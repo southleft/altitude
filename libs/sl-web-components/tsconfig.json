@@ -3,13 +3,11 @@
     "target": "es2019",
     "module": "es2020",
     "lib": ["es2020", "DOM", "DOM.Iterable"],
-    "types": ["resize-observer-browser"],
     "declaration": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
     "sourceMap": true,
     "inlineSources": true,
-    "outDir": "dist/sl",
     "skipLibCheck": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -20,9 +18,7 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "useDefineForClassFields": false,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
     "plugins": [
       {
         "name": "ts-lit-plugin",
@@ -30,5 +26,12 @@
       }
     ]
   },
-  "exclude": ["node_modules", "typings", "stories"]
+  "include": ["**/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "typings",
+    "components/**/*.stories.ts",
+    "components/**/test",
+    "dist"
+  ]
 }
