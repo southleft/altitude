@@ -24,7 +24,7 @@ export class SLButton extends SLElement {
    * Type of button
    */
   @property()
-  type: 'button' | 'submit' | 'reset';
+  accessor type: 'button' | 'submit' | 'reset';
 
   /**
    * Style variant
@@ -32,7 +32,7 @@ export class SLButton extends SLElement {
    * - **danger** renders the button used for caution actions
    */
   @property()
-  variant?: 'secondary' | 'tertiary' | 'danger';
+  accessor variant: 'secondary' | 'tertiary' | 'danger';
 
   /**
    * Target attribute for a link (i.e. set to _blank to open in new tab)
@@ -42,69 +42,69 @@ export class SLButton extends SLElement {
    * - **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.
    */
   @property()
-  target?: '_blank' | '_self' | '_parent' | '_top';
+  accessor target: '_blank' | '_self' | '_parent' | '_top';
 
   /**
    * URL if this is an <a> element - this swaps <button> for <a>
    */
   @property()
-  href?: string;
+  accessor href: string;
 
   /**
    * Indicates the name when submitted with form data.
    */
   @property()
-  name?: string;
+  accessor name: string;
 
   /**
    * Indicates the aria label to apply to the button.
    */
   @property()
-  label?: string;
+  accessor label: string;
 
   /**
    * Indicates the value associated with the name when submitted with form data.
    */
   @property()
-  value?: string;
+  accessor value: string;
 
   /**
    * Indicates this button is a toggle button and whether it is pressed or not.
    */
   @property()
-  isPressed?: boolean | 'mixed';
+  accessor isPressed: boolean | 'mixed';
 
   /**
    * Disabled attribute
    */
   @property({ type: Boolean })
-  isDisabled?: boolean;
+  accessor isDisabled: boolean;
 
   /**
    * Indicates this button is a toggle button and whether it is pressed or not.
    */
   @property({ type: Boolean })
-  isExpanded?: boolean;
+  accessor isExpanded: boolean;
 
   /**
    * Visually hide button text (but text is still accessible to assistive technology)
    * 1. Use this for icon-only buttons for accessibility
    */
   @property({ type: Boolean })
-  hideText?: boolean;
+  accessor hideText: boolean;
 
   /**
    * Full width button
    */
   @property({ type: Boolean })
-  fullWidth?: boolean;
+  accessor fullWidth: boolean;
 
   /**
    * aria-controls attribute on the button
    * 1. Used for items like the buttons attached drawers
    */
   @property()
-  ariaControls?: string;
+  accessor ariaControls: string;
 
   /**
    * Handle click events

@@ -7,7 +7,7 @@ import { classMap } from 'lit/directives/class-map.js';
  */
 export class SLElement extends LitElement {
   @property()
-  styleModifier: string;
+  accessor styleModifier: string;
 
   /**
    * Abstraction of `classMap` that automatically includes any style modifier
