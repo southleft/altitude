@@ -6,7 +6,8 @@
   "scripts": {
     "start": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "build:tokens": "node ./tokens/token-config.js"
+    "build:tokens": "node ./tokens/token-config.js",
+    "generate-icons": "node ./icons/generate-icons.js"
   },
   "dependencies": {
     "lit": "^3.1.1"
@@ -28,13 +29,16 @@
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
     "babel-loader": "^9.1.3",
+    "datauri": "^4.1.0",
     "eslint": "^8.56.0",
     "eslint-plugin-storybook": "^0.6.15",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sass-loader": "^14.0.0",
+    "scale-that-svg": "^1.0.6",
     "storybook": "^7.6.7",
-    "style-dictionary": "^3.9.2"
+    "style-dictionary": "^3.9.2",
+    "webfonts-generator": "^0.4.0"
   },
   "resolutions": {
     "@lit/reactive-element": "^2.0.3"

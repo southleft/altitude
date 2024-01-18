@@ -18,20 +18,6 @@ export class SLButton extends SLElement {
     return unsafeCSS(styles);
   }
 
-//   static styles = css`
-//   .sl-c-button {
-//     background-color: yellow;
-//   }
-
-//   .sl-c-button--secondary {
-//     background-color: blue;
-//   }
-
-//   .sl-c-button--secondary {
-//     background-color: gray;
-//   }
-// `;
-
   protected formController = new FormController(this);
 
   /**
