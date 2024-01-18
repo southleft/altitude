@@ -1,0 +1,295 @@
+/* ------------------------------------*\
+    #TYPOGRAPHY PRESETS
+\*------------------------------------ */
+
+/**
+ * Declare all preset values (font-family, font-weight, font-size, and line-height.
+ * Otherwise, typography utility overrides or BEM typography overrides won't
+ * completely override.
+ */
+
+//
+// Typography Preset 0: Normal and Bold
+//
+@mixin sl-typography-preset-0($important: null, $responsive: true) {
+  font-family: var(--sl-font-family-primary) $important;
+  font-weight: var(--sl-font-weight-regular) $important;
+  line-height: var(--sl-line-height-0) $important;
+  font-size: var(--sl-font-size-10) $important;
+  letter-spacing: var(--sl-letter-spacing-0) $important;
+}
+.sl-typography-preset-0 {
+  @include sl-typography-preset-0;
+}
+
+//
+// Typography Preset 1: Normal and Bold
+//
+@mixin sl-typography-preset-1($important: null, $responsive: true) {
+  font-family: var(--sl-font-family-primary) $important;
+  font-weight: var(--sl-font-weight-regular) $important;
+  line-height: var(--sl-line-height-1) $important;
+  font-size: var(--sl-font-size-12) $important;
+  letter-spacing: var(--sl-letter-spacing-0) $important;
+}
+.sl-typography-preset-1 {
+  @include sl-typography-preset-1;
+}
+
+@mixin sl-typography-preset-1-bold($important: null) {
+  @include sl-typography-preset-1($important);
+
+  font-weight: var(--sl-font-weight-bold) $important;
+}
+.sl-typography-preset-1-bold {
+  @include sl-typography-preset-1-bold;
+}
+
+//
+// Typography Preset 2: Normal and Bold
+//
+@mixin sl-typography-preset-2($important: null, $responsive: true) {
+  font-family: var(--sl-font-family-primary) $important;
+  font-weight: var(--sl-font-weight-regular) $important;
+  line-height: var(--sl-line-height-1) $important;
+  font-size: var(--sl-font-size-14) $important;
+  letter-spacing: var(--sl-letter-spacing-0) $important;
+}
+.sl-typography-preset-2 {
+  @include sl-typography-preset-2;
+}
+
+@mixin sl-typography-preset-2-bold($important: null) {
+  @include sl-typography-preset-2($important);
+
+  font-weight: var(--sl-font-weight-bold) $important;
+}
+.sl-typography-preset-2-bold {
+  @include sl-typography-preset-2-bold;
+}
+
+//
+// Typography Preset 3: Normal and Bold
+//
+@mixin sl-typography-preset-3($important: null, $responsive: true) {
+  font-family: var(--sl-font-family-primary) $important;
+  font-weight: var(--sl-font-weight-regular) $important;
+  line-height: var(--sl-line-height-2) $important;
+  font-size: var(--sl-font-size-16) $important;
+  letter-spacing: var(--sl-letter-spacing-0) $important;
+}
+.sl-typography-preset-3 {
+  @include sl-typography-preset-3;
+}
+
+@mixin sl-typography-preset-3-bold($important: null) {
+  @include sl-typography-preset-3($important);
+
+  font-weight: var(--sl-font-weight-bold) $important;
+}
+.sl-typography-preset-3-bold {
+  @include sl-typography-preset-3-bold;
+}
+
+//
+// Typography Preset 4: Normal and Bold
+//
+@mixin sl-typography-preset-4($important: null, $responsive: true) {
+  font-family: var(--sl-font-family-primary) $important;
+  font-weight: var(--sl-font-weight-regular) $important;
+  line-height: var(--sl-line-height-3) $important;
+  font-size: var(--sl-font-size-18) $important;
+  letter-spacing: var(--sl-letter-spacing-0) $important;
+}
+.sl-typography-preset-4 {
+  @include sl-typography-preset-4;
+}
+
+@mixin sl-typography-preset-4-bold($important: null) {
+  @include sl-typography-preset-4($important);
+
+  font-weight: var(--sl-font-weight-bold) $important;
+}
+.sl-typography-preset-4-bold {
+  @include sl-typography-preset-4-bold;
+}
+
+//
+// Typography Preset 5: Normal and Bold
+//
+@mixin sl-typography-preset-5($important: null, $responsive: true) {
+  font-family: var(--sl-font-family-primary) $important;
+  font-weight: var(--sl-font-weight-regular) $important;
+  line-height: var(--sl-line-height-3) $important;
+  font-size: var(--sl-font-size-20) $important;
+  letter-spacing: var(--sl-letter-spacing-0) $important;
+
+  @if $responsive == true {
+    @media all and (max-width: $sl-bp-md) {
+      line-height: var(--sl-line-height-3) $important;
+      font-size: var(--sl-font-size-18) $important;
+    }
+  }
+}
+.sl-typography-preset-5 {
+  @include sl-typography-preset-5;
+}
+
+@mixin sl-typography-preset-5-bold($important: null) {
+  @include sl-typography-preset-5($important);
+
+  font-weight: var(--sl-font-weight-bold) $important;
+}
+.sl-typography-preset-5-bold {
+  @include sl-typography-preset-5-bold;
+}
+
+//
+// Typography Preset 6: Normal and Bold
+//
+@mixin sl-typography-preset-6($important: null, $responsive: true) {
+  font-family: var(--sl-font-family-primary) $important;
+  font-weight: var(--sl-font-weight-regular) $important;
+  line-height: var(--sl-line-height-4) $important;
+  font-size: var(--sl-font-size-24) $important;
+  letter-spacing: var(--sl-letter-spacing-0) $important;
+
+  @if $responsive == true {
+    @media all and (max-width: $sl-bp-md) {
+      line-height: var(--sl-line-height-3) $important;
+      font-size: var(--sl-font-size-20) $important;
+    }
+  }
+}
+.sl-typography-preset-6 {
+  @include sl-typography-preset-6;
+}
+
+@mixin sl-typography-preset-6-bold($important: null) {
+  @include sl-typography-preset-6($important);
+
+  font-weight: var(--sl-font-weight-bold) $important;
+}
+.sl-typography-preset-6-bold {
+  @include sl-typography-preset-6-bold;
+}
+
+//
+// Typography Preset 7: Normal and Bold
+//
+@mixin sl-typography-preset-7($important: null, $responsive: true) {
+  font-family: var(--sl-font-family-primary) $important;
+  font-weight: var(--sl-font-weight-regular) $important;
+  line-height: var(--sl-line-height-5) $important;
+  font-size: var(--sl-font-size-28) $important;
+  letter-spacing: var(--sl-letter-spacing-0) $important;
+
+  @if $responsive == true {
+    @media all and (max-width: $sl-bp-md) {
+      line-height: var(--sl-line-height-4) $important;
+      font-size: var(--sl-font-size-24) $important;
+    }
+  }
+}
+.sl-typography-preset-7 {
+  @include sl-typography-preset-7;
+}
+
+@mixin sl-typography-preset-7-bold($important: null) {
+  @include sl-typography-preset-7($important);
+
+  font-weight: var(--sl-font-weight-bold) $important;
+}
+.sl-typography-preset-7-bold {
+  @include sl-typography-preset-7-bold;
+}
+
+//
+// Typography Preset 8: Normal and Bold
+//
+@mixin sl-typography-preset-8($important: null, $responsive: true) {
+  font-family: var(--sl-font-family-primary) $important;
+  font-weight: var(--sl-font-weight-regular) $important;
+  line-height: var(--sl-line-height-6) $important;
+  font-size: var(--sl-font-size-32) $important;
+  letter-spacing: var(--sl-letter-spacing-0) $important;
+
+  @if $responsive == true {
+    @media all and (max-width: $sl-bp-md) {
+      line-height: var(--sl-line-height-5) $important;
+      font-size: var(--sl-font-size-28) $important;
+    }
+  }
+}
+.sl-typography-preset-8 {
+  @include sl-typography-preset-8;
+}
+
+@mixin sl-typography-preset-8-bold($important: null) {
+  @include sl-typography-preset-8($important);
+
+  font-weight: var(--sl-font-weight-bold) $important;
+}
+.sl-typography-preset-8-bold {
+  @include sl-typography-preset-8-bold;
+}
+
+//
+// Typography Preset 9: Normal and Bold
+//
+@mixin sl-typography-preset-9($important: null, $responsive: true) {
+  font-family: var(--sl-font-family-primary) $important;
+  font-weight: var(--sl-font-weight-regular) $important;
+  line-height: var(--sl-line-height-7) $important;
+  font-size: var(--sl-font-size-36) $important;
+  letter-spacing: var(--sl-letter-spacing-0) $important;
+
+  @if $responsive == true {
+    @media all and (max-width: $sl-bp-md) {
+      line-height: var(--sl-line-height-6) $important;
+      font-size: var(--sl-font-size-32) $important;
+    }
+  }
+}
+.sl-typography-preset-9 {
+  @include sl-typography-preset-9;
+}
+
+@mixin sl-typography-preset-9-bold($important: null) {
+  @include sl-typography-preset-9($important);
+
+  font-weight: var(--sl-font-weight-bold) $important;
+}
+.sl-typography-preset-9-bold {
+  @include sl-typography-preset-9-bold;
+}
+
+//
+// Typography Preset 10: Normal and Bold
+//
+@mixin sl-typography-preset-10($important: null, $responsive: true) {
+  font-family: var(--sl-font-family-primary) $important;
+  font-weight: var(--sl-font-weight-regular) $important;
+  line-height: var(--sl-line-height-8) $important;
+  font-size: var(--sl-font-size-44) $important;
+  letter-spacing: var(--sl-letter-spacing-0) $important;
+
+  @if $responsive == true {
+    @media all and (max-width: $sl-bp-md) {
+      line-height: var(--sl-line-height-7) $important;
+      font-size: var(--sl-font-size-36) $important;
+    }
+  }
+}
+.sl-typography-preset-10 {
+  @include sl-typography-preset-10;
+}
+
+@mixin sl-typography-preset-10-bold($important: null) {
+  @include sl-typography-preset-10($important);
+
+  font-weight: var(--sl-font-weight-bold) $important;
+}
+.sl-typography-preset-10-bold {
+  @include sl-typography-preset-10-bold;
+}

@@ -1,0 +1,275 @@
+/* ------------------------------------*\
+  #VARIABLES
+\*------------------------------------ */
+
+/**
+ * Breakpoints
+ * 1. SCSS Variables used for media queries
+ * 2. Note: presently CSS Custom Properites can't be used within media queries so SCSS variables must be used
+ */
+$sl-bp-xs: 20rem; // 320px
+$sl-bp-sm: 30rem; // 480px
+$sl-bp-md: 46.5rem; // 744px
+$sl-bp-lg: 64rem; // 1024px
+$sl-bp-xl: 85.375rem; // 1366px
+$sl-bp-xxl: 159.375rem; // 2550px
+
+/**
+  * Global CSS custom properties that aren't part of a theme's design tokens
+  */
+:root,
+:host {
+  --size-base-unit: 0.5rem;
+}
+
+/**
+  * RTL support for values logical properties can't automatically adjust for
+  * 1) Percentage based horizontal translate values need to be flipped
+  * 2) Background gradients using "to right" or "to left" need to be switched to using deg values
+  * 3) Background Position From is used for reversing animation from right to left at 0%
+  * 4) Background Position To is used for reversing animation from right to left at 100%
+  */
+[dir='rtl'] {
+  --rtlTranslateX: 50%; /* 1 */
+  --rtlGradientToRight: 270deg; /* 2 */
+  --rtlBackgroundPositionFrom: -135%; /* 3 */
+  --rtlBackgroundPositionTo: 0%; /* 4 */
+}
+
+/**
+  * Size function
+  * 1. The size function multiplies a provided value ($number) by the base sizing unit (--size-base-unit)
+  * 2. $number should be limited to integers (e.g. 3) or half integers (e.g. 1.5)
+  */
+@function size($number) {
+  @return calc(var(--size-base-unit) * #{$number});
+}
+
+/* ------------------------------------*\
+  #UTILITIES
+\*------------------------------------ */
+
+/**
+  * Visually hidden from display
+  */
+@mixin visuallyHidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.sl-u-is-vishidden {
+  @include visuallyHidden;
+}
+
+/**
+  * Width 100%
+  */
+.sl-u-width-100 {
+  width: 100%;
+}
+
+/* ------------------------------------*\
+  #FORM STYLES
+\*------------------------------------ */
+
+/**
+ * Label styles
+ */
+@mixin label-styles() {
+  @include sl-theme-typography-body-md;
+  color: var(--sl-theme-color-content-weak);
+  display: block;
+  transition: color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+
+  /**
+   * Disabled state
+   */
+  .sl-is-disabled & {
+    color: var(--sl-theme-color-content-default);
+    opacity: var(--sl-theme-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  /**
+   * Visually hide the label
+   */
+  .sl-has-hidden-label & {
+    @include visuallyHidden;
+  }
+}
+
+/**
+ * Input styles
+ */
+@mixin input-styles() {
+  @include sl-theme-typography-body-md;
+  width: 100%;
+  min-height: size(6);
+  appearance: none;
+  outline: none;
+  padding: size(1.375) size(2);
+  border-width: var(--sl-theme-border-width);
+  border-style: solid;
+  border-color: var(--sl-theme-color-content-weak);
+  border-radius: var(--sl-theme-border-radius);
+  color: var(--sl-theme-color-content-weak);
+  background-color: var(--sl-theme-color-background-transparent-default);
+  transition: background-color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing), color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing), border-color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing), box-shadow var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+
+  ~ *  {
+    transition: color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+    color: var(--sl-theme-color-content-weak);
+  }
+
+  /**
+   * Hover state
+   * - Prevents hover while others states are present
+   */
+  &:hover:not(:active, :focus, :focus-visible, :disabled) {
+    color: var(--sl-theme-color-content-default);
+    border-color: var(--sl-theme-color-content-default);
+
+    ~ *  {
+      color: var(--sl-theme-color-content-default);
+    }
+  }
+
+  /**
+   * Active, focus, and focus-visible states
+   * - Uses box-shadow to make the border thicker to prevent shifting of content
+   * - Prevents any of the state styles while read-only is applied
+   */
+  &:active,
+  &:focus,
+  &:focus-visible {
+    border-color: var(--sl-theme-color-border-accent-default);
+    box-shadow: 0px 0px 0px 1px var(--sl-theme-color-border-accent-default);
+    color: var(--sl-theme-color-content-default);
+
+    ~ * {
+      color: var(--sl-theme-color-content-default);
+    }
+  }
+
+  /**
+   * Disabled state
+   */
+  &:disabled {
+    cursor: not-allowed;
+    opacity: var(--sl-theme-opacity-disabled);
+    color: var(--sl-theme-color-content-default);
+    border-color: var(--sl-theme-color-content-default);
+
+    ~ * {
+      color: var(--sl-theme-color-content-default);
+      opacity: var(--sl-theme-opacity-disabled);
+    }
+  }
+
+  /**
+   * Placeholder text
+   */
+  &::placeholder {
+    color: var(--sl-theme-color-content-weak);
+  }
+
+  /**
+   * Error state
+   */
+  .sl-is-error &,
+  .sl-is-error &:hover:not(:active, :focus, :focus-visible, :disabled, :read-only) {
+    border-color: var(--sl-theme-color-border-danger-default);
+    box-shadow: 0px 0px 0px 1px var(--sl-theme-color-border-danger-default);
+  }
+}
+
+/* ------------------------------------*\
+  #LINK STYLES
+\*------------------------------------ */
+
+/**
+ * Styles to override button styling
+ */
+@mixin button-reset() {
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  text-transform: none;
+}
+
+/**
+ * Link styles
+ */
+@mixin link-styles() {
+  @include button-reset;
+  @include sl-theme-typography-body-md;
+  transition: color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing), background-color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+  color: var(--sl-theme-color-content-accent-default);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: size(1);
+  border-radius: var(--sl-theme-border-radius-xs);
+  text-decoration: none;
+  cursor: pointer;
+
+  /**
+   * Hover state
+   */
+  &:hover:not(:active, .sl-is-disabled) {
+    color: var(--sl-theme-color-content-accent-weak);
+    text-decoration: underline;
+  }
+
+  /**
+   * Focus visible state
+   */
+  &:focus-visible {
+    @include focus;
+  }
+
+  /**
+   * Disabled state
+   */
+  &.sl-is-disabled {
+    cursor: not-allowed;
+    opacity: var(--sl-theme-opacity-disabled);
+  }
+}
+
+/* ------------------------------------*\
+  #FOCUS
+\*------------------------------------ */
+
+/**
+ * Visible focus outline for elements
+ */
+@mixin focus() {
+  outline: var(--sl-theme-border-width-md) solid var(--sl-theme-color-focus-ring, var(--sl-theme-color-border-accent-default));
+  outline-offset: var(--sl-focus-outline-offset, var(--sl-theme-border-width-md));
+}
+
+@mixin focus-inset() {
+  outline: var(--sl-theme-border-width-md) solid var(--sl-theme-color-focus-ring, var(--sl-theme-color-border-accent-default));
+  outline-offset: calc(#{var(--sl-theme-border-width-md)} * -1);
+}
+
+:focus-visible {
+  @include focus;
+}
+
+/* ------------------------------------*\
+  #BACKGROUND STYLES
+\*------------------------------------ */
+
+@mixin background-transparent() {
+  background: linear-gradient(180deg, var(--sl-theme-color-background-primary-weak) 0%, var(--sl-theme-color-background-transparent-weak) 100%);
+  backdrop-filter: blur(8px);
+}

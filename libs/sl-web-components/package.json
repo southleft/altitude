@@ -1,10 +1,17 @@
 {
   "name": "sl-web-components",
   "version": "0.1.0",
-  "dependencies": {
-    "lit": "^3.1.1"
-  },
+  "license": "BSD-3-Clause",
   "packageManager": "yarn@1.22.19",
+  "scripts": {
+    "start": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "build:tokens": "node ./tokens/token-config.js"
+  },
+  "dependencies": {
+    "lit": "^3.1.1",
+    "sass": "^1.70.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.14.6",
     "@babel/plugin-proposal-class-properties": "^7.14.5",
@@ -24,18 +31,16 @@
     "eslint-plugin-storybook": "^0.6.15",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "storybook": "^7.6.7"
+    "sass-loader": "^14.0.0",
+    "storybook": "^7.6.7",
+    "style-dictionary": "^3.9.2"
   },
   "resolutions": {
-    "@lit/reactive-element": "^3.0.0"
+    "@lit/reactive-element": "^2.0.3"
   },
   "eslintConfig": {
     "extends": [
       "plugin:storybook/recommended"
     ]
-  },
-  "scripts": {
-    "start": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
   }
 }

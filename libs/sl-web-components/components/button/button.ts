@@ -3,7 +3,7 @@ import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { FormController } from '../../controllers/form';
 import { SLElement } from '../SLElement';
-// import styles from './button.scss';
+import styles from './button.scss';
 
 /**
  * Component: sl-button
@@ -14,23 +14,23 @@ import { SLElement } from '../SLElement';
 export class SLButton extends SLElement {
   static el = 'sl-button';
 
-  // static get styles() {
-  //   return unsafeCSS(styles);
-  // }
-
-  static styles = css`
-  .sl-c-button {
-    background-color: yellow;
+  static get styles() {
+    return unsafeCSS(styles);
   }
 
-  .sl-c-button--secondary {
-    background-color: blue;
-  }
+//   static styles = css`
+//   .sl-c-button {
+//     background-color: yellow;
+//   }
 
-  .sl-c-button--secondary {
-    background-color: gray;
-  }
-`;
+//   .sl-c-button--secondary {
+//     background-color: blue;
+//   }
+
+//   .sl-c-button--secondary {
+//     background-color: gray;
+//   }
+// `;
 
   protected formController = new FormController(this);
 

@@ -1,0 +1,281 @@
+@import '../../tokens/sl/component';
+/* ------------------------------------ *\
+  #BUTTON
+\* ------------------------------------ */
+
+/**
+ * Default button
+ */
+.sl-c-button {
+  @include sl-theme-typography-body-md-bold;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: size(1);
+  margin: 0;
+  padding: var(--sl-button-padding, #{size(1)} #{size(2)});
+  border: none;
+  border-radius: var(--sl-theme-border-radius);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+  position: relative;
+  background-color: var(--sl-theme-color-background-accent-default);
+  color: var(--sl-theme-color-content-accent-weak);
+  width: var(--sl-button-width, auto);
+
+  /**
+   * Hover glow for button with text
+   */
+  &:after {
+    content: '';
+    position: absolute;
+    inset-block-start: 100%;
+    height: 20px;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    z-index: var(--sl-z-index-bottom);
+    transition: all var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+    overflow: hidden;
+    background: linear-gradient(to right, var(--sl-color-base-purple-5) 0%, var(--sl-color-base-purple-9) 20%, var(--sl-color-base-blue-9) 80%, var(--sl-color-base-blue-5) 100%,);
+    mask-repeat: no-repeat;
+    mask-position: top center;
+    mask-size: 100% 100%;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='102' height='20' fill='none'%3E%3Cg clip-path='url(%23a)' filter='url(%23b)'%3E%3Cpath fill='url(%23c)' fill-opacity='.64' d='M60.356 6c-12.876 0-27.778 4-38.593 4C10.947 10 5-.146 5-6h92c0 3.035-2.729 14.439-13.254 14.439C74.476 8.439 73.232 6 60.356 6Z'/%3E%3C/g%3E%3Cdefs%3E%3ClinearGradient id='c' x1='13.576' x2='91.153' y1='1.024' y2='1.024' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%234B449B'/%3E%3Cstop offset='.214' stop-color='%238981E5'/%3E%3Cstop offset='.745' stop-color='%23518EE7'/%3E%3Cstop offset='1' stop-color='%231C4E98'/%3E%3C/linearGradient%3E%3CclipPath id='a'%3E%3Cpath fill='%23fff' d='M0 0h102v20H0z'/%3E%3C/clipPath%3E%3Cfilter id='b' width='110' height='34' x='-4' y='-15' color-interpolation-filters='sRGB' filterUnits='userSpaceOnUse'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeGaussianBlur result='effect1_foregroundBlur_4233_7369' stdDeviation='4.5'/%3E%3C/filter%3E%3C/defs%3E%3C/svg%3E");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: top center;
+    -webkit-mask-size: 100% 100%;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='102' height='20' fill='none'%3E%3Cg clip-path='url(%23a)' filter='url(%23b)'%3E%3Cpath fill='url(%23c)' fill-opacity='.64' d='M60.356 6c-12.876 0-27.778 4-38.593 4C10.947 10 5-.146 5-6h92c0 3.035-2.729 14.439-13.254 14.439C74.476 8.439 73.232 6 60.356 6Z'/%3E%3C/g%3E%3Cdefs%3E%3ClinearGradient id='c' x1='13.576' x2='91.153' y1='1.024' y2='1.024' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%234B449B'/%3E%3Cstop offset='.214' stop-color='%238981E5'/%3E%3Cstop offset='.745' stop-color='%23518EE7'/%3E%3Cstop offset='1' stop-color='%231C4E98'/%3E%3C/linearGradient%3E%3CclipPath id='a'%3E%3Cpath fill='%23fff' d='M0 0h102v20H0z'/%3E%3C/clipPath%3E%3Cfilter id='b' width='110' height='34' x='-4' y='-15' color-interpolation-filters='sRGB' filterUnits='userSpaceOnUse'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeGaussianBlur result='effect1_foregroundBlur_4233_7369' stdDeviation='4.5'/%3E%3C/filter%3E%3C/defs%3E%3C/svg%3E");
+  }
+
+  /**
+   * Hover state
+   */
+  &:hover:not(:active, :disabled) {
+    background-color: var(--sl-theme-color-background-accent-strong);
+
+    &:after {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  /**
+   * Focus outline for A11y
+   */
+  &:focus-visible {
+    @include focus;
+  }
+
+  /**
+  * Disabled state
+  */
+  &:disabled {
+    cursor: not-allowed;
+    opacity: var(--sl-theme-opacity-disabled);
+  }
+}
+
+/**
+ * Secondary button
+ */
+.sl-c-button--secondary {
+  background-color: var(--sl-theme-color-background-transparent-default);
+  border: var(--sl-theme-border-width) solid var(--sl-theme-color-content-accent-default);
+  color: var(--sl-theme-color-content-accent-default);
+
+  /**
+   * Hover state
+   */
+  &:hover:not(:active, :disabled) {
+    background-color: var(--sl-theme-color-background-transparent-default);
+    border-color: var(--sl-theme-color-content-accent-strong);
+    color: var(--sl-theme-color-content-accent-strong);
+  }
+}
+
+/**
+ * Tertiary button
+ */
+.sl-c-button--tertiary {
+  background-color: var(--sl-theme-color-background-transparent-default);
+  color: var(--sl-theme-color-content-weak);
+
+  /**
+   * Hide the shadow effect
+   */
+  &::after {
+    display: none;
+  }
+
+  /**
+   * Hover state
+   */
+  &:hover:not(:active, :disabled) {
+    background-color: var(--sl-theme-color-background-transparent-default);
+    color: var(--sl-theme-color-content-default);
+  }
+
+  /**
+   * Focus outline for Tertiary button
+   */
+   &:focus-visible {
+    --sl-theme-color-focus-ring: var(--sl-theme-color-content-weak);
+  }
+}
+
+/**
+ * Button icon
+ */
+::slotted(.sl-c-icon) {
+  --sl-icon-height: #{size(3)};
+  --sl-icon-width: #{size(3)};
+}
+
+/**
+ * Icon only button
+ */
+.sl-c-button--icon-only {
+  padding: var(--sl-button-padding, #{size(1)} #{size(1)});
+
+  &::after {
+    mask-repeat: no-repeat;
+    mask-position: top center;
+    mask-size: 100% 100%;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' viewBox='0 0 40 20' fill='none'%3E%3Cg clip-path='url(%23clip0_4271_9568)'%3E%3Cg filter='url(%23filter0_f_4271_9568)'%3E%3Cpath d='M7.5 -5H32.5C32.5 3.4 30.5 4 20 4C9.5 4 7.5 0.853658 7.5 -5Z' fill='url(%23paint0_linear_4271_9568)' fill-opacity='0.64'/%3E%3C/g%3E%3C/g%3E%3Cdefs%3E%3Cfilter id='filter0_f_4271_9568' x='-1.5' y='-14' width='43' height='27' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeGaussianBlur stdDeviation='4.5' result='effect1_foregroundBlur_4271_9568'/%3E%3C/filter%3E%3ClinearGradient id='paint0_linear_4271_9568' x1='8.61017' y1='1.02439' x2='32.2203' y2='1.02439' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%234B449B'/%3E%3Cstop offset='0.213542' stop-color='%238981E5'/%3E%3Cstop offset='0.744792' stop-color='%23518EE7'/%3E%3Cstop offset='1' stop-color='%231C4E98'/%3E%3C/linearGradient%3E%3CclipPath id='clip0_4271_9568'%3E%3Crect width='40' height='20' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: top center;
+    -webkit-mask-size: 100% 100%;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' viewBox='0 0 40 20' fill='none'%3E%3Cg clip-path='url(%23clip0_4271_9568)'%3E%3Cg filter='url(%23filter0_f_4271_9568)'%3E%3Cpath d='M7.5 -5H32.5C32.5 3.4 30.5 4 20 4C9.5 4 7.5 0.853658 7.5 -5Z' fill='url(%23paint0_linear_4271_9568)' fill-opacity='0.64'/%3E%3C/g%3E%3C/g%3E%3Cdefs%3E%3Cfilter id='filter0_f_4271_9568' x='-1.5' y='-14' width='43' height='27' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeGaussianBlur stdDeviation='4.5' result='effect1_foregroundBlur_4271_9568'/%3E%3C/filter%3E%3ClinearGradient id='paint0_linear_4271_9568' x1='8.61017' y1='1.02439' x2='32.2203' y2='1.02439' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%234B449B'/%3E%3Cstop offset='0.213542' stop-color='%238981E5'/%3E%3Cstop offset='0.744792' stop-color='%23518EE7'/%3E%3Cstop offset='1' stop-color='%231C4E98'/%3E%3C/linearGradient%3E%3CclipPath id='clip0_4271_9568'%3E%3Crect width='40' height='20' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E");
+  }
+}
+
+/**
+ * Full-width button
+ */
+.sl-c-button--full-width {
+  width: 100%;
+  text-align: center;
+}
+
+/**
+ * Allows for click events to only be on the button element and not slotted items
+ */
+::slotted(*) {
+  pointer-events: none;
+}
+
+/*------------------------------------*\
+  #MENU-ITEM-BUTTON
+\*------------------------------------*/
+
+/**
+ * Menu item button
+ * - Controls the expanded state for Menu Item's
+ */
+.sl-c-menu-item-button {
+  position: relative;
+  height: var(--sl-menu-item-height);
+  width: size(5);
+  border-radius: 0;
+  line-height: 1;
+  color: var(--sl-theme-color-content-accent-default);
+  background: var(--sl-theme-color-background-transparent);
+
+  /**
+   * Hide the shadow effect
+   */
+  &::after {
+    display: none;
+  }
+
+  /**
+   * Menu item buton focus outline with rounded borders
+   */
+  &::before {
+    @include focus;
+    display: block;
+    position: absolute;
+    content: '';
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    height: 100%;
+    width: 100%;
+    visibility: hidden;
+    opacity: 0;
+    background: transparent;
+    border-radius: var(--sl-theme-border-radius-xs);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /**
+   * Menu item button icon
+   * - The chevron icon that visually displays whether the menu item is expanded
+   */
+  .sl-c-button__icon {
+    transition: transform var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+    transform: rotate(0deg);
+  }
+
+  /**
+   * Menu item button hover state
+   */
+  &:hover:not(:active, :disabled) {
+    color: var(--sl-theme-color-content-accent-default);
+    background: var(--sl-theme-color-background-secondary-default);
+
+    /**
+     * Show focus outline with rounded borders on focus-visible
+     */
+    &::before {
+      visibility: hidden;
+      opacity: 0;
+    }
+  }
+
+  /**
+   * Menu item button focus state
+   */
+   &:focus-visible {
+    outline: none;
+
+    /**
+     * Show focus outline with rounded borders on focus-visible
+     */
+    &::before {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  /**
+   * Menu item button selected state
+   */
+  &.sl-is-selected {
+    color: var(--sl-theme-color-content-inverse-default);
+    background: var(--sl-theme-color-background-accent-default);
+
+    /**
+     * Menu item button hover state on a selected menu item
+     */
+    &:hover:not(:active, .sl-is-disabled) {
+      color: var(--sl-theme-color-content-inverse-default);
+      background: var(--sl-theme-color-background-accent-strong);
+    }
+  }
+
+  /**
+   * Menu item button expanded state
+   * - Rotate the icon when expanded
+  */
+  &.sl-is-expanded {
+    .sl-c-button__icon {
+      transform: rotate(-180deg);
+    }
+  }
+}
+
+
+

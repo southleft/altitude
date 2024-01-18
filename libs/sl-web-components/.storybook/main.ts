@@ -1,33 +1,24 @@
-// import type { StorybookConfig } from '@storybook/web-components-webpack5';
+import type { StorybookConfig } from '@storybook/web-components-webpack5';
+const NormalModuleReplacementPlugin = require('webpack').NormalModuleReplacementPlugin;
+const path = require('path');
+const fs = require('fs');
 
-// import { join, dirname } from 'path';
+const themePath = (file = '') => {
+  let node_modules = path.resolve(process.cwd(), 'node_modules');
+  const cacheFile = `${node_modules}/.cache/storybook-theme/theme`;
+  let theme = 'sl';
+  if (fs.existsSync(cacheFile)) {
+    let cachedTheme = fs.readFileSync(cacheFile);
+    cachedTheme = `${cachedTheme}`.replace(/\s+/, '');
+    if (cachedTheme !== '') {
+      theme = cachedTheme;
+    }
+  }
 
-// /**
-//  * This function is used to resolve the absolute path of a package.
-//  * It is needed in projects that use Yarn PnP or are set up within a monorepo.
-//  */
-// function getAbsolutePath(value: string): any {
-//   return dirname(require.resolve(join(value, 'package.json')));
-// }
-// const config: StorybookConfig = {
-//   stories: [
-//     './components/**/*.mdx', 
-//     './components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-//     '../components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-//     './recipes/**/*.stories.@(js|jsx|ts|tsx|mdx)'
-//   ],
-//   addons: [getAbsolutePath('@storybook/addon-links'), getAbsolutePath('@storybook/addon-essentials')],
-//   framework: {
-//     name: getAbsolutePath('@storybook/web-components-webpack5')
-//   },
-//   docs: {
-//     autodocs: 'tag'
-//   }
-// };
-// export default config;
+  return path.resolve(__dirname, `../tokens/${theme}/${file}`);
+};
 
-/** @type { import('@storybook/web-components-webpack5').StorybookConfig } */
-const config = {
+const config: StorybookConfig = {
   stories: [
     '../components/**/**/*.stories.@(js|jsx|ts|tsx|mdx)'
   ],
@@ -54,18 +45,88 @@ const config = {
     autodocs: true,
   },
   // Other Storybook options
-  webpackFinal: async config => {
-    // Add your custom webpack configuration file here
-    config.module.rules.push({
-      test: /\.(j|t)sx?$/,
-      use: ['babel-loader']
+  webpackFinal: async (config, { configType }) => {
+    // Loop over each of module rules in our config. Module rules define the loaders
+    // that Webpack will use. We're, specifically, looking for the CSS rule
+    config.module.rules.map((rule) => {
+      // As we loop over the rules if the rule doesn't have a RegExp test or the
+      // RegExp test doesn't match `.css` then we'll return the rule as-is with no
+      // modifications being made.
+      if (!rule.test || !rule.test.test || !rule.test.test('.css')) {
+        return rule;
+      }
+
+      // If we're here then we're working with the CSS rule so we'll shift off the
+      // first loader, which is the style-loader, since we want to manage styles
+      // in lit-element, not via storybook/head injection
+      rule.use.shift();
+
+      // Return the modified CSS Webpack rule
+      return rule;
     });
 
-    // Resolve file extensions
-    config.resolve.extensions.push('.js', '.ts', '.jsx', '.tsx', '.scss', '.yml');
+    // Add SCSS support
+    config.module.rules.push({
+      test: /\.scss/,
+      use: [
+        'css-loader',
+        {
+          loader: 'sass-loader',
+          options: {
+            sassOptions: {
+              importer: [
+                function themeImport(url) {
+                  const matches = url.match(/^THEME\/(.*)/);
+                  if (!matches) {
+                    return null;
+                  }
 
-    // Return the updated Storybook webpack configuration
+                  const node_modules = path.resolve(process.cwd(), 'node_modules');
+                  const cachedThemePath = path.resolve(node_modules, './.cache/storybook-theme/theme');
+                  if (fs.existsSync(cachedThemePath)) {
+                    this.webpackLoaderContext.addDependency(fs.realpathSync(cachedThemePath));
+                  }
+
+                  const overridePath = fs.realpathSync(themePath(matches[1]));
+                  this.webpackLoaderContext.addDependency(overridePath);
+                  if (fs.existsSync(overridePath)) {
+                    return {
+                      file: overridePath
+                    };
+                  } else {
+                    return {
+                      contents: ''
+                    };
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    });
+
+    // Add theo support
+    config.module.rules.push({
+      test: /\.yml$/,
+      use: ['css-loader']
+    });
+
+    // Add svg support
+    config.module.rules.push({
+      test: /\.svg$/,
+      type: 'asset/source'
+    });
+
+    // Add theme support to JS imports
+    config.plugins.push(
+      new NormalModuleReplacementPlugin(/(^|\!)THEME(.*)/, function (resource) {
+        resource.request = resource.request.replace(/(^|\!)THEME/, '$1' + themePath());
+      })
+    );
+
+    // Return the modified Webpack Config
     return config;
-  },
+  }
 };
 export default config;
