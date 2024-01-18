@@ -7,7 +7,8 @@ import './button';
 export default {
   title: 'Components/Button',
   component: 'sl-button',
-  parameters: { status: { type: 'beta' } },
+  parameters: { status: { type: 'stable' } },
+  tags: ['autodocs'],
   argTypes: {
     type: {
       options: ['button', 'submit', 'reset'],

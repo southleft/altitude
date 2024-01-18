@@ -20,7 +20,9 @@ const themePath = (file = '') => {
 
 const config: StorybookConfig = {
   stories: [
-    '../components/**/**/*.stories.@(js|jsx|ts|tsx|mdx)'
+    './components/**/*.stories.@(js|jsx|ts|tsx|mdx)',
+    '../components/**/**/*.stories.@(js|jsx|ts|tsx|mdx)',
+    './recipes/**/*.stories.@(js|jsx|ts|tsx|mdx)'
   ],
   addons: [
     "@storybook/addon-links",
@@ -31,9 +33,6 @@ const config: StorybookConfig = {
   framework: {
     name: "@storybook/web-components-webpack5",
     options: {},
-  },
-  docs: {
-    autodocs: true,
   },
   // Other Storybook options
   webpackFinal: async (config, { configType }) => {
