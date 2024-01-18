@@ -51,7 +51,7 @@ const config = {
     options: {},
   },
   docs: {
-    autodocs: "tag",
+    autodocs: true,
   },
   // Other Storybook options
   webpackFinal: async config => {

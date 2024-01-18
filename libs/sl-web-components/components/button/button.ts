@@ -1,4 +1,4 @@
-import { html, unsafeCSS } from 'lit';
+import { html, unsafeCSS, css } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { FormController } from '../../controllers/form';
@@ -17,6 +17,20 @@ export class SLButton extends SLElement {
   // static get styles() {
   //   return unsafeCSS(styles);
   // }
+
+  static styles = css`
+  .sl-c-button {
+    background-color: yellow;
+  }
+
+  .sl-c-button--secondary {
+    background-color: blue;
+  }
+
+  .sl-c-button--secondary {
+    background-color: gray;
+  }
+`;
 
   protected formController = new FormController(this);
 
