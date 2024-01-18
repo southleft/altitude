@@ -25,17 +25,8 @@ const config: StorybookConfig = {
   addons: [
     "@storybook/addon-links",
     '@storybook/addon-essentials',
-    //   {
-    //     name: '@storybook/addon-styling',
-    //     options: {
-    //       sass: {
-    //         // Require your Sass preprocessor here
-    //         implementation: require('sass'),
-    //       },
-    //     },
-    //   },
-    // "@storybook/addon-a11y",
-    // "@etchteam/storybook-addon-status"
+    "@storybook/addon-a11y",
+    "@etchteam/storybook-addon-status"
   ],
   framework: {
     name: "@storybook/web-components-webpack5",
