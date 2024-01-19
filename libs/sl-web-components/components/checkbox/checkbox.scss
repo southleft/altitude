@@ -1,0 +1,77 @@
+@import '../../tokens/sl/component';
+/*------------------------------------*\
+  #CHECKBOX
+\*------------------------------------*/
+
+/**
+ * Checkbox
+ */
+.sl-c-checkbox {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: size(0.5);
+}
+
+/**
+ * Checkbox legend
+ */
+.sl-c-checkbox__legend {
+  @include sl-theme-typography-body-sm;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  color: var(--sl-theme-color-content-weak);
+
+  /**
+   * Visually hide the legend
+   */
+  .sl-has-hidden-legend & {
+    @include visuallyHidden;
+  }
+}
+
+/**
+ * Checkbox list
+ * 1. The div that holds all the checkbox items
+ */
+.sl-c-checkbox__list {
+  display: flex;
+  flex-direction: column;
+
+  /**
+   * Checkbox items in displayed in a horizontal row
+   */
+  .sl-c-checkbox--horizontal & {
+    flex-direction: row;
+    column-gap: size(2);
+    row-gap: 0;
+    flex-wrap: wrap;
+  }
+}
+
+/**
+ * Checkbox field note slotted
+ * 1. Targets field notes that are added via a slot
+ */
+slot[name="field-note"]::slotted(*),
+slot[name="error"]::slotted(*) {
+  /**
+   * Field note with error state
+   * 1. Ensures the error styles are still applied even if a slotted field note does not have ?isError applied
+   */
+  .sl-is-error & {
+    --sl-field-note-color: var(--sl-theme-color-border-danger-default);
+  }
+
+  /**
+   * Field note with disabled state
+   * 1. Ensures the disabled styles are still applied even if a slotted field note does not have ?isDisabled applied
+   */
+  .sl-is-disabled & {
+    opacity: var(--sl-theme-opacity-disabled);
+  }
+}
+

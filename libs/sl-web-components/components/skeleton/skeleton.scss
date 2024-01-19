@@ -1,0 +1,47 @@
+@import '../../tokens/sl/component';
+/*------------------------------------*\
+  #SKELETON
+\*------------------------------------*/
+
+/**
+ * Skeleton
+ * - Bar used to represent loading content when the data isn't pulled in yet
+ */
+.sl-c-skeleton {
+  position: relative;
+  padding: size(0.75) size(2);
+  width: var(--sl-skeleton-width, 100%);
+  height: var(--sl-skeleton-height, auto);
+  background: linear-gradient(-90deg, var(--sl-theme-color-background-secondary-default) 0%, var(--sl-theme-color-background-secondary-strong) 50%, var(--sl-theme-color-background-secondary-default) 100%);
+  background-size: 400% 400%;
+  border-radius: var(--sl-theme-border-radius);
+  animation: pulse 1.25s linear infinite;
+}
+
+/**
+ * Circle skeleton
+ */
+.sl-c-skeleton--circle {
+  aspect-ratio: 1 / 1;
+  border-radius: var(--sl-theme-border-radius-round);
+}
+
+/**
+ * Square skeleton
+ */
+.sl-c-skeleton--square {
+  aspect-ratio: 1 / 1;
+}
+
+/**
+ * Pulsing animation for loading look
+ */
+@keyframes pulse {
+  0% {
+    background-position: var(--rtlBackgroundPositionFrom, 0%) 0%;
+  }
+
+  100% {
+    background-position: var(--rtlBackgroundPositionTo, -135%) 0%;
+  }
+}

@@ -1,0 +1,135 @@
+@import '../../tokens/sl/component';
+/* ------------------------------------*\
+  #ALERT
+\*------------------------------------ */
+
+/**
+ * Alert
+ */
+.sl-c-alert {
+  display: none;
+  flex-direction: column;
+  background: transparent;
+
+  /**
+   * Display the alert when it is active
+   */
+  &.sl-is-active {
+    display: block;
+  }
+}
+
+/**
+ * Alert header
+ */
+.sl-c-alert__header {
+  @include sl-theme-typography-body-md-bold;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  padding: size(2) size(3);
+  gap: size(2);
+  color: var(--sl-theme-color-content-default);
+  border-radius: var(--sl-theme-border-radius-md);
+
+  /**
+   * Alert with a panel
+   */
+  .sl-c-alert--has-panel & {
+    cursor: pointer;
+  }
+
+  /**
+   * Alert focused
+   */
+  &:focus-visible {
+    @include focus-inset;
+  }
+}
+
+/**
+ * Icon that depicts the toast variant:
+ * - Default, success, or danger
+ */
+.sl-c-alert__icon {
+  --sl-icon-width: #{size(3)};
+  --sl-icon-height: #{size(3)};
+  --sl-icon-fill: var(--sl-theme-color-content-info-default);
+
+  /**
+   * Icon within success alert
+   */
+   .sl-c-alert--success & {
+    --sl-icon-fill: var(--sl-theme-color-content-success-default);
+  }
+
+  /**
+   * Icon within warning alert
+   */
+   .sl-c-alert--warning & {
+    --sl-icon-fill: var(--sl-theme-color-content-warning-default);
+  }
+
+  /**
+   * Icon within danger alert
+   */
+  .sl-c-alert--danger & {
+    --sl-icon-fill: var(--sl-theme-color-content-danger-default);
+  }
+}
+
+/**
+ * Alert title
+ */
+.sl-c-alert__title {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: size(2);
+}
+
+/**
+ * Icon that depicts the expanded state
+ */
+.sl-c-alert__icon-expand {
+  transform: rotate(0);
+  transition: transform var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+  transform-origin: center center;
+
+  /**
+   * Rotate the icon when expanded
+   */
+  .sl-is-expanded & {
+    transform: rotate(-180deg)
+  }
+}
+
+/**
+ * Alert panel that contains the description
+ */
+.sl-c-alert__panel {
+  @include sl-theme-typography-body-sm;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: size(2);
+  color: var(--sl-theme-color-content-weak);
+  visibility: hidden;
+  opacity: 0;
+  width: 100%;
+  max-height: 0;
+  padding: 0 size(8) 0;
+  transition: opacity var(--sl-theme-animation-duration) var(--sl-theme-animation-timing), visibility var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+
+  /**
+   * Makes the panel visible when the alert is expanded
+   */
+  .sl-is-expanded & {
+    visibility: visible;
+    opacity: 1;
+    max-height: 100vh;
+    padding-bottom: size(2);
+  }
+}

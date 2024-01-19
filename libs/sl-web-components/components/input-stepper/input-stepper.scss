@@ -1,0 +1,123 @@
+@import '../../tokens/sl/component';
+/* ------------------------------------*\
+  #STEPPER
+\*------------------------------------ */
+
+/**
+ * Stepper - Form field that consists of a label, text input, and field note
+ */
+.sl-c-input-stepper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: size(0.5);
+}
+
+/**
+ * Stepper label
+ */
+.sl-c-input-stepper__label {
+  @include label-styles;
+}
+
+/**
+ * Stepper body
+ */
+.sl-c-input-stepper__body {
+  display: inline-grid;
+  position: relative;
+
+  /**
+   * Pseudo class to resize the input field based on the value
+   */
+  &:after {
+    content: attr(data-value) ' ';
+    visibility: hidden;
+    white-space: pre-wrap;
+    width: auto;
+    padding: size(1) size(4.5);
+    min-width: 1em;
+    grid-area: 1/2;
+  }
+}
+
+/**
+ * Stepper spinner buttons
+ * - Hide the default style
+ */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+/**
+ * Stepper input
+ */
+.sl-c-input-stepper__input {
+  @include input-styles;
+  min-width: size(14);
+  width: auto;
+  padding-inline-start: size(4.5);
+  padding-inline-end: size(4.5);
+  text-align: center;
+  grid-area: 1/2;
+}
+
+/**
+ * Stepper increase/decrease buttons
+ */
+.sl-c-input-stepper__button {
+  position: absolute;
+  height: 100%;
+  width: 40px;
+  inset-block-start: 0;
+  inset-block-end: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/**
+ * Left button
+ */
+.sl-c-input-stepper__button--left {
+  inset-inline-start: 0;
+}
+
+/**
+ * Right button
+ */
+.sl-c-input-stepper__button--right {
+  inset-inline-end: 0;
+  --sl-button-padding: #{size(1.5)} #{size(1.5)};
+}
+
+.sl-c-input-stepper__icon-add,
+.sl-c-input-stepper__icon-minus {
+  --sl-icon-width: #{size(2)};
+  --sl-icon-height: #{size(2)};
+}
+
+/**
+ * Stepper field note slotted
+ * 1. Targets field notes that are added via a slot
+ */
+slot[name="field-note"]::slotted(*),
+slot[name="error"]::slotted(*) {
+  /**
+   * Field note with error state
+   * 1. Ensures the error styles are still applied even if a slotted field note does not have ?isError applied
+   */
+  .sl-is-error & {
+    --sl-field-note-color: var(--sl-theme-color-border-danger-default);
+  }
+
+  /**
+   * Field note with disabled state
+   * 1. Ensures the disabled styles are still applied even if a slotted field note does not have ?isDisabled applied
+   */
+  .sl-is-disabled & {
+    opacity: var(--sl-theme-opacity-disabled);
+  }
+}

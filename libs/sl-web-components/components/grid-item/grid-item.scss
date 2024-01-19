@@ -1,0 +1,19 @@
+@import '../../tokens/sl/component';
+/* ------------------------------------*\
+  #GRID-ITEM
+\*------------------------------------ */
+
+/**
+ * 1) Item used for the various items within the grid
+ */
+.sl-c-grid__item {
+  height: 100%;
+}
+
+/**
+* By default the min-width of a flex child is set to auto, so when the content grows beyond the available width and it can’t wrap
+* Adding min-width: 0 to allow the item to shrink to fit inside the container
+*/
+:host {
+  min-width: 0;
+}

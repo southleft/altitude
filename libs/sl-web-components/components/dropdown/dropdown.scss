@@ -1,0 +1,79 @@
+@import '../../tokens/sl/component';
+/* ------------------------------------*\
+  #DROPDOWN
+\*------------------------------------ */
+
+/**
+ * Dropdown
+ */
+.sl-c-dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: size(0.5);
+}
+
+/**
+ * Dropdown container
+ */
+.sl-c-dropdown__container {
+  position: relative;
+}
+
+/**
+ * Dropdown arrow
+ */
+.sl-c-dropdown__icon-arrow {
+  transition: transform var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+  transform: rotate(0);
+  transform-origin: center;
+
+  /**
+   * If the dropdown is active, rotate the arrow
+   */
+  .sl-is-active-dropdown & {
+    transform: rotate(180deg);
+  }
+}
+
+/**
+ * Dropdown value
+ * 1. Positions the dropdown panel absolute to the select
+ */
+.sl-c-dropdown__panel {
+  position: absolute;
+  inset-block-start: calc(100% + size(0.25));
+  inset-inline-start: 0;
+  width: 100%;
+  z-index: var(--sl-z-index-400);
+
+  /**
+   * Open the dropdown panel above the input field
+   */
+  .sl-c-dropdown--align-top & {
+    inset-block-start: auto;
+    inset-block-end: calc(100% + size(1));
+  }
+}
+
+/**
+ * Dropdown field note slotted
+ * 1. Targets field notes that are added via a slot
+ */
+slot[name="field-note"]::slotted(*),
+slot[name="error"]::slotted(*) {
+  /**
+   * Field note with error state
+   * 1. Ensures the error styles are still applied even if a slotted field note does not have ?isError applied
+   */
+  .sl-is-error & {
+    --sl-field-note-color: var(--sl-theme-color-border-danger-default);
+  }
+
+  /**
+   * Field note with disabled state
+   * 1. Ensures the disabled styles are still applied even if a slotted field note does not have ?isDisabled applied
+   */
+  .sl-is-disabled & {
+    opacity: var(--sl-theme-opacity-disabled);
+  }
+}

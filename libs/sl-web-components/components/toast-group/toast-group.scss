@@ -1,0 +1,89 @@
+@import '../../tokens/sl/component';
+
+/* ------------------------------------*\
+  #TOAST-GROUP
+\*------------------------------------ */
+
+:host {
+  display: contents;
+}
+
+/**
+ * Toast Group
+ */
+.sl-c-toast-group {
+  display: none;
+  width: 100%;
+  flex-direction: column;
+  gap: size(4.125);
+  position: relative;
+
+  /**
+    * Displays the toast group when it is active
+    */
+  &.sl-is-active {
+    display: flex;
+  }
+}
+
+/**
+ * Toast Group with position
+ */
+.sl-c-toast-group--position-top,
+.sl-c-toast-group--position-bottom {
+  position: fixed;
+  z-index: var(--sl-z-index-500);
+  inset-inline-start: 50%;
+  inset-inline-end: 0;
+  transform: translateX(-50%);
+  padding: size(3);
+  max-width: var(--sl-theme-layout-container-width);
+}
+
+/**
+ * Toast Group positioned to the top of the page
+ */
+.sl-c-toast-group--position-top {
+  inset-block-start: 0;
+  inset-block-end: auto;
+}
+
+/**
+ * Toast Group positioned to the bottom of the page
+ */
+.sl-c-toast-group--position-bottom {
+  inset-block-end: 0;
+  inset-block-start: auto;
+}
+
+/**
+ * Toast Group controls
+ */
+.sl-c-toast-group__controls {
+  display: flex;
+  gap: size(1);
+  width: fit-content;
+  color: var(--sl-theme-color-content-weak);
+  z-index: var(--sl-z-index-top);
+  position: absolute;
+  inset-block-start: size(2);
+  inset-inline-start: size(3);
+
+  /**
+   * Shift the controls to account for the toast group padding
+   */
+  .sl-c-toast-group--position-top &,
+  .sl-c-toast-group--position-bottom & {
+    inset-block-start: size(5);
+    inset-inline-start: size(6);
+  }
+}
+
+/**
+ * A signular toast group control button
+ */
+.sl-c-toast-group__control {
+  width: size(3);
+  height: size(3);
+  --sl-button-padding: 0 0;
+}

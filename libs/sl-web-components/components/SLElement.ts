@@ -1,4 +1,4 @@
-import { html, LitElement} from 'lit';
+import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
@@ -28,6 +28,9 @@ export interface SLEvent extends Event {
  * A base element.
  */
 export class SLElement extends LitElement {
+  /**
+   * Append to the class name. Used for passing in utility classes
+   */
   @property()
   accessor styleModifier: string;
 

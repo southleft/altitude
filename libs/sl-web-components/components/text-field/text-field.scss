@@ -1,0 +1,220 @@
+@import '../../tokens/sl/component';
+/*------------------------------------*\
+  #TEXT-FIELD
+\*------------------------------------*/
+
+/**
+ * Text Field
+ */
+.sl-c-text-field {
+  display: flex;
+  flex-direction: column;
+  gap: size(0.5);
+}
+
+/**
+ * Text field container
+ * - Holds the input element and label
+ */
+.sl-c-text-field__container {
+  position: relative;
+}
+
+/**
+ * Text field input
+ * - The actual input element of the text field
+ */
+.sl-c-text-field__input {
+  @include input-styles;
+  padding-inline-start: var(--sl-text-field-padding-start, size(2));
+  padding-inline-end: var(--sl-text-field-padding-end, size(2));
+
+  /**
+   * Show the placeholder if the label is hidden
+   */
+  .sl-has-hidden-label & {
+    &::placeholder {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  /**
+   * Hide the placeholder by default because the label appears in it's place
+   */
+  &::placeholder {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/**
+ * Text field label
+ * - The floating label that appears inside of the input field
+ */
+.sl-c-text-field__label {
+  @include label-styles;
+  position: absolute;
+  margin: auto;
+  inset-block-start: 0;
+  inset-block-end: 0;
+  inset-inline-start: var(--sl-text-field-padding-start, size(2));
+  display: flex;
+  align-items: center;
+  gap: size(0.5);
+  pointer-events:  var(--sl-text-field-label-pointer-events, none); /* Allows hover to work properly */
+
+  /**
+   * If the input is focused or active, position the label above the input
+   */
+  .sl-c-text-field__input:focus + &,
+  .sl-is-active & {
+    @include sl-theme-typography-body-xs;
+    padding: 0 size(0.5);
+    background-color: var(--sl-text-input-background, var(--sl-theme-color-background-primary-default));
+    inset-block-start: size(-1.25);
+    inset-block-end: auto;
+    inset-inline-start: size(1.5);
+  }
+
+  /**
+   * A fix for the input border being visible through the label when filled and disabled
+   */
+  .sl-c-text-field__input:disabled + & {
+    opacity: 1;
+
+    /**
+     * Applied the opacity to the text only in the label
+     */
+    span {
+      opacity: var(--sl-theme-opacity-disabled);
+    }
+
+    /**
+     * Prevents the input border from showing through the label
+     */
+    &::before {
+      background-color: var(--sl-text-input-background, var(--sl-theme-color-background-primary-default));
+      content: "";
+      display: block;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+      z-index: -1;
+      width: 100%;
+      height: 80%;
+    }
+  }
+}
+
+/**
+ * Text field optional
+ * - The `(Optional)` text that appears in the label if isOptional is true
+ */
+.sl-c-text-field__optional {
+  @include sl-theme-typography-body-xs;
+}
+
+/**
+ * Text field footer
+ * - The container that holds the field notes and max length
+ */
+.sl-c-text-field__footer {
+  display: flex;
+  gap: size(2);
+}
+
+/**
+ * Text field field notes
+ * - The container that holds the field notes
+ */
+.sl-c-text-field__field-notes {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: size(0.5);
+}
+
+/**
+ * Text field slot before and after
+ * - The slots for icons or prefix/suffix text inside the input field
+ */
+.sl-c-text-field__before,
+.sl-c-text-field__after {
+  display: flex;
+  align-items: center;
+  gap: size(0.5);
+  position: absolute;
+  inset-block-start: 0;
+  inset-block-end: 0;
+  margin: auto;
+  --sl-icon-height: size(2.5);
+  --sl-icon-width: size(2.5);
+}
+
+.sl-c-text-field__before {
+  pointer-events: var(--sl-text-field-slot-before-pointer-events, none); /* Allows hover to work properly */
+}
+
+.sl-c-text-field__after {
+  pointer-events: var(--sl-text-field-slot-after-pointer-events, none); /* Allows hover to work properly */
+}
+
+/**
+ * Text field slot before
+ * - The slot for elements positioned absolutely to the left of the input
+ */
+.sl-c-text-field__before {
+  inset-inline-start: size(2);
+}
+
+/**
+ * Text field slot after
+ * - The slot for elements positioned absolutely to the right of the input
+ */
+.sl-c-text-field__after {
+  inset-inline-end: size(2);
+}
+
+/**
+ * Text field asterick
+ * - The asterick that displays if the field is required
+ */
+.sl-c-text-field__asterisk {
+  color: var(--sl-theme-color-border-danger-default);
+}
+
+/**
+ * Text field slots
+ * - Adds spacing between multiple items slotted
+ */
+slot[name="before"],
+slot[name="after"] {
+  display: flex;
+  gap: size(0.5);
+}
+
+/**
+ * Text field note slotted
+ * 1. Targets field notes that are added via a slot
+ */
+slot[name="field-note"]::slotted(*),
+slot[name="error"]::slotted(*) {
+  /**
+   * Field note with error state
+   * 1. Ensures the error styles are still applied even if a slotted field note does not have ?isError applied
+   */
+  .sl-is-error & {
+    --sl-field-note-color: var(--sl-theme-color-border-danger-default);
+  }
+
+  /**
+   * Field note with disabled state
+   * 1. Ensures the disabled styles are still applied even if a slotted field note does not have ?isDisabled applied
+   */
+  .sl-is-disabled & {
+    opacity: var(--sl-theme-opacity-disabled);
+  }
+}

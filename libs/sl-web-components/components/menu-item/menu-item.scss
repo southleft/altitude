@@ -1,0 +1,61 @@
+@import '../../tokens/sl/component';
+/*------------------------------------*\
+ #MENU-ITEM
+\*------------------------------------*/
+
+/**
+ * Set the menu item height for the link & button
+ */
+:host {
+  display: contents;
+  --sl-menu-item-height: #{size(5)};
+}
+
+/**
+ * Menu Item
+ */
+.sl-c-menu-item {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  visibility: visible;
+  opacity: 1;
+  height: var(--sl-menu-item-height);
+  max-height: var(--sl-menu-item-height);
+  padding: 0;
+  margin: 0;
+  transition: opacity var(--sl-theme-animation-duration) var(--sl-theme-animation-timing), visibility var(--sl-theme-animation-duration) var(--sl-theme-animation-timing), max-height var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+  white-space: nowrap;
+
+  /**
+   * Hidden Menu Item
+   */
+  &.sl-is-hidden {
+    visibility: hidden;
+    opacity: 0;
+    max-height: 0;
+  }
+}
+
+/**
+ * Menu Item Header
+ */
+.sl-c-menu-item--header {
+  margin-block-start: var(--sl-menu-item-header-margin-block-start, 0);
+}
+
+/**
+  * Menu Item link
+  * - Link fills up remaining space of the flexbox
+  */
+.sl-c-menu-item__link {
+  flex: 1;
+}
+
+/**
+  * Menu item prefix - content in the "before" slot
+  */
+.sl-c-menu-item__prefix {
+  --sl-icon-width: #{size(3)};
+  --sl-icon-height: #{size(3)};
+}

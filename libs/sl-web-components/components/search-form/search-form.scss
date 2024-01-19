@@ -1,0 +1,62 @@
+@import '../../tokens/sl/component';
+/* ------------------------------------*\
+    #SEARCH-FORM
+\*------------------------------------ */
+
+/**
+ * Search form
+ * 1. Inline form consisting of an form input and button used for search functionality
+ */
+.sl-c-search-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: size(0.5);
+  --sl-text-field-slot-after-pointer-events: all;
+}
+
+/**
+ * Search form container
+ */
+.sl-c-search-form__container {
+  position: relative;
+}
+
+/**
+ * Search form dropdown
+ */
+.sl-c-search-form__dropdown-panel {
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  position: absolute;
+  inset-block-start: calc(100% + #{size(0.25)});
+  inset-inline-start: 0;
+  width: 100%;
+  z-index: var(--sl-z-index-400);
+
+  /**
+   * When the search form is active, show the dropdown panel
+   */
+  .sl-is-active-dropdown & {
+    visibility: visible;
+    opacity: 1;
+    overflow: visible;
+    height: auto;
+  }
+
+  /**
+   * Dropdown panel positioned to the top of the input
+   */
+  .sl-c-search-form--top & {
+    inset-block-start: unset;
+    inset-block-end:  calc(100% + #{size(1)});
+  }
+}
+
+.sl-c-search-form__clear-button {
+  position: relative;
+  inset-inline-end: size(-1);
+}

@@ -1,0 +1,148 @@
+@import '../../tokens/sl/component';
+/* ------------------------------------*\
+    # TOAST
+\*------------------------------------ */
+
+:host {
+  display: contents;
+}
+
+/**
+ * Toast
+ * 1. Message of information, success, warning, or danger to the user
+ */
+.sl-c-toast {
+  @include sl-theme-typography-body-md-bold;
+  position: relative;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  z-index: var(--sl-z-index-500);
+  padding-block-start: size(2);
+  padding-inline-end: size(3);
+  padding-block-end: size(2);
+  padding-inline-start: size(3);
+  width: 100%;
+  border-radius: var(--sl-theme-border-radius-md);
+  background-color: var(--sl-theme-color-background-primary-strong);
+  box-shadow: var(--sl-theme-box-shadow-xl);
+  gap: size(2);
+
+  /**
+   * Display the toast when it is active
+   */
+  &.sl-is-active {
+    display: flex;
+  }
+
+  /**
+   * Add extra padding to fit the close button
+   */
+  &.sl-is-dismissible {
+    padding-inline-end: size(5.5);
+  }
+
+  /*
+   * Adjust vertical alignment of icon when a description is present, or when toast is part of a group
+   */
+  &.sl-has-description {
+    align-items: flex-start;
+  }
+
+  /*
+   * Add extra padding to fit the controls
+   */
+  &.sl-has-controls {
+    padding-inline-start: size(18);
+  }
+}
+
+/**
+ * Creates space for slider controls when the toast is part of a group
+ */
+.sl-is-grouped {
+  padding-inline-start: size(16);
+}
+
+/**
+ * Icon that depicts the toast variant:
+ * - Default, success, warning, or danger
+ */
+.sl-c-toast__icon {
+  --sl-icon-width: #{size(3)};
+  --sl-icon-height: #{size(3)};
+  --sl-icon-fill: var(--sl-theme-color-content-info-default);
+
+  /**
+   * Icon within success toast
+   */
+  .sl-c-toast--success & {
+    --sl-icon-fill: var(--sl-theme-color-content-success-default);
+  }
+
+  /**
+   * Icon within warning toast
+   */
+  .sl-c-toast--warning & {
+    --sl-icon-fill: var(--sl-theme-color-content-warning-default);
+  }
+
+  /**
+   * Icon within danger toast
+   */
+  .sl-c-toast--danger & {
+    --sl-icon-fill: var(--sl-theme-color-content-danger-default);
+  }
+}
+
+/**
+ * Toast body
+ * 1. Wraps the Toast title and description
+ * 2. Allows the body to take up the remaining space that the icon doesn't occupy
+ */
+.sl-c-toast__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  gap: size(0.5);
+}
+
+/**
+ * Toast description
+ */
+.sl-c-toast__description {
+  @include sl-theme-typography-body-sm;
+  color: var(--sl-theme-color-content-weak);
+}
+
+/**
+ * Toast action buttons that may be slotted
+ */
+.sl-c-toast__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: size(1);
+  align-self: center;
+}
+
+/**
+ * Close button
+ * 1. Displays when the toast is dismissible
+ */
+.sl-c-toast__close-button {
+  position: absolute;
+  inset-inline-end: size(0.4);
+  inset-block-start: size(0.4);
+  --sl-focus-outline-offset: calc(#{var(--sl-theme-border-width-md)} * -1);
+}
+
+/**
+ * Taost close icon
+ * - The X icon in the header to close the toast
+ */
+.sl-c-toast__icon-close {
+  --sl-icon-width: #{size(2)};
+  --sl-icon-height: #{size(2)};
+}

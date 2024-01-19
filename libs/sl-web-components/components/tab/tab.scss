@@ -1,0 +1,76 @@
+@import '../../tokens/sl/component';
+/*------------------------------------*\
+  #TAB
+\*------------------------------------*/
+
+:host {
+  display: contents;
+}
+
+/**
+ * Tab
+ */
+.sl-c-tab {
+  @include sl-theme-typography-body-sm;
+  margin: 0;
+  padding: size(1) size(2);
+  background-color: var(--sl-theme-color-background-transparent-default);
+  color: var(--sl-theme-color-content-default);
+  display: flex;
+  gap: size(0.75);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: none;
+  border-bottom: var(--sl-theme-border-width-md) solid transparent;
+  transition: all var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+  cursor: pointer;
+  white-space: nowrap;
+  width: var(--sl-tab-width, 'fit-content');
+  --sl-icon-width: #{size(3)};
+  --sl-icon-height: #{size(3)};
+
+  /**
+   * Tab with hover that is not active or disabled
+   */
+  &:hover:not(:active, :disabled) {
+    background-color: var(--sl-theme-color-background-secondary-default);
+  }
+
+  /**
+   * Tab with active state (when pressed)
+   */
+   &:active:not(:disabled) {
+    background-color: var(--sl-theme-color-background-transparent-default);
+  }
+  /**
+   * Tab with focus visible state
+   */
+  &:focus-visible {
+    @include focus-inset;
+  }
+
+  /**
+   * Tab with disabled state
+   */
+   &:disabled {
+    cursor: not-allowed;
+    opacity: var(--sl-theme-opacity-disabled);
+  }
+
+  /**
+   * Tab with active state
+   */
+  &.sl-is-active {
+    @include sl-theme-typography-body-sm-bold;
+    color: var(--sl-theme-color-content-accent-default);
+    border-bottom-color: var(--sl-theme-color-border-accent-default);
+  }
+}
+
+/**
+ * Allows for click events to only be on the button element and not slotted items
+ */
+::slotted(*) {
+  pointer-events: none;
+}

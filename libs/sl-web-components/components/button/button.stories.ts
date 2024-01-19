@@ -1,6 +1,7 @@
 import { expect, jest } from '@storybook/jest';
 import { userEvent, within } from '@storybook/testing-library';
 import { html } from 'lit';
+import '../../.storybook/components/f-po/f-po';
 import { spread } from '../../directives/spread';
 import '../icon/icons/done';
 import '../icon/icons/send';
@@ -9,8 +10,13 @@ import './button';
 export default {
   title: 'Components/Button',
   component: 'sl-button',
-  parameters: { status: { type: 'stable' } },
-  tags: ['autodocs'],
+  parameters: {
+    status: { type: 'beta' },
+    layout: 'centered',
+    actions: {
+      handles: ['click']
+    }
+  },
   argTypes: {
     type: {
       options: ['button', 'submit', 'reset'],

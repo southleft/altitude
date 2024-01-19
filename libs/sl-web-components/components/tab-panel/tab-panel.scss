@@ -1,0 +1,34 @@
+@import '../../tokens/sl/component';
+/*------------------------------------*\
+  #TAB-PANEL
+\*------------------------------------*/
+
+:host {
+  display: contents;
+}
+
+/**
+ * Tab Panel
+ */
+.sl-c-tab-panel {
+  @include sl-theme-typography-body-md;
+  margin: 0;
+  padding-block-start: size(2);
+  flex-direction: column;
+  gap: size(2);
+  display: none;
+
+  /**
+   * Tab panel with focus visible state
+   */
+   &:focus-visible {
+    @include focus-inset;
+  }
+
+  /**
+   * Tab panel active state to show the panel
+   */
+  &.sl-is-active {
+    display: flex;
+  }
+}

@@ -1,0 +1,30 @@
+@import '../../tokens/sl/component';
+/*------------------------------------*\
+  #FIELD-NOTE
+\*------------------------------------*/
+
+/**
+ * Field Note
+ */
+.sl-c-field-note {
+  @include sl-theme-typography-body-sm;
+  display: flex;
+  align-items: center;
+  gap: size(1);
+  color: var(--sl-field-note-color, var(--sl-theme-color-content-weak));
+  margin-inline-start: var(--sl-field-note-margin-inline-start, 0);
+}
+
+/**
+ * Field note with error state
+ */
+.sl-is-error {
+  color: var(--sl-theme-color-content-danger-default);
+}
+
+/**
+ * Field note with disabled state
+ */
+.sl-is-disabled {
+  opacity: var(--sl-theme-opacity-disabled);
+}

@@ -1,0 +1,52 @@
+@import '../../tokens/sl/component';
+/* ------------------------------------*\
+  #ICON
+\*------------------------------------ */
+
+/**
+ * Icons span wrapper
+ */
+.sl-c-icon {
+  display: block;
+}
+
+/**
+ * Graphic used to supplement text or represent functionality
+ */
+::slotted(svg),
+svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  fill: var(--sl-icon-fill, currentColor);
+  height: var(--sl-icon-height, size(2));
+  width: var(--sl-icon-width, size(2));
+
+  .sl-c-icon--md & {
+    height: size(2.5);
+    width: size(2.5);
+  }
+
+  /**
+   * LG icon
+   */
+  .sl-c-icon--lg & {
+    height: size(3);
+    width: size(3);
+  }
+
+  /**
+   * XL icon
+   */
+  .sl-c-icon--xl & {
+    height: size(4);
+    width: size(4);
+  }
+
+  /**
+   * Rotate the icon 90 degrees
+   */
+  .sl-c-icon--rotate & {
+    transform: rotate(90deg);
+  }
+}

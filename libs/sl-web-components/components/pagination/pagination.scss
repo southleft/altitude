@@ -1,0 +1,99 @@
+@import '../../tokens/sl/component';
+/*------------------------------------*\
+  #PAGINATION
+\*------------------------------------*/
+
+/**
+ * Pagination wrapper
+ */
+.sl-c-pagination {
+  @include sl-theme-typography-body-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/**
+ * Pagination has before or after
+ * Add modifier classes to parent nav element if before and after slots are defined
+ */
+.sl-c-pagination--has-before,
+.sl-c-pagination--has-after {
+  justify-content: space-between;
+  gap: size(2);
+}
+
+/**
+ * Slot for content to be inserted after pagination
+ */
+.sl-c-pagination__after ::slotted(*) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sl-pagination-footer,
+.sl-pagination-inpage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.sl-pagination-footer-mobile {
+  display: none;
+}
+
+@media screen and (width <= 786px) {
+  .sl-pagination-footer-mobile {
+    display: block;
+    width: 100%;
+
+    .sl-c-pagination__list {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      width: 100%;
+    }
+  }
+
+  .sl-pagination-footer {
+    display: none;
+  }
+}
+
+/**
+ * 1) Ordered list of links that allows for navigation to next/previous content
+ */
+.sl-c-pagination__list {
+  display: flex; /* 1 */
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+}
+
+/**
+ * pagination text with calculation
+ */
+.sl-c-pagination-label {
+  flex-basis: 180px;
+}
+
+/**
+ * pagination dropdown
+ */
+.sl-c-pagination-dropdwon {
+  display: flex;
+  flex-basis: 180px;
+  justify-content: end;
+}
+
+.sl-c-contextual-pagination-list-item {
+  display: block;
+
+  .sl-c-contextual-pagination-item-text {
+    padding-inline: 8px;
+  }
+}

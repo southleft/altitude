@@ -1,0 +1,24 @@
+@import '../../tokens/sl/component';
+/* ------------------------------------*\
+  #BREADCRUMBS
+\*------------------------------------ */
+
+/**
+ * An ordered list of navigational hierarchy showing the user where they are on the site
+ */
+.sl-c-breadcrumbs__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: size(0.5);
+}
+
+.sl-c-breadcrumbs__panel {
+  --sl-panel-container-width: max-content;
+  --sl-panel-container-padding: #{size(1)} 0 #{size(1)} 0;
+  --sl-panel-offset: #{size(1)};
+}

@@ -1,0 +1,201 @@
+@import '../../tokens/sl/component';
+/* ------------------------------------*\
+  #STEPPER-ITEM
+\*------------------------------------ */
+
+/**
+ * Stepper item
+ */
+.sl-c-stepper-item {
+  @include sl-theme-typography-body-md-bold;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  gap: size(1.5);
+
+  /**
+   * Vertical variant
+   */
+  &.sl-c-stepper-item--vertical {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+}
+
+/**
+ * Stepper item step
+ * - The container that holds the counter and hr
+ */
+.sl-c-stepper-item__step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: size(1.5);
+  inset-inline-start: size(6.5);
+
+  /**
+   * Vertical variant
+   */
+  .sl-c-stepper-item--vertical & {
+    inset-inline-start: 0;
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+}
+
+/**
+ * Stepper item counter
+ * - The container that holds the step number or check icon
+ */
+.sl-c-stepper-item__counter {
+  min-width: size(4);
+  max-width: size(4);
+  height: size(4);
+  border-radius: 50%;
+  background-color: var(--sl-theme-color-background-transparent);
+  border: 1.5px solid var(--sl-theme-color-content-weak);
+  color: var(--sl-theme-color-content-weak);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /**
+   * Active state
+   */
+  .sl-is-active & {
+    background-color: var(--sl-theme-color-background-accent-default);
+    border-color: var(--sl-theme-color-border-accent-default);
+    color: var(--sl-theme-color-content-accent-weak);
+  }
+
+  /**
+   * Completed state
+   */
+  .sl-is-complete & {
+    background-color: var(--sl-theme-color-background-transparent);
+    border-color: var(--sl-theme-color-border-accent-default);
+    color: var(--sl-theme-color-content-accent-default);
+  }
+}
+
+/**
+ * Stepper item hr
+ * - The hr that displays either below of next to the counter
+ */
+.sl-c-stepper-item__hr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: var(--sl-theme-color-border-weak);
+  margin: auto;
+  height: 1px;
+  width: 92px;
+
+  /**
+   * Vertical variant
+   */
+  .sl-c-stepper-item--vertical & {
+    height: 35px;
+    width: 1px;
+  }
+
+  /**
+   * Hide the hr if is the last item
+   */
+  .sl-is-last & {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/**
+ * Stepper item content
+ * - The container that holds the icon, title, and description
+ */
+.sl-c-stepper-item__content {
+  display: flex;
+  flex-direction: row;
+  gap: size(0.75);
+  width: max-content;
+  max-width: size(17);
+  color: var(--sl-theme-color-content-weak);
+  --sl-icon-width: #{size(2.5)};
+  --sl-icon-height: #{size(2.5)};
+
+  /**
+   * Active and completed state
+   */
+  .sl-is-active &,
+  .sl-is-complete & {
+    color: var(--sl-theme-color-content-accent-default);
+  }
+
+  /**
+   * Vertical variant
+   */
+  .sl-c-stepper-item--vertical & {
+    max-width: fit-content;
+    padding-block-start: size(0.75);
+  }
+}
+
+/**
+ * Stepper item body
+ * - The container that holds the title and description
+ */
+.sl-c-stepper-item__body {
+  display: flex;
+  flex-direction: column;
+  gap: size(0.25);
+}
+
+/**
+ * Stepper item icon
+ * - The icon that appears within the content container
+ */
+.sl-c-stepper-item__icon {
+  /**
+   * Vertical variant
+   */
+  .sl-c-stepper-item--vertical & {
+    margin-block-start: size(0.125);
+    align-items: flex-start;
+  }
+}
+
+/**
+ * Stepper item icon, title, and description
+ * - Align the slotted items in a row
+ */
+.sl-c-stepper-item__icon,
+.sl-c-stepper-item__title,
+.sl-c-stepper-item__description {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: size(0.5);
+
+  /**
+   * Vertical variant
+   */
+  .sl-c-stepper-item--vertical & {
+    text-align: left;
+    justify-content: flex-start;
+  }
+}
+
+/**
+ * Stepper item description
+ * - The text that appears below the title
+ */
+.sl-c-stepper-item__description {
+  @include sl-theme-typography-body-sm;
+  color: var(--sl-theme-color-content-weak);
+}

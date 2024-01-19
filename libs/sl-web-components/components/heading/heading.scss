@@ -1,0 +1,90 @@
+@import '../../tokens/sl/component';
+/*------------------------------------*\
+  #HEADING
+\*------------------------------------*/
+
+/**
+ * Heading
+ */
+.sl-c-heading {
+  @include sl-theme-typography-heading-sm;
+  color: var(--sl-theme-color-content-default);
+  margin: 0;
+
+  /**
+   * Heading with bold
+   */
+  &.sl-is-bold {
+    @include sl-theme-typography-heading-sm-bold;
+  }
+}
+
+/**
+ * Heading medium
+ */
+.sl-c-heading--md {
+  @include sl-theme-typography-heading-md;
+
+  /**
+   * Heading medium with bold
+   */
+  &.sl-is-bold {
+    @include sl-theme-typography-heading-md-bold;
+  }
+}
+
+/**
+ * Heading large
+ */
+.sl-c-heading--lg {
+  @include sl-theme-typography-heading-lg;
+
+  /**
+   * Heading large with bold
+   */
+  &.sl-is-bold {
+    @include sl-theme-typography-heading-lg-bold;
+  }
+}
+
+/**
+ * Heading display small
+ */
+.sl-c-heading--display-sm {
+  @include sl-theme-typography-display-sm;
+
+  /**
+   * Heading display small with bold
+   */
+  &.sl-is-bold {
+    @include sl-theme-typography-display-sm-bold;
+  }
+}
+
+/**
+ * Heading display medium
+ */
+.sl-c-heading--display-md {
+  @include sl-theme-typography-display-md;
+
+  /**
+   * Heading display medium with bold
+   */
+  &.sl-is-bold {
+    @include sl-theme-typography-display-md-bold;
+  }
+}
+
+/**
+ * Heading display large
+ */
+.sl-c-heading--display-lg {
+  @include sl-theme-typography-display-lg;
+
+  /**
+   * Heading display large with bold
+   */
+  &.sl-is-bold {
+    @include sl-theme-typography-display-lg-bold;
+  }
+}

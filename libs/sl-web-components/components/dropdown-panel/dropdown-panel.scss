@@ -1,0 +1,69 @@
+@import '../../tokens/sl/component';
+/* ------------------------------------*\
+  #DROPDOWN-PANEL
+\*------------------------------------ */
+
+/**
+ * Dropdown panel
+ */
+.sl-c-dropdown-panel {
+  background-color: var(--sl-theme-color-background-primary-strong);
+  box-shadow: var(--sl-panel-box-shadow, var(--sl-theme-box-shadow-lg));
+  border-start-start-radius: var(--sl-dropdown-panel-border-block-start-left-radius, var(--sl-theme-border-radius));
+  border-start-end-radius: var(--sl-dropdown-panel-border-block-start-right-radius, var(--sl-theme-border-radius));
+  border-end-end-radius: var(--sl-dropdown-panel-border-block-end-right-radius, var(--sl-theme-border-radius));
+  border-end-start-radius: var(--sl-dropdown-panel-border-block-end-left-radius, var(--sl-theme-border-radius));
+  height: auto;
+  z-index: var(--sl-z-index-400);
+}
+
+/**
+ * Give padding and border styling to panel body
+ */
+.sl-c-dropdown-panel__body {
+  padding: size(0.5) 0;
+  border-start-start-radius: var(--sl-dropdown-panel-border-block-start-left-radius, var(--sl-theme-border-radius));
+  border-start-end-radius: var(--sl-dropdown-panel-border-block-start-right-radius, var(--sl-theme-border-radius));
+  border-end-end-radius: var(--sl-dropdown-panel-border-block-end-right-radius, var(--sl-theme-border-radius));
+  border-end-start-radius: var(--sl-dropdown-panel-border-block-end-left-radius, var(--sl-theme-border-radius));
+
+  /**
+  * Change border radius on body container if header is present
+  */
+  .sl-has-header & {
+    border-radius: 0 0 var(--sl-theme-border-radius) var(--sl-theme-border-radius);
+  }
+
+  /**
+  * Change border radius on body container if footer is present
+  */
+  .sl-has-footer & {
+    border-radius: var(--sl-theme-border-radius) var(--sl-theme-border-radius) 0 0;
+  }
+
+  /**
+  * Adds a max height and scrolling of the panel
+  */
+  .sl-has-scroll & {
+    overflow: auto;
+    max-height: size(20);
+  }
+}
+
+/**
+ * Optional dropdown panel header
+ */
+.sl-c-dropdown-panel__header {
+  padding: size(1);
+  border: var(--sl-theme-border-width) solid var(--sl-dropdown-panel-border-color, var(--sl-theme-color-border-default));
+  border-radius: var(--sl-theme-border-radius) var(--sl-theme-border-radius) 0 0;
+  margin-block-end: -1px;
+}
+
+/**
+ * Dropdown panel footer
+ * - Add padding to footer
+ */
+.sl-c-dropdown-panel__footer {
+  padding: size(1);
+}
