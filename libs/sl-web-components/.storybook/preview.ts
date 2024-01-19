@@ -4,7 +4,7 @@ import type { Preview } from '@storybook/web-components';
 globalThis.enAutoRegistry = true;
 
 // Creating a style element for headStyles and appending it to the document head
-import headStyles from 'THEME/head.scss';
+import headStyles from '../tokens/sl/head.scss';
 const headStyleElement = document.createElement('style');
 headStyleElement.innerHTML = headStyles;
 document.head.appendChild(headStyleElement);

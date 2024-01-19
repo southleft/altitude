@@ -3,9 +3,7 @@ const StyleDictionary = require('style-dictionary');
 // Look for args passed on the command line
 const args = require('minimist')(process.argv.slice(2));
 
-// If no theme arg was passed, default to Primary theme
 const theme = 'sl';
-
 console.log(`🚧 Compiling tokens with the ${theme.toUpperCase()} theme`);
 
 StyleDictionary.registerFormat({

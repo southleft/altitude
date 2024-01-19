@@ -7,4 +7,4 @@ export default {
   component: 'icon-grid'
 };
 
-export const IconGrid = (args, context) => html` <icon-grid theme=${context.globals.theme}></icon-grid> `;
+export const IconGrid = (args, context) => html` <icon-grid></icon-grid> `;

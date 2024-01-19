@@ -1,10 +1,7 @@
 const path = require('path');
 const glob = require('glob');
 const fs = require('fs');
-const CopyPlugin = require('copy-webpack-plugin');
-const NormalModuleReplacementPlugin = require('webpack').NormalModuleReplacementPlugin;
 
-// Define components for entry definition
 const components = glob.sync('./components/**/*.ts').reduce((acc, file) => {
   // Exclude icon because there are some specific things that need to happen based on the URL inclusion of `icon.js`
   // in order for routing to work correctly
@@ -30,24 +27,10 @@ const components = glob.sync('./components/**/*.ts').reduce((acc, file) => {
   return acc;
 }, {});
 
-/**
- * The webpack config is a callback so that we may pass in `env` and set the Design System theme (which defaults
- * to the `sl` theme). Setting a theme affects the compilation in two ways. First, it replaces out
- * any JS imports with the proper theme path. So `import THEME/foo.scss` will try to import the passed
- * env theme's `foo.scss`. Secondly, we adjust the Sass importers so you can `@import THEME/foo.scss`.
- * The Sass adjustment works the same way and allows you to import theme overrides during compilation.
- */
 module.exports = (env) => {
-  const theme = env.theme || 'sl';
-
-  const themePath = (file = '') => path.resolve(__dirname, `./tokens/${theme}/${file}`);
-
   const entry = () => {
     let entryObj = {
       ...components,
-      theme: {
-        import: path.resolve(__dirname, `./tokens/${theme}/head.scss`)
-      },
       _register: './directives/register.ts',
       icon: './components/icon/icon.ts',
       bundle: Object.entries(components)
@@ -61,45 +44,10 @@ module.exports = (env) => {
     return entryObj;
   };
 
-  const sassLoader = {
-    loader: 'sass-loader',
-    options: {
-      sassOptions: {
-        importer: [
-          function themeImport(url) {
-            const matches = url.match(/^THEME\/(.*)/);
-            if (!matches) {
-              return null;
-            }
-
-            const node_modules = path.resolve(process.cwd(), 'node_modules');
-            const cachedThemePath = path.resolve(node_modules, './.cache/storybook-theme/theme');
-            if (fs.existsSync(cachedThemePath)) {
-              this.webpackLoaderContext.addDependency(fs.realpathSync(cachedThemePath));
-            }
-
-            const overridePath = fs.realpathSync(themePath(matches[1]));
-            this.webpackLoaderContext.addDependency(overridePath);
-            if (fs.existsSync(overridePath)) {
-              return {
-                file: overridePath
-              };
-            } else {
-              return {
-                contents: ''
-              };
-            }
-          }
-        ]
-      }
-    }
-  };
-
   return {
     entry: entry(),
     output: {
       publicPath: '',
-      path: path.resolve(__dirname, 'dist', theme),
       filename: (pathData) => {
         switch (pathData.chunk.name) {
           case '_register':
@@ -116,20 +64,6 @@ module.exports = (env) => {
       outputModule: true
     },
     mode: 'production',
-    plugins: [
-      new NormalModuleReplacementPlugin(/(^|!)THEME(.*)/, function (resource) {
-        resource.request = resource.request.replace(/(^|!)THEME/, '$1' + themePath());
-      }),
-      !env.entry || env.entry === 'all'
-        ? new CopyPlugin({
-            patterns: [
-              { from: `icons/svgs/*.svg`, to: path.resolve(__dirname, 'dist', `${theme}`, 'icons', '[name][ext]') },
-              { from: `tokens/${theme}/data/tokens.json`, to: 'tokens' },
-              { from: `tokens/${theme}/head.scss`, to: 'scss' }
-            ]
-          })
-        : null
-    ],
     module: {
       rules: [
         {
@@ -142,16 +76,13 @@ module.exports = (env) => {
         },
         {
           test: /head\.scss$/,
-          use: [sassLoader],
-          type: 'asset/resource',
-          generator: {
-            filename: `${theme}.css`
-          }
+          use: ['sass-loader'],
+          type: 'asset/resource'
         },
         {
           test: /variables\.scss$/,
           use: [
-            sassLoader,
+            'sass-loader',
             {
               options: {
                 name: '[name].[ext]',
@@ -166,7 +97,7 @@ module.exports = (env) => {
         {
           test: /\.scss$/,
           exclude: /head\.scss$/,
-          use: ['css-loader', sassLoader]
+          use: ['css-loader', 'sass-loader']
         },
         {
           test: /\.svg$/,
