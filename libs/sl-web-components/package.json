@@ -5,12 +5,27 @@
   "packageManager": "yarn@1.22.19",
   "scripts": {
     "start": "storybook dev -p 6006",
+    "build": "del-cli dist && npm run generate-icons && webpack && tsc && npm run build:custom-elements.json",
     "build-storybook": "storybook build",
     "build:tokens": "node ./tokens/token-config.js",
+    "build:custom-elements.json": "wca analyze \"components/*/*.ts\" --outFile custom-elements.json",
     "generate-icons": "node ./icons/generate-icons.js",
     "plop": "plop component",
     "plop:page": "plop page",
     "plop:recipe": "plop recipe"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./dist/sl/sl.css": "./dist/sl/sl.css",
+    "./dist/sl/icons/*": "./dist/sl/icons/*",
+    "./dist/sl/iconfonts/*": "./dist/sl/iconfonts/*",
+    "./dist/sl/tokens/*": "./dist/sl/tokens/*",
+    "./tokens/sl/head.scss": "./tokens/sl/head.scss",
+    "./dist/sl/components/*": "./dist/sl/components/*",
+    "./dist/sl/directives/*": "./dist/sl/directives/*",
+    "./components/*": "./components/*.ts"
   },
   "dependencies": {
     "lit": "^3.1.1"
@@ -32,9 +47,13 @@
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
     "babel-loader": "^9.1.3",
+    "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^6.9.1",
     "datauri": "^4.1.0",
+    "del-cli": "^5.1.0",
     "eslint": "^8.56.0",
     "eslint-plugin-storybook": "^0.6.15",
+    "file-loader": "^6.2.0",
     "plop": "^4.0.1",
     "raw-loader": "^4.0.2",
     "react": "^18.2.0",
@@ -43,10 +62,13 @@
     "scale-that-svg": "^1.0.6",
     "storybook": "^7.6.7",
     "style-dictionary": "^3.9.2",
-    "webfonts-generator": "^0.4.0"
+    "web-component-analyzer": "^2.0.0",
+    "webfonts-generator": "^0.4.0",
+    "webpack-cli": "^4.7.2"
   },
   "resolutions": {
-    "@lit/reactive-element": "^2.0.3"
+    "@lit/reactive-element": "^2.0.3",
+    "react": "18.2.0"
   },
   "eslintConfig": {
     "extends": [

@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/web-components-webpack5';
+
 const NormalModuleReplacementPlugin = require('webpack').NormalModuleReplacementPlugin;
 const path = require('path');
 const fs = require('fs');

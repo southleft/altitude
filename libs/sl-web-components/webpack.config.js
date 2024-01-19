@@ -1,4 +1,34 @@
+const path = require('path');
+const glob = require('glob');
+const fs = require('fs');
+const CopyPlugin = require('copy-webpack-plugin');
 const NormalModuleReplacementPlugin = require('webpack').NormalModuleReplacementPlugin;
+
+// Define components for scoped styles
+const components = glob.sync('./components/**/*.ts').reduce((acc, file) => {
+  // Exclude icon because there are some specific things that need to happen based on the URL inclusion of `icon.js`
+  // in order for routing to work correctly
+  if (file.match(/icon\.ts$/)) {
+    return acc;
+  }
+
+  const contents = fs.readFileSync(file);
+  const isIcon = file.match(/icon\/icons\/.*\.ts$/);
+
+  // Custom Components
+  // Note: is SLElement extension or icon file path.
+  if (contents.indexOf('extends SLElement') >= 0 || isIcon) {
+    // Custom options for icons.
+    acc[`${isIcon ? 'icon-' : ''}` + path.parse(file).name] = isIcon
+      ? {
+          import: file,
+          filename: 'components/icon/icons/' + path.parse(file).name + '.js'
+        }
+      : file;
+  }
+
+  return acc;
+}, {});
 
 /**
  * The webpack config is a callback so that we may pass in `env` and set the Design System theme (which defaults

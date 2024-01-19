@@ -1,0 +1,226 @@
+{
+  "version": "experimental",
+  "tags": [
+    {
+      "name": "sl-button",
+      "path": "./components/button/button.ts",
+      "description": "Component: sl-button\n- Buttons serve as interactive elements that enable users to execute actions or transition to different sections.",
+      "attributes": [
+        {
+          "name": "type",
+          "description": "Type of button",
+          "type": "\"button\" | \"submit\" | \"reset\""
+        },
+        {
+          "name": "variant",
+          "description": "Style variant\n- **secondary** renders the button used for primary actions\n- **danger** renders the button used for caution actions",
+          "type": "\"secondary\" | \"tertiary\" | \"danger\""
+        },
+        {
+          "name": "target",
+          "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
+          "type": "\"_blank\" | \"_self\" | \"_parent\" | \"_top\""
+        },
+        {
+          "name": "href",
+          "description": "URL if this is an <a> element - this swaps <button> for <a>",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "description": "Indicates the name when submitted with form data.",
+          "type": "string"
+        },
+        {
+          "name": "label",
+          "description": "Indicates the aria label to apply to the button.",
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "description": "Indicates the value associated with the name when submitted with form data.",
+          "type": "string"
+        },
+        {
+          "name": "isPressed",
+          "description": "Indicates this button is a toggle button and whether it is pressed or not.",
+          "type": "boolean | \"mixed\""
+        },
+        {
+          "name": "isDisabled",
+          "description": "Disabled attribute",
+          "type": "boolean"
+        },
+        {
+          "name": "isExpanded",
+          "description": "Indicates this button is a toggle button and whether it is pressed or not.",
+          "type": "boolean"
+        },
+        {
+          "name": "hideText",
+          "description": "Visually hide button text (but text is still accessible to assistive technology)\n1. Use this for icon-only buttons for accessibility",
+          "type": "boolean"
+        },
+        {
+          "name": "fullWidth",
+          "description": "Full width button",
+          "type": "boolean"
+        },
+        {
+          "name": "ariaControls",
+          "description": "aria-controls attribute on the button\n1. Used for items like the buttons attached drawers",
+          "type": "string"
+        },
+        {
+          "name": "styleModifier",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "el",
+          "type": "string",
+          "default": "\"sl-button\""
+        },
+        {
+          "name": "type",
+          "attribute": "type",
+          "description": "Type of button",
+          "type": "\"button\" | \"submit\" | \"reset\""
+        },
+        {
+          "name": "variant",
+          "attribute": "variant",
+          "description": "Style variant\n- **secondary** renders the button used for primary actions\n- **danger** renders the button used for caution actions",
+          "type": "\"secondary\" | \"tertiary\" | \"danger\""
+        },
+        {
+          "name": "target",
+          "attribute": "target",
+          "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
+          "type": "\"_blank\" | \"_self\" | \"_parent\" | \"_top\""
+        },
+        {
+          "name": "href",
+          "attribute": "href",
+          "description": "URL if this is an <a> element - this swaps <button> for <a>",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "attribute": "name",
+          "description": "Indicates the name when submitted with form data.",
+          "type": "string"
+        },
+        {
+          "name": "label",
+          "attribute": "label",
+          "description": "Indicates the aria label to apply to the button.",
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "attribute": "value",
+          "description": "Indicates the value associated with the name when submitted with form data.",
+          "type": "string"
+        },
+        {
+          "name": "isPressed",
+          "attribute": "isPressed",
+          "description": "Indicates this button is a toggle button and whether it is pressed or not.",
+          "type": "boolean | \"mixed\""
+        },
+        {
+          "name": "isDisabled",
+          "attribute": "isDisabled",
+          "description": "Disabled attribute",
+          "type": "boolean"
+        },
+        {
+          "name": "isExpanded",
+          "attribute": "isExpanded",
+          "description": "Indicates this button is a toggle button and whether it is pressed or not.",
+          "type": "boolean"
+        },
+        {
+          "name": "hideText",
+          "attribute": "hideText",
+          "description": "Visually hide button text (but text is still accessible to assistive technology)\n1. Use this for icon-only buttons for accessibility",
+          "type": "boolean"
+        },
+        {
+          "name": "fullWidth",
+          "attribute": "fullWidth",
+          "description": "Full width button",
+          "type": "boolean"
+        },
+        {
+          "name": "ariaControls",
+          "attribute": "ariaControls",
+          "description": "aria-controls attribute on the button\n1. Used for items like the buttons attached drawers",
+          "type": "string"
+        },
+        {
+          "name": "styleModifier",
+          "attribute": "styleModifier",
+          "type": "string"
+        }
+      ],
+      "slots": [
+        {
+          "name": "before",
+          "description": "Content to display before the Button text, typically an Icon"
+        },
+        {
+          "name": "after",
+          "description": "Content to display after the Button text, typically an Icon"
+        }
+      ]
+    },
+    {
+      "name": "sl-icon",
+      "path": "./components/icon/icon.ts",
+      "description": "Component: sl-icon-[ICON_NAME]",
+      "attributes": [
+        {
+          "name": "iconTitle",
+          "description": "Icon title",
+          "type": "string"
+        },
+        {
+          "name": "size",
+          "description": "Icon size\n- Default size is 16px\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)",
+          "type": "\"md\" | \"lg\" | \"xl\""
+        },
+        {
+          "name": "styleModifier",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "el",
+          "type": "string",
+          "default": "\"sl-icon\""
+        },
+        {
+          "name": "iconTitle",
+          "attribute": "iconTitle",
+          "description": "Icon title",
+          "type": "string"
+        },
+        {
+          "name": "size",
+          "attribute": "size",
+          "description": "Icon size\n- Default size is 16px\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)",
+          "type": "\"md\" | \"lg\" | \"xl\""
+        },
+        {
+          "name": "styleModifier",
+          "attribute": "styleModifier",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,28 @@ import { html, LitElement} from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
+export interface SLElementProps {
+  styleModifier?: string;
+}
+
+export interface DetailObj {
+  [key: string]: unknown;
+}
+
+export interface SLDispatchProps {
+  e?: Event;
+  eventName: string;
+  detailObj?: DetailObj;
+  optionsObj?: { [key: string]: unknown };
+}
+
+export interface SLEvent extends Event {
+  detail: {
+    originalEvent: Event;
+    detailObj: DetailObj;
+  };
+}
+
 /**
  * A base element.
  */
