@@ -7,10 +7,9 @@ const config: StorybookConfig = {
     './recipes/**/*.stories.@(js|jsx|ts|tsx|mdx)'
   ],
   addons: [
-    "@storybook/addon-links",
     '@storybook/addon-essentials',
     "@storybook/addon-a11y",
-    "@etchteam/storybook-addon-status"
+    "@etchteam/storybook-addon-status",
   ],
   framework: {
     name: "@storybook/web-components-webpack5",

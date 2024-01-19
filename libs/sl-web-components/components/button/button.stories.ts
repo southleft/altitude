@@ -1,3 +1,5 @@
+import { expect, jest } from '@storybook/jest';
+import { userEvent, within } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../icon/icons/done';
@@ -162,4 +164,55 @@ export const WithHref = Template.bind({});
 WithHref.args = {
   href: 'https://www.google.com/',
   target: '_blank'
+};
+
+export const WithSubmit = () =>
+  html`<form
+    data-testid="form"
+    action="#"
+    @submit=${(e) => {
+      e.preventDefault();
+      onSubmit();
+    }}
+  >
+    <input type="hidden" name="test" value="test" />
+    <div style="display: flex; gap: 16px;">
+      <sl-button data-testid="submit" type="submit">Submit</sl-button>
+      <sl-button data-testid="reset" type="reset" variant="secondary">Reset</sl-button>
+    </div>
+  </form>`;
+
+/*------------------------------------*\
+  #STORYBOOK TESTS
+\*------------------------------------*/
+
+DefaultIconAfter.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  const iconAfterSlot: any = canvas.queryByTestId('icon-after')?.shadowRoot?.querySelector('[class*="sl-c-icon"]');
+  expect(iconAfterSlot).toBeInTheDocument();
+};
+
+DefaultIconBefore.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  const iconBefore = canvas.queryByTestId('icon-before')?.shadowRoot?.querySelector('[class*="sl-c-icon"]');
+  expect(iconBefore).toBeInTheDocument();
+};
+
+const onSubmit = jest.fn();
+WithSubmit.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  const submit = canvas.queryByTestId('submit')?.shadowRoot?.firstElementChild as any;
+  const reset = canvas.queryByTestId('reset')?.shadowRoot?.firstElementChild as any;
+
+  expect(submit).toBeInTheDocument();
+  expect(reset).toBeInTheDocument();
+
+  if (!submit || !reset) {
+    return null;
+  }
+
+  await userEvent.click(submit);
+  await userEvent.click(reset);
+  expect(onSubmit).toHaveBeenCalled();
+  reset.blur();
 };
