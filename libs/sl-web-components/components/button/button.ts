@@ -15,7 +15,6 @@ export class SLButton extends SLElement {
   static el = 'sl-button';
 
   static get styles() {
-    console.log("STYLES: ", styles);
     return unsafeCSS(styles);
   }
 

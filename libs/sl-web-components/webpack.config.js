@@ -4,7 +4,7 @@ const fs = require('fs');
 const CopyPlugin = require('copy-webpack-plugin');
 const NormalModuleReplacementPlugin = require('webpack').NormalModuleReplacementPlugin;
 
-// Define components for scoped styles
+// Define components for entry definition
 const components = glob.sync('./components/**/*.ts').reduce((acc, file) => {
   // Exclude icon because there are some specific things that need to happen based on the URL inclusion of `icon.js`
   // in order for routing to work correctly
@@ -58,7 +58,7 @@ module.exports = (env) => {
         .map(([, file]) => file)
     };
 
-    return !env.entry || env.entry === 'all' ? entryObj : { _scopeStyles: './directives/scope-styles.ts' };
+    return entryObj;
   };
 
   const sassLoader = {
@@ -104,8 +104,6 @@ module.exports = (env) => {
         switch (pathData.chunk.name) {
           case '_register':
             return 'directives/register.js';
-          case '_scopeStyles':
-            return 'directives/scoped-styles.js';
           default:
             return 'components/[name]/[name].js';
         }
