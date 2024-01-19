@@ -10,6 +10,7 @@ const config: StorybookConfig = {
     '@storybook/addon-essentials',
     "@storybook/addon-a11y",
     "@etchteam/storybook-addon-status",
+    "@storybook/addon-interactions"
   ],
   framework: {
     name: "@storybook/web-components-webpack5",
