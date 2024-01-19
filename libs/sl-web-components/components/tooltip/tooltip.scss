@@ -1,4 +1,4 @@
-@import '../../tokens/sl/component';
+@import '../../styles/component';
 /* ------------------------------------*\
   #TOOLTIP
 \*------------------------------------ */
@@ -44,10 +44,10 @@
   padding: size(0.5) size(1);
   width: max-content;
   max-width: var(--sl-tooltip-container-width, #{size(32)});
-  background-color: var(--sl-theme-color-background-secondary-strong);
+  background-color: var(--sl-theme-color-background-default-stronger);
   color: var(--sl-theme-color-content-default);
   border-radius: var(--sl-theme-border-radius);
-  box-shadow: var(--sl-theme-box-shadow-md);
+  box-shadow: var(--sl-theme-box-shadow);
   z-index: var(--sl-z-index-top);
   margin: auto;
   cursor: default;
@@ -62,7 +62,7 @@
     content: '';
     display: none;
     position: absolute;
-    background-color: var(--sl-theme-color-background-secondary-strong);
+    background-color: var(--sl-theme-color-background-default-stronger);
     transform: rotate(45deg);
     width: var(--tooltip-arrow-size);
     height: var(--tooltip-arrow-size);
@@ -178,7 +178,7 @@
  */
 .sl-c-tooltip__prefix {
   border-radius: var(--sl-theme-border-radius);
-  background-color: var(--sl-theme-color-background-primary-default);
+  background-color: var(--sl-theme-color-background-default-weak);
   color: var(--sl-theme-color-content-default);
   padding: 0 size(0.75);
   position: relative;

@@ -1,4 +1,4 @@
-@import '../../tokens/sl/component';
+@import '../../styles/component';
 /*------------------------------------*\
   #SLIDER
 \*------------------------------------*/
@@ -31,10 +31,10 @@
 .sl-c-slider__input {
   background: linear-gradient(
     var(--rtlGradientToRight, 90deg),
-    var(--sl-theme-color-background-primary-default) 0%,
-    var(--sl-theme-color-background-primary-default) 40%,
-    var(--sl-theme-color-background-primary-default) 40%,
-    var(--sl-theme-color-background-primary-default) 100%
+    var(--sl-theme-color-background-default-weak) 0%,
+    var(--sl-theme-color-background-default-weak) 40%,
+    var(--sl-theme-color-background-default-weak) 40%,
+    var(--sl-theme-color-background-default-weak) 100%
   );
   border-radius: var(--sl-theme-border-radius);
   height: var(--sl-slider-track-height);
@@ -57,7 +57,7 @@
    * Disabled state for track on slider
    */
   &:disabled::-webkit-slider-runnable-track {
-    background-color: var(--sl-theme-color-background-primary-default);
+    background-color: var(--sl-theme-color-background-default-weak);
   }
 
   /**
@@ -159,7 +159,7 @@
   &::-moz-range-track {
     width: 100%;
     height: var(--sl-slider-track-height);
-    background-color: var(--sl-theme-color-background-primary-default);
+    background-color: var(--sl-theme-color-background-default-weak);
     border-radius: var(--sl-theme-border-radius);
     border: none;
   }
@@ -236,10 +236,10 @@
   min-width: size(3.75);
   width: max-content;
   z-index: var(--sl-z-index-top);
-  background-color: var(--sl-theme-color-background-secondary-default);
+  background-color: var(--sl-theme-color-background-default-strong);
   border-radius: var(--sl-theme-border-radius);
   color: var(--sl-theme-color-content-default);
-  box-shadow: var(--sl-theme-box-shadow-md);
+  box-shadow: var(--sl-theme-box-shadow);
   margin-block-end: calc(var(--size-base-unit) * 0.75);
   font-size: size(1.5);
   line-height: size(2);
@@ -250,11 +250,11 @@
     position: absolute;
     inset-block-end: calc(-1 * size(1.25) / 2);
     inset-inline-start: calc(50% - size(1.25) / 2);
-    background-color: var(--sl-theme-color-background-secondary-default);
+    background-color: var(--sl-theme-color-background-default-strong);
     transform: rotate(45deg);
     width: size(1.25);
     height: size(1.25);
-    box-shadow: var(--sl-theme-box-shadow-md);
+    box-shadow: var(--sl-theme-box-shadow);
   }
 }
 
@@ -267,7 +267,7 @@
 .sl-c-slider__range-one-label,
 .sl-c-slider__range-two-label {
   display: block;
-  background-color: var(--sl-theme-color-background-secondary-default);
+  background-color: var(--sl-theme-color-background-default-strong);
   border-radius: var(--sl-theme-border-radius);
   padding: calc(var(--size-base-unit) * 1);
   position: relative;
@@ -322,7 +322,7 @@
     appearance: none;
     width: 100%;
     height: var(--sl-slider-track-height);
-    background-color: var(--sl-theme-color-background-primary-default);
+    background-color: var(--sl-theme-color-background-default-weak);
     border-radius: var(--sl-theme-border-radius);
     margin: 0;
     border: 0;

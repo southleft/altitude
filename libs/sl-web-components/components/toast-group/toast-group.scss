@@ -1,4 +1,4 @@
-@import '../../tokens/sl/component';
+@import '../../styles/component';
 
 /* ------------------------------------*\
   #TOAST-GROUP
@@ -37,7 +37,7 @@
   inset-inline-end: 0;
   transform: translateX(-50%);
   padding: size(3);
-  max-width: var(--sl-theme-layout-container-width);
+  max-width: var(--sl-theme-layout-width-container);
 }
 
 /**
@@ -63,7 +63,7 @@
   display: flex;
   gap: size(1);
   width: fit-content;
-  color: var(--sl-theme-color-content-weak);
+  color: var(--sl-theme-color-content-default-weak);
   z-index: var(--sl-z-index-top);
   position: absolute;
   inset-block-start: size(2);

@@ -1,4 +1,4 @@
-@import '../../tokens/sl/component';
+@import '../../styles/component';
 /* ------------------------------------*\
     # TOAST
 \*------------------------------------ */
@@ -24,8 +24,8 @@
   padding-inline-start: size(3);
   width: 100%;
   border-radius: var(--sl-theme-border-radius-md);
-  background-color: var(--sl-theme-color-background-primary-strong);
-  box-shadow: var(--sl-theme-box-shadow-xl);
+  background-color: var(--sl-theme-color-background-default);
+  box-shadow: var(--sl-theme-box-shadow-lg);
   gap: size(2);
 
   /**
@@ -113,7 +113,7 @@
  */
 .sl-c-toast__description {
   @include sl-theme-typography-body-sm;
-  color: var(--sl-theme-color-content-weak);
+  color: var(--sl-theme-color-content-default-weak);
 }
 
 /**

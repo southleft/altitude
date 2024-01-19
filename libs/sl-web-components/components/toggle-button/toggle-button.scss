@@ -1,4 +1,4 @@
-@import '../../tokens/sl/component';
+@import '../../styles/component';
 /* ------------------------------------*\
   #TOGGLE-BUTTON
 \*------------------------------------ */
@@ -21,8 +21,8 @@
  * Toggle Button - Background variant
  */
 .sl-c-toggle-button--background {
-  background-color: var(--sl-theme-color-background-primary-strong);
-  box-shadow: var(--sl-theme-box-shadow-lg);
+  background-color: var(--sl-theme-color-background-default);
+  box-shadow: var(--sl-theme-box-shadow-md);
 }
 
 /**
@@ -56,7 +56,7 @@
    * - If parent is hovered, then change the background color of the content
    */
   &:hover:not(:active, .sl-is-selected &) {
-    background: var(--sl-theme-color-background-secondary-default);
+    background: var(--sl-theme-color-background-default-strong);
   }
 
   /**
@@ -65,7 +65,7 @@
    */
   .sl-is-selected & {
     color: var(--sl-theme-color-content-accent-default);
-    background: var(--sl-theme-color-background-primary-default);
+    background: var(--sl-theme-color-background-default-weak);
   }
 
   /**

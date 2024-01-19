@@ -1,4 +1,4 @@
-@import '../../tokens/sl/component';
+@import '../../styles/component';
 /* ------------------------------------*\
   #BREADCRUMBS-ITEM
 \*------------------------------------ */
@@ -17,7 +17,7 @@
   align-items: center;
   justify-content: flex-start;
   gap: size(0.5);
-  color: var(--sl-theme-color-content-weak);
+  color: var(--sl-theme-color-content-default-weak);
 }
 
 /**
@@ -33,7 +33,7 @@
   border: none;
   background-color: var(--sl-theme-color-background-transparent);
   border-radius: var(--sl-theme-border-radius-md);
-  color: var(--sl-theme-color-content-weak);
+  color: var(--sl-theme-color-content-default-weak);
   text-decoration: none;
   transition: all var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
   cursor: pointer;
@@ -53,6 +53,6 @@
    */
   &:hover:not(:active) {
     color: var(--sl-theme-color-content-default);
-    background: var(--sl-theme-color-background-primary-strong);
+    background: var(--sl-theme-color-background-default);
   }
 }

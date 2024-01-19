@@ -1,4 +1,4 @@
-@import '../../tokens/sl/component';
+@import '../../styles/component';
 /* ------------------------------------*\
     #LIST-ITEM
 \*------------------------------------ */
@@ -8,7 +8,7 @@
 }
 
 :host([aria-selected='true']) {
-  background-color: var(--sl-list-item-link-hover-background, var(--sl-theme-color-background-secondary-default));
+  background-color: var(--sl-list-item-link-hover-background, var(--sl-theme-color-background-default-strong));
 }
 
 /**
@@ -55,7 +55,7 @@
   &:hover,
   &:focus,
   .sl-c-list-item[aria-selected='true'] & {
-    background-color: var(--sl-list-item-link-hover-background, var(--sl-theme-color-background-secondary-default));
+    background-color: var(--sl-list-item-link-hover-background, var(--sl-theme-color-background-default-strong));
   }
 
   /**
@@ -91,7 +91,7 @@
    * Active styling of the list item link
    */
   .sl-is-active & {
-    background-color: var(--sl-list-item-link-hover-background, var(--sl-theme-color-background-secondary-default));
+    background-color: var(--sl-list-item-link-hover-background, var(--sl-theme-color-background-default-strong));
   }
 }
 

@@ -1,4 +1,4 @@
-@import '../../tokens/sl/component';
+@import '../../styles/component';
 /* ------------------------------------ *\
   #BUTTON
 \* ------------------------------------ */
@@ -100,7 +100,7 @@
  */
 .sl-c-button--tertiary {
   background-color: var(--sl-theme-color-background-transparent-default);
-  color: var(--sl-theme-color-content-weak);
+  color: var(--sl-theme-color-content-default-weak);
 
   /**
    * Hide the shadow effect
@@ -121,7 +121,7 @@
    * Focus outline for Tertiary button
    */
    &:focus-visible {
-    --sl-theme-color-focus-ring: var(--sl-theme-color-content-weak);
+    --sl-theme-color-focus-ring: var(--sl-theme-color-content-default-weak);
   }
 }
 
@@ -224,7 +224,7 @@
    */
   &:hover:not(:active, :disabled) {
     color: var(--sl-theme-color-content-accent-default);
-    background: var(--sl-theme-color-background-secondary-default);
+    background: var(--sl-theme-color-background-default-strong);
 
     /**
      * Show focus outline with rounded borders on focus-visible

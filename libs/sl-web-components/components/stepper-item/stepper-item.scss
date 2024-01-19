@@ -1,4 +1,4 @@
-@import '../../tokens/sl/component';
+@import '../../styles/component';
 /* ------------------------------------*\
   #STEPPER-ITEM
 \*------------------------------------ */
@@ -57,8 +57,8 @@
   height: size(4);
   border-radius: 50%;
   background-color: var(--sl-theme-color-background-transparent);
-  border: 1.5px solid var(--sl-theme-color-content-weak);
-  color: var(--sl-theme-color-content-weak);
+  border: 1.5px solid var(--sl-theme-color-content-default-weak);
+  color: var(--sl-theme-color-content-default-weak);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,7 +123,7 @@
   gap: size(0.75);
   width: max-content;
   max-width: size(17);
-  color: var(--sl-theme-color-content-weak);
+  color: var(--sl-theme-color-content-default-weak);
   --sl-icon-width: #{size(2.5)};
   --sl-icon-height: #{size(2.5)};
 
@@ -197,5 +197,5 @@
  */
 .sl-c-stepper-item__description {
   @include sl-theme-typography-body-sm;
-  color: var(--sl-theme-color-content-weak);
+  color: var(--sl-theme-color-content-default-weak);
 }

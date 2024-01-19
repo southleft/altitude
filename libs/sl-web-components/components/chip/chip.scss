@@ -1,4 +1,4 @@
-@import '../../tokens/sl/component';
+@import '../../styles/component';
 /*------------------------------------*\
   #CHIP
 \*------------------------------------*/
@@ -24,7 +24,7 @@
   border-width: var(--sl-theme-border-width);
   border-style: solid;
   border-radius: size(4);
-  background-color: var(--sl-theme-color-background-primary-default);
+  background-color: var(--sl-theme-color-background-default-weak);
   border-color: var(--sl-theme-color-border-weak);
   color: var(--sl-theme-color-content-default);
   --sl-icon-width: #{size(3)};
@@ -64,9 +64,9 @@
  * Chip with secondary variant
  */
 .sl-c-chip--secondary {
-  background-color: var(--sl-theme-color-background-secondary-default);
-  border-color: var(--sl-theme-color-background-secondary-default);
-  color: var(--sl-theme-color-content-weak);
+  background-color: var(--sl-theme-color-background-default-strong);
+  border-color: var(--sl-theme-color-background-default-strong);
+  color: var(--sl-theme-color-content-default-weak);
 }
 
 /**
@@ -74,8 +74,8 @@
  */
 .sl-c-chip--tertiary {
   background-color: var(--sl-theme-color-background-transparent-default);
-  border-color: var(--sl-theme-color-background-primary-default);
-  color: var(--sl-theme-color-content-weak);
+  border-color: var(--sl-theme-color-background-default-weak);
+  color: var(--sl-theme-color-content-default-weak);
 }
 
 /**

@@ -1,4 +1,4 @@
-@import '../../tokens/sl/component';
+@import '../../styles/component';
 /*------------------------------------*\
   #PAGINATION-ITEM
 \*------------------------------------*/
@@ -25,7 +25,7 @@
   transition: all var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
   border-radius: var(--sl-theme-border-radius);
   background-color: var(--sl-theme-color-background-transparent-default);
-  color: var(--sl-theme-color-content-weak);
+  color: var(--sl-theme-color-content-default-weak);
   --sl-icon-width: #{size(3)};
   --sl-icon-height: #{size(3)};
 
@@ -41,7 +41,7 @@
    * Focus outline
    */
    &:focus-visible {
-    --sl-theme-color-focus-ring: var(--sl-theme-color-content-weak);
+    --sl-theme-color-focus-ring: var(--sl-theme-color-content-default-weak);
   }
 
   /**

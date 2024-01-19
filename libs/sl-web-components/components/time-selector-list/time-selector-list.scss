@@ -1,4 +1,4 @@
-@import '../../tokens/sl/component';
+@import '../../styles/component';
 /*------------------------------------*\
   #TIME-SELECTOR-LIST
 \*------------------------------------*/
@@ -47,7 +47,7 @@
 .sl-c-time-selector-list__heading {
   @include sl-theme-typography-body-md-bold;
   color: var(--sl-theme-color-content-default);
-  background: var(--sl-theme-color-background-secondary-default);
+  background: var(--sl-theme-color-background-default-strong);
   box-shadow: var(--sl-theme-box-shadow-sm);
   text-align: center;
   padding: size(1);
@@ -104,7 +104,7 @@
    * Hover state
    */
   &:hover:not(:active, :disabled, &.sl-is-active) {
-    background-color: var(--sl-theme-color-background-secondary-default);
+    background-color: var(--sl-theme-color-background-default-strong);
   }
 
   /**

@@ -1,4 +1,4 @@
-@import '../../tokens/sl/component';
+@import '../../styles/component';
 /* ------------------------------------*\
   #BADGE
 \*------------------------------------ */
@@ -16,7 +16,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--sl-theme-color-background-secondary-default);
+  background: var(--sl-theme-color-background-default-strong);
   color: var(--sl-theme-color-content-default);
   padding: 0 size(0.5625);
   border-radius: size(2.5);
@@ -46,7 +46,7 @@
       min-width: size(1.5);
       min-height: size(1.5);
       background: transparent;
-      border: var(--sl-badge-outline-color, var(--sl-theme-color-background-primary-default)) solid var(--sl-badge-border-width, 0);
+      border: var(--sl-badge-outline-color, var(--sl-theme-color-background-default-weak)) solid var(--sl-badge-border-width, 0);
       border-radius: var(--sl-theme-border-radius-round);
     }
   }
