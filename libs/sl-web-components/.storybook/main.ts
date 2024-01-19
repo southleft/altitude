@@ -15,6 +15,7 @@ const config: StorybookConfig = {
     name: "@storybook/web-components-webpack5",
     options: {},
   },
+  staticDirs: ['./static'],
   // Other Storybook options
   webpackFinal: async (config, { configType }) => {
     // Add SCSS support
