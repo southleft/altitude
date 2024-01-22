@@ -35,7 +35,7 @@ export class Tier1Colors extends LitElement {
             </tr>
           </thead>
           <tbody>
-            ${this.filterTokens('sl-color-base-').map((item) => {
+            ${this.filterTokens('sl-color-base').map((item) => {
               return html`
                 <token-specimen
                   variant="color"
@@ -57,7 +57,7 @@ export class Tier1Colors extends LitElement {
             </tr>
           </thead>
           <tbody></tbody>
-            ${this.filterTokens('sl-color-neutral-').map((item) => {
+            ${this.filterTokens('sl-color-neutral').map((item) => {
               return html`
                 <token-specimen
                   variant="color"

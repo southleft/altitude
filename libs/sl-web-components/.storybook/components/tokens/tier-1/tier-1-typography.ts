@@ -1,5 +1,4 @@
 import { html, LitElement, unsafeCSS } from 'lit';
-import { property } from 'lit/decorators.js';
 import tokens from '../../../../styles/tokens.json';
 import '../../token-specimen/token-specimen';
 import styles from '../tokens.scss';
@@ -9,39 +8,20 @@ export class Tier1Typography extends LitElement {
     return unsafeCSS(styles.toString());
   }
 
-  @property()
-  accessor typographyPresets: Object = {
-    'sl-typography-preset-0': 'sl-typography-preset-0',
-    'sl-typography-preset-1': 'sl-typography-preset-1',
-    'sl-typography-preset-1-bold': 'sl-typography-preset-1-bold',
-    'sl-typography-preset-2': 'sl-typography-preset-2',
-    'sl-typography-preset-2-bold': 'sl-typography-preset-2-bold',
-    'sl-typography-preset-3': 'sl-typography-preset-3',
-    'sl-typography-preset-3-bold': 'sl-typography-preset-3-bold',
-    'sl-typography-preset-4': 'sl-typography-preset-4',
-    'sl-typography-preset-4-bold': 'sl-typography-preset-4-bold',
-    'sl-typography-preset-5': 'sl-typography-preset-5',
-    'sl-typography-preset-5-bold': 'sl-typography-preset-5-bold',
-    'sl-typography-preset-6': 'sl-typography-preset-6',
-    'sl-typography-preset-6-bold': 'sl-typography-preset-6-bold',
-    'sl-typography-preset-7': 'sl-typography-preset-7',
-    'sl-typography-preset-7-bold': 'sl-typography-preset-7-bold',
-  };
-
-  filteType(prefix) {
-    return Object.entries(this.typographyPresets)
-      .filter(([name]) => name.startsWith(prefix))
-      .map(([name, value]) => ({
-        name: `${name}`,
-        value
-      }));
-  }
-
   filterTokens(prefix) {
     return Object.entries(tokens)
       .filter(([name]) => name.startsWith(prefix))
       .map(([name, value]) => ({
         name: `--${name}`,
+        value,
+      }));
+  }
+
+  filterType(prefix) {
+    return Object.entries(tokens)
+      .filter(([name]) => name.startsWith(prefix))
+      .map(([name, value]) => ({
+        name: `${name}`,
         value
       }));
   }
@@ -64,9 +44,9 @@ export class Tier1Typography extends LitElement {
             </tr>
           </thead>
           <tbody>
-            ${this.filteType('sl-typography-preset-').map((item) => {
+            ${this.filterType('sl-typography-preset').map((item) => {
               return html`
-                <token-specimen variant="typography" name="@include ${item.value};" exampleClass="${item.name}"
+                <token-specimen variant="typography" name="@include ${item.name};" exampleClass="${item.name}"
                   >Lorem ipsum dolor sit amet, consectetur adipiscing elit.</token-specimen
                 >
               `;
@@ -83,28 +63,9 @@ export class Tier1Typography extends LitElement {
             </tr>
           </thead>
           <tbody>
-            ${this.filterTokens('sl-font-family-').map((item) => {
+            ${this.filterTokens('sl-font-family').map((item) => {
               return html`
                 <token-specimen variant="typography" name="${item.name}" value="${item.value}" inlineStyles="font-family: var(${item.name});"
-                  >Lorem ipsum dolor sit amet, consectetur adipiscing elit.</token-specimen
-                >
-              `;
-            })}
-          </tbody>
-        </table>
-        <table>
-          <caption>Font Weights</caption>
-          <thead>
-            <tr>
-              <th>Token</th>
-              <th>Value</th>
-              <th>Example</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-            ${this.filterTokens('sl-font-weight-').map((item) => {
-              return html`
-                <token-specimen variant="typography" name="${item.name}" value="${item.value}" inlineStyles="font-weight: var(${item.name});"
                   >Lorem ipsum dolor sit amet, consectetur adipiscing elit.</token-specimen
                 >
               `;
@@ -121,7 +82,7 @@ export class Tier1Typography extends LitElement {
             </tr>
           </thead>
           <tbody></tbody>
-            ${this.filterTokens('sl-font-size-').map((item) => {
+            ${this.filterTokens('sl-font-size').map((item) => {
               return html`
                 <token-specimen variant="typography" name="${item.name}" value="${item.value}" inlineStyles="font-size: var(${item.name});"
                   >Aa</token-specimen
@@ -140,10 +101,49 @@ export class Tier1Typography extends LitElement {
             </tr>
           </thead>
           <tbody></tbody>
-            ${this.filterTokens('sl-line-height-').map((item) => {
+            ${this.filterTokens('sl-line-height').map((item) => {
               return html`
                 <token-specimen variant="typography" name="${item.name}" value="${item.value}" inlineStyles="line-height: var(${item.name});"
                   >ABCDEFGHIJKLMNOPQRSTUVWXYZ<br />abcdefghijklmnopqrstuvwxyz</token-specimen
+                >
+              `;
+            })}
+          </tbody>
+        </table>
+
+        <table>
+          <caption>Font Weights</caption>
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Value</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+            ${this.filterTokens('sl-font-weight').map((item) => {
+              return html`
+                <token-specimen variant="typography" name="${item.name}" value="${item.value}" inlineStyles="font-weight: var(${item.name});"
+                  >Lorem ipsum dolor sit amet, consectetur adipiscing elit.</token-specimen
+                >
+              `;
+            })}
+          </tbody>
+        </table>
+        <table>
+          <caption>Letter Spacing</caption>
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Value</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+            ${this.filterTokens('sl-letter-spacing').map((item) => {
+              return html`
+                <token-specimen variant="typography" name="${item.name}" value="${item.value}" inlineStyles="letter-spacing: var(${item.name});"
+                  >Lorem ipsum dolor sit amet, consectetur adipiscing elit.</token-specimen
                 >
               `;
             })}
