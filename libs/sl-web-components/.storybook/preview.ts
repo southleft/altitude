@@ -31,7 +31,7 @@ const preview: Preview = {
       storySort: {
         order: ['Documentation', 'Tokens, Icons, and Utilities', 'Components', 'Recipes', 'Templates', 'Pages']
       }
-    },
+    }
   }
 };
 

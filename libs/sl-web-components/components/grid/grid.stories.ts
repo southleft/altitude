@@ -7,6 +7,7 @@ import './grid';
 export default {
   title: 'Components/Grid',
   component: 'sl-grid',
+  tags: [  'autodocs' ],
   parameters: { status: { type: 'beta' } }
 };
 

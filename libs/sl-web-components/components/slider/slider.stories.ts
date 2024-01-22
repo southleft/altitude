@@ -5,6 +5,7 @@ import './slider';
 export default {
   title: 'Components/Slider',
   component: 'sl-slider',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'padded',

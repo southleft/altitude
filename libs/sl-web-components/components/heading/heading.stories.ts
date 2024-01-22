@@ -5,6 +5,7 @@ import './heading';
 export default {
   title: 'Components/Heading',
   component: 'sl-heading',
+  tags: [  'autodocs' ],
   parameters: { status: { type: 'beta' } },
   argTypes: {
     variant: {

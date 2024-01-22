@@ -1,0 +1,71 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Documentation/Tokens" />
+
+# Design Tokens
+
+SL Web Components is a themeable design system, and [design tokens](https://css-tricks.com/what-are-tokens/) are a core part of building an SL Web Components theme.
+
+## Animation
+
+- `animation-fade-` for fading between frames (e.g. button background color changes, alert messages fading out, etc). Typically default to "short" and "long" as values.
+- `animation-move-` for defining movement durations (e.g. a modal floating up from the bottom of the screen, etc)
+- `animation-ease-` for animation easing properties (`ease-in`, `ease-out`, cubic bezier values)
+
+## Borders
+
+- `border-width-` for border widths. Typically default to abbreviated t-shirt sizes (e.g. `sm`, `md`, `lg`, `xl`) in accordance with the [SL Web Components code guidelines](./CODE_GUIDELINES.md).
+- `border-radius-` for border radius values. Typically default to t-shirt sizes, although sometimes "pill" or "round" might also be present
+
+## Breakpoints
+
+- `bp-` for breakpoint. Typically default to t-shirt sizes (e.g. `bp-sm`, `bp-md`, etc). We [deliberately avoid](https://bradfrost.com/blog/post/7-habits-of-highly-effective-media-queries/) using "mobile" and "tablet" and "desktop" as values, although that's a common approach
+
+## Colors
+
+### Tier 1 colors
+
+- `color-brand-` for brand-specific values (e.g. `color-brand-starbucks-green` or `color-brand-coca-cola-red`)
+- `color-neutral-` for black, white, and grayscale (or similar) values (e.g. `color-neutral-white`, or `color-neutral-50`). We default to the [percentage gray](https://medium.com/eightshapes-llc/color-in-design-systems-a1c80f65fa3) instead of using values like "gray-weak" and "gray-strong". `color-neutral-90` is closer to black and `color-neutral-02` is a very light gray.
+- `color-utility-` for info, warning, error, success, and info (e.g. `color-utility-error` and `color-utility-success`). Sometimes these are aliases of brand colors (for instance when `color-brand-red` is used to denote an error). We sometimes also include `-weak` variants (e.g. `color-utility-error-weak` for background colors for error state components like alerts or form fields.
+
+## Layout
+
+- `layout-max-width` for layout container width. This caps the width of the UI so it doesn't go full bleed.
+- `layout-linelength-width` for containing passages of text to a comfortable character length
+
+## Shadows
+
+- `box-shadow-` for box shadow definitions. We default to t-shirt sizes (e.g. `box-shadow-md` ) for shadows.
+
+## Size
+
+- `size-base-unit` to define our sizing base unit. This is used to size grids, component padding and margin, and other things. We use an 8-point grid nearly always, so our base unit is set to `0.5rem`, which equals `8px`
+
+## Typography
+
+- `font-family-` for font family definitions. We default to "primary" "secondary" and "tertiary" for font-family definitions.
+- `font-size-` for font size definitions. We typically default to t-shirt sizes (e.g. `font-size-sm`, `font-size-md` for body text, `font-size-lg`, and so on).
+- `line-height-` for line height definitions. These are unitless relative values and we default to t-shirt sizes (e.g. `line-height-md: 1.5` )
+
+## Tier 2 tokens (aliased values)
+
+Tier 2 token defitions are _hard_ and they vary depending on the use case. So they're a bit harder to define than Tier 1 token definitions. But here are a few ideas:
+
+### Theme
+
+- `theme-` can be used to define a UI theme that
+- `theme-color-primary` and `theme-color-secondary` to establish dominent and accent colors for the UI. `theme-color-primary` can be mapped to the primary button component, global header, and other branded UI elements. `theme-color-secondary` might be used for other interactive elements. These values are totally up to you.
+- `theme-border-radius` can be used to define a border radius for things like buttons, form controls, cards, etc
+- `theme-box-shadow` can be used to define the default box shadow for appropriate components (like cards, modals, etc)
+
+### Component categories
+
+Tier 2 variables can also be used to map Tier 1 definitions to high-level component applications that then get wired up to individual components in the library. For example:
+
+- `form-input-`
+- `form-input-border-radius`
+- `form-input-border-color`
+- `form-input-border-width`
+
+As mentioned before, Tier 2 can get pretty fuzzy.

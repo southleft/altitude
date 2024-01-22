@@ -7,6 +7,7 @@ import './icons/chevron-down';
 export default {
   title: 'Components/Icon',
   component: 'sl-icon',
+  tags: [  'autodocs' ],
   parameters: { status: { type: 'beta' } },
   argTypes: {
     size: {

@@ -5,6 +5,7 @@ import './calendar';
 export default {
   title: 'Components/Calendar',
   component: 'sl-calendar',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

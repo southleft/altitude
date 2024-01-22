@@ -12,6 +12,7 @@ import './textarea';
 export default {
   title: 'Components/Textarea',
   component: 'sl-textarea',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',

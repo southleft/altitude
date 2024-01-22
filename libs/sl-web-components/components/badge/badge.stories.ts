@@ -7,6 +7,7 @@ import './badge';
 export default {
   title: 'Components/Badge',
   component: 'sl-badge',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered'

@@ -4,6 +4,7 @@ const config: StorybookConfig = {
   stories: [
     './components/**/*.stories.@(js|jsx|ts|tsx|mdx)',
     '../components/**/**/*.stories.@(js|jsx|ts|tsx|mdx)',
+    '../docs/*.@(js|jsx|ts|tsx|mdx)',
     './recipes/**/*.stories.@(js|jsx|ts|tsx|mdx)'
   ],
   addons: [
@@ -17,6 +18,7 @@ const config: StorybookConfig = {
     options: {},
   },
   staticDirs: ['./static'],
+
   // Other Storybook options
   webpackFinal: async (config, { configType }) => {
     // Add SCSS support

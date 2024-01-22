@@ -23,6 +23,7 @@ const dataSource = [
 export default {
   title: 'Components/Search Form',
   component: 'sl-search-form',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',

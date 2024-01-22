@@ -5,6 +5,7 @@ import './accordion-panel';
 export default {
   title: 'Components/Accordion Panel',
   component: 'sl-accordion-panel',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

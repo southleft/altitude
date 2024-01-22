@@ -7,6 +7,7 @@ import './list-item';
 export default {
   title: 'Components/List Item',
   component: 'sl-list-item',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

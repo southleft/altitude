@@ -7,6 +7,7 @@ import './stepper-item';
 export default {
   title: 'Components/Stepper Item',
   component: 'sl-stepper-item',
+  tags: [  'autodocs' ],
   parameters: {
     status: {
       type: 'beta'

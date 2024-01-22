@@ -9,6 +9,7 @@ import './alert';
 export default {
   title: 'Components/Alert',
   component: 'sl-alert',
+  tags: [  'autodocs' ],
   parameters: {
     status: 'beta',
     actions: {

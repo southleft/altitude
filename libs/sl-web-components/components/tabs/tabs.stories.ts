@@ -11,6 +11,7 @@ import './tabs';
 export default {
   title: 'Components/Tabs',
   component: 'sl-tabs',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

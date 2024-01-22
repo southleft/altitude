@@ -10,6 +10,7 @@ import './toast-group';
 export default {
   title: 'Components/Toast Group',
   component: 'sl-toast-group',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

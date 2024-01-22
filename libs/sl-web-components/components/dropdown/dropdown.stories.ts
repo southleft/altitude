@@ -22,6 +22,7 @@ const dataSource = [
 export default {
   title: 'Components/Dropdown',
   component: 'sl-dropdown',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',

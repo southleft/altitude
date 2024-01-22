@@ -1,0 +1,55 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Documentation/Typography" />
+
+# Typography
+
+Typography in SL Web Components follows [the same structure as design tokens](./TOKENS.md), with the exception that typography operates as a _cluster_ of typography-specific style properties rather than a single style property.
+
+## Tier 1: Typography values
+
+Typography-specific design tokens are found in `tokens/tier-1/typography.json` and define these properties:
+
+- `font-size`
+- `font-family`
+- `font-weight`
+- `line-height`
+
+These token values are _never to be used_ directly by components; these token values are assembled into typography presets.
+
+## Tier 1: Typography presets
+
+[Sass mixins](https://sass-lang.com/documentation/at-rules/mixin) are used to cluster typography-specific tokens together into [typography presets](https://superfriendlydesign.systems/articles/typography-in-design-systems/). For example:
+
+```scss
+// typography-presets.scss
+@mixin sl-typography-preset-1() {
+  font-family: var(--sl-font-family-primary);
+  font-weight: var(--sl-font-weight-regular);
+  line-height: var(--sl-line-height-1);
+  font-size: var(--sl-font-size-12);
+  letter-spacing: var(--sl-letter-spacing-0);
+  text-transform: none;
+}
+```
+
+Just as with other Tier 1 tokens, typography presets shouldn't be used directly by components. Typography presets are mapped to specific semantic usage at the Tier 2 level.
+
+## Tier 2: Typography usage
+
+Tier 2 typography values take the typography presets defined at the Tier 2 level and map them to a semantic usage value like so:
+
+```scss
+// typography-usage.scss
+@mixin sl-theme-typography-body-sm() {
+  @include sl-typography-preset-2();
+}
+```
+
+These semantic values are then included in each component's style file:
+
+```scss
+.sl-c-breadcrumbs {
+  @include sl-theme-typography-body-sm();
+}
+```

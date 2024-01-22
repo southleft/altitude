@@ -6,6 +6,7 @@ import './text-passage';
 export default {
   title: 'Components/Text Passage',
   component: 'sl-text-passage',
+  tags: [  'autodocs' ],
   parameters: { status: { type: 'beta' } },
   argTypes: {
     maxWidth: {
