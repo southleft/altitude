@@ -9,7 +9,7 @@ export class SLGridItem extends SLElement {
   static el = 'sl-grid-item';
 
   static get styles() {
-    return unsafeCSS(styles);
+    return unsafeCSS(styles.toString());
   }
 
   render() {

@@ -18,7 +18,7 @@ export class SLList extends SLElement {
   });
 
   static get styles() {
-    return unsafeCSS(styles);
+    return unsafeCSS(styles.toString());
   }
 
   /**

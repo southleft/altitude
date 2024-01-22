@@ -1,0 +1,54 @@
+@import '../../../styles/component.scss';
+/* ------------------------------------*\
+    #TOKEN-SPECIMEN
+\*------------------------------------ */
+
+td {
+  text-align: left;
+  margin: 0;
+  padding: var(--sl-theme-space);
+  border-top: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+  border-left: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+  vertical-align: middle;
+}
+
+code {
+  background: var(--sl-theme-color-background-default-strong);
+  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+  padding: var(--sl-theme-space-xxs) var(--sl-theme-space-xs);
+  border-radius: var(--sl-theme-border-radius);
+  white-space: nowrap;
+}
+
+.token-specimen__example {
+  div {
+    display: block;
+    width: 48px;
+    height: 48px;
+    border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+    background-color: var(--sl-theme-color-background-default-weak);
+
+    .token-specimen--color & {
+      border-radius: 48px;
+    }
+
+    .token-specimen--opacity & {
+      background-color: var(--sl-color-base-purple-50);
+    }
+
+    .token-specimen--typography & {
+      border: none;
+      background-color: var(--sl-theme-color-background-transparent-default);
+      width: 100%;
+      height: auto;
+      line-height: normal;
+    }
+  }
+
+  .token-specimen--animation & {
+    &:hover div {
+      background-color: var(--sl-theme-color-content-default);
+    }
+  }
+}
+

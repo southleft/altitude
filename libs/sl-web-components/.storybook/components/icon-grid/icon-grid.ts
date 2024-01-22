@@ -6,7 +6,7 @@ import styles from './icon-grid.scss';
 @customElement('icon-grid')
 export class IconGrid extends LitElement {
   static get styles() {
-    return unsafeCSS(styles);
+    return unsafeCSS(styles.toString());
   }
 
   ALL_ICONS = require
@@ -19,7 +19,7 @@ export class IconGrid extends LitElement {
       return unsafeHTML(
         `<li class="icon-grid__item">
           <sl-icon-${item.name}></sl-icon-${item.name}>
-          <span class="icon-grid__text">${item.name}</span>
+          <div class="icon-grid__text">${item.name}</div>
         </li>`
       );
     });

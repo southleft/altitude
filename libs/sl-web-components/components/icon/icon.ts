@@ -10,7 +10,7 @@ export class SLIcon extends SLElement {
   static el = 'sl-icon';
 
   static get styles() {
-    return unsafeCSS(styles);
+    return unsafeCSS(styles.toString());
   }
 
   /**

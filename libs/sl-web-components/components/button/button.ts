@@ -15,7 +15,7 @@ export class SLButton extends SLElement {
   static el = 'sl-button';
 
   static get styles() {
-    return unsafeCSS(styles);
+    return unsafeCSS(styles.toString());
   }
 
   protected formController = new FormController(this);

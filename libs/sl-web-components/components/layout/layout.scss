@@ -50,7 +50,7 @@
  *    and other sidebar content) but stretches to fit the content placed inside it.
  */
 .sl-c-layout--sidebar-left {
-  @media all and (min-width: $sl-bp-md) {
+  @media all and (min-width: $sl-breakpoint-md) {
     grid-template-columns: calc(var(--sl-layout-width-sidebar, 40%) - (size(1))) minmax(0, 1fr); /* 2 */
   }
 }
@@ -64,7 +64,7 @@
  *    and other sidebar content) but stretches to fit the content placed inside it.
  */
 .sl-c-layout--sidebar-right {
-  @media all and (min-width: $sl-bp-md) {
+  @media all and (min-width: $sl-breakpoint-md) {
     grid-template-columns: minmax(0, 1fr) calc(var(--sl-layout-width-sidebar, 40%) - (size(1))); /* 2 */
   }
 }

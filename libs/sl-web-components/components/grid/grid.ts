@@ -10,7 +10,7 @@ export class SLGrid extends SLElement {
   static el = 'sl-grid';
 
   static get styles() {
-    return unsafeCSS(styles);
+    return unsafeCSS(styles.toString());
   }
 
   /**

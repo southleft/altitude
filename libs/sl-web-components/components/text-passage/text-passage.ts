@@ -12,7 +12,7 @@ export class SLTextPassage extends SLElement {
   static el = 'sl-text-passage';
 
   static get styles() {
-    return unsafeCSS(styles);
+    return unsafeCSS(styles.toString());
   }
 
   /**

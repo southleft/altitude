@@ -1,0 +1,43 @@
+@import '../../../styles/component';
+/* ------------------------------------*\
+    #TOKENS
+\*------------------------------------ */
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sl-theme-space-super);
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sl-theme-space);
+}
+
+h1 {
+  font-size: xx-large;
+  padding-bottom: var(--sl-theme-space);
+  border-bottom: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+}
+
+caption {
+  font-size: x-large;
+  padding-bottom: var(--sl-theme-space);
+  font-weight: bold;
+  text-align: left;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+}
+
+th {
+  text-align: left;
+  vertical-align: middle;
+  padding: var(--sl-theme-space);
+  border-top: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+  border-left: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+}

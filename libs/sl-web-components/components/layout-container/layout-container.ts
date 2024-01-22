@@ -9,7 +9,7 @@ export class SLLayoutContainer extends SLElement {
   static el = 'sl-layout-container';
 
   static get styles() {
-    return unsafeCSS(styles);
+    return unsafeCSS(styles.toString());
   }
 
   render() {

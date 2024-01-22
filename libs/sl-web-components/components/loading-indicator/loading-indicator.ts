@@ -10,7 +10,7 @@ export class SLLoadingIndicator extends SLElement {
   static el = 'sl-loading-indicator';
 
   static get styles() {
-    return unsafeCSS(styles);
+    return unsafeCSS(styles.toString());
   }
 
   /**

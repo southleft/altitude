@@ -31,7 +31,7 @@ export class SLListItem extends SLElement {
   private iconChevronRightEl = unsafeStatic(this.elementMap.get(SLIconChevronRight.el));
 
   static get styles() {
-    return unsafeCSS(styles);
+    return unsafeCSS(styles.toString());
   }
 
   /**

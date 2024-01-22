@@ -6,7 +6,7 @@ import styles from './f-po.scss';
 
 export class FPO extends LitElement {
   static get styles() {
-    return unsafeCSS(styles);
+    return unsafeCSS(styles.toString());
   }
 
   @property()

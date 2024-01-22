@@ -35,7 +35,7 @@
   /**
    * Small screens position the popup to be fullscreen
    */
-  @media all and (max-width: $sl-bp-sm) {
+  @media all and (max-width: $sl-breakpoint-sm) {
     &:not([hidden]) {
       display: flex;
       align-items: center;
@@ -57,7 +57,7 @@
  * - If there's no room at the bottom of the browser to open the calendar, open it on top
  */
 .sl-c-datetimepicker-field__popup--top {
-  @media all and (min-width: $sl-bp-sm) {
+  @media all and (min-width: $sl-breakpoint-sm) {
     inset-block-start: auto;
     inset-block-end: calc(100% + var(--sl-datetimepicker-field-popup-offset-top));
   }
@@ -68,7 +68,7 @@
  * - If there's no room to the right, open on the left
  */
 .sl-c-datetimepicker-field__popup--left {
-  @media all and (min-width: $sl-bp-sm) {
+  @media all and (min-width: $sl-breakpoint-sm) {
     inset-inline-start: auto;
     inset-inline-end: 0;
   }

@@ -9,24 +9,50 @@ const theme = 'sl';
 console.log(`🚧 Compiling tokens with the ${theme.toUpperCase()} theme`);
 
 StyleDictionary.registerFormat({
-  name: 'css/variables',
+  name: 'scss/variables',
   formatter: function({ dictionary, options }) {
-    const variables = dictionary.allTokens.map(token => {
-      let value = JSON.stringify(token.value);
-      value = JSON.parse(value); // Convert JSON string to its original value
-      if (options.outputReferences) {
-        if (dictionary.usesReference(token.original.value)) {
-          const refs = dictionary.getReferences(token.original.value);
-          refs.forEach(ref => {
-            value = `var(--${theme}-${ref.name})`;
-          });
+    const theme = 'sl'; // Assuming you have a theme variable
+
+    const breakpointVariables = dictionary.allTokens
+      .filter(token => token.name.includes('breakpoint'))
+      .map(token => {
+        let value = JSON.stringify(token.value);
+        value = JSON.parse(value); // Convert JSON string to its original value
+
+        if (options.outputReferences) {
+          if (dictionary.usesReference(token.original.value)) {
+            const refs = dictionary.getReferences(token.original.value);
+            refs.forEach(ref => {
+              value = `breakpoint-${ref.name}`;
+            });
+          }
         }
-      }
-      return `  --${theme}-${token.name}: ${value};`;
-    }).join('\n');
+
+        return `${`$`}${theme}-${token.name}: ${value};`;
+      })
+      .join('\n');
+
+    const otherVariables = dictionary.allTokens
+      .filter(token => !token.name.includes('breakpoint'))
+      .map(token => {
+        let value = JSON.stringify(token.value);
+        value = JSON.parse(value); // Convert JSON string to its original value
+
+        if (options.outputReferences) {
+          if (dictionary.usesReference(token.original.value)) {
+            const refs = dictionary.getReferences(token.original.value);
+            refs.forEach(ref => {
+              value = `var(--${theme}-${ref.name})`;
+            });
+          }
+        }
+
+        return `  --${theme}-${token.name}: ${value};`;
+      })
+      .join('\n');
 
     // Wrap the variables inside :root{}
-    return `:root {\n${variables}\n}`;
+    return `:root {\n${otherVariables}\n}\n\n${breakpointVariables}`;
   }
 });
 
@@ -72,13 +98,13 @@ const generateStyleDictionaryConfig = (theme) => {
     log: 'warn',
     source: filteredSource, // Use the filtered source
     platforms: {
-      css: {
-        transformGroup: 'css',
+      scss: {
+        transformGroup: 'scss',
         buildPath: './',
         files: [
           {
-            destination: `/styles/tokens.css`,
-            format: 'css/variables',
+            destination: `/styles/tokens.scss`,
+            format: 'scss/variables',
             options: {
               outputReferences: true,
             },
@@ -86,7 +112,7 @@ const generateStyleDictionaryConfig = (theme) => {
         ],
       },
       json: {
-        transformGroup: 'css',
+        transformGroup: 'scss',
         buildPath: './',
         files: [
           {

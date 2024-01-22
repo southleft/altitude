@@ -29,7 +29,7 @@ const preview: Preview = {
     // Configuring story sort order
     options: {
       storySort: {
-        order: ['Documentation', 'Tokens, Icons, and Utilities', 'Components', 'Recipes', 'Templates', 'Pages']
+        order: ['Documentation', 'Fundamentals', 'Components', 'Recipes', 'Templates', 'Pages']
       }
     },
   }

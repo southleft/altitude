@@ -10,7 +10,7 @@ export class SLLayout extends SLElement {
   static el = 'sl-layout';
 
   static get styles() {
-    return unsafeCSS(styles);
+    return unsafeCSS(styles.toString());
   }
 
   /**

@@ -9,7 +9,7 @@ export class SLLayoutSection extends SLElement {
   static el = 'sl-layout-section';
 
   static get styles() {
-    return unsafeCSS(styles);
+    return unsafeCSS(styles.toString());
   }
 
   render() {

@@ -43,7 +43,7 @@ export class SLSearchForm extends SLElement {
   private iconSearchEl = unsafeStatic(this.elementMap.get(SLIconSearch.el));
 
   static get styles() {
-    return unsafeCSS(styles);
+    return unsafeCSS(styles.toString());
   }
 
   /**

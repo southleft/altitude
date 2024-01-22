@@ -3,7 +3,7 @@ import './icon-grid';
 import './icons';
 
 export default {
-  title: 'Tokens, Icons, and Utilities/Icons',
+  title: 'Fundamentals/Icons/Icon Grid',
   component: 'icon-grid'
 };
 
