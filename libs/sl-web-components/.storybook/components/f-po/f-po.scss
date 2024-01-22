@@ -1,14 +1,19 @@
+@import '../../../styles/component';
+/* ------------------------------------*\
+    #F-PO
+\*------------------------------------ */
+
 :host {
   display: flex;
 }
 
 .f-po {
-  background: rgba(#bdb39e, 10%);
-  border: 1px dashed #bdb39e;
-  color: #bdb39e;
+  background: rgba(#bdb39e, 0.1);
+  border: var(--sl-theme-border-width) dashed var(--sl-theme-color-border-default);
+  color: var(--sl-theme-color-content-default-weak);
   width: 100%;
-  border-radius: 4px;
-  padding: 1rem;
+  border-radius: var(--sl-theme-border-radius);
+  padding: var(--sl-theme-space);
   font-weight: bold;
   text-align: center;
   display: block;
