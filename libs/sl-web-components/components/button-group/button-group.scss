@@ -1,0 +1,79 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #BUTTON-GROUP
+\*------------------------------------*/
+
+:host {
+  display: contents;
+}
+
+/**
+ * A container to place related buttons to control the layout of these buttons
+ */
+.sl-c-button-group {
+  display: flex;
+  align-items: center;
+  gap: size(2);
+  flex: 1;
+}
+
+/**
+ * Button group with stacked buttons
+ */
+.sl-c-button-group--stacked {
+  flex-direction: column;
+
+  /**
+   * Slotted buttons
+   */
+  ::slotted(sl-button) {
+    width: 100%;
+    --sl-button-width: 100%;
+  }
+}
+
+/**
+ * Button group with buttons stretched to the width of the container
+ */
+.sl-c-button-group--stretched {
+  width: 100%;
+
+  /**
+   * Slotted buttons
+   */
+  ::slotted(sl-button) {
+    width: 100%;
+    --sl-button-width: 100%;
+  }
+}
+
+/**
+ * Button group with buttons that stack on small screens
+ */
+.sl-c-button-group--responsive {
+  @media all and (max-width: $sl-bp-sm) {
+    flex-direction: column;
+
+    /**
+     * Slotted buttons
+     */
+    ::slotted(sl-button) {
+      width: 100%;
+      --sl-button-width: 100%;
+    }
+  }
+}
+
+/**
+ * Aligns the buttons to the right
+ */
+.sl-c-button-group--alignment-right {
+  justify-content: flex-end;
+}
+
+/**
+ * Aligns the buttons to the center
+ */
+.sl-c-button-group--alignment-center {
+  justify-content: center;
+}

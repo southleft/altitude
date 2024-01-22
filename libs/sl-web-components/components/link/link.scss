@@ -1,0 +1,175 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #LINK
+\*------------------------------------*/
+
+/**
+ * Link
+ */
+.sl-c-link {
+  @include link-styles;
+
+  /**
+   * Link icon
+   */
+  ::slotted(.sl-c-icon) {
+    --sl-icon-height: #{size(2.5)};
+    --sl-icon-width: #{size(2.5)};
+  }
+}
+
+/**
+ * Link extra small
+ */
+.sl-c-link--xs {
+  @include sl-theme-typography-body-xs;
+
+  /**
+   * Link icon
+   */
+  ::slotted(.sl-c-icon) {
+    --sl-icon-height: #{size(2)};
+    --sl-icon-width: #{size(2)};
+  }
+}
+
+/**
+ * Link small
+ */
+.sl-c-link--sm {
+  @include sl-theme-typography-body-sm;
+
+  /**
+   * Link icon
+   */
+  ::slotted(.sl-c-icon) {
+    --sl-icon-height: #{size(2.25)};
+    --sl-icon-width: #{size(2.25)};
+  }
+}
+
+/**
+ * Link large
+ */
+.sl-c-link--lg {
+  @include sl-theme-typography-body-lg;
+
+  /**
+   * Link icon
+   */
+  ::slotted(.sl-c-icon) {
+    --sl-icon-height: #{size(3)};
+    --sl-icon-width: #{size(3)};
+  }
+}
+
+/*------------------------------------*\
+  #MENU-ITEM-LINK
+\*------------------------------------*/
+
+/**
+ * Menu item link
+ */
+.sl-c-menu-item-link {
+  @include sl-theme-typography-body-sm;
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  border-radius: 0;
+  width: 100%;
+  height: var(--sl-menu-item-height);
+  padding-block: size(1);
+  padding-inline-end: size(2);
+  padding-inline-start: var(--sl-link-padding-inline-start, #{size(2)});
+  color: var(--sl-theme-color-content-default);
+  background: var(--sl-theme-color-background-transparent);
+
+  /**
+   * Menu item link focus outline with rounded borders
+   */
+  &::before {
+    @include focus;
+    display: block;
+    position: absolute;
+    content: '';
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    height: 100%;
+    width: 100%;
+    visibility: hidden;
+    opacity: 0;
+    background: transparent;
+    border-radius: var(--sl-theme-border-radius-xs);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /**
+   * Menu item link hover state
+   */
+  &:hover:not(:active, .sl-is-disabled) {
+    color: var(--sl-theme-color-content-default);
+    background: var(--sl-theme-color-background-default-strong);
+    text-decoration: none;
+  }
+
+  /**
+   * Menu item link focus state
+   */
+  &:focus-visible {
+    outline: none;
+
+    /**
+     * Show focus outline with rounded borders on focus-visible
+     */
+    &::before {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  /**
+   * Menu item link selected state
+   */
+  &.sl-is-selected {
+    color: var(--sl-theme-color-content-inverse-default);
+    background: var(--sl-theme-color-background-accent-default);
+
+    /**
+     * Menu item link hover state on a selected menu item
+     */
+    &:hover:not(:active, .sl-is-disabled) {
+      color: var(--sl-theme-color-content-inverse-default);
+      background: var(--sl-theme-color-background-accent-strong);
+    }
+  }
+}
+
+/**
+ * Menu item link header
+ */
+.sl-c-menu-item-header-link {
+  @include sl-theme-typography-body-md-bold;
+  color: var(--sl-theme-color-content-accent-default);
+
+  /**
+   * Menu item link header hover state
+   */
+  &:hover:not(:active, .sl-is-disabled) {
+    color: var(--sl-theme-color-content-accent-default);
+  }
+
+  /**
+   * Menu item link header selected state
+   */
+  &.sl-is-selected {
+    color: var(--sl-theme-color-content-inverse-default);
+
+    /**
+     * Menu item link header hover state on a selected menu item
+     */
+    &:hover:not(:active, .sl-is-disabled) {
+      color: var(--sl-theme-color-content-inverse-default);
+    }
+  }
+}

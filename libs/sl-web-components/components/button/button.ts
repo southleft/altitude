@@ -3,7 +3,7 @@ import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { FormController } from '../../controllers/form';
 import { SLElement } from '../SLElement';
-// import styles from './button.scss';
+import styles from './button.scss';
 
 /**
  * Component: sl-button
@@ -14,9 +14,9 @@ import { SLElement } from '../SLElement';
 export class SLButton extends SLElement {
   static el = 'sl-button';
 
-  // static get styles() {
-  //   return unsafeCSS(styles);
-  // }
+  static get styles() {
+    return unsafeCSS(styles);
+  }
 
   protected formController = new FormController(this);
 
@@ -24,15 +24,16 @@ export class SLButton extends SLElement {
    * Type of button
    */
   @property()
-  type: 'button' | 'submit' | 'reset';
+  accessor type: 'button' | 'submit' | 'reset';
 
   /**
    * Style variant
-   * - **secondary** renders the button used for primary actions
-   * - **danger** renders the button used for caution actions
+   * - **default** renders the button used for primary actions
+   * - **secondary** renders the button with an outlined style
+   * - **tertiary** renders the button with a bare style
    */
   @property()
-  variant?: 'secondary' | 'tertiary' | 'danger';
+  accessor variant: 'secondary' | 'tertiary';
 
   /**
    * Target attribute for a link (i.e. set to _blank to open in new tab)
@@ -42,69 +43,69 @@ export class SLButton extends SLElement {
    * - **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.
    */
   @property()
-  target?: '_blank' | '_self' | '_parent' | '_top';
+  accessor target: '_blank' | '_self' | '_parent' | '_top';
 
   /**
    * URL if this is an <a> element - this swaps <button> for <a>
    */
   @property()
-  href?: string;
+  accessor href: string;
 
   /**
    * Indicates the name when submitted with form data.
    */
   @property()
-  name?: string;
+  accessor name: string;
 
   /**
    * Indicates the aria label to apply to the button.
    */
   @property()
-  label?: string;
+  accessor label: string;
 
   /**
    * Indicates the value associated with the name when submitted with form data.
    */
   @property()
-  value?: string;
+  accessor value: string;
 
   /**
    * Indicates this button is a toggle button and whether it is pressed or not.
    */
   @property()
-  isPressed?: boolean | 'mixed';
+  accessor isPressed: boolean | 'mixed';
 
   /**
    * Disabled attribute
    */
   @property({ type: Boolean })
-  isDisabled?: boolean;
+  accessor isDisabled: boolean;
 
   /**
    * Indicates this button is a toggle button and whether it is pressed or not.
    */
   @property({ type: Boolean })
-  isExpanded?: boolean;
+  accessor isExpanded: boolean;
 
   /**
    * Visually hide button text (but text is still accessible to assistive technology)
    * 1. Use this for icon-only buttons for accessibility
    */
   @property({ type: Boolean })
-  hideText?: boolean;
+  accessor hideText: boolean;
 
   /**
    * Full width button
    */
   @property({ type: Boolean })
-  fullWidth?: boolean;
+  accessor fullWidth: boolean;
 
   /**
    * aria-controls attribute on the button
    * 1. Used for items like the buttons attached drawers
    */
   @property()
-  ariaControls?: string;
+  accessor ariaControls: string;
 
   /**
    * Handle click events
@@ -121,7 +122,6 @@ export class SLButton extends SLElement {
     const componentClassNames = this.componentClassNames('sl-c-button', {
       'sl-c-button--secondary': this.variant === 'secondary',
       'sl-c-button--tertiary': this.variant === 'tertiary',
-      'sl-c-button--danger': this.variant === 'danger',
       'sl-c-button--full-width': this.fullWidth === true,
       'sl-c-button--icon-only': this.hideText === true,
       'sl-is-expanded': this.isExpanded === true

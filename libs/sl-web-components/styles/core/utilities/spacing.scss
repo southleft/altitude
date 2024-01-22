@@ -1,0 +1,46 @@
+/* ------------------------------------*\
+    #SPACING UTILITITES
+\*------------------------------------ */
+
+$sizes: (
+  "": size(2),
+  --xs: size(0.5),
+  --sm: size(1),
+  --md: size(3),
+  --lg: size(4),
+  --xl: size(5),
+  --xxl: size(6),
+  --none: 0
+);
+
+$sides: (
+  "": "",
+  --top: "-block-start",
+  --bottom: "-block-end",
+  --left: "-inline-start",
+  --right: "-inline-end"
+);
+
+@each $size_key, $size_value in $sizes {
+  .sl-u-spacing#{$size_key} {
+    & > * + * {
+      margin-block-start: #{$size_value};
+    }
+  }
+
+  @each $side_key, $side_value in $sides {
+    .sl-u-padding#{$size_key}#{$side_key} {
+      padding#{$side_value}: #{$size_value};
+    }
+
+    .sl-u-margin#{$size_key}#{$side_key} {
+      margin#{$side_value}: #{$size_value};
+    }
+  }
+}
+
+.sl-u-spacing--left {
+  & > * + * {
+    margin-inline-start: size(2);
+  }
+}

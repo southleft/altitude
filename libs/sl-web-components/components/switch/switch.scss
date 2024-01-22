@@ -1,0 +1,110 @@
+@import '../../styles/component';
+
+/* ------------------------------------*\
+  #SWITCH
+\*------------------------------------ */
+
+/**
+ * Switch variables which allow an application to change the width and height of the switch if needed
+ */
+:host {
+  --sl-switch-width: 40px;
+  --sl-switch-height: 22px;
+}
+
+/**
+ * Switch
+ * 1. On/Off switch
+ */
+.sl-c-switch {
+  position: relative;
+}
+
+/**
+ * Switch label
+ * 1. The label element that is styled in a pill shape
+ */
+.sl-c-switch__label {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: var(--sl-switch-width);
+  height: var(--sl-switch-height);
+  border-radius: var(--sl-switch-height);
+  background-color: var(--sl-theme-color-background-default-weak);
+  cursor: pointer;
+  transition: all var(--sl-animation-move-quick) var(--sl-theme-animation-timing);
+
+  /**
+   * If the switch state is checked, changes the background color of the label
+   */
+  .sl-is-checked & {
+    background-color: var(--sl-theme-color-background-accent-default);
+  }
+
+  /**
+   * If the switch state is disabled, prevent it from being clickable
+   */
+  .sl-is-disabled & {
+    cursor: not-allowed;
+  }
+}
+
+/**
+ * Switch label after
+ * 1. The inner pill that slides based on the checked state
+ */
+.sl-c-switch__label:after {
+  content: '';
+  position: absolute;
+  width: calc(var(--sl-switch-height) - size(0.5));
+  height: calc(var(--sl-switch-height) - size(0.5));
+  border-radius: var(--sl-switch-height);
+  background-color: var(--sl-theme-color-content-default-weak);
+  inset-block-start: size(0.25);
+  inset-inline-start: size(0.25);
+  box-shadow: var(--sl-theme-box-shadow-xs);
+  transition: all var(--sl-animation-move-quick) var(--sl-theme-animation-timing);
+
+  /**
+   * If the switch state is checked, moves the pill to the right
+   */
+  .sl-is-checked & {
+    background: var(--sl-theme-color-content-default);
+    inset-inline-start: calc(100% - var(--sl-switch-height) + size(0.25));
+  }
+}
+
+/**
+ * Switch checkbox
+ * 1. The checkbox element that is visually hidden, but styled for focus-visible
+ */
+.sl-c-switch__checkbox {
+  display: block;
+  width: var(--sl-switch-width);
+  height: var(--sl-switch-height);
+  border-radius: var(--sl-switch-height);
+  border: 0;
+  margin: 0;
+  padding: 0;
+  appearance: none;
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+
+  /**
+   * The focus visible state when a user tabs to the toggle
+   */
+  &:focus-visible {
+    @include focus;
+  }
+}
+
+/**
+ * Switch disabled state
+ * 1. Changes the opacity of the switch
+ */
+.sl-is-disabled {
+  opacity: var(--sl-theme-opacity-disabled);
+}

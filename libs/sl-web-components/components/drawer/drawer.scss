@@ -1,0 +1,137 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #DRAWER
+\*------------------------------------*/
+
+/**
+ * Drawer
+ * - a large container that enters from the edge of the screen when triggered by a user. It’s used to provide users with actions and info without interrupting their flow like a modal.
+ * - The container element is the backdrop that occupies the full wiewport width and height. This allows for ghosting back the backdrop and handling click events outside the drawer
+ */
+ .sl-c-drawer {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  z-index: var(--sl-z-index-500);
+  width: 100vw;
+  height: 100vh;
+  visibility: hidden;
+  opacity: 0;
+
+  &.sl-is-active {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+/**
+ * Drawer with a dimmed backdrop, similar to a modal background
+ */
+.sl-c-drawer--backdrop {
+  transition: background-color var(--sl-animation-move-long) var(--sl-theme-animation-timing);
+  background-color: transparent;
+
+  /**
+   * Active drawer with backdrop
+   */
+  &.sl-is-active {
+    background-color:var(--sl-theme-color-background-transparent-strong);
+  }
+}
+
+/**
+ * The actual content creator
+ */
+.sl-c-drawer__panel {
+  position: fixed;
+  text-align: start;
+  width: var(--sl-drawer-panel-width, #{size(40)});
+  height: 100vh;
+  inset-inline-start: 0;
+  inset-block-start: 0;
+  background-color: var(--sl-theme-color-background-default);
+  box-shadow: var(--sl-theme-box-shadow-md);
+  transition: transform var(--sl-animation-move-long) var(--sl-theme-animation-timing);
+  transform: translateX(-100%);
+  display: flex;
+  flex-direction: column;
+
+  /**
+   * Right-postioned drawer
+   * - This is the default position
+   */
+  .sl-c-drawer--right & {
+    inset-inline-end: 0;
+    inset-inline-start: auto;
+    transform: translateX(100%);
+  }
+
+  /**
+   * Active left-positioned drawer
+   */
+  .sl-is-active & {
+    transform: translateX(0);
+  }
+
+  /**
+   * Active right-positioned drawer
+   */
+  .sl-c-drawer--right.sl-is-active & {
+    transform: translateX(0);
+  }
+
+  /**
+   * full WIdth panel for mobile view
+   */
+  .sl-c-drawer & {
+    @media all and (width <= calc($sl-bp-md - 0.02px)) {
+      width: 100%;
+      min-width: 100%;
+      max-width: 100%;
+    }
+  }
+}
+
+/**
+ * Drawer header container
+ */
+.sl-c-drawer__header {
+  padding: size(2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-block-end: 1px solid var(--sl-theme-color-border-weak);
+  position: relative;
+  gap: size(2);
+}
+
+/**
+ * Drawer header content
+ */
+.sl-c-drawer__header-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+}
+
+/**
+ * Drawer body container
+ * - Flex contents to span the available space
+ */
+.sl-c-drawer__body {
+  padding: size(2);
+  flex: 1;
+  overflow: auto;
+}
+
+/**
+ * Drawer footer container
+ */
+.sl-c-drawer__footer {
+  padding: size(2);
+  border-block-start: 1px solid var(--sl-theme-color-border-weak);
+}

@@ -1,0 +1,218 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #RADIO-ITEM
+\*------------------------------------*/
+
+/**
+ * Radio item
+ */
+.sl-c-radio-item {
+  display: flex;
+  flex-direction: column;
+  gap: size(1);
+}
+
+/**
+ * Radio container
+ * 1. The container that holds the radio and label
+ */
+.sl-c-radio-item__container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: size(0.5);
+}
+
+/**
+ * Radio label
+ * 1. The label that display next to the radio
+ */
+.sl-c-radio-item__label {
+  @include label-styles;
+  color: var(--sl-theme-color-content-default);
+  cursor: pointer;
+}
+
+/**
+ * Radio
+ * 1. The div that holds the input, custom radio, and ripple
+ */
+.sl-c-radio-item__radio {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: size(5);
+  height: size(5);
+  background-color: var(--sl-theme-color-background-transparent-default);
+}
+
+/**
+ * Radio input
+ * 1. The native input that's hidden
+ */
+.sl-c-radio-item__input {
+  appearance: none;
+  display: block;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  z-index: var(--sl-z-index-100);
+  border-radius: var(--sl-theme-border-radius-round);
+
+  /**
+   * Disabled state
+   */
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  /**
+   * Focused state
+   */
+  &:focus-visible {
+    @include focus-inset;
+  }
+}
+
+/**
+ * Radio ripple
+ * 1. The circle that appears behind the custom radio on hover and active
+ */
+.sl-c-radio-item__ripple {
+  z-index: 0;
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  transform: scale(0);
+  border-radius: var(--sl-theme-border-radius-round);
+  transition: all var(--sl-theme-animation-duration-long) var(--sl-theme-animation-timing);
+  background-color: var(--sl-theme-color-background-transparent-default);
+
+  /**
+   * Ripple on native input hover
+   */
+   .sl-c-radio-item__input:hover:not(:active, :disabled) + * + & {
+    transform: scale(1);
+    background-color: var(--sl-theme-color-background-default-strong);
+  }
+}
+
+/**
+ * Custom radio
+ * 1. Displays a custom styled radio
+ */
+.sl-c-radio-item__custom-radio {
+  z-index: 1;
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: size(3);
+  height: size(3);
+  overflow: hidden;
+  background-color: var(--sl-theme-color-background-transparent-default);
+  border-radius: var(--sl-theme-border-radius-round);
+  border: var(--sl-theme-border-width-md) solid var(--sl-theme-color-content-default);
+  transition: all var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+
+  /**
+   * Custom radio on native input checked
+   */
+  .sl-c-radio-item__input:checked + & {
+    border-color: var(--sl-theme-color-border-accent-default);
+  }
+
+  /**
+   * Custom radio with error
+   */
+  .sl-is-error & {
+    border-color: var(--sl-theme-color-border-danger-default);
+  }
+
+  /**
+   * Custom radio with disabled
+   */
+  .sl-c-radio-item__input:disabled + & {
+    opacity: var(--sl-theme-opacity-disabled);
+  }
+
+  /**
+   * Custom radio with disabled and checked
+   */
+  .sl-c-radio-item__input:checked:disabled + & {
+    border: none;
+  }
+
+  /**
+   * Custom check
+   */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    display: block;
+    width: 100%;
+    height: 100%;
+    mix-blend-mode: color-dodge;
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    mask-size: size(3) size(3);
+    mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"%3E%3Cpath d="m11,22c6.08,0,11-4.92,11-11S17.08,0,11,0,0,4.92,0,11s4.92,11,11,11Zm0-5.5c3.04,0,5.5-2.46,5.5-5.5s-2.46-5.5-5.5-5.5-5.5,2.46-5.5,5.5,2.46,5.5,5.5,5.5Z" fill="white" fill-rule="evenodd" stroke-width="0"/%3E%3C/svg%3E');
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center center;
+    -webkit-mask-size: size(3) size(3);
+    -webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"%3E%3Cpath d="m11,22c6.08,0,11-4.92,11-11S17.08,0,11,0,0,4.92,0,11s4.92,11,11,11Zm0-5.5c3.04,0,5.5-2.46,5.5-5.5s-2.46-5.5-5.5-5.5-5.5,2.46-5.5,5.5,2.46,5.5,5.5,5.5Z" fill="white" fill-rule="evenodd" stroke-width="0"/%3E%3C/svg%3E');
+    background-color: var(--sl-theme-color-border-accent-default);
+    opacity: 0;
+
+    /**
+     * Custom check when native input is checked
+     */
+    .sl-c-radio-item__input:checked + & {
+      opacity: inherit;
+    }
+
+    /**
+     * Custom check when native input is checked and disabled
+     */
+    .sl-c-radio-item__input:checked:disabled + & {
+      background-color: var(--sl-theme-color-content-default);
+    }
+  }
+}
+
+/**
+ * Radio item field note
+ * 1. Targets field notes that are added via a slot or property
+ */
+slot[name="field-note"],
+slot[name="error"] {
+  --sl-field-note-margin-inline-start: #{size(1)};
+}
+
+/**
+ * Radio item field note slotted
+ * 1. Targets field notes that are added via a slot
+ */
+slot[name="field-note"]::slotted(*),
+slot[name="error"]::slotted(*) {
+  /**
+   * Field note with error state
+   * 1. Ensures the error styles are still applied even if a slotted field note does not have ?isError applied
+   */
+  .sl-is-error & {
+    --sl-field-note-color: var(--sl-theme-color-border-danger-default);
+  }
+
+  /**
+   * Field note with disabled state
+   * 1. Ensures the disabled styles are still applied even if a slotted field note does not have ?isDisabled applied
+   */
+  .sl-is-disabled & {
+    opacity: var(--sl-theme-opacity-disabled);
+  }
+}

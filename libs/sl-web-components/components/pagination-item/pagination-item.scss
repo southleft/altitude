@@ -1,0 +1,70 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #PAGINATION-ITEM
+\*------------------------------------*/
+
+/**
+ * Pagination item
+ */
+.sl-c-pagination-item {
+  @include sl-theme-typography-body-sm;
+  list-style: none;
+}
+
+/**
+ * Pagination item link
+ */
+.sl-c-pagination__link {
+  padding: size(1) size(2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  width: max-content;
+  transition: all var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+  border-radius: var(--sl-theme-border-radius);
+  background-color: var(--sl-theme-color-background-transparent-default);
+  color: var(--sl-theme-color-content-default-weak);
+  --sl-icon-width: #{size(3)};
+  --sl-icon-height: #{size(3)};
+
+  /**
+   * Hover state
+   */
+  &:hover:not(:active, .sl-is-disabled &) {
+    background-color: var(--sl-theme-color-background-transparent-default);
+    color: var(--sl-theme-color-content-default);
+  }
+
+  /**
+   * Focus outline
+   */
+   &:focus-visible {
+    --sl-theme-color-focus-ring: var(--sl-theme-color-content-default-weak);
+  }
+
+  /**
+  * Disabled state
+  */
+  .sl-is-disabled & {
+    cursor: not-allowed;
+    opacity: var(--sl-theme-opacity-disabled);
+  }
+
+  /**
+   * Selected state
+   */
+  .sl-is-selected & {
+    background-color: var(--sl-theme-color-background-accent-default);
+    color: var(--sl-theme-color-content-accent-weak);
+
+    /**
+     * Selected and hover state
+     */
+    &:hover:not(:active, .sl-is-disabled &) {
+      background-color: var(--sl-theme-color-background-accent-strong);
+      color: var(--sl-theme-color-content-accent-weak);
+    }
+  }
+}

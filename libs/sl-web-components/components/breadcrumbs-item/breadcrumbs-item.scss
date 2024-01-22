@@ -1,0 +1,58 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #BREADCRUMBS-ITEM
+\*------------------------------------ */
+
+:host {
+  display: contents;
+}
+
+/**
+ * Breadcrumb Item
+ */
+.sl-c-breadcrumbs-item {
+  @include sl-theme-typography-heading-md;
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: size(0.5);
+  color: var(--sl-theme-color-content-default-weak);
+}
+
+/**
+ * Breadcrumb Item Label
+ */
+.sl-c-breadcrumbs-item__label {
+  @include sl-theme-typography-heading-md;
+  display: flex;
+  align-items: center;
+  gap: size(0.75);
+  margin: 0;
+  padding: size(0.5) size(1);
+  border: none;
+  background-color: var(--sl-theme-color-background-transparent);
+  border-radius: var(--sl-theme-border-radius-md);
+  color: var(--sl-theme-color-content-default-weak);
+  text-decoration: none;
+  transition: all var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+  cursor: pointer;
+  --sl-icon-width: #{size(3)};
+  --sl-icon-height: #{size(3)};
+
+  /**
+   * Label - Current state
+   */
+  .sl-is-current & {
+    color: var(--sl-theme-color-content-default);
+    pointer-events: none;
+  }
+
+  /**
+   * Label - Hover state
+   */
+  &:hover:not(:active) {
+    color: var(--sl-theme-color-content-default);
+    background: var(--sl-theme-color-background-default);
+  }
+}

@@ -1,0 +1,137 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #CHIP
+\*------------------------------------*/
+
+:host {
+  display: contents;
+}
+
+/**
+ * Chip
+ */
+.sl-c-chip {
+  @include sl-theme-typography-body-sm;
+
+  display: inline-flex;
+  cursor: pointer;
+  gap: size(0.5);
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  margin: 0;
+  padding: size(0.5) size(1.5);
+  border-width: var(--sl-theme-border-width);
+  border-style: solid;
+  border-radius: size(4);
+  background-color: var(--sl-theme-color-background-default-weak);
+  border-color: var(--sl-theme-color-border-weak);
+  color: var(--sl-theme-color-content-default);
+  --sl-icon-width: #{size(3)};
+  --sl-icon-height: #{size(3)};
+
+  /**
+   * Focus state
+   */
+  &:focus-visible {
+    @include focus;
+    outline-offset: 2px;
+  }
+
+  /**
+   * Hides the chips
+   */
+  &.sl-is-dismissed {
+    display: none;
+  }
+}
+
+/**
+ * Hide the chip from the DOM
+ */
+.sl-u-is-vishidden {
+  display: none;
+}
+
+/**
+ * Chip with squared type
+ */
+.sl-c-chip--squared {
+  border-radius: var(--sl-theme-border-radius);
+}
+
+/**
+ * Chip with secondary variant
+ */
+.sl-c-chip--secondary {
+  background-color: var(--sl-theme-color-background-default-strong);
+  border-color: var(--sl-theme-color-background-default-strong);
+  color: var(--sl-theme-color-content-default-weak);
+}
+
+/**
+ * Chip with tertiary variant
+ */
+.sl-c-chip--tertiary {
+  background-color: var(--sl-theme-color-background-transparent-default);
+  border-color: var(--sl-theme-color-background-default-weak);
+  color: var(--sl-theme-color-content-default-weak);
+}
+
+/**
+ * Chip with success variant
+ */
+.sl-c-chip--success {
+  background-color: var(--sl-theme-color-background-success-default);
+  border-color: var(--sl-theme-color-background-success-default);
+  color: var(--sl-theme-color-content-success-weak);
+}
+
+/**
+ * Chip with danger variant
+ */
+.sl-c-chip--danger {
+  background-color: var(--sl-theme-color-background-danger-default);
+  border-color: var(--sl-theme-color-background-danger-default);
+  color: var(--sl-theme-color-content-danger-weak);
+}
+
+/**
+ * Chip with info variant
+ */
+.sl-c-chip--info {
+  background-color: var(--sl-theme-color-background-info-default);
+  border-color: var(--sl-theme-color-background-info-default);
+  color: var(--sl-theme-color-content-info-weak);
+}
+
+/**
+ * Chip with warning variant
+ */
+.sl-c-chip--warning {
+  background-color: var(--sl-theme-color-background-warning-default);
+  border-color: var(--sl-theme-color-background-warning-default);
+  color: var(--sl-theme-color-content-warning-weak);
+}
+
+/**
+ * Chip close icon
+ */
+.sl-c-chip__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline-end: size(-1);
+  width: size(3);
+  height: size(3);
+  --sl-icon-width: #{size(2)};
+  --sl-icon-height: #{size(2)};
+}
+
+/**
+ * Icons slotted within the chip
+ */
+::slotted(.sl-c-icon) {
+  position: relative;
+  margin-inline-start: size(-0.5);
+}

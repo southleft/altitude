@@ -1,0 +1,324 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+    #CALSLDAR
+\*------------------------------------ */
+
+/**
+ * Calendar
+ */
+.sl-c-calendar {
+  width: 22.5rem;
+  margin-block-start: 0;
+  background-color: var(--sl-calendar-background-color, var(--sl-theme-color-background-default));
+  border-radius: var(--sl-calendar-box-shadow, var(--sl-theme-border-radius-lg));
+  box-shadow: var(--sl-calendar-border-radius, var(--sl-theme-box-shadow-md));
+  position: relative;
+}
+
+/**
+ * Navigation wrapper for previous, next and month sele
+ */
+.sl-c-calendar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: size(1) size(2.5) size(1);
+}
+
+/**
+ * Displayed Month and Year above calendar dates
+ */
+.sl-c-calendar__month-selector-button {
+  @include sl-theme-typography-body-sm;
+  display: inline-flex;
+  align-items: center;
+  gap: size(1);
+  background: none;
+  cursor: pointer;
+  border: 0;
+  padding: size(1);
+  text-align: center;
+  color: var(--sl-theme-color-content-default);
+}
+
+/**
+ * Navigation buttons for previous/next month
+ */
+.sl-c-calendar__nav-btn {
+  cursor: pointer;
+
+  /**
+   * When previous/next month is not selectable
+   */
+  &[disabled],
+  &[disabled]:focus,
+  &[disabled]:hover {
+    color: var(--sl-theme-color-content-default);
+    opacity: var(--sl-theme-opacity-disabled);
+  }
+}
+
+/**
+ * Body wrapper for days
+ */
+.sl-c-calendar__table-container {
+  padding: 0 size(2) size(1);
+  text-align: center;
+}
+
+/**
+ * Footer container in datepicker
+ */
+.sl-c-calendar__footer {
+  padding: 0 size(2) size(2);
+}
+
+/**
+ * Grid for displaying dates
+ */
+.sl-c-calendar__table {
+  width: 100%;
+}
+
+/**
+ * Grid header row spacing
+ */
+.sl-c-calendar__header-cell {
+  @include sl-theme-typography-body-xs;
+  text-transform: uppercase;
+  color: var(--sl-theme-color-content-default-weak);
+  padding-block-end: size(2);
+}
+
+/**
+ * Day buttons on calendar
+ */
+.sl-c-calendar__item {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  height: 2.25rem;
+  width: 2.25rem;
+  padding: 0;
+  margin-block-end: size(1);
+  position: relative;
+  transition: background-color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing), color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+
+  /**
+   * Hover/Focus styles
+   */
+  &:focus-visible,
+  &:hover {
+    background-color: var(--sl-theme-color-background-default-strong);
+    cursor: pointer;
+    outline: none;
+  }
+
+  /**
+   * Focus states for dates
+   */
+  &:focus-visible {
+    @include focus;
+  }
+
+  /**
+   * When day is Today
+   * - Display a dot underneath the date to indicate the present day
+   */
+  &.sl-is-today {
+    &:after {
+      content: '';
+      width: size(1);
+      height: size(1);
+      background: var(--sl-theme-color-background-accent-default);
+      border-radius: 50%;
+      position: absolute;
+      inset-block-end: size(0.125);
+      inset-inline-start: calc(50% - size(0.5));
+    }
+  }
+
+  /**
+   * When day is available to be selected
+   */
+  &.sl-is-available {
+    @include sl-theme-typography-body-sm;
+
+    color: var(--sl-theme-color-content-default);
+  }
+
+  /**
+   * Selected
+   */
+  &.sl-is-active,
+  &.sl-is-available.sl-is-active {
+    color: var(--sl-theme-color-content-accent-weak);
+    background-color: var(--sl-theme-color-background-accent-default);
+
+    /**
+     * - Change current day dot indicator to knockout text color
+     */
+    &.sl-is-today:after {
+      background: var(--sl-theme-color-content-accent-weak); /* 1 */
+    }
+  }
+
+  /**
+   * When focus is set to the active selected day
+   */
+  &.sl-is-active:focus {
+    box-shadow: inset 0 0 0 var(--sl-theme-border-width-md) var(--sl-theme-color-background-accent-strong);
+  }
+
+  /**
+   * When day is not selectable
+   */
+  &:disabled,
+  &:disabled:focus,
+  &:disabled:hover {
+    color: var(--sl-theme-color-content-default);
+    cursor: not-allowed;
+    background: none;
+    opacity: var(--sl-theme-opacity-disabled);
+  }
+}
+
+/**
+ * Month calendar popup
+ */
+.sl-c-calendar__month-selector-popup {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  z-index: 1;
+  background: var(--sl-theme-color-background-default);
+}
+
+/* ------------------------------------*\
+    #MONTH SELECTOR
+\*------------------------------------ */
+.sl-c-month-selector {
+  padding: size(2);
+}
+
+.sl-c-month-selector__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sl-c-month-selector__item {
+  border-block-end: 1px solid var(--sl-theme-color-border-default);
+  padding: size(2) 0;
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  gap: size(2);
+
+  &:last-of-type {
+    border-block-end: none;
+  }
+}
+
+.sl-c-month-selector__sub-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: size(1);
+}
+
+.sl-c-month-selector__year-heading {
+  @include sl-theme-typography-body-sm;
+  color: var(--sl-theme-color-content-default-weak);
+  margin: size(1) 0 0;
+}
+
+.sl-c-month-selector__button {
+  @include sl-theme-typography-body-sm;
+  text-transform: uppercase;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  height: 2.25rem;
+  width: 2.25rem;
+  padding: 0;
+  position: relative;
+  cursor: pointer;
+  transition: background-color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing), color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+
+  abbr {
+    border-block-end: 0;
+    text-decoration: none;
+    color: var(--sl-theme-color-content-default);
+  }
+
+  /**
+   * Hover/Focus styles
+   */
+  &:focus-visible,
+  &:hover {
+    background-color: var(--sl-theme-color-background-default-strong);
+    cursor: pointer;
+    outline: none;
+  }
+
+  /**
+   * Focus states for dates
+   */
+  &:focus-visible {
+    @include focus;
+  }
+
+  /**
+   * When month is not selectable
+   */
+  &:disabled,
+  &:disabled:focus,
+  &:disabled:hover {
+    color: var(--sl-theme-color-content-default);
+    cursor: not-allowed;
+    background: none;
+    opacity: var(--sl-theme-opacity-disabled);
+  }
+
+  /**
+   * When month is current month
+   * - Display a dot underneath the date to indicate the present day
+   */
+  &.sl-is-current {
+    &:after {
+      content: '';
+      width: size(1);
+      height: size(1);
+      background: var(--sl-theme-color-background-accent-default);
+      border-radius: 50%;
+      position: absolute;
+      inset-block-end: -2px;
+      inset-inline-start: calc(50% - 4px);
+    }
+  }
+
+  /**
+   * Selected
+   */
+  &.sl-is-active,
+  &.sl-is-available.sl-is-active {
+    color: var(--sl-theme-color-content-accent-weak);
+    background-color: var(--sl-theme-color-background-accent-default);
+
+    /**
+     * - Change current day dot indicator to knockout text color
+     */
+    &.sl-is-current:after {
+      background: var(--sl-theme-color-content-accent-weak); /* 1 */
+    }
+
+    abbr {
+      color: var(--sl-theme-color-content-accent-weak);
+    }
+  }
+}

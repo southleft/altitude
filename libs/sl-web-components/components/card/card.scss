@@ -1,0 +1,96 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #CARD
+\*------------------------------------ */
+
+/**
+ * Card
+ */
+.sl-c-card {
+  display: flex;
+  padding: size(2);
+  gap: size(1);
+  flex-flow: column wrap;
+  border-radius: var(--sl-theme-border-radius);
+  background-color: var(--sl-theme-color-background-default);
+  color: var(--sl-theme-color-content-default);
+  box-shadow: var(--sl-theme-box-shadow-md);
+}
+
+/**
+ * Card actions wrapper
+ */
+.sl-c-card__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: size(1);
+  overflow: visible;
+  position: relative;
+  z-index: var(--sl-z-index-100);
+}
+
+/**
+ * Card actions left and right
+ */
+.sl-c-card__actions-left,
+.sl-c-card__actions-right {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: size(1);
+  flex: 1;
+}
+
+/**
+ * Card actions left
+ */
+.sl-c-card__actions-left {
+  justify-content: flex-start;
+}
+
+/**
+ * Card actions right
+ */
+.sl-c-card__actions-right {
+  justify-content: flex-end;
+}
+
+/**
+ * Card image
+ */
+.sl-c-card__image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/**
+ * Card image slotted items
+ */
+::slotted([slot='image']) {
+  width: 100%;
+  height: auto;
+}
+
+/**
+ * Card header
+ */
+.sl-c-card__header {
+  @include sl-theme-typography-heading-sm;
+  width: 100%;
+  display: flex;
+  gap: size(1);
+  align-items: center;
+  justify-content: start;
+  flex: 1;
+}
+
+/**
+ * Card header slotted items
+ */
+::slotted([slot='header']) {
+  @include sl-theme-typography-heading-sm;
+  margin: 0;
+}

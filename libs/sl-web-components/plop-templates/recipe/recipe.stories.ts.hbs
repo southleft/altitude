@@ -1,0 +1,14 @@
+import {html} from 'lit';
+import './{{dashCase name}}';
+
+export default {
+  title: 'Recipes/{{titleCase name}}',
+  component: '{{dashCase name}}',
+  parameters: { status: { type: 'beta' } },
+  tags: [ 'autodocs' ]
+};
+
+const Template = (args) => html`<{{dashCase name}} ${spread(args)} data-testid="{{dashCase name}}">Hello world</{{dashCase name}}>`;
+
+export const Default = Template.bind({});
+Default.args = {};

@@ -1,0 +1,48 @@
+/* ------------------------------------ *\
+  $BASE
+\* ------------------------------------ */
+
+/**
+ * Breakpoints
+ * 1. SCSS Variables used for media queries
+ * 2. Note: presently CSS Custom Properites can't be used within media queries so SCSS variables must be used
+ */
+$sl-bp-xs: var(--sl-breakpoint-xs, '320px');
+$sl-bp-sm: var(--sl-breakpoint-sm, '480px');
+$sl-bp-md: var(--sl-breakpoint-md, '768px');
+$sl-bp-lg: var(--sl-breakpoint-lg, '1024px');
+$sl-bp-xl: var(--sl-breakpoint-xl, '1260px');
+$sl-bp-xxl: var(--sl-breakpoint-xxl, '1440px');
+
+/**
+ * RTL support for values logical properties can't automatically adjust for
+ * 1) Percentage based horizontal translate values need to be flipped
+ * 2) Background gradients using "to right" or "to left" need to be switched to using deg values
+ * 3) Background Position From is used for reversing animation from right to left at 0%
+ * 4) Background Position To is used for reversing animation from right to left at 100%
+ */
+[dir='rtl'] {
+  --rtlTranslateX: 50%; /* 1 */
+  --rtlGradientToRight: 270deg; /* 2 */
+  --rtlBackgroundPositionFrom: -135%; /* 3 */
+  --rtlBackgroundPositionTo: 0%; /* 4 */
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  color: var(--sl-theme-color-content-default);
+  background: var(--sl-theme-color-background-default);
+}
+
+a {
+  text-decoration: none;
+  transition: all var(--sl-theme-transition-duration) var(--sl-theme-transition-timing);
+  color: inherit;
+
+  svg path {
+    fill: currentcolor;
+  }
+}
