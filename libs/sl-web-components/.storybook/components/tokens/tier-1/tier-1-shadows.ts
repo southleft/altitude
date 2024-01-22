@@ -35,7 +35,7 @@ export class Tier1Shadows extends LitElement {
             </tr>
           </thead>
           <tbody>
-            ${this.filterTokens('sl-box-shadow-').map((item) => {
+            ${this.filterTokens('sl-box-shadow').map((item) => {
               return html`
                 <token-specimen
                   variant="shadow"

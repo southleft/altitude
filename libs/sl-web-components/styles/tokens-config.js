@@ -33,7 +33,8 @@ StyleDictionary.registerFormat({
       .join('\n');
 
     const otherVariables = dictionary.allTokens
-      .filter(token => !token.name.includes('breakpoint'))
+      // Filter out any tokens that include breakpoint and ends with italic or underline
+      .filter(token => !token.name.includes('breakpoint') && !token.name.includes('typography'))
       .map(token => {
         let value = JSON.stringify(token.value);
         value = JSON.parse(value); // Convert JSON string to its original value
@@ -59,10 +60,14 @@ StyleDictionary.registerFormat({
 StyleDictionary.registerFormat({
   name: 'json/flat',
   formatter: function({ dictionary }) {
-    const variables = dictionary.allTokens.map((token, index, array) => {
+    const variables = dictionary.allTokens
+    // Filter out any tokens that ends with italic or underline
+    .filter(token => !token.name.endsWith('-figma') && !token.name.endsWith('-italic') && !token.name.endsWith('-underline'))
+    .map((token, index, array) => {
+      let tokenName = token.name.includes('typography') && token.name.endsWith('-regular') ? token.name.replace('-regular', '') : token.name;
       let value = token.value;
       const comma = index === array.length - 1 ? '' : ',';
-      return `  "${theme}-${token.name}": "${value}"${comma}`;
+      return `  "${theme}-${tokenName}": "${value}"${comma}`;
     }).join('\n');
 
     // Wrap the variables inside {}
@@ -83,20 +88,9 @@ const generateStyleDictionaryConfig = (theme) => {
     `./styles/tokens/tier-3/*.json`,
   ];
 
-  // Add additional files/directories to exclude
-  const excludedSources = [
-    './styles/tokens/tier-1/typography.json',
-    './styles/tokens/tier-2/typography.json',
-  ];
-
-  // Filter the source array to exclude files/directories
-  const filteredSource = source.filter(sourcePath => {
-    return !excludedSources.some(excludedPath => sourcePath.includes(excludedPath));
-  });
-
   return {
     log: 'warn',
-    source: filteredSource, // Use the filtered source
+    source: source,
     platforms: {
       scss: {
         transformGroup: 'scss',
