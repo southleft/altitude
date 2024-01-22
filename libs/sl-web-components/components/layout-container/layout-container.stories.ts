@@ -6,6 +6,7 @@ import './layout-container';
 export default {
   title: 'Components/Layout Container',
   component: 'layout-container',
+  tags: [  'autodocs' ],
   parameters: { status: { type: 'stable' } }
 };
 

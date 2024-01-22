@@ -1,0 +1,90 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Documentation/Releasing" />
+
+# Versioning and Releasing SL Web Components
+
+SL Web Components is a UI library that powers Extreme Neworks's digital products. This document details the practices that SL follows to provide consumers with a predictable & stable UI library and that introduces changes in a predictable way.
+
+## Principles for versioning and releasing
+
+- Deliver stable, predictable software
+- Communicate and coordinate with teams consuming SL Web Components
+- Clearly communicate changes and roadmap
+- Minimize breaking changes
+- Follow a sensible, predictable release cadance
+
+## Building Themes and Components
+
+In order to use SL Web Components in a HTML page you must compile the TypeScript into vanilla JavaScript. That is done via the `yarn build` command. There are a few options you can include on the command to customize the output. They are,
+
+- `yarn build -- --progress` using `--progress` will display logging info to the terminal as webpack compiles the sources
+- `[theme].css`, depending on the theme you may get a `sl.css` file or something like that. This contains all the CSS custom properties and shared CSS (e.g. typography presets). This should be included in the head of your HTML.
+- `vendor.js`, any shared (or reused) code across multiple components. You _must_ include this in the page any time you are using the library. This should be included first before any components or bundles are included (below).
+- `bundle.js`, a bundled compilation of _all_ components in the repository (**IMPORTANT**: This does not include `icon.js` since the pathing adds more work to the user).
+- `:component.js` where `:component` is the name of a component such as `button`. This is an individual export of each component. If your system has the ability to selectivly bring in javascript based on the needs of the page you could use these to only include the accordion on pages where an accordion is needed, for example.
+
+**IMPORTANT** - Always include `icon.js` in your project whether you use the individual component JS files or bundle.js files.
+
+## Versioning
+
+SL Web Components uses [SemVer](https://semver.org/) semantic versioning to keep track of ongoing changes to the product. The three types of versions are:
+
+- **Major (X.y.z)** - Major versions contain breaking changes to SL Web Components developers builds.
+- **Minor (x.Y.z)** - Minor versions add new features or deprecate existing features without breaking changes.
+- **Patch (x.y.Z)** - Patch versions fix defects or optimize existing features without breaking changes.
+
+The details for each version are as follows:
+
+### Major changes
+
+Major releases incur breaking changes for user developers, including:
+
+- **API** - Removing, renaming, or altering any component, prop, method, event, or slot that would result in a broken build if user developers don't address changes in downstream applications.
+- **Style** - Making changes to box-model properties (such as `padding`, `margin`, `width`, `height` and so on), typography properties, or specificity that would result in layout shifts or wrapping text. Making bold stylistic changes to the design language, such as adopting new typefaces or changing buttons from blue to red.
+- **Icons** - Removing, renaming, or significantly altering the design of icons.
+
+### Minor changes
+
+Minor versions are additive changes with full backwards compatibility, including:
+
+- **API** - Adding new components. Adding new props, methods, events, or slots. Deprecating (but not removing) existing props, methods, events, or slots. Altering a component's markup or behavior in ways that don't cause breaking changes .
+- **Style** - Adding or altering styles in ways that don't cause breaking layout shifts, wrapping text, or radically altering the existing design language.
+- **Icons** - Adding new icons and making subtle changes to existing icons.
+
+### Patch changes
+
+Patch versions fix defects and optimize existing code, including:
+
+- Fixing defects in props, methods, events, or slots that are preventing the component from functioning.
+- Fixing styling defects causing issues with legibility, accessibility, or display.
+- Updating component documentation.
+- Refactoring component code without impacting display or functionality.
+- Adding or updating tests.
+
+---
+
+### Releasing SL Web Components
+
+### Release strategy
+
+SL releases new versions of SL Web Components on a regular schedule to help teams plan and coordinate updates.
+
+In these releases, teams can expect new features and fixes in the form of minor and patch releases that are fully backwards compatible. **Major releases that require any refactoring in downstream applications will always be done in coordination with product teams** so as not to distract from teams' product roadmaps and ensure breaking changes are handled with care and consideration.
+
+In pre-`v1.0` releases, there may be some shifts in architecture or naming as the library gets off the ground. Should any breaking changes be incurred before the library reaches a `v1.0` status, the SL team will prioritize assisting and helping any consuming team address those changes.
+
+Once the dust settles and the component library reaches a `v1.0` status, teams can expect SL Web Components to be stable software. Backwards-compatible features and fixes will continue to be added. Any major release that incurs breaking changes (see "Major changes" section above) to the library will be coordinated around product teams and their roadmaps.
+
+### Release process
+
+1. Create a release branch, e.g. `release-v0.x.x`
+2. Run `yarn update-version`. This will update the version in the `package.json` file of the project.
+4. Navigate to the CHANGELOG.md file and manually update the version number and date.
+5. Commit the changes - `git commit -am "Updating release version and changelog."`
+6. Push the changes up to the remote repo - `git push origin main`
+7. Tag the release - `git tag -a v0.x.x -m "Release v0.x.x"`
+8. Push the tag up to the remote - `git push origin -f --tags`
+9. Make a pull request to merge the changes into the `main` branch
+10. Go to the Github repo "tags" section to confim the new tag - https://github.com/extremenetworks/ExtremeCloud-One/tags
+

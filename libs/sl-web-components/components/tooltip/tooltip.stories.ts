@@ -7,6 +7,7 @@ import './tooltip';
 export default {
   title: 'Components/Tooltip',
   component: 'sl-tooltip',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',

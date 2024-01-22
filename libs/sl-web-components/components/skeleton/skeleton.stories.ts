@@ -5,6 +5,7 @@ import './skeleton';
 export default {
   title: 'Components/Skeleton',
   component: 'sl-skeleton',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',

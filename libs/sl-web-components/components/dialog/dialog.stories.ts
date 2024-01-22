@@ -10,6 +10,7 @@ import './dialog';
 export default {
   title: 'Components/Dialog',
   component: 'sl-dialog',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'padded',

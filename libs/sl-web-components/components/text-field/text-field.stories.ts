@@ -12,6 +12,7 @@ import './text-field';
 export default {
   title: 'Components/Text Field',
   component: 'sl-text-field',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',

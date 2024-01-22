@@ -7,6 +7,7 @@ import './file-upload';
 export default {
   title: 'Components/File Upload',
   component: 'sl-file-upload',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

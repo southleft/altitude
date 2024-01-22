@@ -8,6 +8,7 @@ export default {
   title: 'Components/Breadcrumbs',
   component: 'sl-breadcrumbs',
   subcomponents: { SLBreadcrumbsItem: 'sl-breadcrumbs-item' },
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
   },

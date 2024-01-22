@@ -6,6 +6,7 @@ import './breadcrumbs-item';
 export default {
   title: 'Components/Breadcrumbs Item',
   component: 'sl-breadcrumbs-item',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

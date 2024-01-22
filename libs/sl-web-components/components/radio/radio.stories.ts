@@ -9,6 +9,7 @@ import './radio';
 export default {
   title: 'Components/Radio',
   component: 'sl-radio',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

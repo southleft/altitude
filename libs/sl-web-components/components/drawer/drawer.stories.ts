@@ -5,6 +5,7 @@ import './drawer';
 export default {
   title: 'Components/Drawer',
   component: 'sl-drawer',
+  tags: [  'autodocs' ],
   parameters: { status: { type: 'beta' } },
 };
 

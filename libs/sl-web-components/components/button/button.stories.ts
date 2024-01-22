@@ -10,6 +10,7 @@ import './button';
 export default {
   title: 'Components/Button',
   component: 'sl-button',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',

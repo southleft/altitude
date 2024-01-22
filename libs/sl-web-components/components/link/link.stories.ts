@@ -6,6 +6,7 @@ import './link';
 export default {
   title: 'Components/Link',
   component: 'sl-link',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',

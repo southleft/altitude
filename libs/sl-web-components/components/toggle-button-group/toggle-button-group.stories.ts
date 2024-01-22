@@ -9,6 +9,7 @@ import './toggle-button-group';
 export default {
   title: 'Components/Toggle Button Group',
   component: 'sl-toggle-button-group',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

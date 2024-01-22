@@ -8,6 +8,7 @@ import './datepicker-field';
 export default {
   title: 'Components/Datepicker Field',
   component: 'sl-datepicker-field',
+  tags: [  'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {
