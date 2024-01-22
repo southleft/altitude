@@ -1,5 +1,4 @@
 import { html, LitElement, unsafeCSS } from 'lit';
-import { property } from 'lit/decorators.js';
 import tokens from '../../../../styles/tokens.json';
 import '../../token-specimen/token-specimen';
 import styles from '../tokens.scss';
@@ -9,40 +8,12 @@ export class Tier1Typography extends LitElement {
     return unsafeCSS(styles.toString());
   }
 
-  @property()
-  accessor typographyPresets: Object = {
-    'sl-typography-preset-0': 'sl-typography-preset-0',
-    'sl-typography-preset-1': 'sl-typography-preset-1',
-    'sl-typography-preset-1-bold': 'sl-typography-preset-1-bold',
-    'sl-typography-preset-2': 'sl-typography-preset-2',
-    'sl-typography-preset-2-bold': 'sl-typography-preset-2-bold',
-    'sl-typography-preset-3': 'sl-typography-preset-3',
-    'sl-typography-preset-3-bold': 'sl-typography-preset-3-bold',
-    'sl-typography-preset-4': 'sl-typography-preset-4',
-    'sl-typography-preset-4-bold': 'sl-typography-preset-4-bold',
-    'sl-typography-preset-5': 'sl-typography-preset-5',
-    'sl-typography-preset-5-bold': 'sl-typography-preset-5-bold',
-    'sl-typography-preset-6': 'sl-typography-preset-6',
-    'sl-typography-preset-6-bold': 'sl-typography-preset-6-bold',
-    'sl-typography-preset-7': 'sl-typography-preset-7',
-    'sl-typography-preset-7-bold': 'sl-typography-preset-7-bold',
-  };
-
-  filteType(prefix) {
-    return Object.entries(this.typographyPresets)
-      .filter(([name]) => name.startsWith(prefix))
-      .map(([name, value]) => ({
-        name: `${name}`,
-        value
-      }));
-  }
-
   filterTokens(prefix) {
     return Object.entries(tokens)
       .filter(([name]) => name.startsWith(prefix))
       .map(([name, value]) => ({
         name: `--${name}`,
-        value
+        value,
       }));
   }
 
