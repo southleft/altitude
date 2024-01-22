@@ -25,7 +25,7 @@ export class Tier2Typography extends LitElement {
         </header>
         <table>
           <caption>
-            Typography Presets
+            Typography Usage
           </caption>
           <thead>
             <tr>
