@@ -1,17 +1,17 @@
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { SLButton as SLWebButton } from 'sl-web-components/dist/components/button/button';
+import { SLAlert as SLWebAlert } from 'sl-web-components/dist/components/alert/alert';
 import register from 'sl-web-components/dist/directives/register';
 import PackageJson from '../../../package.json';
 
 const elementMap = register({
-  elements: [SLWebButton.el, SLWebButton],
+  elements: [SLWebAlert.el, SLWebAlert],
   suffix: PackageJson.version
 });
 
-export const SLButton = createComponent({
+export const SLAlert = createComponent({
   react: React,
-  tagName: elementMap.get(SLWebButton.el),
-  elementClass: SLWebButton,
+  tagName: elementMap.get(SLWebAlert.el),
+  elementClass: SLWebAlert,
   events: {}
 });

@@ -1,6 +1,6 @@
-import { createComponent } from '@lit-labs/react';
-import { SLIconDotsVertical as SLWebIconDotsVertical } from 'sl-web-components/dist/sl/components/icon/icons/dots-vertical';
-import register from 'sl-web-components/dist/sl/directives/register';
+import { createComponent } from '@lit/react';
+import { SLIconDotsVertical as SLWebIconDotsVertical } from 'sl-web-components/dist/components/icon/icons/dots-vertical';
+import register from 'sl-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../../package.json';
 

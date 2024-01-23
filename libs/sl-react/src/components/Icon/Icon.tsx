@@ -1,17 +1,17 @@
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { SLButton as SLWebButton } from 'sl-web-components/dist/components/button/button';
+import { SLIcon as SLWebIcon } from 'sl-web-components/dist/components/icon/icon';
 import register from 'sl-web-components/dist/directives/register';
 import PackageJson from '../../../package.json';
 
 const elementMap = register({
-  elements: [SLWebButton.el, SLWebButton],
+  elements: [SLWebIcon.el, SLWebIcon],
   suffix: PackageJson.version
 });
 
-export const SLButton = createComponent({
+export const SLIcon = createComponent({
   react: React,
-  tagName: elementMap.get(SLWebButton.el),
-  elementClass: SLWebButton,
+  tagName: elementMap.get(SLWebIcon.el),
+  elementClass: SLWebIcon,
   events: {}
 });

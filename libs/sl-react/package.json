@@ -2,47 +2,26 @@
   "name": "sl-react",
   "version": "0.1.0",
   "private": true,
-  "description": "The React-powered design system library for SouthLeft web applications",
+  "description": "The React-powered design system library for Southleft web applications",
   "license": "UNLICENSED",
   "main": "dist/index.js",
   "scripts": {
     "start": "storybook dev -p 9009",
-    "build": "npm run dist",
     "build-storybook": "storybook build",
-    "dist": "npm run dist.clear && tsc",
-    "dist.clear": "del-cli dist",
-    "dist.build": "run-p build:js",
-    "test-storybook": "test-storybook",
-    "eject": "react-scripts eject",
     "plop": "plop component",
     "plop:page": "plop page",
     "plop:recipe": "plop recipe"
   },
   "dependencies": {
-    "@lit-labs/react": "^1.1.1",
-    "nanoid": "^3.1.30",
+    "@lit/react": "^1.0.2",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-scripts": "4.0.3",
-    "web-vitals": "^1.0.1"
+    "react-dom": "18.2.0"
   },
   "entry": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "peerDependencies": {
     "en-web-components": "^0.1.0"
   },
@@ -57,19 +36,10 @@
     "@types/node": "^12.0.0",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
-    "autoprefixer": "^9.5.1",
     "babel-loader": "^8.0.6",
     "babel-plugin-transform-rename-import": "^2.3.0",
     "classnames": "2.3.2",
-    "copyfiles": "^2.4.1",
     "css-loader": "^6.7.1",
-    "del-cli": "^4.0.0",
-    "loader-utils": "^3.2.0",
-    "make-dir-cli": "^3.0.0",
-    "npm-run-all": "^4.1.5",
-    "pretty-quick": "^1.11.1",
-    "react-virtualized": "^9.22.3",
-    "regenerator-runtime": "^0.13.3",
     "sass": "^1.35.1",
     "sass-loader": "^10.2.0",
     "style-loader": "^3.3.1",
