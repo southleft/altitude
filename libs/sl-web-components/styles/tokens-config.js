@@ -160,7 +160,7 @@ function formatBoxShadowValue(value) {
  */
 function formatTypographyValue(value) {
   const formattedFontFamily = value.fontFamily.toLowerCase().replace(/\s+/g, '-'); /* 1 */
-  return `${value.fontWeight} ${value.letterSpacing} ${value.fontSize}/${value.lineHeight} ${formattedFontFamily}, sans-serif`; /* 2 */
+  return `${value.fontWeight} ${value.fontSize}/${value.lineHeight} ${formattedFontFamily}, sans-serif`; /* 2 */
 }
 
 /**
