@@ -2,7 +2,6 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './icon';
 import './icons/add';
-import './icons/chevron-down';
 
 export default {
   title: 'Components/Icon',
