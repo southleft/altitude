@@ -1,0 +1,27 @@
+{
+  "source": [
+    "src/tokens/**/*.json"
+  ],
+  "platforms": {
+    "css": {
+      "transformGroup": "css",
+      "buildPath": "src/",
+      "files": [
+        {
+          "destination": "/tokens/tokens-dark.css",
+          "format": "css/variables"
+        }
+      ]
+    },
+    "json": {
+      "transformGroup": "css",
+      "buildPath": "",
+      "files": [
+        {
+          "destination": ".storybook/data/tokens-dark.json",
+          "format": "json/flat"
+        }
+      ]
+    }
+  }
+}

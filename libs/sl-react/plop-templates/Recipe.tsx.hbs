@@ -1,0 +1,30 @@
+import * as React from 'react';
+import classnames from 'classnames';
+import '!style-loader!css-loader!sass-loader!./{{pascalCase name}}.scss';
+
+export interface {{pascalCase name}}Props extends React.HTMLAttributes<HTMLDivElement>{
+  /**
+   * CSS class names that can be appended to the component.
+   */
+  styleModifier?: string;
+}
+
+/**
+ * Primary UI component for user interaction
+ */
+export const {{pascalCase name}} = ({
+  styleModifier,
+  ...other 
+}: {{pascalCase name}}Props) => {
+  const componentClassName = classnames(
+    'c-{{dashCase name}}',
+    styleModifier,
+    {}
+  );
+
+  return (
+    <div className={componentClassName} {...other}>
+      Learn new tricks!
+    </div>
+  );
+};

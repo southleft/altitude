@@ -1,0 +1,24 @@
+{
+  "include": [
+    "src/index.ts",
+    "src/custom.d.ts",
+    "src/util/*.ts",
+    "declaration.d.ts"
+  ],
+  "exclude": ["node_modules", "typings", "src/components/**/*.stories.tsx"],
+  "typeRoots": ["./types", "./node_modules/@types", "./src"],
+  "compilerOptions": {
+    "allowJs": true,
+    "jsx": "react",
+    "target": "es6",
+    "moduleResolution": "node",
+    "module": "ES2020",
+    "declaration": true,
+    "esModuleInterop": true,
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "resolveJsonModule": true,
+  }
+}
