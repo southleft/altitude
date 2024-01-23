@@ -8,6 +8,9 @@ const config: StorybookConfig = {
   stories: [
     '../src/**/*.stories.@(js|jsx|ts|tsx)',
   ],
+  addons: [
+    '@storybook/addon-essentials',
+  ],
 
   webpackFinal: (config) => {
     // Add SCSS support
