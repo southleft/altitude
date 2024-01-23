@@ -33,14 +33,26 @@ StyleDictionary.registerFormat({
 
     const otherVariables = dictionary.allTokens
       // Filter out specific tokens
-      .filter(token => !token.name.includes('breakpoint') && !token.name.includes('typography'))
+      .filter(token => !token.name.endsWith('-figma') && !token.name.endsWith('-italic') && !token.name.endsWith('-underline'))
       .map(token => {
+        let name;
         let value = JSON.stringify(token.value);
         value = JSON.parse(value); // Convert JSON string to its original value
 
+        // Format typography tokens
+        if (token.name.includes('typography')) {
+          name = token.name.endsWith('-regular') ? token.name.replace('-regular', '') : token.name;
+          value = formatTypographyValue(token.value);
+        }
         // Format box-shadow tokens
-        if (token.name.includes('box-shadow')) {
-          value = formatBoxShadowValue(value);
+        else if (token.name.includes('box-shadow')) {
+          name = token.name;
+          value = formatBoxShadowValue(token.value);
+        }
+        // Format all tokens
+        else {
+          name = token.name;
+          value = token.value;
         }
 
         // Check if the token uses references
@@ -48,12 +60,13 @@ StyleDictionary.registerFormat({
           if (dictionary.usesReference(token.original.value)) {
             const refs = dictionary.getReferences(token.original.value);
             refs.forEach(ref => {
-              value = `var(--${theme}-${ref.name})`;
+              let refName = ref.name.endsWith('-regular') ? ref.name.replace('-regular', '') : ref.name;
+              value = `var(--${theme}-${refName})`;
             });
           }
         }
 
-        return `  --${theme}-${token.name}: ${value};`;
+        return `  --${theme}-${name}: ${value};`;
       })
       .join('\n');
 
@@ -93,7 +106,8 @@ StyleDictionary.registerFormat({
         if (dictionary.usesReference(token.original.value)) {
           const refs = dictionary.getReferences(token.original.value);
           refs.forEach(ref => {
-            value = `var(--${theme}-${ref.name})`;
+            let refName = ref.name.endsWith('-regular') ? ref.name.replace('-regular', '') : ref.name;
+            value = `var(--${theme}-${refName})`;
           });
         }
       }
@@ -123,7 +137,7 @@ function formatTypographyValue(value) {
   // Convert fontFamily to lowercase and dash case
   const formattedFontFamily = value.fontFamily.toLowerCase().replace(/\s+/g, '-');
 
-  return `${value.fontWeight} ${value.fontSize}/${value.lineHeight} ${formattedFontFamily} ${value.letterSpacing} ${value.textDecoration}`;
+  return `${value.fontWeight} ${value.fontSize}/${value.lineHeight} ${formattedFontFamily}, sans-serif ${value.letterSpacing}`;
 }
 
 /**
