@@ -31,10 +31,10 @@
 .sl-c-slider__input {
   background: linear-gradient(
     var(--rtlGradientToRight, 90deg),
-    var(--sl-theme-color-background-default-weak) 0%,
-    var(--sl-theme-color-background-default-weak) 40%,
-    var(--sl-theme-color-background-default-weak) 40%,
-    var(--sl-theme-color-background-default-weak) 100%
+    var(--sl-theme-color-background-default-strong) 0%,
+    var(--sl-theme-color-background-default-strong) 40%,
+    var(--sl-theme-color-background-default-strong) 40%,
+    var(--sl-theme-color-background-default-strong) 100%
   );
   border-radius: var(--sl-theme-border-radius);
   height: var(--sl-slider-track-height);
@@ -57,7 +57,7 @@
    * Disabled state for track on slider
    */
   &:disabled::-webkit-slider-runnable-track {
-    background-color: var(--sl-theme-color-background-default-weak);
+    background-color: var(--sl-theme-color-background-default-strong);
   }
 
   /**
@@ -159,7 +159,7 @@
   &::-moz-range-track {
     width: 100%;
     height: var(--sl-slider-track-height);
-    background-color: var(--sl-theme-color-background-default-weak);
+    background-color: var(--sl-theme-color-background-default-strong);
     border-radius: var(--sl-theme-border-radius);
     border: none;
   }
@@ -322,7 +322,7 @@
     appearance: none;
     width: 100%;
     height: var(--sl-slider-track-height);
-    background-color: var(--sl-theme-color-background-default-weak);
+    background-color: var(--sl-theme-color-background-default-strong);
     border-radius: var(--sl-theme-border-radius);
     margin: 0;
     border: 0;
