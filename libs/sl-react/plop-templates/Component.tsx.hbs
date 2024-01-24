@@ -1,0 +1,17 @@
+import React from 'react';
+import { createComponent } from '@lit/react';
+import { SL{{pascalCase name}} as SLWeb{{pascalCase name}} } from 'sl-web-components/dist/components/{{dashCase name}}/{{dashCase name}}';
+import register from 'sl-web-components/dist/directives/register';
+import PackageJson from '../../../package.json';
+
+const elementMap = register({
+  elements: [SLWeb{{pascalCase name}}.el, SLWeb{{pascalCase name}}],
+  suffix: PackageJson.version
+});
+
+export const SL{{pascalCase name}} = createComponent({
+  react: React,
+  tagName: elementMap.get(SLWeb{{pascalCase name}}.el),
+  elementClass: SLWeb{{pascalCase name}},
+  events: {}
+});

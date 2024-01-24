@@ -1,0 +1,10 @@
+import type { ComponentStoryObj } from '@storybook/react';
+import { {{pascalCase name}} } from './{{pascalCase name}}';
+
+export default {
+  title: 'Pages/{{titleCase name}}',
+  component: {{pascalCase name}},
+  parameters: { status: { type: 'beta' } },
+};
+
+export const Default: ComponentStoryObj<typeof {{pascalCase name}}> = { args: {} };

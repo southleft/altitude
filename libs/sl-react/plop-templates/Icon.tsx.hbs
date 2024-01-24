@@ -1,0 +1,17 @@
+import React from 'react';
+import { createComponent } from '@lit/react';
+import { SLIcon{{pascalCase name}} as SLWebIcon{{pascalCase name}} } from 'sl-web-components/dist/components/icon/icons/{{dashCase name}}';
+import register from 'sl-web-components/dist/directives/register';
+import PackageJson from '../../../../package.json';
+
+const elementMap = register({
+  elements: [SLWebIcon{{pascalCase name}}.el, SLWebIcon{{pascalCase name}}],
+  suffix: PackageJson.version
+});
+
+export const SLIcon{{pascalCase name}} = createComponent({
+  react: React,
+  tagName: elementMap.get(SLWebIcon{{pascalCase name}}.el),
+  elementClass: SLWebIcon{{pascalCase name}},
+  events: {}
+});

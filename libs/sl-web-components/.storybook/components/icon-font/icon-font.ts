@@ -38,7 +38,6 @@ export class IconFont extends LitElement {
 
   render() {
     const iconMap = this.getIconMap();
-    console.log(iconMap);
     return html`
       <ul class="icon-font">
         <slot>
