@@ -1,0 +1,11 @@
+import type { StoryObj } from '@storybook/react-webpack5';
+import { SL{{pascalCase name}} } from '../..';
+
+export default {
+  title: 'Components/{{titleCase name}}',
+  component: SL{{pascalCase name}},
+  parameters: { status: { type: 'beta' } },
+  args: { children: 'Hello world' },
+};
+
+export const Default: StoryObj<typeof SL{{pascalCase name}}> = { args: {} };

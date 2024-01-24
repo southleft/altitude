@@ -1,0 +1,50 @@
+{
+  "name": "sl-react",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The React-powered design system library for Southleft web applications",
+  "license": "UNLICENSED",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "storybook dev -p 9009",
+    "build-storybook": "storybook build",
+    "plop": "plop component",
+    "plop:page": "plop page",
+    "plop:recipe": "plop recipe"
+  },
+  "dependencies": {
+    "@lit/react": "^1.0.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "entry": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "en-web-components": "^0.1.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.23.3",
+    "@etchteam/storybook-addon-status": "^4.2.4",
+    "@storybook/addon-a11y": "^7.6.10",
+    "@storybook/addon-essentials": "^7.6.10",
+    "@storybook/preset-scss": "^1.0.3",
+    "@storybook/react-webpack5": "^7.6.10",
+    "@types/node": "^12.0.0",
+    "@types/react": "18.0.25",
+    "@types/react-dom": "18.0.9",
+    "babel-loader": "^8.0.6",
+    "classnames": "2.3.2",
+    "css-loader": "^6.7.1",
+    "sass": "^1.35.1",
+    "sass-loader": "^10.2.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.89.0"
+  }
+}

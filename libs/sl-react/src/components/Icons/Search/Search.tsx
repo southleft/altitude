@@ -1,6 +1,6 @@
-import { createComponent } from '@lit-labs/react';
-import { SLIconSearch as SLWebIconSearch } from 'sl-web-components/dist/sl/components/icon/icons/search';
-import register from 'sl-web-components/dist/sl/directives/register';
+import { createComponent } from '@lit/react';
+import { SLIconSearch as SLWebIconSearch } from 'sl-web-components/dist/components/icon/icons/search';
+import register from 'sl-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../../package.json';
 

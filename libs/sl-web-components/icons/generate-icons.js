@@ -11,7 +11,7 @@ const dest_directory_name = './components/icon/svgs';
 const dest_large_svg_directory_name = dest_directory_name + '/iconFontFiles';
 const dest_ts_directory_name = './components/icon/icons';
 const dest_iconfonts_directory_name = 'components/icon/fonts';
-const dest_dist_iconfonts_directory_name = 'dist/sl/iconfonts';
+const dest_dist_iconfonts_directory_name = 'dist/iconfonts';
 // const dest_tsx_index = path.join(__dirname, '../../sl-react/src/index.ts');
 const dest_tsx_directory_name = path.join(__dirname, '../../sl-react/src/components/Icons');
 

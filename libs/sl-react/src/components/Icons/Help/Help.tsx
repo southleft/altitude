@@ -1,6 +1,6 @@
-import { createComponent } from '@lit-labs/react';
-import { SLIconHelp as SLWebIconHelp } from 'sl-web-components/dist/sl/components/icon/icons/help';
-import register from 'sl-web-components/dist/sl/directives/register';
+import { createComponent } from '@lit/react';
+import { SLIconHelp as SLWebIconHelp } from 'sl-web-components/dist/components/icon/icons/help';
+import register from 'sl-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../../package.json';
 
