@@ -1,7 +1,7 @@
-import React from 'react';
 import { createComponent } from '@lit/react';
 import { SLAlert as SLWebAlert } from 'sl-web-components/dist/components/alert/alert';
 import register from 'sl-web-components/dist/directives/register';
+import React from 'react';
 import PackageJson from '../../../package.json';
 
 const elementMap = register({

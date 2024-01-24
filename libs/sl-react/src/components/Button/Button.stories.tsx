@@ -1,12 +1,11 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLButton, SLIconDone, SLIconSend } from '../..';
+import { SLButton, SLIconDone, SLIconSend, SLProgress} from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
   title: 'Components/Button',
   component: SLButton,
-  tags: [ 'autodocs' ],
-  parameters: { 
+  parameters: {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
@@ -62,12 +61,12 @@ export default {
   },
   args: {
     children: 'Label',
-  }
+  },
 };
 
-export const Default: StoryObj<typeof SLButton> = { args: {} };
+export const Default: StoryObj<typeof SLButton> = {};
 
-export const DefaultIcon: ComponentStoryObj<typeof ENButton> = {
+export const DefaultIcon: StoryObj<typeof SLButton> = {
   args: {
     hideText: true,
     children: (
@@ -79,7 +78,7 @@ export const DefaultIcon: ComponentStoryObj<typeof ENButton> = {
   },
 };
 
-export const DefaultIconBefore: ComponentStoryObj<typeof ENButton> = {
+export const DefaultIconBefore: StoryObj<typeof SLButton> = {
   args: {
     children: (
       <>
@@ -90,7 +89,7 @@ export const DefaultIconBefore: ComponentStoryObj<typeof ENButton> = {
   },
 };
 
-export const DefaultIconAfter: ComponentStoryObj<typeof ENButton> = {
+export const DefaultIconAfter: StoryObj<typeof SLButton> = {
   args: {
     children: (
       <>
@@ -101,115 +100,115 @@ export const DefaultIconAfter: ComponentStoryObj<typeof ENButton> = {
   },
 };
 
-export const DefaultDisabled: ComponentStoryObj<typeof ENButton> = {
+export const DefaultDisabled: StoryObj<typeof SLButton> = {
   args: {
     isDisabled: true,
   },
 };
 
-export const Secondary: ComponentStoryObj<typeof ENButton> = {
+export const Secondary: StoryObj<typeof SLButton> = {
   args: {
     variant: 'secondary',
   },
 };
 
-export const SecondaryIcon: ComponentStoryObj<typeof ENButton> = {
+export const SecondaryIcon: StoryObj<typeof SLButton> = {
   args: {
     ...DefaultIcon.args,
     variant: 'secondary',
   },
 };
 
-export const SecondaryIconBefore: ComponentStoryObj<typeof ENButton> = {
+export const SecondaryIconBefore: StoryObj<typeof SLButton> = {
   args: {
     ...DefaultIconBefore.args,
     variant: 'secondary',
   },
 };
 
-export const SecondaryIconAfter: ComponentStoryObj<typeof ENButton> = {
+export const SecondaryIconAfter: StoryObj<typeof SLButton> = {
   args: {
     ...DefaultIconAfter.args,
     variant: 'secondary',
   },
 }
 
-export const SecondaryDisabled: ComponentStoryObj<typeof ENButton> = {
+export const SecondaryDisabled: StoryObj<typeof SLButton> = {
   args: {
     variant: 'secondary',
     isDisabled: true,
   },
 };
 
-export const Tertiary: ComponentStoryObj<typeof ENButton> = {
+export const Tertiary: StoryObj<typeof SLButton> = {
   args: {
     variant: 'tertiary',
   },
 };
 
-export const TertiaryIcon: ComponentStoryObj<typeof ENButton> = {
+export const TertiaryIcon: StoryObj<typeof SLButton> = {
   args: {
     ...DefaultIcon.args,
     variant: 'tertiary',
   },
 };
 
-export const TertiaryIconBefore: ComponentStoryObj<typeof ENButton> = {
+export const TertiaryIconBefore: StoryObj<typeof SLButton> = {
   args: {
     ...DefaultIconBefore.args,
     variant: 'tertiary',
   },
 };
 
-export const TertiaryIconAfter: ComponentStoryObj<typeof ENButton> = {
+export const TertiaryIconAfter: StoryObj<typeof SLButton> = {
   args: {
     ...DefaultIconAfter.args,
     variant: 'tertiary',
   },
 }
 
-export const TertiaryDisabled: ComponentStoryObj<typeof ENButton> = {
+export const TertiaryDisabled: StoryObj<typeof SLButton> = {
   args: {
     variant: 'tertiary',
     isDisabled: true,
   },
 };
 
-export const Danger: ComponentStoryObj<typeof ENButton> = {
+export const Danger: StoryObj<typeof SLButton> = {
   args: {
     variant: 'danger',
   },
 };
 
-export const DangerIcon: ComponentStoryObj<typeof ENButton> = {
+export const DangerIcon: StoryObj<typeof SLButton> = {
   args: {
     ...DefaultIcon.args,
     variant: 'danger',
   },
 };
 
-export const DangerIconBefore: ComponentStoryObj<typeof ENButton> = {
+export const DangerIconBefore: StoryObj<typeof SLButton> = {
   args: {
     ...DefaultIconBefore.args,
     variant: 'danger',
   },
 };
 
-export const DangerIconAfter: ComponentStoryObj<typeof ENButton> = {
+export const DangerIconAfter: StoryObj<typeof SLButton> = {
   args: {
     ...DefaultIconAfter.args,
     variant: 'danger',
   },
 };
 
-export const DangerDisabled: ComponentStoryObj<typeof ENButton> = {
+export const DangerDisabled: StoryObj<typeof SLButton> = {
   args: {
     variant: 'danger',
     isDisabled: true,
   },
 };
 
-export const WithFullWidth: ComponentStoryObj<typeof ENButton> = {
+export const WithFullWidth: StoryObj<typeof SLButton> = {
   args: {
     fullWidth: true,
   },
@@ -222,10 +221,20 @@ export const WithFullWidth: ComponentStoryObj<typeof ENButton> = {
   ]
 };
 
-export const WithHref: ComponentStoryObj<typeof ENButton> = {
+export const WithHref: StoryObj<typeof SLButton> = {
   args: {
     href: 'https://www.google.com/',
     target: '_blank',
   },
 };
- 
+
+export const WithProgress: StoryObj<typeof SLButton> = {
+  args: {
+    children: (
+      <>
+      <SLProgress isCircle={true} isDarkContrast={true} duration={3} slot="before"></SLProgress>
+      Saving
+      </>
+    )
+  },
+};
