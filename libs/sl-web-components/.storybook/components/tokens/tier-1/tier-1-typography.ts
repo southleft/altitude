@@ -31,22 +31,21 @@ export class Tier1Typography extends LitElement {
       <section>
         <header>
           <h1>Tier 1: Typography</h1>
-          <p>These token values are the raw materials that make up the
-          <a href="?path=/story/atoms-tokens-typography--presets">typography presets</a>. They are displayed here only for reference and are
-          never used directly.</p>
+          <p>These tokens are meant to be referenced and never used directly.</p>
         </header>
         <table>
           <caption>Typography Presets</caption>
           <thead>
             <tr>
               <th>Include</th>
+              <th>Value</th>
               <th>Example</th>
             </tr>
           </thead>
           <tbody>
             ${this.filterType('sl-typography-preset').map((item) => {
               return html`
-                <token-specimen variant="typography" name="@include ${item.name};" exampleClass="${item.name}"
+                <token-specimen variant="typography" name="@include ${item.name};" value="${item.value}" exampleClass="${item.name}"
                   >Lorem ipsum dolor sit amet, consectetur adipiscing elit.</token-specimen
                 >
               `;

@@ -4,10 +4,10 @@
 
 /**
  * RTL support for values logical properties can't automatically adjust for
- * 1) Percentage based horizontal translate values need to be flipped
- * 2) Background gradients using "to right" or "to left" need to be switched to using deg values
- * 3) Background Position From is used for reversing animation from right to left at 0%
- * 4) Background Position To is used for reversing animation from right to left at 100%
+ * 1. Percentage based horizontal translate values need to be flipped
+ * 2. Background gradients using "to right" or "to left" need to be switched to using deg values
+ * 3. Background Position From is used for reversing animation from right to left at 0%
+ * 4. Background Position To is used for reversing animation from right to left at 100%
  */
 [dir='rtl'] {
   --rtlTranslateX: 50%; /* 1 */
@@ -23,6 +23,8 @@ body {
   margin: 0;
   color: var(--sl-theme-color-content-default);
   background: var(--sl-theme-color-background-default);
+  font-family: var(--sl-font-family-primary);
+  font-size: 1rem;
 }
 
 a {
@@ -33,4 +35,8 @@ a {
   svg path {
     fill: currentcolor;
   }
+}
+
+strong {
+  font-weight: var(--sl-theme-font-weight-bold);
 }

@@ -24,8 +24,6 @@ export default {
 const Template = (args) => html`
   <sl-chip-group ${spread(args)} data-testid="chip-group">
     <sl-chip>Label</sl-chip>
-    <sl-chip variant="secondary">Label</sl-chip>
-    <sl-chip variant="tertiary">Label</sl-chip>
     <sl-chip variant="success">Label</sl-chip>
     <sl-chip variant="danger">Label</sl-chip>
     <sl-chip variant="info">Label</sl-chip>
