@@ -46,7 +46,7 @@ StyleDictionary.registerFormat({
 
     /* 2 */
     const otherVariables = dictionary.allTokens
-      .filter(token => !token.name.endsWith('-figma') && !token.name.endsWith('-italic') && !token.name.endsWith('-underline'))
+      .filter(token => !token.name.endsWith('-italic') && !token.name.endsWith('-underline'))
       .map(token => {
         let name;
         /* 2.1 */
@@ -102,7 +102,7 @@ StyleDictionary.registerFormat({
   formatter: function({ dictionary, options }) {
     const variables = dictionary.allTokens
     /* 1 */
-    .filter(token => !token.name.endsWith('-figma') && !token.name.endsWith('-italic') && !token.name.endsWith('-underline'))
+    .filter(token => !token.name.endsWith('-italic') && !token.name.endsWith('-underline'))
     /* 2 */
     .map((token, index, array) => {
       let name;
@@ -155,12 +155,17 @@ function formatBoxShadowValue(value) {
 
 /**
  * Format typography tokens into a string
- * 1. Convert fontFamily to lowercase and dash case
- * 2. Return the string value
+ * 1. Convert pixel values to rems
+ * 2. Convert font weight text to values
+ * 3. Return the string value
  */
 function formatTypographyValue(value) {
-  const formattedFontFamily = value.fontFamily.toLowerCase().replace(/\s+/g, '-'); /* 1 */
-  return `${value.fontWeight} ${value.fontSize}/${value.lineHeight} ${formattedFontFamily}, sans-serif`; /* 2 */
+  /* 1 */
+  const fontSize = `${parseFloat(value.fontSize) / 16}rem`;
+  const lineHeight = `${parseFloat(value.lineHeight) / 16}rem`;
+  /* 2 */
+  const fontWeight = value.fontWeight === 'Bold' ? '600' : '400';
+  return `${fontWeight} ${fontSize}/${lineHeight} ${value.fontFamily}, sans-serif`; /* 3 */
 }
 
 /**
