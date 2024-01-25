@@ -6,22 +6,14 @@
 .sl-c-text-passage {
   display: flex;
   flex-direction: column;
-  gap: var(--sl-theme-space-lg);
+  align-items: flex-start;
+  gap: size(2);
   @include sl-theme-typography-body-md;
 
   /**
    * Reset paragraph margins
    */
-  ::slotted(p),
-  ::slotted(a),
-  ::slotted(h1),
-  ::slotted(h2),
-  ::slotted(h3),
-  ::slotted(h4),
-  ::slotted(h5),
-  ::slotted(h6),
-  ::slotted(ul),
-  ::slotted(ol) {
+  ::slotted(*) {
     margin: 0;
     padding: 0;
   }
@@ -35,7 +27,7 @@
   ::slotted(h4),
   ::slotted(h5),
   ::slotted(h6) {
-     padding-block-start: size(1);
+     padding-block-start: size(2);
   }
 
   /**
@@ -92,7 +84,7 @@
    * Generic link tag within text passage
    */
   ::slotted(a) {
-     @include link-styles;
+    @include link-styles;
   }
 
   /**
@@ -107,19 +99,11 @@
    * Blockquote within text passage
    */
   ::slotted(blockquote) {
-    font-style: italic;
     border-inline-start: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
     color: var(--sl-theme-color-content-default);
     padding-inline-start: size(2);
     margin-inline-start: 0;
     margin-block-end: size(2);
-  }
-
-  /**
-   * Vertical spacing within slotted elements
-   */
-  ::slotted(*:not(:first-child)){
-    margin-block-start: size(2);
   }
 
   /**
@@ -133,41 +117,4 @@
 
 .sl-c-text-passage--max-width-sm {
   max-width: var(--sl-theme-layout-max-width-sm);
-}
-
-
-h1 {
-  @include sl-theme-typography-display-lg;
-}
-
-h2 {
-  @include sl-theme-typography-display-md;
-}
-
-h3 {
-  @include sl-theme-typography-display-sm;
-}
-
-h4 {
-  @include sl-theme-typography-heading-lg;
-}
-
-h5 {
-  @include sl-theme-typography-heading-md;
-}
-
-h6 {
-  @include sl-theme-typography-heading-sm;
-}
-
-ul, ol {
-  margin-left: var(--sl-theme-space-xxxl);
-}
-
-ul {
-  list-style: disc;
-}
-
-ol {
-  list-style-type: decimal;
 }
