@@ -9,7 +9,6 @@
  *    (e.g. unclassed ::slotted(h2), ::slotted(h3), ul, li, and so on).
  * 2) Use this file only for styling text passage and elements inside of text passage.
  */
-
 .sl-c-text-passage {
   @include sl-theme-typography-body-md;
 
@@ -45,6 +44,7 @@
   /**
    * Generic ::slotted(h1) within text passage
    */
+   h1,
   ::slotted(h1) {
     @include sl-theme-typography-display-lg-bold;
   }
@@ -137,4 +137,41 @@
 
 .sl-c-text-passage--max-width-sm {
   max-width: var(--sl-theme-layout-max-width-sm);
+}
+
+
+h1 {
+  @include sl-theme-typography-display-lg;
+}
+
+h2 {
+  @include sl-theme-typography-display-md;
+}
+
+h3 {
+  @include sl-theme-typography-display-sm;
+}
+
+h4 {
+  @include sl-theme-typography-heading-lg;
+}
+
+h5 {
+  @include sl-theme-typography-heading-md;
+}
+
+h6 {
+  @include sl-theme-typography-heading-sm;
+}
+
+ul, ol {
+  margin-left: var(--sl-theme-space-xxxl);
+}
+
+ul {
+  list-style: disc;
+}
+
+ol {
+  list-style-type: decimal;
 }

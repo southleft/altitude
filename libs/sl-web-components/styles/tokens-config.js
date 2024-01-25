@@ -1,9 +1,13 @@
 const StyleDictionary = require('style-dictionary');
 
 /**
- * Define theme prefix
+ * Define theme customizations
  */
 const theme = 'sl';
+const themeFontWeightRegular = '400';
+const themeFontWeightBold = '600';
+const themeFontBaseSize = 16;
+const themeFontFamilyFallback = 'sans-serif';
 
 /**
  * SCSS Formatting
@@ -13,11 +17,12 @@ const theme = 'sl';
  *    1.3. Map and create variables for breakpoint-related tokens
  * 2. Filter other specific tokens, format them, and create variables
  *    2.1. Convert JSON string to its original value
- *    2.2. Format typography tokens
- *    2.3. Format box-shadow tokens
- *    2.4. Format all tokens
- *    2.5. Check if the token uses references and format accordingly
- *    2.6. Map and create variables for other tokens
+ *    2.2. Format font-weight tokens
+ *    2.3. Format typography tokens
+ *    2.4. Format box-shadow tokens
+ *    2.5. Format all tokens
+ *    2.6. Check if the token uses references and format accordingly
+ *    2.7. Map and create variables for other tokens
  * 3. Wrap the variables inside :root{}
  */
 StyleDictionary.registerFormat({
@@ -53,21 +58,26 @@ StyleDictionary.registerFormat({
         let value = JSON.stringify(token.value);
         value = JSON.parse(value);
         /* 2.2 */
-        if (token.name.includes('typography')) {
+        if (token.name.includes('font-weight')) {
+          name = token.name;
+          value = formatFontWeightValue(token.value);
+        }
+        /* 2.3 */
+        else if (token.name.includes('typography')) {
           name = token.name.endsWith('-regular') ? token.name.replace('-regular', '') : token.name;
           value = formatTypographyValue(token.value);
         }
-        /* 2.3 */
+        /* 2.4 */
         else if (token.name.includes('box-shadow')) {
           name = token.name;
           value = formatBoxShadowValue(token.value);
         }
-        /* 2.4 */
+        /* 2.5 */
         else {
           name = token.name;
           value = token.value;
         }
-        /* 2.5 */
+        /* 2.6 */
         if (token.name.includes('theme') && options.outputReferences) {
           if (dictionary.usesReference(token.original.value)) {
             const refs = dictionary.getReferences(token.original.value);
@@ -77,7 +87,7 @@ StyleDictionary.registerFormat({
             });
           }
         }
-        /* 2.6 */
+        /* 2.7 */
         return `  --${theme}-${name}: ${value};`;
       })
       .join('\n');
@@ -91,11 +101,12 @@ StyleDictionary.registerFormat({
  * JSON Formatting
  * 1. Filter out specific tokens
  * 2. Map and format tokens based on conditions
- * 3. Format typography tokens
- * 4. Format box-shadow tokens
- * 5. Format all tokens
- * 6. Check if the token uses references and format accordingly
- * 7. Wrap the variables inside {}
+ * 3. Format font-weight tokens
+ * 4. Format typography tokens
+ * 5. Format box-shadow tokens
+ * 6. Format all tokens
+ * 7. Check if the token uses references and format accordingly
+ * 8. Wrap the variables inside {}
  */
 StyleDictionary.registerFormat({
   name: 'json/flat',
@@ -108,21 +119,26 @@ StyleDictionary.registerFormat({
       let name;
       let value;
       /* 3 */
-      if (token.name.includes('typography')) {
+      if (token.name.includes('font-weight')) {
+        name = token.name;
+        value = formatFontWeightValue(token.value);
+      }
+      /* 4 */
+      else if (token.name.includes('typography')) {
         name = token.name.endsWith('-regular') ? token.name.replace('-regular', '') : token.name;
         value = formatTypographyValue(token.value);
       }
-      /* 4 */
+      /* 5 */
       else if (token.name.includes('box-shadow')) {
         name = token.name;
         value = formatBoxShadowValue(token.value);
       }
-      /* 5 */
+      /* 6 */
       else {
         name = token.name;
         value = token.value;
       }
-      /* 6 */
+      /* 7 */
       if (token.name.includes('theme') && options.outputReferences) {
         if (dictionary.usesReference(token.original.value)) {
           const refs = dictionary.getReferences(token.original.value);
@@ -135,7 +151,7 @@ StyleDictionary.registerFormat({
       const comma = index === array.length - 1 ? '' : ',';
       return `  "${theme}-${name}": "${value}"${comma}`;
     }).join('\n');
-    /* 7 */
+    /* 8 */
     return `{\n${variables}\n}`;
   }
 });
@@ -154,18 +170,25 @@ function formatBoxShadowValue(value) {
 }
 
 /**
+ * Format font-weight tokens
+ * 1. Convert text string values to number values for font-weights
+ * 2. Return the string value
+ */
+function formatFontWeightValue(value) {
+  const fontWeight = value === 'Bold' ? themeFontWeightBold : themeFontWeightRegular; /* 1 */
+  return `${fontWeight}`; /* 2 */
+}
+
+/**
  * Format typography tokens into a string
  * 1. Convert pixel values to rems
- * 2. Convert font weight text to values
- * 3. Return the string value
+ * 2. Return the string value
  */
 function formatTypographyValue(value) {
   /* 1 */
-  const fontSize = `${parseFloat(value.fontSize) / 16}rem`;
-  const lineHeight = `${parseFloat(value.lineHeight) / 16}rem`;
-  /* 2 */
-  const fontWeight = value.fontWeight === 'Bold' ? '600' : '400';
-  return `${fontWeight} ${fontSize}/${lineHeight} ${value.fontFamily}, sans-serif`; /* 3 */
+  const fontSize = `${parseFloat(value.fontSize) / themeFontBaseSize}rem`;
+  const lineHeight = `${parseFloat(value.lineHeight) / themeFontBaseSize}rem`;
+  return `${formatFontWeightValue(value.fontWeight)} ${fontSize}/${lineHeight} ${value.fontFamily}, ${themeFontFamilyFallback}`; /* 3 */
 }
 
 /**
