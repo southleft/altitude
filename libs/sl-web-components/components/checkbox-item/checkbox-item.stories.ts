@@ -11,7 +11,7 @@ import { SLCheckboxItem } from './checkbox-item';
 export default {
   title: 'Components/Checkbox item',
   component: 'sl-checkbox-item',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

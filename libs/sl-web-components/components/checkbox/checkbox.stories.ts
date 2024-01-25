@@ -9,7 +9,7 @@ import './checkbox';
 export default {
   title: 'Components/Checkbox',
   component: 'sl-checkbox',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

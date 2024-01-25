@@ -7,7 +7,7 @@ import './chip';
 export default {
   title: 'Components/Chip',
   component: 'sl-chip',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

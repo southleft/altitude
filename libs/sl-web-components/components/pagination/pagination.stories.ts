@@ -5,7 +5,7 @@ import './pagination';
 export default {
   title: 'Components/Pagination',
   component: 'sl-pagination',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

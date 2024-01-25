@@ -5,7 +5,7 @@ import './loading-indicator';
 export default {
   title: 'Components/Loading Indicator',
   component: 'sl-loading-indicator',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: { status: { type: 'stable' } }
 };
 

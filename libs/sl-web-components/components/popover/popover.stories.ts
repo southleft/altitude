@@ -15,7 +15,7 @@ import './popover';
 export default {
   title: 'Components/Popover',
   component: 'sl-popover',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',

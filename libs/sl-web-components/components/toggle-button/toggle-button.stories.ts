@@ -12,7 +12,7 @@ import './toggle-button';
 export default {
   title: 'Components/Toggle Button',
   component: 'sl-toggle-button',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',

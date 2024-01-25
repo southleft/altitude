@@ -7,7 +7,7 @@ import './chip-group';
 export default {
   title: 'Components/Chip Group',
   component: 'sl-chip-group',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

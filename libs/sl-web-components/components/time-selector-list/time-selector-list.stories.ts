@@ -5,7 +5,7 @@ import './time-selector-list';
 export default {
   title: 'Components/Time Selector List',
   component: 'sl-time-selector-list',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: { status: { type: 'beta' } },
 };
 

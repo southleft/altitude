@@ -6,7 +6,7 @@ import './avatar';
 export default {
   title: 'Components/Avatar',
   component: 'sl-avatar',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered'

@@ -9,7 +9,7 @@ import './dropdown-panel';
 export default {
   title: 'Components/Dropdown Panel',
   component: 'sl-dropdown-panel',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: { status: { type: 'stable' } }
 };
 

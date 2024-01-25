@@ -9,7 +9,7 @@ import './menu-item';
 export default {
   title: 'Components/Menu Item',
   component: 'sl-menu-item',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',

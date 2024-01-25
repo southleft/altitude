@@ -7,7 +7,7 @@ import './layout';
 export default {
   title: 'Components/Layout',
   component: 'sl-layout',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: { status: { type: 'stable' } },
   argTypes: {
     variant: {

@@ -5,7 +5,7 @@ import './field-note';
 export default {
   title: 'Components/Field Note',
   component: 'sl-field-note',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: { status: { type: 'beta' } },
   argTypes: {
     isError: {

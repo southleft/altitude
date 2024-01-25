@@ -6,7 +6,7 @@ import './accordion';
 export default {
   title: 'Components/Accordion',
   component: 'sl-accordion',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {
