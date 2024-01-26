@@ -18,8 +18,8 @@ import styles from './alert.scss';
  * 
  * Alert displays a short important message that will attract a user's attention without interrupting the user's task.
  * - **slot**: The alert's main content or title
- * - slot "description": A description to include in the dropdown panel
- * - slot "icon": Slot in an icon to override the default one
+ * - **slot** "description": A description to include in the dropdown panel
+ * - **slot** "icon": Slot in an icon to override the default one
  * 
  * */
 export class SLAlert extends SLElement {
