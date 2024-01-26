@@ -12,6 +12,7 @@ import styles from './dialog.scss';
 
 /**
  * Component: sl-dialog
+ * - Dialog informs users about a task and can contain critical information, require decisions, or involve multiple tasks.
  * @slot - The main body of the dialog
  * @slot "header" - The header of the dialog that appears above the main slot
  * @slot "footer" - The footer of the dialog that appears below the main slot

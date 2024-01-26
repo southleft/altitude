@@ -6,7 +6,7 @@ import styles from './tab-panel.scss';
 
 /**
  * Component: sl-tab-panel
- * - A tab panel is a singular item that is meant to be used within the SLTabs. Used to display the content of the selected tab.
+ * - Tab Panel displays content for a single tab within the tabs component.
  * @slot - The components content
  */
 export class SLTabPanel extends SLElement {

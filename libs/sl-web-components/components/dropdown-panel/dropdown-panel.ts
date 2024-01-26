@@ -4,6 +4,8 @@ import { SLElement } from '../SLElement';
 import styles from './dropdown-panel.scss';
 
 /**
+ * Component: sl-dropdown-panel
+ * - Dropdown Panel provides overlay and show/hide functionality to the dropdown's list of options.
  * @slot - The component content
  */
 export class SLDropdownPanel extends SLElement {

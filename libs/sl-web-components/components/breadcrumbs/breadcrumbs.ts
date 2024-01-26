@@ -15,7 +15,7 @@ import styles from './breadcrumbs.scss';
 
 /**
  * Component: sl-breadcrumbs
- * - Breadcrumbs consist of a list of links that help a user visualize a page's location within the hierarchical structure of a website, and allow navigation up to any of its "ancestors".
+ * - Breadcrumbs are a list of links that help a user visualize a page's location within the hierarchical structure of a website. They provide navigation to any of the page's ancestors.
  * @slot - The component content
  */
 export class SLBreadcrumbs extends SLElement {

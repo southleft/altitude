@@ -5,7 +5,7 @@ import styles from './heading.scss';
 
 /**
  * Component: sl-heading
- * - The heading is used to render semenatic heading tags with specific styles.
+ * - Heading is used to render semantic heading tags with specific styles.
  * @slot - The components content
  */
 export class SLHeading extends SLElement {

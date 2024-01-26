@@ -28,6 +28,7 @@ const endDot = '... '; /* 3 */
 
 /**
  * Component: sl-pagination
+ * - Pagination allows a user to navigate to content that has been split up into pages.
  * @slot - The components content
  */
 export class SLPagination extends SLElement {

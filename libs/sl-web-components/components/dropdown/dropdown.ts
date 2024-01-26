@@ -17,6 +17,8 @@ import { PartialDataSource } from './dropdown.model';
 import styles from './dropdown.scss';
 
 /**
+ * Component: sl-dropdown
+ * - Dropdown presents a list of options from which a user can select one.
  *  @slot - The component content
  */
 export class SLDropdown extends SLElement {

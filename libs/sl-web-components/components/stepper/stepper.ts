@@ -6,7 +6,7 @@ import styles from './stepper.scss';
 
 /**
  * Component: sl-stepper
- * - The stepper is used to help users keep track of their progress and/or indicate where the user is in a multi-step process.
+ * - Stepper keeps track of a user's progress by indicating where the user is in a multi-step process.
  * @slot - The component content
  */
 export class SLStepper extends SLElement {

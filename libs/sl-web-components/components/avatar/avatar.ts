@@ -44,7 +44,7 @@ export class SLAvatar extends SLElement {
   accessor hasBadge: boolean;
 
   /**
-   * Badeg state variant
+   * Badge state variant
    * - **default** Displays a badge with the default state
    * - **success** renders a badge with success state treatment
    * - **warning** renders a badge with warning state treatment

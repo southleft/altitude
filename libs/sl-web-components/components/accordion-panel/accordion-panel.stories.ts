@@ -12,6 +12,10 @@ export default {
       handles: ['open', 'close']
     },
   },
+  argTypes: {
+    isDisabled: { control: 'boolean' },
+    isLast: { control: 'boolean' },
+  }
 };
 
 const Template = (args) => html`

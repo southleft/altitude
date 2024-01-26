@@ -9,7 +9,7 @@ import styles from './toggle-button.scss';
 
 /**
  * Component: sl-toggle-button
- * - A Toggle Button can be used to group related options. To emphasize groups of related Toggle Buttons, a group should share a common container.
+ * - Toggle Button can be used to group related options. 
  * @slot - The content to display in the Toggle Button
  */
 export class SLToggleButton extends SLElement {

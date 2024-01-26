@@ -15,6 +15,7 @@ import styles from './datepicker-field.scss';
 
 /**
  * Component: sl-datepicker-field
+ * - Datepicker Field allows a user to select a date.
  * @slot - The components content
  */
 export class SLDatepickerField extends SLElement {

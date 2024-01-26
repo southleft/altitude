@@ -12,7 +12,7 @@ import styles from './checkbox.scss';
 
 /**
  * Component: sl-checkbox
- * - Checkboxes let users select one or more items from a list, or turn an item on or off. The “Checkbox” component should never be used on its own and designers should instead reference the “Checkbox Group” component.
+ * - Checkbox lets a user select one or more items from a list, or turn an item on or off.
  * @slot - The component content
  * @slot "field-note" - If content is slotted, it will display in place of the fieldNote property
  * @slot "error" - If content is slotted, it will display in place of the errorNote property

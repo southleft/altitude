@@ -13,6 +13,8 @@ import { SLIconMinus } from '../icon/icons/minus';
 import styles from './input-stepper.scss';
 
 /**
+ * Component: sl-input-stepper
+ * - Input Stepper lets users enter a numeric value and incrementally increase or decrease the value with a two-segment control.
  * @slot - The component content
  */
 export class SLInputStepper extends SLElement {

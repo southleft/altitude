@@ -1,4 +1,9 @@
 import type { Preview } from '@storybook/web-components';
+import { setCustomElementsManifest } from '@storybook/web-components';
+import customElements from '../custom-elements.json';
+
+// Set custom elements manifest before any code runs. This enables autodocs from web components jsdoc comments.
+setCustomElementsManifest(customElements);
 
 // Setting auto registry to true to allow storybook to automatically register components
 globalThis.enAutoRegistry = true;
@@ -21,6 +26,7 @@ const preview: Preview = {
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
+      expanded: true,
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/i

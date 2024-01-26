@@ -7,7 +7,7 @@ import styles from './button.scss';
 
 /**
  * Component: sl-button
- * - Buttons serve as interactive elements that enable users to execute actions or transition to different sections.
+ * - Buttons are interactive elements that enable users to execute actions.
  * @slot "before" - Content to display before the Button text, typically an Icon
  * @slot "after" - Content to display after the Button text, typically an Icon
  */

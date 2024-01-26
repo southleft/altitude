@@ -9,7 +9,7 @@ import styles from './chip-group.scss';
 
 /**
  * Component: sl-chip-group
- * - Chip group is used to display chips in a row with additional expand functionality.
+ * - Chip Group is used to display chips in a row, with the ability to expand the row and increase the number of visible chips.
  * @slot - The area to slot in SLChips
  */
 export class SLChipGroup extends SLElement {

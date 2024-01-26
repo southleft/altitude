@@ -5,7 +5,7 @@ import styles from './field-note.scss';
 
 /**
  * Component: sl-field-note
- * - The field note is used as helper text for any type of input field.
+ * - Field note is used as helper text for any type of input field.
  * @slot - The components content
  */
 export class SLFieldNote extends SLElement {

@@ -6,6 +6,7 @@ import styles from './toggle-button-group.scss';
 
 /**
  * Component: sl-toggle-button-group
+ * - Toggle Button Group is a grouping of related toggle buttons.
  * @slot - The components content
  */
 export class SLToggleButtonGroup extends SLElement {

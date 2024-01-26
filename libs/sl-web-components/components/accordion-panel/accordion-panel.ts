@@ -11,8 +11,8 @@ import styles from './accordion-panel.scss';
 
 /**
  * Component: sl-accordion-panel
- * - The panel that is slotted inside the SLAccordion
- * @slot - The component content
+ * - Accordion Panel shows and hides content within the accordion component.
+ * @slot - The accordion panel content
  */
 export class SLAccordionPanel extends SLElement {
   static el = 'sl-accordion-panel';

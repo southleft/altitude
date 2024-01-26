@@ -12,7 +12,7 @@ import styles from './radio.scss';
 
 /**
  * Component: sl-radio
- * - Radio buttons let people select one option from a set of options. The “Radio” component should never be used on its own and designers should instead reference the “Radio Group” component.
+ * - Radio allows users to choose one option from a set of mutually exclusive options.
  * @slot - The component content
  * @slot "field-note" - If content is slotted, it will display in place of the fieldNote property
  * @slot "error" - If content is slotted, it will display in place of the errorNote property

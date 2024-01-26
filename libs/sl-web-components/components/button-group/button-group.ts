@@ -5,7 +5,7 @@ import styles from './button-group.scss';
 
 /**
  * Component: sl-button-group
- * - A button group is used to group buttons and provide proper alignment.
+ * - Button Group is used to group buttons and provide proper alignment.
  * @slot - The components content
  */
 export class SLButtonGroup extends SLElement {

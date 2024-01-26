@@ -4,7 +4,7 @@
     {
       "name": "sl-accordion-panel",
       "path": "./components/accordion-panel/accordion-panel.ts",
-      "description": "Component: sl-accordion-panel\n- The panel that is slotted inside the SLAccordion",
+      "description": "Component: sl-accordion-panel\n- Accordion Panel shows and hides content within the accordion component.",
       "attributes": [
         {
           "name": "isActive",
@@ -94,14 +94,14 @@
       "slots": [
         {
           "name": "",
-          "description": "The component content"
+          "description": "The accordion panel content"
         }
       ]
     },
     {
       "name": "sl-accordion",
       "path": "./components/accordion/accordion.ts",
-      "description": "Component: sl-accordion",
+      "description": "Component: sl-accordion\n- Accordion is a vertical list of panels used to show and hide related sections of content.\n- slot: The accordion content, a set of accordion panels",
       "attributes": [
         {
           "name": "expandAll",
@@ -148,18 +148,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The component content"
-        }
       ]
     },
     {
       "name": "sl-alert",
       "path": "./components/alert/alert.ts",
-      "description": "Component: sl-alert\n- Alerts are triggered based on user-defined criteria for specific actions. *Within Inspector",
+      "description": "Component: sl-alert\n\nAlert displays a short important message that will attract a user's attention without interrupting the user's task.\n- **slot**: The alert's main content or title\n- slot \"description\": A description to include in the dropdown panel\n- slot \"icon\": Slot in an icon to override the default one",
       "attributes": [
         {
           "name": "variant",
@@ -273,20 +267,6 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        },
-        {
-          "name": "description",
-          "description": "A description to include in the dropdown panel"
-        },
-        {
-          "name": "icon",
-          "description": "Slot in an icon to override the default one"
-        }
       ]
     },
     {
@@ -306,7 +286,7 @@
         },
         {
           "name": "badgeVariant",
-          "description": "Badeg state variant\n- **default** Displays a badge with the default state\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+          "description": "Badge state variant\n- **default** Displays a badge with the default state\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
           "type": "\"success\" | \"warning\" | \"danger\""
         },
         {
@@ -336,7 +316,7 @@
         {
           "name": "badgeVariant",
           "attribute": "badgeVariant",
-          "description": "Badeg state variant\n- **default** Displays a badge with the default state\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+          "description": "Badge state variant\n- **default** Displays a badge with the default state\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
           "type": "\"success\" | \"warning\" | \"danger\""
         },
         {
@@ -356,7 +336,7 @@
     {
       "name": "sl-badge",
       "path": "./components/badge/badge.ts",
-      "description": "Component: sl-badge\n- Badges are labels which hold small amounts of information. Badges can hold a number and can be paired with icons, text, or avatars.",
+      "description": "Component: sl-badge\n- Badges are labels that hold small amounts of information. Badges can hold a number and can be paired with other components including icons, text, or avatars.",
       "attributes": [
         {
           "name": "isDot",
@@ -370,7 +350,7 @@
         },
         {
           "name": "position",
-          "description": "Positions the badge absolutely to the parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right",
+          "description": "Positions the badge absolutely to its parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right",
           "type": "\"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\""
         },
         {
@@ -400,7 +380,7 @@
         {
           "name": "position",
           "attribute": "position",
-          "description": "Positions the badge absolutely to the parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right",
+          "description": "Positions the badge absolutely to its parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right",
           "type": "\"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\""
         },
         {
@@ -413,14 +393,14 @@
       "slots": [
         {
           "name": "",
-          "description": "The component content"
+          "description": "The badge content"
         }
       ]
     },
     {
       "name": "sl-breadcrumbs-item",
       "path": "./components/breadcrumbs-item/breadcrumbs-item.ts",
-      "description": "Component: sl-breadcrumbs-item\n- A breadcrumbs item is a singular item that is meant to be used within the SLBreadcrumbs",
+      "description": "Component: sl-breadcrumbs-item\n- Breadcrumbs Item is a singular link used within the breadcrumbs component.",
       "attributes": [
         {
           "name": "href",
@@ -506,7 +486,7 @@
     {
       "name": "sl-breadcrumbs",
       "path": "./components/breadcrumbs/breadcrumbs.ts",
-      "description": "Component: sl-breadcrumbs\n- Breadcrumbs consist of a list of links that help a user visualize a page's location within the hierarchical structure of a website, and allow navigation up to any of its \"ancestors\".",
+      "description": "Component: sl-breadcrumbs\n- Breadcrumbs are a list of links that help a user visualize a page's location within the hierarchical structure of a website. They provide navigation to any of the page's ancestors.",
       "attributes": [
         {
           "name": "label",
@@ -592,7 +572,7 @@
     {
       "name": "sl-button-group",
       "path": "./components/button-group/button-group.ts",
-      "description": "Component: sl-button-group\n- A button group is used to group buttons and provide proper alignment.",
+      "description": "Component: sl-button-group\n- Button Group is used to group buttons and provide proper alignment.",
       "attributes": [
         {
           "name": "behavior",
@@ -645,7 +625,7 @@
     {
       "name": "sl-button",
       "path": "./components/button/button.ts",
-      "description": "Component: sl-button\n- Buttons serve as interactive elements that enable users to execute actions or transition to different sections.",
+      "description": "Component: sl-button\n- Buttons are interactive elements that enable users to execute actions.",
       "attributes": [
         {
           "name": "type",
@@ -823,6 +803,7 @@
     {
       "name": "sl-calendar",
       "path": "./components/calendar/calendar.ts",
+      "description": "Component: sl-calendar\n- Calendar provides a way for a user to select a date from a month.",
       "attributes": [
         {
           "name": "disabledMinDate",
@@ -1093,7 +1074,7 @@
     {
       "name": "sl-card",
       "path": "./components/card/card.ts",
-      "description": "Component: sl-card",
+      "description": "Component: sl-card\n- Card displays content and actions on a single topic in a concise, scannable format.",
       "attributes": [
         {
           "name": "styleModifier",
@@ -1140,7 +1121,7 @@
     {
       "name": "sl-checkbox-item",
       "path": "./components/checkbox-item/checkbox-item.ts",
-      "description": "Component: sl-checkbox-item\n- A radio item is a singular checkbox that is meant to be used within the SLCheckbox",
+      "description": "Component: sl-checkbox-item\n- Checkbox Item is a singular checkbox that is used within the checkbox component.",
       "attributes": [
         {
           "name": "isChecked",
@@ -1311,7 +1292,7 @@
     {
       "name": "sl-checkbox",
       "path": "./components/checkbox/checkbox.ts",
-      "description": "Component: sl-checkbox\n- Checkboxes let users select one or more items from a list, or turn an item on or off. The “Checkbox” component should never be used on its own and designers should instead reference the “Checkbox Group” component.",
+      "description": "Component: sl-checkbox\n- Checkbox lets a user select one or more items from a list, or turn an item on or off.",
       "attributes": [
         {
           "name": "isError",
@@ -1460,7 +1441,7 @@
     {
       "name": "sl-chip-group",
       "path": "./components/chip-group/chip-group.ts",
-      "description": "Component: sl-chip-group\n- Chip group is used to display chips in a row with additional expand functionality.",
+      "description": "Component: sl-chip-group\n- Chip Group is used to display chips in a row, with the ability to expand the row and increase the number of visible chips.",
       "attributes": [
         {
           "name": "chipsVisible",
@@ -1516,8 +1497,8 @@
       "attributes": [
         {
           "name": "variant",
-          "description": "Variant\n- **default** A chip with a high contrast background\n- **secondary** A chip with a medium contrast background\n- **tertiary** A chip with a low contrast background\n- **success** A chip with a success background\n- **danger** A chip with a danger background\n- **info** A chip with a info background\n- **warning** A chip with a warning background",
-          "type": "\"success\" | \"warning\" | \"danger\" | \"secondary\" | \"tertiary\" | \"info\""
+          "description": "Variant\n- **default** A chip with a strong contrast background\n- **success** A chip with a success background\n- **danger** A chip with a danger background\n- **info** A chip with a info background\n- **warning** A chip with a warning background",
+          "type": "\"success\" | \"warning\" | \"danger\" | \"info\""
         },
         {
           "name": "type",
@@ -1549,8 +1530,8 @@
         {
           "name": "variant",
           "attribute": "variant",
-          "description": "Variant\n- **default** A chip with a high contrast background\n- **secondary** A chip with a medium contrast background\n- **tertiary** A chip with a low contrast background\n- **success** A chip with a success background\n- **danger** A chip with a danger background\n- **info** A chip with a info background\n- **warning** A chip with a warning background",
-          "type": "\"success\" | \"warning\" | \"danger\" | \"secondary\" | \"tertiary\" | \"info\""
+          "description": "Variant\n- **default** A chip with a strong contrast background\n- **success** A chip with a success background\n- **danger** A chip with a danger background\n- **info** A chip with a info background\n- **warning** A chip with a warning background",
+          "type": "\"success\" | \"warning\" | \"danger\" | \"info\""
         },
         {
           "name": "type",
@@ -1587,7 +1568,7 @@
     {
       "name": "sl-contextual-menu",
       "path": "./components/contextual-menu/contextual-menu.ts",
-      "description": "Component: sl-contextual-menu\n- The contextual menuis a component that is opened/closed by a trigger and is positioned around it.",
+      "description": "Component: sl-contextual-menu\n- Contextual Menu is a list of options that is opened/closed by a trigger and positioned around the trigger.",
       "attributes": [
         {
           "name": "heading",
@@ -1596,7 +1577,7 @@
         },
         {
           "name": "position",
-          "description": "Positions the dropdown contextual menuabsolutely to the trigger.\n- **default** places the contextual menuto the bottom left\n- **bottom-center** places the contextual menuto the bottom center\n- **bottom-right** places the contextual menuto the bottom right\n- **bottom-left** places the contextual menuto the bottom left\n- **top-center** places the contextual menuto the top center\n- **top-right** places the contextual menuto the top right\n- **top-left** places the contextual menuto the top left\n- **left** places the contextual menuto the left\n- **right** places the contextual menuto the right",
+          "description": "Positions the dropdown contextual menu absolutely to the trigger.\n- **default** places the contextual menuto the bottom left\n- **bottom-center** places the contextual menuto the bottom center\n- **bottom-right** places the contextual menuto the bottom right\n- **bottom-left** places the contextual menuto the bottom left\n- **top-center** places the contextual menuto the top center\n- **top-right** places the contextual menuto the top right\n- **top-left** places the contextual menuto the top left\n- **left** places the contextual menuto the left\n- **right** places the contextual menuto the right",
           "type": "\"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\" | \"right\" | \"bottom-center\" | \"top-center\" | \"left\"",
           "default": "\"bottom-left\""
         },
@@ -1636,7 +1617,7 @@
         {
           "name": "position",
           "attribute": "position",
-          "description": "Positions the dropdown contextual menuabsolutely to the trigger.\n- **default** places the contextual menuto the bottom left\n- **bottom-center** places the contextual menuto the bottom center\n- **bottom-right** places the contextual menuto the bottom right\n- **bottom-left** places the contextual menuto the bottom left\n- **top-center** places the contextual menuto the top center\n- **top-right** places the contextual menuto the top right\n- **top-left** places the contextual menuto the top left\n- **left** places the contextual menuto the left\n- **right** places the contextual menuto the right",
+          "description": "Positions the dropdown contextual menu absolutely to the trigger.\n- **default** places the contextual menuto the bottom left\n- **bottom-center** places the contextual menuto the bottom center\n- **bottom-right** places the contextual menuto the bottom right\n- **bottom-left** places the contextual menuto the bottom left\n- **top-center** places the contextual menuto the top center\n- **top-right** places the contextual menuto the top right\n- **top-left** places the contextual menuto the top left\n- **left** places the contextual menuto the left\n- **right** places the contextual menuto the right",
           "type": "\"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\" | \"right\" | \"bottom-center\" | \"top-center\" | \"left\"",
           "default": "\"bottom-left\""
         },
@@ -1696,7 +1677,7 @@
     {
       "name": "sl-datepicker-field",
       "path": "./components/datepicker-field/datepicker-field.ts",
-      "description": "Component: sl-datepicker-field",
+      "description": "Component: sl-datepicker-field\n- Datepicker Field allows a user to select a date.",
       "attributes": [
         {
           "name": "fieldId",
@@ -2036,7 +2017,7 @@
     {
       "name": "sl-datetimepicker-field",
       "path": "./components/datetimepicker-field/datetimepicker-field.ts",
-      "description": "Component: sl-datetimepicker-field",
+      "description": "Component: sl-datetimepicker-field\n- Datetimepicker Field allows the user to select a date and time.",
       "attributes": [
         {
           "name": "fieldId",
@@ -2499,7 +2480,7 @@
     {
       "name": "sl-dialog",
       "path": "./components/dialog/dialog.ts",
-      "description": "Component: sl-dialog",
+      "description": "Component: sl-dialog\n- Dialog informs users about a task and can contain critical information, require decisions, or involve multiple tasks.",
       "attributes": [
         {
           "name": "heading",
@@ -2657,7 +2638,7 @@
     {
       "name": "sl-drawer",
       "path": "./components/drawer/drawer.ts",
-      "description": "Component: sl-drawer",
+      "description": "Component: sl-drawer\n- Drawer provides ergonomic access to context-sensitive actions and information.",
       "attributes": [
         {
           "name": "alignment",
@@ -2762,6 +2743,7 @@
     {
       "name": "sl-dropdown-panel",
       "path": "./components/dropdown-panel/dropdown-panel.ts",
+      "description": "Component: sl-dropdown-panel\n- Dropdown Panel provides overlay and show/hide functionality to the dropdown's list of options.",
       "attributes": [
         {
           "name": "hasScroll",
@@ -2829,6 +2811,7 @@
     {
       "name": "sl-dropdown",
       "path": "./components/dropdown/dropdown.ts",
+      "description": "Component: sl-dropdown\n- Dropdown presents a list of options from which a user can select one.",
       "attributes": [
         {
           "name": "isActive",
@@ -3094,7 +3077,7 @@
     {
       "name": "sl-field-note",
       "path": "./components/field-note/field-note.ts",
-      "description": "Component: sl-field-note\n- The field note is used as helper text for any type of input field.",
+      "description": "Component: sl-field-note\n- Field note is used as helper text for any type of input field.",
       "attributes": [
         {
           "name": "isError",
@@ -3147,7 +3130,7 @@
     {
       "name": "sl-file-upload",
       "path": "./components/file-upload/file-upload.ts",
-      "description": "Component: sl-file-upload",
+      "description": "Component: sl-file-upload\n- File Upload provides a way for users to upload files from their operating system.",
       "attributes": [
         {
           "name": "fieldId",
@@ -3423,6 +3406,7 @@
     {
       "name": "sl-grid",
       "path": "./components/grid/grid.ts",
+      "description": "Component: sl-grid\n- Grid provides a responsive layout that adapts to screen size and orientation, ensuring consistency across devices.",
       "attributes": [
         {
           "name": "variant",
@@ -3508,7 +3492,7 @@
     {
       "name": "sl-heading",
       "path": "./components/heading/heading.ts",
-      "description": "Component: sl-heading\n- The heading is used to render semenatic heading tags with specific styles.",
+      "description": "Component: sl-heading\n- Heading is used to render semantic heading tags with specific styles.",
       "attributes": [
         {
           "name": "variant",
@@ -3574,7 +3558,7 @@
     {
       "name": "sl-icon",
       "path": "./components/icon/icon.ts",
-      "description": "Component: sl-icon-[ICON_NAME]",
+      "description": "Component: sl-icon-[ICON_NAME]\n- Icons are symbols that provide meaning. Icon component is used to display any icon from the Altitude icon library.",
       "attributes": [
         {
           "name": "iconTitle",
@@ -3621,6 +3605,7 @@
     {
       "name": "sl-input-stepper",
       "path": "./components/input-stepper/input-stepper.ts",
+      "description": "Component: sl-input-stepper\n- Input Stepper lets users enter a numeric value and incrementally increase or decrease the value with a two-segment control.",
       "attributes": [
         {
           "name": "fieldId",
@@ -3846,7 +3831,7 @@
     {
       "name": "sl-layout-container",
       "path": "./components/layout-container/layout-container.ts",
-      "description": "Component: sl-layout-container",
+      "description": "Component: sl-layout-container\n- Layout Container caps the width of content sections and centers content within it.",
       "attributes": [
         {
           "name": "styleModifier",
@@ -3896,7 +3881,7 @@
     {
       "name": "sl-layout",
       "path": "./components/layout/layout.ts",
-      "description": "Component: sl-layout",
+      "description": "Component: sl-layout\n- Layout provides a responsive structure for content that ensures consistency across an application.",
       "attributes": [
         {
           "name": "gap",
@@ -3943,7 +3928,7 @@
     {
       "name": "sl-link",
       "path": "./components/link/link.ts",
-      "description": "Component: sl-link\n- A link can be a standalone item, and it can be an in-line text link. But it will always be formatted with the same styles.",
+      "description": "Component: sl-link\n- Link provides consistent formatting to navigational elements.",
       "attributes": [
         {
           "name": "href",
@@ -4051,6 +4036,7 @@
     {
       "name": "sl-list-item",
       "path": "./components/list-item/list-item.ts",
+      "description": "Component: sl-list-item\n- List Item is a single item in a list.",
       "attributes": [
         {
           "name": "variant",
@@ -4210,6 +4196,7 @@
     {
       "name": "sl-list",
       "path": "./components/list/list.ts",
+      "description": "Component: sl-list\n- List is a vertical or horizontal grouping of related content or links.",
       "attributes": [
         {
           "name": "behavior",
@@ -4280,6 +4267,7 @@
     {
       "name": "sl-loading-indicator",
       "path": "./components/loading-indicator/loading-indicator.ts",
+      "description": "Component: el-loading-indicator\n- Loading Indicator is used when retrieving data or performing slow computations, to notify users that their action is being processed.",
       "attributes": [
         {
           "name": "inverted",
@@ -4334,7 +4322,7 @@
     {
       "name": "sl-menu-item",
       "path": "./components/menu-item/menu-item.ts",
-      "description": "Component: sl-menu-item\n- A menu item is a singular item that is meant to be used within the SLMenu",
+      "description": "Component: sl-menu-item\n- Menu item is a single item within a menu.",
       "attributes": [
         {
           "name": "href",
@@ -4556,7 +4544,7 @@
     {
       "name": "sl-menu",
       "path": "./components/menu/menu.ts",
-      "description": "Component: sl-menu\n- The menu is used to render menu items in a semantic list.",
+      "description": "Component: sl-menu\n- Menu displays a list of interactive options on a temporary surface.",
       "attributes": [
         {
           "name": "variant",
@@ -4744,7 +4732,7 @@
     {
       "name": "sl-pagination-item",
       "path": "./components/pagination-item/pagination-item.ts",
-      "description": "Component: sl-pagination-item",
+      "description": "Component: sl-pagination-item\n- Pagination Item is a singular link used within the pagination component.",
       "attributes": [
         {
           "name": "href",
@@ -4819,7 +4807,7 @@
     {
       "name": "sl-pagination",
       "path": "./components/pagination/pagination.ts",
-      "description": "Component: sl-pagination",
+      "description": "Component: sl-pagination\n- Pagination allows a user to navigate to content that has been split up into pages.",
       "attributes": [
         {
           "name": "prevButtonText",
@@ -4991,7 +4979,7 @@
     {
       "name": "sl-popover",
       "path": "./components/popover/popover.ts",
-      "description": "Component: sl-popover\n- The popover is a component that is opened/closed by a trigger and is positioned around it.",
+      "description": "Component: sl-popover\n- Popover is used to display content on top of other elements, and is positioned around the trigger that opens it.",
       "attributes": [
         {
           "name": "heading",
@@ -5108,7 +5096,7 @@
     {
       "name": "sl-progress",
       "path": "./components/progress/progress.ts",
-      "description": "Component: sl-progress\n- The progress is a progress indicator that visually shows a remaining value.",
+      "description": "Component: sl-progress\n- Progress provides feedback about the duration and progression of a process to indicate how long a user will be waiting.",
       "attributes": [
         {
           "name": "isCircle",
@@ -5236,7 +5224,7 @@
     {
       "name": "sl-radio-item",
       "path": "./components/radio-item/radio-item.ts",
-      "description": "Component: sl-radio-item\n- A radio item is a singular radio that is meant to be used within the SLRadio",
+      "description": "Component: sl-radio-item\n- Radio Item is a singular radio button within the radio component.",
       "attributes": [
         {
           "name": "isChecked",
@@ -5396,7 +5384,7 @@
     {
       "name": "sl-radio",
       "path": "./components/radio/radio.ts",
-      "description": "Component: sl-radio\n- Radio buttons let people select one option from a set of options. The “Radio” component should never be used on its own and designers should instead reference the “Radio Group” component.",
+      "description": "Component: sl-radio\n- Radio allows users to choose one option from a set of mutually exclusive options.",
       "attributes": [
         {
           "name": "isError",
@@ -5545,6 +5533,7 @@
     {
       "name": "sl-search-form",
       "path": "./components/search-form/search-form.ts",
+      "description": "Component: sl-search-form\n- Search Form enables users to specify a word or phrase to find relevant content without navigation.",
       "attributes": [
         {
           "name": "ariaControlsId",
@@ -5825,12 +5814,26 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The component content that appears next to the radio"
+        },
+        {
+          "name": "field-note",
+          "description": "If content is slotted, it will display in place of the fieldNote property"
+        },
+        {
+          "name": "error",
+          "description": "If content is slotted, it will display in place of the errorNote property"
+        }
       ]
     },
     {
       "name": "sl-skeleton",
       "path": "./components/skeleton/skeleton.ts",
-      "description": "Component: sl-skeleton",
+      "description": "Component: sl-skeleton\n- Skeleton provides a low fidelity representation of content before it appears in a view. This improves the perceived loading time for users.",
       "attributes": [
         {
           "name": "variant",
@@ -5894,7 +5897,7 @@
     {
       "name": "sl-slider",
       "path": "./components/slider/slider.ts",
-      "description": "Component: sl-slider",
+      "description": "Component: sl-slider\n- Slider provides a visual indication of adjustable content, where the user can increment or decrement the value by moving the handle along a track, or via text input.",
       "attributes": [
         {
           "name": "hideLabel",
@@ -6232,7 +6235,7 @@
     {
       "name": "sl-stepper-item",
       "path": "./components/stepper-item/stepper-item.ts",
-      "description": "Component: sl-stepper-item\n- A stepper item is an item inside the SLStepper",
+      "description": "Component: sl-stepper-item\n- Stepper Item is a single step within a stepper.",
       "attributes": [
         {
           "name": "variant",
@@ -6328,7 +6331,7 @@
     {
       "name": "sl-stepper",
       "path": "./components/stepper/stepper.ts",
-      "description": "Component: sl-stepper\n- The stepper is used to help users keep track of their progress and/or indicate where the user is in a multi-step process.",
+      "description": "Component: sl-stepper\n- Stepper keeps track of a user's progress by indicating where the user is in a multi-step process.",
       "attributes": [
         {
           "name": "variant",
@@ -6375,7 +6378,7 @@
     {
       "name": "sl-switch",
       "path": "./components/switch/switch.ts",
-      "description": "Component: sl-switch\n- Switches toggle the state of a single setting on or off.",
+      "description": "Component: sl-switch\n- Switch is used to toggle the on/off state of a single setting.",
       "attributes": [
         {
           "name": "isChecked",
@@ -6457,7 +6460,7 @@
     {
       "name": "sl-tab-panel",
       "path": "./components/tab-panel/tab-panel.ts",
-      "description": "Component: sl-tab-panel\n- A tab panel is a singular item that is meant to be used within the SLTabs. Used to display the content of the selected tab.",
+      "description": "Component: sl-tab-panel\n- Tab Panel displays content for a single tab within the tabs component.",
       "attributes": [
         {
           "name": "isActive",
@@ -6539,7 +6542,7 @@
     {
       "name": "sl-tab",
       "path": "./components/tab/tab.ts",
-      "description": "Component: sl-tab\n- A tab item is a singular tab that is meant to be used within the SLTabs.",
+      "description": "Component: sl-tab\n- Tab is a singular interactive item within the tabs component.",
       "attributes": [
         {
           "name": "isActive",
@@ -6632,7 +6635,7 @@
     {
       "name": "sl-tabs",
       "path": "./components/tabs/tabs.ts",
-      "description": "Component: sl-tabs\n- Tabs organize and allow navigation between groups of content that are related and at the same level of hierarchy, and each tab contains distinct content from other tabs in a set.",
+      "description": "Component: sl-tabs\n- Tabs organize related content at the same level of hierarchy, and allow navigation between distinct groups of content.",
       "attributes": [
         {
           "name": "variant",
@@ -6721,7 +6724,7 @@
     {
       "name": "sl-text-field",
       "path": "./components/text-field/text-field.ts",
-      "description": "Component: sl-text-field\n- A text field allows users to input alphanumeric data, such as names, addresses, or messages.",
+      "description": "Component: sl-text-field\n- Text Field allows users to input alphanumeric data when the expected input is short.",
       "attributes": [
         {
           "name": "type",
@@ -7025,7 +7028,7 @@
     {
       "name": "sl-text-passage",
       "path": "./components/text-passage/text-passage.ts",
-      "description": "Component: sl-text-passage\n- The text passage provides an area to slot in any content related items and they are all spaced accordingly.",
+      "description": "Component: sl-text-passage\n- Text Passage provides a layout with consistent spacing for any content related items.",
       "attributes": [
         {
           "name": "maxWidth",
@@ -7067,7 +7070,7 @@
     {
       "name": "sl-textarea",
       "path": "./components/textarea/textarea.ts",
-      "description": "Component: sl-textarea\n- The textarea is often used in a form, to collect user inputs like comments or reviews.",
+      "description": "Component: sl-textarea\n- Textarea allows users to write text for input over multiple rows. Used when the expected user input is long.",
       "attributes": [
         {
           "name": "rows",
@@ -7345,7 +7348,7 @@
     {
       "name": "sl-time-selector-list",
       "path": "./components/time-selector-list/time-selector-list.ts",
-      "description": "Component: sl-time-selector-list",
+      "description": "Component: sl-time-selector-list\n- Time Selector List lets a user select a time from a list of options.",
       "attributes": [
         {
           "name": "orientation",
@@ -7530,7 +7533,7 @@
     {
       "name": "sl-toast-group",
       "path": "./components/toast-group/toast-group.ts",
-      "description": "Component: sl-toast-group\n- Parent component to one or multiple toasts that provides positioning and group interactivity.",
+      "description": "Component: sl-toast-group\n- Toast Group contains one or multiple toasts, and provides positioning and group interactivity.",
       "attributes": [
         {
           "name": "position",
@@ -7668,7 +7671,7 @@
     {
       "name": "sl-toast",
       "path": "./components/toast/toast.ts",
-      "description": "Component: sl-toast\n- A toast is a brief message triggered after a user completed an action.",
+      "description": "Component: sl-toast\n- Toast provides a brief, temporary notification without interrupting a user's task.",
       "attributes": [
         {
           "name": "variant",
@@ -7775,7 +7778,7 @@
     {
       "name": "sl-toggle-button-group",
       "path": "./components/toggle-button-group/toggle-button-group.ts",
-      "description": "Component: sl-toggle-button-group",
+      "description": "Component: sl-toggle-button-group\n- Toggle Button Group is a grouping of related toggle buttons.",
       "attributes": [
         {
           "name": "variant",
@@ -7847,7 +7850,7 @@
     {
       "name": "sl-toggle-button",
       "path": "./components/toggle-button/toggle-button.ts",
-      "description": "Component: sl-toggle-button\n- A Toggle Button can be used to group related options. To emphasize groups of related Toggle Buttons, a group should share a common container.",
+      "description": "Component: sl-toggle-button\n- Toggle Button can be used to group related options.",
       "attributes": [
         {
           "name": "variant",

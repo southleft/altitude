@@ -14,7 +14,7 @@ import styles from './tabs.scss';
 
 /**
  * Component: sl-tabs
- * - Tabs organize and allow navigation between groups of content that are related and at the same level of hierarchy, and each tab contains distinct content from other tabs in a set.
+ * - Tabs organize related content at the same level of hierarchy, and allow navigation between distinct groups of content. 
  * @slot - The slot to add the SLTab items
  * @slot "panel" - The slot to add the SLTabPanel items
  */

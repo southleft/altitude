@@ -19,6 +19,7 @@ import styles from './datetimepicker-field.scss';
 
 /**
  * Component: sl-datetimepicker-field
+ * - Datetimepicker Field allows the user to select a date and time.
  * @slot - The components content
  */
 export class SLDatetimepickerField extends SLElement {

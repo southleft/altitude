@@ -7,7 +7,7 @@ import styles from './menu.scss';
 
 /**
  * Component: sl-menu
- * - The menu is used to render menu items in a semantic list.
+ * - Menu displays a list of interactive options on a temporary surface.
  * @slot - The Menu Items in the menu
  * @slot "trigger" - A button to trigger the active state of the menu
  */

@@ -11,7 +11,7 @@ import styles from './checkbox-item.scss';
 
 /**
  * Component: sl-checkbox-item
- * - A radio item is a singular checkbox that is meant to be used within the SLCheckbox
+ * - Checkbox Item is a singular checkbox that is used within the checkbox component.
  * @slot - The component content that appears next to the checkbox
  * @slot "field-note" - If content is slotted, it will display in place of the fieldNote property
  * @slot "error" - If content is slotted, it will display in place of the errorNote property

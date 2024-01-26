@@ -12,7 +12,7 @@ import styles from './toast-group.scss';
 
 /**
  * Component: sl-toast-group
- * - Parent component to one or multiple toasts that provides positioning and group interactivity.
+ * - Toast Group contains one or multiple toasts, and provides positioning and group interactivity.
  * @slot - Individual Toast components
  */
 export class SLToastGroup extends SLElement {

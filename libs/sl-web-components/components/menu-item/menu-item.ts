@@ -12,7 +12,7 @@ import styles from './menu-item.scss';
 
 /**
  * Component: sl-menu-item
- * - A menu item is a singular item that is meant to be used within the SLMenu
+ * - Menu item is a single item within a menu.
  * @slot - The content to display in the menu item
  * @slot "before" - Optional prefix content to display in the menu item
  */

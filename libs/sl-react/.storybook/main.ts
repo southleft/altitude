@@ -14,6 +14,9 @@ const config: StorybookConfig = {
     '@storybook/addon-a11y',
     "@etchteam/storybook-addon-status"
   ],
+  docs: {
+    autodocs: true
+  },
 
   webpackFinal: (config) => {
     // Add SCSS support

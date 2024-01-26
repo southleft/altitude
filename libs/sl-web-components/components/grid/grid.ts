@@ -4,6 +4,8 @@ import { SLElement } from '../SLElement';
 import styles from './grid.scss';
 
 /**
+ * Component: sl-grid
+ * - Grid provides a responsive layout that adapts to screen size and orientation, ensuring consistency across devices.
  * @slot - The grid items
  */
 export class SLGrid extends SLElement {

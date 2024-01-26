@@ -6,7 +6,7 @@ import styles from './link.scss';
 
 /**
  * Component: sl-link
- * - A link can be a standalone item, and it can be an in-line text link. But it will always be formatted with the same styles.
+ * - Link provides consistent formatting to navigational elements.
  * @slot - The components content
  */
 export class SLLink extends SLElement {

@@ -39,6 +39,8 @@ import { SLIconChevronRight } from '../icon/icons/chevron-right';
 import styles from './calendar.scss';
 
 /**
+ * Component: sl-calendar
+ * - Calendar provides a way for a user to select a date from a month.
  * @slot - The component content
  */
 export class SLCalendar extends SLElement {
