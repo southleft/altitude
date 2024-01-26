@@ -12,7 +12,7 @@ import './card';
 export default {
   title: 'Components/Card',
   component: 'sl-card',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',

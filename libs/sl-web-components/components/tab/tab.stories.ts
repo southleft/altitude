@@ -8,7 +8,7 @@ import './tab';
 export default {
   title: 'Components/Tab',
   component: 'sl-tab',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

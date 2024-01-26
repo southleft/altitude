@@ -16,27 +16,18 @@
   --rtlBackgroundPositionTo: 0%; /* 4 */
 }
 
+html {
+  font-size: var(--sl-base-font);
+}
+
 body {
   display: flex;
   flex-direction: column;
-  padding: 0;
-  margin: 0;
   color: var(--sl-theme-color-content-default);
   background: var(--sl-theme-color-background-default);
-  font-family: var(--sl-font-family-primary);
-  font-size: 1rem;
-}
-
-a {
-  text-decoration: none;
-  transition: all var(--sl-theme-transition-duration) var(--sl-theme-transition-timing);
-  color: inherit;
-
-  svg path {
-    fill: currentcolor;
-  }
+  font: var(--sl-theme-typography-body-md);
 }
 
 strong {
-  font-weight: var(--sl-theme-font-weight-bold);
+  font-weight: var(--sl-font-weight-bold);
 }

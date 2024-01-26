@@ -8,7 +8,7 @@
  * 2. $number should be limited to integers (e.g. 3) or half integers (e.g. 1.5)
  */
 @function size($number) {
-  @return calc(var(--sl-size-base-unit) * #{$number});
+  @return calc(var(--sl-base-space) * #{$number});
 }
 
 /**
@@ -166,21 +166,20 @@
   @include button-reset;
   @include sl-theme-typography-body-md;
   transition: color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing), background-color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
-  color: var(--sl-theme-color-content-accent-default);
+  color: var(--sl-theme-color-content-accent-strong);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: size(1);
   border-radius: var(--sl-theme-border-radius-xs);
-  text-decoration: none;
+  text-decoration: underline;
   cursor: pointer;
 
   /**
    * Hover state
    */
   &:hover:not(:active, .sl-is-disabled) {
-    color: var(--sl-theme-color-content-accent-weak);
-    text-decoration: underline;
+    color: var(--sl-theme-color-content-accent-stronger);
   }
 
   /**

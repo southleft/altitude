@@ -7,7 +7,7 @@ import './list';
 export default {
   title: 'Components/List',
   component: 'sl-list',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

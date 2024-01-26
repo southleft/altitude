@@ -5,7 +5,7 @@ import './tab-panel';
 export default {
   title: 'Components/Tab Panel',
   component: 'sl-tab-panel',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     controls: {

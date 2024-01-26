@@ -6,7 +6,7 @@ import './divider';
 export default {
   title: 'Components/Divider',
   component: 'sl-divider',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered'

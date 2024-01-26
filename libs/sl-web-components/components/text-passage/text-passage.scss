@@ -1,7 +1,120 @@
 @import '../../styles/component';
-@import './text-passage-light-dom';
+/* ------------------------------------*\
+  #TEXT-PASSAGE
+\*------------------------------------ */
 
-/**
- * !!! DO NOT WRITE ANY STYLE IN THIS FILE for styling specific elements within text passage.
- * Write it in text-passage-light-dom.scss to for styling.!!!
- */
+.sl-c-text-passage {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: size(2);
+  @include sl-theme-typography-body-md;
+
+  /**
+   * Reset paragraph margins
+   */
+  ::slotted(*) {
+    margin: 0;
+    padding: 0;
+  }
+
+  /**
+   * Add extra spacing to the top of headings
+   */
+  ::slotted(h1),
+  ::slotted(h2),
+  ::slotted(h3),
+  ::slotted(h4),
+  ::slotted(h5),
+  ::slotted(h6) {
+     padding-block-start: size(2);
+  }
+
+  /**
+   * Generic ::slotted(h1) within text passage
+   */
+  ::slotted(h1) {
+    @include sl-theme-typography-display-lg-bold;
+  }
+
+  /**
+   * Generic ::slotted(h2) within text passage
+   */
+  ::slotted(h2) {
+    @include sl-theme-typography-display-md-bold;
+  }
+
+  /**
+   * Generic ::slotted(h3) within text passage
+   */
+  ::slotted(h3) {
+    @include sl-theme-typography-display-sm-bold;
+  }
+
+  /**
+   * Generic ::slotted(h4) within text passage
+   */
+  ::slotted(h4) {
+    @include sl-theme-typography-heading-lg-bold;
+  }
+
+  /**
+   * Generic ::slotted(h5) within text passage
+   */
+  ::slotted(h5) {
+    @include sl-theme-typography-heading-md-bold;
+  }
+
+  /**
+   * Generic ::slotted(h6) within text passage
+   */
+  ::slotted(h6) {
+    @include sl-theme-typography-heading-sm-bold;
+  }
+
+  /**
+   * Generic unordered and ordered lists within text passage
+   */
+  ::slotted(ul),
+  ::slotted(ol) {
+    margin-inline-start: size(4);
+  }
+
+  /**
+   * Generic link tag within text passage
+   */
+  ::slotted(a) {
+    @include link-styles;
+  }
+
+  /**
+   * Generic link tag hover
+   */
+  ::slotted(a:hover) {
+    color: var(--sl-theme-color-content-accent-strong);
+    text-decoration: underline;
+  }
+
+  /**
+   * Blockquote within text passage
+   */
+  ::slotted(blockquote) {
+    border-inline-start: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+    color: var(--sl-theme-color-content-default);
+    padding-inline-start: size(2);
+    margin-inline-start: 0;
+    margin-block-end: size(2);
+  }
+
+  /**
+   * Remove margin and padding from first slotted element
+   */
+  ::slotted(*:first-child) {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.sl-c-text-passage--max-width-sm {
+  max-width: var(--sl-theme-layout-max-width-sm);
+}

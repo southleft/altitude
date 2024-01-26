@@ -5,7 +5,7 @@ import './button-group';
 export default {
   title: 'Components/Button Group',
   component: 'sl-button-group',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: { status: { type: 'beta' } },
   argTypes: {
     behavior: {

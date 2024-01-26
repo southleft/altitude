@@ -6,7 +6,7 @@ import './progress';
 export default {
   title: 'Components/Progress',
   component: 'sl-progress',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

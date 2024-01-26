@@ -7,14 +7,15 @@ td {
   text-align: left;
   margin: 0;
   padding: var(--sl-theme-space);
-  border-top: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
-  border-left: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+  border-top: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default-weak);
+  border-left: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default-weak);
   vertical-align: middle;
 }
 
 code {
-  background: var(--sl-theme-color-background-default-strong);
-  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+  font-family: monospace;
+  background: var(--sl-theme-color-background-default-stronger);
+  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default-weak);
   padding: var(--sl-theme-space-xxs) var(--sl-theme-space-xs);
   border-radius: var(--sl-theme-border-radius);
   white-space: nowrap;
@@ -25,15 +26,16 @@ code {
     display: block;
     width: 48px;
     height: 48px;
-    border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
-    background-color: var(--sl-theme-color-background-default-weak);
+    border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default-weak);
+    background-color: var(--sl-theme-color-background-default-stronger);
 
     .token-specimen--color & {
       border-radius: 48px;
     }
 
     .token-specimen--opacity & {
-      background-color: var(--sl-color-base-purple-50);
+      border: none;
+      background-color: var(--sl-theme-color-background-inverse-default);
     }
 
     .token-specimen--typography & {

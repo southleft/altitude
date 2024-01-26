@@ -12,7 +12,7 @@ import './menu';
 export default {
   title: 'Components/Menu',
   component: 'sl-menu',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',

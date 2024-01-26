@@ -7,7 +7,7 @@ import './input-stepper';
 export default {
   title: 'Components/Input Stepper',
   component: 'sl-input-stepper',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',

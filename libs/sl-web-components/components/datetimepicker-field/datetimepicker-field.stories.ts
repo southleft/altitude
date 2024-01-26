@@ -8,7 +8,7 @@ import './datetimepicker-field';
 export default {
   title: 'Components/Datetimepicker Field',
   component: 'sl-datetimepicker-field',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

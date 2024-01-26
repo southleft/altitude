@@ -9,7 +9,7 @@ import './contextual-menu';
 export default {
   title: 'Components/Contextual Menu',
   component: 'sl-contextual-menu',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',

@@ -6,7 +6,7 @@ import './icons/add';
 export default {
   title: 'Components/Icon',
   component: 'sl-icon',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: { status: { type: 'beta' } },
   argTypes: {
     size: {

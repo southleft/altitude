@@ -9,7 +9,7 @@ import './toast';
 export default {
   title: 'Components/Toast',
   component: 'sl-toast',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {

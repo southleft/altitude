@@ -7,7 +7,7 @@ import './switch';
 export default {
   title: 'Components/Switch',
   component: 'sl-switch',
-  tags: [  'autodocs' ],
+  tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',

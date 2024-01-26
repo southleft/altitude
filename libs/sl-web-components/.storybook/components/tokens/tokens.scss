@@ -16,28 +16,28 @@ header {
 }
 
 h1 {
-  font-size: xx-large;
+  @include sl-theme-typography-display-lg-bold;
   padding-bottom: var(--sl-theme-space);
-  border-bottom: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+  border-bottom: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default-weak);
 }
 
 caption {
-  font-size: x-large;
+  @include sl-theme-typography-heading-lg-bold;
   padding-bottom: var(--sl-theme-space);
-  font-weight: bold;
   text-align: left;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default-weak);
 }
 
 th {
+  @include sl-theme-typography-body-lg-bold;
   text-align: left;
   vertical-align: middle;
   padding: var(--sl-theme-space);
-  border-top: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
-  border-left: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+  border-top: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default-weak);
+  border-left: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default-weak);
 }
