@@ -6,8 +6,9 @@ import styles from './breadcrumbs-item.scss';
 
 /**
  * Component: sl-breadcrumbs-item
- * - A breadcrumbs item is a singular item that is meant to be used within the SLBreadcrumbs
- * @slot - The breadcrumb item's content, typically text
+ *
+ * Breadcrumbs Item is a singular link used within the breadcrumbs component.
+ * - **slot**: The breadcrumb item's content, typically text
  */
 export class SLBreadcrumbsItem extends SLElement {
   static el = 'sl-breadcrumbs-item';

@@ -10,8 +10,9 @@ import styles from './avatar.scss';
 
 /**
  * Component: sl-avatar
- * - Avatars are used to represent a user and can hold strings, icons, and images. Avatars can also be used with dot badges.
- * @slot - The avatar content
+ *
+ * Avatars are used to represent a user and can hold strings, icons, and images. Avatars can also be used with dot badges.
+ * - **slot**: The avatar content
  */
 export class SLAvatar extends SLElement {
   static el = 'sl-avatar';
@@ -44,7 +45,7 @@ export class SLAvatar extends SLElement {
   accessor hasBadge: boolean;
 
   /**
-   * Badeg state variant
+   * Badge state variant
    * - **default** Displays a badge with the default state
    * - **success** renders a badge with success state treatment
    * - **warning** renders a badge with warning state treatment

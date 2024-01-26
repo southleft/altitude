@@ -13,6 +13,10 @@ export default {
       handles: ['open', 'close']
     },
   },
+  args: {
+    expandOneOnly: false,
+    expandAll: false,
+  }
 };
 
 const Template = (args) => html`

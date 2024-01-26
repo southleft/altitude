@@ -14,10 +14,11 @@ import styles from './toast.scss';
 
 /**
  * Component: sl-toast
- * - A toast is a brief message triggered after a user completed an action.
- * @slot - The components content
- * @slot "actions" - Actions to optionally display in the toast
- * @slot "icon" - Slot in an icon to override the default one
+ *
+ * Toast provides a brief, temporary notification without interrupting a user's task.
+ * - **slot**: The toast title or primary text
+ * - **slot** "actions": Actions to optionally display in the toast
+ * - **slot** "icon": Slot in an icon to override the default one
  */
 export class SLToast extends SLElement {
   static el = 'sl-toast';

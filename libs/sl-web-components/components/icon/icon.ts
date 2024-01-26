@@ -5,6 +5,8 @@ import styles from './icon.scss';
 
 /**
  * Component: sl-icon-[ICON_NAME]
+ * 
+ * Icons are symbols that provide meaning. Icon component is used to display any icon from the Altitude icon library. 
  */
 export class SLIcon extends SLElement {
   static el = 'sl-icon';

@@ -5,7 +5,8 @@ import styles from './skeleton.scss';
 
 /**
  * Component: sl-skeleton
- * @slot - The components content
+ *
+ * Skeleton provides a low fidelity representation of content before it appears in a view. This improves the perceived loading time for users.
  */
 export class SLSkeleton extends SLElement {
   static el = 'sl-skeleton';

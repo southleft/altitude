@@ -4,7 +4,9 @@ import { SLElement } from '../SLElement';
 import styles from './loading-indicator.scss';
 
 /**
- * @slot - The component content
+ * Component: el-loading-indicator
+ *
+ * Loading Indicator is used when retrieving data or performing slow computations, to notify users that their action is being processed.
  */
 export class SLLoadingIndicator extends SLElement {
   static el = 'sl-loading-indicator';

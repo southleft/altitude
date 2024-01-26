@@ -7,7 +7,10 @@ import { SLListItem } from '../list-item/list-item';
 import styles from './list.scss';
 
 /**
- * @slot - The list items
+ * Component: sl-list
+ *
+ * List is a vertical or horizontal grouping of related content or links.
+ * - **slot**: The list items
  */
 export class SLList extends SLElement {
   static el = 'sl-list';

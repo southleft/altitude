@@ -12,9 +12,11 @@ import styles from './dialog.scss';
 
 /**
  * Component: sl-dialog
- * @slot - The main body of the dialog
- * @slot "header" - The header of the dialog that appears above the main slot
- * @slot "footer" - The footer of the dialog that appears below the main slot
+ *
+ * Dialog informs users about a task and can contain critical information, require decisions, or involve multiple tasks.
+ * - **slot**: The main body of the dialog
+ * - **slot** "header": The header of the dialog that appears above the main slot
+ * - **slot** "footer": The footer of the dialog that appears below the main slot
  */
 export class SLDialog extends SLElement {
   static el = 'sl-dialog';

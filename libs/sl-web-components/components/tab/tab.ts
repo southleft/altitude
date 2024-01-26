@@ -6,8 +6,9 @@ import styles from './tab.scss';
 
 /**
  * Component: sl-tab
- * - A tab item is a singular tab that is meant to be used within the SLTabs.
- * @slot - The components content
+ *
+ * Tab is a singular interactive item within the tabs component.
+ * - **slot**: The tab label
  */
 export class SLTab extends SLElement {
   static el = 'sl-tab';

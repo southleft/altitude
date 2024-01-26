@@ -7,9 +7,10 @@ import styles from './menu.scss';
 
 /**
  * Component: sl-menu
- * - The menu is used to render menu items in a semantic list.
- * @slot - The Menu Items in the menu
- * @slot "trigger" - A button to trigger the active state of the menu
+ *
+ * Menu displays a list of interactive options on a temporary surface.
+ * - **slot**: The menu items in the menu
+ * - **slot** "trigger": A button to trigger the active state of the menu
  */
 export class SLMenu extends SLElement {
   static el = 'sl-menu';

@@ -5,8 +5,9 @@ import styles from './text-passage.scss';
 
 /**
  * Component: sl-text-passage
- * - The text passage provides an area to slot in any content related items and they are all spaced accordingly.
- * @slot - The components content
+ *
+ * Text Passage provides a layout with consistent spacing for any content related items.
+ * - **slot**: The text passage content
  */
 export class SLTextPassage extends SLElement {
   static el = 'sl-text-passage';

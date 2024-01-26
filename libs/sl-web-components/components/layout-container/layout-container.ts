@@ -4,6 +4,8 @@ import styles from './layout-container.scss';
 
 /**
  * Component: sl-layout-container
+ *
+ * Layout Container caps the width of content sections and centers content within it.
  */
 export class SLLayoutContainer extends SLElement {
   static el = 'sl-layout-container';

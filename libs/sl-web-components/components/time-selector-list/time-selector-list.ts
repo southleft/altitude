@@ -22,7 +22,8 @@ import styles from './time-selector-list.scss';
 
 /**
  * Component: sl-time-selector-list
- * @slot - The components content
+ *
+ * Time Selector List lets a user select a time from a list of options.
  */
 export class SLTimeSelectorList extends SLElement {
   static el = 'sl-time-selector-list';

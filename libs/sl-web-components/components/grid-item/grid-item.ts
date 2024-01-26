@@ -3,7 +3,7 @@ import { SLElement } from '../SLElement';
 import styles from './grid-item.scss';
 
 /**
- * @slot - The content of the grid item
+ * - **slot**: The content of the grid item
  */
 export class SLGridItem extends SLElement {
   static el = 'sl-grid-item';

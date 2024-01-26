@@ -10,10 +10,11 @@ import styles from './stepper-item.scss';
 
 /**
  * Component: sl-stepper-item
- * - A stepper item is an item inside the SLStepper
- * @slot - The label for each Stepper item
- * @slot "icon" - The icon that displays next to the label
- * @slot "description" - The description that displays below the label
+ *
+ * Stepper Item is a single step within a stepper.
+ * - **slot**: The label for each stepper item
+ * - **slot** "icon": The icon that displays next to the label
+ * - **slot** "description": The description that displays below the label
  */
 export class SLStepperItem extends SLElement {
   static el = 'sl-stepper-item';

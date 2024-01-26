@@ -5,7 +5,8 @@ import styles from './progress.scss';
 
 /**
  * Component: sl-progress
- * - The progress is a progress indicator that visually shows a remaining value.
+ *
+ * Progress provides feedback about the duration and progression of a process to indicate how long a user will be waiting.
  */
 export class SLProgress extends SLElement {
   static el = 'sl-progress';

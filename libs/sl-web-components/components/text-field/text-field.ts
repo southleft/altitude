@@ -11,11 +11,12 @@ import styles from './text-field.scss';
 
 /**
  * Component: sl-text-field
- * - A text field allows users to input alphanumeric data, such as names, addresses, or messages.
- * @slot "before" - The content that appears before the text in the input
- * @slot "after" - The content that appears after the text in the input
- * @slot "field-note" - If content is slotted, it will display in place of the fieldNote property
- * @slot "error" - If content is slotted, it will display in place of the errorNote property
+ *
+ * Text Field allows users to input alphanumeric data when the expected input is short.
+ * - **slot** "before": The content that appears before the text in the input
+ * - **slot** "after": The content that appears after the text in the input
+ * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
+ * - **slot** "error": If content is slotted, it will display in place of the errorNote property
  */
 export class SLTextField extends SLElement {
   static el = 'sl-text-field';

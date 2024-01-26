@@ -39,7 +39,11 @@ import { SLIconChevronRight } from '../icon/icons/chevron-right';
 import styles from './calendar.scss';
 
 /**
- * @slot - The component content
+ * Component: sl-calendar
+ *
+ * Calendar provides a way for a user to select a date from a month.
+ * - **slot** "before": If content is slotted, it will override the default "previous button" icon
+ * - **slot** "after": If content is slotted, it will override the default "next button" icon
  */
 export class SLCalendar extends SLElement {
   static el = 'sl-calendar';
