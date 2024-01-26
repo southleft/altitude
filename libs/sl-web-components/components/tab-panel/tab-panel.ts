@@ -6,8 +6,9 @@ import styles from './tab-panel.scss';
 
 /**
  * Component: sl-tab-panel
- * - Tab Panel displays content for a single tab within the tabs component.
- * @slot - The components content
+ *
+ * Tab Panel displays content for a single tab within the tabs component.
+ * - **slot**: The tab panel content
  */
 export class SLTabPanel extends SLElement {
   static el = 'sl-tab-panel';

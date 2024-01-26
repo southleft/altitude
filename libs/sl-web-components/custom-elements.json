@@ -4,7 +4,7 @@
     {
       "name": "sl-accordion-panel",
       "path": "./components/accordion-panel/accordion-panel.ts",
-      "description": "Component: sl-accordion-panel\n- Accordion Panel shows and hides content within the accordion component.",
+      "description": "Component: sl-accordion-panel\n\nAccordion Panel shows and hides content within the accordion component.\n- **slot**: The accordion panel content",
       "attributes": [
         {
           "name": "isActive",
@@ -90,18 +90,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The accordion panel content"
-        }
       ]
     },
     {
       "name": "sl-accordion",
       "path": "./components/accordion/accordion.ts",
-      "description": "Component: sl-accordion\n- Accordion is a vertical list of panels used to show and hide related sections of content.\n- slot: The accordion content, a set of accordion panels",
+      "description": "Component: sl-accordion\n\nAccordion is a vertical list of panels used to show and hide related sections of content.\n- **slot**: The accordion content, a set of accordion panels",
       "attributes": [
         {
           "name": "expandAll",
@@ -272,7 +266,7 @@
     {
       "name": "sl-avatar",
       "path": "./components/avatar/avatar.ts",
-      "description": "Component: sl-avatar\n- Avatars are used to represent a user and can hold strings, icons, and images. Avatars can also be used with dot badges.",
+      "description": "Component: sl-avatar\n\nAvatars are used to represent a user and can hold strings, icons, and images. Avatars can also be used with dot badges.\n- **slot**: The avatar content",
       "attributes": [
         {
           "name": "variant",
@@ -325,18 +319,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The avatar content"
-        }
       ]
     },
     {
       "name": "sl-badge",
       "path": "./components/badge/badge.ts",
-      "description": "Component: sl-badge\n- Badges are labels that hold small amounts of information. Badges can hold a number and can be paired with other components including icons, text, or avatars.",
+      "description": "Component: sl-badge\n\nBadges are labels that hold small amounts of information. Badges can hold a number and can be paired with other components including icons, text, or avatars.\n- **slot**: The badge content",
       "attributes": [
         {
           "name": "isDot",
@@ -389,18 +377,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The badge content"
-        }
       ]
     },
     {
       "name": "sl-breadcrumbs-item",
       "path": "./components/breadcrumbs-item/breadcrumbs-item.ts",
-      "description": "Component: sl-breadcrumbs-item\n- Breadcrumbs Item is a singular link used within the breadcrumbs component.",
+      "description": "Component: sl-breadcrumbs-item\n\nBreadcrumbs Item is a singular link used within the breadcrumbs component.\n- **slot**: The breadcrumb item's content, typically text",
       "attributes": [
         {
           "name": "href",
@@ -475,18 +457,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The breadcrumb item's content, typically text"
-        }
       ]
     },
     {
       "name": "sl-breadcrumbs",
       "path": "./components/breadcrumbs/breadcrumbs.ts",
-      "description": "Component: sl-breadcrumbs\n- Breadcrumbs are a list of links that help a user visualize a page's location within the hierarchical structure of a website. They provide navigation to any of the page's ancestors.",
+      "description": "Component: sl-breadcrumbs\n\nBreadcrumbs are a list of links that help a user visualize a page's location within the hierarchical structure of a website. They provide navigation to any of the page's ancestors.\n- **slot**: The breadcrumbs content, a set of breadcrumb items",
       "attributes": [
         {
           "name": "label",
@@ -561,18 +537,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The component content"
-        }
       ]
     },
     {
       "name": "sl-button-group",
       "path": "./components/button-group/button-group.ts",
-      "description": "Component: sl-button-group\n- Button Group is used to group buttons and provide proper alignment.",
+      "description": "Component: sl-button-group\n\nButton Group is used to group buttons and provide proper alignment.\n- **slot**: The button group content, a set of buttons",
       "attributes": [
         {
           "name": "behavior",
@@ -614,18 +584,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-button",
       "path": "./components/button/button.ts",
-      "description": "Component: sl-button\n- Buttons are interactive elements that enable users to execute actions.",
+      "description": "Component: sl-button\n\nButtons are interactive elements that enable users to execute actions.\n- **slot**: The button text content\n- **slot** \"before\": Content to display before the button text, typically an icon\n- **slot** \"after\": Content to display after the button text, typically an icon",
       "attributes": [
         {
           "name": "type",
@@ -788,22 +752,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "before",
-          "description": "Content to display before the Button text, typically an Icon"
-        },
-        {
-          "name": "after",
-          "description": "Content to display after the Button text, typically an Icon"
-        }
       ]
     },
     {
       "name": "sl-calendar",
       "path": "./components/calendar/calendar.ts",
-      "description": "Component: sl-calendar\n- Calendar provides a way for a user to select a date from a month.",
+      "description": "Component: sl-calendar\n\nCalendar provides a way for a user to select a date from a month.\n- **slot** \"before\": If content is slotted, it will override the default \"previous button\" icon\n- **slot** \"after\": If content is slotted, it will override the default \"next button\" icon",
       "attributes": [
         {
           "name": "disabledMinDate",
@@ -1063,18 +1017,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The component content"
-        }
       ]
     },
     {
       "name": "sl-card",
       "path": "./components/card/card.ts",
-      "description": "Component: sl-card\n- Card displays content and actions on a single topic in a concise, scannable format.",
+      "description": "Component: sl-card\n\nCard displays content and actions on a single topic in a concise, scannable format.\n- **slot**: The main content of the card that appers below the header\n- **slot** \"actions-left\": The actions the appear to the top-left of the card\n- **slot** \"action-right\": The actions the appear to the top-right of the card\n- **slot** \"image\": The main image of the card that appears below the actions\n- **slot** \"header\": The main title of the card that appears below the image",
       "attributes": [
         {
           "name": "styleModifier",
@@ -1094,34 +1042,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The main content of the card that appers below the header"
-        },
-        {
-          "name": "actions-left",
-          "description": "The actions the appear to the top-left of the card"
-        },
-        {
-          "name": "action-right",
-          "description": "The actions the appear to the top-right of the card"
-        },
-        {
-          "name": "image",
-          "description": "The main image of the card that appears below the actions"
-        },
-        {
-          "name": "header",
-          "description": "The main title of the card that appears below the image"
-        }
       ]
     },
     {
       "name": "sl-checkbox-item",
       "path": "./components/checkbox-item/checkbox-item.ts",
-      "description": "Component: sl-checkbox-item\n- Checkbox Item is a singular checkbox that is used within the checkbox component.",
+      "description": "Component: sl-checkbox-item\n\nCheckbox Item is a singular checkbox that is used within the checkbox component.\n- **slot**: The component content that appears next to the checkbox\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
       "attributes": [
         {
           "name": "isChecked",
@@ -1273,26 +1199,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The component content that appears next to the checkbox"
-        },
-        {
-          "name": "field-note",
-          "description": "If content is slotted, it will display in place of the fieldNote property"
-        },
-        {
-          "name": "error",
-          "description": "If content is slotted, it will display in place of the errorNote property"
-        }
       ]
     },
     {
       "name": "sl-checkbox",
       "path": "./components/checkbox/checkbox.ts",
-      "description": "Component: sl-checkbox\n- Checkbox lets a user select one or more items from a list, or turn an item on or off.",
+      "description": "Component: sl-checkbox\n\nCheckbox lets a user select one or more items from a list, or turn an item on or off.\n- **slot**: The component content, a set of checkbox items\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
       "attributes": [
         {
           "name": "isError",
@@ -1422,26 +1334,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The component content"
-        },
-        {
-          "name": "field-note",
-          "description": "If content is slotted, it will display in place of the fieldNote property"
-        },
-        {
-          "name": "error",
-          "description": "If content is slotted, it will display in place of the errorNote property"
-        }
       ]
     },
     {
       "name": "sl-chip-group",
       "path": "./components/chip-group/chip-group.ts",
-      "description": "Component: sl-chip-group\n- Chip Group is used to display chips in a row, with the ability to expand the row and increase the number of visible chips.",
+      "description": "Component: sl-chip-group\n\nChip Group is used to display chips in a row, with the ability to expand the row and increase the number of visible chips.\n- **slot**: The chip group content, a set of chips",
       "attributes": [
         {
           "name": "chipsVisible",
@@ -1482,18 +1380,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The area to slot in SLChips"
-        }
       ]
     },
     {
       "name": "sl-chip",
       "path": "./components/chip/chip.ts",
-      "description": "Component: sl-chip\n- Chips are compact elements that represent an input, attribute, or action.",
+      "description": "Component: sl-chip\n\nChips are compact elements that represent an input, attribute, or action.\n- **slot**: The chip content",
       "attributes": [
         {
           "name": "variant",
@@ -1557,18 +1449,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-contextual-menu",
       "path": "./components/contextual-menu/contextual-menu.ts",
-      "description": "Component: sl-contextual-menu\n- Contextual Menu is a list of options that is opened/closed by a trigger and positioned around the trigger.",
+      "description": "Component: sl-contextual-menu\n\nContextual Menu is a list of options that is opened/closed by a trigger and positioned around the trigger.\n- **slot**: The main body of the contextual menu\n- **slot** \"trigger\": The trigger that opens/closes the contextual menu",
       "attributes": [
         {
           "name": "heading",
@@ -1662,22 +1548,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The main body of the contextual menu"
-        },
-        {
-          "name": "trigger",
-          "description": "The trigger that opens/closes the contextual menu"
-        }
       ]
     },
     {
       "name": "sl-datepicker-field",
       "path": "./components/datepicker-field/datepicker-field.ts",
-      "description": "Component: sl-datepicker-field\n- Datepicker Field allows a user to select a date.",
+      "description": "Component: sl-datepicker-field\n\nDatepicker Field allows a user to select a date.\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
       "attributes": [
         {
           "name": "fieldId",
@@ -2006,18 +1882,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-datetimepicker-field",
       "path": "./components/datetimepicker-field/datetimepicker-field.ts",
-      "description": "Component: sl-datetimepicker-field\n- Datetimepicker Field allows the user to select a date and time.",
+      "description": "Component: sl-datetimepicker-field\n\nDatetimepicker Field allows the user to select a date and time.\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
       "attributes": [
         {
           "name": "fieldId",
@@ -2469,18 +2339,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-dialog",
       "path": "./components/dialog/dialog.ts",
-      "description": "Component: sl-dialog\n- Dialog informs users about a task and can contain critical information, require decisions, or involve multiple tasks.",
+      "description": "Component: sl-dialog\n\nDialog informs users about a task and can contain critical information, require decisions, or involve multiple tasks.\n- **slot**: The main body of the dialog\n- **slot** \"header\": The header of the dialog that appears above the main slot\n- **slot** \"footer\": The footer of the dialog that appears below the main slot",
       "attributes": [
         {
           "name": "heading",
@@ -2583,26 +2447,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The main body of the dialog"
-        },
-        {
-          "name": "header",
-          "description": "The header of the dialog that appears above the main slot"
-        },
-        {
-          "name": "footer",
-          "description": "The footer of the dialog that appears below the main slot"
-        }
       ]
     },
     {
       "name": "sl-divider",
       "path": "./components/divider/divider.ts",
-      "description": "Component: sl-divider\n- A divider is a thin line that groups content in lists and layouts.",
+      "description": "Component: sl-divider\n\nA divider is a thin line that groups content in lists and layouts.",
       "attributes": [
         {
           "name": "variant",
@@ -2638,7 +2488,7 @@
     {
       "name": "sl-drawer",
       "path": "./components/drawer/drawer.ts",
-      "description": "Component: sl-drawer\n- Drawer provides ergonomic access to context-sensitive actions and information.",
+      "description": "Component: sl-drawer\n\nDrawer provides ergonomic access to context-sensitive actions and information.\n- **slot**: The drawer content",
       "attributes": [
         {
           "name": "alignment",
@@ -2732,18 +2582,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-dropdown-panel",
       "path": "./components/dropdown-panel/dropdown-panel.ts",
-      "description": "Component: sl-dropdown-panel\n- Dropdown Panel provides overlay and show/hide functionality to the dropdown's list of options.",
+      "description": "Component: sl-dropdown-panel\n\nDropdown Panel provides overlay and show/hide functionality to the dropdown's list of options.\n- **slot**: The dropdown panel content",
       "attributes": [
         {
           "name": "hasScroll",
@@ -2800,18 +2644,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The component content"
-        }
       ]
     },
     {
       "name": "sl-dropdown",
       "path": "./components/dropdown/dropdown.ts",
-      "description": "Component: sl-dropdown\n- Dropdown presents a list of options from which a user can select one.",
+      "description": "Component: sl-dropdown\n\nDropdown presents a list of options from which a user can select one.\n- **slot**: The dropdown content\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
       "attributes": [
         {
           "name": "isActive",
@@ -3066,18 +2904,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The component content"
-        }
       ]
     },
     {
       "name": "sl-field-note",
       "path": "./components/field-note/field-note.ts",
-      "description": "Component: sl-field-note\n- Field note is used as helper text for any type of input field.",
+      "description": "Component: sl-field-note\n\nField note is used as helper text for any type of input field.\n- **slot**: The field note content",
       "attributes": [
         {
           "name": "isError",
@@ -3119,18 +2951,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-file-upload",
       "path": "./components/file-upload/file-upload.ts",
-      "description": "Component: sl-file-upload\n- File Upload provides a way for users to upload files from their operating system.",
+      "description": "Component: sl-file-upload\n\nFile Upload provides a way for users to upload files from their operating system.\n- **slot**: The component's content",
       "attributes": [
         {
           "name": "fieldId",
@@ -3365,17 +3191,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-grid-item",
       "path": "./components/grid-item/grid-item.ts",
+      "description": "- **slot**: The content of the grid item",
       "attributes": [
         {
           "name": "styleModifier",
@@ -3395,18 +3216,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The content of the grid item"
-        }
       ]
     },
     {
       "name": "sl-grid",
       "path": "./components/grid/grid.ts",
-      "description": "Component: sl-grid\n- Grid provides a responsive layout that adapts to screen size and orientation, ensuring consistency across devices.",
+      "description": "Component: sl-grid\n\nGrid provides a responsive layout that adapts to screen size and orientation, ensuring consistency across devices.\n- **slot**: The grid items",
       "attributes": [
         {
           "name": "variant",
@@ -3481,18 +3296,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The grid items"
-        }
       ]
     },
     {
       "name": "sl-heading",
       "path": "./components/heading/heading.ts",
-      "description": "Component: sl-heading\n- Heading is used to render semantic heading tags with specific styles.",
+      "description": "Component: sl-heading\n\nHeading is used to render semantic heading tags with specific styles.\n- **slot**: The heading content",
       "attributes": [
         {
           "name": "variant",
@@ -3547,18 +3356,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-icon",
       "path": "./components/icon/icon.ts",
-      "description": "Component: sl-icon-[ICON_NAME]\n- Icons are symbols that provide meaning. Icon component is used to display any icon from the Altitude icon library.",
+      "description": "Component: sl-icon-[ICON_NAME]\n\nIcons are symbols that provide meaning. Icon component is used to display any icon from the Altitude icon library.",
       "attributes": [
         {
           "name": "iconTitle",
@@ -3605,7 +3408,7 @@
     {
       "name": "sl-input-stepper",
       "path": "./components/input-stepper/input-stepper.ts",
-      "description": "Component: sl-input-stepper\n- Input Stepper lets users enter a numeric value and incrementally increase or decrease the value with a two-segment control.",
+      "description": "Component: sl-input-stepper\n\nInput Stepper lets users enter a numeric value and incrementally increase or decrease the value with a two-segment control.\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
       "attributes": [
         {
           "name": "fieldId",
@@ -3820,18 +3623,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The component content"
-        }
       ]
     },
     {
       "name": "sl-layout-container",
       "path": "./components/layout-container/layout-container.ts",
-      "description": "Component: sl-layout-container\n- Layout Container caps the width of content sections and centers content within it.",
+      "description": "Component: sl-layout-container\n\nLayout Container caps the width of content sections and centers content within it.",
       "attributes": [
         {
           "name": "styleModifier",
@@ -3881,7 +3678,7 @@
     {
       "name": "sl-layout",
       "path": "./components/layout/layout.ts",
-      "description": "Component: sl-layout\n- Layout provides a responsive structure for content that ensures consistency across an application.",
+      "description": "Component: sl-layout\n\nLayout provides a responsive structure for content that ensures consistency across an application.",
       "attributes": [
         {
           "name": "gap",
@@ -3928,7 +3725,7 @@
     {
       "name": "sl-link",
       "path": "./components/link/link.ts",
-      "description": "Component: sl-link\n- Link provides consistent formatting to navigational elements.",
+      "description": "Component: sl-link\n\nLink provides consistent formatting to navigational elements.\n- **slot**: The link text",
       "attributes": [
         {
           "name": "href",
@@ -4025,18 +3822,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-list-item",
       "path": "./components/list-item/list-item.ts",
-      "description": "Component: sl-list-item\n- List Item is a single item in a list.",
+      "description": "Component: sl-list-item\n\nList Item is a single item in a list.\n- **slot**: The content of the list item",
       "attributes": [
         {
           "name": "variant",
@@ -4185,18 +3976,12 @@
         {
           "name": "select"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The content of the list item"
-        }
       ]
     },
     {
       "name": "sl-list",
       "path": "./components/list/list.ts",
-      "description": "Component: sl-list\n- List is a vertical or horizontal grouping of related content or links.",
+      "description": "Component: sl-list\n\nList is a vertical or horizontal grouping of related content or links.\n- **slot**: The list items",
       "attributes": [
         {
           "name": "behavior",
@@ -4256,18 +4041,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The list items"
-        }
       ]
     },
     {
       "name": "sl-loading-indicator",
       "path": "./components/loading-indicator/loading-indicator.ts",
-      "description": "Component: el-loading-indicator\n- Loading Indicator is used when retrieving data or performing slow computations, to notify users that their action is being processed.",
+      "description": "Component: el-loading-indicator\n\nLoading Indicator is used when retrieving data or performing slow computations, to notify users that their action is being processed.",
       "attributes": [
         {
           "name": "inverted",
@@ -4311,18 +4090,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The component content"
-        }
       ]
     },
     {
       "name": "sl-menu-item",
       "path": "./components/menu-item/menu-item.ts",
-      "description": "Component: sl-menu-item\n- Menu item is a single item within a menu.",
+      "description": "Component: sl-menu-item\n\nMenu item is a single item within a menu.\n- **slot**: The content to display in the menu item\n- **slot** \"before\": Optional prefix content to display in the menu item",
       "attributes": [
         {
           "name": "href",
@@ -4529,22 +4302,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The content to display in the menu item"
-        },
-        {
-          "name": "before",
-          "description": "Optional prefix content to display in the menu item"
-        }
       ]
     },
     {
       "name": "sl-menu",
       "path": "./components/menu/menu.ts",
-      "description": "Component: sl-menu\n- Menu displays a list of interactive options on a temporary surface.",
+      "description": "Component: sl-menu\n\nMenu displays a list of interactive options on a temporary surface.\n- **slot**: The menu items in the menu\n- **slot** \"trigger\": A button to trigger the active state of the menu",
       "attributes": [
         {
           "name": "variant",
@@ -4717,22 +4480,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The Menu Items in the menu"
-        },
-        {
-          "name": "trigger",
-          "description": "A button to trigger the active state of the menu"
-        }
       ]
     },
     {
       "name": "sl-pagination-item",
       "path": "./components/pagination-item/pagination-item.ts",
-      "description": "Component: sl-pagination-item\n- Pagination Item is a singular link used within the pagination component.",
+      "description": "Component: sl-pagination-item\n\nPagination Item is a singular link used within the pagination component.\n- **slot**: The pagination item's content",
       "attributes": [
         {
           "name": "href",
@@ -4796,18 +4549,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-pagination",
       "path": "./components/pagination/pagination.ts",
-      "description": "Component: sl-pagination\n- Pagination allows a user to navigate to content that has been split up into pages.",
+      "description": "Component: sl-pagination\n\nPagination allows a user to navigate to content that has been split up into pages.\n- **slot** \"label\": If content is slotted, it will override the default pagination label\n- **slot** \"prev\": If content is slotted, it will override the default \"previous\" icon\n- **slot** \"next\": If content is slotted, it will override the default \"next\" icon",
       "attributes": [
         {
           "name": "prevButtonText",
@@ -4968,18 +4715,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-popover",
       "path": "./components/popover/popover.ts",
-      "description": "Component: sl-popover\n- Popover is used to display content on top of other elements, and is positioned around the trigger that opens it.",
+      "description": "Component: sl-popover\n\nPopover is used to display content on top of other elements, and is positioned around the trigger that opens it.\n- **slot**: The main body of the popover\n- **slot** \"header\": The header of the popover that appears above the main slot\n- **slot** \"footer\": The footer of the popover that appears below the main slot\n- **slot** \"trigger\": The trigger that opens/closes the popover",
       "attributes": [
         {
           "name": "heading",
@@ -5073,30 +4814,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The main body of the popover"
-        },
-        {
-          "name": "header",
-          "description": "The header of the popover that appears above the main slot"
-        },
-        {
-          "name": "footer",
-          "description": "The footer of the popover that appears below the main slot"
-        },
-        {
-          "name": "trigger",
-          "description": "The trigger that opens/closes the popover"
-        }
       ]
     },
     {
       "name": "sl-progress",
       "path": "./components/progress/progress.ts",
-      "description": "Component: sl-progress\n- Progress provides feedback about the duration and progression of a process to indicate how long a user will be waiting.",
+      "description": "Component: sl-progress\n\nProgress provides feedback about the duration and progression of a process to indicate how long a user will be waiting.",
       "attributes": [
         {
           "name": "isCircle",
@@ -5224,7 +4947,7 @@
     {
       "name": "sl-radio-item",
       "path": "./components/radio-item/radio-item.ts",
-      "description": "Component: sl-radio-item\n- Radio Item is a singular radio button within the radio component.",
+      "description": "Component: sl-radio-item\n\nRadio Item is a singular radio button within the radio component.\n- **slot**: The component content that appears next to the radio\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
       "attributes": [
         {
           "name": "isChecked",
@@ -5365,26 +5088,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The component content that appears next to the radio"
-        },
-        {
-          "name": "field-note",
-          "description": "If content is slotted, it will display in place of the fieldNote property"
-        },
-        {
-          "name": "error",
-          "description": "If content is slotted, it will display in place of the errorNote property"
-        }
       ]
     },
     {
       "name": "sl-radio",
       "path": "./components/radio/radio.ts",
-      "description": "Component: sl-radio\n- Radio allows users to choose one option from a set of mutually exclusive options.",
+      "description": "Component: sl-radio\n\nRadio allows users to choose one option from a set of mutually exclusive options.\n- **slot**: The radio content, a set of radio items\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
       "attributes": [
         {
           "name": "isError",
@@ -5514,26 +5223,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The component content"
-        },
-        {
-          "name": "field-note",
-          "description": "If content is slotted, it will display in place of the fieldNote property"
-        },
-        {
-          "name": "error",
-          "description": "If content is slotted, it will display in place of the errorNote property"
-        }
       ]
     },
     {
       "name": "sl-search-form",
       "path": "./components/search-form/search-form.ts",
-      "description": "Component: sl-search-form\n- Search Form enables users to specify a word or phrase to find relevant content without navigation.",
+      "description": "Component: sl-search-form\n\nSearch Form enables users to specify a word or phrase to find relevant content without navigation.\n- **slot**: The search form's dropdown content\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
       "attributes": [
         {
           "name": "ariaControlsId",
@@ -5814,26 +5509,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The component content that appears next to the radio"
-        },
-        {
-          "name": "field-note",
-          "description": "If content is slotted, it will display in place of the fieldNote property"
-        },
-        {
-          "name": "error",
-          "description": "If content is slotted, it will display in place of the errorNote property"
-        }
       ]
     },
     {
       "name": "sl-skeleton",
       "path": "./components/skeleton/skeleton.ts",
-      "description": "Component: sl-skeleton\n- Skeleton provides a low fidelity representation of content before it appears in a view. This improves the perceived loading time for users.",
+      "description": "Component: sl-skeleton\n\nSkeleton provides a low fidelity representation of content before it appears in a view. This improves the perceived loading time for users.",
       "attributes": [
         {
           "name": "variant",
@@ -5886,18 +5567,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-slider",
       "path": "./components/slider/slider.ts",
-      "description": "Component: sl-slider\n- Slider provides a visual indication of adjustable content, where the user can increment or decrement the value by moving the handle along a track, or via text input.",
+      "description": "Component: sl-slider\n\nSlider provides a visual indication of adjustable content, where the user can increment or decrement the value by moving the handle along a track, or via text input.\n- **slot** \"label\": If content is slotted, it will override the default slider label\n- **slot** \"before\": If content is slotted, it will override the default slider \"min\" label text\n- **slot** \"after\": If content is slotted, it will override the default slider \"max\" label text",
       "attributes": [
         {
           "name": "hideLabel",
@@ -6224,18 +5899,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-stepper-item",
       "path": "./components/stepper-item/stepper-item.ts",
-      "description": "Component: sl-stepper-item\n- Stepper Item is a single step within a stepper.",
+      "description": "Component: sl-stepper-item\n\nStepper Item is a single step within a stepper.\n- **slot**: The label for each stepper item\n- **slot** \"icon\": The icon that displays next to the label\n- **slot** \"description\": The description that displays below the label",
       "attributes": [
         {
           "name": "variant",
@@ -6312,26 +5981,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The label for each Stepper item"
-        },
-        {
-          "name": "icon",
-          "description": "The icon that displays next to the label"
-        },
-        {
-          "name": "description",
-          "description": "The description that displays below the label"
-        }
       ]
     },
     {
       "name": "sl-stepper",
       "path": "./components/stepper/stepper.ts",
-      "description": "Component: sl-stepper\n- Stepper keeps track of a user's progress by indicating where the user is in a multi-step process.",
+      "description": "Component: sl-stepper\n\nStepper keeps track of a user's progress by indicating where the user is in a multi-step process.\n- **slot**: The stepper content, a set of stepper items",
       "attributes": [
         {
           "name": "variant",
@@ -6367,18 +6022,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The component content"
-        }
       ]
     },
     {
       "name": "sl-switch",
       "path": "./components/switch/switch.ts",
-      "description": "Component: sl-switch\n- Switch is used to toggle the on/off state of a single setting.",
+      "description": "Component: sl-switch\n\nSwitch is used to toggle the on/off state of a single setting.",
       "attributes": [
         {
           "name": "isChecked",
@@ -6460,7 +6109,7 @@
     {
       "name": "sl-tab-panel",
       "path": "./components/tab-panel/tab-panel.ts",
-      "description": "Component: sl-tab-panel\n- Tab Panel displays content for a single tab within the tabs component.",
+      "description": "Component: sl-tab-panel\n\nTab Panel displays content for a single tab within the tabs component.\n- **slot**: The tab panel content",
       "attributes": [
         {
           "name": "isActive",
@@ -6531,18 +6180,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-tab",
       "path": "./components/tab/tab.ts",
-      "description": "Component: sl-tab\n- Tab is a singular interactive item within the tabs component.",
+      "description": "Component: sl-tab\n\nTab is a singular interactive item within the tabs component.\n- **slot**: The tab label",
       "attributes": [
         {
           "name": "isActive",
@@ -6624,18 +6267,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-tabs",
       "path": "./components/tabs/tabs.ts",
-      "description": "Component: sl-tabs\n- Tabs organize related content at the same level of hierarchy, and allow navigation between distinct groups of content.",
+      "description": "Component: sl-tabs\n\nTabs organize related content at the same level of hierarchy, and allow navigation between distinct groups of content. \n- **slot**: The tab items for the tabs\n- **slot** \"panel\": The tab panels that correspond to the slotted tab items",
       "attributes": [
         {
           "name": "variant",
@@ -6709,22 +6346,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The slot to add the SLTab items"
-        },
-        {
-          "name": "panel",
-          "description": "The slot to add the SLTabPanel items"
-        }
       ]
     },
     {
       "name": "sl-text-field",
       "path": "./components/text-field/text-field.ts",
-      "description": "Component: sl-text-field\n- Text Field allows users to input alphanumeric data when the expected input is short.",
+      "description": "Component: sl-text-field\n\nText Field allows users to input alphanumeric data when the expected input is short.\n- **slot** \"before\": The content that appears before the text in the input\n- **slot** \"after\": The content that appears after the text in the input\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
       "attributes": [
         {
           "name": "type",
@@ -7005,30 +6632,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "before",
-          "description": "The content that appears before the text in the input"
-        },
-        {
-          "name": "after",
-          "description": "The content that appears after the text in the input"
-        },
-        {
-          "name": "field-note",
-          "description": "If content is slotted, it will display in place of the fieldNote property"
-        },
-        {
-          "name": "error",
-          "description": "If content is slotted, it will display in place of the errorNote property"
-        }
       ]
     },
     {
       "name": "sl-text-passage",
       "path": "./components/text-passage/text-passage.ts",
-      "description": "Component: sl-text-passage\n- Text Passage provides a layout with consistent spacing for any content related items.",
+      "description": "Component: sl-text-passage\n\nText Passage provides a layout with consistent spacing for any content related items.\n- **slot**: The text passage content",
       "attributes": [
         {
           "name": "maxWidth",
@@ -7059,18 +6668,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-textarea",
       "path": "./components/textarea/textarea.ts",
-      "description": "Component: sl-textarea\n- Textarea allows users to write text for input over multiple rows. Used when the expected user input is long.",
+      "description": "Component: sl-textarea\n\nTextarea allows users to write text for input over multiple rows. Used when the expected user input is long.\n- **slot** \"before\": The content that appears before the text in the input\n- **slot** \"after\": The content that appears after the text in the input\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
       "attributes": [
         {
           "name": "rows",
@@ -7325,30 +6928,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "before",
-          "description": "The content that appears before the text in the input"
-        },
-        {
-          "name": "after",
-          "description": "The content that appears after the text in the input"
-        },
-        {
-          "name": "field-note",
-          "description": "If content is slotted, it will display in place of the fieldNote property"
-        },
-        {
-          "name": "error",
-          "description": "If content is slotted, it will display in place of the errorNote property"
-        }
       ]
     },
     {
       "name": "sl-time-selector-list",
       "path": "./components/time-selector-list/time-selector-list.ts",
-      "description": "Component: sl-time-selector-list\n- Time Selector List lets a user select a time from a list of options.",
+      "description": "Component: sl-time-selector-list\n\nTime Selector List lets a user select a time from a list of options.",
       "attributes": [
         {
           "name": "orientation",
@@ -7522,18 +7107,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-toast-group",
       "path": "./components/toast-group/toast-group.ts",
-      "description": "Component: sl-toast-group\n- Toast Group contains one or multiple toasts, and provides positioning and group interactivity.",
+      "description": "Component: sl-toast-group\n\nToast Group contains one or multiple toasts, and provides positioning and group interactivity.\n- **slot**: One or more individual toast components",
       "attributes": [
         {
           "name": "position",
@@ -7660,18 +7239,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "Individual Toast components"
-        }
       ]
     },
     {
       "name": "sl-toast",
       "path": "./components/toast/toast.ts",
-      "description": "Component: sl-toast\n- Toast provides a brief, temporary notification without interrupting a user's task.",
+      "description": "Component: sl-toast\n\nToast provides a brief, temporary notification without interrupting a user's task.\n- **slot**: The toast title or primary text\n- **slot** \"actions\": Actions to optionally display in the toast\n- **slot** \"icon\": Slot in an icon to override the default one",
       "attributes": [
         {
           "name": "variant",
@@ -7759,26 +7332,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        },
-        {
-          "name": "actions",
-          "description": "Actions to optionally display in the toast"
-        },
-        {
-          "name": "icon",
-          "description": "Slot in an icon to override the default one"
-        }
       ]
     },
     {
       "name": "sl-toggle-button-group",
       "path": "./components/toggle-button-group/toggle-button-group.ts",
-      "description": "Component: sl-toggle-button-group\n- Toggle Button Group is a grouping of related toggle buttons.",
+      "description": "Component: sl-toggle-button-group\n\nToggle Button Group is a grouping of related toggle buttons.\n- **slot**: A set of toggle buttons",
       "attributes": [
         {
           "name": "variant",
@@ -7839,18 +7398,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The components content"
-        }
       ]
     },
     {
       "name": "sl-toggle-button",
       "path": "./components/toggle-button/toggle-button.ts",
-      "description": "Component: sl-toggle-button\n- Toggle Button can be used to group related options.",
+      "description": "Component: sl-toggle-button\n\nToggle Button can be used to group related options. \n- **slot**: The content to display in the toggle button",
       "attributes": [
         {
           "name": "variant",
@@ -7942,18 +7495,12 @@
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
         }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The content to display in the Toggle Button"
-        }
       ]
     },
     {
       "name": "sl-tooltip",
       "path": "./components/tooltip/tooltip.ts",
-      "description": "Component: sl-tooltip\n- Tooltips display informative text when users hover over, focus on, or tap an element.",
+      "description": "Component: sl-tooltip\n\nTooltips display informative text when users hover over, focus on, or tap an element.\n- **slot**: The content that appears inside the tooltip\n- **slot** \"prefix\": The content that appears before the main content\n- **slot** \"trigger\": The trigger that opens the tooltip",
       "attributes": [
         {
           "name": "hasArrow",
@@ -8060,20 +7607,6 @@
           "attribute": "styleModifier",
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
-        }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The content that appears inside the tooltip"
-        },
-        {
-          "name": "prefix",
-          "description": "The content that appears before the main content"
-        },
-        {
-          "name": "trigger",
-          "description": "The trigger that opens the tooltip"
         }
       ]
     }

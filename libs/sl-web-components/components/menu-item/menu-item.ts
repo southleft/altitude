@@ -12,9 +12,10 @@ import styles from './menu-item.scss';
 
 /**
  * Component: sl-menu-item
- * - Menu item is a single item within a menu.
- * @slot - The content to display in the menu item
- * @slot "before" - Optional prefix content to display in the menu item
+ *
+ * Menu item is a single item within a menu.
+ * - **slot**: The content to display in the menu item
+ * - **slot** "before": Optional prefix content to display in the menu item
  */
 export class SLMenuItem extends SLElement {
   static el = 'sl-menu-item';

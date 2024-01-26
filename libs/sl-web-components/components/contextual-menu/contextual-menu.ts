@@ -6,9 +6,10 @@ import styles from './contextual-menu.scss';
 
 /**
  * Component: sl-contextual-menu
- * - Contextual Menu is a list of options that is opened/closed by a trigger and positioned around the trigger.
- * @slot - The main body of the contextual menu
- * @slot "trigger" - The trigger that opens/closes the contextual menu
+ *
+ * Contextual Menu is a list of options that is opened/closed by a trigger and positioned around the trigger.
+ * - **slot**: The main body of the contextual menu
+ * - **slot** "trigger": The trigger that opens/closes the contextual menu
  */
 export class SLContextualMenu extends SLElement {
   static el = 'sl-contextual-menu';

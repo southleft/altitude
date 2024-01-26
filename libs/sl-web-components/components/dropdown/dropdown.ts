@@ -18,8 +18,11 @@ import styles from './dropdown.scss';
 
 /**
  * Component: sl-dropdown
- * - Dropdown presents a list of options from which a user can select one.
- *  @slot - The component content
+ *
+ * Dropdown presents a list of options from which a user can select one.
+ * - **slot**: The dropdown content
+ * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
+ * - **slot** "error": If content is slotted, it will display in place of the errorNote property
  */
 export class SLDropdown extends SLElement {
   static el = 'sl-dropdown';

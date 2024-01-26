@@ -7,7 +7,8 @@ import styles from './switch.scss';
 
 /**
  * Component: sl-switch
- * - Switch is used to toggle the on/off state of a single setting.
+ *
+ * Switch is used to toggle the on/off state of a single setting.
  */
 export class SLSwitch extends SLElement {
   static el = 'sl-switch';

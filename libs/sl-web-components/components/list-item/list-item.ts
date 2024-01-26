@@ -12,8 +12,9 @@ import styles from './list-item.scss';
 
 /**
  * Component: sl-list-item
- * - List Item is a single item in a list.
- * @slot - The content of the list item
+ *
+ * List Item is a single item in a list.
+ * - **slot**: The content of the list item
  */
 export class SLListItem extends SLElement {
   static el = 'sl-list-item';

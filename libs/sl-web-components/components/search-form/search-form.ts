@@ -20,10 +20,11 @@ import styles from './search-form.scss';
 
 /**
  * Component: sl-search-form
- * - Search Form enables users to specify a word or phrase to find relevant content without navigation.
- * @slot - The component content that appears next to the radio
- * @slot "field-note" - If content is slotted, it will display in place of the fieldNote property
- * @slot "error" - If content is slotted, it will display in place of the errorNote property
+ *
+ * Search Form enables users to specify a word or phrase to find relevant content without navigation.
+ * - **slot**: The search form's dropdown content
+ * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
+ * - **slot** "error": If content is slotted, it will display in place of the errorNote property
  */
 export class SLSearchForm extends SLElement {
   static el = 'sl-search-form';

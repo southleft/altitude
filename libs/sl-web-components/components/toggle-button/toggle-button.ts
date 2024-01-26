@@ -9,8 +9,9 @@ import styles from './toggle-button.scss';
 
 /**
  * Component: sl-toggle-button
- * - Toggle Button can be used to group related options. 
- * @slot - The content to display in the Toggle Button
+ *
+ * Toggle Button can be used to group related options. 
+ * - **slot**: The content to display in the toggle button
  */
 export class SLToggleButton extends SLElement {
   static el = 'sl-toggle-button';

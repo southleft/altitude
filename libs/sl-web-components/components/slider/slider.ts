@@ -14,8 +14,11 @@ const UPPER_SLIDER = 'UPPERSLIDER';
 
 /**
  * Component: sl-slider
- * - Slider provides a visual indication of adjustable content, where the user can increment or decrement the value by moving the handle along a track, or via text input.
- * @slot - The components content
+ *
+ * Slider provides a visual indication of adjustable content, where the user can increment or decrement the value by moving the handle along a track, or via text input.
+ * - **slot** "label": If content is slotted, it will override the default slider label
+ * - **slot** "before": If content is slotted, it will override the default slider "min" label text
+ * - **slot** "after": If content is slotted, it will override the default slider "max" label text
  */
 export class SLSlider extends SLElement {
   static el = 'sl-slider';

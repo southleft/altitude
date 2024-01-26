@@ -5,7 +5,8 @@ import styles from './divider.scss';
 
 /**
  * Component: sl-divider
- * - A divider is a thin line that groups content in lists and layouts.
+ *
+ * A divider is a thin line that groups content in lists and layouts.
  */
 export class SLDivider extends SLElement {
   static el = 'sl-divider';

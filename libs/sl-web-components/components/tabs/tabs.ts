@@ -14,9 +14,10 @@ import styles from './tabs.scss';
 
 /**
  * Component: sl-tabs
- * - Tabs organize related content at the same level of hierarchy, and allow navigation between distinct groups of content. 
- * @slot - The slot to add the SLTab items
- * @slot "panel" - The slot to add the SLTabPanel items
+ *
+ * Tabs organize related content at the same level of hierarchy, and allow navigation between distinct groups of content. 
+ * - **slot**: The tab items for the tabs
+ * - **slot** "panel": The tab panels that correspond to the slotted tab items
  */
 export class SLTabs extends SLElement {
   static el = 'sl-tabs';

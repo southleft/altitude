@@ -5,8 +5,9 @@ import styles from './badge.scss';
 
 /**
  * Component: sl-badge
- * - Badges are labels that hold small amounts of information. Badges can hold a number and can be paired with other components including icons, text, or avatars.
- * @slot - The badge content
+ *
+ * Badges are labels that hold small amounts of information. Badges can hold a number and can be paired with other components including icons, text, or avatars.
+ * - **slot**: The badge content
  */
 export class SLBadge extends SLElement {
   static el = 'sl-badge';

@@ -8,8 +8,9 @@ import styles from './list.scss';
 
 /**
  * Component: sl-list
- * - List is a vertical or horizontal grouping of related content or links.
- * @slot - The list items
+ *
+ * List is a vertical or horizontal grouping of related content or links.
+ * - **slot**: The list items
  */
 export class SLList extends SLElement {
   static el = 'sl-list';

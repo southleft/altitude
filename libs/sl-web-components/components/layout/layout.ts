@@ -5,7 +5,8 @@ import styles from './layout.scss';
 
 /**
  * Component: sl-layout
- * - Layout provides a responsive structure for content that ensures consistency across an application.
+ *
+ * Layout provides a responsive structure for content that ensures consistency across an application.
  */
 export class SLLayout extends SLElement {
   static el = 'sl-layout';

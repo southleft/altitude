@@ -40,8 +40,10 @@ import styles from './calendar.scss';
 
 /**
  * Component: sl-calendar
- * - Calendar provides a way for a user to select a date from a month.
- * @slot - The component content
+ *
+ * Calendar provides a way for a user to select a date from a month.
+ * - **slot** "before": If content is slotted, it will override the default "previous button" icon
+ * - **slot** "after": If content is slotted, it will override the default "next button" icon
  */
 export class SLCalendar extends SLElement {
   static el = 'sl-calendar';

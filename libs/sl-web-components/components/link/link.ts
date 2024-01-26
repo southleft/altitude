@@ -6,8 +6,9 @@ import styles from './link.scss';
 
 /**
  * Component: sl-link
- * - Link provides consistent formatting to navigational elements.
- * @slot - The components content
+ *
+ * Link provides consistent formatting to navigational elements.
+ * - **slot**: The link text
  */
 export class SLLink extends SLElement {
   static el = 'sl-link';

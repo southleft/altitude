@@ -12,8 +12,9 @@ import styles from './toast-group.scss';
 
 /**
  * Component: sl-toast-group
- * - Toast Group contains one or multiple toasts, and provides positioning and group interactivity.
- * @slot - Individual Toast components
+ *
+ * Toast Group contains one or multiple toasts, and provides positioning and group interactivity.
+ * - **slot**: One or more individual toast components
  */
 export class SLToastGroup extends SLElement {
   static el = 'sl-toast-group';

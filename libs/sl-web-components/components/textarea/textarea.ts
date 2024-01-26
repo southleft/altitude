@@ -11,11 +11,12 @@ import styles from './textarea.scss';
 
 /**
  * Component: sl-textarea
- * - Textarea allows users to write text for input over multiple rows. Used when the expected user input is long.
- * @slot "before" - The content that appears before the text in the input
- * @slot "after" - The content that appears after the text in the input
- * @slot "field-note" - If content is slotted, it will display in place of the fieldNote property
- * @slot "error" - If content is slotted, it will display in place of the errorNote property
+ *
+ * Textarea allows users to write text for input over multiple rows. Used when the expected user input is long.
+ * - **slot** "before": The content that appears before the text in the input
+ * - **slot** "after": The content that appears after the text in the input
+ * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
+ * - **slot** "error": If content is slotted, it will display in place of the errorNote property
  */
 export class SLTextarea extends SLElement {
   static el = 'sl-textarea';

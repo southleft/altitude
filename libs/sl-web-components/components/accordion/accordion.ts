@@ -6,8 +6,9 @@ import styles from './accordion.scss';
 
 /**
  * Component: sl-accordion
- * - Accordion is a vertical list of panels used to show and hide related sections of content.
- * - slot: The accordion content, a set of accordion panels
+ *
+ * Accordion is a vertical list of panels used to show and hide related sections of content.
+ * - **slot**: The accordion content, a set of accordion panels
  */
 export class SLAccordion extends SLElement {
   static el = 'sl-accordion';

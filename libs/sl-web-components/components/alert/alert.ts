@@ -20,7 +20,6 @@ import styles from './alert.scss';
  * - **slot**: The alert's main content or title
  * - **slot** "description": A description to include in the dropdown panel
  * - **slot** "icon": Slot in an icon to override the default one
- * 
  * */
 export class SLAlert extends SLElement {
   static el = 'sl-alert';

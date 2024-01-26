@@ -43,8 +43,9 @@ export const defaultTextConfig: FileUploadTextConfig = {
 
 /**
  * Component: sl-file-upload
- * - File Upload provides a way for users to upload files from their operating system.
- * @slot - The components content
+ *
+ * File Upload provides a way for users to upload files from their operating system.
+ * - **slot**: The component's content
  */
 export class SLFileUpload extends SLElement {
   static el = 'sl-file-upload';

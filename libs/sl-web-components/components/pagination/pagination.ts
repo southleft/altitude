@@ -28,8 +28,11 @@ const endDot = '... '; /* 3 */
 
 /**
  * Component: sl-pagination
- * - Pagination allows a user to navigate to content that has been split up into pages.
- * @slot - The components content
+ *
+ * Pagination allows a user to navigate to content that has been split up into pages.
+ * - **slot** "label": If content is slotted, it will override the default pagination label
+ * - **slot** "prev": If content is slotted, it will override the default "previous" icon
+ * - **slot** "next": If content is slotted, it will override the default "next" icon
  */
 export class SLPagination extends SLElement {
   static el = 'sl-pagination';

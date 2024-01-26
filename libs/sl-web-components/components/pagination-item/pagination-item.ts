@@ -6,8 +6,9 @@ import styles from './pagination-item.scss';
 
 /**
  * Component: sl-pagination-item
- * - Pagination Item is a singular link used within the pagination component.
- * @slot - The components content
+ *
+ * Pagination Item is a singular link used within the pagination component.
+ * - **slot**: The pagination item's content
  */
 export class SLPaginationItem extends SLElement {
   static el = 'sl-pagination-item';

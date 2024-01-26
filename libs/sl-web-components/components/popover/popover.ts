@@ -12,11 +12,12 @@ import styles from './popover.scss';
 
 /**
  * Component: sl-popover
- * - Popover is used to display content on top of other elements, and is positioned around the trigger that opens it.
- * @slot - The main body of the popover
- * @slot "header" - The header of the popover that appears above the main slot
- * @slot "footer" - The footer of the popover that appears below the main slot
- * @slot "trigger" - The trigger that opens/closes the popover
+ *
+ * Popover is used to display content on top of other elements, and is positioned around the trigger that opens it.
+ * - **slot**: The main body of the popover
+ * - **slot** "header": The header of the popover that appears above the main slot
+ * - **slot** "footer": The footer of the popover that appears below the main slot
+ * - **slot** "trigger": The trigger that opens/closes the popover
  */
 export class SLPopover extends SLElement {
   static el = 'sl-popover';

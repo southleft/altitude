@@ -12,8 +12,9 @@ import styles from './drawer.scss';
 
 /**
  * Component: sl-drawer
- * - Drawer provides ergonomic access to context-sensitive actions and information.
- * @slot - The components content
+ *
+ * Drawer provides ergonomic access to context-sensitive actions and information.
+ * - **slot**: The drawer content
  */
 export class SLDrawer extends SLElement {
   static el = 'sl-drawer';

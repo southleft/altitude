@@ -12,10 +12,11 @@ import styles from './radio.scss';
 
 /**
  * Component: sl-radio
- * - Radio allows users to choose one option from a set of mutually exclusive options.
- * @slot - The component content
- * @slot "field-note" - If content is slotted, it will display in place of the fieldNote property
- * @slot "error" - If content is slotted, it will display in place of the errorNote property
+ *
+ * Radio allows users to choose one option from a set of mutually exclusive options.
+ * - **slot**: The radio content, a set of radio items
+ * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
+ * - **slot** "error": If content is slotted, it will display in place of the errorNote property
  */
 export class SLRadio extends SLElement {
   static el = 'sl-radio';
