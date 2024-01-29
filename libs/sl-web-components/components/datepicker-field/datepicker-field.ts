@@ -341,11 +341,15 @@ export class SLDatepickerField extends SLElement {
       if (this.popup) {
         /* 2 */
         this.popup.classList.remove('sl-c-datepicker-field__popup--top');
-        const body = document.querySelector('body').getBoundingClientRect();
+        // const body = document.querySelector('body').getBoundingClientRect();        
+        const body = this.closest('#root-inner') || document.querySelector('body');
+        console.log("Body: ", body);
+        const bodyRect = body.getBoundingClientRect();
+        console.log("bodyRect: ", bodyRect)
         const calendarPopup = this.popup.getBoundingClientRect();
 
         /* 3 */
-        if (body.height > calendarPopup.height && calendarPopup.bottom > body.height) {
+        if (bodyRect.height > calendarPopup.height && calendarPopup.bottom > bodyRect.height) {
           this.popup.classList.add('sl-c-datepicker-field__popup--top');
         }
       }
