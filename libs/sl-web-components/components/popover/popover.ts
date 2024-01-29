@@ -218,7 +218,7 @@ export class SLPopover extends SLElement {
   handleOnCloseButton() {
     this.toggleActive();
     this.dispatch({
-      eventName: 'popoverCloseButton',
+      eventName: 'onPopoverCloseButton',
       detailObj: {
         active: this.isActive
       }
@@ -254,7 +254,7 @@ export class SLPopover extends SLElement {
     }, 400);
     /* 3 */
     this.dispatch({
-      eventName: 'popoverOpen',
+      eventName: 'onPopoverOpen',
       detailObj: {
         active: this.isActive
       }
@@ -277,7 +277,7 @@ export class SLPopover extends SLElement {
     }
     /* 3 */
     this.dispatch({
-      eventName: 'popoverClose',
+      eventName: 'onPopoverClose',
       detailObj: {
         active: this.isActive
       }

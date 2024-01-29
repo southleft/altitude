@@ -2,6 +2,7 @@ import { expect } from '@storybook/jest';
 import { fireEvent, within } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../field-note/field-note';
 import '../icon/icons/attachment';
 import '../icon/icons/emoji';
@@ -17,9 +18,10 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['change']
+      handles: ['onTextFieldChange']
     },
   },
+  decorators: [withActions],
   argTypes: {
     type: {
       control: { type: 'radio' },

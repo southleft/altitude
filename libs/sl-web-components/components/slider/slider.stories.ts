@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import './slider';
 
 export default {
@@ -10,9 +11,10 @@ export default {
     status: { type: 'beta' },
     layout: 'padded',
     actions: {
-      handles: ['slide', 'outputValueChange']
+      handles: ['onSliderDrag', 'onSliderOutputValueChange']
     }
   },
+  decorators: [withActions],
   args: {
     label: 'Label',
     fieldNote: 'This is a field note.'

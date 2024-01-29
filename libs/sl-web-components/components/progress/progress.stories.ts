@@ -1,6 +1,7 @@
 import { within } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import './progress';
 
 export default {
@@ -10,10 +11,11 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['progressChange' ]
+      handles: ['onProgressChange' ]
     },
     layout: 'padded'
   },
+  decorators: [withActions],
   argTypes: {
     isCircle: {
       control: 'boolean'

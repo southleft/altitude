@@ -2,6 +2,7 @@ import { expect } from '@storybook/jest';
 import { userEvent, within } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../field-note/field-note';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
@@ -15,9 +16,10 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['change']
+      handles: ['onCheckboxItemChange']
     },
   },
+  decorators: [withActions],
   argTypes: {
     isChecked: {
       control: 'boolean'

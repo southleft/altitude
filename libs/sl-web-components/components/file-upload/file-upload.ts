@@ -310,7 +310,7 @@ export class SLFileUpload extends SLElement {
       this.filesState = null;
     }
     /* 3 */
-    this.dispatch({ eventName: 'removedFiles', detailObj: { updatedFiles } });
+    this.dispatch({ eventName: 'onFileUploadFileRemove', detailObj: { updatedFiles } });
   }
 
   /**
@@ -361,7 +361,7 @@ export class SLFileUpload extends SLElement {
       files.push(fileObj);
     });
 
-    this.dispatch({ eventName: 'uploadedFiles', detailObj: { uploadedFiles } });
+    this.dispatch({ eventName: 'onFileUploadFileUpload', detailObj: { uploadedFiles } });
     this.filesState = files as filesStateConfig[];
 
     /* 5 */

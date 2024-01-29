@@ -105,7 +105,7 @@ export class SLAccordionPanel extends SLElement {
     this.isActive = true; /* 1 */
     /* 2 */
     this.dispatch({
-      eventName: 'open',
+      eventName: 'onAccordionOpen',
       detailObj: {
         index: this.idx,
         expanded: this.isActive
@@ -122,7 +122,7 @@ export class SLAccordionPanel extends SLElement {
     this.isActive = false; /* 1 */
     /* 2 */
     this.dispatch({
-      eventName: 'close',
+      eventName: 'onAccordionClose',
       detailObj: {
         index: this.idx,
         expanded: this.isActive

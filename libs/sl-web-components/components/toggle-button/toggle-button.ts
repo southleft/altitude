@@ -103,7 +103,7 @@ export class SLToggleButton extends SLElement {
   connectedCallback() {
     super.connectedCallback();
     globalThis.addEventListener('mousedown', this.handleOnClickOutside, false); /* 1 */
-    this.addEventListener('popoverCloseButton', this.deselectToggleButton, false); /* 2 */
+    this.addEventListener('onPopoverCloseButton', this.deselectToggleButton, false); /* 2 */
   }
 
   /**
@@ -114,7 +114,7 @@ export class SLToggleButton extends SLElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     globalThis.removeEventListener('mousedown', this.handleOnClickOutside, false); /* 1 */
-    this.removeEventListener('popoverCloseButton', this.deselectToggleButton, false); /* 2 */
+    this.removeEventListener('onPopoverCloseButton', this.deselectToggleButton, false); /* 2 */
   }
 
   /**
@@ -183,7 +183,7 @@ export class SLToggleButton extends SLElement {
     }
     /* 3 */
     this.dispatch({
-      eventName: 'toggleButtonSelected',
+      eventName: 'onToggleButtonSelect',
       detailObj: {
         item: this,
         selected: this.isSelected
@@ -210,7 +210,7 @@ export class SLToggleButton extends SLElement {
     }
     /* 4 */
     this.dispatch({
-      eventName: 'toggleButtonDeselected',
+      eventName: 'onToggleButtonDeselect',
       detailObj: {
         item: this,
         selected: this.isSelected

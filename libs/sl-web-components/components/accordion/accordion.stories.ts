@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../accordion-panel/accordion-panel';
 import './accordion';
 
@@ -10,9 +11,10 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['open', 'close']
+      handles: ['onAccordionOpen', 'onAccordionClose']
     },
   },
+  decorators: [withActions],
 };
 
 const Template = (args) => html`

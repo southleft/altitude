@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../button/button';
 import '../icon/icons/list';
 import '../list-item/list-item';
@@ -14,9 +15,10 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['contextualMenuOpen', 'contextualMenuClose']
+      handles: ['onContextualMenuOpen', 'onContextualMenuClose']
     }
   },
+  decorators: [withActions],
 };
 
 const Template = (args) => html`

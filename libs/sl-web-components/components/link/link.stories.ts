@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../icon/icons/chevron-right';
 import './link';
 
@@ -13,7 +14,8 @@ export default {
     actions: {
       handles: ['click']
     },
-   },
+  },
+  decorators: [withActions],
   argTypes: {
     variant: {
       control: { type: 'radio' },

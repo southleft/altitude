@@ -259,7 +259,7 @@ export class SLMenuItem extends SLElement {
       this.isSelected = true;
       /* 2 */
       this.dispatch({
-        eventName: 'menuItemSelected',
+        eventName: 'onMenuItemSelect',
         detailObj: {
           selected: this.isSelected,
           item: this
@@ -279,7 +279,7 @@ export class SLMenuItem extends SLElement {
       this.isExpanded = !this.isExpanded;
       /* 2 */
       this.dispatch({
-        eventName: 'menuItemExpanded',
+        eventName: 'onMenuItemExpand',
         detailObj: {
           expanded: this.isExpanded,
           item: this

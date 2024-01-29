@@ -131,7 +131,7 @@ export class SLRadioItem extends SLElement {
     this.isChecked = true; /* 1 */
     /* 2 */
     this.dispatch({
-      eventName: 'radioChecked',
+      eventName: 'onRadioItemChange',
       detailObj: {
         checked: this.isChecked,
         name: this.name,

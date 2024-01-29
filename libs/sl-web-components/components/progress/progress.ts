@@ -286,7 +286,7 @@ export class SLProgress extends SLElement {
 
     /* 5 */
     this.dispatch({
-      eventName: 'progressChange',
+      eventName: 'onProgressChange',
       detailObj: {
         label: this._label
       }

@@ -300,7 +300,7 @@ export class SLSearchForm extends SLElement {
    * Emit onChange event
    */
   private emitOnChangeEvent(value: string | null): void {
-    this.dispatch({ eventName: 'change', detailObj: { value } });
+    this.dispatch({ eventName: 'onSearchFormChange', detailObj: { value } });
   }
 
   /**

@@ -258,7 +258,7 @@ export class SLTextField extends SLElement {
 
     /* 4 */
     this.dispatch({
-      eventName: 'change',
+      eventName: 'onTextFieldChange',
       detailObj: {
         value: this.value
       }

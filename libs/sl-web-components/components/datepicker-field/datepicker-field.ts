@@ -281,14 +281,14 @@ export class SLDatepickerField extends SLElement {
     /* 4 */
     if (this.isActiveCalendar) {
       this.dispatch({
-        eventName: 'open',
+        eventName: 'onDatepickerFieldOpen',
         detailObj: {
           activeCalendar: this.isActiveCalendar
         }
       });
     } else {
       this.dispatch({
-        eventName: 'close',
+        eventName: 'onDatepickerFieldClose',
         detailObj: {
           activeCalendar: this.isActiveCalendar
         }
@@ -358,13 +358,14 @@ export class SLDatepickerField extends SLElement {
    * 5. Dispatches a 'dateChanged' event with the updated value
    */
   handleOnChangeDate(e: CustomEvent) {
+    console.log(e.detail.value);
     this.selectedDate = e.detail.value; /* 1 */
     this.rawDateValue = e.detail.rawDate; /* 2 */
     this.value = this.selectedDate; /* 3 */
     this.isActive = true; /* 4 */
     /* 5 */
     this.dispatch({
-      eventName: 'dateChanged',
+      eventName: 'onDatepickerFieldChange',
       detailObj: {
         value: this.value
       }
@@ -410,7 +411,7 @@ export class SLDatepickerField extends SLElement {
             <div class="sl-c-datepicker-field__popup-body">
               <${this.calendarEl}
                 class="sl-c-datepicker-field__calendar"
-                @change=${this.handleOnChangeDate}
+                @onCalendarChange=${this.handleOnChangeDate}
                 .setActiveDate=${this.setActiveDate}
                 .disabledMinDate=${this.disabledMinDate}
                 .disabledMaxDate=${this.disabledMaxDate}

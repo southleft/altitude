@@ -436,7 +436,7 @@ export class SLSlider extends SLElement {
     this.clearSetTimeout = setTimeout(() => {
       clearTimeout(this.clearSetTimeout);
       this.dispatch({
-        eventName: 'slide',
+        eventName: 'onSliderDrag',
         detailObj
       });
     }, 300);
@@ -447,7 +447,7 @@ export class SLSlider extends SLElement {
    */
 
   emitOutputFieldEvent(value: number) {
-    this.dispatch({ eventName: 'outputValueChange', detailObj: { value } });
+    this.dispatch({ eventName: 'onSliderOutputValueChange', detailObj: { value } });
   }
 
   async doubleRange() {

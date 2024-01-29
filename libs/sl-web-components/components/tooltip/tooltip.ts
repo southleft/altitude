@@ -265,7 +265,7 @@ export class SLTooltip extends SLElement {
     this.setDynamicPosition(); /* 2 */
     /* 3 */
     this.dispatch({
-      eventName: 'open',
+      eventName: 'onTooltipOpen',
       detailObj: {
         active: this.isActive
       }
@@ -281,7 +281,7 @@ export class SLTooltip extends SLElement {
     this.isActive = false; /* 1 */
     /* 2 */
     this.dispatch({
-      eventName: 'close',
+      eventName: 'onTooltipClose',
       detailObj: {
         active: this.isActive
       }

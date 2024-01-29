@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../icon/icons/calendar';
 import '../icon/icons/warning-circle';
 import '../list-item/list-item';
@@ -27,9 +28,10 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['open', 'close']
+      handles: ['onDropdownOpen', 'onDropdownClose']
     }
   },
+  decorators: [withActions],
   args: {
     label: 'Select Option',
     fieldNote: 'This is a field note.',

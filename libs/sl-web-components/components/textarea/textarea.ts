@@ -236,7 +236,7 @@ export class SLTextarea extends SLElement {
 
     /* 4 */
     this.dispatch({
-      eventName: 'change',
+      eventName: 'onTextareaFieldChange',
       detailObj: {
         value: this.value
       }

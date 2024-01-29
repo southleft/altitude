@@ -54,7 +54,7 @@ export class SLToggleButtonGroup extends SLElement {
     /**
      * Observe changes to the selected state of toggle buttons
      */
-    this.addEventListener('toggleButtonSelected', (e: CustomEvent) => this.handleOnToggleButtonSelected(e.target as SLToggleButton));
+    this.addEventListener('onToggleButtonSelect', (e: CustomEvent) => this.handleOnToggleButtonSelect(e.target as SLToggleButton));
     this.handleOnClickOutside = this.handleOnClickOutside.bind(this);
   }
 
@@ -81,7 +81,7 @@ export class SLToggleButtonGroup extends SLElement {
    * 1. Set the previously selected item's isSelected state to false
    * 2. Store the newly selected item on the toggle button's state
    */
-  handleOnToggleButtonSelected(item: SLToggleButton) {
+  handleOnToggleButtonSelect(item: SLToggleButton) {
     if (this.selectedItem && this.selectedItem !== item) {
       this.selectedItem.isSelected = false; /* 1 */
     }

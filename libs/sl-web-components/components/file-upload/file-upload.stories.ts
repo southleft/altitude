@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../button/button';
 import '../icon/icons/document';
 import './file-upload';
@@ -11,9 +12,10 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['removedFiles', 'uploadedFiles']
+      handles: ['onFileUploadFileRemove', 'onFileUploadFileUpload']
     }
   },
+  decorators: [withActions],
   args: {
     name: 'file-upload',
     label: 'File upload',

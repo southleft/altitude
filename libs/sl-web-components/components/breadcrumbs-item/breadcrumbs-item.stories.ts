@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../icon/icons/document';
 import './breadcrumbs-item';
 
@@ -16,6 +17,7 @@ export default {
       exclude: ['isTruncated']
     },
   },
+  decorators: [withActions],
   argTypes: {
     href: {
       control: 'text'

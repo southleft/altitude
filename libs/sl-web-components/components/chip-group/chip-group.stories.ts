@@ -2,6 +2,7 @@ import { expect } from '@storybook/jest';
 import { userEvent, within } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import './chip-group';
 
 export default {
@@ -11,9 +12,10 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['click', 'showChips']
+      handles: ['click', 'onChipGroupExpand']
     }
   },
+  decorators: [withActions],
   argTypes: {
     chipsVisible: {
       control: 'number'

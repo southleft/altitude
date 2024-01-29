@@ -10,7 +10,7 @@
     "build:tokens": "node ./styles/tokens-config.js",
     "build:icons": "node ./icons/icons-config.js",
     "build:custom-elements.json": "wca analyze \"components/*/*.ts\" --outFile custom-elements.json",
-    "test": "test-storybook",
+    "test": "test-storybook --coverage || true && npx nyc report --reporter=lcov -t coverage/storybook --report-dir coverage/storybook && open coverage/storybook/lcov-report/index.html",
     "plop": "plop --plopfile plop/plop-config.js"
   },
   "files": [

@@ -3,6 +3,7 @@ import { userEvent, within } from '@storybook/testing-library';
 import { html } from 'lit';
 import '../../.storybook/components/f-po/f-po';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../avatar/avatar';
 import '../icon/icons/emoji';
 import '../popover/popover';
@@ -17,12 +18,13 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['toggleButtonDeselected', 'toggleButtonSelected', 'popoverCloseButton']
+      handles: ['onToggleButtonDeselect', 'onToggleButtonSelect', 'onPopoverCloseButton']
     },
     controls: {
       exclude: ['isSmall', 'slottedEls', 'toggleButton', 'toggleButtonContent', 'hasPanel']
     }
   },
+  decorators: [withActions],
   argTypes: {
     variant: {
       control: 'radio',

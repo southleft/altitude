@@ -210,7 +210,7 @@ export class SLContextualMenu extends SLElement {
     }, 400);
     /* 3 */
     this.dispatch({
-      eventName: 'contextualMenuOpen',
+      eventName: 'onContextualMenuOpen',
       detailObj: {
         active: this.isActive
       }
@@ -232,7 +232,7 @@ export class SLContextualMenu extends SLElement {
     }, 1);
     /* 3 */
     this.dispatch({
-      eventName: 'contextualMenuClose',
+      eventName: 'onContextualMenuClose',
       detailObj: {
         active: this.isActive
       }

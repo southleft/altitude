@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import './calendar';
 
 export default {
@@ -9,9 +10,10 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['change']
+      handles: ['onCalendarChange']
     }
-  }
+  },
+  decorators: [withActions],
 };
 
 export const Default = (args) => html` <sl-calendar ${spread(args)}></sl-calendar> `;

@@ -93,7 +93,7 @@ export class SLChipGroup extends SLElement {
       }
     });
     /* 3 */
-    this.dispatch({ eventName: 'showChips' });
+    this.dispatch({ eventName: 'onChipGroupExpand' });
   }
 
   render() {

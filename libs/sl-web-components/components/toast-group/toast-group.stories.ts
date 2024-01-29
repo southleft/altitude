@@ -2,6 +2,7 @@ import { expect } from '@storybook/jest';
 import { userEvent, waitFor, within } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../button/button';
 import '../icon/icons/done';
 import '../toast/toast';
@@ -14,12 +15,13 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['open', 'close', 'next', 'prev', 'toastClose']
+      handles: ['onToastGroupOpen', 'onToastGroupClose', 'onToastGroupPrevious', 'onToastGroupNext', 'onToastClose']
     },
     controls: {
       exclude: ['activeToastIdx', 'prevActiveIdx', 'toasts', 'toastsVisible', 'controlPrev', 'controlNext']
     }
   },
+  decorators: [withActions],
   argTypes: {
     position: {
       control: { type: 'radio' },

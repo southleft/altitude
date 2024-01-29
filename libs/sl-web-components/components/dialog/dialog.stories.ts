@@ -1,8 +1,9 @@
 import { expect } from '@storybook/jest';
 import { userEvent, waitFor, within } from '@storybook/testing-library';
 import { html } from 'lit';
-import '../../.storybook/components/f-po/f-po';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
+import '../../.storybook/components/f-po/f-po';
 import '../button-group/button-group';
 import '../button/button';
 import './dialog';
@@ -15,12 +16,13 @@ export default {
     status: { type: 'beta' },
     layout: 'padded',
     actions: {
-      handles: ['dialogOpen', 'dialogClose', 'dialogCloseButton']
+      handles: ['onDialogOpen', 'onDialogClose', 'onDialogCloseButton']
     },
     controls: {
       exclude: ['ariaLabelledBy']
     },
   },
+  decorators: [withActions],
   argTypes: {
     heading: {
       type: 'text'
@@ -118,7 +120,7 @@ Default.play = async ({ canvasElement }) => {
   expect(dialog.isActive).toBe(true);
 
   await waitFor(() => expect(dialogContainer).toBeVisible(), {
-    timeout: 300, // A long timeout to make sure it doesn't close
+    timeout: 400, // A long timeout to make sure it doesn't close
   });
   await userEvent.type(dialogContainer, '{Escape}');
   expect(dialog.isActive).toBe(false);

@@ -210,12 +210,21 @@ export class SLAlert extends SLElement {
     this.isExpanded = !this.isExpanded;
 
     /* 2 */
-    this.dispatch({
-      eventName: 'expanded',
-      detailObj: {
-        expanded: this.isExpanded
-      }
-    });
+    if (this.isExpanded) {
+      this.dispatch({
+        eventName: 'onAlertExpand',
+        detailObj: {
+          expanded: this.isExpanded
+        }
+      });
+    } else {
+      this.dispatch({
+        eventName: 'onAlertCollapse',
+        detailObj: {
+          expanded: this.isExpanded
+        }
+      });
+    }
   }
 
   /**
@@ -229,7 +238,7 @@ export class SLAlert extends SLElement {
 
     /* 2 */
     this.dispatch({
-      eventName: 'close',
+      eventName: 'onAlertClose',
       detailObj: {
         active: this.isActive
       }
@@ -247,7 +256,7 @@ export class SLAlert extends SLElement {
 
     /* 2 */
     this.dispatch({
-      eventName: 'open',
+      eventName: 'onAlertOpen',
       detailObj: {
         active: this.isActive
       }

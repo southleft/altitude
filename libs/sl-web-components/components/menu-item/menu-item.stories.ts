@@ -2,6 +2,7 @@ import { expect } from '@storybook/jest';
 import { userEvent, within } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../icon/icons/add-square';
 import '../icon/icons/chevron-down';
 import './menu-item';
@@ -14,12 +15,13 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['menuItemSelected', 'menuItemExpanded'],
+      handles: ['onMenuItemSelect', 'onMenuExpand'],
     },
     controls: {
       exclude: ['isFocused', 'idx', 'ariaControls', 'menuItemLink', 'menuItemControl', 'menuItemLinkEl', 'menuItemControlEl']
     },
   },
+  decorators: [withActions],
   argTypes: {
     href: {
       control: 'text'

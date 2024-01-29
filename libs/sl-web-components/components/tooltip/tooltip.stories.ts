@@ -2,6 +2,7 @@ import { expect } from '@storybook/jest';
 import { userEvent, waitFor, within } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import './tooltip';
 
 export default {
@@ -12,12 +13,13 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['open', 'close']
+      handles: ['onTooltipOpen', 'onTooltipClose']
     },
     controls: {
       exclude: ['ariaDescribedBy']
     },
   },
+  decorators: [withActions],
   argTypes: {
     hasArrow: {
       type: 'boolean'

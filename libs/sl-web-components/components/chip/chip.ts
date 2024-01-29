@@ -70,7 +70,7 @@ export class SLChip extends SLElement {
   public close() {
     this.isDismissed = true; /* 1 */
     this.classList.add('sl-is-dismissed'); /* 2 */
-    this.dispatch({ eventName: 'close' }); /* 3 */
+    this.dispatch({ eventName: 'onChipClose' }); /* 3 */
   }
 
   /**

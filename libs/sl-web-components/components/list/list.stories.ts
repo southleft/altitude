@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../heading/heading';
 import '../list-item/list-item';
 import './list';
@@ -13,7 +14,8 @@ export default {
     actions: {
       handles: ['select']
     }
-  }
+  },
+  decorators: [withActions],
 };
 
 const Template = (args) => html`

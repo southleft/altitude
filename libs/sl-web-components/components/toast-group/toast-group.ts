@@ -156,8 +156,8 @@ export class SLToastGroup extends SLElement {
       /* 3 */
       this.toastsVisible = this.toasts.length;
       /* 4 */
-      this.addEventListener('closeToast', (e: CustomEvent) => {
-        this.handleToastClosed(e);
+      this.addEventListener('onToastClose', (e: CustomEvent) => {
+        this.handleOnToastClose(e);
       });
     }, 1);
 
@@ -217,7 +217,7 @@ export class SLToastGroup extends SLElement {
    * 5. If there is only one toast left, then disabled the controls
    * 6. If there are no open toasts, then hide the toast group
    */
-  handleToastClosed(e: CustomEvent) {
+  handleOnToastClose(e: CustomEvent) {
     const closedToastIdx = e.detail.toastIdx;
     /* 1 */
     const updatedToasts = this.toasts.filter((_, index) => index !== closedToastIdx);
@@ -253,7 +253,7 @@ export class SLToastGroup extends SLElement {
 
     /* 2 */
     this.dispatch({
-      eventName: 'open',
+      eventName: 'onToastGroupOpen',
       detailObj: {
         active: this.isActive
       }
@@ -271,7 +271,7 @@ export class SLToastGroup extends SLElement {
 
     /* 2 */
     this.dispatch({
-      eventName: 'close',
+      eventName: 'onToastGroupClose',
       detailObj: {
         active: this.isActive
       }
@@ -310,7 +310,7 @@ export class SLToastGroup extends SLElement {
     }
     /* 4 */
     this.dispatch({
-      eventName: 'prev',
+      eventName: 'onToastGroupPrevious',
       detailObj: {
         activeToastIdx: this.activeToastIdx
       }
@@ -339,7 +339,7 @@ export class SLToastGroup extends SLElement {
     }
     /* 4 */
     this.dispatch({
-      eventName: 'next',
+      eventName: 'onToastGroupNext',
       detailObj: {
         activeToastIdx: this.activeToastIdx
       }

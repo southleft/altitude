@@ -2,6 +2,7 @@ import { expect } from '@storybook/jest';
 import { userEvent, waitFor, within } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../button/button';
 import '../text-passage/text-passage';
 import './alert';
@@ -13,12 +14,13 @@ export default {
   parameters: {
     status: 'beta',
     actions: {
-      handles: ['click', 'keydown', 'close', 'expanded']
+      handles: ['keydown', 'onAlertOpen', 'onAlertClose', 'onAlertExpand', 'onAlertCollapse']
     },
     controls: {
       exclude: ['hasPanel', 'ariaControls', 'ariaLabelledBy']
     }
   },
+  decorators: [withActions],
   argTypes: {
     variant: {
       options: ['default', 'success', 'warning', 'danger'],

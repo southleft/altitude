@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../field-note/field-note';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
@@ -28,9 +29,10 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['change']
+      handles: ['onSearchFormChange']
     }
   },
+  decorators: [withActions],
   args: {
     label: 'Search',
     fieldNote: 'This is a field note.',

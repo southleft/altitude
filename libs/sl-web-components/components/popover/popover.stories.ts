@@ -1,8 +1,9 @@
 import { expect } from '@storybook/jest';
 import { userEvent, waitFor, within } from '@storybook/testing-library';
 import { html } from 'lit';
-import '../../.storybook/components/f-po/f-po';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
+import '../../.storybook/components/f-po/f-po';
 import '../button-group/button-group';
 import '../button/button';
 import '../icon/icons/help';
@@ -20,12 +21,13 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['popoverOpen', 'popoverClose', 'popoverCloseButton']
+      handles: ['onPopoverOpen', 'onPopoverClose', 'onPopoverCloseButton']
     },
     controls: {
       exclude: ['ariaLabelledBy']
     },
   },
+  decorators: [withActions],
   argTypes: {
     heading: {
       type: 'text'
@@ -167,7 +169,7 @@ WithSlottedContent.play = async ({ canvasElement }) => {
   expect(popover.isActive).toBe(true);
 
   await waitFor(() => expect(popoverContainer).toBeVisible(), {
-    timeout: 300, // A long timeout to make sure it doesn't close
+    timeout: 400, // A long timeout to make sure it doesn't close
   });
   await userEvent.type(popoverContainer, '{Escape}');
   expect(popover.isActive).toBe(false);

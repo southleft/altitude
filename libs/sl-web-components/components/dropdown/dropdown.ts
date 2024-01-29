@@ -265,9 +265,9 @@ export class SLDropdown extends SLElement {
     }
     if (this.isActiveDropdown === true) {
       this.handleOnActiveDropdown();
-      this.dispatch({ eventName: 'open', detailObj: { active: true } });
+      this.dispatch({ eventName: 'onDropdownOpen', detailObj: { active: true } });
     } else {
-      this.dispatch({ eventName: 'close', detailObj: { active: false } });
+      this.dispatch({ eventName: 'onDropdownClose', detailObj: { active: false } });
     }
   }
 

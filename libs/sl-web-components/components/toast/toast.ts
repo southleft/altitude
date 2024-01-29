@@ -101,7 +101,7 @@ export class SLToast extends SLElement {
 
     /* 2 */
     this.dispatch({
-      eventName: 'closeToast',
+      eventName: 'onToastClose',
       detailObj: {
         active: this.isActive,
         toastIdx: this.idx

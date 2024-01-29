@@ -143,7 +143,7 @@ export class SLTimeSelectorList extends SLElement {
    */
   handleOnChange() {
     /* 1 */
-    this.dispatch({ eventName: 'change', detailObj: { value: format(this.selectedTime, this.timeFormat) } });
+    this.dispatch({ eventName: 'onTimeSelectorListChange', detailObj: { value: format(this.selectedTime, this.timeFormat) } });
     /* 2 */
     return format(this.selectedTime, this.timeFormat);
   }

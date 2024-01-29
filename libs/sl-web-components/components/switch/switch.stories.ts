@@ -2,6 +2,7 @@ import { expect } from '@storybook/jest';
 import { userEvent, within } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import './switch';
 
 export default {
@@ -12,9 +13,10 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['changed']
+      handles: ['onSwitchChange']
     }
   },
+  decorators: [withActions],
   argTypes: {
     label: {
       control: 'text'

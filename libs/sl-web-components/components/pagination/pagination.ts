@@ -363,7 +363,7 @@ export class SLPagination extends SLElement {
    * Dispatch custom event
    */
   eventDispatch() {
-    this.dispatch({ eventName: 'change', detailObj: { pageNumber: this.currentItem, pageSize: this.pageSize, totalRecordSize: this.totalRecords } });
+    this.dispatch({ eventName: 'onPaginationChange', detailObj: { pageNumber: this.currentItem, pageSize: this.pageSize, totalRecordSize: this.totalRecords } });
   }
 
   /**

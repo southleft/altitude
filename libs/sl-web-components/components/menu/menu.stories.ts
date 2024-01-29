@@ -2,6 +2,7 @@ import { expect } from '@storybook/jest';
 import { userEvent, within, waitFor } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../button/button';
 import '../icon/icons/add-square';
 import '../icon/icons/list';
@@ -17,7 +18,7 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['open', 'close', 'menuItemExpanded', 'menuItemSelected'],
+      handles: ['onMenuOpen', 'onMenuClose', 'onMenuItemExpand', 'onMenuItemSelect'],
     },
     controls: {
       exclude: [
@@ -34,6 +35,7 @@ export default {
       ]
     }
   },
+  decorators: [withActions],
   argTypes: {
     variant: {
       type: 'radio',

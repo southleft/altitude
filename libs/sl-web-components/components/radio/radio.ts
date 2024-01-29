@@ -125,7 +125,7 @@ export class SLRadio extends SLElement {
     /**
      * Observe changes to the selected state of radio items and update the radio
      */
-    this.addEventListener('radioChecked', (e: CustomEvent) => this.handleOnRadioChecked(e.target as SLRadioItem));
+    this.addEventListener('onRadioItemChange', (e: CustomEvent) => this.handleOnRadioItemChange(e.target as SLRadioItem));
   }
 
   /**
@@ -160,11 +160,11 @@ export class SLRadio extends SLElement {
   }
 
   /**
-   * When a new item is selected:
-   * 1. Set the previously selected item's isChecked state to false
-   * 2. Store the newly selected item on the radio's state
+   * When a new item is checked:
+   * 1. Set the previously checked item's isChecked state to false
+   * 2. Store the newly checked item on the radio's state
    */
-  handleOnRadioChecked(item: SLRadioItem) {
+  handleOnRadioItemChange(item: SLRadioItem) {
     if (this.checkedItem) {
       this.checkedItem.isChecked = false; /* 1 */
     }
@@ -189,7 +189,7 @@ export class SLRadio extends SLElement {
   setCheckedAdjacentItem(checkedItem: SLRadioItem, isPrevious: boolean) {
     const activeIndex = this.radioItems.indexOf(checkedItem); /* 1 */
     const radioListLength = this.radioItems.length - 1; /* 2 */
-    this.handleOnRadioChecked(checkedItem);
+    this.handleOnRadioItemChange(checkedItem);
     let newIndex = isPrevious ? activeIndex - 1 : activeIndex + 1; /* 4 */
     /* 5 */
     if (newIndex < 0) {
@@ -215,9 +215,11 @@ export class SLRadio extends SLElement {
     }
     /* 9 */
     this.dispatch({
-      eventName: 'radioChange',
+      eventName: 'onRadioChange',
       detailObj: {
-        value: this.checkedItem,
+        checked: this.checkedItem.isChecked,
+        name: this.checkedItem.name,
+        value: this.checkedItem.value
       }
     });
   }
@@ -238,7 +240,7 @@ export class SLRadio extends SLElement {
       target = e.target;
     }
     if (e.code === 'Enter') {
-      this.handleOnRadioChecked(target); /* 2 */
+      this.handleOnRadioItemChange(target as SLRadioItem); /* 2 */
     } else if (e.code === 'ArrowLeft' || e.code === 'ArrowUp') {
       this.setCheckedAdjacentItem(target as SLRadioItem, true); /* 3 */
     } else if (e.code === 'ArrowRight' || e.code === 'ArrowDown') {
