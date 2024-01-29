@@ -1,5 +1,5 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property, queryAsync } from 'lit/decorators.js';
+import { property, queryAssignedElements, queryAsync } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import { nanoid } from 'nanoid';
@@ -200,7 +200,7 @@ export class SLTextField extends SLElement {
   accessor autoComplete: 'on' | 'off';
 
   /**
-   * Queries content in the 'before' slot
+   * Queries content before the text field label
    */
   @queryAsync('.sl-c-text-field__before')
   accessor beforeEl: any;
@@ -220,7 +220,7 @@ export class SLTextField extends SLElement {
 
   /**
    * First updated lifecycle
-   * 1. Set the padding for the input after to element has loaded in the DOM
+   * 1. Set the padding for the input, accounting for content before the label
    * 2. If there is a value, set isActive to true to move the label and get the length and set it to the maxlengthValue
    * 3. If isFocused is true, then autofocus the field on page load
    */
@@ -267,21 +267,36 @@ export class SLTextField extends SLElement {
   }
 
   /**
+   * Set the padding-left for the input field based on the before content width
+   */
+  setBeforePadding(beforeEl: HTMLElement) {      
+    let beforeWidth;
+    if (this.isRequired && this.hideLabel) {
+      beforeWidth = beforeEl.clientWidth + 16;
+    } else {
+      beforeWidth = beforeEl.clientWidth + 24;
+    }
+    this.style.setProperty('--sl-text-field-padding-start', beforeWidth + 'px');
+  }
+
+  /**
    * Set input padding
    * 1. Set the padding-left for the input field based on the before slotted content
-   * 2. Set the padding-right for the input field based on the after slotted content
+   * 2. If the before slotted content has not loaded, wait 100ms and try again
+   * 3. Set the padding-right for the input field based on the after slotted content
    */
   async setInputPadding() {
     /* 1 */
     const beforeEl = await this.beforeEl;
     if (beforeEl) {
-      let beforeWidth;
-      if (this.isRequired && this.hideLabel) {
-        beforeWidth = beforeEl.clientWidth + 16;
+      /* 2 */
+      if (!beforeEl.clientWidth)  { 
+        setTimeout(() => {
+          this.setBeforePadding(beforeEl);
+        }, 100)
       } else {
-        beforeWidth = beforeEl.clientWidth + 24;
+        this.setBeforePadding(beforeEl);
       }
-      this.style.setProperty('--sl-text-field-padding-start', beforeWidth + 'px');
     }
     /* 2 */
     const afterEl = this.shadowRoot.querySelector<HTMLElement>('.sl-c-text-field__after');

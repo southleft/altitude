@@ -176,6 +176,7 @@ const TemplateIconAfter= (args) => html`
     <sl-icon-attachment slot="after"></sl-icon-attachment>
   </sl-text-field>
 `;
+
 export const WithIconAfter = TemplateIconAfter.bind({});
 WithIconAfter.args = {};
 
