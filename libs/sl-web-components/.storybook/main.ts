@@ -9,13 +9,22 @@ const config: StorybookConfig = {
   ],
   addons: [
     '@storybook/addon-essentials',
-    "@storybook/addon-a11y",
-    "@etchteam/storybook-addon-status",
-    "@storybook/addon-interactions",
-    "@storybook/addon-coverage"
+    '@storybook/addon-a11y',
+    '@storybook/addon-interactions',
+    {
+      name: '@storybook/addon-coverage',
+      options: {
+        istanbul: {
+          include: ['**/components/**'],
+          exclude: ['**/SLElement.ts', '**/components/icon/**'],
+          excludeNodeModules: true
+        }
+      }
+    },
+    '@etchteam/storybook-addon-status'
   ],
   framework: {
-    name: "@storybook/web-components-webpack5",
+    name: '@storybook/web-components-webpack5',
     options: {},
   },
   staticDirs: ['./static'],

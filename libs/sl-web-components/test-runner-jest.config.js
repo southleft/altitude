@@ -7,5 +7,5 @@ module.exports = {
    * @see https://jestjs.io/docs/configuration
    */
   // Ignore the following components for now.
-  // modulePathIgnorePatterns: ['<rootDir>/components/data-grid/data-grid/**'],
+  //modulePathIgnorePatterns: ['<rootDir>/components/data-grid/data-grid/**'],
 };
