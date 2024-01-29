@@ -56,7 +56,7 @@ function closePanel() {
 
 const Template = (args) => html`
   <sl-popover ${spread(args)} data-testid="popover">
-    <sl-button slot="trigger">Open Panel</sl-button>
+    <sl-button slot="trigger">Open Popover</sl-button>
     <f-po>Panel content</f-po>
   </sl-popover>
 `;
@@ -110,7 +110,7 @@ PositionRightTop.args = {
 };
 
 const TemplateWithSlottedContent = (args) => html`
-  <div style="position: fixed; inset-block-end: 1rem; inset-inline-end: 1rem;">
+  <div style="position: absolute; inset-block-end: 1rem; inset-inline-end: 1rem;">
     <sl-popover ${spread(args)} data-testid="popover">
       <sl-toggle-button slot="trigger" data-testid="popover-trigger"><sl-icon-help size="lg"></sl-icon-help></sl-toggle-button>
       <sl-tabs variant="stretch">
@@ -142,6 +142,7 @@ export const WithSlottedContent = TemplateWithSlottedContent.bind({});
 WithSlottedContent.args = {
   position: 'top-left'
 };
+
 WithSlottedContent.parameters = {
   layout: 'fullscreen'
 };

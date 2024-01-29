@@ -38,7 +38,9 @@ export class SLStepper extends SLElement {
    */
   updated() {
     this.setVerticalItems(); /* 1 */
-    this.setStepNumber(); /* 2 */
+    setTimeout(() => {
+      this.setStepNumber(); /* 2 */
+    }, 100);
   }
 
   /**
