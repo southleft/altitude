@@ -448,11 +448,12 @@ export class SLDatetimepickerField extends SLElement {
       if (this.popup) {
         /* 2 */
         this.popup.classList.remove('sl-c-datetimepicker-field__popup--top');
-        const body = document.querySelector('body').getBoundingClientRect();
+        const body = this.closest('#root-inner') || document.querySelector('body');
+        const bodyRect = body.getBoundingClientRect();
         const calendarPopup = this.popup.getBoundingClientRect();
 
         /* 3 */
-        if (body.height > calendarPopup.height && calendarPopup.bottom > body.height) {
+        if (bodyRect.height > calendarPopup.height && calendarPopup.bottom > bodyRect.height) {
           this.popup.classList.add('sl-c-datetimepicker-field__popup--top');
         }
       }

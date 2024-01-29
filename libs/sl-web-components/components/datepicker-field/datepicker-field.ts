@@ -340,12 +340,9 @@ export class SLDatepickerField extends SLElement {
     setTimeout(() => {
       if (this.popup) {
         /* 2 */
-        this.popup.classList.remove('sl-c-datepicker-field__popup--top');
-        // const body = document.querySelector('body').getBoundingClientRect();        
+        this.popup.classList.remove('sl-c-datepicker-field__popup--top');        
         const body = this.closest('#root-inner') || document.querySelector('body');
-        console.log("Body: ", body);
         const bodyRect = body.getBoundingClientRect();
-        console.log("bodyRect: ", bodyRect)
         const calendarPopup = this.popup.getBoundingClientRect();
 
         /* 3 */

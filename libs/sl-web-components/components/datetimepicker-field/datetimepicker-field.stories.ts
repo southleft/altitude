@@ -95,7 +95,7 @@ WithCustomDateFormat.args = {
 };
 
 const TemplateWithDynamicPlacement = (args) => html`
-  <div style="height: 90vh; display: flex; justify-content: center; align-items: flex-end;">
+  <div style="height: 90vh; max-height: 600px; display: flex; justify-content: center; align-items: flex-end;">
     <sl-datetimepicker-field ${spread(args)}></sl-datetimepicker-field>
   </div>
 `;

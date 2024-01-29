@@ -106,7 +106,7 @@ SlottedErrorNote.args = {
 };
 
 const TemplateAlignment = (args) => html`
-  <div style="display: flex; height: 90vh; align-items: flex-end;">
+  <div style="display: flex; height: 90vh; max-height: 600px; align-items: flex-end;">
     <sl-dropdown ${spread(args)}>
       <sl-list>${dataSource.map((item: any) => html`<sl-list-item value=${item.value}>${item.label}</sl-list-item>`)}</sl-list>
     </sl-dropdown>

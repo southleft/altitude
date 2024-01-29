@@ -5,6 +5,7 @@ import { spread } from '../../directives/spread';
 import '../button/button';
 import '../text-passage/text-passage';
 import './alert';
+import { SLAlert } from './alert';
 
 export default {
   title: 'Components/Alert',
@@ -43,21 +44,23 @@ export default {
 };
 
 function closePanel() {
-  const alert = document.querySelector<any>('sl-alert');
+  const alert = document.getElementById('alert-close-panel') as SLAlert;
   if (alert) {
     alert.toggleExpanded();
   }
 }
 
-function closeAlert() {
-  const alert = document.querySelector<any>('sl-alert');
+function closeAlert(evt: Event) {
+  const target = evt.target as HTMLElement;
+  const alertId = target.dataset.alertid || '';
+  const alert = document.getElementById(alertId) as SLAlert;
   if (alert) {
     alert.close();
   }
 }
 
 function openAlert() {
-  const alert = document.querySelector<any>('sl-alert');
+  const alert = document.getElementById('alert-open-alert') as SLAlert;
   if (alert) {
     alert.open();
   }
@@ -99,7 +102,7 @@ WithAutoClose.args = {
 };
 
 const TemplateClosePanel = (args) => html`
-  <sl-alert ${spread(args)}>
+  <sl-alert ${spread(args)} id="alert-close-panel">
     Alert title
     <sl-text-passage slot="panel">
       Something longer like a description should go here, and maybe a brief on what triggered this alert.
@@ -110,12 +113,12 @@ const TemplateClosePanel = (args) => html`
 export const WithClosePanel = TemplateClosePanel.bind({});
 
 const TemplateCloseAlert = (args) => html`
-  <sl-alert ${spread(args)}>
+  <sl-alert ${spread(args)} id="alert-close-alert">
     Alert title
     <sl-text-passage slot="panel">
       Something longer like a description should go here, and maybe a brief on what triggered this alert.
     </sl-text-passage>
-    <sl-button slot="panel" @click=${closeAlert}>Dismiss</sl-button>
+    <sl-button slot="panel" @click=${closeAlert} data-alertid="alert-close-alert" >Dismiss</sl-button>
   </sl-alert>
 `;
 export const WithCloseButton = TemplateCloseAlert.bind({});
@@ -123,12 +126,12 @@ export const WithCloseButton = TemplateCloseAlert.bind({});
 const TemplateOpenAlert = (args) => html`
   <div>
     <sl-button @click=${openAlert} data-testid="open-alert">Show Alert</sl-button>
-    <sl-alert ${spread(args)} data-testid="alert">
+    <sl-alert ${spread(args)} data-testid="alert" id="alert-open-alert">
       Alert title
       <sl-text-passage slot="panel">
         Something longer like a description should go here, and maybe a brief on what triggered this alert.
       </sl-text-passage>
-      <sl-button slot="panel" @click=${closeAlert} data-testid="close-alert">Dismiss</sl-button>
+      <sl-button slot="panel" @click=${closeAlert} data-alertid="alert-open-alert" data-testid="close-alert">Dismiss</sl-button>
     </sl-alert>
   </div>
 `;
