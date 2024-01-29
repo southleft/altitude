@@ -123,32 +123,15 @@ export class SLRadioItem extends SLElement {
   }
 
   /**
-   * Remove checked
-   * 1. Remove checked property from all radio items
+   * Toggle checked
+   * 1. Set the checked state
+   * 2. Dispatch the custom event
    */
-  removeChecked() {
-    if (this.parentNode.nodeName === this.elementMap.get(SLRadio.el).toUpperCase()) {
-      const radioItems = this.parentNode.querySelectorAll(this.elementMap.get(SLRadioItem.el));
-      if (radioItems) {
-        radioItems.forEach((el: SLRadioItem) => {
-          el.isChecked = false;
-        });
-      }
-    }
-  }
-
-  /**
-   * Handle on change events
-   * 1. Remove any checked items
-   * 2. Toggle the checked state
-   * 3. Dispatch the custom event
-   */
-  handleOnChange() {
-    this.removeChecked(); /* 1 */
-    this.isChecked = !this.isChecked; /* 2 */
-    /* 3 */
+  toggleChecked() {
+    this.isChecked = true; /* 1 */
+    /* 2 */
     this.dispatch({
-      eventName: 'change',
+      eventName: 'radioChecked',
       detailObj: {
         checked: this.isChecked,
         name: this.name,
@@ -158,57 +141,20 @@ export class SLRadioItem extends SLElement {
   }
 
   /**
-   * Set the next or previous sibling as checked based on the arrow key pressed
-   * @param {string} direction - 'previousElementSibling' or 'nextElementSibling'
-   * 1. Skip over disabled siblings
-   * 2. Remove checked from all items
-   * 3. Set the sibling as checked
-   * 4. Focus on the selected sibling's radio input
-   * 5. Dispatch the custom event
+   * Handle on change of the radio item
+   * - Check the item
    */
-  setSiblingChecked(direction: 'previousElementSibling' | 'nextElementSibling') {
-    let sibling = this[direction] as SLRadioItem | null;
-
-    /* 1 */
-    while (sibling && sibling.isDisabled) {
-      sibling = sibling[direction] as SLRadioItem | null;
-    }
-
-    if (sibling.nodeName === this.elementMap.get(SLRadioItem.el).toUpperCase()) {
-      this.removeChecked(); /* 2 */
-      sibling.isChecked = true; /* 3 */
-
-      /* 4 */
-      const siblingRadioInput = sibling.shadowRoot?.querySelector<HTMLInputElement>('.sl-c-radio-item__input:not(:disabled)');
-      if (siblingRadioInput) {
-        siblingRadioInput.focus();
-      }
-
-      /* 3 */
-      this.dispatch({
-        eventName: 'change',
-        detailObj: {
-          checked: sibling.isChecked,
-          name: sibling.name,
-          value: sibling.value
-        }
-      });
-    }
+  handleOnChange() {
+    this.toggleChecked();
   }
 
   /**
-   * Handle on keydown events
-   * 1. If the enter key is pressed, then check the checkbox and dispatch the custom event
-   * 2. If arrow left or arrow up is pressed, set previous sibling as checked
-   * 3. If arrow right or arrow down is pressed, set next sibling as checked
+   * Handle on keydown of the radio item
+   * - Check the item
    */
   handleOnKeydown(e: KeyboardEvent) {
-    if (e.code === 'Enter') {
-      this.handleOnChange(); /* 1 */
-    } else if (e.code === 'ArrowLeft' || e.code === 'ArrowUp') {
-      this.setSiblingChecked('previousElementSibling'); /* 2 */
-    } else if (e.code === 'ArrowRight' || e.code === 'ArrowDown') {
-      this.setSiblingChecked('nextElementSibling'); /* 3 */
+    if (!this.isChecked && e.code === 'Enter') {
+      this.toggleChecked();
     }
   }
 

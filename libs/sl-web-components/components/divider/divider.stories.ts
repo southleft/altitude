@@ -20,7 +20,7 @@ export default {
 };
 
 const Template = (args) => html`
-  <div class="sl-u-spacing">
+  <div style="display: flex; flex-direction: column; gap: 1rem;">
     <f-po>Layout Section</f-po>
     <sl-divider ${spread(args)}></sl-divider>
     <f-po>Layout Section</f-po>
@@ -31,7 +31,7 @@ export const Default = Template.bind({});
 Default.args = {};
 
 const TemplateVertical = (args) => html`
-  <div class="sl-u-spacing--left" style="display: flex;">
+  <div style="display: flex; gap: 1rem;">
     <f-po>Layout Section</f-po>
     <sl-divider ${spread(args)}></sl-divider>
     <f-po>Layout Section</f-po>

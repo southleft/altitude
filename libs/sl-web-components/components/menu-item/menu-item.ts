@@ -104,7 +104,7 @@ export class SLMenuItem extends SLElement {
    * - **true** Hide the item
    * - **false** Show the item
    */
-  @property()
+  @property( { type: Boolean })
   accessor isHidden: boolean = false;
 
   /**

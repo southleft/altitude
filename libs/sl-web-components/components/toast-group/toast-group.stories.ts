@@ -169,7 +169,7 @@ WithGroupControlsPositionBottom.args = {
 };
 
 const TemplateWithTriggers = (args) => html`
-  <div class="sl-u-spacing">
+  <div style="display: flex; flex-direction: column; gap: 1rem;">
     <div style="display: flex; gap: 1rem;">
       <sl-button @click=${openToastGroup} data-testid="open-toast">Open Toast Group</sl-button>
       <sl-button @click=${closeToastGroup} data-testid="close-toast" variant="secondary">Close Toast Group</sl-button>

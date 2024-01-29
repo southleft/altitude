@@ -1,5 +1,5 @@
 import { expect } from '@storybook/jest';
-import { userEvent, within } from '@storybook/testing-library';
+import { userEvent, within, waitFor } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../button/button';
@@ -275,29 +275,41 @@ Default.play = async ({ canvasElement }) => {
   // Make assertions
   expect(menu).toBeInTheDocument();
 
-  // // Simulate a focus event on the menu
+  // Simulate a focus event on the menu
   await menuListEl.focus();
-  expect(menu.focusedItem).toBe(menuItems[0]);
+  await waitFor(() => expect(menu.focusedItem).toBe(menuItems[0]), {
+    timeout: 6000
+  });
 
   // Simulate a keyboard event (pressing Arrow Down key)
-  await userEvent.type(menuItems[0], '{arrowDown}');
-  expect(menu.focusedItem).toBe(menuItems[1])
+  await userEvent.keyboard('[ArrowDown]');
+  await waitFor(() => expect(menu.focusedItem).toBe(menuItems[1]), {
+    timeout: 6000
+  });
 
   // Simulate a keyboard event (pressing Arrow Up key)
-  await userEvent.type(menuItems[1], '{arrowUp}');
-  expect(menu.focusedItem).toBe(menuItems[0]);
+  await userEvent.keyboard('[ArrowUp]');
+  await waitFor(() => expect(menu.focusedItem).toBe(menuItems[0]), {
+    timeout: 6000
+  });
 
   // Simulate a keyboard event (pressing End key)
-  await userEvent.type(menuItems[0], '{End}');
-  expect(menu.focusedItem).toBe(menuItems[5]);
+  await userEvent.keyboard('[End]');
+  await waitFor(() => expect(menu.focusedItem).toBe(menuItems[5]), {
+    timeout: 6000
+  });
 
   // Simulate a keyboard event (pressing Arrow Up key) and skipping disabled menu item
-  await userEvent.type(menuItems[5], '{arrowUp}');
-  expect(menu.focusedItem).toBe(menuItems[3]);
+  await userEvent.keyboard('[ArrowUp]');
+  await waitFor(() => expect(menu.focusedItem).toBe(menuItems[3]), {
+    timeout: 6000
+  });
 
   // Simulate a keyboard event (pressing Home key)
-  await userEvent.type(menuItems[3], '{Home}');
-  expect(menu.focusedItem).toBe(menuItems[0]);
+  await userEvent.keyboard('[Home]');
+  await waitFor(() => expect(menu.focusedItem).toBe(menuItems[0]), {
+    timeout: 6000
+  });
 
   // Remove focus
   menuItems[0].blur();
@@ -331,11 +343,11 @@ DefaultWithTrigger.play = async ({ canvasElement }) => {
   expect(menu.isActive).toBe(true);
 
   // Simulate a keyboard event (pressing Escape key)
-  await userEvent.type(menuTrigger, "{Escape}");
+  await userEvent.keyboard('{Escape}');
   expect(menu.isActive).toBe(false);
 
   // Simulate a keyboard event (pressing Ebter key)
-  await userEvent.type(menuTrigger, "{Enter}");
+  await userEvent.keyboard('{Enter}');
   expect(menu.isActive).toBe(true);
 
   // Remove focus

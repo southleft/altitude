@@ -1,5 +1,5 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property, queryAssignedNodes } from 'lit/decorators.js';
+import { property, state, queryAssignedElements } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import { nanoid } from 'nanoid';
@@ -21,7 +21,10 @@ export class SLRadio extends SLElement {
   static el = 'sl-radio';
 
   private elementMap = register({
-    elements: [[SLFieldNote.el, SLFieldNote]],
+    elements: [
+      [SLFieldNote.el, SLFieldNote],
+      [SLRadioItem.el, SLRadioItem]
+    ],
     suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
   });
 
@@ -103,10 +106,27 @@ export class SLRadio extends SLElement {
   accessor variant: 'horizontal';
 
   /**
+   * The currently checked radio in the radio list
+   */
+  @state()
+  accessor checkedItem: SLRadioItem;
+
+  /**
    * Query all the radio-item's
    */
-  @queryAssignedNodes({ flatten: true })
+  @queryAssignedElements({ flatten: true, slot: '' })
   private accessor radioItems: Array<SLRadioItem>;
+
+  /**
+   * Initialize functions
+   */
+  constructor() {
+    super();
+    /**
+     * Observe changes to the selected state of radio items and update the radio
+     */
+    this.addEventListener('radioChecked', (e: CustomEvent) => this.handleOnRadioChecked(e.target as SLRadioItem));
+  }
 
   /**
    * Connected callback
@@ -139,6 +159,93 @@ export class SLRadio extends SLElement {
     });
   }
 
+  /**
+   * When a new item is selected:
+   * 1. Set the previously selected item's isChecked state to false
+   * 2. Store the newly selected item on the radio's state
+   */
+  handleOnRadioChecked(item: SLRadioItem) {
+    if (this.checkedItem) {
+      this.checkedItem.isChecked = false; /* 1 */
+    }
+    this.checkedItem = item; /* 2 */
+  }
+
+  /**
+   * Set the checked radio to the previous or next radio based on the 'isPrevious' flag
+   * @param checkedItem - The currently active radio
+   * @param isPrevious - A flag indicating whether to select the previous radio (true) or the next radio (false)
+   * @fires radioChange - Emits a 'radioChange' event with information about the newly selected radio
+   * 1. Get the index of the currently active radio
+   * 2. Calculate the total number of radio's in the list
+   * 3. Deactivate the currently active radio
+   * 4. Calculate the index of the new radio based on the 'isPrevious' flag
+   * 5. Handle boundary conditions by looping to the other end if necessary
+   * 6. Find the next valid radio that is not disabled
+   * 7. Handle boundary conditions again if necessary
+   * 8. Set the newly selected radio as the active one
+   * 9. Emit a 'radioChange' event to indicate the change in the selected radio
+   */
+  setCheckedAdjacentItem(checkedItem: SLRadioItem, isPrevious: boolean) {
+    const activeIndex = this.radioItems.indexOf(checkedItem); /* 1 */
+    const radioListLength = this.radioItems.length - 1; /* 2 */
+    this.handleOnRadioChecked(checkedItem);
+    let newIndex = isPrevious ? activeIndex - 1 : activeIndex + 1; /* 4 */
+    /* 5 */
+    if (newIndex < 0) {
+      newIndex = radioListLength;
+    } else if (newIndex > radioListLength) {
+      newIndex = 0;
+    }
+    /* 6 */
+    while (this.radioItems[newIndex].isDisabled) {
+      newIndex = isPrevious ? newIndex - 1 : newIndex + 1;
+      /* 7 */
+      if (newIndex < 0) {
+        newIndex = radioListLength;
+      } else if (newIndex > radioListLength) {
+        newIndex = 0;
+      }
+    }
+    /* 8 */
+    this.checkedItem = this.radioItems[newIndex];
+    this.checkedItem.isChecked = true;
+    if (this.checkedItem) {
+      this.checkedItem.shadowRoot?.querySelector<HTMLInputElement>('.sl-c-radio-item__input:not(:disabled)').focus();
+    }
+    /* 9 */
+    this.dispatch({
+      eventName: 'radioChange',
+      detailObj: {
+        value: this.checkedItem,
+      }
+    });
+  }
+
+  /**
+   * Handle on keydown events
+   * 1. Check if a radio is already checked, else use the target
+   * 2. If the enter key is pressed, then check the radio and dispatch the custom event
+   * 3. If arrow left or arrow up is pressed, set previous radio as checked
+   * 4. If arrow right or arrow down is pressed, set next radio as checked
+   */
+  handleOnKeydown(e: KeyboardEvent) {
+    /* 1 */
+    let target;
+    if (this.checkedItem) {
+      target = this.checkedItem;
+    } else {
+      target = e.target;
+    }
+    if (e.code === 'Enter') {
+      this.handleOnRadioChecked(target); /* 2 */
+    } else if (e.code === 'ArrowLeft' || e.code === 'ArrowUp') {
+      this.setCheckedAdjacentItem(target as SLRadioItem, true); /* 3 */
+    } else if (e.code === 'ArrowRight' || e.code === 'ArrowDown') {
+      this.setCheckedAdjacentItem(target as SLRadioItem, false); /* 4 */
+    }
+  }
+
   render() {
     const componentClassNames = this.componentClassNames('sl-c-radio', {
       'sl-is-error': this.isError === true,
@@ -148,7 +255,7 @@ export class SLRadio extends SLElement {
     });
 
     return html`
-      <fieldset class="${componentClassNames}">
+      <fieldset class="${componentClassNames}" @keydown=${this.handleOnKeydown}>
         ${this.label && html` <legend class="sl-c-radio__legend" aria-describedby="${this.ariaDescribedBy}">${this.label}</legend> `}
         <div class="sl-c-radio__list">
           <slot></slot>

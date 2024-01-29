@@ -192,10 +192,10 @@ DefaultWithDropdown.play = async ({ canvasElement }) => {
   await userEvent.click(toggleButtonEl);
   expect(toggleButton.isSelected).toBe(false);
 
-  await userEvent.type(toggleButton, '{enter}');
+  await userEvent.keyboard('{Enter}');
   expect(toggleButton.isSelected).toBe(true);
 
-  await userEvent.type(toggleButton, '{escape}');
+  await userEvent.keyboard('{Escape}');
   expect(toggleButton.isSelected).toBe(false);
 
   await userEvent.click(canvasElement);

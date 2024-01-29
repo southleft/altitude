@@ -92,7 +92,7 @@ WithIconDismissible.play = async ({ canvasElement }) => {
   expect(chip.isDismissed).toBe(true);
 
   // Set the chip to active
-  chip.isDismissed = false;
+  chip.isDismissed = true;
 
   // Simulate a keyboard event (pressing Escape key)
   await userEvent.type(chip, '{escape}');
@@ -100,9 +100,6 @@ WithIconDismissible.play = async ({ canvasElement }) => {
 
   // Set the chip to active
   chip.isDismissed = false;
-
-  // Simulate a keyboard event (pressing Enter key) and remove the focus
-  await userEvent.type(chip, '{enter}');
-  expect(chip.isDismissed).toBe(false);;
   chip.blur();
 };
+

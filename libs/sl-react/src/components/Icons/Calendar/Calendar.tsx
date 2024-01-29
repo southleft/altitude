@@ -1,4 +1,4 @@
-import { createComponent } from '@lit/react';
+import { createComponent } from '@lit-labs/react';
 import { SLIconCalendar as SLWebIconCalendar } from 'sl-web-components/dist/components/icon/icons/calendar';
 import register from 'sl-web-components/dist/directives/register';
 import React from 'react';

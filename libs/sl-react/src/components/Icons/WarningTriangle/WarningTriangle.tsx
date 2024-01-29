@@ -1,4 +1,4 @@
-import { createComponent } from '@lit/react';
+import { createComponent } from '@lit-labs/react';
 import { SLIconWarningTriangle as SLWebIconWarningTriangle } from 'sl-web-components/dist/components/icon/icons/warning-triangle';
 import register from 'sl-web-components/dist/directives/register';
 import React from 'react';

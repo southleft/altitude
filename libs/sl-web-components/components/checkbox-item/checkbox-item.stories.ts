@@ -149,7 +149,7 @@ SlottedErrorNote.args = {
 
 Checked.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement);
-  const checkboxItem = canvas.queryByTestId('checkbox-item');
+  const checkboxItem = canvas.queryByTestId('checkbox-item') as any;
   const checkboxItemInput = checkboxItem?.shadowRoot?.querySelector('input') as HTMLInputElement;
 
   // Make assertions
@@ -159,13 +159,13 @@ Checked.play = async ({ canvasElement }) => {
   await userEvent.click(checkboxItemInput);
 
   // Check that the checkbox is checked
-  expect(checkboxItemInput.checked).toBe(false);
+  expect(checkboxItem.isChecked).toBe(false);
 
   // Simulate a keyboard event (pressing Enter key)
-  await userEvent.type(checkboxItemInput, '{enter}');
+  await userEvent.keyboard('{Enter}');
 
   // Check that the checkbox is no longer checked
-  expect(checkboxItemInput.checked).toBe(true);
+  expect(checkboxItem.isChecked).toBe(true);
 
   // Remove focus from the input element
   checkboxItemInput.blur();

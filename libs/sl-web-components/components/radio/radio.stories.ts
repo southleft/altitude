@@ -1,3 +1,5 @@
+import { expect } from '@storybook/jest';
+import { userEvent, within, waitFor } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../field-note/field-note';
@@ -55,12 +57,12 @@ export default {
   }
 };
 
-const Template = (args) =>
-  html` <sl-radio ${spread(args)}>
-    <sl-radio-item name="radio-name" value="radio-value-1">Radio item 1</sl-radio-item>
-    <sl-radio-item name="radio-name" value="radio-value-2">Radio item 2</sl-radio-item>
-    <sl-radio-item name="radio-name" value="radio-value-3">Radio item 3</sl-radio-item>
-    <sl-radio-item name="radio-name" value="radio-value-4" ?isDisabled=${true}>Radio item 4</sl-radio-item>
+const Template = (args) => html`
+  <sl-radio ${spread(args)} data-testid="radio">
+    <sl-radio-item data-testid="radio-item-1" name="radio-name" value="radio-value-1">Radio item 1</sl-radio-item>
+    <sl-radio-item data-testid="radio-item-2" name="radio-name" value="radio-value-2">Radio item 2</sl-radio-item>
+    <sl-radio-item data-testid="radio-item-3" name="radio-name" value="radio-value-3">Radio item 3</sl-radio-item>
+    <sl-radio-item data-testid="radio-item-4" name="radio-name" value="radio-value-4" ?isDisabled=${true}>Radio item 4</sl-radio-item>
   </sl-radio>`;
 
 export const Default = Template.bind({});
@@ -116,3 +118,31 @@ SlottedErrorNote.args = {
   isRequired: true,
   fieldNote: false
 };
+
+/*------------------------------------*\
+  #STORYBOOK TESTS
+\*------------------------------------*/
+
+Default.play = async ({ canvasElement }) => {
+
+  const canvas = within(canvasElement);
+  const radio = canvas.getByTestId('radio') as any;
+  const radioItems = canvas.queryAllByTestId(/^radio-item-/) as any;
+  const radioItemInput1 = radioItems[0]?.shadowRoot?.querySelector('input') as HTMLInputElement;
+  const radioItemInput2 = radioItems[1]?.shadowRoot?.querySelector('input') as HTMLInputElement;
+  const radioItemInput3 = radioItems[2]?.shadowRoot?.querySelector('input') as HTMLInputElement;
+  const radioItemInput4 = radioItems[3]?.shadowRoot?.querySelector('input') as HTMLInputElement;
+
+  // Make assertions
+  expect(radio).toBeInTheDocument();
+  expect(radioItems).toHaveLength(4);
+
+  await userEvent.click(radioItemInput3);
+  await userEvent.keyboard('[ArrowUp]');
+  await userEvent.keyboard('[ArrowDown]');
+  await userEvent.keyboard('[ArrowDown]');
+  await waitFor(() => expect(radioItemInput1.checked).toBe(true), {
+    timeout: 6000
+  });
+};
+

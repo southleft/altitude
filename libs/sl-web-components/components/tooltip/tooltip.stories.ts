@@ -204,16 +204,16 @@ VisibleOnClick.play = async ({ canvasElement }) => {
   await userEvent.click(tooltipTrigger);
   expect(tooltip.isActive).toBe(true);
 
-  await userEvent.type(tooltip, '{escape}');
+  await userEvent.keyboard('{Escape}');
   expect(tooltip.isActive).toBe(false);
 
-  await userEvent.type(tooltip, '{enter}');
+  await userEvent.keyboard('{Enter}');
   expect(tooltip.isActive).toBe(true);
 
-  await userEvent.type(tooltip, '{space}');
+  await userEvent.keyboard(' ');
   expect(tooltip.isActive).toBe(false);
 
-  await userEvent.type(tooltip, '{tab}');
+  await userEvent.keyboard('{Tab}');
   expect(tooltip.isActive).toBe(false);
 
   await userEvent.click(canvasElement);
