@@ -38,9 +38,7 @@ export class SLStepper extends SLElement {
    */
   updated() {
     this.setVerticalItems(); /* 1 */
-    setTimeout(() => {
-      this.setStepNumber(); /* 2 */
-    }, 200);
+    this.setStepNumber(); /* 2 */
   }
 
   /**
@@ -51,7 +49,6 @@ export class SLStepper extends SLElement {
   setStepNumber() {
     if (this.stepperItems) {
       this.stepperItems.forEach((item: SLStepperItem, idx: number) => {
-        console.log("ITEM: ", item)
         /* 1 */
         item.stepNumber = idx + 1;
         /* 2 */

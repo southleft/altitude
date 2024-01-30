@@ -6,6 +6,7 @@ import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
 import '../avatar/avatar';
 import '../icon/icons/emoji';
+import '../icon/icons/chevron-down';
 import '../popover/popover';
 import '../tooltip/tooltip';
 import './toggle-button';

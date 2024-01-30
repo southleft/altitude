@@ -290,7 +290,7 @@ export class SLDropdown extends SLElement {
   handleOnActiveDropdown() {
     setTimeout(() => {
       const dropdownPanel = this.shadowRoot.querySelector<HTMLElement>('.sl-c-dropdown__panel')?.getBoundingClientRect();
-      const body = document.querySelector('body');
+      const body = this.closest('#root-inner') || document.querySelector('body');
       const bodyPosition = body.getBoundingClientRect();
       if (bodyPosition.height > dropdownPanel?.height && dropdownPanel?.bottom > bodyPosition.bottom) {
         /* Position dropdown panel based on viewport space */

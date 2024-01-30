@@ -1,6 +1,8 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './stepper';
+import '../stepper-item/stepper-item';
+import '../icon/icons/emoji';
 
 export default {
   title: 'Molecules/Stepper',
