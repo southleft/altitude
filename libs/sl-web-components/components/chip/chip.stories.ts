@@ -7,7 +7,7 @@ import './chip';
 import '../icon/icons/emoji';
 
 export default {
-  title: 'Components/Chip',
+  title: 'Atoms/Chip',
   component: 'sl-chip',
   tags: [ 'autodocs' ],
   parameters: {

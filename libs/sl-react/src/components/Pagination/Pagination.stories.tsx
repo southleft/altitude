@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLPagination } from '../..';
 
 export default {
-  title: 'Boilerplate/Pagination',
+  title: 'Molecules/Pagination',
   component: SLPagination,
   parameters: {
     status: { type: 'beta' },

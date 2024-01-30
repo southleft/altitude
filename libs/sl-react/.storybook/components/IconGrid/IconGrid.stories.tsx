@@ -4,7 +4,7 @@ import IconGrid from './IconGrid';
 export default {
   title: 'Fundamentals/Icons/Icon Grid',
   component: IconGrid,
-  parameters: { status: { type: 'stable' } }
+  parameters: { status: { type: 'beta' } }
 };
 
 export const Default: ComponentStoryObj<typeof IconGrid> = { args: {} };

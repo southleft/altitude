@@ -11,7 +11,7 @@ import '../icon/icons/warning-circle';
 import './textarea';
 
 export default {
-  title: 'Components/Textarea',
+  title: 'Molecules/Textarea',
   component: 'sl-textarea',
   tags: [ 'autodocs' ],
   parameters: {

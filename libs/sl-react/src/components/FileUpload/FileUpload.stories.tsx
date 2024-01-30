@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLFileUpload, SLIconDocument, SLButton } from '../..';
 
 export default {
-  title: 'Boilerplate/File Upload',
+  title: 'Molecules/File Upload',
   component: SLFileUpload,
   parameters: {
     status: { type: 'beta' },

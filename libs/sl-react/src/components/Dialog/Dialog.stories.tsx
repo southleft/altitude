@@ -3,7 +3,7 @@ import { SLDialog, SLButton, SLButtonGroup } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
-  title: 'Components/Dialog',
+  title: 'Molecules/Dialog',
   component: SLDialog,
   parameters: {
     status: { type: 'beta' },

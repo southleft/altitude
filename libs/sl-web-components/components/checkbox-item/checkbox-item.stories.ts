@@ -10,7 +10,7 @@ import './checkbox-item';
 import { SLCheckboxItem } from './checkbox-item';
 
 export default {
-  title: 'Components/Checkbox item',
+  title: 'Atoms/Checkbox item',
   component: 'sl-checkbox-item',
   tags: [ 'autodocs' ],
   parameters: {

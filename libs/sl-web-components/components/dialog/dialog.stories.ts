@@ -9,7 +9,7 @@ import '../button/button';
 import './dialog';
 
 export default {
-  title: 'Components/Dialog',
+  title: 'Molecules/Dialog',
   component: 'sl-dialog',
   tags: [ 'autodocs' ],
   parameters: {

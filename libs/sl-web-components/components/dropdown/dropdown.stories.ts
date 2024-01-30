@@ -21,7 +21,7 @@ const dataSource = [
 ];
 
 export default {
-  title: 'Components/Dropdown',
+  title: 'Molecules/Dropdown',
   component: 'sl-dropdown',
   tags: [ 'autodocs' ],
   parameters: {

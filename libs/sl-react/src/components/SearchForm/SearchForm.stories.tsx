@@ -15,7 +15,7 @@ const dataSource = [
 ];
 
 export default {
-  title: 'Boilerplate/Search Form',
+  title: 'Molecules/Search Form',
   component: SLSearchForm,
   parameters: {
     status: { type: 'beta' },

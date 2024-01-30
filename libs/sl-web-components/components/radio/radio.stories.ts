@@ -10,7 +10,7 @@ import '../radio-item/radio-item';
 import './radio';
 
 export default {
-  title: 'Components/Radio',
+  title: 'Molecules/Radio',
   component: 'sl-radio',
   tags: [ 'autodocs' ],
   parameters: {

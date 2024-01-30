@@ -3,7 +3,7 @@ import React from 'react';
 import { SLContextualMenu, SLIconList, SLButton, SLList, SLListItem } from '../..';
 
 export default {
-  title: 'Boilerplate/Contextual Menu',
+  title: 'Molecules/Contextual Menu',
   component: SLContextualMenu,
   parameters: {
     status: { type: 'beta' },

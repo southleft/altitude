@@ -4,7 +4,7 @@ import { withActions } from '@storybook/addon-actions/decorator';
 import './accordion-panel';
 
 export default {
-  title: 'Components/Accordion Panel',
+  title: 'Atoms/Accordion Panel',
   component: 'sl-accordion-panel',
   tags: [ 'autodocs' ],
   parameters: {

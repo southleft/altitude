@@ -22,7 +22,7 @@ const dataSource = [
 ];
 
 export default {
-  title: 'Components/Search Form',
+  title: 'Molecules/Search Form',
   component: 'sl-search-form',
   tags: [ 'autodocs' ],
   parameters: {

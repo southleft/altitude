@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLChip, SLIconEmoji } from '../..';
 
 export default {
-  title: 'Components/Chip',
+  title: 'Atoms/Chip',
   component: SLChip,
   parameters: {
     status: { type: 'beta' },

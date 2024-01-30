@@ -8,7 +8,7 @@ import '../icon/icons/chevron-down';
 import './menu-item';
 
 export default {
-  title: 'Components/Menu Item',
+  title: 'Atoms/Menu Item',
   component: 'sl-menu-item',
   tags: [ 'autodocs' ],
   parameters: {

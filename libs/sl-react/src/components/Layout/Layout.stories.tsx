@@ -5,10 +5,10 @@ import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 import { SLLayoutSection } from '../LayoutSection/LayoutSection';
 
 export default {
-  title: 'Components/Layout',
+  title: 'Organisms/Layout',
   component: SLLayout,
   subcomponents: { SLLayoutSection },
-  parameters: { status: { type: 'stable' } },
+  parameters: { status: { type: 'beta' } },
   argTypes: {
     variant: {
       control: 'radio',

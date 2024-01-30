@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLList, SLListItem, SLDropdownPanel } from '../..';
 
 export default {
-  title: 'Boilerplate/List',
+  title: 'Molecules/List',
   component: SLList,
   parameters: {
     status: { type: 'beta' },

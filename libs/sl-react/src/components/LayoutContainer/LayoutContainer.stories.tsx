@@ -4,9 +4,9 @@ import { SLLayoutContainer } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
-  title: 'Components/Layout Container',
+  title: 'Organisms/Layout Container',
   component: SLLayoutContainer,
-  parameters: { status: { type: 'stable' } },
+  parameters: { status: { type: 'beta' } },
   args: {
     children: <Fpo>Layout Container</Fpo>
   }

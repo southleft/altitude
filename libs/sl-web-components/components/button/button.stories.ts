@@ -9,7 +9,7 @@ import '../icon/icons/send';
 import './button';
 
 export default {
-  title: 'Components/Button',
+  title: 'Atoms/Button',
   component: 'sl-button',
   tags: [ 'autodocs' ],
   parameters: {

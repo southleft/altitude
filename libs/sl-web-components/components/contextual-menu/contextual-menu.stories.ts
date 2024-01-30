@@ -8,7 +8,7 @@ import '../list/list';
 import './contextual-menu';
 
 export default {
-  title: 'Components/Contextual Menu',
+  title: 'Molecules/Contextual Menu',
   component: 'sl-contextual-menu',
   tags: [ 'autodocs' ],
   parameters: {

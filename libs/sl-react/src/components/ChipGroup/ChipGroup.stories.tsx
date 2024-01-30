@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLChipGroup, SLChip } from '../..';
 
 export default {
-  title: 'Components/Chip Group',
+  title: 'Molecules/Chip Group',
   component: SLChipGroup,
   subcomponents: { SLChip },
   parameters: {

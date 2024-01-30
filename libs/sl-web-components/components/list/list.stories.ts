@@ -6,7 +6,7 @@ import '../list-item/list-item';
 import './list';
 
 export default {
-  title: 'Components/List',
+  title: 'Molecules/List',
   component: 'sl-list',
   tags: [ 'autodocs' ],
   parameters: {

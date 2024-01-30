@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLRadioItem, SLFieldNote, SLIconWarningCircle, SLIconHelp } from '../..';
 
 export default {
-  title: 'Components/Radio Item',
+  title: 'Atoms/Radio Item',
   component: SLRadioItem,
   parameters: {
     status: { type: 'beta' },

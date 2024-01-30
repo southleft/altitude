@@ -4,7 +4,7 @@ import { withActions } from '@storybook/addon-actions/decorator';
 import './pagination';
 
 export default {
-  title: 'Components/Pagination',
+  title: 'Molecules/Pagination',
   component: 'sl-pagination',
   tags: [ 'autodocs' ],
   parameters: {

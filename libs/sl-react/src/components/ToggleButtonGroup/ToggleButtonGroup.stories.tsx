@@ -3,7 +3,7 @@ import { SLToggleButtonGroup, SLToggleButton, SLIconCalendar, SLPopover } from '
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
-  title: 'Components/Control Button Group',
+  title: 'Molecules/Toggle Button Group',
   component: SLToggleButtonGroup,
   subcomponents: { SLToggleButton },
   parameters: {

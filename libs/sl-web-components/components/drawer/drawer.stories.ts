@@ -3,7 +3,7 @@ import { spread } from '../../directives/spread';
 import './drawer';
 
 export default {
-  title: 'Components/Drawer',
+  title: 'Molecules/Drawer',
   component: 'sl-drawer',
   tags: [ 'autodocs' ],
   parameters: { status: { type: 'beta' } },

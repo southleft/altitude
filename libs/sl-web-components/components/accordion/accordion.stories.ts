@@ -5,7 +5,7 @@ import '../accordion-panel/accordion-panel';
 import './accordion';
 
 export default {
-  title: 'Components/Accordion',
+  title: 'Molecules/Accordion',
   component: 'sl-accordion',
   tags: [ 'autodocs' ],
   parameters: {

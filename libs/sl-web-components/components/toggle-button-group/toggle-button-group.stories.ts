@@ -8,7 +8,7 @@ import '../toggle-button/toggle-button';
 import './toggle-button-group';
 
 export default {
-  title: 'Components/Toggle Button Group',
+  title: 'Molecules/Toggle Button Group',
   component: 'sl-toggle-button-group',
   tags: [ 'autodocs' ],
   parameters: {

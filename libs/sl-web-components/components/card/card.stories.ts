@@ -10,7 +10,7 @@ import '../text-passage/text-passage';
 import './card';
 
 export default {
-  title: 'Components/Card',
+  title: 'Molecules/Card',
   component: 'sl-card',
   tags: [ 'autodocs' ],
   parameters: {

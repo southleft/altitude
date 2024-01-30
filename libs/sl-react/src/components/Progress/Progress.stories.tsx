@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLProgress } from '../..';
 
 export default {
-  title: 'Components/Progress',
+  title: 'Atoms/Progress',
   component: SLProgress,
   parameters: {
     status: { type: 'beta' },

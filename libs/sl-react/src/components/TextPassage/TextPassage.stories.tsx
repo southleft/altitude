@@ -3,7 +3,7 @@ import React from 'react';
 import { SLTextPassage, SLLink } from '../..';
 
 export default {
-  title: 'Components/Text Passage',
+  title: 'Atoms/Text Passage',
   component: SLTextPassage,
   parameters: { status: { type: 'beta' } },
   argTypes: {

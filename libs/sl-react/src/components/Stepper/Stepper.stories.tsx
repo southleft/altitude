@@ -3,7 +3,7 @@ import React from 'react';
 import { SLIconEmoji, SLStepper, SLStepperItem } from '../..';
 
 export default {
-  title: 'Components/Stepper',
+  title: 'Molecules/Stepper',
   component: SLStepper,
   subcomponents: { SLStepperItem },
   parameters: {

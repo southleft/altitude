@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLMenu, SLMenuItem, SLIconAdd, SLIconList, SLButton, SLToggleButton } from '../..';
 
 export default {
-  title: 'Components/Menu',
+  title: 'Molecules/Menu',
   component: SLMenu,
   parameters: {
     status: { type: 'beta' },

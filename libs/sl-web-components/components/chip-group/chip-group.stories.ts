@@ -6,7 +6,7 @@ import { withActions } from '@storybook/addon-actions/decorator';
 import './chip-group';
 
 export default {
-  title: 'Components/Chip Group',
+  title: 'Molecules/Chip Group',
   component: 'sl-chip-group',
   tags: [ 'autodocs' ],
   parameters: {

@@ -3,7 +3,7 @@ import { spread } from '../../directives/spread';
 import './stepper';
 
 export default {
-  title: 'Components/Stepper',
+  title: 'Molecules/Stepper',
   component: 'sl-stepper',
   tags: [ 'autodocs' ],
   parameters: {

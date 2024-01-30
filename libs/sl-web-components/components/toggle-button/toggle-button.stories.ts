@@ -11,7 +11,7 @@ import '../tooltip/tooltip';
 import './toggle-button';
 
 export default {
-  title: 'Components/Toggle Button',
+  title: 'Atoms/Toggle Button',
   component: 'sl-toggle-button',
   tags: [ 'autodocs' ],
   parameters: {

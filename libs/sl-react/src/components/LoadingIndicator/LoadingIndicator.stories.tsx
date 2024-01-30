@@ -2,9 +2,9 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLLoadingIndicator } from '../..';
 
 export default {
-  title: 'Boilerplate/Loading Indicator',
+  title: 'Atoms/Loading Indicator',
   component: SLLoadingIndicator,
-  parameters: { status: { type: 'stable' } }
+  parameters: { status: { type: 'beta' } }
 };
 
 export const Default: StoryObj<typeof SLLoadingIndicator> = { args: {} };

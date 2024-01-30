@@ -9,7 +9,7 @@ import '../toast/toast';
 import './toast-group';
 
 export default {
-  title: 'Components/Toast Group',
+  title: 'Molecules/Toast Group',
   component: 'sl-toast-group',
   tags: [ 'autodocs' ],
   parameters: {

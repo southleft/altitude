@@ -7,7 +7,7 @@ import '../icon/icons/warning-circle';
 import './datetimepicker-field';
 
 export default {
-  title: 'Components/Datetimepicker Field',
+  title: 'Molecules/Datetimepicker Field',
   component: 'sl-datetimepicker-field',
   tags: [ 'autodocs' ],
   parameters: {

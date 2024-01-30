@@ -7,7 +7,7 @@ import '../icon/icons/done';
 import './tab';
 
 export default {
-  title: 'Components/Tab',
+  title: 'Atoms/Tab',
   component: 'sl-tab',
   tags: [ 'autodocs' ],
   parameters: {

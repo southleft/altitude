@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLSkeleton } from '../..';
 
 export default {
-  title: 'Boilerplate/Skeleton',
+  title: 'Atoms/Skeleton',
   component: SLSkeleton,
   parameters: {
     status: { type: 'beta' },

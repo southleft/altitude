@@ -10,7 +10,7 @@ import '../tab/tab';
 import './tabs';
 
 export default {
-  title: 'Components/Tabs',
+  title: 'Molecules/Tabs',
   component: 'sl-tabs',
   tags: [ 'autodocs' ],
   parameters: {

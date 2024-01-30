@@ -6,7 +6,7 @@ import { withActions } from '@storybook/addon-actions/decorator';
 import './tooltip';
 
 export default {
-  title: 'Components/Tooltip',
+  title: 'Atoms/Tooltip',
   component: 'sl-tooltip',
   tags: [ 'autodocs' ],
   parameters: {

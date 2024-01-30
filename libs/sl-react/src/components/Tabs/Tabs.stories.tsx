@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLTabs, SLTab, SLTabPanel, SLIconDone, SLBadge } from '../..';
 
 export default {
-  title: 'Components/Tabs',
+  title: 'Molecules/Tabs',
   component: SLTabs,
   subcomponents: { SLTab, SLTabPanel },
   parameters: {

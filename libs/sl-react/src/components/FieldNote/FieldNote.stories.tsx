@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLFieldNote } from '../..';
 
 export default {
-  title: 'Components/Field Note',
+  title: 'Atoms/Field Note',
   component: SLFieldNote,
   parameters: { status: { type: 'beta' } },
   argTypes: {

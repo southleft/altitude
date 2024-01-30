@@ -3,7 +3,7 @@ import { spread } from '../../directives/spread';
 import './tab-panel';
 
 export default {
-  title: 'Components/Tab Panel',
+  title: 'Atoms/Tab Panel',
   component: 'sl-tab-panel',
   tags: [ 'autodocs' ],
   parameters: {

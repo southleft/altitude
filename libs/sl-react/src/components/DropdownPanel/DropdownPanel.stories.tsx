@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLDropdownPanel, SLList, SLListItem, SLIconDone, SLSearchForm } from '../..';
 
 export default {
-  title: 'Boilerplate/Dropdown Panel',
+  title: 'Atoms/Dropdown Panel',
   component: SLDropdownPanel,
   parameters: { status: { type: 'beta' } },
   args: {

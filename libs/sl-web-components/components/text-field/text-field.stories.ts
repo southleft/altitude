@@ -11,7 +11,7 @@ import '../icon/icons/warning-circle';
 import './text-field';
 
 export default {
-  title: 'Components/Text Field',
+  title: 'Molecules/Text Field',
   component: 'sl-text-field',
   tags: [ 'autodocs' ],
   parameters: {

@@ -7,10 +7,10 @@ import '../search-form/search-form';
 import './dropdown-panel';
 
 export default {
-  title: 'Components/Dropdown Panel',
+  title: 'Atoms/Dropdown Panel',
   component: 'sl-dropdown-panel',
   tags: [ 'autodocs' ],
-  parameters: { status: { type: 'stable' } }
+  parameters: { status: { type: 'beta' } }
 };
 
 export const Default = (args) => html`

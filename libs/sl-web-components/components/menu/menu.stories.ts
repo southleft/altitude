@@ -11,7 +11,7 @@ import '../toggle-button/toggle-button';
 import './menu';
 
 export default {
-  title: 'Components/Menu',
+  title: 'Molecules/Menu',
   component: 'sl-menu',
   tags: [ 'autodocs' ],
   parameters: {

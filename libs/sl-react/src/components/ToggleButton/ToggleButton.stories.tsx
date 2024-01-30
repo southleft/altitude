@@ -3,7 +3,7 @@ import { SLToggleButton, SLIconCalendar, SLAvatar, SLTooltip, SLPopover, SLIconC
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
-  title: 'Components/Control Button',
+  title: 'Atoms/Toggle Button',
   component: SLToggleButton,
   parameters: {
     status: { type: 'beta' },

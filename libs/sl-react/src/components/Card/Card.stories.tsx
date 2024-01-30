@@ -3,7 +3,7 @@ import { SLCard, SLHeading, SLButton, SLChip, SLIconDone, SLIconEmoji, SLTextPas
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
-  title: 'Components/Card',
+  title: 'Molecules/Card',
   component: SLCard,
   parameters: {
     status: { type: 'beta' },

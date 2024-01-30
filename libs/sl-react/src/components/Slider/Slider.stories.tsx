@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLSlider } from '../..';
 
 export default {
-  title: 'Boilerplate/Slider',
+  title: 'Molecules/Slider',
   component: SLSlider,
   parameters: {
     status: { type: 'beta' },

@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLIconEmoji, SLStepperItem } from '../..';
 
 export default {
-  title: 'Components/Stepper Item',
+  title: 'Atoms/Stepper Item',
   component: SLStepperItem,
   parameters: {
     status: {

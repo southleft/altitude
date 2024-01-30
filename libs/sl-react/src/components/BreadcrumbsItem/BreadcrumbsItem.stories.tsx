@@ -3,7 +3,7 @@ import React from 'react';
 import { SLBreadcrumbsItem, SLIconDocument } from '../..';
 
 export default {
-  title: 'Components/Breadcrumbs Item',
+  title: 'Atoms/Breadcrumbs Item',
   component: SLBreadcrumbsItem,
   parameters: {
     status: { type: 'beta' },

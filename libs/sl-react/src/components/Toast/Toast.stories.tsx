@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLToast, SLButton, SLIconDone } from '../..';
 
 export default {
-  title: 'Components/Toast',
+  title: 'Atoms/Toast',
   component: SLToast,
   parameters: {
     status: { type: 'beta' },

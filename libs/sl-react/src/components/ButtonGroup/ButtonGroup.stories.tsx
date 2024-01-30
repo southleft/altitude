@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLButtonGroup, SLButton } from '../..';
 
 export default {
-  title: 'Components/Button Group',
+  title: 'Molecules/Button Group',
   component: SLButtonGroup,
   parameters: { status: { type: 'beta' } },
   argTypes: {

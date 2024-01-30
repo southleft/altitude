@@ -8,7 +8,7 @@ import '../icon/icons/done';
 import './toast';
 
 export default {
-  title: 'Components/Toast',
+  title: 'Atoms/Toast',
   component: 'sl-toast',
   tags: [ 'autodocs' ],
   parameters: {

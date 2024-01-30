@@ -3,10 +3,10 @@ import { spread } from '../../directives/spread';
 import './loading-indicator';
 
 export default {
-  title: 'Components/Loading Indicator',
+  title: 'Atoms/Loading Indicator',
   component: 'sl-loading-indicator',
   tags: [ 'autodocs' ],
-  parameters: { status: { type: 'stable' } }
+  parameters: { status: { type: 'beta' } }
 };
 
 export const Default = (args) => html` <sl-loading-indicator ${spread(args)}></sl-loading-indicator> `;

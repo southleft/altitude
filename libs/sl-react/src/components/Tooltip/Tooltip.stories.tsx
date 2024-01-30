@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLTooltip } from '../..';
 
 export default {
-  title: 'Components/Tooltip',
+  title: 'Atoms/Tooltip',
   component: SLTooltip,
   parameters: {
     status: { type: 'beta' },
