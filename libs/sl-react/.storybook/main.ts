@@ -11,9 +11,22 @@ const config: StorybookConfig = {
   ],
   addons: [
     '@storybook/addon-essentials',
-    '@storybook/addon-a11y',
-    "@etchteam/storybook-addon-status"
+    "@storybook/addon-a11y",
+    "@etchteam/storybook-addon-status",
+    "@storybook/addon-interactions",
+    "@storybook/blocks",
+    {
+      name: '@storybook/addon-coverage',
+      options: {
+        istanbul: {
+          include: ['**/components/**'],
+          exclude: ['**/components/SLElement.ts', '**/components/icon/**'],
+          excludeNodeModules: true
+        }
+      }
+    }
   ],
+  staticDirs: ['./static'],
   docs: {
     autodocs: true
   },

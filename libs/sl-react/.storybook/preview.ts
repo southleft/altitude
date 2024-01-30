@@ -4,8 +4,6 @@ export const excludeRegexArray = [
   '^children$',
   '^render$',
   '^firstUpdated$',
-  '^openAll$',
-  '^closeAll$',
   '^componentClassNames$',
   '^slotEmpty$',
   '^slotNotEmpty$',
@@ -33,7 +31,7 @@ const headStyleElement = document.createElement('style');
 headStyleElement.innerHTML = headStyles;
 document.head.appendChild(headStyleElement);
 
-// Icon font (Storybook only for docs)
+// Creating a style element for iconFontCSS and appending it to the document head
 import iconFontCSS from '../../sl-web-components/components/icon/fonts/iconfont.css';
 const iconFontStyleElement = document.createElement('style');
 iconFontStyleElement.setAttribute('type', 'text/css');
@@ -43,7 +41,7 @@ document.head.appendChild(iconFontStyleElement);
 
 const preview: Preview = {
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
+    actions: { argTypesRegex: '^on.*' },
     controls: {
       exclude: new RegExp(excludeRegexArray.join('|')),
       matchers: {

@@ -22,7 +22,7 @@
   transition: all var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
   position: relative;
   background-color: var(--sl-theme-color-background-accent-default);
-  color: var(--sl-theme-color-content-accent-weak);
+  color: var(--sl-theme-color-content-accent-stronger);
   width: var(--sl-button-width, auto);
 
   /**
@@ -54,7 +54,7 @@
    * Hover state
    */
   &:hover:not(:active, :disabled) {
-    background-color: var(--sl-theme-color-background-accent-strong);
+    background-color: var(--sl-theme-color-background-accent-weak);
 
     &:after {
       opacity: 1;
@@ -83,16 +83,16 @@
  */
 .sl-c-button--secondary {
   background-color: var(--sl-theme-color-background-transparent-default);
-  border: var(--sl-theme-border-width) solid var(--sl-theme-color-content-accent-default);
-  color: var(--sl-theme-color-content-accent-default);
+  border: var(--sl-theme-border-width) solid var(--sl-theme-color-content-accent-stronger);
+  color: var(--sl-theme-color-content-accent-stronger);
 
   /**
    * Hover state
    */
   &:hover:not(:active, :disabled) {
     background-color: var(--sl-theme-color-background-transparent-default);
-    border-color: var(--sl-theme-color-content-accent-strong);
-    color: var(--sl-theme-color-content-accent-strong);
+    border-color: var(--sl-theme-color-content-accent-default);
+    color: var(--sl-theme-color-content-accent-stronger);
   }
 }
 

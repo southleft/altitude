@@ -39,7 +39,7 @@ module.exports = (plop) => {
       {
         type: 'input',
         name: 'name',
-        message: 'What is your icon name (e.g. if en-icon-chevron-down, write "chevron-down")?'
+        message: 'What is your icon name (e.g. if sl-icon-chevron-down, write "chevron-down")?'
       }
     ],
     actions: [

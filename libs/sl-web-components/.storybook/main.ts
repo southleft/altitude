@@ -1,6 +1,10 @@
 import type { StorybookConfig } from '@storybook/web-components-webpack5';
 
 const config: StorybookConfig = {
+  framework: {
+    name: "@storybook/web-components-webpack5",
+    options: {},
+  },
   stories: [
     './components/**/*.stories.@(js|jsx|ts|tsx|mdx)',
     '../components/**/**/*.stories.@(js|jsx|ts|tsx|mdx)',
@@ -24,11 +28,10 @@ const config: StorybookConfig = {
       }
     }
   ],
-  framework: {
-    name: "@storybook/web-components-webpack5",
-    options: {},
-  },
   staticDirs: ['./static'],
+  docs: {
+    autodocs: true
+  },
 
   // Other Storybook options
   webpackFinal: async (config, { configType }) => {
