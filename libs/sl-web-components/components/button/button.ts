@@ -1,5 +1,5 @@
 import { html, unsafeCSS } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, queryAssignedNodes } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { FormController } from '../../controllers/form';
 import { SLElement } from '../SLElement';
@@ -111,6 +111,13 @@ export class SLButton extends SLElement {
   accessor ariaControls: string;
 
   /**
+   * Queries nodes in the default slot
+   * 1. Used to dynamically set the aria-label attribute if a label is not provided
+   */
+  @queryAssignedNodes()
+  accessor slotNodes: NodeListOf<HTMLElement>;
+
+  /**
    * Handle click events
    * 1. When we click on button which has type=submit trigger requestSubmit on closest form element in order to invoke submit event on form element
    */
@@ -118,6 +125,24 @@ export class SLButton extends SLElement {
     /* 1 */
     if (this.type === 'submit' || this.type === 'reset') {
       this.formController.submit(this.type);
+    }
+  }
+
+  /**
+   * Lifecycle connected callback
+   * 1. If a label is not provided for aria, dynamically set the label from button's slotted text content
+   */
+  connectedCallback() {
+    super.connectedCallback();
+    
+    /* 1 */
+    if (!this.label) {
+      setTimeout(() => {
+        const textNode = [...this.slotNodes].find((node) => node.nodeType === 3);
+        if (textNode) {
+          this.label = textNode.textContent.trim();
+        }
+      }, 10);
     }
   }
 
