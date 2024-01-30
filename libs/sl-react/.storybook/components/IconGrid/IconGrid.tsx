@@ -25,7 +25,7 @@ export default function IconGrid() {
           const TagName = createTagName();
 
           function createTagName() {
-            return `sl-icon-${item.name}`;
+            return `sl-icon-${item.name}-${PackageJson.version.replace(/\./g, '-')}`;
           }
           return (
             <li className="icon-grid__item" key={`icon-grid-item-${index}`}>
