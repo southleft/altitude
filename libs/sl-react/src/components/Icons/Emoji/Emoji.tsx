@@ -1,4 +1,4 @@
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import { SLIconEmoji as SLWebIconEmoji } from 'sl-web-components/dist/components/icon/icons/emoji';
 import register from 'sl-web-components/dist/directives/register';
 import React from 'react';
