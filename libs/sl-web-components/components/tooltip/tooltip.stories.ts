@@ -2,6 +2,7 @@ import { expect } from '@storybook/jest';
 import { userEvent, waitFor, within } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import './tooltip';
 
 export default {
@@ -12,12 +13,13 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['open', 'close']
+      handles: ['onTooltipOpen', 'onTooltipClose']
     },
     controls: {
       exclude: ['ariaDescribedBy']
     },
   },
+  decorators: [withActions],
   argTypes: {
     hasArrow: {
       type: 'boolean'
@@ -204,16 +206,16 @@ VisibleOnClick.play = async ({ canvasElement }) => {
   await userEvent.click(tooltipTrigger);
   expect(tooltip.isActive).toBe(true);
 
-  await userEvent.type(tooltip, '{escape}');
+  await userEvent.keyboard('{Escape}');
   expect(tooltip.isActive).toBe(false);
 
-  await userEvent.type(tooltip, '{enter}');
+  await userEvent.keyboard('{Enter}');
   expect(tooltip.isActive).toBe(true);
 
-  await userEvent.type(tooltip, '{space}');
+  await userEvent.keyboard(' ');
   expect(tooltip.isActive).toBe(false);
 
-  await userEvent.type(tooltip, '{tab}');
+  await userEvent.keyboard('{Tab}');
   expect(tooltip.isActive).toBe(false);
 
   await userEvent.click(canvasElement);

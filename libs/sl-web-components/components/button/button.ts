@@ -33,9 +33,10 @@ export class SLButton extends SLElement {
    * - **default** renders the button used for primary actions
    * - **secondary** renders the button with an outlined style
    * - **tertiary** renders the button with a bare style
+   * - **danger** renders the button used for caution actions
    */
   @property()
-  accessor variant: 'secondary' | 'tertiary';
+  accessor variant: 'secondary' | 'tertiary' | 'danger';
 
   /**
    * Target attribute for a link (i.e. set to _blank to open in new tab)
@@ -124,6 +125,7 @@ export class SLButton extends SLElement {
     const componentClassNames = this.componentClassNames('sl-c-button', {
       'sl-c-button--secondary': this.variant === 'secondary',
       'sl-c-button--tertiary': this.variant === 'tertiary',
+      'sl-c-button--danger': this.variant === 'danger',
       'sl-c-button--full-width': this.fullWidth === true,
       'sl-c-button--icon-only': this.hideText === true,
       'sl-is-expanded': this.isExpanded === true

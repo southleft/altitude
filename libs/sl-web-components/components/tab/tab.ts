@@ -58,7 +58,7 @@ export class SLTab extends SLElement {
    */
   handleOnClick() {
     this.dispatch({
-      eventName: 'tabSelect',
+      eventName: 'onTabSelect',
       detailObj: {
         value: this,
         index: this.idx

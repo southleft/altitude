@@ -2,6 +2,7 @@ import { expect } from '@storybook/jest';
 import { userEvent, within } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../icon/icons/emoji';
 import '../toggle-button/toggle-button';
 import './toggle-button-group';
@@ -13,12 +14,13 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['toggleButtonSelected', 'toggleButtonDeselected']
+      handles: ['onToggleButtonSelect', 'onToggleButtonDeselect']
     },
     controls: {
       exclude: ['selectedItem', 'toggleButtons']
     }
   },
+  decorators: [withActions],
   argTypes: {
     variant: {
       control: 'radio',

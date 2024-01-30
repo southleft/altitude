@@ -9,7 +9,7 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['contextualMenuOpen', 'contextualMenuClose']
+      handles: ['onContextualMenuOpen', 'onContextualMenuClose']
     }
   },
   args: {

@@ -2,6 +2,7 @@ import { expect } from '@storybook/jest';
 import { userEvent, within } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../button/button';
 import '../icon/icons/done';
 import './toast';
@@ -13,12 +14,13 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['click', 'keydown', 'toastClose']
+      handles: ['onToastClose']
     },
     controls: {
       exclude: ['idx']
     }
   },
+  decorators: [withActions],
   argTypes: {
     variant: {
       control: { type: 'radio' },
@@ -97,7 +99,7 @@ WithDismissible.play = async ({ canvasElement }) => {
 
   // Focus on the close button and simulate a keyboard event (pressing Escape key)
   toastCloseButton.focus();
-  await userEvent.type(toastCloseButton, '{escape}');
+  await userEvent.type(toastCloseButton, '{Escape}');
 
   // Check to make sure the toast is no longer active
   expect(toast.isActive).toBe(false);

@@ -391,14 +391,14 @@ export class SLDatetimepickerField extends SLElement {
     /* 5 */
     if (this.isActiveCalendar) {
       this.dispatch({
-        eventName: 'open',
+        eventName: 'onDatetimepickerFieldOpen',
         detailObj: {
           activeCalendar: this.isActiveCalendar
         }
       });
     } else {
       this.dispatch({
-        eventName: 'close',
+        eventName: 'onDatetimepickerFieldClose',
         detailObj: {
           activeCalendar: this.isActiveCalendar
         }
@@ -484,7 +484,7 @@ export class SLDatetimepickerField extends SLElement {
     this.timeSelectorList.shadowRoot.querySelector<HTMLButtonElement>('.sl-c-time-selector-list__item:first-child button').focus(); /* 6 */
     /* 7 */
     this.dispatch({
-      eventName: 'dateChanged',
+      eventName: 'onDatetimepickerFieldDateChange',
       detailObj: {
         value: this.value
       }
@@ -516,7 +516,7 @@ export class SLDatetimepickerField extends SLElement {
     this.isActive = true; /* 5 */
     /* 6 */
     this.dispatch({
-      eventName: 'timeChanged',
+      eventName: 'onDatetimepickerFieldTimeChange',
       detailObj: {
         value: this.value
       }
@@ -648,7 +648,7 @@ export class SLDatetimepickerField extends SLElement {
               <div class="sl-c-datetimepicker-field__calendar-container">
                 <${this.calendarEl}
                   class="sl-c-datetimepicker-field__calendar"
-                  @change=${this.handleOnChangeDate}
+                  @onCalendarChange=${this.handleOnChangeDate}
                   resetDates="${this.isCancelled}"
                   .setActiveDate=${this.setActiveDate}
                   .disabledMinDate=${this.disabledMinDate}
@@ -662,7 +662,7 @@ export class SLDatetimepickerField extends SLElement {
                 ></${this.calendarEl}>
                 <${this.timeSelectorListEl}
                   class="sl-c-datetimepicker-field__time-selector-list"
-                  @change=${this.handleOnChangeTime}
+                  @onTimeSelectorListChange=${this.handleOnChangeTime}
                   orientation=${this.isSmallScreen ? 'horizontal' : false}
                   resetTime="${this.isCancelled}"
                   .setActiveTime=${this.setActiveTime}

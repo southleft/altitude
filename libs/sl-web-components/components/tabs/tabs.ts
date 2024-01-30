@@ -244,7 +244,7 @@ export class SLTabs extends SLElement {
     this.setActiveTab();
     /* 3 */
     this.dispatch({
-      eventName: 'tabChange',
+      eventName: 'onTabsChange',
       detailObj: {
         value: this.activeTab,
         activeTabIdx: this.activeIndex
@@ -350,7 +350,7 @@ export class SLTabs extends SLElement {
     }
     /* 11 */
     this.dispatch({
-      eventName: 'tabChange',
+      eventName: 'onTabsChange',
       detailObj: {
         value: this.activeTab,
         activeTabIdx: this.activeIndex
@@ -385,7 +385,7 @@ export class SLTabs extends SLElement {
             role="tablist"
             @scroll=${this.handleOnScroll}
             @keydown=${this.handleOnTabKeydown}
-            @tabSelect=${this.handleOnTabSelect}
+            @onTabSelect=${this.handleOnTabSelect}
           >
             <slot></slot>
           </div>

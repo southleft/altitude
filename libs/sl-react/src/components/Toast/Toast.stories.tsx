@@ -7,7 +7,7 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['click', 'keydown', 'toastClose']
+      handles: ['onToastClose']
     },
     controls: {
       exclude: ['idx']

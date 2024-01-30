@@ -141,7 +141,7 @@ export class SLCheckboxItem extends SLElement {
     }
     /* 3 */
     this.dispatch({
-      eventName: 'change',
+      eventName: 'onCheckboxItemChange',
       detailObj: {
         checked: this.isChecked,
         indeterminate: this.isIndeterminate,

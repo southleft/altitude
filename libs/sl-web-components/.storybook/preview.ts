@@ -24,7 +24,7 @@ document.head.appendChild(iconFontStyleElement);
 
 const preview: Preview = {
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
+    actions: { argTypesRegex: '^on.*' },
     controls: {
       expanded: true,
       matchers: {

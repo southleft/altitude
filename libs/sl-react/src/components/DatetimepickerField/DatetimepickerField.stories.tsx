@@ -8,9 +8,8 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['open', 'close', 'dateChanged', 'timeChanged']
+      handles: ['onDatetimepickerFieldOpen', 'onDatetimepickerFieldClose', 'onDatetimepickerFieldDateChange', 'onDatetimepickerFieldTimeChange']
     },
-    layout: 'padded',
   },
   args: {
     label: 'Select a Date & Time',

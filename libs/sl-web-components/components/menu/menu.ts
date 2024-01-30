@@ -175,13 +175,13 @@ export class SLMenu extends SLElement {
     /**
      * Observe changes to the expanded state of menu items and update the menu
      */
-    this.addEventListener('menuItemExpanded', () => {
-      this.handleOnMenuItemExpanded();
+    this.addEventListener('onMenuItemExpand', () => {
+      this.handleOnMenuItemExpand();
     });
     /**
      * Observe changes to the selected state of menu items and update the menu
      */
-    this.addEventListener('menuItemSelected', (e: CustomEvent) => this.handleOnMenuItemSelected(e.target as SLMenuItem));
+    this.addEventListener('onMenuItemSelect', (e: CustomEvent) => this.handleOnMenuItemSelect(e.target as SLMenuItem));
   }
 
   /**
@@ -449,7 +449,7 @@ export class SLMenu extends SLElement {
    * 1. Set the previously selected item's isSelected state to false
    * 2. Store the newly selected item on the menu's state
    */
-  handleOnMenuItemSelected(item: SLMenuItem) {
+  handleOnMenuItemSelect(item: SLMenuItem) {
     if (this.selectedItem) {
       this.selectedItem.isSelected = false; /* 1 */
     }
@@ -460,7 +460,7 @@ export class SLMenu extends SLElement {
    * When a menu Group Header is Expanded:
    * 1. Show/hide items that belong to the given Group Header, and reassign valid indexes for keyboard navigation
    */
-  handleOnMenuItemExpanded(): void {
+  handleOnMenuItemExpand(): void {
     this.syncHeadersWithItems();
   }
 
@@ -513,7 +513,7 @@ export class SLMenu extends SLElement {
     }, 1);
     /* 3 */
     this.dispatch({
-      eventName: 'open',
+      eventName: 'onMenuOpen',
       detailObj: {
         active: this.isActive
       }
@@ -547,7 +547,7 @@ export class SLMenu extends SLElement {
     }, 1);
     /* 4 */
     this.dispatch({
-      eventName: 'close',
+      eventName: 'onMenuClose',
       detailObj: {
         active: this.isActive
       }

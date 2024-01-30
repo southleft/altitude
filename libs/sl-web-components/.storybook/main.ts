@@ -12,7 +12,17 @@ const config: StorybookConfig = {
     "@storybook/addon-a11y",
     "@etchteam/storybook-addon-status",
     "@storybook/addon-interactions",
-    "@storybook/blocks"
+    "@storybook/blocks",
+    {
+      name: '@storybook/addon-coverage',
+      options: {
+        istanbul: {
+          include: ['**/components/**'],
+          exclude: ['**/components/SLElement.ts', '**/components/icon/**'],
+          excludeNodeModules: true
+        }
+      }
+    }
   ],
   framework: {
     name: "@storybook/web-components-webpack5",

@@ -2,6 +2,7 @@ import { expect } from '@storybook/jest';
 import { userEvent, within } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../badge/badge';
 import '../icon/icons/done';
 import '../tab-panel/tab-panel';
@@ -15,12 +16,13 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['tabSelect', 'tabChange']
+      handles: ['onTabsChange']
     },
     controls: {
       exclude: ['activeTab', 'isScrollable', 'tabsList', 'tabPanels', 'tabItems', 'isLTR', 'handleOnScroll', 'handleOnResize']
     }
   },
+  decorators: [withActions],
   argTypes: {
     variant: {
       control: { type: 'radio' },

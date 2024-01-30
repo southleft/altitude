@@ -75,7 +75,7 @@ export class SLSwitch extends SLElement {
 
     /* 2 */
     this.dispatch({
-      eventName: 'changed',
+      eventName: 'onSwitchChange',
       detailObj: {
         checked: this.isChecked
       }

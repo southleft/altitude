@@ -206,7 +206,7 @@ export class SLInputStepper extends SLElement {
   }
 
   private emitEvent(): void {
-    this.dispatch({ eventName: 'change', detailObj: { value: this.count } });
+    this.dispatch({ eventName: 'onInputStepperChange', detailObj: { value: this.count } });
   }
 
   /**

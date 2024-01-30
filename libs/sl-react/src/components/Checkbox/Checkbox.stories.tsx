@@ -8,7 +8,7 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['change']
+      handles: ['onCheckboxItemChange']
     },
   },
   argTypes: {

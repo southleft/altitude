@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import './pagination';
 
 export default {
@@ -9,9 +10,10 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['change']
+      handles: ['onPaginationChange']
     }
   },
+  decorators: [withActions],
   args: {
     totalRecords: '200',
     pageSize: '20'

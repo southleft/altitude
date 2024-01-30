@@ -7,14 +7,13 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['click', 'close']
+      handles: ['click', 'onChipClose']
     },
-    themes: { default: 'dark-subtle' },
   },
   argTypes: {
     variant: {
       control: { type: 'radio' },
-      options: ['default', 'secondary', 'tertiary', 'green', 'red', 'blue', 'amber', 'purple'],
+      options: ['default', 'info', 'success', 'warning', 'danger'],
     },
     type: {
       control: { type: 'radio' },
@@ -35,28 +34,20 @@ export const Secondary: StoryObj<typeof SLChip> = { args: {
   variant: 'secondary',
 } };
 
-export const Tertiary: StoryObj<typeof SLChip> = { args: {
-  variant: 'tertiary',
+export const Info: StoryObj<typeof SLChip> = { args: {
+  variant: 'info',
 } };
 
-export const Green: StoryObj<typeof SLChip> = { args: {
-  variant: 'green',
+export const Success: StoryObj<typeof SLChip> = { args: {
+  variant: 'success',
 } };
 
-export const Red: StoryObj<typeof SLChip> = { args: {
-  variant: 'red',
+export const Warning: StoryObj<typeof SLChip> = { args: {
+  variant: 'warning',
 } };
 
-export const Blue: StoryObj<typeof SLChip> = { args: {
-  variant: 'blue',
-} };
-
-export const Amber: StoryObj<typeof SLChip> = { args: {
-  variant: 'amber',
-} };
-
-export const Purple: StoryObj<typeof SLChip> = { args: {
-  variant: 'purple',
+export const Danger: StoryObj<typeof SLChip> = { args: {
+  variant: 'danger',
 } };
 
 export const WithIcon: StoryObj<typeof SLChip> = { args: {

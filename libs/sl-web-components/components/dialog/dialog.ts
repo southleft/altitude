@@ -210,7 +210,7 @@ export class SLDialog extends SLElement {
   handleOnCloseButton() {
     this.toggleActive();
     this.dispatch({
-      eventName: 'dialogCloseButton',
+      eventName: 'onDialogCloseButton',
       detailObj: {
         active: this.isActive,
         item: this
@@ -247,7 +247,7 @@ export class SLDialog extends SLElement {
     }, 400);
     /* 3 */
     this.dispatch({
-      eventName: 'dialogOpen',
+      eventName: 'onDialogOpen',
       detailObj: {
         active: this.isActive,
         item: this
@@ -271,7 +271,7 @@ export class SLDialog extends SLElement {
     }
     /* 3 */
     this.dispatch({
-      eventName: 'dialogClose',
+      eventName: 'onDialogClose',
       detailObj: {
         active: this.isActive,
         item: this

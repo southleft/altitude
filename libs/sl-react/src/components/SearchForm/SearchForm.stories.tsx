@@ -21,7 +21,7 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['change']
+      handles: ['onSearchFormChange']
     }
   },
   args: {

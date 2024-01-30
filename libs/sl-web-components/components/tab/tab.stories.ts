@@ -2,6 +2,7 @@ import { expect } from '@storybook/jest';
 import { userEvent, within } from '@storybook/testing-library';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../icon/icons/done';
 import './tab';
 
@@ -12,12 +13,13 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['tabSelect']
+      handles: ['onTabSelect']
     },
     controls: {
       exclude: ['ariaId', 'ariaControls', 'idx', 'tabEl']
     },
   },
+  decorators: [withActions],
   argTypes: {
     isActive: {
       control: 'boolean',

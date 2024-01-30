@@ -9,7 +9,7 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['panelOpen', 'panelClose', 'panelCloseButton']
+      handles: ['onPopoverOpen', 'onPopoverClose', 'onPopoverCloseButton']
     },
     controls: {
       exclude: ['ariaLabelledBy']

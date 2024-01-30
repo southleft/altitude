@@ -522,7 +522,7 @@ export class SLCalendar extends SLElement {
    */
   handleOnChange() {
     this.dispatch({
-      eventName: 'change',
+      eventName: 'onCalendarChange',
       detailObj: {
         value: format(this.selectedDate, this.dateFormat),
         rawDate: this.selectedDate

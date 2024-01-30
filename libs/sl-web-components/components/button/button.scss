@@ -127,6 +127,35 @@
 }
 
 /**
+ * Danger button
+ */
+.sl-c-button--danger {
+  background-color: var(--sl-theme-color-background-danger-default);
+  color: var(--sl-theme-color-content-danger-weak);
+
+  /**
+   * Hide the shadow effect
+   */
+  &::after {
+    display: none;
+  }
+
+  /**
+   * Hover state
+   */
+  &:hover:not(:active, :disabled) {
+    background-color: var(--sl-theme-color-background-danger-strong);
+  }
+
+  /**
+   * Focus outline for Danger button
+   */
+  &:focus-visible {
+    --sl-theme-color-focus-ring: var(--sl-theme-color-border-danger-default);
+  }
+}
+
+/**
  * Button icon
  */
 ::slotted(.sl-c-icon) {

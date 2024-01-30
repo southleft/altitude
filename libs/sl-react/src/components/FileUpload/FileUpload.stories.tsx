@@ -4,7 +4,12 @@ import { SLFileUpload, SLIconDocument, SLButton } from '../..';
 export default {
   title: 'Boilerplate/File Upload',
   component: SLFileUpload,
-  parameters: { status: { type: 'beta' } },
+  parameters: {
+    status: { type: 'beta' },
+    actions: {
+      handles: ['onFileUploadFileRemove', 'onFileUploadFileUpload']
+    }
+  },
   args: {
     name: 'file-upload',
     label: 'File upload',

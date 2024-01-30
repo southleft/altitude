@@ -16,10 +16,10 @@ const dest_dist_iconfonts_directory_name = 'dist/iconfonts';
 const dest_tsx_directory_name = path.join(__dirname, '../../sl-react/src/components/Icons');
 
 // Templates
-const svgTsTemplate = './icons/generate-icons-templates/icon-component.svg.ts.hbs';
-const tsTemplate = './icons/generate-icons-templates/icon-component.ts.hbs';
-const tsxTemplate = './icons/generate-icons-templates/IconComponent.tsx.hbs';
-const tsxIndexTemplate = './icons/generate-icons-templates/index.tsx.hbs';
+const svgTsTemplate = './icons/templates/icon-component.svg.ts.hbs';
+const tsTemplate = './icons/templates/icon-component.ts.hbs';
+const tsxTemplate = './icons/templates/IconComponent.tsx.hbs';
+const tsxIndexTemplate = './icons/templates/index.tsx.hbs';
 
 // Main svg vars
 const filenames = fs.readdirSync(directory_name);

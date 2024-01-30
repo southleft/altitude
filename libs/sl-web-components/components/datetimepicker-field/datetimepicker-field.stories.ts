@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
+import { withActions } from '@storybook/addon-actions/decorator';
 import '../field-note/field-note';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
@@ -12,10 +13,10 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['open', 'close', 'dateChanged', 'timeChanged']
+      handles: ['onDatetimepickerFieldOpen', 'onDatetimepickerFieldClose', 'onDatetimepickerFieldDateChange', 'onDatetimepickerFieldTimeChange']
     },
-    layout: 'padded',
   },
+  decorators: [withActions],
   args: {
     label: 'Select a Date & Time',
     fieldNote: 'This is a field note.',

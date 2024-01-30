@@ -598,8 +598,8 @@
         },
         {
           "name": "variant",
-          "description": "Style variant\n- **default** renders the button used for primary actions\n- **secondary** renders the button with an outlined style\n- **tertiary** renders the button with a bare style",
-          "type": "\"secondary\" | \"tertiary\""
+          "description": "Style variant\n- **default** renders the button used for primary actions\n- **secondary** renders the button with an outlined style\n- **tertiary** renders the button with a bare style\n- **danger** renders the button used for caution actions",
+          "type": "\"danger\" | \"secondary\" | \"tertiary\""
         },
         {
           "name": "target",
@@ -677,8 +677,8 @@
         {
           "name": "variant",
           "attribute": "variant",
-          "description": "Style variant\n- **default** renders the button used for primary actions\n- **secondary** renders the button with an outlined style\n- **tertiary** renders the button with a bare style",
-          "type": "\"secondary\" | \"tertiary\""
+          "description": "Style variant\n- **default** renders the button used for primary actions\n- **secondary** renders the button with an outlined style\n- **tertiary** renders the button with a bare style\n- **danger** renders the button used for caution actions",
+          "type": "\"danger\" | \"secondary\" | \"tertiary\""
         },
         {
           "name": "target",
@@ -1389,7 +1389,7 @@
       "attributes": [
         {
           "name": "variant",
-          "description": "Variant\n- **default** A chip with a strong contrast background\n- **success** A chip with a success background\n- **danger** A chip with a danger background\n- **info** A chip with a info background\n- **warning** A chip with a warning background",
+          "description": "Variant\n- **default** A chip with a strong contrast background\n- **info** A chip with a info background\n- **success** A chip with a success background\n- **warning** A chip with a warning background\n- **danger** A chip with a danger background",
           "type": "\"success\" | \"warning\" | \"danger\" | \"info\""
         },
         {
@@ -1422,7 +1422,7 @@
         {
           "name": "variant",
           "attribute": "variant",
-          "description": "Variant\n- **default** A chip with a strong contrast background\n- **success** A chip with a success background\n- **danger** A chip with a danger background\n- **info** A chip with a info background\n- **warning** A chip with a warning background",
+          "description": "Variant\n- **default** A chip with a strong contrast background\n- **info** A chip with a info background\n- **success** A chip with a success background\n- **warning** A chip with a warning background\n- **danger** A chip with a danger background",
           "type": "\"success\" | \"warning\" | \"danger\" | \"info\""
         },
         {
@@ -5218,6 +5218,11 @@
           "type": "\"horizontal\""
         },
         {
+          "name": "checkedItem",
+          "description": "The currently checked radio in the radio list",
+          "type": "SLRadioItem"
+        },
+        {
           "name": "styleModifier",
           "attribute": "styleModifier",
           "description": "Append to the class name. Used for passing in utility classes",
@@ -6624,7 +6629,7 @@
         },
         {
           "name": "beforeEl",
-          "description": "Queries content in the 'before' slot"
+          "description": "Queries content before the text field label"
         },
         {
           "name": "styleModifier",

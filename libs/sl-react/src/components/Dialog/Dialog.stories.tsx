@@ -7,9 +7,8 @@ export default {
   component: SLDialog,
   parameters: {
     status: { type: 'beta' },
-    layout: 'padded',
     actions: {
-      handles: ['dialogOpen', 'dialogClose', 'dialogCloseButton']
+      handles: ['onDialogOpen', 'onDialogClose', 'onDialogCloseButton']
     },
     controls: {
       exclude: ['ariaLabelledBy']

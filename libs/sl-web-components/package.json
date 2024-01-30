@@ -5,15 +5,13 @@
   "packageManager": "yarn@1.22.19",
   "scripts": {
     "start": "storybook dev -p 6006",
-    "build": "del-cli dist && npm run generate-icons && webpack && tsc && npm run build:custom-elements.json",
+    "build": "del-cli dist && npm run build:icons && webpack && tsc && npm run build:custom-elements.json",
     "build-storybook": "storybook build",
     "build:tokens": "node ./styles/tokens-config.js",
+    "build:icons": "node ./icons/icons-config.js",
     "build:custom-elements.json": "wca analyze \"components/*/*.ts\" --outFile custom-elements.json",
-    "test": "test-storybook",
-    "generate-icons": "node ./icons/generate-icons.js",
-    "plop": "plop component",
-    "plop:page": "plop page",
-    "plop:recipe": "plop recipe"
+    "test": "test-storybook --coverage || true && npx nyc report --reporter=lcov -t coverage/storybook --report-dir coverage/storybook && open coverage/storybook/lcov-report/index.html",
+    "plop": "plop --plopfile plop/plop-config.js"
   },
   "files": [
     "dist"
@@ -52,6 +50,7 @@
     "@storybook/web-components-webpack5": "^7.6.7",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
+    "axe-playwright": "^1.1.11",
     "babel-loader": "^9.1.3",
     "css-loader": "^6.9.1",
     "datauri": "^4.1.0",

@@ -8,7 +8,7 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['open', 'close']
+      handles: ['onAccordionPanelOpen', 'onAccordionPanelClose']
     },
   },
   args: {

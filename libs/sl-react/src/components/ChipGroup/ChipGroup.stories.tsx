@@ -7,9 +7,8 @@ export default {
   subcomponents: { SLChip },
   parameters: {
     status: { type: 'beta' },
-    themes: { default: 'dark-subtle' },
     actions: {
-      handles: ['click', 'showChips']
+      handles: ['click', 'onChipGroupExpand']
     }
   },
   argTypes: {
@@ -20,11 +19,11 @@ export default {
   args: {
     children: (
       <>
-        <SLChip variant="green">Label</SLChip>
-        <SLChip variant="blue">Label</SLChip>
-        <SLChip variant="purple">Label</SLChip>
-        <SLChip variant="amber">Label</SLChip>
-        <SLChip variant="red">Label</SLChip>
+        <SLChip>Label</SLChip>
+        <SLChip variant="info">Label</SLChip>
+        <SLChip variant="success">Label</SLChip>
+        <SLChip variant="warning">Label</SLChip>
+        <SLChip variant="danger">Label</SLChip>
       </>
     )
   },

@@ -9,10 +9,10 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['controlButtonSelected', 'controlButtonDeselected']
+      handles: ['onToggleButtonSelect', 'onToggleButtonDeselect']
     },
     controls: {
-      exclude: ['selectedItem', 'controlButtons']
+      exclude: ['selectedItem', 'toggleButtons']
     }
   },
   argTypes: {

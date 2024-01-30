@@ -1,5 +1,5 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property, queryAssignedElements, queryAsync } from 'lit/decorators.js';
+import { property, queryAsync } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import { nanoid } from 'nanoid';
@@ -259,7 +259,7 @@ export class SLTextField extends SLElement {
 
     /* 4 */
     this.dispatch({
-      eventName: 'change',
+      eventName: 'onTextFieldChange',
       detailObj: {
         value: this.value
       }
@@ -269,7 +269,7 @@ export class SLTextField extends SLElement {
   /**
    * Set the padding-left for the input field based on the before content width
    */
-  setBeforePadding(beforeEl: HTMLElement) {      
+  setBeforePadding(beforeEl: HTMLElement) {
     let beforeWidth;
     if (this.isRequired && this.hideLabel) {
       beforeWidth = beforeEl.clientWidth + 16;
@@ -290,7 +290,7 @@ export class SLTextField extends SLElement {
     const beforeEl = await this.beforeEl;
     if (beforeEl) {
       /* 2 */
-      if (!beforeEl.clientWidth)  { 
+      if (!beforeEl.clientWidth)  {
         setTimeout(() => {
           this.setBeforePadding(beforeEl);
         }, 100)

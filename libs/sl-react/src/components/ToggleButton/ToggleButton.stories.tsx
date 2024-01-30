@@ -9,10 +9,10 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['controlButtonDeselected', 'controlButtonSelected', 'panelCloseButton']
+      handles: ['onToggleButtonDeselect', 'onToggleButtonSelect', 'onPopoverCloseButton']
     },
     controls: {
-      exclude: ['isSmall', 'slottedEls', 'controlButton', 'controlButtonContent', 'hasPanel']
+      exclude: ['isSmall', 'slottedEls', 'toggleButton', 'toggleButtonContent', 'hasPanel']
     }
   },
   argTypes: {
