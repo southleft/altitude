@@ -6,12 +6,12 @@ headStyleElement.innerHTML = headStyles;
 document.head.appendChild(headStyleElement);
 
 // Creating a style element for iconFontCSS and appending it to the document head
-// import iconFontCSS from 'sl-web-components/components/icon/fonts/iconfont.css';
-// const iconFontStyleElement = document.createElement('style');
-// iconFontStyleElement.setAttribute('type', 'text/css');
-// iconFontStyleElement.setAttribute('id', 'iconfont-style');
-// iconFontStyleElement.innerHTML = iconFontCSS;
-// document.head.appendChild(iconFontStyleElement);
+import iconFontCSS from '../../sl-web-components/components/icon/fonts/iconfont.css';
+const iconFontStyleElement = document.createElement('style');
+iconFontStyleElement.setAttribute('type', 'text/css');
+iconFontStyleElement.setAttribute('id', 'iconfont-style');
+iconFontStyleElement.innerHTML = iconFontCSS;
+document.head.appendChild(iconFontStyleElement);
 
 export const excludeRegexArray = [
   '^children$',

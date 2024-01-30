@@ -15,7 +15,7 @@ const config: StorybookConfig = {
     "@etchteam/storybook-addon-status"
 
   ],
-  staticDirs: ['static'],
+  staticDirs: ['./static'],
   docs: {
     autodocs: true
   },
