@@ -10,7 +10,6 @@ export default {
     actions: {
       handles: ['onDatepickerFieldOpen', 'onDatepickerFieldClose', 'onDatepickerFieldChange']
     },
-    layout: 'padded',
   },
   args: {
     label: 'Select a Date',

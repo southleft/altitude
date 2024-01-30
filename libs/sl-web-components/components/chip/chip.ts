@@ -29,10 +29,10 @@ export class SLChip extends SLElement {
   /**
    * Variant
    * - **default** A chip with a strong contrast background
-   * - **success** A chip with a success background
-   * - **danger** A chip with a danger background
    * - **info** A chip with a info background
+   * - **success** A chip with a success background
    * - **warning** A chip with a warning background
+   * - **danger** A chip with a danger background
    */
   @property()
   accessor variant: 'success' | 'danger' | 'info' | 'warning';

@@ -9,7 +9,6 @@ export default {
   tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
-    layout: 'padded',
     actions: {
       handles: ['onSliderDrag', 'onSliderOutputValueChange']
     }

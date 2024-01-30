@@ -7,7 +7,6 @@ export default {
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',
-    themes: { default: 'dark-subtle' },
   },
   argTypes: {
     variant: {

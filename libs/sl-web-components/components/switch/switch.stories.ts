@@ -75,7 +75,7 @@ Default.play = async ({ canvasElement }) => {
   expect(checkbox).toBeInTheDocument();
 
   // Simulate a keyboard event (pressing Enter key)
-  await userEvent.type(checkbox, '{enter}');
+  await userEvent.type(checkbox, '{Enter}');
 
   // Validate that the checkbox is checked
   expect(checkbox.checked).toBe(true);

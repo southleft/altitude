@@ -15,7 +15,6 @@ export default {
     actions: {
       handles: ['onDatetimepickerFieldOpen', 'onDatetimepickerFieldClose', 'onDatetimepickerFieldDateChange', 'onDatetimepickerFieldTimeChange']
     },
-    layout: 'padded',
   },
   decorators: [withActions],
   args: {

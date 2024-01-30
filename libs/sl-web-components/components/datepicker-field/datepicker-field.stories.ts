@@ -15,7 +15,6 @@ export default {
     actions: {
       handles: ['onDatepickerFieldOpen', 'onDatepickerFieldClose', 'onDatepickerFieldChange']
     },
-    layout: 'padded',
   },
   decorators: [withActions],
   args: {

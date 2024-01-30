@@ -13,7 +13,6 @@ export default {
     actions: {
       handles: ['onProgressChange' ]
     },
-    layout: 'padded'
   },
   decorators: [withActions],
   argTypes: {

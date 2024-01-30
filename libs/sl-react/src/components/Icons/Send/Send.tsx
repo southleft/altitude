@@ -1,4 +1,4 @@
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import { SLIconSend as SLWebIconSend } from 'sl-web-components/dist/components/icon/icons/send';
 import register from 'sl-web-components/dist/directives/register';
 import React from 'react';

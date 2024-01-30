@@ -10,7 +10,6 @@ export default {
     actions: {
       handles: ['onDatetimepickerFieldOpen', 'onDatetimepickerFieldClose', 'onDatetimepickerFieldDateChange', 'onDatetimepickerFieldTimeChange']
     },
-    layout: 'padded',
   },
   args: {
     label: 'Select a Date & Time',

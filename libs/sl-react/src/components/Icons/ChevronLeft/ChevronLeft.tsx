@@ -1,4 +1,4 @@
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import { SLIconChevronLeft as SLWebIconChevronLeft } from 'sl-web-components/dist/components/icon/icons/chevron-left';
 import register from 'sl-web-components/dist/directives/register';
 import React from 'react';

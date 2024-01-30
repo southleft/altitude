@@ -161,7 +161,7 @@ Default.play = async ({ canvasElement }) => {
   expect(alertEl).toHaveClass('sl-is-expanded');
 
   // Simulate a keyboard event (pressing Escape key)
-  await userEvent.type(alertEl, '{escape}');
+  await userEvent.type(alertEl, '{Escape}');
   //expect(alertEl).not.toHaveClass('sl-is-expanded');
 
   // Simulate a keyboard event (pressing Enter key)

@@ -9,7 +9,6 @@ export default {
     actions: {
       handles: ['onProgressChange']
     },
-    layout: 'padded'
   },
   argTypes: {
     isDarkContrast: {

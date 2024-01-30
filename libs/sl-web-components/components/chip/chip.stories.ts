@@ -4,6 +4,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
 import './chip';
+import '../icon/icons/emoji';
 
 export default {
   title: 'Components/Chip',
@@ -19,7 +20,7 @@ export default {
   argTypes: {
     variant: {
       control: { type: 'radio' },
-      options: ['default', 'success', 'danger', 'info', 'warning'],
+      options: ['default', 'info', 'success', 'warning', 'danger'],
     },
     type: {
       control: { type: 'radio' },
@@ -36,24 +37,24 @@ const Template = (args) => html`<sl-chip ${spread(args)}>Label</sl-chip>`;
 export const Default = Template.bind({});
 Default.args = {};
 
-export const Success = Template.bind({});
-Success.args = {
-  variant: 'success'
-};
-
-export const Danger = Template.bind({});
-Danger.args = {
-  variant: 'danger'
-};
-
 export const Info = Template.bind({});
 Info.args = {
   variant: 'info'
 };
 
+export const Success = Template.bind({});
+Success.args = {
+  variant: 'success'
+};
+
 export const Warning = Template.bind({});
 Warning.args = {
   variant: 'warning'
+};
+
+export const Danger = Template.bind({});
+Danger.args = {
+  variant: 'danger'
 };
 
 const TemplateIcon = (args) => html`<sl-chip ${spread(args)} data-testid="chip"><sl-icon-emoji></sl-icon-emoji>Label</sl-chip>`;
@@ -97,7 +98,7 @@ WithIconDismissible.play = async ({ canvasElement }) => {
   chip.isDismissed = true;
 
   // Simulate a keyboard event (pressing Escape key)
-  await userEvent.type(chip, '{escape}');
+  await userEvent.type(chip, '{Escape}');
   expect(chip.isDismissed).toBe(true);
 
   // Set the chip to active

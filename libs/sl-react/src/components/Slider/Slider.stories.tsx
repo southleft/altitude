@@ -6,11 +6,9 @@ export default {
   component: SLSlider,
   parameters: {
     status: { type: 'beta' },
-    layout: 'padded',
     actions: {
       handles: ['onSliderDrag', 'onSliderOutputValueChange']
     },
-    themes: { default: 'dark-subtle' }
   },
   args: {
     label: 'Label',

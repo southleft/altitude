@@ -10,7 +10,6 @@ export default {
     actions: {
       handles: ['onSwitchChange']
     },
-    themes: { default: 'dark-subtle' },
   },
   argTypes: {
     label: {
