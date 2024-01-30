@@ -8,7 +8,7 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['changed']
+      handles: ['onSwitchChange']
     },
     themes: { default: 'dark-subtle' },
   },

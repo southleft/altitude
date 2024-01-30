@@ -8,7 +8,7 @@ export default {
     status: { type: 'beta' },
     layout: 'padded',
     actions: {
-      handles: ['slide', 'outputValueChange']
+      handles: ['onSliderDrag', 'onSliderOutputValueChange']
     },
     themes: { default: 'dark-subtle' }
   },

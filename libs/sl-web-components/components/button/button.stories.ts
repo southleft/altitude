@@ -26,7 +26,7 @@ export default {
       control: { type: 'radio' }
     },
     variant: {
-      options: ['default', 'secondary', 'tertiary'],
+      options: ['default', 'secondary', 'tertiary', 'danger'],
       control: { type: 'radio' }
     },
     target: {
@@ -161,6 +161,33 @@ TertiaryIconAfter.args = {
 export const TertiaryDisabled = Template.bind({});
 TertiaryDisabled.args = {
   variant: 'tertiary',
+  isDisabled: true
+};
+
+export const Danger = Template.bind({});
+Danger.args = {
+  variant: 'danger'
+};
+
+export const DangerIcon = TemplateIconBefore.bind({});
+DangerIcon.args = {
+  hideText: true,
+  variant: 'danger'
+};
+
+export const DangerIconBefore = TemplateIconBefore.bind({});
+DangerIconBefore.args = {
+  variant: 'danger'
+};
+
+export const DangerIconAfter = TemplateIconAfter.bind({});
+DangerIconAfter.args = {
+  variant: 'danger'
+};
+
+export const DangerDisabled = Template.bind({});
+DangerDisabled.args = {
+  variant: 'danger',
   isDisabled: true
 };
 

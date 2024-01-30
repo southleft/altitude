@@ -7,7 +7,7 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['tabSelect']
+      handles: ['onTabSelect']
     },
     controls: {
       exclude: ['ariaId', 'ariaControls', 'idx', 'tabEl']

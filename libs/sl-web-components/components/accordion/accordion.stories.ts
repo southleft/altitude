@@ -11,7 +11,7 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['onAccordionOpen', 'onAccordionClose']
+      handles: ['onAccordionPanelOpen', 'onAccordionPanelClose']
     },
   },
   decorators: [withActions],

@@ -9,7 +9,7 @@ export default {
     status: { type: 'beta' },
     layout: 'padded',
     actions: {
-      handles: ['dialogOpen', 'dialogClose', 'dialogCloseButton']
+      handles: ['onDialogOpen', 'onDialogClose', 'onDialogCloseButton']
     },
     controls: {
       exclude: ['ariaLabelledBy']

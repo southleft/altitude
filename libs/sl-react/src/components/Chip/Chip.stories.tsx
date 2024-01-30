@@ -7,7 +7,7 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['click', 'close']
+      handles: ['click', 'onChipClose']
     },
     themes: { default: 'dark-subtle' },
   },

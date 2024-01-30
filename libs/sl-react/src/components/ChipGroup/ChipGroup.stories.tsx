@@ -9,7 +9,7 @@ export default {
     status: { type: 'beta' },
     themes: { default: 'dark-subtle' },
     actions: {
-      handles: ['click', 'showChips']
+      handles: ['click', 'onChipGroupExpand']
     }
   },
   argTypes: {

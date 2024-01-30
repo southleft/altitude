@@ -7,7 +7,7 @@ export default {
   parameters: {
     status: 'beta',
     actions: {
-      handles: ['click', 'keydown', 'close', 'expanded']
+      handles: ['keydown', 'onAlertOpen', 'onAlertClose', 'onAlertExpand', 'onAlertCollapse']
     },
     controls: {
       exclude: ['hasPanel', 'ariaControls', 'ariaLabelledBy']

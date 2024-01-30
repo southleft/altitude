@@ -8,7 +8,7 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['focus', 'keydown', 'open', 'close'],
+      handles: ['onMenuOpen', 'onMenuClose', 'onMenuItemExpand', 'onMenuItemSelect'],
     },
     controls: {
       exclude: [

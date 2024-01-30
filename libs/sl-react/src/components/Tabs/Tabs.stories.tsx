@@ -8,7 +8,7 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['tabSelect', 'tabChange']
+      handles: ['onTabsChange']
     },
     controls: {
       exclude: ['activeTab', 'isScrollable', 'tabsList', 'tabPanels', 'tabItems', 'isLTR', 'handleOnScroll', 'handleOnResize']

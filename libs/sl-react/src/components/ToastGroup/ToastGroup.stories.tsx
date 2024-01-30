@@ -8,7 +8,7 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['open', 'close', 'next', 'prev', 'toastClose']
+      handles: ['onToastGroupOpen', 'onToastGroupClose', 'onToastGroupPrevious', 'onToastGroupNext', 'onToastClose']
     },
     controls: {
       exclude: ['activeToastIdx', 'prevActiveIdx', 'toasts', 'toastsVisible', 'controlPrev', 'controlNext']

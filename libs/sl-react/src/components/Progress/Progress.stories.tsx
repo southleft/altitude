@@ -7,7 +7,7 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['progressChange']
+      handles: ['onProgressChange']
     },
     layout: 'padded'
   },
