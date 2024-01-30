@@ -310,7 +310,7 @@ export class SLTooltip extends SLElement {
             <slot name="trigger"></slot>
           </div>
         `}
-        <div class="sl-c-tooltip__container" tabindex="-1" role="tooltip" id=${this.ariaDescribedBy} aria-hidden=${this.isActive ? false : true}>
+        <div class="sl-c-tooltip__container" tabindex="-1" role="tooltip" id=${this.ariaDescribedBy} aria-hidden=${this.isActive ? false : true} style=${this.isActive ? "" : "display: none"}>
           ${this.slotNotEmpty('prefix') &&
           html`
             <div class="sl-c-tooltip__prefix">
