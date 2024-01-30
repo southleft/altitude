@@ -6,6 +6,7 @@ import '../icon/icons/warning-circle';
 import '../list-item/list-item';
 import '../list/list';
 import './dropdown';
+import '../dropdown-panel/dropdown-panel';
 
 const dataSource = [
   { label: 'List item 1', value: 'List item 1' },

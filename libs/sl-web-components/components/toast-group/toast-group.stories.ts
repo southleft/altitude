@@ -7,6 +7,7 @@ import '../button/button';
 import '../icon/icons/done';
 import '../toast/toast';
 import './toast-group';
+import '../progress/progress';
 
 export default {
   title: 'Components/Toast Group',
