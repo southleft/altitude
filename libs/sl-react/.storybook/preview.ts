@@ -1,3 +1,4 @@
+import type { Preview } from '@storybook/react-webpack5';
 
 // Creating a style element for headStyles and appending it to the document head
 import headStyles from 'sl-web-components/styles/head.scss';
@@ -38,7 +39,7 @@ export const excludeRegexArray = [
   '^_.*'
 ];
 
-export const parameters = {
+const preview: Preview = {
   parameters: {
     actions: { argTypesRegex: '^on.*' },
     controls: {
@@ -56,3 +57,5 @@ export const parameters = {
     }
   }
 };
+
+export default preview;

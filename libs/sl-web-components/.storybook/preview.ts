@@ -22,11 +22,36 @@ iconFontStyleElement.setAttribute('id', 'iconfont-style');
 iconFontStyleElement.innerHTML = iconFontCSS;
 document.head.appendChild(iconFontStyleElement);
 
+export const excludeRegexArray = [
+  '^children$',
+  '^render$',
+  '^firstUpdated$',
+  '^componentClassNames$',
+  '^slotEmpty$',
+  '^slotNotEmpty$',
+  '^dispatch$',
+  '^renderOptions$',
+  '^connectedCallback$',
+  '^disconnectedCallback$',
+  '^renderRoot$',
+  '^isUpdatePending$',
+  '^hasUpdated$',
+  '^updated$',
+  '^addController$',
+  '^removeController$',
+  '^attributeChangedCallback$',
+  '^requestUpdate$',
+  '^updateComplete$',
+  '^on[A-Z].*',
+  '^handle[A-Z].*',
+  '^_.*'
+];
+
 const preview: Preview = {
   parameters: {
     actions: { argTypesRegex: '^on.*' },
     controls: {
-      expanded: true,
+      exclude: new RegExp(excludeRegexArray.join('|')),
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/i
