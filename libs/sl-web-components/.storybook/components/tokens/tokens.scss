@@ -16,13 +16,15 @@ header {
 }
 
 h1 {
-  @include sl-theme-typography-display-lg-bold;
+  //@include sl-theme-typography-display-lg-bold;
   padding-bottom: var(--sl-theme-space);
-  border-bottom: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default-weak);
+  border-bottom: var(--sl-theme-border-width) solid var(--sl-theme-color-border-inverse-default);
 }
 
 caption {
-  @include sl-theme-typography-heading-lg-bold;
+  //@include sl-theme-typography-heading-lg-bold;
+  font-size: larger;
+  font-weight: bold;
   padding-bottom: var(--sl-theme-space);
   text-align: left;
 }
@@ -30,14 +32,15 @@ caption {
 table {
   width: 100%;
   border-collapse: collapse;
-  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default-weak);
+  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-inverse-default);
 }
 
 th {
-  @include sl-theme-typography-body-lg-bold;
+  //@include sl-theme-typography-body-lg-bold;
+  font-weight: bodl;
   text-align: left;
   vertical-align: middle;
   padding: var(--sl-theme-space);
-  border-top: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default-weak);
-  border-left: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default-weak);
+  border-top: var(--sl-theme-border-width) solid var(--sl-theme-color-border-inverse-default);
+  border-left: var(--sl-theme-border-width) solid var(--sl-theme-color-border-inverse-default);
 }

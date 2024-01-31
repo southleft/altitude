@@ -3,7 +3,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
 import './chip';
-import '../icon/icons/emoji';
+import '../icon/icons/warning-triangle';
 
 export default {
   title: 'Atoms/Chip',
@@ -56,7 +56,7 @@ Danger.args = {
   variant: 'danger'
 };
 
-const TemplateIcon = (args) => html`<sl-chip ${spread(args)} data-testid="chip"><sl-icon-emoji></sl-icon-emoji>Label</sl-chip>`;
+const TemplateIcon = (args) => html`<sl-chip ${spread(args)} data-testid="chip"><sl-icon-warning-triangle></sl-icon-warning-triangle>Label</sl-chip>`;
 
 export const WithIcon = TemplateIcon.bind({});
 WithIcon.args = {};

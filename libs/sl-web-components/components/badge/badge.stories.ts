@@ -29,25 +29,11 @@ export default {
 
 const Template = (args) => html`<sl-badge ${spread(args)}>0</sl-badge>`;
 
-const TemplateWithIcon = (args) => html`
-  <sl-badge ${spread(args)}>
-    <sl-icon-emoji></sl-icon-emoji>
-  </sl-badge>
-`;
-
 export const Default = Template.bind({});
 Default.args = {};
 
-export const DefaultWithIcon = TemplateWithIcon.bind({});
-DefaultWithIcon.args = {};
-
 export const DefaultSuccess = Template.bind({});
 DefaultSuccess.args = {
-  variant: 'success'
-};
-
-export const DefaultSuccessWithIcon = TemplateWithIcon.bind({});
-DefaultSuccessWithIcon.args = {
   variant: 'success'
 };
 
@@ -56,18 +42,8 @@ DefaultWarning.args = {
   variant: 'warning'
 };
 
-export const DefaultWarningWithIcon = TemplateWithIcon.bind({});
-DefaultWarningWithIcon.args = {
-  variant: 'warning'
-};
-
 export const DefaultDanger = Template.bind({});
 DefaultDanger.args = {
-  variant: 'danger'
-};
-
-export const DefaultDangerWithIcon = TemplateWithIcon.bind({});
-DefaultDangerWithIcon.args = {
   variant: 'danger'
 };
 

@@ -153,7 +153,7 @@ Each SL Web Components component is documented in Storybook, which surfaces each
 1. To create a component, run `npm run plop` in the command line.
 2. The command will ask, "What is your component name?" Add your component name (you can either type `link-list` or `link list` and it will automatically generate the proper casing).
 3. In `packages/web-components/components/[component]/[component].stories.ts`, change `title: 'Molecules/Category/[ComponentName]'` to the location in the Storybook navigation where you want your component to live. For instance, `PageHeader` component you would change `title: 'Molecules/Category/PageHeader'` to `title: 'Molecules/Text/PageHeader'`.
-4. Edit component source code in accordance with [SL Web Components's code guidelines](./CODE_GUIDELINES.md)
+4. Edit component source code in accordance with [SL Web Components's code guidelines](./CODE_GUIDELINES.mdx)
 5. Create relevant stories for all component variants
 
 ---
@@ -186,7 +186,7 @@ Recipes
 ----Component Stories
 ```
 
-Recipe components should _not_ include the `.sl-` CSS prefix, since they are not part of the design system (so a recipe could look like `.c-recipe-name`). However, the other design system [code conventions](./CODE_GUIDELINES.md) should be followed in order to make refactoring into the design system as easy as possible.
+Recipe components should _not_ include the `.sl-` CSS prefix, since they are not part of the design system (so a recipe could look like `.c-recipe-name`). However, the other design system [code conventions](./CODE_GUIDELINES.mdx) should be followed in order to make refactoring into the design system as easy as possible.
 
 ---
 

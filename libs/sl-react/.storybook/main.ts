@@ -2,7 +2,7 @@ import type { StorybookConfig } from '@storybook/react-webpack5';
 
 const config: StorybookConfig = {
   framework: {
-    name: "@storybook/react-webpack5",
+    name: '@storybook/react-webpack5',
     options: {},
   },
   stories: [
@@ -11,9 +11,9 @@ const config: StorybookConfig = {
   ],
   addons: [
     '@storybook/addon-essentials',
-    "@storybook/addon-a11y",
-    "@etchteam/storybook-addon-status"
-
+    '@storybook/addon-a11y',
+    '@etchteam/storybook-addon-status',
+    'storybook-addon-themes'
   ],
   staticDirs: ['./static'],
   docs: {

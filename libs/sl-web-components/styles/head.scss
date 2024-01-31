@@ -1,6 +1,35 @@
 @import './tokens';
 @import './core/base';
+@import './core/breakpoints';
+@import './core/typography';
 
-.docs-story {
-  background-color: var(--sl-theme-color-background-default);
+body.theme-light {
+  color: var(--sl-theme-color-content-inverse-default);
+  background: var(--sl-theme-color-background-inverse-default);
 }
+
+// .sb-show-main {
+//   h1 {
+//     @include sl-theme-typography-display-lg-bold;
+//   }
+
+//   h2 {
+//     @include sl-theme-typography-display-md-bold;
+//   }
+
+//   h3 {
+//     @include sl-theme-typography-display-sm-bold;
+//   }
+
+//   h4 {
+//     @include sl-theme-typography-heading-lg-bold;
+//   }
+
+//   h5 {
+//     @include sl-theme-typography-heading-md-bold;
+//   }
+
+//   h6 {
+//     @include sl-theme-typography-heading-sm-bold;
+//   }
+// }

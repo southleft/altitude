@@ -24,6 +24,8 @@
   background-color: var(--sl-theme-color-background-accent-default);
   color: var(--sl-theme-color-content-accent-stronger);
   width: var(--sl-button-width, auto);
+  --sl-icon-height: #{var(--sl-theme-icon-lg)};
+  --sl-icon-width: #{var(--sl-theme-icon-lg)};
 
   /**
    * Hover state
@@ -95,14 +97,6 @@
   &:hover:not(:active, :disabled) {
     background-color: var(--sl-theme-color-background-danger-strong);
   }
-}
-
-/**
- * Button icon
- */
-::slotted(.sl-c-icon) {
-  --sl-icon-height: #{var(--sl-theme-icon-lg)};
-  --sl-icon-width: #{var(--sl-theme-icon-lg)};
 }
 
 /**

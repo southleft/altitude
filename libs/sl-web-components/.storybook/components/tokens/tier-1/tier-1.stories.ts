@@ -15,16 +15,10 @@ export default {
   title: 'Fundamentals/Tokens/Tier 1: Definitions',
   component: 'tier-1-tokens',
   parameters: {
-    docs: {
-      disable: true
+    themes: {
+      default: 'light',
     },
-    viewMode: 'story',
-    previewTabs: {
-      'storybook/docs/panel': {
-        hidden: true
-      }
-    }
-  }
+  },
 };
 
 export const Animation = (args, context) => html`<tier-1-animation theme=${context.globals.theme}></tier-1-animation>`;
