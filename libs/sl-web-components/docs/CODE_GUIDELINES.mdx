@@ -308,8 +308,8 @@ One exception to this is `icon` properties. Icon properties should be set at the
 .sl-c-icon {
   display: block;
   fill: var(--sl-icon-fill, currentColor);
-  height: var(--sl-icon-height, size(2));
-  width: var(--sl-icon-width, size(2));
+  height: var(--sl-icon-height, var(--sl-theme-icon));
+  width: var(--sl-icon-width, var(--sl-theme-icon));
 }
 ```
 

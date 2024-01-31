@@ -31,7 +31,7 @@ export class SLIcon extends SLElement {
    * - **xxxl** renders a larger size than the lg variant (40px)
    */
   @property()
-  accessor size: 'md' | 'lg' | 'xl';
+  accessor size: 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl';
 
   render() {
     const componentClassName = this.componentClassNames('sl-c-icon', {
