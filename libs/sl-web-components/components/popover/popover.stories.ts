@@ -172,7 +172,7 @@ WithSlottedContent.play = async ({ canvasElement }) => {
   await waitFor(() => expect(popoverContainer).toBeVisible(), {
     timeout: 400, // A long timeout to make sure it doesn't close
   });
-  await userEvent.type(popoverContainer, '{Escape}');
+  await userEvent.type(popoverCloseButton, '{Escape}');
   expect(popover.isActive).toBe(false);
 
   popoverTrigger.focus();

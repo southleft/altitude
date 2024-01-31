@@ -2,6 +2,7 @@ import { html, unsafeCSS } from 'lit';
 import { property, query, queryAssignedElements } from 'lit/decorators.js';
 import { nanoid } from 'nanoid';
 import { SLElement } from '../SLElement';
+import '@a11y/focus-trap';
 import styles from './contextual-menu.scss';
 
 /**
@@ -63,16 +64,16 @@ export class SLContextualMenu extends SLElement {
   accessor ariaLabelledBy: string;
 
   /**
-   * Query the contextual menucontainer
-   */
-  @query('.sl-c-contextual-menu__container')
-  accessor contextualMenuContainer: HTMLElement;
-
-  /**
    * Query the contextual menutrigger
    */
   @queryAssignedElements({ slot: 'trigger' })
   accessor contextualMenuTrigger: any[];
+
+  /**
+   * Query the list component in the menu's default slot
+   */
+  @queryAssignedElements()
+  accessor menuList: any[];
 
   /**
    * Query the contextual menutrigger inner element
@@ -207,7 +208,13 @@ export class SLContextualMenu extends SLElement {
   public open() {
     this.isActive = true; /* 1 */
     setTimeout(() => {
-      this.contextualMenuContainer.focus(); /* 2 */
+      const menuListItems = this.menuList && this.menuList[0] && this.menuList[0].listItems;
+      const firstValidListItem = menuListItems.find((item: SLListItem) => !item.isDisabled && !item.isError);
+      const firstFocusableEl = firstValidListItem && firstValidListItem.shadowRoot.querySelector('button, a');
+
+      if (firstFocusableEl) {
+        firstFocusableEl.focus();
+      }
     }, 400);
     /* 3 */
     this.dispatch({
@@ -261,18 +268,19 @@ export class SLContextualMenu extends SLElement {
             <slot name="trigger"></slot>
           </div>
         `}
-        <div
-          class="sl-c-contextual-menu__container"
-          tabindex=${this.isActive ? '0' : '-1'}
-          role="region"
-          aria-labelledby=${this.ariaLabelledBy}
-          aria-hidden=${this.isActive ? false : true}
-          @keydown=${this.handleOnKeydown}
-        >
-          <div class="sl-c-contextual-menu__body">
-            <slot></slot>
+        <focus-trap>
+          <div
+            class="sl-c-contextual-menu__container"
+            role="region"
+            aria-labelledby=${this.ariaLabelledBy}
+            aria-hidden=${this.isActive ? false : true}
+            @keydown=${this.handleOnKeydown}
+          >
+            <div class="sl-c-contextual-menu__body">
+              <slot></slot>
+            </div>
           </div>
-        </div>
+        </focus-trap>
       </div>
     `;
   }

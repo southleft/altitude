@@ -1,5 +1,5 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property, query, queryAssignedElements } from 'lit/decorators.js';
+import { property, query, queryAsync, queryAssignedElements } from 'lit/decorators.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import { nanoid } from 'nanoid';
 import register from '../../directives/register';
@@ -8,6 +8,7 @@ import { SLElement } from '../SLElement';
 import { SLButton } from '../button/button';
 import { SLHeading } from '../heading/heading';
 import { SLIconClose } from '../icon/icons/close';
+import '@a11y/focus-trap';
 import styles from './dialog.scss';
 
 /**
@@ -87,6 +88,18 @@ export class SLDialog extends SLElement {
    */
   @query('.sl-c-dialog__container')
   accessor dialogContainer: HTMLElement;
+
+  /**
+   * Query the dialog heading
+   */
+  @queryAsync('.sl-c-dialog__title > sl-heading')
+  accessor dialogHeading: HTMLElement;
+
+  /**
+   * Query the dialog close button
+   */
+  @queryAsync('.sl-c-dialog__close-button')
+  accessor closeButton: HTMLElement;
 
   /**
    * Query the dialog trigger
@@ -237,13 +250,22 @@ export class SLDialog extends SLElement {
   /**
    * Open dialog
    * 1. Set isActive to true to show the dialog
-   * 2. Focus on the dialog container once opened. Timeout is equal to the css transition timing
+   * 2. Focus on the dialog's first focusable element when opened. Timeout is equal to the css transition timing
+   * - The first focusable element defaults to the dialog heading, but if a heading is not present, it defaults to the close button.
    * 3. Dispatch a custom event on open
    */
   public open() {
     this.isActive = true; /* 1 */
-    setTimeout(() => {
-      this.dialogContainer.focus(); /* 2 */
+    /* 2 */
+     setTimeout(async () => {
+      let firstFocusableEl = await this.dialogHeading;
+
+      if (!firstFocusableEl) {
+        const closeButton = await this.closeButton;
+        firstFocusableEl = closeButton.shadowRoot.querySelector('button');
+      }
+
+      firstFocusableEl.focus();
     }, 400);
     /* 3 */
     this.dispatch({
@@ -295,43 +317,44 @@ export class SLDialog extends SLElement {
             </div>
           `
         }
-        <div
-          class="sl-c-dialog__container"
-          tabindex=${this.isActive ? '0' : '-1'}
-          role="dialog"
-          aria-labelledby=${this.ariaLabelledBy}
-          aria-hidden=${this.isActive ? false : true}
-        >
-          <div class="sl-c-dialog__header">
+        <focus-trap>
+          <div
+            class="sl-c-dialog__container"
+            role="dialog"
+            aria-labelledby=${this.ariaLabelledBy}
+            aria-hidden=${this.isActive ? false : true}
+          >
+            <div class="sl-c-dialog__header">
+              ${
+                (this.slotNotEmpty('header') || this.heading) &&
+                html`
+                  <div class="sl-c-dialog__title" id=${this.ariaLabelledBy}>
+                    ${this.heading &&
+                    html`
+                    <${this.headingEl} tagName="h1" tabindex="0">${this.heading}</${this.headingEl}>
+                  `}
+                    <slot name="header"></slot>
+                  </div>
+                `
+              }
+              <${this.buttonEl} class="sl-c-dialog__close-button" variant="tertiary" ?hideText=${true} @click=${this.handleOnCloseButton}>
+                Close
+                <${this.iconCloseEl} class="sl-c-dialog__icon-close" slot="after"></${this.iconCloseEl}>
+              </${this.buttonEl}>
+            </div>
+            <div class="sl-c-dialog__body">
+              <slot></slot>
+            </div>
             ${
-              (this.slotNotEmpty('header') || this.heading) &&
+              this.slotNotEmpty('footer') &&
               html`
-                <div class="sl-c-dialog__title" id=${this.ariaLabelledBy}>
-                  ${this.heading &&
-                  html`
-                  <${this.headingEl} tagName="h3">${this.heading}</${this.headingEl}>
-                `}
-                  <slot name="header"></slot>
+                <div class="sl-c-dialog__footer">
+                  <slot name="footer"></slot>
                 </div>
               `
             }
-            <${this.buttonEl} class="sl-c-dialog__close-button" variant="tertiary" ?hideText=${true} @click=${this.handleOnCloseButton}>
-              Close
-              <${this.iconCloseEl} class="sl-c-dialog__icon-close" slot="after"></${this.iconCloseEl}>
-            </${this.buttonEl}>
           </div>
-          <div class="sl-c-dialog__body">
-            <slot></slot>
-          </div>
-          ${
-            this.slotNotEmpty('footer') &&
-            html`
-              <div class="sl-c-dialog__footer">
-                <slot name="footer"></slot>
-              </div>
-            `
-          }
-        </div>
+        </focus-trap>
       </div>
     ` as TemplateResult<1>;
   }

@@ -129,9 +129,11 @@ export class SLTabs extends SLElement {
       tab.ariaControls = tabPanelAriaId;
       /* 5 */
       const tabPanel = this.tabPanels[index];
-      tabPanel.idx = index;
-      tabPanel.ariaLabelledBy = tabAriaId;
-      tabPanel.ariaId = tabPanelAriaId;
+      if (tabPanel) {
+        tabPanel.idx = index;
+        tabPanel.ariaLabelledBy = tabAriaId;
+        tabPanel.ariaId = tabPanelAriaId;
+      }
     });
   }
 
@@ -180,9 +182,13 @@ export class SLTabs extends SLElement {
    * 2. Find and mark the active tab panel as active based on the tab's index
    */
   setActiveTab() {
-    this.activeTab.isActive = true;
+    if (this.activeTab) {
+      this.activeTab.isActive = true;
+    }
     const activePanel = this.tabPanels.find((tabPanel) => tabPanel.idx === this.activeIndex);
-    activePanel.isActive = true;
+    if (activePanel) {
+      activePanel.isActive = true;
+    }
   }
 
   /**
@@ -193,7 +199,9 @@ export class SLTabs extends SLElement {
   setInactiveTab() {
     this.activeTab.isActive = false;
     const activePanel = this.tabPanels.find((tabPanel) => tabPanel.idx === this.activeIndex);
-    activePanel.isActive = false;
+    if (activePanel) {
+      activePanel.isActive = false;
+    }
   }
 
   /**
