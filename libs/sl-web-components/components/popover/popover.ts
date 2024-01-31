@@ -1,5 +1,5 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property, query, queryAssignedElements } from 'lit/decorators.js';
+import { property, query, queryAsync, queryAssignedElements } from 'lit/decorators.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import { nanoid } from 'nanoid';
 import register from '../../directives/register';
@@ -8,6 +8,7 @@ import { SLElement } from '../SLElement';
 import { SLButton } from '../button/button';
 import { SLHeading } from '../heading/heading';
 import { SLIconClose } from '../icon/icons/close';
+import '@a11y/focus-trap';
 import styles from './popover.scss';
 
 /**
@@ -95,11 +96,17 @@ export class SLPopover extends SLElement {
   @property()
   accessor ariaLabelledBy: string;
 
-  /**
-   * Query the popover container
+   /**
+   * Query the popover heading
    */
-  @query('.sl-c-popover__container')
-  accessor popoverContainer: HTMLElement;
+   @queryAsync('.sl-c-popover__title > sl-heading')
+   accessor popoverHeading: HTMLElement;
+ 
+   /**
+    * Query the popover close button
+    */
+   @queryAsync('.sl-c-popover__close-button')
+   accessor closeButton: HTMLElement;
 
   /**
    * Query the popover trigger
@@ -245,13 +252,22 @@ export class SLPopover extends SLElement {
   /**
    * Open popover
    * 1. Set isActive to true to show the popover
-   * 2. Focus on the popover container once opened. Timeout is equal to the css transition timing
+   * 2. Focus on the popover's first focusable element when opened. Timeout is equal to the css transition timing
+   * - The first focusable element defaults to the popover heading, but if a heading is not present, it defaults to the close button.
    * 3. Dispatch a custom event on open
    */
   public open() {
     this.isActive = true; /* 1 */
     setTimeout(() => {
-      this.popoverContainer.focus(); /* 2 */
+      setTimeout(async () => {
+        let firstFocusableEl = await this.popoverHeading;
+        if (!firstFocusableEl) {
+          const closeButton = await this.closeButton;
+          firstFocusableEl = closeButton.shadowRoot.querySelector('button');
+        }
+  
+        firstFocusableEl.focus();
+      }, 400);
     }, 400);
     /* 3 */
     this.dispatch({
@@ -308,45 +324,46 @@ export class SLPopover extends SLElement {
             <slot name="trigger"></slot>
           </div>
         `}
-        <div
-          class="sl-c-popover__container"
-          tabindex=${this.isActive ? '0' : '-1'}
-          role="region"
-          aria-labelledby=${this.ariaLabelledBy}
-          aria-hidden=${this.isActive ? false : true}
-        >
-          ${(this.slotNotEmpty('header') || this.heading || this.isDismissible) &&
-          html`
-            <div class="sl-c-popover__header">
-              ${(this.slotNotEmpty('header') || this.heading) &&
-              html`
-                <div class="sl-c-popover__title" id=${this.ariaLabelledBy}>
-                  ${this.heading &&
-                  html`
-                    <${this.headingEl} tagName="h3">${this.heading}</${this.headingEl}>
-                  `}
-                  <slot name="header"></slot>
-                </div>
-              `}
-              ${this.isDismissible
-                ? html`
-                <${this.buttonEl} class="sl-c-popover__close-button" variant="tertiary" ?hideText=${true} @click=${this.handleOnCloseButton}>
-                  Close<${this.iconCloseEl} class="sl-c-popover__icon-close" slot="after"></${this.iconCloseEl}>
-                </${this.buttonEl}>
-              `
-                : html``}
+        <focus-trap>
+          <div
+            class="sl-c-popover__container"
+            role="region"
+            aria-labelledby=${this.ariaLabelledBy}
+            aria-hidden=${this.isActive ? false : true}
+          >
+            ${(this.slotNotEmpty('header') || this.heading || this.isDismissible) &&
+            html`
+              <div class="sl-c-popover__header">
+                ${(this.slotNotEmpty('header') || this.heading) &&
+                html`
+                  <div class="sl-c-popover__title" id=${this.ariaLabelledBy}>
+                    ${this.heading &&
+                    html`
+                      <${this.headingEl} tagName="h1" tabindex="0">${this.heading}</${this.headingEl}>
+                    `}
+                    <slot name="header"></slot>
+                  </div>
+                `}
+                ${this.isDismissible
+                  ? html`
+                  <${this.buttonEl} class="sl-c-popover__close-button" variant="tertiary" ?hideText=${true} @click=${this.handleOnCloseButton}>
+                    Close<${this.iconCloseEl} class="sl-c-popover__icon-close" slot="after"></${this.iconCloseEl}>
+                  </${this.buttonEl}>
+                `
+                  : html``}
+              </div>
+            `}
+            <div class="sl-c-popover__body">
+              <slot></slot>
             </div>
-          `}
-          <div class="sl-c-popover__body">
-            <slot></slot>
+            ${this.slotNotEmpty('footer') &&
+            html`
+              <div class="sl-c-popover__footer">
+                <slot name="footer"></slot>
+              </div>
+            `}
           </div>
-          ${this.slotNotEmpty('footer') &&
-          html`
-            <div class="sl-c-popover__footer">
-              <slot name="footer"></slot>
-            </div>
-          `}
-        </div>
+        <focus-trap>
       </div>
     ` as TemplateResult<1>;
   }
