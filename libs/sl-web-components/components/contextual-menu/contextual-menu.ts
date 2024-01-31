@@ -1,5 +1,5 @@
 import { html, unsafeCSS } from 'lit';
-import { property, query, queryAssignedElements } from 'lit/decorators.js';
+import { property, queryAssignedElements } from 'lit/decorators.js';
 import { nanoid } from 'nanoid';
 import { SLElement } from '../SLElement';
 import '@a11y/focus-trap';
@@ -209,7 +209,7 @@ export class SLContextualMenu extends SLElement {
     this.isActive = true; /* 1 */
     setTimeout(() => {
       const menuListItems = this.menuList && this.menuList[0] && this.menuList[0].listItems;
-      const firstValidListItem = menuListItems.find((item: SLListItem) => !item.isDisabled && !item.isError);
+      const firstValidListItem = menuListItems.find((item: any) => !item.isDisabled && !item.isError);
       const firstFocusableEl = firstValidListItem && firstValidListItem.shadowRoot.querySelector('button, a');
 
       if (firstFocusableEl) {

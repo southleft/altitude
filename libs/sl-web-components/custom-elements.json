@@ -747,6 +747,11 @@
           "type": "string"
         },
         {
+          "name": "slotNodes",
+          "description": "Queries nodes in the default slot\n1. Used to dynamically set the aria-label attribute if a label is not provided",
+          "type": "Node[]"
+        },
+        {
           "name": "styleModifier",
           "attribute": "styleModifier",
           "description": "Append to the class name. Used for passing in utility classes",
@@ -1526,13 +1531,13 @@
           "type": "string"
         },
         {
-          "name": "contextualMenuContainer",
-          "description": "Query the contextual menucontainer",
-          "type": "HTMLElement"
-        },
-        {
           "name": "contextualMenuTrigger",
           "description": "Query the contextual menutrigger",
+          "type": "array"
+        },
+        {
+          "name": "menuList",
+          "description": "Query the list component in the menu's default slot",
           "type": "array"
         },
         {
@@ -2428,6 +2433,14 @@
           "name": "dialogContainer",
           "description": "Query the dialog container",
           "type": "HTMLElement"
+        },
+        {
+          "name": "dialogHeading",
+          "description": "Query the dialog heading"
+        },
+        {
+          "name": "closeButton",
+          "description": "Query the dialog close button"
         },
         {
           "name": "dialogTrigger",
@@ -4823,9 +4836,12 @@
           "type": "string"
         },
         {
-          "name": "popoverContainer",
-          "description": "Query the popover container",
-          "type": "HTMLElement"
+          "name": "popoverHeading",
+          "description": "Query the popover heading"
+        },
+        {
+          "name": "closeButton",
+          "description": "Query the popover close button"
         },
         {
           "name": "popoverTrigger",

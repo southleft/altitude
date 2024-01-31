@@ -115,7 +115,7 @@ export class SLButton extends SLElement {
    * 1. Used to dynamically set the aria-label attribute if a label is not provided
    */
   @queryAssignedNodes()
-  accessor slotNodes: NodeListOf<HTMLElement>;
+  accessor slotNodes: Array<Node>;
 
   /**
    * Handle click events
