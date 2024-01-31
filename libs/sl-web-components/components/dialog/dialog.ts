@@ -93,13 +93,13 @@ export class SLDialog extends SLElement {
    * Query the dialog heading
    */
   @queryAsync('.sl-c-dialog__title > sl-heading')
-  accessor dialogHeading: HTMLElement;
+  accessor dialogHeading: any;
 
   /**
    * Query the dialog close button
    */
   @queryAsync('.sl-c-dialog__close-button')
-  accessor closeButton: HTMLElement;
+  accessor closeButton: any;
 
   /**
    * Query the dialog trigger

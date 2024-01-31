@@ -1,5 +1,5 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property, query, queryAsync, queryAssignedElements } from 'lit/decorators.js';
+import { property, queryAsync, queryAssignedElements } from 'lit/decorators.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import { nanoid } from 'nanoid';
 import register from '../../directives/register';
@@ -100,13 +100,13 @@ export class SLPopover extends SLElement {
    * Query the popover heading
    */
    @queryAsync('.sl-c-popover__title > sl-heading')
-   accessor popoverHeading: HTMLElement;
+   accessor popoverHeading: any;
  
    /**
     * Query the popover close button
     */
    @queryAsync('.sl-c-popover__close-button')
-   accessor closeButton: HTMLElement;
+   accessor closeButton: any;
 
   /**
    * Query the popover trigger
