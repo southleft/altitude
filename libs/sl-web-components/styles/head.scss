@@ -3,7 +3,13 @@
 @import './core/breakpoints';
 @import './core/typography';
 
-body.theme-light {
+.docs-story {
+  color: var(--sl-theme-color-content-default);
+  background: var(--sl-theme-color-background-default);
+}
+
+body.theme-light,
+body.theme-light .docs-story {
   color: var(--sl-theme-color-content-inverse-default);
   background: var(--sl-theme-color-background-inverse-default);
 }
