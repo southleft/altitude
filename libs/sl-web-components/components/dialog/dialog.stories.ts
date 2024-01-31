@@ -120,7 +120,7 @@ Default.play = async ({ canvasElement }) => {
   await waitFor(() => expect(dialogContainer).toBeVisible(), {
     timeout: 400, // A long timeout to make sure it doesn't close
   });
-  await userEvent.type(dialogContainer, '{Escape}');
+  await userEvent.type(dialogCloseButton, '{Escape}');
   expect(dialog.isActive).toBe(false);
 
   await userEvent.type(dialogTrigger, '{Enter}');
