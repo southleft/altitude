@@ -15,7 +15,7 @@ export default {
       handles: ['click', 'onChipClose']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     variant: {
       control: { type: 'radio' },

@@ -18,7 +18,7 @@ export default {
       handles: ['click']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     type: {
       options: ['button', 'submit', 'reset'],

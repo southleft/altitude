@@ -18,7 +18,7 @@ export default {
       exclude: ['ariaDescribedBy']
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     hasArrow: {
       type: 'boolean'

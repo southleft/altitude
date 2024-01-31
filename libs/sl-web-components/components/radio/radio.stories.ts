@@ -18,7 +18,7 @@ export default {
       handles: ['onRadioChange']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     isError: {
       control: 'boolean'

@@ -1,14 +1,14 @@
 import { expect, userEvent, within } from '@storybook/test';
 import { html } from 'lit';
-import '../../.storybook/components/f-po/f-po';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
+import './toggle-button';
 import '../avatar/avatar';
 import '../icon/icons/emoji';
 import '../icon/icons/chevron-down';
 import '../popover/popover';
 import '../tooltip/tooltip';
-import './toggle-button';
+import '../../.storybook/components/f-po/f-po';
 
 export default {
   title: 'Atoms/Toggle Button',
@@ -24,7 +24,7 @@ export default {
       exclude: ['isSmall', 'slottedEls', 'toggleButton', 'toggleButtonContent', 'hasPanel']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     variant: {
       control: 'radio',

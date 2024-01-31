@@ -32,7 +32,7 @@ export default {
       handles: ['onSearchFormChange']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   args: {
     label: 'Search',
     fieldNote: 'This is a field note.',

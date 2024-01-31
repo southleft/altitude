@@ -32,7 +32,7 @@ export default {
       handles: ['onDropdownOpen', 'onDropdownClose']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   args: {
     label: 'Select Option',
     fieldNote: 'This is a field note.',

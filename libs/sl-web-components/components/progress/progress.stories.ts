@@ -14,7 +14,7 @@ export default {
       handles: ['onProgressChange' ]
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     isCircle: {
       control: 'boolean'

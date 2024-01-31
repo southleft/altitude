@@ -2,8 +2,9 @@ import { html, LitElement, unsafeCSS } from 'lit';
 import tokens from '../../../../styles/tokens.json';
 import styles from '../tokens.scss';
 import '../../token-specimen/token-specimen';
+import '../../../../components/icon/icons/add';
 
-export class Tier1Opacity extends LitElement {
+export class Tier1Icons extends LitElement {
   static get styles() {
     return unsafeCSS(styles.toString());
   }
@@ -21,30 +22,31 @@ export class Tier1Opacity extends LitElement {
     return html`
       <section>
         <header>
-          <h1>Tier 1: Opacity</h1>
+          <h1>Tier 1: Icons</h1>
         </header>
         <table>
           <caption>
-            Opacity
+            Sizes
           </caption>
           <thead>
             <tr>
               <th>Token</th>
               <th>Value</th>
-              <th>Example</th>
             </tr>
           </thead>
           <tbody>
-            ${this.filterTokens('sl-opacity').map((item) => {
-              return html`
-                <token-specimen
-                  variant="opacity"
-                  name="${item.name}"
-                  value="${item.value}"
-                  inlineStyles="opacity: var(${item.name});"
-                ></token-specimen>
-              `;
-            })}
+            ${this.filterTokens('sl-icon').map((item) => {
+                return html`
+                  <token-specimen
+                    variant="icon"
+                    name="${item.name}"
+                    value="${item.value}"
+                    inlineStyles="--sl-icon-width: ${item.value}; --sl-icon-height: ${item.value};"
+                  >
+                    <sl-icon-add></sl-icon-add>
+                  </token-specimen>
+                `;
+              })}
           </tbody>
         </table>
       </section>
@@ -52,12 +54,12 @@ export class Tier1Opacity extends LitElement {
   }
 }
 
-if (customElements.get('tier-1-opacity') === undefined) {
-  customElements.define('tier-1-opacity', Tier1Opacity);
+if (customElements.get('tier-1-icons') === undefined) {
+  customElements.define('tier-1-icons', Tier1Icons);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'tier-1-opacity': Tier1Opacity;
+    'tier-1-icons': Tier1Icons;
   }
 }

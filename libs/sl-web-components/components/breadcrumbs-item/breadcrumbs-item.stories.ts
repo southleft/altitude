@@ -17,7 +17,7 @@ export default {
       exclude: ['isTruncated']
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     href: {
       control: 'text'

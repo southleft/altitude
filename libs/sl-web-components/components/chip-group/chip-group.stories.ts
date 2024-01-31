@@ -14,7 +14,7 @@ export default {
       handles: ['click', 'onChipGroupExpand']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     chipsVisible: {
       control: 'number'

@@ -1,8 +1,8 @@
 import { html } from 'lit';
-import '../../.storybook/components/f-po/f-po';
 import { spread } from '../../directives/spread';
-import '../grid-item/grid-item';
 import './grid';
+import '../grid-item/grid-item';
+import '../../.storybook/components/f-po/f-po';
 
 export default {
   title: 'Organisms/Grid',

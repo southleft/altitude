@@ -3,6 +3,7 @@ import './tier-1-animation';
 import './tier-1-border';
 import './tier-1-breakpoints';
 import './tier-1-colors';
+import './tier-1-icons';
 import './tier-1-layout';
 import './tier-1-opacity';
 import './tier-1-shadows';
@@ -33,6 +34,8 @@ export const Border = (args, context) => html`<tier-1-border theme=${context.glo
 export const Breakpoints = (args, context) => html`<tier-1-breakpoints theme=${context.globals.theme}></tier-1-breakpoints>`;
 
 export const Colors = (args, context) => html`<tier-1-colors theme=${context.globals.theme}></tier-1-colors>`;
+
+export const Icons = (args, context) => html`<tier-1-icons theme=${context.globals.theme}></tier-1-icons>`;
 
 export const Layout = (args, context) => html`<tier-1-layout theme=${context.globals.theme}></tier-1-layout>`;
 

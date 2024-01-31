@@ -27,6 +27,7 @@ code {
 
 .token-specimen__example {
   div {
+    margin: auto;
     display: block;
     width: 48px;
     height: 48px;
@@ -35,6 +36,14 @@ code {
 
     .token-specimen--color & {
       border-radius: 48px;
+    }
+
+    .token-specimen--icon & {
+      background-color: transparent;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .token-specimen--opacity & {

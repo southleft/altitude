@@ -20,7 +20,7 @@ export default {
       handles: ['onTextFieldChange']
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     type: {
       control: { type: 'radio' },

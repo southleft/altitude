@@ -2,8 +2,9 @@ import { html, LitElement, unsafeCSS } from 'lit';
 import tokens from '../../../../styles/tokens.json';
 import styles from '../tokens.scss';
 import '../../token-specimen/token-specimen';
+import '../../../../components/icon/icons/add';
 
-export class Tier2Spacing extends LitElement {
+export class Tier2Icons extends LitElement {
   static get styles() {
     return unsafeCSS(styles.toString());
   }
@@ -21,10 +22,10 @@ export class Tier2Spacing extends LitElement {
     return html`
       <section>
         <header>
-          <h1>Tier 2: Spacing</h1>
+          <h1>Tier 2: Icons</h1>
         </header>
         <table>
-          <caption>Spacing</caption>
+          <caption>Sizes</caption>
           <thead>
             <tr>
               <th>Token</th>
@@ -33,13 +34,15 @@ export class Tier2Spacing extends LitElement {
             </tr>
           </thead>
           <tbody>
-            ${this.filterTokens('sl-theme-space').map((item) => {
+            ${this.filterTokens('sl-theme-icon').map((item) => {
               return html`
                 <token-specimen
+                  variant="icon"
                   name="${item.name}"
                   value="${item.value}"
-                  inlineStyles="width: 100px; height: var(${item.name});"
+                  inlineStyles="--sl-icon-width: ${item.value}; --sl-icon-height: ${item.value};"
                 >
+                  <sl-icon-add></sl-icon-add>
                 </token-specimen>
               `;
             })}
@@ -50,12 +53,12 @@ export class Tier2Spacing extends LitElement {
   }
 }
 
-if (customElements.get('tier-2-spacing') === undefined) {
-  customElements.define('tier-2-spacing', Tier2Spacing);
+if (customElements.get('tier-2-icons') === undefined) {
+  customElements.define('tier-2-icons', Tier2Icons);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'tier-2-spacing': Tier2Spacing;
+    'tier-2-icons': Tier2Icons;
   }
 }

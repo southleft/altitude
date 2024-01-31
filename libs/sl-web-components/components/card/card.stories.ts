@@ -1,13 +1,13 @@
 import { html } from 'lit';
-import '../../.storybook/components/f-po/f-po';
 import { spread } from '../../directives/spread';
+import './card';
+import '../../.storybook/components/f-po/f-po';
 import '../button/button';
 import '../chip/chip';
 import '../heading/heading';
 import '../icon/icons/done';
 import '../icon/icons/emoji';
 import '../text-passage/text-passage';
-import './card';
 
 export default {
   title: 'Molecules/Card',

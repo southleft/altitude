@@ -21,7 +21,7 @@ export default {
       exclude: ['activeTab', 'isScrollable', 'tabsList', 'tabPanels', 'tabItems', 'isLTR', 'handleOnScroll', 'handleOnResize']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     variant: {
       control: { type: 'radio' },

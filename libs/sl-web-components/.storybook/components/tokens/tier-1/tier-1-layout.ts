@@ -1,7 +1,7 @@
 import { html, LitElement, unsafeCSS } from 'lit';
 import tokens from '../../../../styles/tokens.json';
-import '../../token-specimen/token-specimen';
 import styles from '../tokens.scss';
+import '../../token-specimen/token-specimen';
 
 export class Tier1Layout extends LitElement {
   static get styles() {

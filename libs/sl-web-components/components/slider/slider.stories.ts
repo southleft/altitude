@@ -13,7 +13,7 @@ export default {
       handles: ['onSliderDrag', 'onSliderOutputValueChange']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   args: {
     label: 'Label',
     fieldNote: 'This is a field note.'

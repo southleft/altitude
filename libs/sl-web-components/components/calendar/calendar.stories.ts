@@ -13,7 +13,7 @@ export default {
       handles: ['onCalendarChange']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
 };
 
 export const Default = (args) => html` <sl-calendar ${spread(args)}></sl-calendar> `;

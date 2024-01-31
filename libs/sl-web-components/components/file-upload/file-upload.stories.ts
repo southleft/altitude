@@ -15,7 +15,7 @@ export default {
       handles: ['onFileUploadFileRemove', 'onFileUploadFileUpload']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   args: {
     name: 'file-upload',
     label: 'File upload',

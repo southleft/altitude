@@ -18,7 +18,7 @@ export default {
       handles: ['onCheckboxItemChange']
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     isChecked: {
       control: 'boolean'

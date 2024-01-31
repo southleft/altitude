@@ -13,7 +13,7 @@ export default {
       handles: ['onTimeSelectorListChange']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
 };
 
 const Template = (args) => html`<sl-time-selector-list ${spread(args)} data-testid="time-selector-list">Hello world</sl-time-selector-list>`;
