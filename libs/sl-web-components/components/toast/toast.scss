@@ -69,8 +69,8 @@
  * - Default, success, warning, or danger
  */
 .sl-c-toast__icon {
-  --sl-icon-width: #{size(3)};
-  --sl-icon-height: #{size(3)};
+  --sl-icon-width: #{var(--sl-theme-icon-lg)};
+  --sl-icon-height: #{var(--sl-theme-icon-lg)};
   --sl-icon-fill: var(--sl-theme-color-content-info-default);
 
   /**
@@ -143,6 +143,6 @@
  * - The X icon in the header to close the toast
  */
 .sl-c-toast__icon-close {
-  --sl-icon-width: #{size(2)};
-  --sl-icon-height: #{size(2)};
+  --sl-icon-width: #{var(--sl-theme-icon)};
+  --sl-icon-height: #{var(--sl-theme-icon)};
 }

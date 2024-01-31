@@ -26,8 +26,8 @@
   background-color: var(--sl-theme-color-background-default-stronger);
   border-color: var(--sl-theme-color-background-default-stronger);
   color: var(--sl-theme-color-content-default-weak);
-  --sl-icon-width: #{size(3)};
-  --sl-icon-height: #{size(3)};
+  --sl-icon-width: #{var(--sl-theme-icon-lg)};
+  --sl-icon-height: #{var(--sl-theme-icon-lg)};
 
   /**
    * Focus state
@@ -103,10 +103,10 @@
   align-items: center;
   justify-content: center;
   margin-inline-end: size(-1);
-  width: size(3);
-  height: size(3);
-  --sl-icon-width: #{size(2)};
-  --sl-icon-height: #{size(2)};
+  width: var(--sl-theme-icon-lg);
+  height: var(--sl-theme-icon-lg);
+  --sl-icon-width: #{var(--sl-theme-icon)};
+  --sl-icon-height: #{var(--sl-theme-icon)};
 }
 
 /**

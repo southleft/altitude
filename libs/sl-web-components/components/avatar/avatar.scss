@@ -14,15 +14,15 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  width: size(5);
-  height: size(5);
-  line-height: size(5);
+  width: #{var(--sl-theme-icon-xxxl)};
+  height: #{var(--sl-theme-icon-xxxl)};
+  line-height: #{var(--sl-theme-icon-xxxl)};
   border-radius: var(--sl-theme-border-radius-round);
   background: var(--sl-theme-color-background-default-strong);
   color: var(--sl-theme-color-content-default);
 
-  --sl-icon-width: #{size(3)};
-  --sl-icon-height: #{size(3)};
+  --sl-icon-width: #{var(--sl-theme-icon-lg)};
+  --sl-icon-height: #{var(--sl-theme-icon-lg)};
 }
 
 /**
@@ -31,12 +31,12 @@
 .sl-c-avatar--sm {
   @include sl-theme-typography-body-xs-bold;
 
-  width: size(4);
-  height: size(4);
-  line-height: size(4);
+  width: #{var(--sl-theme-icon-xl)};
+  height: #{var(--sl-theme-icon-xl)};
+  line-height: #{var(--sl-theme-icon-xl)};
 
-  --sl-icon-width: #{size(2.5)};
-  --sl-icon-height: #{size(2.5)};
+  --sl-icon-width: #{var(--sl-theme-icon-md)};
+  --sl-icon-height: #{var(--sl-theme-icon-md)};
 }
 
 /**

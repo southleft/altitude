@@ -299,7 +299,7 @@ export class SLAlert extends SLElement {
             <div class="sl-c-alert__icon">${this.slotNotEmpty('icon') ? html` <slot name="icon"></slot> ` : html` ${alertIcon} `}</div>
             <slot></slot>
           </div>
-          ${this.hasPanel ? html`<${this.iconChevronDownEl} size="lg" class="sl-c-alert__icon-expand"></${this.iconChevronDownEl}>` : ''}
+          ${this.hasPanel ? html`<${this.iconChevronDownEl} size="xl" class="sl-c-alert__icon-expand"></${this.iconChevronDownEl}>` : ''}
         </div>
         ${this.hasPanel &&
         html`

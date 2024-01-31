@@ -131,13 +131,13 @@ export class SLToast extends SLElement {
       'sl-has-description': this.description?.length > 0
     });
 
-    let toastIcon = html`<${this.iconInfoEl} size="lg"></${this.iconInfoEl}>`;
+    let toastIcon = html`<${this.iconInfoEl} size="xl"></${this.iconInfoEl}>`;
     if (this.variant === 'success') {
-      toastIcon = html`<${this.iconDoneEl} size="lg"></${this.iconDoneEl}>`;
+      toastIcon = html`<${this.iconDoneEl} size="xl"></${this.iconDoneEl}>`;
     } else if (this.variant === 'warning') {
-      toastIcon = html`<${this.iconWarningTriangleEl} size="lg"></${this.iconWarningTriangleEl}>`;
+      toastIcon = html`<${this.iconWarningTriangleEl} size="xl"></${this.iconWarningTriangleEl}>`;
     } else if (this.variant === 'danger') {
-      toastIcon = html`<${this.iconWarningEl} size="lg"></${this.iconWarningEl}>`;
+      toastIcon = html`<${this.iconWarningEl} size="xl"></${this.iconWarningEl}>`;
     }
 
     return html`

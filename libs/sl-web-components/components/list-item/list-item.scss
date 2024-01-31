@@ -136,8 +136,8 @@
   gap: size(1);
   align-items: center;
 
-  --sl-icon-height: #{size(2)};
-  --sl-icon-width: #{size(2)};
+  --sl-icon-height: #{var(--sl-theme-icon)};
+  --sl-icon-width: #{var(--sl-theme-icon)};
 }
 
 /**
@@ -170,8 +170,8 @@
  * Icon that shows that the item has children
  */
 .sl-c-list-item__items-icon {
-  --sl-icon-height: #{size(2)};
-  --sl-icon-width: #{size(2)};
+  --sl-icon-height: #{var(--sl-theme-icon)};
+  --sl-icon-width: #{var(--sl-theme-icon)};
 
   margin-inline-start: auto;
   transition: transform var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);

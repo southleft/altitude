@@ -40,13 +40,13 @@ export default {
 const Template = (args) => html`
   <sl-toggle-button-group ${spread(args)} data-testid="toggle-button-group">
     <sl-toggle-button data-testid="toggle-button-01">
-      <sl-icon-emoji size="lg"></sl-icon-emoji>
+      <sl-icon-emoji size="xl"></sl-icon-emoji>
     </sl-toggle-button>
     <sl-toggle-button data-testid="toggle-button-02">
-      <sl-icon-emoji size="lg"></sl-icon-emoji>
+      <sl-icon-emoji size="xl"></sl-icon-emoji>
     </sl-toggle-button>
     <sl-toggle-button data-testid="toggle-button-03">
-      <sl-icon-emoji size="lg"></sl-icon-emoji>
+      <sl-icon-emoji size="xl"></sl-icon-emoji>
     </sl-toggle-button>
   </sl-toggle-button-group>
 `;
@@ -75,19 +75,19 @@ const TemplateGapSmall = (args) => html`
     <sl-toggle-button-group ${spread(args)}>
       <sl-toggle-button variant="background">
         <sl-popover position="top-left">
-          <sl-icon-emoji slot="trigger" size="lg"></sl-icon-emoji>
+          <sl-icon-emoji slot="trigger" size="xl"></sl-icon-emoji>
           <f-po>Content</f-po>
         </sl-popover>
       </sl-toggle-button>
       <sl-toggle-button variant="background">
         <sl-popover position="top-left">
-          <sl-icon-emoji slot="trigger" size="lg"></sl-icon-emoji>
+          <sl-icon-emoji slot="trigger" size="xl"></sl-icon-emoji>
           <f-po>Content</f-po>
         </sl-popover>
       </sl-toggle-button>
       <sl-toggle-button variant="background">
         <sl-popover position="top-left">
-          <sl-icon-emoji slot="trigger" size="lg"></sl-icon-emoji>
+          <sl-icon-emoji slot="trigger" size="xl"></sl-icon-emoji>
           <f-po>Content</f-po>
         </sl-popover>
       </sl-toggle-button>

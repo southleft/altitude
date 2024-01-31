@@ -5,8 +5,8 @@ import styles from './icon.scss';
 
 /**
  * Component: sl-icon-[ICON_NAME]
- * 
- * Icons are symbols that provide meaning. Icon component is used to display any icon from the Altitude icon library. 
+ *
+ * Icons are symbols that provide meaning. Icon component is used to display any icon from the Altitude icon library.
  */
 export class SLIcon extends SLElement {
   static el = 'sl-icon';
@@ -27,6 +27,8 @@ export class SLIcon extends SLElement {
    * - **md** renders a larger size than default (20px)
    * - **lg** renders a larger size than the md variant (24px)
    * - **xl** renders a larger size than the lg variant (32px)
+   * - **xxl** renders a larger size than the lg variant (36px)
+   * - **xxxl** renders a larger size than the lg variant (40px)
    */
   @property()
   accessor size: 'md' | 'lg' | 'xl';
@@ -35,7 +37,9 @@ export class SLIcon extends SLElement {
     const componentClassName = this.componentClassNames('sl-c-icon', {
       'sl-c-icon--md': this.size === 'md',
       'sl-c-icon--lg': this.size === 'lg',
-      'sl-c-icon--xl': this.size === 'xl'
+      'sl-c-icon--xl': this.size === 'xl',
+      'sl-c-icon--xxl': this.size === 'xxl',
+      'sl-c-icon--xxxl': this.size === 'xxxl'
     });
 
     return html`
