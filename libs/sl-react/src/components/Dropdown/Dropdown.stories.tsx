@@ -15,7 +15,7 @@ const dataSource = [
 ];
 
 export default {
-  title: 'Boilerplate/Dropdown',
+  title: 'Molecules/Dropdown',
   component: SLDropdown,
   parameters: {
     status: { type: 'beta' },

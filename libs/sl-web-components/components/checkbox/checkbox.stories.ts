@@ -8,7 +8,7 @@ import '../icon/icons/warning-circle';
 import './checkbox';
 
 export default {
-  title: 'Components/Checkbox',
+  title: 'Molecules/Checkbox',
   component: 'sl-checkbox',
   tags: [ 'autodocs' ],
   parameters: {

@@ -4,7 +4,7 @@ import './icon';
 import './icons/add';
 
 export default {
-  title: 'Components/Icon',
+  title: 'Atoms/Icon',
   component: 'sl-icon',
   tags: [ 'autodocs' ],
   parameters: { status: { type: 'beta' } },

@@ -3,12 +3,12 @@ module.exports = (plop) => {
   plop.setHelper('upperCase', (txt) => txt.toUpperCase());
 
   plop.setGenerator('component', {
-    description: 'Create a reusable component',
+    description: 'Create a component',
     prompts: [
       {
         type: 'input',
         name: 'name',
-        message: 'What is your component name (e.g. "checkbox" or "link-list")?'
+        message: 'What is the component name? Note: Name must be in dash case. (e.g. "component-name")'
       }
     ],
     actions: [
@@ -30,36 +30,13 @@ module.exports = (plop) => {
     ]
   });
 
-  plop.setGenerator('page', {
-    description: 'Create a page template',
-    prompts: [
-      {
-        type: 'input',
-        name: 'name',
-        message: 'What is your page name (e.g. "quote-detail")?  Note: name must include a dash.'
-      }
-    ],
-    actions: [
-      {
-        type: 'add',
-        path: './../.storybook/pages/{{dashCase name}}/{{dashCase name}}.ts',
-        templateFile: 'templates/page/page.ts.hbs'
-      },
-      {
-        type: 'add',
-        path: './../.storybook/pages/{{dashCase name}}/{{dashCase name}}.stories.ts',
-        templateFile: 'templates/page/page.stories.ts.hbs'
-      }
-    ]
-  });
-
   plop.setGenerator('recipe', {
     description: 'Create a recipe',
     prompts: [
       {
         type: 'input',
         name: 'name',
-        message: 'What is your recipe name (e.g. "site-header")? Note: name must include a dash.'
+        message: 'What is the recipe name? Note: Name must be in dash case. (e.g. "recipe-name")'
       }
     ],
     actions: [
@@ -77,6 +54,29 @@ module.exports = (plop) => {
         type: 'add',
         path: './../.storybook/recipes/{{dashCase name}}/{{dashCase name}}.scss',
         templateFile: 'templates/recipe/recipe.scss.hbs'
+      }
+    ]
+  });
+
+  plop.setGenerator('page', {
+    description: 'Create a page',
+    prompts: [
+      {
+        type: 'input',
+        name: 'name',
+        message: 'What is the page name? Note: Name must be in dash case. (e.g. page-name)'
+      }
+    ],
+    actions: [
+      {
+        type: 'add',
+        path: './../.storybook/pages/{{dashCase name}}/{{dashCase name}}.ts',
+        templateFile: 'templates/page/page.ts.hbs'
+      },
+      {
+        type: 'add',
+        path: './../.storybook/pages/{{dashCase name}}/{{dashCase name}}.stories.ts',
+        templateFile: 'templates/page/page.stories.ts.hbs'
       }
     ]
   });

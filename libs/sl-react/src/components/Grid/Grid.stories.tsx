@@ -4,7 +4,7 @@ import { SLGrid, SLGridItem} from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
-  title: 'Boilerplate/Grid',
+  title: 'Organisms/Grid',
   component: SLGrid,
   subcomponents: { SLGridItem },
   parameters: { status: { type: 'beta' } },

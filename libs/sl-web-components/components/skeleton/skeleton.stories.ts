@@ -3,7 +3,7 @@ import { spread } from '../../directives/spread';
 import './skeleton';
 
 export default {
-  title: 'Components/Skeleton',
+  title: 'Atoms/Skeleton',
   component: 'sl-skeleton',
   tags: [ 'autodocs' ],
   parameters: {

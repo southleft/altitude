@@ -5,10 +5,10 @@ import '../layout-section/layout-section';
 import './layout';
 
 export default {
-  title: 'Components/Layout',
+  title: 'Organisms/Layout',
   component: 'sl-layout',
   tags: [ 'autodocs' ],
-  parameters: { status: { type: 'stable' } },
+  parameters: { status: { type: 'beta' } },
   argTypes: {
     variant: {
       control: 'radio',

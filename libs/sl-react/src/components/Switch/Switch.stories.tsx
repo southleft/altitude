@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLSwitch } from '../..';
 
 export default {
-  title: 'Components/Switch',
+  title: 'Atoms/Switch',
   component: SLSwitch,
   parameters: {
     status: { type: 'beta' },

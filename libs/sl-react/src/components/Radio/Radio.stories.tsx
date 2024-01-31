@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLRadio, SLRadioItem, SLFieldNote, SLIconWarningCircle, SLIconHelp } from '../..';
 
 export default {
-  title: 'Components/Radio',
+  title: 'Molecules/Radio',
   component: SLRadio,
   subcomponents: { SLRadioItem },
   parameters: {

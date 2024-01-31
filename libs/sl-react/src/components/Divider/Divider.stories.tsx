@@ -3,7 +3,7 @@ import { SLDivider } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
-  title: 'Components/Divider',
+  title: 'Atoms/Divider',
   component: SLDivider,
   parameters: {
     status: { type: 'beta' },

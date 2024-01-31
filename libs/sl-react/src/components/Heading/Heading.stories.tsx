@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLHeading } from '../..';
 
 export default {
-  title: 'Components/Heading',
+  title: 'Atoms/Heading',
   component: SLHeading,
   parameters: { status: { type: 'beta' } },
   argTypes: {

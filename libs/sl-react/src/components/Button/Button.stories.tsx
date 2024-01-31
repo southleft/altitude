@@ -3,7 +3,7 @@ import { SLButton, SLIconDone, SLIconSend, SLProgress} from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
-  title: 'Components/Button',
+  title: 'Atoms/Button',
   component: SLButton,
   parameters: {
     status: { type: 'beta' },

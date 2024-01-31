@@ -3,7 +3,7 @@ import React from 'react';
 import { SLDatetimepickerField, SLFieldNote, SLIconWarningCircle, SLIconHelp } from '../..';
 
 export default {
-  title: 'Boilerplate/Datetimepicker Field',
+  title: 'Molecules/Datetimepicker Field',
   component: SLDatetimepickerField,
   parameters: {
     status: { type: 'beta' },

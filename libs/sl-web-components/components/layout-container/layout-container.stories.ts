@@ -4,10 +4,10 @@ import { spread } from '../../directives/spread';
 import './layout-container';
 
 export default {
-  title: 'Components/Layout Container',
+  title: 'Organisms/Layout Container',
   component: 'layout-container',
   tags: [ 'autodocs' ],
-  parameters: { status: { type: 'stable' } }
+  parameters: { status: { type: 'beta' } }
 };
 
 export const Default = (args) => html`

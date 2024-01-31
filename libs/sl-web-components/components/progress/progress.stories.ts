@@ -5,7 +5,7 @@ import { withActions } from '@storybook/addon-actions/decorator';
 import './progress';
 
 export default {
-  title: 'Components/Progress',
+  title: 'Atoms/Progress',
   component: 'sl-progress',
   tags: [ 'autodocs' ],
   parameters: {

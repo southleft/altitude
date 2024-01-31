@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLTabPanel, SLTextPassage, SLButton } from '../..';
 
 export default {
-  title: 'Components/Tab Panel',
+  title: 'Atoms/Tab Panel',
   component: SLTabPanel,
   parameters: {
     status: { type: 'beta' },

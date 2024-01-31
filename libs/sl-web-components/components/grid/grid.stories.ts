@@ -5,7 +5,7 @@ import '../grid-item/grid-item';
 import './grid';
 
 export default {
-  title: 'Components/Grid',
+  title: 'Organisms/Grid',
   component: 'sl-grid',
   tags: [ 'autodocs' ],
   parameters: { status: { type: 'beta' } }

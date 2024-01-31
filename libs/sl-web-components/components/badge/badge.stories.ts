@@ -5,7 +5,7 @@ import '../icon/icons/emoji';
 import './badge';
 
 export default {
-  title: 'Components/Badge',
+  title: 'Atoms/Badge',
   component: 'sl-badge',
   tags: [ 'autodocs' ],
   parameters: {

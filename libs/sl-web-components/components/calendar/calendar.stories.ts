@@ -4,7 +4,7 @@ import { withActions } from '@storybook/addon-actions/decorator';
 import './calendar';
 
 export default {
-  title: 'Components/Calendar',
+  title: 'Atoms/Calendar',
   component: 'sl-calendar',
   tags: [ 'autodocs' ],
   parameters: {

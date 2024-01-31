@@ -4,7 +4,7 @@ import { withActions } from '@storybook/addon-actions/decorator';
 import './time-selector-list';
 
 export default {
-  title: 'Components/Time Selector List',
+  title: 'Atoms/Time Selector List',
   component: 'sl-time-selector-list',
   tags: [ 'autodocs' ],
   parameters: {

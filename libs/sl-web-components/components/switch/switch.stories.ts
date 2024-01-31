@@ -6,7 +6,7 @@ import { withActions } from '@storybook/addon-actions/decorator';
 import './switch';
 
 export default {
-  title: 'Components/Switch',
+  title: 'Atoms/Switch',
   component: 'sl-switch',
   tags: [ 'autodocs' ],
   parameters: {

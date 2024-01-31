@@ -4,7 +4,7 @@ import '../link/link';
 import './text-passage';
 
 export default {
-  title: 'Components/Text Passage',
+  title: 'Atoms/Text Passage',
   component: 'sl-text-passage',
   tags: [ 'autodocs' ],
   parameters: { status: { type: 'beta' } },

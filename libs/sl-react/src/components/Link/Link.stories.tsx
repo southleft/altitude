@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLLink, SLIconChevronRight } from '../..';
 
 export default {
-  title: 'Components/Link',
+  title: 'Atoms/Link',
   component: SLLink,
   parameters: {
     status: { type: 'beta' },

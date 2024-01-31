@@ -3,7 +3,7 @@ import { SLDrawer, SLButton, SLButtonGroup } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
-  title: 'Boilerplate/Drawer',
+  title: 'Molecules/Drawer',
   component: SLDrawer,
   parameters: { status: { type: 'beta' } },
   args: {

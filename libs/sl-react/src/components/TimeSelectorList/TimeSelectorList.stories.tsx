@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLTimeSelectorList } from '../..';
 
 export default {
-  title: 'Boilerplate/Time Selector List',
+  title: 'Atoms/Time Selector List',
   component: SLTimeSelectorList,
   parameters: { status: { type: 'beta' } },
 };

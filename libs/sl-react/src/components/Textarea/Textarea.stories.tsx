@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLTextarea, SLFieldNote, SLIconEmoji, SLIconAttachment, SLIconWarningCircle, SLIconHelp } from '../..';
 
 export default {
-  title: 'Components/Textarea',
+  title: 'Molecules/Textarea',
   component: SLTextarea,
   parameters: {
     status: { type: 'beta' },

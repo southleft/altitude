@@ -3,7 +3,7 @@ import { SLPopover, SLButton, SLButtonGroup, SLTabs, SLTab, SLTabPanel, SLToggle
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
-  title: 'Components/Popover',
+  title: 'Molecules/Popover',
   component: SLPopover,
   parameters: {
     status: { type: 'beta' },

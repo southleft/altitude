@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLListItem, SLList, SLCheckboxItem } from '../..'
 
 export default {
-  title: 'Boilerplate/List Item',
+  title: 'Atoms/List Item',
   component: SLListItem,
   parameters: {
     status: { type: 'beta' },

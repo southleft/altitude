@@ -4,7 +4,7 @@ import { spread } from '../../directives/spread';
 import './divider';
 
 export default {
-  title: 'Components/Divider',
+  title: 'Atoms/Divider',
   component: 'sl-divider',
   tags: [ 'autodocs' ],
   parameters: {

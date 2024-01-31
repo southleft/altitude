@@ -6,7 +6,7 @@ import '../icon/icons/document';
 import './file-upload';
 
 export default {
-  title: 'Components/File Upload',
+  title: 'Molecules/File Upload',
   component: 'sl-file-upload',
   tags: [ 'autodocs' ],
   parameters: {

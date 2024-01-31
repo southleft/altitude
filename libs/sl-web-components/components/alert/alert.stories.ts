@@ -9,7 +9,7 @@ import './alert';
 import { SLAlert } from './alert';
 
 export default {
-  title: 'Components/Alert',
+  title: 'Atoms/Alert',
   component: 'sl-alert',
   tags: [ 'autodocs' ],
   parameters: {

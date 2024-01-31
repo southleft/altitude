@@ -3,7 +3,7 @@ import React from 'react';
 import { SLBadge, SLButton, SLIconEmoji } from '../..';
 
 export default {
-  title: 'Components/Badge',
+  title: 'Atoms/Badge',
   component: SLBadge,
   parameters: {
     status: { type: 'beta' },

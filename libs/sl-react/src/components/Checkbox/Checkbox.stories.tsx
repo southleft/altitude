@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLCheckbox, SLCheckboxItem, SLFieldNote, SLIconWarningCircle, SLIconHelp } from '../..';
 
 export default {
-  title: 'Components/Checkbox',
+  title: 'Molecules/Checkbox',
   component: SLCheckbox,
   subcomponents: { SLCheckboxItem },
   parameters: {

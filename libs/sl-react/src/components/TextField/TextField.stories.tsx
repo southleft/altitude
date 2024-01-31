@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLTextField, SLFieldNote, SLIconEmoji, SLIconAttachment, SLIconWarningCircle, SLIconHelp } from '../..';
 
 export default {
-  title: 'Components/Text Field',
+  title: 'Molecules/Text Field',
   component: SLTextField,
   parameters: {
     status: { type: 'beta' },

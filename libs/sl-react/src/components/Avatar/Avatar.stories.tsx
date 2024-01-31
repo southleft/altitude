@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLAvatar, SLIconUser } from '../..';
 
 export default {
-  title: 'Components/Avatar',
+  title: 'Atoms/Avatar',
   component: SLAvatar,
   parameters: {
     status: { type: 'beta' },

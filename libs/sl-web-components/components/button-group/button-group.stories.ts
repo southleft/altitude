@@ -3,7 +3,7 @@ import { spread } from '../../directives/spread';
 import './button-group';
 
 export default {
-  title: 'Components/Button Group',
+  title: 'Molecules/Button Group',
   component: 'sl-button-group',
   tags: [ 'autodocs' ],
   parameters: { status: { type: 'beta' } },

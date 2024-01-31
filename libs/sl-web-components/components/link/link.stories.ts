@@ -5,7 +5,7 @@ import '../icon/icons/chevron-right';
 import './link';
 
 export default {
-  title: 'Components/Link',
+  title: 'Atoms/Link',
   component: 'sl-link',
   tags: [ 'autodocs' ],
   parameters: {

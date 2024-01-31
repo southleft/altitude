@@ -6,7 +6,7 @@ import '../icon/icons/warning-circle';
 import './input-stepper';
 
 export default {
-  title: 'Components/Input Stepper',
+  title: 'Molecules/Input Stepper',
   component: 'sl-input-stepper',
   tags: [ 'autodocs' ],
   parameters: {

@@ -3,7 +3,7 @@ import React from 'react';
 import { SLInputStepper, SLFieldNote, SLIconWarningCircle, SLIconHelp } from '../..';
 
 export default {
-  title: 'Boilerplate/Input Stepper',
+  title: 'Molecules/Input Stepper',
   component: SLInputStepper,
   parameters: {
     status: { type: 'beta' },

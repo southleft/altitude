@@ -10,7 +10,7 @@ import './toast-group';
 import '../progress/progress';
 
 export default {
-  title: 'Components/Toast Group',
+  title: 'Molecules/Toast Group',
   component: 'sl-toast-group',
   tags: [ 'autodocs' ],
   parameters: {

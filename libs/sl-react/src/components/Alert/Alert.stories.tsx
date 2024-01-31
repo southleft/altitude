@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLAlert, SLTextPassage, SLButton } from '../..';
 
 export default {
-  title: 'Components/Alert',
+  title: 'Atoms/Alert',
   component: SLAlert,
   parameters: {
     status: 'beta',

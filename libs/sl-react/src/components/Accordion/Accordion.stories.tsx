@@ -3,7 +3,7 @@ import { SLAccordion, SLAccordionPanel } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
-  title: 'Boilerplate/Accordion',
+  title: 'Molecules/Accordion',
   component: SLAccordion,
   subcomponents: { SLAccordionPanel },
   parameters: {

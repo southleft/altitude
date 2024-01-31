@@ -3,7 +3,7 @@ import { spread } from '../../directives/spread';
 import './heading';
 
 export default {
-  title: 'Components/Heading',
+  title: 'Atoms/Heading',
   component: 'sl-heading',
   tags: [ 'autodocs' ],
   parameters: { status: { type: 'beta' } },

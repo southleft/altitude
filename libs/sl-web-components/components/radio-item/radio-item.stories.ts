@@ -9,7 +9,7 @@ import '../icon/icons/warning-circle';
 import './radio-item';
 
 export default {
-  title: 'Components/Radio item',
+  title: 'Atoms/Radio item',
   component: 'sl-radio-item',
   tags: [ 'autodocs' ],
   parameters: {

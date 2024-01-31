@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-webpack5';
 import { SLMenuItem, SLIconAddSquare } from '../..';
 
 export default {
-  title: 'Components/Menu Item',
+  title: 'Atoms/Menu Item',
   component: SLMenuItem,
   parameters: {
     status: { type: 'beta' },

@@ -5,7 +5,7 @@ import '../stepper-item/stepper-item';
 import '../icon/icons/emoji';
 
 export default {
-  title: 'Components/Stepper',
+  title: 'Molecules/Stepper',
   component: 'sl-stepper',
   tags: [ 'autodocs' ],
   parameters: {

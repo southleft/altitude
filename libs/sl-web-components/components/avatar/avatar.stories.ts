@@ -4,7 +4,7 @@ import '../icon/icons/user';
 import './avatar';
 
 export default {
-  title: 'Components/Avatar',
+  title: 'Atoms/Avatar',
   component: 'sl-avatar',
   tags: [ 'autodocs' ],
   parameters: {

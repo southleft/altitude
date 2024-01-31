@@ -4,7 +4,7 @@ import { withActions } from '@storybook/addon-actions/decorator';
 import './slider';
 
 export default {
-  title: 'Components/Slider',
+  title: 'Molecules/Slider',
   component: 'sl-slider',
   tags: [ 'autodocs' ],
   parameters: {

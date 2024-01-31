@@ -5,7 +5,7 @@ import '../icon/icons/document';
 import './breadcrumbs';
 
 export default {
-  title: 'Components/Breadcrumbs',
+  title: 'Molecules/Breadcrumbs',
   component: 'sl-breadcrumbs',
   subcomponents: { SLBreadcrumbsItem: 'sl-breadcrumbs-item' },
   tags: [ 'autodocs' ],
