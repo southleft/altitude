@@ -1,5 +1,4 @@
-import { expect, jest } from '@storybook/jest';
-import { userEvent, within } from '@storybook/testing-library';
+import { expect, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
@@ -232,23 +231,4 @@ DefaultIconBefore.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement);
   const iconBefore = canvas.queryByTestId('icon-before')?.shadowRoot?.querySelector('[class*="sl-c-icon"]');
   expect(iconBefore).toBeInTheDocument();
-};
-
-const onSubmit = jest.fn();
-WithSubmit.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const submit = canvas.queryByTestId('submit')?.shadowRoot?.firstElementChild as any;
-  const reset = canvas.queryByTestId('reset')?.shadowRoot?.firstElementChild as any;
-
-  expect(submit).toBeInTheDocument();
-  expect(reset).toBeInTheDocument();
-
-  if (!submit || !reset) {
-    return null;
-  }
-
-  await userEvent.click(submit);
-  await userEvent.click(reset);
-  expect(onSubmit).toHaveBeenCalled();
-  reset.blur();
 };

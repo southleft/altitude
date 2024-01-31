@@ -1,5 +1,4 @@
-import { expect } from '@storybook/jest';
-import { userEvent, within } from '@storybook/testing-library';
+import { expect, userEvent, within } from '@storybook/test';
 import { html } from 'lit';
 import '../../.storybook/components/f-po/f-po';
 import { spread } from '../../directives/spread';

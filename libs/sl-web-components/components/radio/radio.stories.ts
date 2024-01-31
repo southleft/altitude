@@ -1,5 +1,4 @@
-import { expect } from '@storybook/jest';
-import { userEvent, within, waitFor } from '@storybook/testing-library';
+import { expect, userEvent, within, waitFor } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
@@ -140,7 +139,10 @@ Default.play = async ({ canvasElement }) => {
 
   // Make assertions
   expect(radio).toBeInTheDocument();
-  expect(radioItems).toHaveLength(4);
+  expect(radioItemInput1).toBeInTheDocument();
+  expect(radioItemInput2).toBeInTheDocument();
+  expect(radioItemInput3).toBeInTheDocument();
+  expect(radioItemInput4).toBeInTheDocument();
 
   await userEvent.click(radioItemInput3);
   // await userEvent.keyboard('[ArrowUp]');

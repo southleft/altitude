@@ -19,7 +19,6 @@ export default {
   },
 };
 
-
 const Template = (args) => html`
   <sl-icon-add ${spread(args)}></sl-icon-add>
 `;

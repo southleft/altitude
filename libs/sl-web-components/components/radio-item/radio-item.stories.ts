@@ -1,5 +1,4 @@
-import { expect } from '@storybook/jest';
-import { userEvent, within, waitFor } from '@storybook/testing-library';
+import { expect, userEvent, within, waitFor } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
