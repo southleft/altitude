@@ -27,52 +27,16 @@ export default {
       options: ['default', 'success', 'warning', 'danger'],
       control: { type: 'radio' }
     },
-    isActive: {
-      control: 'boolean'
-    },
-    isExpanded: {
-      control: 'boolean'
-    },
-    autoClose: {
-      control: 'boolean'
-    },
-    autoCloseDelay: {
-      control: 'number'
+    title: {
+      control: 'text'
     }
-  },
-  args: {
-    isActive: true
   },
 };
 
-function closePanel() {
-  const alert = document.getElementById('alert-close-panel') as SLAlert;
-  if (alert) {
-    alert.toggleExpanded();
-  }
-}
-
-function closeAlert(evt: Event) {
-  const target = evt.target as HTMLElement;
-  const alertId = target.dataset.alertid || '';
-  const alert = document.getElementById(alertId) as SLAlert;
-  if (alert) {
-    alert.close();
-  }
-}
-
-function openAlert() {
-  const alert = document.getElementById('alert-open-alert') as SLAlert;
-  if (alert) {
-    alert.open();
-  }
-}
-
 const Template = (args) =>
   html`<sl-alert ${spread(args)} data-testid="alert">
-    Alert title
-    <sl-text-passage slot="panel">
-      Something longer like a description should go here, and maybe a brief on what triggered this alert.
+    <sl-text-passage>
+      This is an alert. It is used to notify the user of something important.
     </sl-text-passage>
   </sl-alert>`;
 

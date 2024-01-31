@@ -7,39 +7,16 @@
  * Alert
  */
 .sl-c-alert {
-  display: none;
-  flex-direction: column;
+  display: flex;
   background: transparent;
-
-  /**
-   * Display the alert when it is active
-   */
-  &.sl-is-active {
-    display: block;
-  }
 }
 
 /**
  * Alert header
  */
-.sl-c-alert__header {
+.sl-c-alert__title {
   @include sl-theme-typography-body-md-bold;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: none;
-  border: none;
-  padding: size(2) size(3);
-  gap: size(2);
-  color: var(--sl-theme-color-content-default);
-  border-radius: var(--sl-theme-border-radius-md);
-
-  /**
-   * Alert with a panel
-   */
-  .sl-c-alert--has-panel & {
-    cursor: pointer;
-  }
+  margin-block-end: size(1);
 
   /**
    * Alert focused
@@ -57,6 +34,7 @@
   --sl-icon-width: #{size(3)};
   --sl-icon-height: #{size(3)};
   --sl-icon-fill: var(--sl-theme-color-content-info-default);
+  margin-inline-end: size(2);
 
   /**
    * Icon within success alert
@@ -78,16 +56,6 @@
   .sl-c-alert--danger & {
     --sl-icon-fill: var(--sl-theme-color-content-danger-default);
   }
-}
-
-/**
- * Alert title
- */
-.sl-c-alert__title {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  gap: size(2);
 }
 
 /**

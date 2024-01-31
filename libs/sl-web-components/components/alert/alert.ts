@@ -294,19 +294,14 @@ export class SLAlert extends SLElement {
         aria-labelledby=${this.ariaLabelledBy}
         aria-expanded=${ifDefined(this.isExpanded)}
       >
-        <div class="sl-c-alert__header" @click=${this.toggleExpanded} aria-controls=${ifDefined(this.ariaControls)} tabindex="0">
-          <div class="sl-c-alert__title" id=${this.ariaLabelledBy}>
-            <div class="sl-c-alert__icon">${this.slotNotEmpty('icon') ? html` <slot name="icon"></slot> ` : html` ${alertIcon} `}</div>
-            <slot></slot>
-          </div>
-          ${this.hasPanel ? html`<${this.iconChevronDownEl} size="lg" class="sl-c-alert__icon-expand"></${this.iconChevronDownEl}>` : ''}
+        <div class="sl-c-alert__icon">${this.slotNotEmpty('icon') ? 
+          html` <slot name="icon"></slot> ` : html` ${alertIcon} `}
         </div>
-        ${this.hasPanel &&
-        html`
-          <div class="sl-c-alert__panel" id=${this.ariaControls}>
-            <slot name="panel"></slot>
-          </div>
-        `}
+        <div class="sl-c-alert__body">
+          ${this.title ? 
+            html`<div class="sl-c-alert__title">${this.title}</div>` : ''}
+          <slot></slot>
+        </div>
       </div>
     ` as TemplateResult<1>;
   }
