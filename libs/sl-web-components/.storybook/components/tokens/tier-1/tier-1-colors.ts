@@ -26,7 +26,7 @@ export class Tier1Colors extends LitElement {
           be used directly by SL components. Tier 2 token values should be used instead.</p>
         </header>
         <table>
-          <caption>Base Colors</caption>
+          <caption>Brand Colors</caption>
           <thead>
             <tr>
               <th>Token</th>
@@ -35,7 +35,29 @@ export class Tier1Colors extends LitElement {
             </tr>
           </thead>
           <tbody>
-            ${this.filterTokens('sl-color-base').map((item) => {
+            ${this.filterTokens('sl-color-brand').map((item) => {
+              return html`
+                <token-specimen
+                  variant="color"
+                  name="${item.name}"
+                  value="${item.value}"
+                  inlineStyles="background-color: var(${item.name});"
+                ></token-specimen>
+              `;
+            })}
+          </tbody>
+        </table>
+        <table>
+          <caption>Utility Colors</caption>
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Value</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${this.filterTokens('sl-color-utility').map((item) => {
               return html`
                 <token-specimen
                   variant="color"
