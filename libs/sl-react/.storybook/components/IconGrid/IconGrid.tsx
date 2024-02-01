@@ -20,9 +20,6 @@ export default function IconGrid() {
 
   return (
     <div className="icon-grid">
-      <header>
-        <h1>Icon Grid</h1>
-      </header>
       <ul className="icon-grid__list">
         {ALL_ICONS.map(function (item, index) {
           const TagName = createTagName();

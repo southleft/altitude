@@ -18,7 +18,7 @@ class IconFont extends React.Component {
       <li key={item.name} className="icon-font__item">
         <div className={`icon icon-${item.name}`}></div>
         <div className="icon-font__text">
-          {item.name}<br />
+          icon-{item.name}<br />
           <span className="icon-font__text-unicode">
             <strong>unicode:</strong> <code>{item.code.replace(`\\`, '\\u')}</code>
           </span>
@@ -34,9 +34,6 @@ class IconFont extends React.Component {
     const iconMap = this.getIconMap();
     return (
       <div className="icon-font">
-        <header>
-          <h1>Icon Font</h1>
-        </header>
         <ul className="icon-font__list">
           {this.renderIconList(iconMap)}
         </ul>

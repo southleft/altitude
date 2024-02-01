@@ -1,2 +1,65 @@
 @import '../../../../sl-web-components/components/icon/fonts/iconfont.css';
-@import '../../../../sl-web-components/.storybook/components/icon-font/icon-font.scss';
+/* ------------------------------------*\
+    #ICON-FONT
+\*------------------------------------ */
+
+.icon-font__list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-gap: var(--sl-theme-space);
+  padding: 0;
+  margin-top: var(--sl-theme-space-lg);
+}
+
+.icon-font__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sl-theme-space);
+  text-align: center;
+  border-radius: var(--sl-theme-border-radius);
+  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-inverse-default);
+  padding: var(--sl-theme-space);
+  aspect-ratio: 1/1;
+}
+
+.icon-font__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sl-theme-space-xs);
+}
+
+.icon-font__text-unicode {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sl-theme-space-xs);
+  color: var(--sl-theme-color-content-default-weak);
+  border-top: var(--sl-theme-border-width) solid var(--sl-theme-color-border-inverse-default);
+  padding-top: var(--sl-theme-space-xs);
+}
+
+code {
+  font-family: monospace;
+  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-inverse-default);
+  padding: var(--sl-theme-space-xxs) var(--sl-theme-space-xs);
+  border-radius: var(--sl-theme-border-radius);
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--sl-theme-color-border-inverse-default);
+    opacity: 0.2;
+  }
+}

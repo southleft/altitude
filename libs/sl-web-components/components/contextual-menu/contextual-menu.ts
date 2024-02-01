@@ -2,7 +2,6 @@ import { html, unsafeCSS } from 'lit';
 import { property, queryAssignedElements } from 'lit/decorators.js';
 import { nanoid } from 'nanoid';
 import { SLElement } from '../SLElement';
-import '@a11y/focus-trap';
 import styles from './contextual-menu.scss';
 
 /**
@@ -268,19 +267,17 @@ export class SLContextualMenu extends SLElement {
             <slot name="trigger"></slot>
           </div>
         `}
-        <focus-trap>
-          <div
-            class="sl-c-contextual-menu__container"
-            role="region"
-            aria-labelledby=${this.ariaLabelledBy}
-            aria-hidden=${this.isActive ? false : true}
-            @keydown=${this.handleOnKeydown}
-          >
-            <div class="sl-c-contextual-menu__body">
-              <slot></slot>
-            </div>
+        <div
+          class="sl-c-contextual-menu__container"
+          role="region"
+          aria-labelledby=${this.ariaLabelledBy}
+          aria-hidden=${this.isActive ? false : true}
+          @keydown=${this.handleOnKeydown}
+        >
+          <div class="sl-c-contextual-menu__body">
+            <slot></slot>
           </div>
-        </focus-trap>
+        </div>
       </div>
     `;
   }
