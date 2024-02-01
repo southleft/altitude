@@ -2382,6 +2382,12 @@
           "type": "number"
         },
         {
+          "name": "transitionDelay",
+          "description": "Number in ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
+          "type": "number",
+          "default": "400"
+        },
+        {
           "name": "styleModifier",
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
@@ -2428,6 +2434,13 @@
           "attribute": "width",
           "description": "The width of the dialog container\n- If no value is entered, it defaults to 432px",
           "type": "number"
+        },
+        {
+          "name": "transitionDelay",
+          "attribute": "transitionDelay",
+          "description": "Number in ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
+          "type": "number",
+          "default": "400"
         },
         {
           "name": "dialogContainer",
@@ -3203,6 +3216,85 @@
           "attribute": "styleModifier",
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "sl-focus-trap",
+      "path": "./components/focus-trap/focus-trap.ts",
+      "description": "Component: sl-focus-trap",
+      "attributes": [
+        {
+          "name": "isActive",
+          "type": "boolean"
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "name": "firstFocusableEl",
+          "type": "HTMLElement"
+        },
+        {
+          "name": "lastFocusableEl",
+          "type": "HTMLElement"
+        },
+        {
+          "name": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "el",
+          "type": "string",
+          "default": "\"sl-focus-trap\""
+        },
+        {
+          "name": "isActive",
+          "attribute": "isActive",
+          "type": "boolean"
+        },
+        {
+          "name": "delay",
+          "attribute": "delay",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "name": "firstFocusableEl",
+          "attribute": "firstFocusableEl",
+          "type": "HTMLElement"
+        },
+        {
+          "name": "lastFocusableEl",
+          "attribute": "lastFocusableEl",
+          "type": "HTMLElement"
+        },
+        {
+          "name": "slottedContent",
+          "type": "HTMLElement[]"
+        },
+        {
+          "name": "trapFocusEnd"
+        },
+        {
+          "name": "trapFocusStart"
+        },
+        {
+          "name": "styleModifier",
+          "attribute": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": "The content to trap in the focus trap"
         }
       ]
     },
