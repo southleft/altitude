@@ -75,13 +75,29 @@ module.exports = (env) => {
           use: ['css-loader']
         },
         {
-          test: /\.s[ac]ss$/i,
-          exclude: /head\.scss$/,
+          test: /head\.scss$/,
+          use: ['sass-loader'],
+          type: 'asset/resource'
+        },
+        {
+          test: /variables\.scss$/,
           use: [
-            'style-loader',
-            'css-loader',
             'sass-loader',
+            {
+              options: {
+                name: '[name].[ext]',
+                outputPath: 'fonts/'
+              }
+            }
           ],
+          generator: {
+            filename: `variables.css`
+          }
+        },
+        {
+          test: /\.scss$/,
+          exclude: /head\.scss$/,
+          use: ['css-loader', 'sass-loader']
         },
         {
           test: /\.svg$/,

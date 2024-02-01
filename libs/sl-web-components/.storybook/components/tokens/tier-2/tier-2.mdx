@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/blocks';
+import { Meta, Canvas } from '@storybook/blocks';
 import * as Stories from './tier-2.stories';
 
 <Meta of={Stories} />
@@ -9,15 +9,13 @@ Tier 2 tokens allow for adaptability and diversity in design while still maintai
 
 ---
 
-<div class="docs-story sb-stories">
-  <Story of={Stories.Animation} />
-  <Story of={Stories.Border} />
-  <Story of={Stories.Colors} />
-  <Story of={Stories.Icons} />
-  <Story of={Stories.Layout} />
-  <Story of={Stories.Opacity} />
-  <Story of={Stories.Shadows} />
-  <Story of={Stories.Spacing} />
-  <Story of={Stories.Typography} />
-</div>
+<Canvas of={Stories.Animation} sourceState="none" />
+<Canvas of={Stories.Border} sourceState="none" />
+<Canvas of={Stories.Colors} sourceState="none" />
+<Canvas of={Stories.Icons} sourceState="none" />
+<Canvas of={Stories.Layout} sourceState="none" />
+<Canvas of={Stories.Opacity} sourceState="none" />
+<Canvas of={Stories.Shadows} sourceState="none" />
+<Canvas of={Stories.Spacing} sourceState="none" />
+<Canvas of={Stories.Typography} sourceState="none" />
 { /* tier-2.mdx */ }

@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/blocks';
+import { Meta, Canvas } from '@storybook/blocks';
 import * as Stories from './icon-grid.stories';
 
 <Meta of={Stories} />
@@ -88,8 +88,6 @@ For icons used solely within a `<slot>` of a component, style the slotted sl-ico
 }
 ```
 
-<div class="docs-story sb-stories">
-  <Story of={Stories.IconGrid} />
-</div>
+<Canvas of={Stories.IconGrid} sourceState="none" />
 
 { /* icon-grid.mdx */ }

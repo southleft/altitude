@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/blocks';
+import { Meta, Canvas } from '@storybook/blocks';
 import * as Stories from './icon-font.stories';
 
 <Meta of={Stories} />
@@ -74,8 +74,6 @@ sl-react/components/Icons/*
 sl-react/src/index.ts
 ```
 
-<div class="docs-story sb-stories">
-  <Story of={Stories.IconFont} />
-</div>
+<Canvas of={Stories.IconFont} sourceState="none" />
 
 { /* icon-font.mdx */ }

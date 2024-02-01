@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/blocks';
+import { Meta, Canvas } from '@storybook/blocks';
 import * as Stories from './tier-1.stories';
 
 <Meta of={Stories} />
@@ -8,17 +8,15 @@ import * as Stories from './tier-1.stories';
 Tier 1 colors form the core visual language of the design system and are consistently applied across various interfaces and components.
 
 ---
-<div class="docs-story sb-stories">
-  <Story of={Stories.Animation} />
-  <Story of={Stories.Border} />
-  <Story of={Stories.Breakpoints} />
-  <Story of={Stories.Colors} />
-  <Story of={Stories.Icons} />
-  <Story of={Stories.Layout} />
-  <Story of={Stories.Opacity} />
-  <Story of={Stories.Shadows} />
-  <Story of={Stories.Spacing} />
-  <Story of={Stories.Typography} />
-  <Story of={Stories.ZIndex} />
-</div>
+<Canvas of={Stories.Animation} sourceState="none" />
+<Canvas of={Stories.Border} sourceState="none" />
+<Canvas of={Stories.Breakpoints} sourceState="none" />
+<Canvas of={Stories.Colors} sourceState="none" />
+<Canvas of={Stories.Icons} sourceState="none" />
+<Canvas of={Stories.Layout} sourceState="none" />
+<Canvas of={Stories.Opacity} sourceState="none" />
+<Canvas of={Stories.Shadows} sourceState="none" />
+<Canvas of={Stories.Spacing} sourceState="none" />
+<Canvas of={Stories.Typography} sourceState="none" />
+<Canvas of={Stories.ZIndex} sourceState="none" />
 { /* tier-1.mdx */ }
