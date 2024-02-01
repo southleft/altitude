@@ -33,9 +33,14 @@ class IconFont extends React.Component {
   render() {
     const iconMap = this.getIconMap();
     return (
-      <ul className="icon-font">
-        {this.renderIconList(iconMap)}
-      </ul>
+      <div className="icon-font">
+        <header>
+          <h1>Icon Font</h1>
+        </header>
+        <ul className="icon-font__list">
+          {this.renderIconList(iconMap)}
+        </ul>
+      </div>
     );
   }
 }

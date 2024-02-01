@@ -24,7 +24,7 @@ export class IconFont extends LitElement {
       return html`<li class="icon-font__item">
         <div class="icon icon-${item.name}"></div>
         <div class="icon-font__text">
-          ${item.name}<br />
+          icon-${item.name}<br />
           <span class="icon-font__text-unicode">
             <strong>unicode:</strong> <code>${item.code.replace(`\\`, '\\u')}</code>
           </span>
@@ -39,11 +39,17 @@ export class IconFont extends LitElement {
   render() {
     const iconMap = this.getIconMap();
     return html`
-      <ul class="icon-font">
-        <slot>
-          ${this.renderIconList(iconMap)}
-        </slot>
-      </ul>
+      <div class="icon-font">
+        <header>
+          <h1>Icon Font</h1>
+          <p>Icon names should accurately describe the represented concept or action in a clear and intuitive manner. Avoid obscure or ambiguous names that could lead to confusion or misinterpretation.</p>
+        </header>
+          <ul class="icon-font__list">
+            <slot>
+              ${this.renderIconList(iconMap)}
+            </slot>
+          </ul>
+      </div>
     `;
   }
 }

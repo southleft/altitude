@@ -27,8 +27,7 @@ const config: StorybookConfig = {
           excludeNodeModules: true
         }
       }
-    },
-    'storybook-addon-themes'
+    }
   ],
   staticDirs: ['./static'],
 

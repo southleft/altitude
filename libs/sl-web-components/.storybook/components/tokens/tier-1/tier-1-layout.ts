@@ -2,6 +2,7 @@ import { html, LitElement, unsafeCSS } from 'lit';
 import tokens from '../../../../styles/tokens.json';
 import styles from '../tokens.scss';
 import '../../token-specimen/token-specimen';
+import '../../../../components/alert/alert';
 
 export class Tier1Layout extends LitElement {
   static get styles() {
@@ -22,10 +23,11 @@ export class Tier1Layout extends LitElement {
       <section>
         <header>
           <h1>Tier 1: Layout</h1>
+          <sl-alert ?isActive=${true} variant="warning">IMPORTANT: Avoid direct usage of Tier 1 tokens in code. Tier 2 tokens must exclusively reference Tier 1 tokens.</sl-alert>
         </header>
         <table>
           <caption>
-            Max Widths
+            <h2>Max Widths</h2>
           </caption>
           <thead>
             <tr>

@@ -24,7 +24,10 @@ export class Tier2Layout extends LitElement {
           <h1>Tier 2: Layout</h1>
         </header>
         <table>
-          <caption>Max Widths</caption>
+          <caption>
+            <h2>Max Widths</h2>
+            <p>Establishing a maximum width for content containers helps optimize readability and scannability by preventing lines of text from becoming excessively long. Narrower content areas are easier for users to read and navigate, enhancing comprehension and usability across devices and screen sizes.</p>
+          </caption>
           <thead>
             <tr>
               <th>Token</th>

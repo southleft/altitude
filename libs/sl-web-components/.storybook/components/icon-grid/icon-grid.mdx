@@ -1,0 +1,95 @@
+import { Meta, Story } from '@storybook/blocks';
+import * as Stories from './icon-grid.stories';
+
+<Meta of={Stories} />
+
+# Icons
+
+Incorporating SVG icons offers numerous benefits, providing scalability without loss of quality, enhancing accessibility through customizable styling, improving performance with smaller file sizes, supporting interactivity and animation, offering flexibility for customization, ensuring cross-browser compatibility, and remaining future-proof as web standards evolve. By leveraging SVG icons effectively, developers can create visually compelling, accessible, and engaging user interfaces across various platforms and devices.
+
+## Usage Guidelines
+
+Within this design system, individual icon components containing SVGs are utilized. These components use embedded SVGs, simplifying usage by requiring only the individual web component to display the icon. The name of each individual icon corresponds to its name in the icon grid below. Here's how it's done:
+
+```html
+<sl-icon-chevron-down></sl-icon-chevron-down>
+```
+
+If an icon is embedded into a component (e.g., an accordion with only chevron-down), import the individual component.
+
+```html
+import { SLIconAdd } from '../icon/icons/add';
+```
+
+## Adding Icons
+
+1. Add the icon SVG file to `./libs/sl-web-components/icons/svgs`.  This location is the source of truth for all icons in the design system.
+2. Run `yarn workspace sl-web-components build:icons` to generate all the icons files.
+
+**IMPORTANT**: Never directly update any icon files outside of ./libs/sl-web-components/icons/svgs. Changes made here will be overwritten when the build:icons command is run.
+
+### Formatting icons
+
+Properly formatting icons is crucial to ensure they render correctly as icon fonts. Follow these steps in Adobe Illustrator:
+
+  1. Run Pathfinder > Divide
+  2. Apply a fill to the svg
+  3. Delete the filled in areas
+  4. Make the svg a Compound Path
+  5. Export the svg
+
+## Modifiying icons
+
+To modify an existing icon, override the corresponding SVG icon file with the new icon. However, take care when releasing modified icons, as certain changes may constitute breaking changes to the library. Refer to the [releasing guidelines](./RELEASING.mdx) for guidance on rolling out icon updates.
+
+## Removing icons
+
+Removing icons must be done manually to prevent breaking changes. Follow these steps:
+
+1. Delete the svg file from `./libs/sl-web-components/icons/svgs`
+2. Delete all applicable icon files in the `sl-web-components` and `sl-react` directories
+
+**Note:** After removing icons, check the following files modified by the generate icons pipeline:
+
+```
+sl-web-components/components/icon/fonts/*
+sl-web-components/components/icon/icons/*
+sl-web-components/components/icon/svgs/*
+sl-web-components/.storybook/components/icon-grid/icons.ts
+sl-react/components/Icons/*
+sl-react/src/index.ts
+```
+
+## Styling icons
+
+The sl-icon component comes with default height, width, and fill settings, which can be overridden with CSS Custom Properties when used within another component. By default, the icon is styled as follows:
+
+```scss
+.sl-c-icon {
+  fill: var(--sl-icon-fill, currentColor);
+  height: var(--sl-icon-height, var(--sl-theme-icon));
+  width: var(--sl-icon-width, var(--sl-theme-icon));
+}
+```
+
+The icon inherits the color property from the component it resides within. If the color needs to be overridden, set the fill at the component level where the icon lives:
+
+```scss
+sl-icon {
+  --sl-icon-fill: blue;
+}
+```
+
+For icons used solely within a `<slot>` of a component, style the slotted sl-icon in your new-component.scss file:
+
+```scss
+::slotted(sl-icon) {
+  --sl-icon-fill: blue;
+}
+```
+
+<div class="docs-story sb-stories">
+  <Story of={Stories.IconGrid} />
+</div>
+
+{ /* icon-grid.mdx */ }

@@ -25,7 +25,33 @@ export class Tier2Border extends LitElement {
         </header>
         <table>
           <caption>
-            Border Width
+            <h2>Border Colors</h2>
+            <p>Border colors help distinguish between different interface elements, providing visual cues that aid in navigation and comprehension. By using distinct border colors, designers can create clear distinctions between interactive elements, such as buttons, input fields, and clickable links.</p>
+          </caption>
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Value</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+            ${this.filterTokens('sl-theme-color-border').map((item) => {
+              return html`
+                <token-specimen
+                  variant="color"
+                  name="${item.name}"
+                  value="${item.value}"
+                  inlineStyles="background-color: var(${item.name});"
+                ></token-specimen>
+              `;
+            })}
+          </tbody>
+        </table>
+        <table>
+          <caption>
+            <h2>Border Width</h2>
+            <p>Border width defines the thickness of borders around elements such as buttons, cards, input fields, and containers, contributing significantly to the visual hierarchy, structure, and overall aesthetics of the design.</p>
           </caption>
           <thead>
             <tr>
@@ -49,7 +75,8 @@ export class Tier2Border extends LitElement {
         </table>
         <table>
           <caption>
-            Border Radius
+            <h2>Border Radius</h2>
+            <p>Border radius dictates the curvature of corners in these elements, playing a crucial role in shaping their visual appearance, feel, and overall aesthetics within the design system.</p>
           </caption>
           <thead>
             <tr>

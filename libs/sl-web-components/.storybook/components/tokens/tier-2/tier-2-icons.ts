@@ -25,7 +25,10 @@ export class Tier2Icons extends LitElement {
           <h1>Tier 2: Icons</h1>
         </header>
         <table>
-          <caption>Sizes</caption>
+          <caption>
+            <h2>Sizes</h2>
+            <p>Consistent icon sizes help establish visual harmony and predictability within the user interface. Users become accustomed to certain icon dimensions, making it easier for them to navigate and understand the interface intuitively.</p>
+          </caption>
           <thead>
             <tr>
               <th>Token</th>

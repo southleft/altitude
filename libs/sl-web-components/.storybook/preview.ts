@@ -92,12 +92,6 @@ const preview: Preview = {
       }
     },
     backgrounds: { disable: true },
-    themes: {
-      list: [
-        { name: 'dark', class: 'theme-dark', color: '#181818', default: true },
-        { name: 'light', class: 'theme-light', color: '#fff' },
-      ]
-    }
   }
 };
 

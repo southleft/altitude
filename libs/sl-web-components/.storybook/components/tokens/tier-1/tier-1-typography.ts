@@ -2,6 +2,7 @@ import { html, LitElement, unsafeCSS } from 'lit';
 import tokens from '../../../../styles/tokens.json';
 import styles from '../tokens.scss';
 import '../../token-specimen/token-specimen';
+import '../../../../components/alert/alert';
 
 export class Tier1Typography extends LitElement {
   static get styles() {
@@ -31,10 +32,10 @@ export class Tier1Typography extends LitElement {
       <section>
         <header>
           <h1>Tier 1: Typography</h1>
-          <p>These tokens are meant to be referenced and never used directly.</p>
+          <sl-alert ?isActive=${true} variant="warning">IMPORTANT: Avoid direct usage of Tier 1 tokens in code. Tier 2 tokens must exclusively reference Tier 1 tokens.</sl-alert>
         </header>
         <table>
-          <caption>Typography Presets</caption>
+          <caption><h2>Typography Presets</h2></caption>
           <thead>
             <tr>
               <th>Include</th>
@@ -53,7 +54,7 @@ export class Tier1Typography extends LitElement {
           </tbody>
         </table>
         <table>
-          <caption>Font Families</caption>
+          <caption><h2>Font Families</h2></caption>
           <thead>
             <tr>
               <th>Token</th>
@@ -72,7 +73,7 @@ export class Tier1Typography extends LitElement {
           </tbody>
         </table>
         <table>
-          <caption>Font Sizes</caption>
+          <caption><h2>Font Sizes</h2></caption>
           <thead>
             <tr>
               <th>Token</th>
@@ -91,7 +92,7 @@ export class Tier1Typography extends LitElement {
           </tbody>
         </table>
         <table>
-          <caption>Line Heights</caption>
+          <caption><h2>Line Heights</h2></caption>
           <thead>
             <tr>
               <th>Token</th>
@@ -111,7 +112,7 @@ export class Tier1Typography extends LitElement {
         </table>
 
         <table>
-          <caption>Font Weights</caption>
+          <caption><h2>Font Weights</h2></caption>
           <thead>
             <tr>
               <th>Token</th>
@@ -130,7 +131,7 @@ export class Tier1Typography extends LitElement {
           </tbody>
         </table>
         <table>
-          <caption>Letter Spacing</caption>
+          <caption><h2>Letter Spacing</h2></caption>
           <thead>
             <tr>
               <th>Token</th>

@@ -22,10 +22,13 @@ export class Tier2Colors extends LitElement {
       <section>
         <header>
           <h1>Tier 2: Colors</h1>
-          <p>These token values should be the only ones used in components.</p>
+          <p>Tier 2 tokens allow for adaptability and diversity in design while still maintaining a cohesive visual identity through adherence to the tier 1 tokens.</p>
         </header>
         <table>
-          <caption>Background Colors</caption>
+          <caption>
+            <h2>Background Colors</h2>
+            <p>Used for the background of components, sections, or the entire interface. Ensure appropriate contrast with content colors for readability.</p>
+          </caption>
           <thead>
             <tr>
               <th>Token</th>
@@ -47,7 +50,10 @@ export class Tier2Colors extends LitElement {
           </tbody>
         </table>
         <table>
-          <caption>Content Colors</caption>
+          <caption>
+            <h2>Content Colors</h2>
+            <p>Applied to text, icons, and other content elements to convey information. Prioritize accessibility by ensuring sufficient contrast for text and interactive elements.</p>
+          </caption>
           <thead>
             <tr>
               <th>Token</th>
@@ -57,28 +63,6 @@ export class Tier2Colors extends LitElement {
           </thead>
           <tbody></tbody>
             ${this.filterTokens('sl-theme-color-content').map((item) => {
-              return html`
-                <token-specimen
-                  variant="color"
-                  name="${item.name}"
-                  value="${item.value}"
-                  inlineStyles="background-color: var(${item.name});"
-                ></token-specimen>
-              `;
-            })}
-          </tbody>
-        </table>
-        <table>
-          <caption>Border Colors</caption>
-          <thead>
-            <tr>
-              <th>Token</th>
-              <th>Value</th>
-              <th>Example</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-            ${this.filterTokens('sl-theme-color-border').map((item) => {
               return html`
                 <token-specimen
                   variant="color"

@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
-
 import './tier-2-animation';
 import './tier-2-border';
 import './tier-2-colors';
@@ -14,11 +13,6 @@ import './tier-2-typography';
 const meta: Meta = {
   title: 'Fundamentals/Tokens/Tier 2: Usage',
   component: 'tier-2-tokens',
-  parameters: {
-    themes: {
-      default: 'light',
-    },
-  },
 };
 
 export default meta;

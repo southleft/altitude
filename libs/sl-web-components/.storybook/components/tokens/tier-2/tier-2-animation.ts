@@ -24,7 +24,10 @@ export class Tier2Animation extends LitElement {
           <h1>Tier 2: Animation</h1>
         </header>
         <table>
-          <caption>Duration</caption>
+          <caption>
+            <h2>Duration</h2>
+            <p>By defining standardized durations for motion effects and transitions, developers can maintain a cohesive and unified user experience across different interface elements and interactions.</p>
+          </caption>
           <thead>
             <tr>
               <th>Token</th>
@@ -47,7 +50,10 @@ export class Tier2Animation extends LitElement {
           </tbody>
         </table>
         <table>
-          <caption>Timing</caption>
+          <caption>
+            <h2>Timing</h2>
+            <p>By establishing consistent timing values, developers can create harmonious and predictable animation sequences that feel cohesive and polished.</p>
+          </caption>
           <thead>
             <tr>
               <th>Token</th>

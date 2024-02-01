@@ -25,7 +25,8 @@ export class Tier2Opacity extends LitElement {
         </header>
         <table>
           <caption>
-            Opacity
+            <h2>Opacity</h2>
+            <p>Opacity tokens control the transparency of elements, allowing developers to create layered and visually rich interfaces. By adjusting opacity levels, developers can create depth and dimensionality, guiding users' focus and enhancing the overall hierarchy of the interface.</p>
           </caption>
           <thead>
             <tr>

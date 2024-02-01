@@ -25,7 +25,8 @@ export class Tier2Typography extends LitElement {
         </header>
         <table>
           <caption>
-            Typography Usage
+            <h2>Typography Usage</h2>
+            <p> Leverage the type mixins below to achieve modular and reusable typography styles throughout the codebase.</p>
           </caption>
           <thead>
             <tr>

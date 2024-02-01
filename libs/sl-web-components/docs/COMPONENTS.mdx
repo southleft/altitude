@@ -6,47 +6,43 @@ import { Meta } from '@storybook/blocks';
 
 This codebase contains all the components, [recipes](https://bradfrost.com/blog/post/design-system-components-recipes-and-snowflakes/), and pages to successfully build the presentation view of product screens.
 
----
+## Creating components
 
-## Creating a component guidelines:
-
-### Initializing Component Creation:
+### Initializing Component Creation
 - Run `yarn workspace sl-web-components plop` for web components and `yarn workspace sl-react plop` for React components.
 - Use dash-case for web components (e.g., my-web-component) and PascalCase for React components (e.g., MyReactComponent).
 - After using templates, start Storybook by running `yarn workspace sl-web-components start`.
 
-### Defining Properties:
+### Defining Properties
 - Define properties that form the component's structure, typically `string`, `boolean`, or `number`.
 - Make properties required by omitting the `?` if they are integral to the component's functionality.
 
-### HTML Structure:
+### HTML Structure
 - Construct the HTML structure of the component.
 - Prioritize slot usage to ensure full composability, allowing dynamic content addition.
 - Embed necessary components within the structure (e.g., a close button) if essential.
 
-### Styling with SCSS and Tokens:
+### Styling with SCSS and Tokens
 - Use Tier 2 tokens for styling with SCSS.
 - Workflow for new tokens added via Figma:
 - Push token studio changes to the `tokens` branch.
 - Create a PR from the tokens branch to master, merge upon approval.
 - Run `yarn workspace sl-web-components build:tokens` to update tokens in Storybook docs.
 
-### Event Handling:
+### Event Handling
 - Implement event handlers within the component as necessary.
 - Prefix method names with 'handle' or 'set' based on their actions to maintain consistency.
 - Avoid using event names (onClick, onHover) that may conflict with React's built-in methods.
 
-### Documentation:
+### Documentation
 - Ensure comprehensive documentation for the component.
 - Utilize basic Markdown formatting for clear and structured documentation.
 - Refer to the Markdown Guide Cheat Sheet for formatting assistance.
 
-### Building Web Component:
+### Packaging
 - Upon completing the main Web Component, run `yarn workspace sl-web-components build`.
 - This command packages the WC files for the React wrappers to reference.
 - For any subsequent changes in the WC, rerun the build command to reflect updates in React.
-
----
 
 ## Working with components
 
@@ -148,16 +144,6 @@ document.head.appendChild(style);
 
 Each SL Web Components component is documented in Storybook, which surfaces each component's API and provides copy-and-paste code snippets. If you have questions or are experiencing any issues when working with SL Web Components's components, please [reach out for support](#) (TODO: provide support link) and the team will be happy to help.
 
-### Creating a component
-
-1. To create a component, run `npm run plop` in the command line.
-2. The command will ask, "What is your component name?" Add your component name (you can either type `link-list` or `link list` and it will automatically generate the proper casing).
-3. In `packages/web-components/components/[component]/[component].stories.ts`, change `title: 'Molecules/Category/[ComponentName]'` to the location in the Storybook navigation where you want your component to live. For instance, `PageHeader` component you would change `title: 'Molecules/Category/PageHeader'` to `title: 'Molecules/Text/PageHeader'`.
-4. Edit component source code in accordance with [SL Web Components's code guidelines](./CODE_GUIDELINES.mdx)
-5. Create relevant stories for all component variants
-
----
-
 ## Working with recipes
 
 **[Recipes](https://bradfrost.com/blog/post/design-system-components-recipes-and-snowflakes/)** are mainly compositions of design system components that are to be consistently used across a product, but aren’t agnostic enough to live in core component library. Like pages, recipes live in the `.storybook` directory of the project since they are not packaged up with the design system. Recipe components may be revisited and pulled into [Name of design system] at a later date if they are deemed to be reusable enough to move into the design system library.
@@ -187,8 +173,6 @@ Recipes
 ```
 
 Recipe components should _not_ include the `.sl-` CSS prefix, since they are not part of the design system (so a recipe could look like `.c-recipe-name`). However, the other design system [code conventions](./CODE_GUIDELINES.mdx) should be followed in order to make refactoring into the design system as easy as possible.
-
----
 
 ## Directory structure <a name="directory"></a>
 

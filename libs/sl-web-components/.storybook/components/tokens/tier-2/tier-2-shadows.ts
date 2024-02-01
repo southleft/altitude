@@ -25,7 +25,8 @@ export class Tier2Shadows extends LitElement {
         </header>
         <table>
           <caption>
-            Box Shadows
+            <h2>Drop Shadows</h2>
+            <p>Drop shadows are shadows that appear outside the boundaries of an object, creating the illusion of the object being lifted or floating above the background.</p>
           </caption>
           <thead>
             <tr>
