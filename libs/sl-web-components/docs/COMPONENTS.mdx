@@ -119,11 +119,11 @@ The last step is to import the theme CSS file into your application. This will p
 1. **Importing the CSS file directly** - This method is recommended when it isn't necessary to support multiple version of the SL Web Components in your application. You'd import the CSS file into your application's main entry point (e.g. `index.js` or `main.js`) or main css file.
 
 ```js
-import 'sl-web-components/dist/sl/sl.css';
+import 'sl-web-components/dist/css/head.css';
 ```
 
 ```css
-@import '~sl-web-components/dist/sl/sl.css';
+@import '~sl-web-components/dist/css/head.css';
 ```
 
 2. **Using the scopeStyles function** - This method is recommended when using multiple versions of the SL Web Components in your application such as needed with a Micro Frontend Architecture. This approach will scope the CSS to the element selector provided.

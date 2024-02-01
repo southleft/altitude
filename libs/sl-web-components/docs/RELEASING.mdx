@@ -2,21 +2,21 @@ import { Meta } from '@storybook/blocks';
 
 <Meta title="Documentation/Releasing" />
 
-# Versioning and Releasing SL Web Components
+# Versioning and Releasing Web Components
 
-SL Web Components is a UI library that powers Extreme Neworks's digital products. This document details the practices that SL follows to provide consumers with a predictable & stable UI library and that introduces changes in a predictable way.
+Web Components is a UI library that powers Extreme Neworks's digital products. This document details the practices that follows to provide consumers with a predictable & stable UI library and that introduces changes in a predictable way.
 
 ## Principles for versioning and releasing
 
 - Deliver stable, predictable software
-- Communicate and coordinate with teams consuming SL Web Components
+- Communicate and coordinate with teams consuming Web Components
 - Clearly communicate changes and roadmap
 - Minimize breaking changes
 - Follow a sensible, predictable release cadance
 
 ## Building Themes and Components
 
-In order to use SL Web Components in a HTML page you must compile the TypeScript into vanilla JavaScript. That is done via the `yarn build` command. There are a few options you can include on the command to customize the output. They are,
+In order to use Web Components in a HTML page you must compile the TypeScript into vanilla JavaScript. That is done via the `yarn build` command. There are a few options you can include on the command to customize the output. They are,
 
 - `yarn build -- --progress` using `--progress` will display logging info to the terminal as webpack compiles the sources
 - `[theme].css`, depending on the theme you may get a `sl.css` file or something like that. This contains all the CSS custom properties and shared CSS (e.g. typography presets). This should be included in the head of your HTML.
@@ -28,9 +28,9 @@ In order to use SL Web Components in a HTML page you must compile the TypeScript
 
 ## Versioning
 
-SL Web Components uses [SemVer](https://semver.org/) semantic versioning to keep track of ongoing changes to the product. The three types of versions are:
+Web Components uses [SemVer](https://semver.org/) semantic versioning to keep track of ongoing changes to the product. The three types of versions are:
 
-- **Major (X.y.z)** - Major versions contain breaking changes to SL Web Components developers builds.
+- **Major (X.y.z)** - Major versions contain breaking changes to Web Components developers builds.
 - **Minor (x.Y.z)** - Minor versions add new features or deprecate existing features without breaking changes.
 - **Patch (x.y.Z)** - Patch versions fix defects or optimize existing features without breaking changes.
 
@@ -64,17 +64,17 @@ Patch versions fix defects and optimize existing code, including:
 
 ---
 
-### Releasing SL Web Components
+### Releasing Web Components
 
 ### Release strategy
 
-SL releases new versions of SL Web Components on a regular schedule to help teams plan and coordinate updates.
+releases new versions of Web Components on a regular schedule to help teams plan and coordinate updates.
 
 In these releases, teams can expect new features and fixes in the form of minor and patch releases that are fully backwards compatible. **Major releases that require any refactoring in downstream applications will always be done in coordination with product teams** so as not to distract from teams' product roadmaps and ensure breaking changes are handled with care and consideration.
 
-In pre-`v1.0` releases, there may be some shifts in architecture or naming as the library gets off the ground. Should any breaking changes be incurred before the library reaches a `v1.0` status, the SL team will prioritize assisting and helping any consuming team address those changes.
+In pre-`v1.0` releases, there may be some shifts in architecture or naming as the library gets off the ground. Should any breaking changes be incurred before the library reaches a `v1.0` status, the team will prioritize assisting and helping any consuming team address those changes.
 
-Once the dust settles and the component library reaches a `v1.0` status, teams can expect SL Web Components to be stable software. Backwards-compatible features and fixes will continue to be added. Any major release that incurs breaking changes (see "Major changes" section above) to the library will be coordinated around product teams and their roadmaps.
+Once the dust settles and the component library reaches a `v1.0` status, teams can expect Web Components to be stable software. Backwards-compatible features and fixes will continue to be added. Any major release that incurs breaking changes (see "Major changes" section above) to the library will be coordinated around product teams and their roadmaps.
 
 ### Release process
 
