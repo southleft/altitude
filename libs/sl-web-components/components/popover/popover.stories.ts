@@ -118,17 +118,17 @@ const TemplateWithSlottedContent = (args) => html`
         <sl-tab>Tab 1</sl-tab>
         <sl-tab>Tab 2</sl-tab>
         <sl-tab>Tab 3</sl-tab>
-        <sl-tab-panel slot="popover">
-          <f-po>Tab popover 1 - Instance slot 1</f-po>
-          <f-po>Tab popover 1 - Instance slot 2</f-po>
+        <sl-tab-panel slot="panel">
+          <f-po>Tab panel 1 - Instance slot 1</f-po>
+          <f-po>Tab panel 1 - Instance slot 2</f-po>
         </sl-tab-panel>
-        <sl-tab-panel slot="popover">
-          <f-po>Tab popover 2 - Instance slot 1</f-po>
-          <f-po>Tab popover 2 - Instance slot 2</f-po>
+        <sl-tab-panel slot="panel">
+          <f-po>Tab panel 2 - Instance slot 1</f-po>
+          <f-po>Tab panel 2 - Instance slot 2</f-po>
         </sl-tab-panel>
-        <sl-tab-panel slot="popover">
-          <f-po>Tab popover 3 - Instance slot 1</f-po>
-          <f-po>Tab popover 3 - Instance slot 2</f-po>
+        <sl-tab-panel slot="panel">
+          <f-po>Tab panel 3 - Instance slot 1</f-po>
+          <f-po>Tab panel 3 - Instance slot 2</f-po>
         </sl-tab-panel>
       </sl-tabs>
       <sl-button slot="footer" variant="tertiary" @click=${closePanel}>Close</sl-button>
