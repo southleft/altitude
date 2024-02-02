@@ -2,89 +2,72 @@ import { Meta } from '@storybook/blocks';
 
 <Meta title="Documentation/Releasing" />
 
-# Versioning and Releasing Web Components
+# Releasing
 
-Web Components is a UI library that powers Extreme Neworks's digital products. This document details the practices that follows to provide consumers with a predictable & stable UI library and that introduces changes in a predictable way.
+Web Components is the UI library driving all digital products. This document outlines our practices to ensure a predictable and stable UI library while introducing changes in a structured manner.
 
-## Principles for versioning and releasing
+## Our Principles
 
-- Deliver stable, predictable software
-- Communicate and coordinate with teams consuming Web Components
-- Clearly communicate changes and roadmap
-- Minimize breaking changes
-- Follow a sensible, predictable release cadance
-
-## Building Themes and Components
-
-In order to use Web Components in a HTML page you must compile the TypeScript into vanilla JavaScript. That is done via the `yarn build` command. There are a few options you can include on the command to customize the output. They are,
-
-- `yarn build -- --progress` using `--progress` will display logging info to the terminal as webpack compiles the sources
-- `[theme].css`, depending on the theme you may get a `sl.css` file or something like that. This contains all the CSS custom properties and shared CSS (e.g. typography presets). This should be included in the head of your HTML.
-- `vendor.js`, any shared (or reused) code across multiple components. You _must_ include this in the page any time you are using the library. This should be included first before any components or bundles are included (below).
-- `bundle.js`, a bundled compilation of _all_ components in the repository (**IMPORTANT**: This does not include `icon.js` since the pathing adds more work to the user).
-- `:component.js` where `:component` is the name of a component such as `button`. This is an individual export of each component. If your system has the ability to selectivly bring in javascript based on the needs of the page you could use these to only include the accordion on pages where an accordion is needed, for example.
-
-**IMPORTANT** - Always include `icon.js` in your project whether you use the individual component JS files or bundle.js files.
-
-## Versioning
-
-Web Components uses [SemVer](https://semver.org/) semantic versioning to keep track of ongoing changes to the product. The three types of versions are:
-
-- **Major (X.y.z)** - Major versions contain breaking changes to Web Components developers builds.
-- **Minor (x.Y.z)** - Minor versions add new features or deprecate existing features without breaking changes.
-- **Patch (x.y.Z)** - Patch versions fix defects or optimize existing features without breaking changes.
-
-The details for each version are as follows:
-
-### Major changes
-
-Major releases incur breaking changes for user developers, including:
-
-- **API** - Removing, renaming, or altering any component, prop, method, event, or slot that would result in a broken build if user developers don't address changes in downstream applications.
-- **Style** - Making changes to box-model properties (such as `padding`, `margin`, `width`, `height` and so on), typography properties, or specificity that would result in layout shifts or wrapping text. Making bold stylistic changes to the design language, such as adopting new typefaces or changing buttons from blue to red.
-- **Icons** - Removing, renaming, or significantly altering the design of icons.
-
-### Minor changes
-
-Minor versions are additive changes with full backwards compatibility, including:
-
-- **API** - Adding new components. Adding new props, methods, events, or slots. Deprecating (but not removing) existing props, methods, events, or slots. Altering a component's markup or behavior in ways that don't cause breaking changes .
-- **Style** - Adding or altering styles in ways that don't cause breaking layout shifts, wrapping text, or radically altering the existing design language.
-- **Icons** - Adding new icons and making subtle changes to existing icons.
-
-### Patch changes
-
-Patch versions fix defects and optimize existing code, including:
-
-- Fixing defects in props, methods, events, or slots that are preventing the component from functioning.
-- Fixing styling defects causing issues with legibility, accessibility, or display.
-- Updating component documentation.
-- Refactoring component code without impacting display or functionality.
-- Adding or updating tests.
-
----
-
-### Releasing Web Components
+- **Deliver Stability**: Provide consumers with stable and predictable software.
+- **Communication and Coordination**: Maintain open communication and coordinate with teams consuming Web Components.
+- **Clear Communication**: Clearly communicate changes and the roadmap to all stakeholders.
+- **Minimize Breaking Changes**: Strive to minimize breaking changes to maintain compatibility.
+- **Predictable Release Cadence**: Follow a sensible and predictable release schedule.
 
 ### Release strategy
 
-releases new versions of Web Components on a regular schedule to help teams plan and coordinate updates.
+Our approach to releasing new versions of Web Components follows a structured schedule to aid teams in planning and coordinating updates effectively.
 
-In these releases, teams can expect new features and fixes in the form of minor and patch releases that are fully backwards compatible. **Major releases that require any refactoring in downstream applications will always be done in coordination with product teams** so as not to distract from teams' product roadmaps and ensure breaking changes are handled with care and consideration.
+During these releases, teams can anticipate a range of new features and fixes delivered through minor and patch releases, all of which are fully backwards compatible. Major releases, which may necessitate refactoring in downstream applications, are always coordinated closely with product teams. This ensures alignment with product roadmaps and careful handling of any breaking changes.
 
-In pre-`v1.0` releases, there may be some shifts in architecture or naming as the library gets off the ground. Should any breaking changes be incurred before the library reaches a `v1.0` status, the team will prioritize assisting and helping any consuming team address those changes.
+In pre-v1.0 releases, there might be adjustments in architecture or naming as the library evolves. If any breaking changes occur before reaching v1.0, our team prioritizes assisting consuming teams in addressing these changes.
 
-Once the dust settles and the component library reaches a `v1.0` status, teams can expect Web Components to be stable software. Backwards-compatible features and fixes will continue to be added. Any major release that incurs breaking changes (see "Major changes" section above) to the library will be coordinated around product teams and their roadmaps.
+Once the component library stabilizes at v1.0, teams can expect Web Components to provide a stable foundation for their projects. We continue to introduce backwards-compatible features and fixes. Any major releases that introduce breaking changes (refer to the "Major changes" section above) are planned in coordination with product teams and their roadmaps.
 
 ### Release process
 
-1. Create a release branch, e.g. `release-v0.x.x`
-2. Run `yarn update-version`. This will update the version in the `package.json` file of the project.
-4. Navigate to the CHANGELOG.md file and manually update the version number and date.
-5. Commit the changes - `git commit -am "Updating release version and changelog."`
-6. Push the changes up to the remote repo - `git push origin main`
-7. Tag the release - `git tag -a v0.x.x -m "Release v0.x.x"`
-8. Push the tag up to the remote - `git push origin -f --tags`
-9. Make a pull request to merge the changes into the `main` branch
-10. Go to the Github repo "tags" section to confim the new tag - https://github.com/extremenetworks/ExtremeCloud-One/tags
+1. Create a release branch, e.g., `release-v0.x.x`.
+2. Execute `yarn update-version`. This updates the version in the `package.json` file.
+3. Manually update the version number and date in the `CHANGELOG.md` file.
+4. Commit the changes: `git commit -am "Updating release version and changelog."`
+5. Push the changes to the remote repository: `git push origin main`
+6. Tag the release: `git tag -a v0.x.x -m "Release v0.x.x"`
+7. Push the tag to the remote: `git push origin -f --tags`
+9. Make a pull request to merge the changes into the `main` branch.
+9. Confirm the new tag in the Github repository's [tags](https://github.com/southleft/altitude/tags) section.
 
+## Versioning
+
+Web Components follows [SemVer](https://semver.org/) semantic versioning to manage ongoing changes. There are three types of versions:
+
+- **Major (X.y.z)**: Major versions include breaking changes for developers using Web Components.
+- **Minor (x.Y.z)**: Minor versions introduce new features or deprecate existing ones without breaking changes.
+- **Patch (x.y.Z)**: Patch versions address defects or optimize features without breaking changes.
+
+Here's a breakdown of each version:
+
+### Major Changes
+
+Major releases introduce breaking changes for developers, such as:
+
+- **API**: Removing, renaming, or altering components, props, methods, events, or slots, which may break downstream applications if not addressed.
+- **Style**: Making significant changes to box-model properties, typography, or design language that could affect layout or appearance.
+- **Icons**: Removing, renaming, or drastically altering icon designs.
+
+### Minor Changes
+
+Minor versions bring additive changes with full backwards compatibility, such as:
+
+- **API**: Adding new components, props, methods, events, or slots. Deprecating existing ones without removing them. Modifying markup or behavior without causing breaking changes.
+- **Style**: Making non-disruptive style additions or alterations that maintain layout and design consistency.
+- **Icons**: Introducing new icons or making subtle changes to existing ones.
+
+### Patch Changes
+
+Patch versions address defects and optimize existing code by:
+
+- Fixing defects in props, methods, events, or slots that impair component functionality.
+- Rectifying styling issues affecting legibility, accessibility, or display.
+- Updating component documentation.
+- Refactoring code without affecting display or functionality.
+- Adding or updating tests.

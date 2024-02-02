@@ -2,7 +2,7 @@ import { Meta } from '@storybook/blocks';
 
 <Meta title="Documentation/Components" />
 
-# Working with SL Web Components Components, Pages, and Recipes
+# Working with Web Components Components, Pages, and Recipes
 
 This codebase contains all the components, [recipes](https://bradfrost.com/blog/post/design-system-components-recipes-and-snowflakes/), and pages to successfully build the presentation view of product screens.
 
@@ -48,11 +48,9 @@ This codebase contains all the components, [recipes](https://bradfrost.com/blog/
 
 ### Using components
 
-Using SL Web Components components in your application involves first installing the SL Web Components package as a dependency:
+Using Web Components components in your application involves first installing the Web Components package as a dependency:
 
-[TODO] Process needs to be established
-
-Next, import any needed components from the SL Web Components component library into your application like so:
+Next, import any needed components from the Web Components component library into your application like so:
 
 1. **Auto-registering components method** (preferred) - This will automatically register the component by just importing the component. This is the preferred method of importing components. In order to trigger this auto registery you will need to set a global at the application level.
 
@@ -66,7 +64,7 @@ window.enAutoRegistry = true;
 import 'sl-web-components/dist/sl/components/button/button';
 ```
 
-2. **Manual registering components method** - This method is necessary when using multiple versions of the SL Web Components given the global scope of custom elements registry. You'll need to use named imports to import the component and then manually register the component(s) using the `register` function available in the package. This method is not recommended unless you are using multiple versions of the SL Web Components in your application such as needed with a Micro Frontend Architecture.
+2. **Manual registering components method** - This method is necessary when using multiple versions of the Web Components given the global scope of custom elements registry. You'll need to use named imports to import the component and then manually register the component(s) using the `register` function available in the package. This method is not recommended unless you are using multiple versions of the Web Components in your application such as needed with a Micro Frontend Architecture.
 
 ```js
 import { EnButton } from 'sl-web-components/dist/sl/components/button/button';
@@ -95,7 +93,7 @@ const elementMap = register({
 });
 ```
 
-From there, call SL Web Components in your application and pass in the desired values into each component's API:
+From there, call Web Components in your application and pass in the desired values into each component's API:
 
 ```html
 <!-- Using auto register method or default element name -->
@@ -116,7 +114,7 @@ From there, call SL Web Components in your application and pass in the desired v
 
 The last step is to import the theme CSS file into your application. This will provide the default styling for all components. There are two main ways to accomplish this:
 
-1. **Importing the CSS file directly** - This method is recommended when it isn't necessary to support multiple version of the SL Web Components in your application. You'd import the CSS file into your application's main entry point (e.g. `index.js` or `main.js`) or main css file.
+1. **Importing the CSS file directly** - This method is recommended when it isn't necessary to support multiple version of the Web Components in your application. You'd import the CSS file into your application's main entry point (e.g. `index.js` or `main.js`) or main css file.
 
 ```js
 import 'sl-web-components/dist/css/head.css';
@@ -126,7 +124,7 @@ import 'sl-web-components/dist/css/head.css';
 @import '~sl-web-components/dist/css/head.css';
 ```
 
-2. **Using the scopeStyles function** - This method is recommended when using multiple versions of the SL Web Components in your application such as needed with a Micro Frontend Architecture. This approach will scope the CSS to the element selector provided.
+2. **Using the scopeStyles function** - This method is recommended when using multiple versions of the Web Components in your application such as needed with a Micro Frontend Architecture. This approach will scope the CSS to the element selector provided.
 
 ```js
 import { scopeStyles } from 'sl-web-components/dist/sl/directives/scope-styles';
@@ -142,19 +140,11 @@ style.innerHTML = scopedCss;
 document.head.appendChild(style);
 ```
 
-Each SL Web Components component is documented in Storybook, which surfaces each component's API and provides copy-and-paste code snippets. If you have questions or are experiencing any issues when working with SL Web Components's components, please [reach out for support](#) (TODO: provide support link) and the team will be happy to help.
+Each Web Components component is documented in Storybook, which surfaces each component's API and provides copy-and-paste code snippets. If you have questions or are experiencing any issues when working with Web Components's components, please [reach out for support](#) (TODO: provide support link) and the team will be happy to help.
 
 ## Working with recipes
 
 **[Recipes](https://bradfrost.com/blog/post/design-system-components-recipes-and-snowflakes/)** are mainly compositions of design system components that are to be consistently used across a product, but aren’t agnostic enough to live in core component library. Like pages, recipes live in the `.storybook` directory of the project since they are not packaged up with the design system. Recipe components may be revisited and pulled into [Name of design system] at a later date if they are deemed to be reusable enough to move into the design system library.
-
-### Using recipes
-
-TODO: Need to establish the location of where recipes should live. Options include:
-
-1. The downstream application codebase
-2. A `design-system-extras` sibling repository
-3. In a directory in the `SL Web Components` library (not recommended)
 
 ### Creating a recipe
 
@@ -168,63 +158,8 @@ Note: Recipe components live in `.storybook/recipes` and take the following shap
 
 ```
 Recipes
---Component Name
-----Component Stories
+--Recipe Name
+----Recipe Stories
 ```
 
 Recipe components should _not_ include the `.sl-` CSS prefix, since they are not part of the design system (so a recipe could look like `.c-recipe-name`). However, the other design system [code conventions](./CODE_GUIDELINES.mdx) should be followed in order to make refactoring into the design system as easy as possible.
-
-## Directory structure <a name="directory"></a>
-
-### Organizing components
-
-We're using the [atomic design methodology](https://atomicdesign.bradfrost.com/chapter-2/#the-atomic-design-methodology) to cluster design system components into [Atoms](http://atomicdesign.bradfrost.com/chapter-2/#atoms), [Molecules](http://atomicdesign.bradfrost.com/chapter-2/#molecules), and [Organisms](http://atomicdesign.bradfrost.com/chapter-2/#organisms). Therefore the top-level navigation categories for Storybook are:
-
-- Design tokens
-- Atoms
-- Molecules
-- Organisms
-
-The component stucture is as follows:
-
-```
-Atoms
---Design Tokens
---Component Category
-----Component Name
-------Component Stories
-Molecules
---Component Category
-----Component Name
-------Component Stories
-Organisms
---Component Category
-----Component Name
-------Component Stories
-```
-
-Components all follow a general pattern of:
-
-```
---Component Category
-----Individual Component Name
-------Individual Component Stories
-```
-
-For instance, `Molecules/Buttons/Button` would look something like:
-
-```
-Molecules
---Buttons
-----Button
-------Default
-------Primary
-------Small
-------[Other Variations]
-```
-
----
-
-## Testing
-
-- [Documentation](https://storybook.js.org/docs/writing-tests/interaction-testing)
