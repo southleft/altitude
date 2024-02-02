@@ -57,8 +57,8 @@
   height: size(4);
   border-radius: 50%;
   background-color: var(--sl-theme-color-background-transparent);
-  border: var(--sl-theme-border-width) solid var(--sl-theme-color-content-default-weak);
-  color: var(--sl-theme-color-content-default-weak);
+  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+  color: var(--sl-theme-color-content-default);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,17 +67,17 @@
    * Active state
    */
   .sl-is-active & {
-    background-color: var(--sl-theme-color-content-default);
-    border-color: var(--sl-theme-color-content-default-weak);
-    color: var(--sl-theme-color-content-inverse-default);
+    background-color: var(--sl-theme-color-background-accent-default);
+    border-color: var(--sl-theme-color-border-accent-default);
+    color: var(--sl-theme-color-content-accent-stronger);
   }
 
   /**
    * Completed state
    */
   .sl-is-complete & {
-    background-color: var(--sl-theme-color-content-default-weaker);
-    border-color: var(--sl-theme-color-content-default-weaker);
+    background-color: var(--sl-theme-color-content-default-weak);
+    border-color: var(--sl-theme-color-content-default-weak);
     color: var(--sl-theme-color-content-inverse-default);
   }
 }
@@ -91,7 +91,7 @@
   align-items: center;
   justify-content: center;
   border: none;
-  background-color: var(--sl-theme-color-border-default-weak);
+  background-color: var(--sl-theme-color-border-default);
   margin: auto;
   height: 1px;
   width: 92px;
@@ -123,7 +123,7 @@
   gap: var(--sl-theme-space-xs);
   width: max-content;
   max-width: size(17);
-  color: var(--sl-theme-color-content-default-weak);
+  color: var(--sl-theme-color-content-default);
   --sl-icon-width: #{var(--sl-theme-icon-md)};
   --sl-icon-height: #{var(--sl-theme-icon-md)};
 
@@ -138,7 +138,7 @@
    * Completed state
    */
    .sl-is-complete & {
-     color: var(--sl-theme-color-content-default-weaker);
+     color: var(--sl-theme-color-content-default-weak);
    }
 
   /**
@@ -203,5 +203,12 @@
  */
 .sl-c-stepper-item__description {
   @include sl-theme-typography-body-sm;
-  color: var(--sl-theme-color-content-default-weak);
+  color: var(--sl-theme-color-content-default);
+
+  /**
+   * Completed state
+   */
+  .sl-is-complete & {
+    color: var(--sl-theme-color-content-default-weak);
+  }
 }

@@ -38,7 +38,7 @@
  */
 @mixin label-styles() {
   @include sl-theme-typography-body-md;
-  color: var(--sl-theme-color-content-default-weak);
+  color: var(--sl-theme-color-content-default);
   display: block;
   transition: color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
 
@@ -71,15 +71,15 @@
   padding: size(1.375) size(2);
   border-width: var(--sl-theme-border-width);
   border-style: solid;
-  border-color: var(--sl-theme-color-content-default-weak);
+  border-color: var(--sl-theme-color-border-default);
   border-radius: var(--sl-theme-border-radius);
-  color: var(--sl-theme-color-content-default-weak);
+  color: var(--sl-theme-color-content-default);
   background-color: var(--sl-theme-color-background-transparent-default);
   transition: background-color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing), color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing), border-color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing), box-shadow var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
 
   ~ *  {
     transition: color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
-    color: var(--sl-theme-color-content-default-weak);
+    color: var(--sl-theme-color-content-default);
   }
 
   /**
@@ -87,12 +87,7 @@
    * - Prevents hover while others states are present
    */
   &:hover:not(:active, :focus, :focus-visible, :disabled) {
-    color: var(--sl-theme-color-content-default);
-    border-color: var(--sl-theme-color-content-default);
-
-    ~ *  {
-      color: var(--sl-theme-color-content-default);
-    }
+    border-color: var(--sl-theme-color-border-default-strong);
   }
 
   /**
@@ -105,11 +100,6 @@
   &:focus-visible {
     border-color: var(--sl-theme-color-border-accent-default);
     box-shadow: 0px 0px 0px 1px var(--sl-theme-color-border-accent-default);
-    color: var(--sl-theme-color-content-default);
-
-    ~ * {
-      color: var(--sl-theme-color-content-default);
-    }
   }
 
   /**
