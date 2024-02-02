@@ -5,7 +5,7 @@
 
 .sl-c-layout {
   display: grid;
-  gap: size(2);
+  gap: var(--sl-theme-space);
   grid-template-columns: repeat(1, 1fr);
 }
 
@@ -22,7 +22,7 @@
  * 1. Shrink the gap to 8px between items
  */
 .sl-c-layout--gap-sm {
-  gap: size(1);
+  gap: var(--sl-theme-space-xs);
 }
 
 /**
@@ -30,7 +30,7 @@
  * 1. Shrink the gap to 24px between items
  */
 .sl-c-layout--gap-lg {
-  gap: size(3);
+  gap: var(--sl-theme-space-lg);
 }
 
 /**
@@ -38,7 +38,7 @@
  * 1. Widen the gap to 32px between items
  */
 .sl-c-layout--gap-xl {
-  gap: size(4);
+  gap: var(--sl-theme-space-xxl);
 }
 
 /**
@@ -51,7 +51,7 @@
  */
 .sl-c-layout--sidebar-left {
   @media all and (min-width: $sl-breakpoint-md) {
-    grid-template-columns: calc(var(--sl-layout-width-sidebar, 40%) - (size(1))) minmax(0, 1fr); /* 2 */
+    grid-template-columns: calc(var(--sl-layout-width-sidebar, 40%) - (var(--sl-theme-space-xs))) minmax(0, 1fr); /* 2 */
   }
 }
 
@@ -65,6 +65,6 @@
  */
 .sl-c-layout--sidebar-right {
   @media all and (min-width: $sl-breakpoint-md) {
-    grid-template-columns: minmax(0, 1fr) calc(var(--sl-layout-width-sidebar, 40%) - (size(1))); /* 2 */
+    grid-template-columns: minmax(0, 1fr) calc(var(--sl-layout-width-sidebar, 40%) - (var(--sl-theme-space-xs))); /* 2 */
   }
 }

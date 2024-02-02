@@ -32,7 +32,7 @@
   @include sl-theme-typography-body-sm;
   display: inline-flex;
   align-items: center;
-  gap: size(1);
+  gap: var(--sl-theme-space-xs);
   background: none;
   cursor: pointer;
   border: 0;
@@ -215,7 +215,7 @@
   padding: size(2) 0;
   display: grid;
   grid-template-columns: min-content 1fr;
-  gap: size(2);
+  gap: var(--sl-theme-space);
 
   &:last-of-type {
     border-block-end: none;
@@ -228,7 +228,7 @@
   margin: 0;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-  gap: size(1);
+  gap: var(--sl-theme-space-xs);
 }
 
 .sl-c-month-selector__year-heading {

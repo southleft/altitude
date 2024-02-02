@@ -9,7 +9,7 @@
 .sl-c-dropdown {
   display: flex;
   flex-direction: column;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
 }
 
 /**
@@ -51,7 +51,7 @@
    */
   .sl-c-dropdown--align-top & {
     inset-block-start: auto;
-    inset-block-end: calc(100% + size(1));
+    inset-block-end: calc(100% + var(--sl-theme-space-xs));
   }
 }
 

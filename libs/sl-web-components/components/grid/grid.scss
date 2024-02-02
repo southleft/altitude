@@ -252,7 +252,7 @@
   * Slotted grid item within grid with small gap between items
   */
   .sl-c-grid--gap-sm > & {
-    padding: size(0.5);
+    padding: var(--sl-theme-space-xxs);
   }
 
   /**
@@ -542,14 +542,14 @@
 .sl-c-grid--break-none {
   flex-wrap: nowrap;
   margin: 0;
-  grid-gap: size(2);
+  grid-gap: var(--sl-theme-space);
 
   &.sl-c-grid--gap-sm {
-    grid-gap: size(1);
+    grid-gap: var(--sl-theme-space-xs);
   }
 
   &.sl-c-grid--gap-lg {
-    grid-gap: size(4);
+    grid-gap: var(--sl-theme-space-xxl);
   }
 
   ::slotted(sl-grid-item) {

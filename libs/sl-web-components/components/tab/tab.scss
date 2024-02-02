@@ -13,11 +13,11 @@
 .sl-c-tab {
   @include sl-theme-typography-body-sm;
   margin: 0;
-  padding: size(1) size(2);
+  padding: var(--sl-theme-space-xs) size(2);
   background-color: var(--sl-theme-color-background-transparent-default);
   color: var(--sl-theme-color-content-default);
   display: flex;
-  gap: size(0.75);
+  gap: var(--sl-theme-space-xs);
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -63,8 +63,8 @@
    */
   &.sl-is-active {
     @include sl-theme-typography-body-sm-bold;
-    color: var(--sl-theme-color-content-accent-default);
-    border-bottom-color: var(--sl-theme-color-border-accent-default);
+    color: var(--sl-theme-color-content-default-weaker);
+    border-bottom-color: var(--sl-theme-color-content-default-weaker);
   }
 }
 

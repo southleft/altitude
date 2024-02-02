@@ -32,7 +32,7 @@
  */
 .sl-c-list-item__link {
   @include sl-theme-typography-body-sm;
-  width: var(--sl-list-item-link-width, calc(100% - #{size(0.5)}));
+  width: var(--sl-list-item-link-width, calc(100% - #{var(--sl-theme-space-xxs)}));
   margin-inline-start: var(--sl-list-item-link-marign-inline-start, size(0.25));
   margin-inline-end: var(--sl-list-item-link-marign-inline-start, size(0.25));
   display: flex;
@@ -40,9 +40,9 @@
   text-decoration: none;
   border: none;
   padding-block-start: var(--sl-list-item-link-padding-block-start, size(0.75));
-  padding-inline-start: var(--sl-list-item-link-padding-inline-start, size(1));
+  padding-inline-start: var(--sl-list-item-link-padding-inline-start, var(--sl-theme-space-xs));
   padding-block-end: var(--sl-list-item-link-padding-block-end, size(0.75));
-  padding-inline-end: var(--sl-list-item-link-padding-inline-end, size(1));
+  padding-inline-end: var(--sl-list-item-link-padding-inline-end, var(--sl-theme-space-xs));
   color: inherit;
   transition: background-color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
   background-color: transparent;
@@ -114,7 +114,7 @@
 .sl-c-list-item__body {
   display: flex;
   max-width: 100%;
-  gap: size(1);
+  gap: var(--sl-theme-space-xs);
   align-items: center;
   flex: 1;
 }
@@ -133,7 +133,7 @@
 .sl-c-list-item__icon,
 .sl-c-list-item__after {
   display: flex;
-  gap: size(1);
+  gap: var(--sl-theme-space-xs);
   align-items: center;
 
   --sl-icon-height: #{var(--sl-theme-icon)};

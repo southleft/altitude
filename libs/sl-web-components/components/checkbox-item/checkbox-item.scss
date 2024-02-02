@@ -9,7 +9,7 @@
 .sl-c-checkbox-item {
   display: flex;
   flex-direction: column;
-  gap: size(1);
+  gap: var(--sl-theme-space-xs);
 }
 
 /**
@@ -20,7 +20,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
 }
 
 /**
@@ -203,7 +203,7 @@
  */
 slot[name="field-note"],
 slot[name="error"] {
-  --sl-field-note-margin-inline-start: #{size(1)};
+  --sl-field-note-margin-inline-start: #{var(--sl-theme-space-xs)};
 }
 
 /**

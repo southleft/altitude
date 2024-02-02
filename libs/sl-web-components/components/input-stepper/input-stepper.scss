@@ -10,7 +10,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
 }
 
 /**
@@ -35,7 +35,7 @@
     visibility: hidden;
     white-space: pre-wrap;
     width: auto;
-    padding: size(1) size(4.5);
+    padding: var(--sl-theme-space-xs) var(--sl-theme-space-xxxl);
     min-width: 1em;
     grid-area: 1/2;
   }
@@ -58,8 +58,8 @@ input[type='number']::-webkit-outer-spin-button {
   @include input-styles;
   min-width: size(14);
   width: auto;
-  padding-inline-start: size(4.5);
-  padding-inline-end: size(4.5);
+  padding-inline-start: var(--sl-theme-space-xxxl);
+  padding-inline-end: var(--sl-theme-space-xxxl);
   text-align: center;
   grid-area: 1/2;
 }
@@ -90,7 +90,7 @@ input[type='number']::-webkit-outer-spin-button {
  */
 .sl-c-input-stepper__button--right {
   inset-inline-end: 0;
-  --sl-button-padding: #{size(1.5)} #{size(1.5)};
+  --sl-button-padding: #{var(--sl-theme-space-sm)} #{var(--sl-theme-space-sm)};
 }
 
 .sl-c-input-stepper__icon-add,

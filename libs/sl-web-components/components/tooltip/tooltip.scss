@@ -6,7 +6,7 @@
 :host {
   display: contents;
   --tooltip-arrow-size: #{size(1.0625)};
-  --tooltip-offset: #{size(0.5)};
+  --tooltip-offset: #{var(--sl-theme-space-xxs)};
 }
 
 /**
@@ -39,9 +39,9 @@
   position: absolute;
   inset-inline-end: 0;
   inset-block-start: calc(100% + var(--tooltip-offset));
-  column-gap: size(0.75);
-  row-gap: size(0.5);
-  padding: size(0.5) size(1);
+  column-gap: var(--sl-theme-space-xs);
+  row-gap: var(--sl-theme-space-xxs);
+  padding: var(--sl-theme-space-xxs) var(--sl-theme-space-xs);
   width: max-content;
   max-width: var(--sl-tooltip-container-width, #{size(32)});
   background-color: var(--sl-theme-color-background-default-stronger);
@@ -82,7 +82,7 @@
    * - Adjust the left padding if there is a prefix
    */
   .sl-has-prefix & {
-    padding-inline-start: size(0.5);
+    padding-inline-start: var(--sl-theme-space-xxs);
   }
 
   /**
@@ -185,7 +185,7 @@
   z-index: 1;
   display: flex;
   align-items: center;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
 }
 
 /**

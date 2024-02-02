@@ -4,7 +4,7 @@
 \*------------------------------------ */
 
 :host {
-  --sl-datepicker-field-popup-offset-top: #{size(1)};
+  --sl-datepicker-field-popup-offset-top: #{var(--sl-theme-space-xs)};
   --sl-datepicker-field-popup-offset-bottom: #{size(0.25)};
 }
 
@@ -14,7 +14,7 @@
 .sl-c-datepicker-field {
   display: flex;
   flex-direction: column;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
 }
 
 /**

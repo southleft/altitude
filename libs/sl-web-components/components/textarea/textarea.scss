@@ -9,7 +9,7 @@
 .sl-c-textarea {
   display: flex;
   flex-direction: column;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
 }
 
 /**
@@ -57,11 +57,11 @@
 .sl-c-textarea__label {
   @include label-styles;
   position: absolute;
-  inset-block-start: size(1.5);
+  inset-block-start: var(--sl-theme-space-sm);
   inset-inline-start: var(--sl-textarea-padding-start, size(2));
   display: flex;
   align-items: center;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
   pointer-events: none; /* Allows hover to work properly */
 
   /**
@@ -70,11 +70,11 @@
   .sl-c-textarea__input:focus + &,
   .sl-is-active & {
     @include sl-theme-typography-body-xs;
-    padding: 0 size(0.5);
+    padding: 0 var(--sl-theme-space-xxs);
     background-color: var(--sl-text-textarea-background, var(--sl-theme-color-background-default));
     inset-block-start: size(-1.25);
     inset-block-end: auto;
-    inset-inline-start: size(1.5);
+    inset-inline-start: var(--sl-theme-space-sm);
   }
 
   /**
@@ -123,7 +123,7 @@
  */
 .sl-c-textarea__footer {
   display: flex;
-  gap: size(2);
+  gap: var(--sl-theme-space);
 }
 
 /**
@@ -134,7 +134,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
 }
 
 /**
@@ -145,11 +145,11 @@
 .sl-c-textarea__after {
   display: flex;
   align-items: center;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
   position: absolute;
-  inset-block-start: size(1.5);
-  --sl-icon-height: size(2.5);
-  --sl-icon-width: size(2.5);
+  inset-block-start: var(--sl-theme-space-sm);
+  --sl-icon-height: var(--sl-theme-icon-md);
+  --sl-icon-width: var(--sl-theme-icon-md);
   pointer-events: none; /* Allows hover to work properly */
 }
 
@@ -184,7 +184,7 @@
 slot[name="before"],
 slot[name="after"] {
   display: flex;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
 }
 
 /**

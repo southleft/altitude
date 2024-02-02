@@ -12,9 +12,9 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  gap: size(1);
+  gap: var(--sl-theme-space-xs);
   margin: 0;
-  padding: var(--sl-button-padding, #{size(1)} #{size(2)});
+  padding: var(--sl-button-padding, #{var(--sl-theme-space-xs)} #{size(2)});
   border: none;
   border-radius: var(--sl-theme-border-radius);
   text-decoration: none;
@@ -103,7 +103,7 @@
  * Icon only button
  */
 .sl-c-button--icon-only {
-  padding: var(--sl-button-padding, #{size(1)} #{size(1)});
+  padding: var(--sl-button-padding, #{var(--sl-theme-space-xs)} #{var(--sl-theme-space-xs)});
 }
 
 /**
