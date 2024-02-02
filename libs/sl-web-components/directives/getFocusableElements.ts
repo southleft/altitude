@@ -1,3 +1,8 @@
+/**
+ * Traverse the shadow DOM and light DOM of a given root element and return an array of all focusable elements.
+ *
+*/
+
 const focusableSelectors = 'a[href], area[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 const isFocusable = (node: HTMLElement): boolean => {
@@ -7,11 +12,12 @@ const isFocusable = (node: HTMLElement): boolean => {
 const isVisible = (node: HTMLElement): boolean => {
   const rect = node.getBoundingClientRect();
   const computed = getComputedStyle(node);
-  // If it has no height or its computed visibility is hidden
-  return !(
-      rect.width === 0 && rect.height === 0
-      || computed.visibility === 'hidden'
-      || computed.opacity === '0'
+
+  return (
+    rect.width > 0 && rect.height > 0
+    && computed.display !== 'none'
+    && computed.visibility !== 'hidden'
+    && computed.opacity !== '0'
   );
 };
 

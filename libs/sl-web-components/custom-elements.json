@@ -3222,23 +3222,27 @@
     {
       "name": "sl-focus-trap",
       "path": "./components/focus-trap/focus-trap.ts",
-      "description": "Component: sl-focus-trap",
+      "description": "Component: sl-focus-trap\n\nFocus Trap is used as a wrapper around dialogs, popovers, and other overlays to trap focus within them, enabling accessible keyboard navigation.\n\n- **slot**: The content to trap in the focus trap",
       "attributes": [
         {
           "name": "isActive",
+          "description": "Is the focus trap active?",
           "type": "boolean"
         },
         {
           "name": "delay",
+          "description": "Delay in milliseconds before the focus trap is activated. \n- Can be set by the component using focus trap, when there is a css transition that needs to complete before the focus trap activates.",
           "type": "number",
           "default": "0"
         },
         {
           "name": "firstFocusableEl",
+          "description": "First element that can recieve focus in the focus trap (e.g. button, input, a, etc.).",
           "type": "HTMLElement"
         },
         {
           "name": "lastFocusableEl",
+          "description": "Last element that can recieve focus in the focus trap (e.g. button, input, a, etc.).",
           "type": "HTMLElement"
         },
         {
@@ -3256,26 +3260,31 @@
         {
           "name": "isActive",
           "attribute": "isActive",
+          "description": "Is the focus trap active?",
           "type": "boolean"
         },
         {
           "name": "delay",
           "attribute": "delay",
+          "description": "Delay in milliseconds before the focus trap is activated. \n- Can be set by the component using focus trap, when there is a css transition that needs to complete before the focus trap activates.",
           "type": "number",
           "default": "0"
         },
         {
           "name": "firstFocusableEl",
           "attribute": "firstFocusableEl",
+          "description": "First element that can recieve focus in the focus trap (e.g. button, input, a, etc.).",
           "type": "HTMLElement"
         },
         {
           "name": "lastFocusableEl",
           "attribute": "lastFocusableEl",
+          "description": "Last element that can recieve focus in the focus trap (e.g. button, input, a, etc.).",
           "type": "HTMLElement"
         },
         {
           "name": "slottedContent",
+          "description": "Slotted elements contain the component that will be included in the focus trap.",
           "type": "HTMLElement[]"
         },
         {
@@ -3289,12 +3298,6 @@
           "attribute": "styleModifier",
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
-        }
-      ],
-      "slots": [
-        {
-          "name": "",
-          "description": "The content to trap in the focus trap"
         }
       ]
     },
