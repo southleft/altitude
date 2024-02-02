@@ -1,7 +1,11 @@
-import { html, unsafeCSS } from 'lit';
+import { TemplateResult, unsafeCSS } from 'lit';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import { property, queryAssignedElements } from 'lit/decorators.js';
 import { nanoid } from 'nanoid';
 import { SLElement } from '../SLElement';
+import { SLFocusTrap } from '../focus-trap/focus-trap';
+import register from '../../directives/register';
+import PackageJson from '../../package.json';
 import styles from './contextual-menu.scss';
 
 /**
@@ -13,6 +17,15 @@ import styles from './contextual-menu.scss';
  */
 export class SLContextualMenu extends SLElement {
   static el = 'sl-contextual-menu';
+
+  private elementMap = register({
+    elements: [
+      [SLFocusTrap.el, SLFocusTrap]
+    ],
+    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+  });
+
+  private focusTrapEl = unsafeStatic(this.elementMap.get(SLFocusTrap.el));
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -61,6 +74,13 @@ export class SLContextualMenu extends SLElement {
    */
   @property()
   accessor ariaLabelledBy: string;
+
+  /**
+   * Number of ms of the dialog's open/close css transition delay
+   * - Used to delay focus trap activation
+   */
+   @property()
+   accessor transitionDelay: number = 400;
 
   /**
    * Query the contextual menutrigger
@@ -201,21 +221,11 @@ export class SLContextualMenu extends SLElement {
   /**
    * Open contextual menu
    * 1. Set isActive to true to show the contextual menu
-   * 2. Focus on the contextual menu container once opened. Timeout is equal to the css transition timing
-   * 3. Dispatch a custom event on open
+   * 2. Dispatch a custom event on open
    */
   public open() {
     this.isActive = true; /* 1 */
-    setTimeout(() => {
-      const menuListItems = this.menuList && this.menuList[0] && this.menuList[0].listItems;
-      const firstValidListItem = menuListItems.find((item: any) => !item.isDisabled && !item.isError);
-      const firstFocusableEl = firstValidListItem && firstValidListItem.shadowRoot.querySelector('button, a');
-
-      if (firstFocusableEl) {
-        firstFocusableEl.focus();
-      }
-    }, 400);
-    /* 3 */
+    /* 2 */
     this.dispatch({
       eventName: 'onContextualMenuOpen',
       detailObj: {
@@ -267,6 +277,7 @@ export class SLContextualMenu extends SLElement {
             <slot name="trigger"></slot>
           </div>
         `}
+        <${this.focusTrapEl} .delay=${this.transitionDelay} .isActive=${this.isActive}>
           <div
             class="sl-c-contextual-menu__container"
             role="region"
@@ -278,8 +289,9 @@ export class SLContextualMenu extends SLElement {
               <slot></slot>
             </div>
           </div>
+        </${this.focusTrapEl}>
       </div>
-    `;
+    ` as TemplateResult<1>;
   }
 }
 

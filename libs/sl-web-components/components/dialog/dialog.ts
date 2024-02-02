@@ -86,7 +86,7 @@ export class SLDialog extends SLElement {
   accessor width: number;
 
   /**
-   * Number in ms of the dialog's open/close css transition delay
+   * Number of ms of the dialog's open/close css transition delay
    * - Used to delay focus trap activation
    */
   @property()
