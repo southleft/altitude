@@ -153,7 +153,7 @@ export class SLAccordionPanel extends SLElement {
               <slot name="header"></slot>
             </div>
             <div class="sl-c-accordion-panel__icon">
-              <${this.iconChevronDownEl} size="xl"></${this.iconChevronDownEl}>
+              <${this.iconChevronDownEl} size="lg"></${this.iconChevronDownEl}>
             </div>
           </button>
         </dt>

@@ -438,8 +438,8 @@ export class SLListItem extends SLElement {
               </div>
               ${this.slotNotEmpty('items') &&
               (this.behavior === 'flyout'
-                ? html` <${this.iconChevronRightEl} class="sl-c-list-item__items-icon" size="xl"></${this.iconChevronRightEl}> `
-                : html` <${this.iconChevronDownEl} class="sl-c-list-item__items-icon" size="xl"></${this.iconChevronDownEl}> `)}
+                ? html` <${this.iconChevronRightEl} class="sl-c-list-item__items-icon" size="lg"></${this.iconChevronRightEl}> `
+                : html` <${this.iconChevronDownEl} class="sl-c-list-item__items-icon" size="lg"></${this.iconChevronDownEl}> `)}
             </span>
             ${this.slotNotEmpty('after') && html` <div class="sl-c-list-item__after"><slot name="after"></slot></div> `}
           </button>

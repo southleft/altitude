@@ -49,7 +49,7 @@ Default.args = {};
 
 const TemplateIcon = (args) => html`
   <sl-toggle-button ${spread(args)} data-testid="toggle-button">
-    <sl-icon-emoji size="xl"></sl-icon-emoji>
+    <sl-icon-emoji size="lg"></sl-icon-emoji>
   </sl-toggle-button>
 `;
 export const DefaultIcon = TemplateIcon.bind({});
@@ -57,7 +57,7 @@ DefaultIcon.args = {};
 
 const TemplatePrefixIcon = (args) => html`
   <sl-toggle-button ${spread(args)} data-testid="toggle-button">
-    <sl-icon-emoji size="xl"></sl-icon-emoji>
+    <sl-icon-emoji size="lg"></sl-icon-emoji>
     Text Label
   </sl-toggle-button>
 `;
@@ -89,7 +89,7 @@ DefaultWithDropdown.args = {};
 const TemplateWithDropdownIcon = (args) => html`
   <sl-toggle-button ${spread(args)} data-testid="toggle-button">
     <sl-popover>
-      <sl-icon-emoji slot="trigger" size="xl"></sl-icon-emoji>
+      <sl-icon-emoji slot="trigger" size="lg"></sl-icon-emoji>
       <sl-icon-chevron-down slot="trigger"></sl-icon-chevron-down>
       <f-po>Content</f-po>
     </sl-popover>
@@ -101,7 +101,7 @@ DefaultWithDropdownIcon.args = {};
 const TemplateWithDropdownPrefixIcon = (args) => html`
   <sl-toggle-button ${spread(args)} data-testid="toggle-button">
     <sl-popover>
-      <sl-icon-emoji slot="trigger" size="xl"></sl-icon-emoji>
+      <sl-icon-emoji slot="trigger" size="lg"></sl-icon-emoji>
       <span slot="trigger">Text label</span>
       <sl-icon-chevron-down slot="trigger"></sl-icon-chevron-down>
       <f-po>Content</f-po>
@@ -124,7 +124,7 @@ const TemplateWithTooltipAndDropdown = (args) => html`
   <sl-tooltip>
     <sl-toggle-button ${spread(args)} data-testid="toggle-button" slot="trigger">
       <sl-popover>
-        <sl-icon-emoji slot="trigger" size="xl"></sl-icon-emoji>
+        <sl-icon-emoji slot="trigger" size="lg"></sl-icon-emoji>
         <span slot="trigger">Text label</span>
         <sl-icon-chevron-down slot="trigger"></sl-icon-chevron-down>
         <f-po>Content</f-po>

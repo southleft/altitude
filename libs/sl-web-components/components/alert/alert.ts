@@ -15,7 +15,7 @@ import styles from './alert.scss';
 
 /**
  * Component: sl-alert
- * 
+ *
  * Alert displays a short important message that will attract a user's attention without interrupting the user's task.
  * - **slot**: The alert's main content or title
  * - **slot** "description": A description to include in the dropdown panel
@@ -299,7 +299,7 @@ export class SLAlert extends SLElement {
             <div class="sl-c-alert__icon">${this.slotNotEmpty('icon') ? html` <slot name="icon"></slot> ` : html` ${alertIcon} `}</div>
             <slot></slot>
           </div>
-          ${this.hasPanel ? html`<${this.iconChevronDownEl} size="xl" class="sl-c-alert__icon-expand"></${this.iconChevronDownEl}>` : ''}
+          ${this.hasPanel ? html`<${this.iconChevronDownEl} size="lg" class="sl-c-alert__icon-expand"></${this.iconChevronDownEl}>` : ''}
         </div>
         ${this.hasPanel &&
         html`

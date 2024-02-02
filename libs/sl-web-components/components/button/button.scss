@@ -12,9 +12,9 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  gap: var(--sl-theme-space-xs);
+  gap: size(1);
   margin: 0;
-  padding: var(--sl-button-padding, #{var(--sl-theme-space-xs)} #{size(2)});
+  padding: var(--sl-button-padding, #{size(1)} #{size(2)});
   border: none;
   border-radius: var(--sl-theme-border-radius);
   text-decoration: none;
@@ -103,7 +103,7 @@
  * Icon only button
  */
 .sl-c-button--icon-only {
-  padding: var(--sl-button-padding, #{var(--sl-theme-space-xs)} #{var(--sl-theme-space-xs)});
+  padding: var(--sl-button-padding, #{size(1)} #{size(1)});
 }
 
 /**
@@ -135,7 +135,7 @@
   width: size(5);
   border-radius: 0;
   line-height: 1;
-  color: var(--sl-theme-color-content-accent-default);
+  color: var(--sl-theme-color-content-default-weak);
   background: var(--sl-theme-color-background-transparent);
 
   /**
@@ -171,7 +171,7 @@
    * Menu item button hover state
    */
   &:hover:not(:active, :disabled) {
-    color: var(--sl-theme-color-content-accent-default);
+    color: var(--sl-theme-color-content-default-weak);
     background: var(--sl-theme-color-background-default-strong);
 
     /**
@@ -202,15 +202,15 @@
    * Menu item button selected state
    */
   &.sl-is-selected {
-    color: var(--sl-theme-color-content-inverse-default);
+    color: var(--sl-theme-color-content-default-accent-stronger);
     background: var(--sl-theme-color-background-accent-default);
 
     /**
      * Menu item button hover state on a selected menu item
      */
     &:hover:not(:active, .sl-is-disabled) {
-      color: var(--sl-theme-color-content-inverse-default);
-      background: var(--sl-theme-color-background-accent-strong);
+      color: var(--sl-theme-color-content-accent-stronger);
+      background: var(--sl-theme-color-background-accent-weak);
     }
   }
 

@@ -122,7 +122,7 @@ const TemplateWithGroups = (args) => html`
 
 const TemplateWithGroupsWithTrigger = (args) => html`
   <sl-menu ${spread(args)} data-testid="menu" ?isActive=${false}>
-    <sl-toggle-button slot="trigger" data-testid="menu-trigger" variant="background"><sl-icon-list size="xl"></sl-icon-list></sl-toggle-button>
+    <sl-toggle-button slot="trigger" data-testid="menu-trigger" variant="background"><sl-icon-list size="lg"></sl-icon-list></sl-toggle-button>
     <sl-menu-item ?isHeader=${true} data-testid="menu-item-1">
       <sl-icon-add-square slot="before"></sl-icon-add-square>
       Menu Item
