@@ -3,11 +3,11 @@ import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
 /**
- * Page: l-{{dashCase name}}
+ * Page: l-homepage
  * @slot - The pages content
  */
-@customElement('{{dashCase name}}')
-export class {{pascalCase name}} extends LitElement {
+@customElement('homepage')
+export class Homepage extends LitElement {
   static get styles() {
     return unsafeCSS(styles.toString());
   }
@@ -19,7 +19,7 @@ export class {{pascalCase name}} extends LitElement {
   accessor styleModifier: string;
 
   render() {
-    const componentClassName = classMap({'l-{{dashCase name}}': true, [this.styleModifier]: !!this.styleModifier });
+    const componentClassName = classMap({'l-homepage': true, [this.styleModifier]: !!this.styleModifier });
 
     return html`
       <div class="${componentClassName}">
@@ -31,6 +31,6 @@ export class {{pascalCase name}} extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    '{{dashCase name}}': {{pascalCase name}};
+    'homepage': Homepage;
   }
 }
