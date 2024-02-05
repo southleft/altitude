@@ -15,7 +15,7 @@
   display: flex;
   flex-direction: column;
   height: auto;
-  margin: size(-1.25);
+  margin: calc(#{var(--sl-theme-space-sm)} * -1);
 }
 
 /**
@@ -30,7 +30,7 @@
  * 1. Spacing between grid items is smaller than default
  */
 .sl-c-grid--gap-sm {
-  margin: size(-0.5);
+  margin: calc(#{var(--sl-theme-space-xxs)} * -1);
 }
 
 /**
@@ -38,7 +38,7 @@
  * 1. Spacing between grid items is larger than default
  */
 .sl-c-grid--gap-lg {
-  margin: size(-2);
+  margin: calc(#{var(--sl-theme-space)} * -1);
 }
 
 /**

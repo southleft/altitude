@@ -446,7 +446,7 @@ export class SLDropdown extends SLElement {
             @input=${this.handleOnChange}
             ?isActive="${this.isActive}"
           >
-            <${this.iconChevronDownEl} slot="after" class="sl-c-dropdown__icon-arrow"></${this.iconChevronDownEl}>
+            <${this.iconChevronDownEl} size="lg" slot="after" class="sl-c-dropdown__icon-arrow"></${this.iconChevronDownEl}>
           </${this.textFieldEl}>
           ${
             this.isActiveDropdown

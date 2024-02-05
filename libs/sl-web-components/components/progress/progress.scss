@@ -40,8 +40,8 @@
  * - The background for the circular progress indicator
  */
 .sl-c-progress__track--circle {
-  height: var(--sl-theme-space);
-  width: var(--sl-theme-space);
+  height: size(2);
+  width: size(2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,17 +53,17 @@
    * Medium circular progress track
    */
   .sl-is-circle-md & {
-    height: var(--sl-theme-space-lg);
-    width: var(--sl-theme-space-lg);
-    border-width: size(0.4);
+    height: size(3);
+    width: size(3);
+    border-width: var(--sl-theme-space-xxs);
   }
 
   /**
    * Large circular progress track
    */
   .sl-is-circle-lg & {
-    height: var(--sl-theme-space-xxl);
-    width: var(--sl-theme-space-xxl);
+    height: size(4);
+    width: size(4);
     border-width: var(--sl-theme-border-width-lg);
   }
 
@@ -85,8 +85,8 @@
   position: absolute;
   inset-block-start: 0;
   inset-inline-start: 0;
-  height: var(--sl-theme-space);
-  width: var(--sl-theme-space);
+  height: size(2);
+  width: size(2);
   background: none;
   border-radius: var(--sl-theme-border-radius-round);
   transform-origin: top left;

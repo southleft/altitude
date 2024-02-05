@@ -72,7 +72,7 @@
     @include sl-theme-typography-body-xs;
     padding: 0 var(--sl-theme-space-xxs);
     background-color: var(--sl-text-textarea-background, var(--sl-theme-color-background-default-weak));
-    inset-block-start: size(-1.25);
+    inset-block-start: calc(#{var(--sl-theme-space-sm)} * -1);
     inset-block-end: auto;
     inset-inline-start: var(--sl-theme-space-sm);
   }

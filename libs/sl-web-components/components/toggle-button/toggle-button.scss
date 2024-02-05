@@ -98,7 +98,7 @@
  */
 ::slotted(sl-popover) {
   --sl-popover-trigger-z-index: 1;
-  --sl-popover-shift: #{size(-1.75)};
+  --sl-popover-shift: #{calc(#{var(--sl-theme-space-sm)} * -1)};
 
   .sl-c-toggle-button--background & {
     --sl-popover-offset: #{var(--sl-theme-space-lg)};
