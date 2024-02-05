@@ -87,3 +87,4 @@ export * from './components/ToastGroup';
 export * from './components/ToggleButton';
 export * from './components/ToggleButtonGroup';
 export * from './components/Tooltip';
+export * from './components/FocusTrap';
