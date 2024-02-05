@@ -9,7 +9,7 @@
 .sl-c-alert {
   display: none;
   background: transparent;
-  padding: size(2);
+  padding: var(--sl-theme-space);
 
   &.sl-is-active {
     display: flex;
@@ -34,7 +34,7 @@
 
 .sl-c-alert__actions {
   display: flex;
-  gap: size(1.5);
+  gap: var(--sl-theme-space-sm);
 }
 
 /**
@@ -42,7 +42,7 @@
  */
 .sl-c-alert__title {
   @include sl-theme-typography-body-md-bold;
-  margin-block-end: size(1);
+  margin-block-end: var(--sl-theme-space-xs);
 }
 
 /**
@@ -56,7 +56,7 @@
 
   display: flex;
   align-items: center;
-  margin-inline-end: size(2);
+  margin-inline-end: var(--sl-theme-space);
 
   .sl-has-title & {
     align-items: flex-start;

@@ -6,7 +6,7 @@
 
 :host {
   display: contents;
-  --sl-popover-offset: #{size(2)};
+  --sl-popover-offset: #{var(--sl-theme-space)};
   --sl-popover-shift: 0;
 }
 
@@ -37,7 +37,7 @@
   inset-block-start: calc(100% + var(--sl-popover-offset));
   flex-direction: column;
   gap: var(--sl-theme-space);
-  padding: var(--sl-popover-container-padding, #{size(2)} #{size(2)}#{size(2)} #{size(2)});
+  padding: var(--sl-popover-container-padding, #{var(--sl-theme-space)} #{var(--sl-theme-space)}#{var(--sl-theme-space)} #{var(--sl-theme-space)});
   border-radius: var(--sl-theme-border-radius-lg);
   box-shadow: var(--sl-theme-box-shadow-md);
   z-index: var(--sl-z-index-500);

@@ -28,8 +28,8 @@
  */
 .sl-c-textarea__input {
   @include input-styles;
-  padding-inline-start: var(--sl-textarea-padding-start, size(2));
-  padding-inline-end: var(--sl-textarea-padding-end, size(2));
+  padding-inline-start: var(--sl-textarea-padding-start, var(--sl-theme-space));
+  padding-inline-end: var(--sl-textarea-padding-end, var(--sl-theme-space));
 
   /**
    * Show the placeholder if the label is hidden
@@ -58,7 +58,7 @@
   @include label-styles;
   position: absolute;
   inset-block-start: var(--sl-theme-space-sm);
-  inset-inline-start: var(--sl-textarea-padding-start, size(2));
+  inset-inline-start: var(--sl-textarea-padding-start, var(--sl-theme-space));
   display: flex;
   align-items: center;
   gap: var(--sl-theme-space-xxs);
@@ -158,7 +158,7 @@
  * - The slot for elements positioned absolutely to the left of the textarea
  */
 .sl-c-textarea__before {
-  inset-inline-start: size(2);
+  inset-inline-start: var(--sl-theme-space);
 }
 
 /**
@@ -166,7 +166,7 @@
  * - The slot for elements positioned absolutely to the right of the textarea
  */
 .sl-c-textarea__after {
-  inset-inline-end: size(2);
+  inset-inline-end: var(--sl-theme-space);
 }
 
 /**

@@ -9,7 +9,7 @@
 .sl-c-toggle-button {
   @include sl-theme-typography-body-sm;
   display: flex;
-  padding: size(0.75);
+  padding: var(--sl-theme-space-xs);
   background: var(--sl-theme-color-background-transparent);
   border: none;
   border-radius: var(--sl-theme-border-radius-lg);
@@ -101,6 +101,6 @@
   --sl-popover-shift: #{size(-1.75)};
 
   .sl-c-toggle-button--background & {
-    --sl-popover-offset: #{size(3)};
+    --sl-popover-offset: #{var(--sl-theme-space-lg)};
   }
 }

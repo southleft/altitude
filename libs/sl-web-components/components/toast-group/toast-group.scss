@@ -36,7 +36,7 @@
   inset-inline-start: 50%;
   inset-inline-end: 0;
   transform: translateX(-50%);
-  padding: size(3);
+  padding: var(--sl-theme-space-lg);
   max-width: var(--sl-theme-layout-width-container);
 }
 
@@ -66,8 +66,8 @@
   color: var(--sl-theme-color-content-default-weak);
   z-index: var(--sl-z-index-top);
   position: absolute;
-  inset-block-start: size(2);
-  inset-inline-start: size(3);
+  inset-block-start: var(--sl-theme-space);
+  inset-inline-start: var(--sl-theme-space-lg);
 
   /**
    * Shift the controls to account for the toast group padding
@@ -83,7 +83,7 @@
  * A signular toast group control button
  */
 .sl-c-toast-group__control {
-  width: size(3);
-  height: size(3);
+  width: var(--sl-theme-space-lg);
+  height: var(--sl-theme-space-lg);
   --sl-button-padding: 0 0;
 }

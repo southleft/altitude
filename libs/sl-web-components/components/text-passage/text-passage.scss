@@ -27,7 +27,7 @@
   ::slotted(h4),
   ::slotted(h5),
   ::slotted(h6) {
-     padding-block-start: size(2);
+     padding-block-start: var(--sl-theme-space);
   }
 
   /**
@@ -77,7 +77,7 @@
    */
   ::slotted(ul),
   ::slotted(ol) {
-    margin-inline-start: size(4);
+    margin-inline-start: var(--sl-theme-space-xxl);
   }
 
   /**
@@ -101,9 +101,9 @@
   ::slotted(blockquote) {
     border-inline-start: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
     color: var(--sl-theme-color-content-default);
-    padding-inline-start: size(2);
+    padding-inline-start: var(--sl-theme-space);
     margin-inline-start: 0;
-    margin-block-end: size(2);
+    margin-block-end: var(--sl-theme-space);
   }
 
   /**

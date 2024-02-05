@@ -26,8 +26,8 @@
  */
 .sl-c-text-field__input {
   @include input-styles;
-  padding-inline-start: var(--sl-text-field-padding-start, size(2));
-  padding-inline-end: var(--sl-text-field-padding-end, size(2));
+  padding-inline-start: var(--sl-text-field-padding-start, var(--sl-theme-space));
+  padding-inline-end: var(--sl-text-field-padding-end, var(--sl-theme-space));
 
   /**
    * Show the placeholder if the label is hidden
@@ -58,7 +58,7 @@
   margin: auto;
   inset-block-start: 0;
   inset-block-end: 0;
-  inset-inline-start: var(--sl-text-field-padding-start, size(2));
+  inset-inline-start: var(--sl-text-field-padding-start, var(--sl-theme-space));
   display: flex;
   align-items: center;
   gap: var(--sl-theme-space-xxs);
@@ -167,7 +167,7 @@
  * - The slot for elements positioned absolutely to the left of the input
  */
 .sl-c-text-field__before {
-  inset-inline-start: size(2);
+  inset-inline-start: var(--sl-theme-space);
 }
 
 /**
@@ -175,7 +175,7 @@
  * - The slot for elements positioned absolutely to the right of the input
  */
 .sl-c-text-field__after {
-  inset-inline-end: size(2);
+  inset-inline-end: var(--sl-theme-space);
 }
 
 /**

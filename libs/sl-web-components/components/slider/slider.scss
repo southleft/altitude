@@ -8,7 +8,7 @@
  * 1 slider value, 2 slider values (range),
  */
  :host {
-  --sl-slider-thumb-size: #{size(3)};
+  --sl-slider-thumb-size: #{var(--sl-theme-space-lg)};
   --sl-slider-track-height: 0.25rem;
 }
 
@@ -240,27 +240,27 @@
   border-radius: var(--sl-theme-border-radius);
   color: var(--sl-theme-color-content-default);
   box-shadow: var(--sl-theme-box-shadow);
-  margin-block-end: size(0.75);
+  margin-block-end: var(--sl-theme-space-xs);
   font-size: var(--sl-theme-space-sm);
-  line-height: size(2);
+  line-height: var(--sl-theme-space);
 
   &:after {
     content: '';
     display: block;
     position: absolute;
-    inset-block-end: calc(-1 * size(1.25) / 2);
-    inset-inline-start: calc(50% - size(1.25) / 2);
+    inset-block-end: calc(-1 * var(--sl-theme-space-sm) / 2);
+    inset-inline-start: calc(50% - var(--sl-theme-space-sm) / 2);
     background-color: var(--sl-theme-color-background-default-strong);
     transform: rotate(45deg);
-    width: size(1.25);
-    height: size(1.25);
+    width: var(--sl-theme-space-sm);
+    height: var(--sl-theme-space-sm);
     box-shadow: var(--sl-theme-box-shadow);
   }
 }
 
 .sl-c-slider__range-one-label-container,
 .sl-c-slider__range-two-label-container {
-  inset-block-end: size(2);
+  inset-block-end: var(--sl-theme-space);
 }
 
 .sl-c-slider__tooltip,
@@ -480,7 +480,7 @@
   }
 
   .sl-c-slider--range.sl-has-output & {
-    padding-block-end: size(2);
+    padding-block-end: var(--sl-theme-space);
   }
 }
 
