@@ -14,20 +14,16 @@
   @include sl-theme-typography-body-sm;
   display: inline-flex;
   cursor: pointer;
-  gap: size(0.75);
+  gap: var(--sl-theme-space-xs);
   justify-content: center;
   align-items: center;
   white-space: nowrap;
   margin: 0;
-  padding: size(0.5) size(1.5);
-  border-width: var(--sl-theme-border-width);
-  border-style: solid;
+  padding: var(--sl-theme-space-xxs) var(--sl-theme-space-sm);
+  border: none;
   border-radius: size(4);
   background-color: var(--sl-theme-color-background-default-stronger);
-  border-color: var(--sl-theme-color-background-default-stronger);
   color: var(--sl-theme-color-content-default-weak);
-  --sl-icon-width: #{size(3)};
-  --sl-icon-height: #{size(3)};
 
   /**
    * Focus state
@@ -64,7 +60,6 @@
  */
 .sl-c-chip--success {
   background-color: var(--sl-theme-color-background-success-default);
-  border-color: var(--sl-theme-color-background-success-default);
   color: var(--sl-theme-color-content-success-weak);
 }
 
@@ -73,7 +68,6 @@
  */
 .sl-c-chip--danger {
   background-color: var(--sl-theme-color-background-danger-default);
-  border-color: var(--sl-theme-color-background-danger-default);
   color: var(--sl-theme-color-content-danger-weak);
 }
 
@@ -82,7 +76,6 @@
  */
 .sl-c-chip--info {
   background-color: var(--sl-theme-color-background-info-default);
-  border-color: var(--sl-theme-color-background-info-default);
   color: var(--sl-theme-color-content-info-weak);
 }
 
@@ -91,7 +84,6 @@
  */
 .sl-c-chip--warning {
   background-color: var(--sl-theme-color-background-warning-default);
-  border-color: var(--sl-theme-color-background-warning-default);
   color: var(--sl-theme-color-content-warning-weak);
 }
 
@@ -103,16 +95,6 @@
   align-items: center;
   justify-content: center;
   margin-inline-end: size(-1);
-  width: size(3);
-  height: size(3);
-  --sl-icon-width: #{size(2)};
-  --sl-icon-height: #{size(2)};
-}
-
-/**
- * Icons slotted within the chip
- */
-::slotted(.sl-c-icon) {
-  position: relative;
-  margin-inline-start: size(-0.5);
+  width: var(--sl-theme-icon-lg);
+  height: var(--sl-theme-icon-lg);
 }

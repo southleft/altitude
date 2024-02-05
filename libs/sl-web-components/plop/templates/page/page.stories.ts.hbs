@@ -8,4 +8,7 @@ export default {
   tags: [ 'autodocs' ]
 };
 
-export const Default = (args) => html`<{{dashCase name}}>Hello world</{{dashCase name}}>`
+const Template = (args) => html`<{{dashCase name}} ${spread(args)} data-testid="{{dashCase name}}">Hello world</{{dashCase name}}>`;
+
+export const Default = Template.bind({});
+Default.args = {};

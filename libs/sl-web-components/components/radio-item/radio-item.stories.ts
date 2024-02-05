@@ -17,7 +17,7 @@ export default {
       handles: ['onRadioItemChange']
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     isChecked: {
       control: 'boolean'

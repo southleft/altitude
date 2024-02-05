@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
   color: var(--sl-theme-color-content-default-weak);
 }
 
@@ -27,9 +27,9 @@
   @include sl-theme-typography-heading-md;
   display: flex;
   align-items: center;
-  gap: size(0.75);
+  gap: var(--sl-theme-space-xs);
   margin: 0;
-  padding: size(0.5) size(1);
+  padding: var(--sl-theme-space-xxs) var(--sl-theme-space-xs);
   border: none;
   background-color: var(--sl-theme-color-background-transparent);
   border-radius: var(--sl-theme-border-radius-md);
@@ -37,8 +37,8 @@
   text-decoration: none;
   transition: all var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
   cursor: pointer;
-  --sl-icon-width: #{size(3)};
-  --sl-icon-height: #{size(3)};
+  --sl-icon-width: #{var(--sl-theme-icon-lg)};
+  --sl-icon-height: #{var(--sl-theme-icon-lg)};
 
   /**
    * Label - Current state

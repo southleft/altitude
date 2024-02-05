@@ -24,6 +24,8 @@
   background-color: var(--sl-theme-color-background-accent-default);
   color: var(--sl-theme-color-content-accent-stronger);
   width: var(--sl-button-width, auto);
+  --sl-icon-height: #{var(--sl-theme-icon-lg)};
+  --sl-icon-width: #{var(--sl-theme-icon-lg)};
 
   /**
    * Hover state
@@ -53,16 +55,16 @@
  */
 .sl-c-button--secondary {
   background-color: var(--sl-theme-color-background-transparent-default);
-  border: var(--sl-theme-border-width) solid var(--sl-theme-color-content-accent-stronger);
-  color: var(--sl-theme-color-content-accent-stronger);
+  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+  color: var(--sl-theme-color-content-default);
 
   /**
    * Hover state
    */
   &:hover:not(:active, :disabled) {
     background-color: var(--sl-theme-color-background-transparent-default);
-    border-color: var(--sl-theme-color-content-default);
-    color: var(--sl-theme-color-content-default);
+    border-color: var(--sl-theme-color-border-default-weak);
+    color: var(--sl-theme-color-content-default-weak);
   }
 }
 
@@ -95,14 +97,6 @@
   &:hover:not(:active, :disabled) {
     background-color: var(--sl-theme-color-background-danger-strong);
   }
-}
-
-/**
- * Button icon
- */
-::slotted(.sl-c-icon) {
-  --sl-icon-height: #{size(3)};
-  --sl-icon-width: #{size(3)};
 }
 
 /**
@@ -141,7 +135,7 @@
   width: size(5);
   border-radius: 0;
   line-height: 1;
-  color: var(--sl-theme-color-content-accent-default);
+  color: var(--sl-theme-color-content-default-weak);
   background: var(--sl-theme-color-background-transparent);
 
   /**
@@ -177,7 +171,7 @@
    * Menu item button hover state
    */
   &:hover:not(:active, :disabled) {
-    color: var(--sl-theme-color-content-accent-default);
+    color: var(--sl-theme-color-content-default-weak);
     background: var(--sl-theme-color-background-default-strong);
 
     /**
@@ -208,15 +202,15 @@
    * Menu item button selected state
    */
   &.sl-is-selected {
-    color: var(--sl-theme-color-content-inverse-default);
+    color: var(--sl-theme-color-content-default-accent-stronger);
     background: var(--sl-theme-color-background-accent-default);
 
     /**
      * Menu item button hover state on a selected menu item
      */
     &:hover:not(:active, .sl-is-disabled) {
-      color: var(--sl-theme-color-content-inverse-default);
-      background: var(--sl-theme-color-background-accent-strong);
+      color: var(--sl-theme-color-content-accent-stronger);
+      background: var(--sl-theme-color-background-accent-weak);
     }
   }
 

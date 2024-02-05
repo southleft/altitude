@@ -2,10 +2,11 @@ import type { StorybookConfig } from '@storybook/web-components-webpack5';
 
 const config: StorybookConfig = {
   framework: {
-    name: "@storybook/web-components-webpack5",
+    name: '@storybook/web-components-webpack5',
     options: {},
   },
   stories: [
+    './components/**/**/*.mdx',
     './components/**/*.stories.@(js|jsx|ts|tsx|mdx)',
     '../components/**/**/*.stories.@(js|jsx|ts|tsx|mdx)',
     '../docs/*.@(js|jsx|ts|tsx|mdx)',
@@ -13,10 +14,10 @@ const config: StorybookConfig = {
   ],
   addons: [
     '@storybook/addon-essentials',
-    "@storybook/addon-a11y",
-    "@etchteam/storybook-addon-status",
-    "@storybook/addon-interactions",
-    "@storybook/blocks",
+    '@storybook/addon-a11y',
+    '@etchteam/storybook-addon-status',
+    '@storybook/addon-interactions',
+    '@storybook/blocks',
     {
       name: '@storybook/addon-coverage',
       options: {
@@ -29,9 +30,6 @@ const config: StorybookConfig = {
     }
   ],
   staticDirs: ['./static'],
-  docs: {
-    autodocs: true
-  },
 
   // Other Storybook options
   webpackFinal: async (config, { configType }) => {

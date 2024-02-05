@@ -20,7 +20,7 @@ export default {
       exclude: ['isFocused', 'idx', 'ariaControls', 'menuItemLink', 'menuItemControl', 'menuItemLinkEl', 'menuItemControlEl']
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     href: {
       control: 'text'

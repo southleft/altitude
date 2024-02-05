@@ -15,7 +15,7 @@ export default {
       handles: ['select']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
 };
 
 const Template = (args) => html`<sl-list-item ${spread(args)}>List Item</sl-list-item>`;

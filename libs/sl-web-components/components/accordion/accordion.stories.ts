@@ -1,8 +1,9 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
-import '../accordion-panel/accordion-panel';
 import './accordion';
+import '../accordion-panel/accordion-panel';
+import '../../.storybook/components/f-po/f-po';
 
 export default {
   title: 'Molecules/Accordion',
@@ -14,7 +15,7 @@ export default {
       handles: ['onAccordionPanelOpen', 'onAccordionPanelClose']
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
 };
 
 const Template = (args) => html`

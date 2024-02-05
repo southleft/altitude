@@ -20,7 +20,7 @@ export default {
       handles: ['onTextareaFieldChange']
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     rows: {
       control: 'number',

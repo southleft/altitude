@@ -20,7 +20,7 @@ export default {
       exclude: ['hasPanel', 'ariaControls', 'ariaLabelledBy']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     variant: {
       options: ['default', 'success', 'warning', 'danger'],

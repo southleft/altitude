@@ -26,20 +26,19 @@ export class SLIconEmoji extends SLElement {
    * - **md** renders a larger size than default (20px)
    * - **lg** renders a larger size than the md variant (24px)
    * - **xl** renders a larger size than the lg variant (32px)
+   * - **xxl** renders a larger size than the lg variant (36px)
+   * - **xxxl** renders a larger size than the lg variant (40px)
    */
   @property()
-  accessor size: 'md' | 'lg' | 'xl';
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.classList.add('sl-c-icon');
-  }
+  accessor size: 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl';
 
   render() {
-    const componentClassName = this.componentClassNames('sl-c-icon-emoji', {
+    const componentClassName = this.componentClassNames('sl-c-icon', {
       'sl-c-icon--md': this.size === 'md',
       'sl-c-icon--lg': this.size === 'lg',
-      'sl-c-icon--xl': this.size === 'xl'
+      'sl-c-icon--xl': this.size === 'xl',
+      'sl-c-icon--xxl': this.size === 'xxl',
+      'sl-c-icon--xxxl': this.size === 'xxxl'
     });
 
     return html`

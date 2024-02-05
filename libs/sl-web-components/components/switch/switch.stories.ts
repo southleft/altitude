@@ -15,7 +15,7 @@ export default {
       handles: ['onSwitchChange']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     label: {
       control: 'text'

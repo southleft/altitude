@@ -34,7 +34,7 @@ export default {
       ]
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     variant: {
       type: 'radio',

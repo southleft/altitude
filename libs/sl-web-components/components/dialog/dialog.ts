@@ -8,7 +8,10 @@ import { SLElement } from '../SLElement';
 import { SLButton } from '../button/button';
 import { SLHeading } from '../heading/heading';
 import { SLIconClose } from '../icon/icons/close';
+<<<<<<< HEAD
 import { SLFocusTrap } from '../focus-trap/focus-trap';
+=======
+>>>>>>> origin
 import styles from './dialog.scss';
 
 /**
@@ -314,6 +317,7 @@ export class SLDialog extends SLElement {
             </div>
           `
         }
+<<<<<<< HEAD
         <${this.focusTrapEl} .delay=${this.transitionDelay} .isActive=${this.isActive}>
           <div
             class="sl-c-dialog__container"
@@ -342,16 +346,48 @@ export class SLDialog extends SLElement {
             <div class="sl-c-dialog__body">
               <slot></slot>
             </div>
+=======
+        <div
+          class="sl-c-dialog__container"
+          role="dialog"
+          aria-labelledby=${this.ariaLabelledBy}
+          aria-hidden=${this.isActive ? false : true}
+        >
+          <div class="sl-c-dialog__header">
+>>>>>>> origin
             ${
-              this.slotNotEmpty('footer') &&
+              (this.slotNotEmpty('header') || this.heading) &&
               html`
-                <div class="sl-c-dialog__footer">
-                  <slot name="footer"></slot>
+                <div class="sl-c-dialog__title" id=${this.ariaLabelledBy}>
+                  ${this.heading &&
+                  html`
+                  <${this.headingEl} tagName="h1" tabindex="0">${this.heading}</${this.headingEl}>
+                `}
+                  <slot name="header"></slot>
                 </div>
               `
             }
+            <${this.buttonEl} class="sl-c-dialog__close-button" variant="tertiary" ?hideText=${true} @click=${this.handleOnCloseButton}>
+              Close
+              <${this.iconCloseEl} class="sl-c-dialog__icon-close" slot="after"></${this.iconCloseEl}>
+            </${this.buttonEl}>
           </div>
+<<<<<<< HEAD
         </${this.focusTrapEl}>
+=======
+          <div class="sl-c-dialog__body">
+            <slot></slot>
+          </div>
+          ${
+            this.slotNotEmpty('footer') &&
+            html`
+              <div class="sl-c-dialog__footer">
+                <slot name="footer"></slot>
+              </div>
+            `
+          }
+        </div>
+>>>>>>> origin
       </div>
     ` as TemplateResult<1>;
   }

@@ -47,10 +47,10 @@
 .sl-c-time-selector-list__heading {
   @include sl-theme-typography-body-md-bold;
   color: var(--sl-theme-color-content-default);
-  background: var(--sl-theme-color-background-default-strong);
+  background: var(--sl-theme-color-background-default-stronger);
   box-shadow: var(--sl-theme-box-shadow-sm);
   text-align: center;
-  padding: size(1);
+  padding: var(--sl-theme-space-xs);
   margin: 0;
   position: sticky;
   inset-block-start: 0;
@@ -58,7 +58,7 @@
   z-index: 1;
 
   .sl-c-time-selector-list--horizontal & {
-    padding: size(1) size(2);
+    padding: var(--sl-theme-space-xs) size(2);
   }
 }
 
@@ -68,16 +68,16 @@
  */
 .sl-c-time-selector-list__list {
   list-style: none;
-  padding: size(1) 0;
+  padding: var(--sl-theme-space-xs) 0;
   margin: 0;
   display: grid;
   justify-content: center;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
 
   .sl-c-time-selector-list--horizontal & {
     display: flex;
     align-items: center;
-    padding: 0 size(1);
+    padding: 0 var(--sl-theme-space-xs);
   }
 }
 
@@ -92,7 +92,7 @@
   background: var(--sl-theme-color-background-transparent-default);
   border-radius: 40px;
   border: none;
-  padding: size(1);
+  padding: var(--sl-theme-space-xs);
   position: relative;
   cursor: pointer;
   white-space: nowrap;
@@ -111,8 +111,8 @@
    * Active state
    */
   &.sl-is-active {
-    color: var(--sl-theme-color-content-accent-weak);
-    background-color: var(--sl-theme-color-background-accent-default);
+    color: var(--sl-theme-color-content-accent-stronger);
+    background-color: var(--sl-theme-color-background-accent-weak);
   }
 
   /**

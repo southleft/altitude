@@ -1,13 +1,13 @@
 import { html } from 'lit';
-import '../../.storybook/components/f-po/f-po';
 import { spread } from '../../directives/spread';
+import './card';
+import '../../.storybook/components/f-po/f-po';
 import '../button/button';
 import '../chip/chip';
 import '../heading/heading';
 import '../icon/icons/done';
 import '../icon/icons/emoji';
 import '../text-passage/text-passage';
-import './card';
 
 export default {
   title: 'Molecules/Card',
@@ -37,7 +37,7 @@ const TemplateWithContent = (args) => html`
     <sl-chip slot="actions-left">Label</sl-chip>
     <sl-button slot="actions-right" variant="secondary" ?hideText=${true}>Button<sl-icon-done slot="after"></sl-icon-done></sl-button>
     <img slot="image" alt="card image" src="https://fakeimg.pl/600x400" />
-    <sl-icon-emoji size="md" slot="header"></sl-icon-emoji>
+    <sl-icon-emoji size="lg" slot="header"></sl-icon-emoji>
     <sl-heading slot="header" tagName="h3" variant="sm">Card title</sl-heading>
     <sl-text-passage>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dui leo, lacinia ut finibus sed, consectetur quis enim.</sl-text-passage>
   </sl-card>

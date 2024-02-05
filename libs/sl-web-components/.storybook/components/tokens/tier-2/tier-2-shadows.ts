@@ -1,7 +1,7 @@
 import { html, LitElement, unsafeCSS } from 'lit';
 import tokens from '../../../../styles/tokens.json';
-import '../../token-specimen/token-specimen';
 import styles from '../tokens.scss';
+import '../../token-specimen/token-specimen';
 
 export class Tier2Shadows extends LitElement {
   static get styles() {
@@ -25,7 +25,8 @@ export class Tier2Shadows extends LitElement {
         </header>
         <table>
           <caption>
-            Box Shadows
+            <h2>Drop Shadows</h2>
+            <p>Drop shadows are shadows that appear outside the boundaries of an object, creating the illusion of the object being lifted or floating above the background.</p>
           </caption>
           <thead>
             <tr>

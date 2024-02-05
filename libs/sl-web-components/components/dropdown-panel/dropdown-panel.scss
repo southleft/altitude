@@ -21,7 +21,7 @@
  * Give padding and border styling to panel body
  */
 .sl-c-dropdown-panel__body {
-  padding: size(0.5) 0;
+  padding: var(--sl-theme-space-xxs) 0;
   border-start-start-radius: var(--sl-dropdown-panel-border-block-start-left-radius, var(--sl-theme-border-radius));
   border-start-end-radius: var(--sl-dropdown-panel-border-block-start-right-radius, var(--sl-theme-border-radius));
   border-end-end-radius: var(--sl-dropdown-panel-border-block-end-right-radius, var(--sl-theme-border-radius));
@@ -54,7 +54,7 @@
  * Optional dropdown panel header
  */
 .sl-c-dropdown-panel__header {
-  padding: size(1);
+  padding: var(--sl-theme-space-xs);
   border: var(--sl-theme-border-width) solid var(--sl-dropdown-panel-border-color, var(--sl-theme-color-border-default));
   border-radius: var(--sl-theme-border-radius) var(--sl-theme-border-radius) 0 0;
   margin-block-end: -1px;
@@ -65,5 +65,5 @@
  * - Add padding to footer
  */
 .sl-c-dropdown-panel__footer {
-  padding: size(1);
+  padding: var(--sl-theme-space-xs);
 }

@@ -13,7 +13,7 @@ export default {
       handles: ['onPaginationChange']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   args: {
     totalRecords: '200',
     pageSize: '20'

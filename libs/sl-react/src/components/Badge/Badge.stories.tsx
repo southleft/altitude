@@ -1,6 +1,6 @@
 import type { StoryObj } from '@storybook/react-webpack5';
 import React from 'react';
-import { SLBadge, SLButton, SLIconEmoji } from '../..';
+import { SLBadge, SLButton } from '../..';
 
 export default {
   title: 'Atoms/Badge',
@@ -29,22 +29,9 @@ export default {
 
 export const Default: StoryObj<typeof SLBadge> = { args: {} };
 
-export const DefaultWithIcon: StoryObj<typeof SLBadge> = { args: {
-  children: (
-    <><SLIconEmoji></SLIconEmoji></>
-  )
-} };
-
 export const DefaultSuccess: StoryObj<typeof SLBadge> = {
   args: {
     variant: 'success',
-  }
-};
-
-export const DefaultSuccessWithIcon: StoryObj<typeof SLBadge> = {
-  args: {
-    ...DefaultSuccess.args,
-    ...DefaultWithIcon.args,
   }
 };
 
@@ -54,23 +41,9 @@ export const DefaultWarning: StoryObj<typeof SLBadge> = {
   }
 };
 
-export const DefaultWarningWithIcon: StoryObj<typeof SLBadge> = {
-  args: {
-    ...DefaultWarning.args,
-    ...DefaultWithIcon.args,
-  }
-};
-
 export const DefaultDanger: StoryObj<typeof SLBadge> = {
   args: {
     variant: 'danger',
-  }
-};
-
-export const DefaultDangerWithIcon: StoryObj<typeof SLBadge> = {
-  args: {
-    ...DefaultDanger.args,
-    ...DefaultWithIcon.args,
   }
 };
 

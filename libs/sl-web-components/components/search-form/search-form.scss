@@ -11,7 +11,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
   --sl-text-field-slot-after-pointer-events: all;
 }
 
@@ -52,7 +52,7 @@
    */
   .sl-c-search-form--top & {
     inset-block-start: unset;
-    inset-block-end:  calc(100% + #{size(1)});
+    inset-block-end:  calc(100% + #{var(--sl-theme-space-xs)});
   }
 }
 

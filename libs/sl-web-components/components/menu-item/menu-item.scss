@@ -50,12 +50,13 @@
   */
 .sl-c-menu-item__link {
   flex: 1;
+  --sl-link-text-decoration: none;
 }
 
 /**
   * Menu item prefix - content in the "before" slot
   */
 .sl-c-menu-item__prefix {
-  --sl-icon-width: #{size(3)};
-  --sl-icon-height: #{size(3)};
+  --sl-icon-width: #{var(--sl-theme-icon-lg)};
+  --sl-icon-height: #{var(--sl-theme-icon-lg)};
 }

@@ -15,7 +15,7 @@ export default {
       handles: ['onFileUploadFileRemove', 'onFileUploadFileUpload']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   args: {
     name: 'file-upload',
     label: 'File upload',
@@ -26,7 +26,7 @@ export default {
 
 const Template = (args) => html`
   <sl-file-upload ${spread(args)}>
-    <sl-icon-document size="xl"></sl-icon-document>
+    <sl-icon-document size="xxl"></sl-icon-document>
     <span><strong>Drag and Drop files here</strong><br/>or</span>
     <sl-button>Browse Files</sl-button>
   </sl-file-upload>

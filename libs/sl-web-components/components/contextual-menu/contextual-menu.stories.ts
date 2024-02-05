@@ -18,7 +18,7 @@ export default {
       handles: ['onContextualMenuOpen', 'onContextualMenuClose']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
 };
 
 const Template = (args) => html`

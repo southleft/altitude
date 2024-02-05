@@ -21,7 +21,7 @@ export default {
       exclude: ['activeToastIdx', 'prevActiveIdx', 'toasts', 'toastsVisible', 'controlPrev', 'controlNext']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     position: {
       control: { type: 'radio' },

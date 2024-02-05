@@ -13,7 +13,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  gap: size(1.5);
+  gap: var(--sl-theme-space-sm);
 
   /**
    * Vertical variant
@@ -34,7 +34,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: size(1.5);
+  gap: var(--sl-theme-space-sm);
   inset-inline-start: size(6.5);
 
   /**
@@ -57,8 +57,8 @@
   height: size(4);
   border-radius: 50%;
   background-color: var(--sl-theme-color-background-transparent);
-  border: 1.5px solid var(--sl-theme-color-content-default-weak);
-  color: var(--sl-theme-color-content-default-weak);
+  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+  color: var(--sl-theme-color-content-default);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,16 +69,16 @@
   .sl-is-active & {
     background-color: var(--sl-theme-color-background-accent-default);
     border-color: var(--sl-theme-color-border-accent-default);
-    color: var(--sl-theme-color-content-accent-weak);
+    color: var(--sl-theme-color-content-accent-stronger);
   }
 
   /**
    * Completed state
    */
   .sl-is-complete & {
-    background-color: var(--sl-theme-color-background-transparent);
-    border-color: var(--sl-theme-color-border-accent-default);
-    color: var(--sl-theme-color-content-accent-default);
+    background-color: var(--sl-theme-color-content-default-weak);
+    border-color: var(--sl-theme-color-content-default-weak);
+    color: var(--sl-theme-color-content-inverse-default);
   }
 }
 
@@ -91,7 +91,7 @@
   align-items: center;
   justify-content: center;
   border: none;
-  background-color: var(--sl-theme-color-border-default-weak);
+  background-color: var(--sl-theme-color-border-default);
   margin: auto;
   height: 1px;
   width: 92px;
@@ -120,20 +120,26 @@
 .sl-c-stepper-item__content {
   display: flex;
   flex-direction: row;
-  gap: size(0.75);
+  gap: var(--sl-theme-space-xs);
   width: max-content;
   max-width: size(17);
-  color: var(--sl-theme-color-content-default-weak);
-  --sl-icon-width: #{size(2.5)};
-  --sl-icon-height: #{size(2.5)};
+  color: var(--sl-theme-color-content-default);
+  --sl-icon-width: #{var(--sl-theme-icon-md)};
+  --sl-icon-height: #{var(--sl-theme-icon-md)};
 
   /**
-   * Active and completed state
+   * Active state
    */
-  .sl-is-active &,
-  .sl-is-complete & {
-    color: var(--sl-theme-color-content-accent-default);
+  .sl-is-active & {
+    color: var(--sl-theme-color-content-default);
   }
+
+  /**
+   * Completed state
+   */
+   .sl-is-complete & {
+     color: var(--sl-theme-color-content-default-weak);
+   }
 
   /**
    * Vertical variant
@@ -151,7 +157,7 @@
 .sl-c-stepper-item__body {
   display: flex;
   flex-direction: column;
-  gap: size(0.25);
+  gap: var(--sl-theme-space-xxs);
 }
 
 /**
@@ -180,7 +186,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
 
   /**
    * Vertical variant
@@ -197,5 +203,12 @@
  */
 .sl-c-stepper-item__description {
   @include sl-theme-typography-body-sm;
-  color: var(--sl-theme-color-content-default-weak);
+  color: var(--sl-theme-color-content-default);
+
+  /**
+   * Completed state
+   */
+  .sl-is-complete & {
+    color: var(--sl-theme-color-content-default-weak);
+  }
 }

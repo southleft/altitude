@@ -1,10 +1,14 @@
 import { html } from 'lit';
+import type { Meta, StoryObj } from '@storybook/web-components';
 import './icon-grid';
 import './icons';
 
-export default {
+const meta: Meta = {
   title: 'Fundamentals/Icons/Icon Grid',
-  component: 'icon-grid'
+  component: 'icon-grid',
 };
 
-export const IconGrid = (args, context) => html` <icon-grid></icon-grid> `;
+export default meta;
+type Story = StoryObj;
+
+export const IconGrid: Story = (args, context) => html` <icon-grid></icon-grid> `;

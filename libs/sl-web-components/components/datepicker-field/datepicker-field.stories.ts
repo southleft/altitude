@@ -16,7 +16,7 @@ export default {
       handles: ['onDatepickerFieldOpen', 'onDatepickerFieldClose', 'onDatepickerFieldChange']
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   args: {
     label: 'Select a Date',
     fieldNote: 'This is a field note.',

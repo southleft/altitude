@@ -2,13 +2,13 @@ import { Meta } from '@storybook/blocks';
 
 <Meta title="Documentation/Code Guidelines" />
 
-# SL Web Components Code Guidelines
+# Code Guidelines
 
-SL Web Components is the web component implementation implementation of SL. It provides presentational UI components to be consumed by SL web applications.
+Web Components is the web component implementation of SL, providing presentational UI components for web applications.
 
-SL Web Components follows these coding principles and conventions for HTML, CSS, and JavaScript:
+These coding principles and conventions are followed for HTML, CSS, and JavaScript:
 
-- [SL Web Components principles](#principles)
+- [Web Components principles](#principles)
 - [HTML](#html)
   - [HTML principles and conventions](#html-principles)
 - [CSS](#css)
@@ -18,28 +18,28 @@ SL Web Components follows these coding principles and conventions for HTML, CSS,
 - [JavaScript](#js)
   - [Component API naming conventions](#api-naming)
 - [Component structure and assets](#component-structure-assets)
-  - [Component directory structure](#component-directory-structure)
   - [Icons](#icons)
   - [Custom Events](#custom-events)
-  - [Workflow](#workflow)
-  - [Directory Structure](#directory)
+  - [Directory Structure](#directory-structure)
 
-## SL Web Components principles <a name="principles"></a>
+## Web Components Principles <a name="principles"></a>
 
-- **A front-end source of truth** - SL Web Components serves as the UI-specific front-end code source of truth for SL. SL Web Components embody best practices around accessibility, responsive design, performance, and other front-end practices. SL applications can pull SL Web Components into their projects in order to deliver high-quality web experiences.
-- **Presentational UI Components Only** - SL Web Components provides a library of reusable [presentational UI components](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0) that are consumed by SL applications. These presentational components are "dumb" and don't contain any application business logic, aren't hooked up to any data models, or rely on specific environments or configurations.
-- **Agnostic** - SL Web Components are free of any framework, CMS, or implementation-specific conventions. These are standalone presentational UI components that aim to travel to any web-based environment. Any framework, CMS, or implementation-specific handling should be managed within the application environment.
-- **Predictable APIs** - SL Web Components provides consistent, clear [component APIs](#api-naming) in order to provide a smooth user developer experience.
-- **Composition over inheritance** - SL Web Components adheres to the [composition over inheritance](https://en.wikipedia.org/wiki/Composition_over_inheritance) principle in order to create clean, extensible components that aren't tied to specific contexts or content.
+- **A Front-End Source of Truth**: Web Components serve as the UI-specific front-end code source of truth for SL, embodying best practices around accessibility, responsive design, performance, and other front-end practices. Applications can integrate Web Components to deliver high-quality web experiences.
+- **Presentational UI Components Only**: Web Components provide a library of reusable [presentational UI components](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0) consumed by applications. These "dumb" components do not contain application business logic, data models, or rely on specific environments or configurations.
+- **Agnostic**: Web Components are free of any framework, CMS, or implementation-specific conventions, aiming to function in any web-based environment. Framework, CMS, or implementation-specific handling should be managed within the application environment.
+- **Predictable APIs**: Web Components offer consistent, clear [component APIs](#api-naming) to ensure a smooth developer experience.
+- **Composition over Inheritance**: Web Components adhere to the [composition over inheritance](https://en.wikipedia.org/wiki/Composition_over_inheritance) principle, creating clean, extensible components not tied to specific contexts or content.
+
+---
 
 # HTML <a name="html"></a>
 
-## HTML principles and conventions <a name="html-principles"></a>
+## HTML Principles and Conventions <a name="html-principles"></a>
 
-- **Use semantic markup.** This means marking up a document with information about the data structure behind the information. For example, use `<h1>` for headings, `<p>` for paragraphs, `<ol>` for ordered lists, and so on. Avoid using `<div>` and `<span>` for everything.
-- **Clarity over brevity** - Developers should be able to understand what's going on with markup at a glance. Avoid cryptic abbreviations and nicknames, add proper indenting & spacing, and use clear comments.
-- **Accessibility.** Markup should be accessible and [follow best practices](https://www.a11yproject.com/checklist/). Use (but [don't abuse](https://www.deque.com/blog/top-5-rules-of-aria/)) <abbr title="Accessible Rich Internet Applications">ARIA</abbr> attributes.
-- Native HTML elements (e.g. `<input>`, `<select>`) should be preferred over custom elements whenever possible. Native elements provide a slew of functionality and accessibility best practices out of the box.
+- **Use Semantic Markup**: Utilize markup that describes the data structure behind the information. For example, use `<h1>` for headings, `<p>` for paragraphs, `<ol>` for ordered lists, etc. Minimize the use of generic `<div>` and `<span>` elements.
+- **Clarity over Brevity**: Ensure markup is easily understandable at a glance. Avoid cryptic abbreviations, use proper indentation and spacing, and include clear comments.
+- **Accessibility**: Ensure markup follows accessibility best practices. Use ARIA attributes appropriately, without overusing them.
+- **Prefer Native Elements**: Whenever possible, prioritize native HTML elements (e.g., `<input>`, `<select>`) over custom elements. Native elements provide built-in functionality and accessibility best practices.
 
 ---
 
@@ -54,7 +54,7 @@ SL Web Components follows these coding principles and conventions for HTML, CSS,
 
 ## CSS conventions <a name="css-conventions"></a>
 
-SL Web Components follows a [BEM](http://getbem.com/introduction/)-like syntax, extending it further to follow more of [BEMIT](http://csswizardry.com/2015/08/bemit-taking-the-bem-naming-convention-a-step-further/)-like conventions.
+Web Components follows a [BEM](http://getbem.com/introduction/)-like syntax, extending it further to follow more of [BEMIT](http://csswizardry.com/2015/08/bemit-taking-the-bem-naming-convention-a-step-further/)-like conventions.
 
 ### BEM syntax
 
@@ -64,18 +64,18 @@ BEM stands for “Block Element Modifier”. Here's a breakdown of what that mea
 - **Element** is a child of the primary block (e.g. `.sl-c-button__text`)
 - **Modifier** is a variation of a component style (e.g. `.sl-c-button--primary`)
 
-SL Web Components extends BEM's conventions to create even more explicit, encapsulated class names.
+Web Components extends BEM's conventions to create even more explicit, encapsulated class names.
 
 ### Global namespace
 
-SL Web Components uses a global namespace of `sl-` prefix to all styles that come from the design system. This is done to:
+Web Components uses a global namespace of `sl-` prefix to all styles that come from the design system. This is done to:
 
 - Avoid naming collisions with code coming from other sources.
-- Clarify the source of the code, distinguishing SL Web Components markup/styles from code coming from other codebases and libraries.
+- Clarify the source of the code, distinguishing Web Components markup/styles from code coming from other codebases and libraries.
 
 ### Class prefixes
 
-In addition to the global `sl-` namespace, SL Web Components uses [class prefixes](http://csswizardry.com/2015/03/more-transparent-ui-code-with-namespaces/) to provide additional clarity to the job a given class plays. SL Web Components uses the following class prefix conventions:
+In addition to the global `sl-` namespace, Web Components uses [class prefixes](http://csswizardry.com/2015/03/more-transparent-ui-code-with-namespaces/) to provide additional clarity to the job a given class plays. Web Components uses the following class prefix conventions:
 
 - **`c-`** for UI components, such as `.sl-c-button`
 - **`l-`** for layout-specific component styles, such as `.sl-l-layout-container`
@@ -90,7 +90,7 @@ Let's take a look at the following example:
 
 `.sl-c-button--inverted`
 
-- `sl-` is the global namespace for all styles coming from SL Web Components.
+- `sl-` is the global namespace for all styles coming from Web Components.
 - `c-` is the category of class, which in this case `c-` means “component”
 - `button` is the block name (“Block” being the “B” in BEM)
 - `--inverted` is a modifier, indicating a stylistic variation of the block (“Modifier” being the “M” in BEM)
@@ -99,7 +99,7 @@ Here's another example:
 
 `.sl-c-grid__item`
 
-- `sl-` once again is SL Web Components's global namespace.
+- `sl-` once again is Web Components's global namespace.
 - `c-` is the category of class, which in this case `c-` means “component”
 - `grid` is the block name
 - `__item` is an element, indicating that this is a child of the block (“Element” being the “E” in BEM)
@@ -129,9 +129,10 @@ Keep SCSS files as flat as possible rather than [nesting](https://sass-lang.com/
 ```scss
 .sl-c-primary-nav {
   /**
-    * 1) On larger displays, convert to a horizontal list
-    */
-  @media all and (min-width: 40em) {
+   * 1. On larger displays, convert to a horizontal list
+   */
+
+  @media (min-width: $sl-breakpoint-md) {
     display: flex;
   }
 }
@@ -141,16 +142,11 @@ Keep SCSS files as flat as possible rather than [nesting](https://sass-lang.com/
 
 ```scss
 .sl-c-button {
-  background: var(--sl-theme-color-background-knockout-brand);
+  background: var(--sl-theme-color-background-accent-default);
 
   &:hover,
   &:focus {
-    background: var(--sl-theme-color-background-knockout-brand-hover);
-  }
-
-  &:after {
-    content: '';
-    display: block;
+    background: var(--sl-theme-color-background-accent-strong);
   }
 }
 ```
@@ -189,27 +185,27 @@ Use the following conventions:
 
 ### Sizing
 
-SL Web Components defaults to an 8-point grid, so a variable called `--size-base-unit` is set to `0.5rem` (which is equivalent to `8px`) and is used throughout the system via a Sass function called `size()`. The `size()` function is used to size grids, control component padding and margin, define widths and heights, and other use cases. Some examples:
+Web Components defaults to an 8-point grid, so a variable called `--size-base-unit` is set to `0.5rem` (which is equivalent to `8px`) and is used throughout the system via a Sass function called `size()`. The `size()` function is used to size grids, control component padding and margin, define widths and heights, and other use cases. Some examples:
 
 ```scss
 .sl-c-card {
-  padding: size(2); // 2 * 0.5rem = 1rem or 16px
+  padding: var(--sl-theme-spacing); // 2 * 0.5rem = 1rem or 16px
 }
 
 .sl-c-header {
-  margin-block-end: size(4); // 4 * 0.5rem = 2rem or 32px
+  margin-block-end: var(--sl-theme-spacing-lg); // 4 * 0.5rem = 2rem or 32px
 }
 ```
 
 ### CSS Comments
 
-SL Web Components uses the following commenting conventions, which take much inspiration from [these commenting guidelines](https://cssguidelin.es/#commenting).
+Web Components uses the following commenting conventions, which take much inspiration from [these commenting guidelines](https://cssguidelin.es/#commenting).
 
 For example:
 
 ```scss
 /*------------------------------------*\
-    # BUTTON
+  # BUTTON
 \*------------------------------------*/
 
 /**
@@ -220,9 +216,9 @@ For example:
 
 /**
  * Full width button
- * 1) Button should take up the full width of the container it lives within
- * 2) Pushes the button away from the other content because it lives in a flexbox container
- * 3) I know this a weird magic number, but blah blah blah
+ * 1. Button should take up the full width of the container it lives within
+ * 2. Pushes the button away from the other content because it lives in a flexbox container
+ * 3. I know this a weird magic number, but blah blah blah
  */
 .sl-c-button--full-width {
   background: red;
@@ -234,7 +230,7 @@ For example:
 
 ### Other CSS Rules
 
-- SL Web Components generally arranges CSS properties in the following manner (although more as a guideline than a strictly-enforced convention):
+- Web Components generally arranges CSS properties in the following manner (although more as a guideline than a strictly-enforced convention):
 
 ```css
 .element {
@@ -255,7 +251,7 @@ Instead of:
   flex-direction: column;
 }
 
-@media (min-width: $sl-bp-md) {
+@media (min-width: $sl-breakpoint-md) {
   .sl-c-primary-nav {
     flex-direction: row;
   }
@@ -268,7 +264,7 @@ Use:
 .sl-c-primary-nav {
   flex-direction: column;
 
-  @media (min-width: $sl-bp-md) {
+  @media (min-width: $sl-breakpoint-md) {
     flex-direction: row;
   }
 }
@@ -276,11 +272,9 @@ Use:
 
 ## CSS Custom Properties <a name="css-custom-properties"></a>
 
-TODO: document CSS custom properties conventions.
-
 ### CSS Custom Property Composition
 
-SL Web Components is a [themeable design system](THEMING.md). The SL Web Component library uses CSS Custom Properties to pass properties down through the various levels of the library (theming, child components, etc.). Custom properties are the only way that the scoped component CSS can inherit styles outside of the components SCSS file (e.g. `button.scss`). Custom properties allow the library to support multiple themes without changing the structure of the code.
+Web Components is a [themeable design system](THEMING.mdx). The Web Component library uses CSS Custom Properties to pass properties down through the various levels of the library (theming, child components, etc.). Custom properties are the only way that the scoped component CSS can inherit styles outside of the components SCSS file (e.g. `button.scss`). Custom properties allow the library to support multiple themes without changing the structure of the code.
 
 The general structure of a CSS property on a component should be as follows:
 
@@ -308,8 +302,8 @@ One exception to this is `icon` properties. Icon properties should be set at the
 .sl-c-icon {
   display: block;
   fill: var(--sl-icon-fill, currentColor);
-  height: var(--sl-icon-height, size(2));
-  width: var(--sl-icon-width, size(2));
+  height: var(--sl-icon-height, var(--sl-theme-icon));
+  width: var(--sl-icon-width, var(--sl-theme-icon));
 }
 ```
 
@@ -321,8 +315,8 @@ Then when an icon is used in a button, you can set the custom properties at the 
  */
 sl-icon,
 .sl-icon {
-  --sl-icon-height: #{size(2)};
-  --sl-icon-width: #{size(2)};
+  --sl-icon-height: #{var(--sl-theme-icon)};
+  --sl-icon-width: #{var(--sl-theme-icon)};
 }
 ```
 
@@ -362,15 +356,17 @@ sl-link-list-secondary-link-hover-text-color
 
 In this example, the `link-list` is the parent component, `secondary` is the modifier, `link` is an element that lives inside of the `link-list`, `hover` is the hover state of this link, and `text-color` is the CSS property. We use `text-color` instead of `color` to be more specific, but for other properties like `background` and `border-color` we use the actual CSS property.
 
+---
+
 # JavaScript <a name="js"></a>
 
-SL Web Components builds native web components using [LitElement](https://lit.dev/) with [TypeScript](https://www.typescriptlang.org/).
+Web Components builds native web components using [LitElement](https://lit.dev/) with [TypeScript](https://www.typescriptlang.org/).
 
 Tip: VS Code users can install the [lit-plugin extension](https://marketplace.visualstudio.com/items?itemName=runem.lit-plugin), which enables some extremely useful features for lit templates.
 
 ## Component API naming conventions <a name="api-naming"></a>
 
-SL Web Components provide attributes that serve as the API for user developers to interface with SL Web Components. For example:
+Web Components provide attributes that serve as the API for user developers to interface with Web Components. For example:
 
 ```html
 <sl-button>
@@ -391,7 +387,7 @@ The library adhreres to the following API naming conventions:
 
 - `variant` should be used for primary _stylistic_ variations of a component, such as (e.g. `variant="primary"` or `variant="success"`).
 - `inverted` should be used consistently for stylistic variations that "invert" the color schemes (e.g. `<sl-heading ?inverted=${true}>`) to work on a darker background. Note: this is different than dark/light mode support, which is handled elsewhere.
-- `size` should be used for adjusting size attributes (e.g. `size="sm"` or `size="lg"`). Default to `sm`, `lg`, `xl` with "md" being the undeclared default. Note: use abbreviated t-shirt sizes — `xs`, `sm`, `md`, `lg`, `xl` — for naming versus spelling out "small", "large" and so on. "Medium" (`md`) is the default value and should be omitted from the available options.
+- `size` should be used for adjusting size attributes (e.g. `size="md"` or `size="lg"`). Default to `sm`, `lg`, `xl` with "md" being the undeclared default. Note: use abbreviated t-shirt sizes — `xs`, `sm`, `md`, `lg`, `xl` — for naming versus spelling out "small", "large" and so on. "Medium" (`md`) is the default value and should be omitted from the available options.
 - `spacing` should be used for adjusting spacing between elements (e.g. `spacing="condensed"`).
 - `behavior` should be used for functional variations of a pattern, such as `<sl-alert behavior="dismissible">`. `behavior` should be used as the default for introducing a functional variant to a component, and should be used for mutually exclusive behaviors.
 - `is[Behavior]` should be used in conjunction with `behavior` to add additional behavioral variants to a component (e.g. `<sl-alert behavior="dismissible" ?isDraggable=${true}" ?isFadeable="${true}">`). `is[Behavior]` should be the default convention, but sometimes deviating from the `is` language is necessary (for instance, `<sl-accordion allowMultipleOpen="true">`). Whatever the language, the name should be clear to the user whether they're toggling something on or off.
@@ -488,18 +484,19 @@ From there, the child component recieves those CSS custom properties, like so:
 .sl-c-table-row {
   :host(:nth-of-type(even)) & {
     background: var(--sl-table-row-evsl-background-pass-down);
+  }
 }
 ```
 
-CSS custom properties are one of the only ways for styles to pass through the shadow DOM. SL Web Components uses a CSS custom property naming suffix called `-pass-down` to identify variables that are passed down from parent to child.
+CSS custom properties are one of the only ways for styles to pass through the shadow DOM. Web Components uses a CSS custom property naming suffix called `-pass-down` to identify variables that are passed down from parent to child.
 
 ### Composability and Slots
 
-SL Web Components are composable in order to account for different content configurations. Certain components (like cards and other sl) need to be extremely composable in order to meet requirements across many different products and use cases.
+Web Components are composable in order to account for different content configurations. Certain components (like cards and other sl) need to be extremely composable in order to meet requirements across many different products and use cases.
 
 The library makes use of [slots](https://developer.mozilla.org/sl-US/docs/Web/HTML/Element/Slot) to carve out specific areas where child elements can be injected.
 
-Certain SL Web Components follow a "`header`, `body`, `footer`" convention to standardize slot areas for specific types. Consider the `card` component:
+Certain Web Components follow a "`header`, `body`, `footer`" convention to standardize slot areas for specific types. Consider the `card` component:
 
 ```ts
 // card.ts
@@ -535,14 +532,66 @@ This commenting format allows slot documentation to appear alongside the prop ta
   - `xs` = Extra small
   - `sm` = Small
   - `md` = Medium
-  - `md2` = Another Medium Value
   - `lg` = Large
   - `xl` = Extra large
   - `xxl` = Extra, extra large
 
 # Component structure and assets <a name="component-structure-assets"></a>
 
-## Component directory structure: <a name="component-directory-structure"></a>
+## Component Rules and Considerations
+
+### Exactly one component per directory and per folder
+
+Components in this library exist in a flat structure so each component directory needs to contain exactly one component file. Certain components may require several components to properly function (for instance, a `table` may consist of `table-row`, `table-cell`, and `table-header` subcomponents), and these components should live as siblings in the `components/` directory.
+
+## Icons <a name="icons"></a>
+
+Source SVG icons live in the `icons` directory. A `build:icons` script is used to create the directories of icon components in both Web Components and React. These directories contain all individual SVG icon components to be used by the library.
+
+Individaul SVG icon components called `<sl-icon-[icon-name]>` are used in this library (e.g. `<sl-icon-email"></sl-icon-email>`). A reference of all available icons for use can be found on Storybook under "Icon Grid".
+
+To add an icon, add an SVG to the `icons` directory and ensure the SVG code contains no hard-coded `fill` attributes. This allows the icon fill to be controlled dynamically via CSS.
+
+## Custom Events <a name="custom-events"></a>
+
+Firing `CustomEvent`s in Lit are an important way for framework-specific wrappers and applications to latch onto and change certain reactive properties within the component. All Web Components use the `SLElement.ts` base JS class which has a `dispatch` event built into it to create a consistent way of authoring event emitters. This base element allows users to add `this.dispatch` to a component code method:
+
+```ts
+handleOnClose() {
+   this.isActive = false;
+   this.dispatch({ eventName: 'onModalClose', detailObj: { isActive: this.isActive } });
+}
+```
+
+`this.dispatch` consists of an `eventName` which is used to pass in a function from the outside and a `detailObj` which allows a user to pass in the `@property` they want to expose to applications. This gives the ability for users to run another function at the application-level from the outside. It also allows access to the property value from inside the component to use to trigger other events at the application. Here is an example of logging the `isActive` interactive property to the console when the `modal` is closed:
+
+```ts
+<sl-modal @onModalClose=${(e) => { console.log(e.detail.isActive)}}>
+```
+
+While this is only a simple `console.log`, functions can be passed into these events as well and then use internal component properties to align application or framework (e.g. React) states with internal reactive property values so that those are always aligned. If you add custom events to your components, be sure to update your stories so the `Actions` tab in addons can fire that event. Here is an example story with `actions` linked up to an `eventName`:
+
+```ts
+import { withActions } from '@storybook/addon-actions/decorator';
+
+export default {
+  title: 'Molecules/Modal',
+  component: 'sl-modal',
+  parameters: {
+    status: { type: 'beta' },
+    actions: {
+      handles: ['onModalClose']
+    }
+  },
+  decorators: [withActions]
+};
+```
+
+You can also trigger these by adding child actions to the parent stories file's actions (e.g. a `radio-field-item` custom event within a `radio-field` story's actions). These custom events should be added to React's stories' actions as well. For more information on how custom event emission works, go to [Lit's Documentation on custom events](https://lit.dev/docs/v1/components/events/#fire-event).
+
+## Directory Structure <a name="directory-structure"></a>
+
+### Components
 
 The design system's component directory (inside `components`) contains all of the design system's components. The structure is as follows:
 
@@ -560,63 +609,9 @@ The design system's component directory (inside `components`) contains all of th
 - `component-name.stories.ts` contains all the Storybook [stories](https://storybook.js.org/basics/writing-stories/) for the component. All components must include a `.stories.ts` file with the exception of [compound components](#compound-components)
 - `component-name.ts` contains the TypeScript source code for the component
 
-## Component Rules and Considerations
+### Folder Structure <a name="directory"></a>
 
-### Exactly one component per directory and per folder
-
-Components in this library exist in a flat structure so each component directory needs to contain exactly one component file. Certain components may require several components to properly function (for instance, a `table` may consist of `table-row`, `table-cell`, and `table-header` subcomponents), and these components should live as siblings in the `components/` directory.
-
----
-
-## Icons <a name="icons"></a>
-
-Source SVG icons live in the `icons` directory. A `generate-icons` script is used to create the directories of icon components in both SL Web Components and SL React. These directories contain all individual SVG icon components to be used by the library.
-
-Individaul SVG icon components called `<sl-icon-[icon-name]>` are used in this library (e.g. `<sl-icon-email"></sl-icon-email>`). A reference of all available icons for use can be found on Storybook under "Icon Grid".
-
-To add an icon, add an SVG to the `icons` directory and ensure the SVG code contains no hard-coded `fill` attributes. This allows the icon fill to be controlled dynamically via CSS.
-
----
-
-## Custom Events <a name="custom-events"></a>
-
-Firing `CustomEvent`s in Lit are an important way for framework-specific wrappers and applications to latch onto and change certain reactive properties within the component. All SL Web Components use the `BlockElement.ts` base JS class which has a `dispatch` event built into it to create a consistent way of authoring event emitters. This base element allows users to add `this.dispatch` to a component code method:
-
-```ts
-handleOnOpen() {
-   this.isActive = true;
-   this.dispatch({ eventName: 'close', detailObj: { isActive: this.isActive } });
-}
-```
-
-`this.dispatch` consists of an `eventName` which is used to pass in a function from the outside and a `detailObj` which allows a user to pass in the `@property` they want to expose to applications. This gives the ability for users to run another function at the application-level from the outside. It also allows access to the property value from inside the component to use to trigger other events at the application. Here is an example of logging the `isActive` interactive property to the console when the `modal` is closed:
-
-```ts
-<sl-modal @close=${(e) => { console.log(e.detail.isActive)}}>
-```
-
-While this is only a simple `console.log`, functions can be passed into these events as well and then use internal component properties to align application or framework (e.g. React) states with internal reactive property values so that those are always aligned. If you add custom events to your components, be sure to update your stories so the `Actions` tab in addons can fire that event. Here is an example story with `actions` linked up to an `eventName`:
-
-```ts
-export default {
-  title: 'Examples/Tabs',
-  component: 'sl-tabs',
-  parameters: {
-    status: { type: 'beta' },
-    actions: {
-      handles: ['onTabChange']
-    }
-  }
-};
-```
-
-You can also trigger these by adding child actions to the parent stories file's actions (e.g. a `radio-field-item` custom event within a `radio-field` story's actions). These custom events should be added to React's stories' actions as well. For more information on how custom event emission works, go to [Lit's Documentation on custom events](https://lit.dev/docs/v1/components/events/#fire-event).
-
----
-
-## Directory structure <a name="directory"></a>
-
-SL Web Components uses the [atomic design methodology](https://atomicdesign.bradfrost.com/chapter-2/#the-atomic-design-methodology) to organize components into [Atoms](http://atomicdesign.bradfrost.com/chapter-2/#atoms), [Molecules](http://atomicdesign.bradfrost.com/chapter-2/#molecules), and [Organisms](http://atomicdesign.bradfrost.com/chapter-2/#organisms). Therefore the top-level navigation categories for Storybook are:
+Web Components uses the [atomic design methodology](https://atomicdesign.bradfrost.com/chapter-2/#the-atomic-design-methodology) to organize components into [Atoms](http://atomicdesign.bradfrost.com/chapter-2/#atoms), [Molecules](http://atomicdesign.bradfrost.com/chapter-2/#molecules), and [Organisms](http://atomicdesign.bradfrost.com/chapter-2/#organisms). Therefore the top-level navigation categories for Storybook are:
 
 - Atoms
 - Molecules
@@ -628,45 +623,39 @@ The component stucture is as follows:
 
 ```
 Atoms
---Design Tokens
---Component Category
-----Component Name
-------Component Stories
+--Component Name
+----Component Stories
 Molecules
---Component Category
-----Component Name
-------Component Stories
+--Component Name
+----Component Stories
 Organisms
---Component Category
-----Component Name
-------Component Stories
+--Component Name
+----Component Stories
 Pages
 --Page Name
 ----Default
 ----[Other Variations]
 Recipes
---Component Name
-----Component Stories
+--Recipe Name
+----Recipe Stories
 ```
 
 **Atoms**, **Molecules**, and **Organisms** all follow a general pattern of:
 
 ```
---Component Category
-----Individual Component Name
-------Individual Component Stories
+--Individual Component Name
+----Individual Component Stories
 ```
 
-For instance, `Molecules/Buttons/Button` would look something like:
+For instance, `Atoms/Button` would look something like:
 
 ```
-Molecules
---Buttons
-----Button
-------Default
-------Primary
-------Small
-------[Other Variations]
+Atoms
+--Button
+----Default
+----Primary
+----Secondary
+----[Other Variations]
 ```
 
 ### Working with pages
@@ -695,14 +684,14 @@ Pages
 
 ### Working with recipes
 
-**[Recipes](https://bradfrost.com/blog/post/design-system-components-recipes-and-snowflakes/)** are specific compositions of design system components (for the most part) that are to be consistently used across a product, but aren’t agnostic enough to live in the SL Web Components core library. Like pages, recipes live in the `.storybook` directory of the project since they are not packaged up with the design system. Recipe components may be revisited and pulled into SL Web Components at a later date if they are deemed to be reusable enough to move into the design system library.
+**[Recipes](https://bradfrost.com/blog/post/design-system-components-recipes-and-snowflakes/)** are specific compositions of design system components (for the most part) that are to be consistently used across a product, but aren’t agnostic enough to live in the Web Components core library. Like pages, recipes live in the `.storybook` directory of the project since they are not packaged up with the design system. Recipe components may be revisited and pulled into Web Components at a later date if they are deemed to be reusable enough to move into the design system library.
 
 Recipe components live in `./storybook/recipes` and take the following shape in Storybook:
 
 ```
 Recipes
---Component Name
-----Component Stories
+--Recipe Name
+----Recipe Stories
 ```
 
 Recipe components should _not_ include the `.sl-` CSS prefix, since they are not part of the design system (so a recipe could look like `.c-recipe-name`). However, the other design system CSS conventions should be followed in order to make refactoring into the design system as easy as possible.

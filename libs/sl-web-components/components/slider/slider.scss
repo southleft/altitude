@@ -15,7 +15,7 @@
 .sl-c-slider {
   display: flex;
   flex-direction: column;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
 }
 
 /**
@@ -57,7 +57,7 @@
    * Disabled state for track on slider
    */
   &:disabled::-webkit-slider-runnable-track {
-    background-color: var(--sl-theme-color-background-default-strong);
+    background-color: var(--sl-theme-color-background-default);
   }
 
   /**
@@ -241,7 +241,7 @@
   color: var(--sl-theme-color-content-default);
   box-shadow: var(--sl-theme-box-shadow);
   margin-block-end: size(0.75);
-  font-size: size(1.5);
+  font-size: var(--sl-theme-space-sm);
   line-height: size(2);
 
   &:after {
@@ -269,7 +269,7 @@
   display: block;
   background-color: var(--sl-theme-color-background-default-strong);
   border-radius: var(--sl-theme-border-radius);
-  padding: size(1);
+  padding: var(--sl-theme-space-xs);
   position: relative;
   z-index: var(--sl-z-index-top);
   text-align: center;
@@ -278,7 +278,7 @@
 .sl-c-slider__output-range-one-text,
 .sl-c-slider__output-range-two-text {
   @include sl-theme-typography-body-xs;
-  margin-block-start: size(0.5);
+  margin-block-start: var(--sl-theme-space-xxs);
 }
 
 /**
@@ -289,7 +289,7 @@
 .sl-c-slider__range-container {
   display: flex;
   align-items: center;
-  gap: size(2);
+  gap: var(--sl-theme-space);
 
   /**
    * Applies to make the slider as full width.

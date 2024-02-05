@@ -18,7 +18,7 @@ export default {
       exclude: ['ariaId', 'ariaControls', 'idx', 'tabEl']
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     isActive: {
       control: 'boolean',

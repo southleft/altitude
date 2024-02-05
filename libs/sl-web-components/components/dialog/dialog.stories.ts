@@ -23,7 +23,7 @@ export default {
       exclude: ['ariaLabelledBy']
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     heading: {
       type: 'text'

@@ -16,7 +16,7 @@ export default {
       handles: ['onInputStepperChange']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   args: {
     count: '1',
     min: '0',

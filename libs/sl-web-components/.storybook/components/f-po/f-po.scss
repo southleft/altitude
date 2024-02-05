@@ -8,9 +8,8 @@
 }
 
 .f-po {
-  background: rgba(#2D56CA, 0.1);
-  border: var(--sl-theme-border-width) dashed var(--sl-theme-color-border-accent-default);
-  color: var(--sl-theme-color-content-accent-default);
+  border: var(--sl-theme-border-width) dashed var(--sl-theme-color-border-default);
+  color: var(--sl-theme-color-content-default-weak);
   width: 100%;
   border-radius: var(--sl-theme-border-radius);
   padding: var(--sl-theme-space);
@@ -18,4 +17,19 @@
   text-align: center;
   display: block;
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--sl-theme-color-border-default);
+    opacity: 0.2;
+  }
 }

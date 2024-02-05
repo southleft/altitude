@@ -9,7 +9,7 @@
 .sl-c-file-upload {
   display: flex;
   flex-direction: column;
-  gap: size(1);
+  gap: var(--sl-theme-space-xs);
 
   /**
    * File upload disabled state
@@ -37,8 +37,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: size(1);
-  padding: size(2.5) size(3) size(1.5) size(3);
+  gap: var(--sl-theme-space-xs);
+  padding: var(--sl-theme-space-md) size(3) var(--sl-theme-space-sm) size(3);
   text-align: center;
   border-radius: var(--sl-theme-border-radius);
   color: var(--sl-theme-color-content-default-weak);
@@ -80,7 +80,7 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: size(2);
+  gap: var(--sl-theme-space);
 }
 
 /**
@@ -91,8 +91,8 @@
   flex-direction: column;
   border-radius: var(--sl-theme-border-radius);
   overflow: hidden;
-  --sl-icon-width: #{size(3)};
-  --sl-icon-height: #{size(3)};
+  --sl-icon-width: #{var(--sl-theme-icon-lg)};
+  --sl-icon-height: #{var(--sl-theme-icon-lg)};
 }
 
 /**
@@ -103,10 +103,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: size(1);
-  padding: size(0) size(0.5) size(0) size(1.5);
+  gap: var(--sl-theme-space-xs);
+  padding: size(0) var(--sl-theme-space-xxs) size(0) var(--sl-theme-space-sm);
   color: var(--sl-theme-color-content-default);
-  background-color: var(--sl-theme-color-background-default-stronger);
+  background-color: var(--sl-theme-color-background-default);
 }
 
 /**
@@ -116,7 +116,7 @@
 .sl-c-file-upload__item-second {
   display: flex;
   align-items: center;
-  gap: size(1);
+  gap: var(--sl-theme-space-xs);
 }
 
 /**
