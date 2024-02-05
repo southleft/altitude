@@ -137,7 +137,7 @@ export class SLToast extends SLElement {
     } else if (this.variant === 'warning') {
       toastIcon = html`<${this.iconWarningTriangleEl}></${this.iconWarningTriangleEl}>`;
     } else if (this.variant === 'danger') {
-      toastIcon = html`<${this.iconWarningEl}lg></${this.iconWarningEl}>`;
+      toastIcon = html`<${this.iconWarningEl}></${this.iconWarningEl}>`;
     }
 
     return html`
