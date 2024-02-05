@@ -252,24 +252,11 @@ export class SLDrawer extends SLElement {
   /**
    * Open drawer
    * 1. Set isActive to true to show the drawer
-   * 2. Focus on the drawer's first focusable element when opened. Timeout is equal to the css transition timing
-   * - The first focusable element defaults to the drawer heading, but if a heading is not present, it defaults to the close button.
-   * 3. Dispatch a custom event on open
+   * 2. Dispatch a custom event on open
    */
   public open() {
     this.isActive = true; /* 1 */
-    // setTimeout(() => {
-    //   setTimeout(async () => {
-    //     let firstFocusableEl = await this.drawerHeading;
-    //     if (!firstFocusableEl) {
-    //       const closeButton = await this.closeButton;
-    //       firstFocusableEl = closeButton.shadowRoot.querySelector('button');
-    //     }
-
-    //     firstFocusableEl.focus();
-    //   }, 400);
-    // }, 400);
-    /* 3 */
+    /* 2 */
     this.dispatch({
       eventName: 'onDrawerOpen',
       detailObj: {

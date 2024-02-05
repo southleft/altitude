@@ -9,6 +9,8 @@ const elementMap = register({
   suffix: PackageJson.version
 });
 
+console.log("TEXT PASSAGE: ", SLTextPassage)
+
 export const SLTextPassage = createComponent({
   react: React,
   tagName: elementMap.get(SLWebTextPassage.el),
