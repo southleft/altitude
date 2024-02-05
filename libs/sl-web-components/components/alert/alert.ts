@@ -1,8 +1,6 @@
 import { TemplateResult, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
-import { nanoid } from 'nanoid';
 import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { SLElement } from '../SLElement';

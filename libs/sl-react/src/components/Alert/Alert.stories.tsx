@@ -7,21 +7,18 @@ export default {
   parameters: {
     status: 'beta',
     actions: {
-      handles: ['keydown', 'onAlertOpen', 'onAlertClose', 'onAlertExpand', 'onAlertCollapse']
-    },
-    controls: {
-      exclude: ['hasPanel', 'ariaControls', 'ariaLabelledBy']
-    },
+      handles: ['keydown', 'onAlertOpen', 'onAlertClose']
+    }
   },
   argTypes: {
     variant: {
       options: ['default', 'success', 'warning', 'danger'],
       control: { type: 'radio' }
     },
-    isActive: {
-      control: 'boolean'
+    title: {
+      control: 'text'
     },
-    isExpanded: {
+    isActive: {
       control: 'boolean'
     },
     autoClose: {
@@ -30,24 +27,19 @@ export default {
     autoCloseDelay: {
       control: 'number'
     },
+    isDismissible: {
+      control: 'boolean'
+    }
   },
   args: {
     isActive: true,
     children: (
       <>
-        Alert title
-        <SLTextPassage slot="panel">Something longer like a description should go here, and maybe a brief on what triggered this alert.</SLTextPassage>
+        <SLTextPassage>This is an alert. It is used to notify the user of something important.</SLTextPassage>
       </>
     )
   }
 };
-
-function closePanel() {
-  const alert = document.querySelector<any>('.c-alert').querySelector('*');
-  if (alert) {
-    alert.toggleExpanded();
-  }
-}
 
 function closeAlert() {
   const alert = document.querySelector<any>('.c-alert').querySelector('*');
@@ -84,55 +76,55 @@ export const Danger: StoryObj<typeof SLAlert> = {
   }
 };
 
-export const WithoutPanel: StoryObj<typeof SLAlert> = {
+export const DefaultDismissible: StoryObj<typeof SLAlert> = {
   args: {
-    children: 'Alert title',
-    hasPanel: false,
+    isDismissible: true
   }
 };
 
-export const WithAutoClose: StoryObj<typeof SLAlert> = {
+export const WithAction: StoryObj<typeof SLAlert> = {
   args: {
-    autoClose: true,
+    children: (
+      <>
+        <SLTextPassage>This is an alert. It is used to notify the user of something important.</SLTextPassage>
+        <SLButton slot="action" variant="secondary">Action</SLButton>
+      </>
+    )
   }
 };
 
-export const WithClosePanel: StoryObj<typeof SLAlert> = {
+export const WithActionDismissible: StoryObj<typeof SLAlert> = {
   args: {
-    children: (
-      <>
-        Alert title
-        <SLTextPassage slot="panel">Something longer like a description should go here, and maybe a brief on what triggered this alert.</SLTextPassage>
-        <SLButton slot="panel" onClick={closePanel}>Dismiss</SLButton>
-      </>
-    )
-  },
-  decorators: [
-    (Story) => (
-      <div className="c-alert">{Story()}</div>
-    )
-  ],
+    ...WithAction.args,
+    isDismissible: true
+  }
 };
 
-export const WithCloseButton: StoryObj<typeof SLAlert> = {
+export const WithTitle: StoryObj<typeof SLAlert> = {
   args: {
-    children: (
-      <>
-        Alert title
-        <SLTextPassage slot="panel">Something longer like a description should go here, and maybe a brief on what triggered this alert.</SLTextPassage>
-        <SLButton slot="panel" onClick={closeAlert}>Ok</SLButton>
-      </>
-    )
-  },
-  decorators: [
-    ...WithClosePanel.decorators
-  ]
+    title: 'Alert Title'
+  }
+};
+
+export const WithTitleAndAction: StoryObj<typeof SLAlert> = {
+  args: {
+    ...WithAction.args,
+    title: 'Alert Title'
+  }
+};
+
+export const WithTitleAndActionDismissible: StoryObj<typeof SLAlert> = {
+  args: {
+    ...WithAction.args,
+    title: 'Alert Title',
+    isDismissible: true
+  }
 };
 
 export const WithOpenButton: StoryObj<typeof SLAlert> = {
   args: {
     isActive: false,
-    ...WithCloseButton.args,
+    isDismissible: true
   },
   decorators: [
     (Story) => (
@@ -142,4 +134,10 @@ export const WithOpenButton: StoryObj<typeof SLAlert> = {
       </div>
     )
   ],
+};
+
+export const WithAutoClose: StoryObj<typeof SLAlert> = {
+  args: {
+    autoClose: true,
+  }
 };

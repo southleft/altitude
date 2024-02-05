@@ -15,9 +15,6 @@ export default {
     status: 'beta',
     actions: {
       handles: ['keydown', 'onAlertOpen', 'onAlertClose']
-    },
-    controls: {
-      exclude: ['hasPanel', 'ariaControls', 'ariaLabelledBy']
     }
   },
   decorators: [ withActions ],
@@ -93,8 +90,8 @@ Danger.args = {
   variant: 'danger',
 };
 
-export const Dismissible = Template.bind({});
-Dismissible.args = {  
+export const DefaultDismissible = Template.bind({});
+DefaultDismissible.args = {  
   isDismissible: true
 };
 
