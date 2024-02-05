@@ -64,8 +64,8 @@
    * - If parent has selected state, then change the background & color of the content
    */
   .sl-is-selected & {
-    color: var(--sl-theme-color-content-accent-default);
-    background: var(--sl-theme-color-background-default-weak);
+    color: var(--sl-theme-color-content-default-weak);
+    background: var(--sl-theme-color-background-default-stronger);
   }
 
   /**
@@ -75,8 +75,8 @@
     content: "";
     display: block;
     position: absolute;
-    top: 0;
-    left: 0;
+    inset-inline-start: 0;
+    inset-block-start: 0;
     width: 100%;
     height: 100%;
     z-index: 2;

@@ -7,5 +7,24 @@
  * Header
  */
 .sl-c-header {
-  padding: size(2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sl-theme-space);
+  border-radius: var(--sl-theme-border-radius-lg);
+  background-color: var(--sl-theme-color-background-default);
+  box-shadow: var(--sl-theme-box-shadow-md);
+  --sl-text-input-background: var(--sl-theme-color-background-default);
+}
+
+.sl-c-header__before,
+.sl-c-header__after {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--sl-theme-space);
+}
+
+.sl-c-header__after {
+  justify-content: flex-end;
 }

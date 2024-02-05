@@ -77,6 +77,11 @@ module.exports = (plop) => {
         type: 'add',
         path: './../.storybook/pages/{{dashCase name}}/{{dashCase name}}.stories.ts',
         templateFile: 'templates/page/page.stories.ts.hbs'
+      },
+      {
+        type: 'add',
+        path: './../.storybook/pages/{{dashCase name}}/{{dashCase name}}.scss',
+        templateFile: 'templates/page/page.scss.hbs'
       }
     ]
   });

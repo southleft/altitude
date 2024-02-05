@@ -1,14 +1,13 @@
-import { PropertyValueMap, TemplateResult, unsafeCSS } from 'lit';
-import { property, query } from 'lit/decorators.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
+import { TemplateResult, unsafeCSS } from 'lit';
+import { property, queryAsync, queryAssignedElements } from 'lit/decorators.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import { nanoid } from 'nanoid';
 import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { SLElement } from '../SLElement';
+import styles from './drawer.scss';
 import { SLButton } from '../button/button';
 import { SLIconClose } from '../icon/icons/close';
-import styles from './drawer.scss';
 
 /**
  * Component: sl-drawer
@@ -55,16 +54,19 @@ export class SLDrawer extends SLElement {
   accessor hasBackdrop: boolean;
 
   /**
-   * Aria labelledby attribute
-   */
-  @property()
-  accessor ariaLabelledBy: string;
-
-  /**
-   *  Append an active state on the button
+   * Is active?
+   * - **true** Shows the drawer container
+   * - **false** Hides the drawer container
    */
   @property({ type: Boolean })
   accessor isActive: boolean;
+
+  /**
+   * Aria Labelled By attribute
+   * - Dynamically set for A11y
+   */
+  @property()
+  accessor ariaLabelledBy: string;
 
   /**
    *  Disable to close the drawer on outside click
@@ -72,11 +74,26 @@ export class SLDrawer extends SLElement {
   @property({ type: Boolean })
   accessor disableBackdropClick: boolean;
 
+   /**
+    * Query the drawer close button
+    */
+   @queryAsync('.sl-c-drawer__close-button')
+   accessor closeButton: any;
+
   /**
-   * Query the drawer close button
+   * Query the drawer trigger
    */
-  @query('.sl-c-drawer__close-button')
-  accessor drawerCloseButton: HTMLElement;
+  @queryAssignedElements({ slot: 'trigger' })
+  accessor drawerTrigger: any[];
+
+  /**
+   * Query the drawer trigger inner element
+   */
+  get drawerTriggerButton(): any {
+    if (this.drawerTrigger[0] && this.drawerTrigger[0].shadowRoot) {
+      return this.drawerTrigger[0].shadowRoot.querySelector('*');
+    }
+  }
 
   /**
    * Initialize functions
@@ -88,100 +105,200 @@ export class SLDrawer extends SLElement {
 
   /**
    * Connected callback lifecycle
-   * 1. Add event listeners
-   * 2. Set the id and ariaLabelledBy
+   * 1. Add mousedown event listener
    */
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener('keydown', this.handleKeyDown.bind(this));
-    document.addEventListener('mousedown', this.handleOnClickOutside, false);
-    this.ariaLabelledBy = this.ariaLabelledBy || nanoid(); /* 2 */
+    globalThis.addEventListener('mousedown', this.handleOnClickOutside, false); /* 1 */
   }
 
   /**
    * Disconnected callback lifecycle
-   * 1. Remove event listeners
+   * 1. Remove mousedown event listener
    */
   disconnectedCallback() {
     super.disconnectedCallback();
-    document.removeEventListener('keydown', this.handleKeyDown);
-    document.removeEventListener('mousedown', this.handleOnClickOutside, false);
+    globalThis.removeEventListener('mousedown', this.handleOnClickOutside, false); /* 1 */
   }
 
   /**
-   * Handle click outside the component
-   * 1. Close the show hide panel on click outside
-   * 2. If the nav is already closed then we don't care about outside clicks and we
-   * can bail early
-   * 3. By the time a user clicks on the page the shadowRoot will almost certainly be
-   * defined, but TypeScript isn't that trusting and sees this.shadowRoot as possibly
-   * undefined. To work around that we'll check that we have a shadowRoot (and a
-   * rendered .host) element here to appease the TypeScript compiler. This should never
-   * actually be shown or run for a human end user.
-   * 4. If the panel is active and the backdrop click is enabled and we've clicked outside of the panel then it should
-   * be closed.
+   * First updated lifecycle
+   * 1. Wait for slotted components to be loaded
+   * 2. Set aria-expanded on the trigger for A11y
+   * 3. Set the width of the drawer container
    */
-  handleOnClickOutside(event: MouseEvent) {
+  async firstUpdated() {
+    await this.updateComplete; /* 1 */
+    this.setAria(); /* 2 */
+    this.setWidth(); /* 3 */
+  }
+
+  /**
+   * Updated lifecycle
+   * 1. Update aria-expanded on the trigger based on if isActive
+   * 2. Set the body overflow based on if the drawer is active
+   */
+  updated() {
+    this.setAria(); /* 1 */
+    this.setBodyOverflow(); /* 2 */
+  }
+
+  /**
+   * Set aria-expanded to the trigger button
+   * 1. Dynamically sets the aria-labelledby for A11y
+   * 2. Set isExpanded to this.isActive if it's truthy, otherwise, set it to false
+   */
+  setAria() {
+    /* 1 */
+    this.ariaLabelledBy = this.ariaLabelledBy || nanoid();
     /* 2 */
-    if (!this.isActive) {
-      return;
-    }
-    /* 3 */
-    if (!this.shadowRoot?.host) {
-      throw Error('Could not determine panel context during click handler');
-    }
-    const eventTarget = event.target as HTMLElement;
-    /* 4 */
-    if (this.isActive && eventTarget.getAttribute('role') === 'region' && !this.disableBackdropClick) {
-      this.toggleActive();
+    if (this.drawerTriggerButton) {
+      this.drawerTriggerButton.isExpanded = this.isActive || false;
     }
   }
 
-  updated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
-    if (_changedProperties.has('width')) {
-      this.style.setProperty('--sl-drawer-panel-width', this.width.toString() + 'px');
+  /**
+   * Set the width
+   * 1. Add a custom property to adjust the width of the drawer container
+   */
+  setWidth() {
+    if (this.width) {
+      this.style.setProperty('--sl-drawer-container-width', this.width.toString() + 'px');
     }
-    if (_changedProperties.has('isActive')) {
-      const body = document.querySelector('body');
-      if (this.isActive) {
-        body.style.overflow = 'hidden';
-      } else {
-        body.style.removeProperty('overflow');
+  }
+
+  /**
+   * Set body overflow
+   * 1. If the drawer is active, prevent scrolling on the body
+   * 2. If the drawer is inactive, allow scrolling on the body
+   */
+  setBodyOverflow() {
+    const body = globalThis.querySelector('body');
+    if (this.isActive) {
+      body.style.overflow = 'hidden'; /* 1 */
+    } else {
+      body.style.removeProperty('overflow'); /* 2 */
+    }
+  }
+
+  /**
+   * Handles the click event outside the component:
+   * 1. Check if the drawer is active
+   * 2. Determine if the click occurred inside the active drawer
+   * 3. Check if the click occurred outside the active drawer
+   * 4. Close the drawer if the click occurred outside it
+   */
+  handleOnClickOutside(event: MouseEvent) {
+    /* 1 */
+    if (this.isActive) {
+      const didClickInside = event.composedPath().includes(this.shadowRoot.host); /* 2 */
+      /* 3 */
+      if (!didClickInside) {
+        /* 4 */
+        this.close();
       }
     }
   }
 
   /**
-   * Set drawer active state
-   * 1. Toggle the active state between true and false
-   * 2. If the active state is toggled to false, close the panel and return focus to the trigger
-   *  @fires open/close - Fires when we open/close drawer by clicking close icon
-   * 3. If isActive is set to true, then focus the user on the close button so the aria-describedby property reads out
+   * Handle on keydown events
+   * 1. When the Enter key is pressed on the trigger, open the drawer and prevent default button click
+   * 2. If the drawer is open and escape is keyed, close the drawer and return focus to the trigger button
    */
-  toggleActive() {
-    this.isActive = !this.isActive; /* 1 */
-    if (this.isActive === true && this.drawerCloseButton) {
-      setTimeout(() => {
-        this.drawerCloseButton.shadowRoot.querySelector<HTMLButtonElement>('.sl-c-button').focus();
-      }, 100);
+  handleOnKeydown(e: KeyboardEvent) {
+    const { target } = e as any;
+    /* 1 */
+    if (this.slotNotEmpty('trigger') && target.matches('[slot="trigger"]') && e.code === 'Enter') {
+      e.preventDefault();
+      this.toggleActive();
     }
-    if (this.isActive === false) {
-      /* 2 */
-      this.dispatch({ eventName: 'close', detailObj: { isActive: this.isActive } });
-      return;
-    } else {
-      this.dispatch({ eventName: 'open', detailObj: { isActive: this.isActive } });
+    /* 2 */
+    if (this.isActive === true && e.code === 'Escape') {
+      this.close();
     }
   }
 
   /**
-   * Handle on keydown
-   * 1. If the panel is open and escape is keyed, close the menu and return focus to the trigger button
+   * Handle on click of close button
+   * 1. Toggle the active state between true and false
+   * 2. Dispatch a custom event on click of close button
    */
-  handleKeyDown(e: KeyboardEvent) {
-    if (this.isActive === true && e.key === 'Escape') {
-      this.toggleActive();
+  handleOnCloseButton() {
+    this.toggleActive();
+    this.dispatch({
+      eventName: 'onDrawerCloseButton',
+      detailObj: {
+        active: this.isActive
+      }
+    });
+  }
+
+  /**
+   * Set drawer active state
+   * 1. Toggle the active state between true and false
+   * 2. Open/close the drawer container based on isActive
+   */
+  public toggleActive() {
+    this.isActive = !this.isActive; /* 1 */
+
+    /* 2 */
+    if (this.isActive) {
+      this.open();
+    } else {
+      this.close();
     }
+  }
+
+  /**
+   * Open drawer
+   * 1. Set isActive to true to show the drawer
+   * 2. Focus on the drawer's first focusable element when opened. Timeout is equal to the css transition timing
+   * - The first focusable element defaults to the drawer heading, but if a heading is not present, it defaults to the close button.
+   * 3. Dispatch a custom event on open
+   */
+  public open() {
+    this.isActive = true; /* 1 */
+    // setTimeout(() => {
+    //   setTimeout(async () => {
+    //     let firstFocusableEl = await this.drawerHeading;
+    //     if (!firstFocusableEl) {
+    //       const closeButton = await this.closeButton;
+    //       firstFocusableEl = closeButton.shadowRoot.querySelector('button');
+    //     }
+
+    //     firstFocusableEl.focus();
+    //   }, 400);
+    // }, 400);
+    /* 3 */
+    this.dispatch({
+      eventName: 'onDrawerOpen',
+      detailObj: {
+        active: this.isActive
+      }
+    });
+  }
+
+  /**
+   * Close drawer
+   * 1. Set isActive to false to hide the drawer
+   * 2. Set the focus on trigger button element when the drawer is closed
+   * 3. Dispatch a custom event on close
+   */
+  public close() {
+    this.isActive = false; /* 1 */
+    /* 2 */
+    if (this.drawerTriggerButton) {
+      setTimeout(() => {
+        this.drawerTriggerButton.focus();
+      }, 1);
+    }
+    /* 3 */
+    this.dispatch({
+      eventName: 'onDrawerClose',
+      detailObj: {
+        active: this.isActive
+      }
+    });
   }
 
   render() {
@@ -192,31 +309,42 @@ export class SLDrawer extends SLElement {
     });
 
     return html`
-      <section
-        class="${componentClassName}"
-        role="region"
-        id="${this.id}"
-        aria-hidden=${this.isActive ? false : true}
-        @click=${this.handleOnClickOutside}
-      >
-        <article role="dialog" aria-labelledby=${ifDefined(this.ariaLabelledBy)} class="sl-c-drawer__panel">
-          <header class="sl-c-drawer__header">
-            <div class="sl-c-drawer__header-content" id=${this.ariaLabelledBy}>
-              <slot name="header"></slot>
+      <div class="${componentClassName}" @keydown=${this.handleOnKeydown}>
+      ${this.slotNotEmpty('trigger') &&
+        html`
+          <div class="sl-c-drawer__trigger" @click=${this.toggleActive}>
+            <slot name="trigger"></slot>
+          </div>
+        `}
+        <div
+          class="sl-c-drawer__container"
+          role="region"
+          aria-labelledby=${this.ariaLabelledBy}
+          aria-hidden=${this.isActive ? false : true}
+        >
+        ${this.slotNotEmpty('header') &&
+          html`
+            <div class="sl-c-drawer__header">
+              <div class="sl-c-drawer__header-content" id=${this.ariaLabelledBy}>
+                <slot name="header"></slot>
+              </div>
+              <${this.buttonEl} variant="tertiary" ?hideText=${true} class="sl-c-drawer__close-button" @click=${this.handleOnCloseButton}>
+                Close
+                <${this.iconCloseEl} slot="after"></${this.iconCloseEl}>
+              </${this.buttonEl}>
             </div>
-            <${this.buttonEl} variant="tertiary" ?hideText=${true} class="sl-c-drawer__close-button" @click=${this.toggleActive}>
-              Close
-              <${this.iconCloseEl} slot="after"></${this.iconCloseEl}>
-            </${this.buttonEl}>
-          </header>
+          `}
           <div class="sl-c-drawer__body">
             <slot></slot>
           </div>
-          <footer class="sl-c-drawer__footer">
-            <slot name="footer"></slot>
-          </footer>
-        </article>
-      </section>
+          ${this.slotNotEmpty('footer') &&
+          html`
+            <div class="sl-c-drawer__footer">
+              <slot name="footer"></slot>
+            </div>
+          `}
+        </div>
+      </div>
     ` as TemplateResult<1>;
   }
 }

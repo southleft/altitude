@@ -2,12 +2,11 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './card';
 import '../../.storybook/components/f-po/f-po';
-import '../button/button';
 import '../chip/chip';
 import '../heading/heading';
-import '../icon/icons/done';
-import '../icon/icons/emoji';
+import '../icon/icons/dots-vertical';
 import '../text-passage/text-passage';
+import * as ContextualMenu from '../contextual-menu/contextual-menu.stories';
 
 export default {
   title: 'Molecules/Card',
@@ -33,12 +32,11 @@ Default.args = {};
 
 const TemplateWithContent = (args) => html`
 <div style="max-width: 300px;">
-  <sl-card ${spread(args)} data-testid="card">
+  <sl-card ${spread(args)}>
     <sl-chip slot="actions-left">Label</sl-chip>
-    <sl-button slot="actions-right" variant="secondary" ?hideText=${true}>Button<sl-icon-done slot="after"></sl-icon-done></sl-button>
+    <div slot="actions-right">${ContextualMenu.Default({})}</div>
     <img slot="image" alt="card image" src="https://fakeimg.pl/600x400" />
-    <sl-icon-emoji size="lg" slot="header"></sl-icon-emoji>
-    <sl-heading slot="header" tagName="h3" variant="sm">Card title</sl-heading>
+    <sl-heading slot="header" tagName="h3" variant="sm" ?isBold=${true}>Card title</sl-heading>
     <sl-text-passage>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dui leo, lacinia ut finibus sed, consectetur quis enim.</sl-text-passage>
   </sl-card>
 </div>`;

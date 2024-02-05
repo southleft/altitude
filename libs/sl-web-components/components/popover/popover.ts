@@ -100,7 +100,7 @@ export class SLPopover extends SLElement {
    */
    @queryAsync('.sl-c-popover__title > sl-heading')
    accessor popoverHeading: any;
- 
+
    /**
     * Query the popover close button
     */
@@ -264,7 +264,7 @@ export class SLPopover extends SLElement {
           const closeButton = await this.closeButton;
           firstFocusableEl = closeButton.shadowRoot.querySelector('button');
         }
-  
+
         firstFocusableEl.focus();
       }, 400);
     }, 400);

@@ -145,6 +145,7 @@ export class SLDialog extends SLElement {
    * First updated lifecycle
    * 1. Wait for slotted components to be loaded
    * 2. Set aria-expanded on the trigger for A11y
+   * 3. Set the width of the dialog container
    */
   async firstUpdated() {
     await this.updateComplete; /* 1 */
@@ -155,19 +156,11 @@ export class SLDialog extends SLElement {
   /**
    * Updated lifecycle
    * 1. Update aria-expanded on the trigger based on if isActive
+   * 2. Set the body overflow based on if the dialog is active
    */
   updated() {
-    this.setAria();
-  }
-
-  /**
-   * Set the width
-   * 1. Add a custom property to adjust the width of the dialog container
-   */
-  setWidth() {
-    if (this.width) {
-      this.style.setProperty('--sl-dialog-container-width', this.width.toString() + 'px');
-    }
+    this.setAria(); /* 1 */
+    this.setBodyOverflow(); /* 2 */
   }
 
   /**
@@ -181,6 +174,30 @@ export class SLDialog extends SLElement {
     /* 2 */
     if (this.dialogTriggerButton) {
       this.dialogTriggerButton.isExpanded = this.isActive || false;
+    }
+  }
+
+  /**
+   * Set the width
+   * 1. Add a custom property to adjust the width of the dialog container
+   */
+  setWidth() {
+    if (this.width) {
+      this.style.setProperty('--sl-dialog-container-width', this.width.toString() + 'px');
+    }
+  }
+
+  /**
+   * Set body overflow
+   * 1. If the dialog is active, prevent scrolling on the body
+   * 2. If the dialog is inactive, allow scrolling on the body
+   */
+  setBodyOverflow() {
+    const body = globalThis.querySelector('body');
+    if (this.isActive) {
+      body.style.overflow = 'hidden'; /* 1 */
+    } else {
+      body.style.removeProperty('overflow'); /* 2 */
     }
   }
 
