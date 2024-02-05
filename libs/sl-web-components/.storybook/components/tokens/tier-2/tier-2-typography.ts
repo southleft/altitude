@@ -1,7 +1,7 @@
 import { html, LitElement, unsafeCSS } from 'lit';
 import tokens from '../../../../styles/tokens.json';
-import '../../token-specimen/token-specimen';
 import styles from '../tokens.scss';
+import '../../token-specimen/token-specimen';
 
 export class Tier2Typography extends LitElement {
   static get styles() {
@@ -25,7 +25,8 @@ export class Tier2Typography extends LitElement {
         </header>
         <table>
           <caption>
-            Typography Usage
+            <h2>Typography Usage</h2>
+            <p> Leverage the type mixins below to achieve modular and reusable typography styles throughout the codebase.</p>
           </caption>
           <thead>
             <tr>

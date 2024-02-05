@@ -1,5 +1,4 @@
-import { expect } from '@storybook/jest';
-import { userEvent, waitFor, within } from '@storybook/testing-library';
+import { expect, userEvent, waitFor, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
@@ -21,7 +20,7 @@ export default {
       exclude: ['hasPanel', 'ariaControls', 'ariaLabelledBy']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     variant: {
       options: ['default', 'success', 'warning', 'danger'],

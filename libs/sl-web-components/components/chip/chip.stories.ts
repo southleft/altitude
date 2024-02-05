@@ -1,10 +1,9 @@
-import { expect } from '@storybook/jest';
-import { userEvent, within } from '@storybook/testing-library';
+import { expect, userEvent, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
 import './chip';
-import '../icon/icons/emoji';
+import '../icon/icons/warning-triangle';
 
 export default {
   title: 'Atoms/Chip',
@@ -16,7 +15,7 @@ export default {
       handles: ['click', 'onChipClose']
     }
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     variant: {
       control: { type: 'radio' },
@@ -57,7 +56,7 @@ Danger.args = {
   variant: 'danger'
 };
 
-const TemplateIcon = (args) => html`<sl-chip ${spread(args)} data-testid="chip"><sl-icon-emoji></sl-icon-emoji>Label</sl-chip>`;
+const TemplateIcon = (args) => html`<sl-chip ${spread(args)} data-testid="chip"><sl-icon-warning-triangle></sl-icon-warning-triangle>Label</sl-chip>`;
 
 export const WithIcon = TemplateIcon.bind({});
 WithIcon.args = {};

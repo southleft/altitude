@@ -12,7 +12,7 @@ export class TokenSpecimen extends LitElement {
   accessor styleModifier: string;
 
   @property()
-  accessor variant: 'color' | 'animation' | 'border' | 'opacity' | 'shadow' | 'typography';
+  accessor variant: 'color' | 'icon' | 'animation' | 'border' | 'opacity' | 'shadow' | 'typography';
 
   @property()
   accessor value: string;
@@ -30,9 +30,10 @@ export class TokenSpecimen extends LitElement {
     const componentClassNames = classMap({
       'token-specimen': true,
       [this.styleModifier]: !!this.styleModifier,
-      'token-specimen--color': this.variant === 'color',
       'token-specimen--animation': this.variant === 'animation',
       'token-specimen--border': this.variant === 'border',
+      'token-specimen--color': this.variant === 'color',
+      'token-specimen--icon': this.variant === 'icon',
       'token-specimen--opacity': this.variant === 'opacity',
       'token-specimen--shadow': this.variant === 'shadow',
       'token-specimen--typography': this.variant === 'typography'

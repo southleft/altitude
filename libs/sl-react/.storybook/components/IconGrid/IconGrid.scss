@@ -2,13 +2,13 @@
     #ICON-GRID
 \*------------------------------------ */
 
-.icon-grid {
+.icon-grid__list {
   list-style: none;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   grid-gap: var(--sl-theme-space);
-  margin: var(--sl-theme-space);
   padding: 0;
+  margin-top: var(--sl-theme-space-lg);
 }
 
 .icon-grid__item {
@@ -19,7 +19,7 @@
   gap: var(--sl-theme-space);
   text-align: center;
   border-radius: var(--sl-theme-border-radius);
-  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default-weak);
+  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-inverse-default);
   padding: var(--sl-theme-space);
   aspect-ratio: 1/1;
 }

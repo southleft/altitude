@@ -747,6 +747,11 @@
           "type": "string"
         },
         {
+          "name": "slotNodes",
+          "description": "Queries nodes in the default slot\n1. Used to dynamically set the aria-label attribute if a label is not provided",
+          "type": "Node[]"
+        },
+        {
           "name": "styleModifier",
           "attribute": "styleModifier",
           "description": "Append to the class name. Used for passing in utility classes",
@@ -1483,6 +1488,12 @@
           "type": "string"
         },
         {
+          "name": "transitionDelay",
+          "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
+          "type": "number",
+          "default": "400"
+        },
+        {
           "name": "styleModifier",
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
@@ -1526,13 +1537,20 @@
           "type": "string"
         },
         {
-          "name": "contextualMenuContainer",
-          "description": "Query the contextual menucontainer",
-          "type": "HTMLElement"
+          "name": "transitionDelay",
+          "attribute": "transitionDelay",
+          "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
+          "type": "number",
+          "default": "400"
         },
         {
           "name": "contextualMenuTrigger",
           "description": "Query the contextual menutrigger",
+          "type": "array"
+        },
+        {
+          "name": "menuList",
+          "description": "Query the list component in the menu's default slot",
           "type": "array"
         },
         {
@@ -2377,6 +2395,12 @@
           "type": "number"
         },
         {
+          "name": "transitionDelay",
+          "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
+          "type": "number",
+          "default": "400"
+        },
+        {
           "name": "styleModifier",
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
@@ -2425,9 +2449,24 @@
           "type": "number"
         },
         {
+          "name": "transitionDelay",
+          "attribute": "transitionDelay",
+          "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
+          "type": "number",
+          "default": "400"
+        },
+        {
           "name": "dialogContainer",
           "description": "Query the dialog container",
           "type": "HTMLElement"
+        },
+        {
+          "name": "dialogHeading",
+          "description": "Query the dialog heading"
+        },
+        {
+          "name": "closeButton",
+          "description": "Query the dialog close button"
         },
         {
           "name": "dialogTrigger",
@@ -3194,6 +3233,88 @@
       ]
     },
     {
+      "name": "sl-focus-trap",
+      "path": "./components/focus-trap/focus-trap.ts",
+      "description": "Component: sl-focus-trap\n\nFocus Trap is used as a wrapper around dialogs, popovers, and other overlays to trap focus within them, enabling accessible keyboard navigation.\n\n- **slot**: The content to trap in the focus trap",
+      "attributes": [
+        {
+          "name": "isActive",
+          "description": "Is the focus trap active?",
+          "type": "boolean"
+        },
+        {
+          "name": "delay",
+          "description": "Delay in milliseconds before the focus trap is activated. \n- Can be set by the component using focus trap, when there is a css transition that needs to complete before the focus trap activates.",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "name": "firstFocusableEl",
+          "description": "First element that can recieve focus in the focus trap (e.g. button, input, a, etc.).",
+          "type": "HTMLElement"
+        },
+        {
+          "name": "lastFocusableEl",
+          "description": "Last element that can recieve focus in the focus trap (e.g. button, input, a, etc.).",
+          "type": "HTMLElement"
+        },
+        {
+          "name": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "el",
+          "type": "string",
+          "default": "\"sl-focus-trap\""
+        },
+        {
+          "name": "isActive",
+          "attribute": "isActive",
+          "description": "Is the focus trap active?",
+          "type": "boolean"
+        },
+        {
+          "name": "delay",
+          "attribute": "delay",
+          "description": "Delay in milliseconds before the focus trap is activated. \n- Can be set by the component using focus trap, when there is a css transition that needs to complete before the focus trap activates.",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "name": "firstFocusableEl",
+          "attribute": "firstFocusableEl",
+          "description": "First element that can recieve focus in the focus trap (e.g. button, input, a, etc.).",
+          "type": "HTMLElement"
+        },
+        {
+          "name": "lastFocusableEl",
+          "attribute": "lastFocusableEl",
+          "description": "Last element that can recieve focus in the focus trap (e.g. button, input, a, etc.).",
+          "type": "HTMLElement"
+        },
+        {
+          "name": "slottedContent",
+          "description": "Slotted elements contain the component that will be included in the focus trap.",
+          "type": "HTMLElement[]"
+        },
+        {
+          "name": "trapFocusEnd"
+        },
+        {
+          "name": "trapFocusStart"
+        },
+        {
+          "name": "styleModifier",
+          "attribute": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ]
+    },
+    {
       "name": "sl-grid-item",
       "path": "./components/grid-item/grid-item.ts",
       "description": "- **slot**: The content of the grid item",
@@ -3401,8 +3522,8 @@
         },
         {
           "name": "size",
-          "description": "Icon size\n- Default size is 16px\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)",
-          "type": "\"lg\" | \"md\" | \"xl\""
+          "description": "Icon size\n- Default size is 16px\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)\n- **xxl** renders a larger size than the lg variant (36px)\n- **xxxl** renders a larger size than the lg variant (40px)",
+          "type": "\"lg\" | \"md\" | \"xl\" | \"xxl\" | \"xxxl\""
         },
         {
           "name": "styleModifier",
@@ -3425,8 +3546,8 @@
         {
           "name": "size",
           "attribute": "size",
-          "description": "Icon size\n- Default size is 16px\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)",
-          "type": "\"lg\" | \"md\" | \"xl\""
+          "description": "Icon size\n- Default size is 16px\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)\n- **xxl** renders a larger size than the lg variant (36px)\n- **xxxl** renders a larger size than the lg variant (40px)",
+          "type": "\"lg\" | \"md\" | \"xl\" | \"xxl\" | \"xxxl\""
         },
         {
           "name": "styleModifier",
@@ -4780,6 +4901,12 @@
           "type": "string"
         },
         {
+          "name": "transitionDelay",
+          "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
+          "type": "number",
+          "default": "400"
+        },
+        {
           "name": "styleModifier",
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
@@ -4823,9 +4950,19 @@
           "type": "string"
         },
         {
-          "name": "popoverContainer",
-          "description": "Query the popover container",
-          "type": "HTMLElement"
+          "name": "transitionDelay",
+          "attribute": "transitionDelay",
+          "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
+          "type": "number",
+          "default": "400"
+        },
+        {
+          "name": "popoverHeading",
+          "description": "Query the popover heading"
+        },
+        {
+          "name": "closeButton",
+          "description": "Query the popover close button"
         },
         {
           "name": "popoverTrigger",

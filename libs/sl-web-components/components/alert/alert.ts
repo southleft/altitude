@@ -15,7 +15,7 @@ import styles from './alert.scss';
 
 /**
  * Component: sl-alert
- * 
+ *
  * Alert displays a short important message that will attract a user's attention without interrupting the user's task.
  * - **slot**: The alert's main content or title
  * - **slot** "description": A description to include in the dropdown panel

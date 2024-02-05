@@ -8,7 +8,7 @@
 */
 .sl-c-accordion-panel {
   width: 100%;
-  border-block-end: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default-weak);
+  border-block-end: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
 
   &.sl-is-last {
     border-color: transparent;
@@ -28,7 +28,7 @@
   appearance: none;
   border: none;
   padding: size(2);
-  gap: size(2);
+  gap: var(--sl-theme-space);
   width: 100%;
   cursor: pointer;
   overflow-x: hidden; /* 1 */
@@ -53,7 +53,7 @@
   @include sl-theme-typography-body-md;
   display: flex;
   align-items: center;
-  gap: size(2);
+  gap: var(--sl-theme-space);
 }
 
 /**

@@ -1,6 +1,7 @@
 const path = require('path');
 const glob = require('glob');
 const fs = require('fs');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const components = glob.sync('./components/**/*.ts').reduce((acc, file) => {
   // Exclude icon because there are some specific things that need to happen based on the URL inclusion of `icon.js`
@@ -31,6 +32,10 @@ module.exports = (env) => {
   const entry = () => {
     let entryObj = {
       ...components,
+      theme: {
+        import: path.resolve(__dirname, `./styles/head.scss`),
+        // filename: 'theme.js'
+      },
       _register: './directives/register.ts',
       icon: './components/icon/icon.ts',
       bundle: Object.entries(components)
@@ -64,40 +69,38 @@ module.exports = (env) => {
       outputModule: true
     },
     mode: 'production',
+    plugins: [
+      !env.entry || env.entry === 'all'
+        ? new CopyPlugin({
+            patterns: [
+              { from: `icons/svgs/*`, to: 'icons/[name][ext]' },
+              { from: `styles/tokens.scss`, to: 'scss' }
+            ]
+          })
+        : null
+    ],
     module: {
       rules: [
         {
-          test: /\.(j|t)sx?$/,
-          use: ['babel-loader']
+          test: /head\.scss$/,
+          use: ['css-loader', 'sass-loader'],
+          type: 'asset/resource',
+          generator: {
+            filename: `css/head.css`
+          }
+        },
+        {
+          test: /\.scss$/,
+          exclude: /head\.scss$/,
+          use: ['css-loader', 'sass-loader'],
         },
         {
           test: /\.css$/,
           use: ['css-loader']
         },
         {
-          test: /head\.scss$/,
-          use: ['sass-loader'],
-          type: 'asset/resource'
-        },
-        {
-          test: /variables\.scss$/,
-          use: [
-            'sass-loader',
-            {
-              options: {
-                name: '[name].[ext]',
-                outputPath: 'fonts/'
-              }
-            }
-          ],
-          generator: {
-            filename: `variables.css`
-          }
-        },
-        {
-          test: /\.scss$/,
-          exclude: /head\.scss$/,
-          use: ['css-loader', 'sass-loader']
+          test: /\.(j|t)sx?$/,
+          use: ['babel-loader']
         },
         {
           test: /\.svg$/,
@@ -106,7 +109,7 @@ module.exports = (env) => {
               loader: 'file-loader',
               options: {
                 name: '[name].[ext]',
-                outputPath: 'svgs/'
+                outputPath: 'icons/svgs/'
               }
             }
           ]

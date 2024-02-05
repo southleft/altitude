@@ -16,14 +16,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--sl-theme-color-background-default-stronger);
+  background: var(--sl-theme-color-background-default);
   color: var(--sl-theme-color-content-default);
   padding: 0 size(0.5625);
   border-radius: size(2.5);
   min-width: size(2.5);
   min-height: size(2.5);
   width: fit-content;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
 
   /**
    * Dot badge
@@ -122,14 +122,4 @@
   inset-block-end: 0;
   inset-inline-end: 0;
   transform: var(--sl-badge-transform, translate(50%, 50%));
-}
-
-/**
- * Badge with slotted icon
- */
- ::slotted(.sl-c-icon) {
-  margin-inline-start: size(-0.3125);
-  margin-inline-end: size(-0.3125);
-  --sl-icon-width: #{size(2)};
-  --sl-icon-height: #{size(2)};
 }

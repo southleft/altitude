@@ -1,8 +1,8 @@
 import { html } from 'lit';
-import '../../.storybook/components/f-po/f-po';
 import { spread } from '../../directives/spread';
-import '../layout-section/layout-section';
 import './layout';
+import '../layout-section/layout-section';
+import '../../.storybook/components/f-po/f-po';
 
 export default {
   title: 'Organisms/Layout',

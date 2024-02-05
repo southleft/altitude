@@ -26,7 +26,7 @@
   border-radius: var(--sl-theme-border-radius-md);
   background-color: var(--sl-theme-color-background-default);
   box-shadow: var(--sl-theme-box-shadow-lg);
-  gap: size(2);
+  gap: var(--sl-theme-space);
 
   /**
    * Display the toast when it is active
@@ -69,8 +69,8 @@
  * - Default, success, warning, or danger
  */
 .sl-c-toast__icon {
-  --sl-icon-width: #{size(3)};
-  --sl-icon-height: #{size(3)};
+  --sl-icon-width: #{var(--sl-theme-icon-lg)};
+  --sl-icon-height: #{var(--sl-theme-icon-lg)};
   --sl-icon-fill: var(--sl-theme-color-content-info-default);
 
   /**
@@ -105,7 +105,7 @@
   flex-direction: column;
   justify-content: center;
   flex: 1;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
 }
 
 /**
@@ -123,7 +123,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: size(1);
+  gap: var(--sl-theme-space-xs);
   align-self: center;
 }
 
@@ -143,6 +143,6 @@
  * - The X icon in the header to close the toast
  */
 .sl-c-toast__icon-close {
-  --sl-icon-width: #{size(2)};
-  --sl-icon-height: #{size(2)};
+  --sl-icon-width: #{var(--sl-theme-icon)};
+  --sl-icon-height: #{var(--sl-theme-icon)};
 }

@@ -8,7 +8,7 @@ import { SLElement } from '../SLElement';
 import { SLButton } from '../button/button';
 import { SLHeading } from '../heading/heading';
 import { SLIconClose } from '../icon/icons/close';
-import '@a11y/focus-trap';
+import { SLFocusTrap } from '../focus-trap/focus-trap';
 import styles from './dialog.scss';
 
 /**
@@ -26,7 +26,8 @@ export class SLDialog extends SLElement {
     elements: [
       [SLHeading.el, SLHeading],
       [SLButton.el, SLButton],
-      [SLIconClose.el, SLIconClose]
+      [SLIconClose.el, SLIconClose],
+      [SLFocusTrap.el, SLFocusTrap]
     ],
     suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
   });
@@ -34,6 +35,7 @@ export class SLDialog extends SLElement {
   private headingEl = unsafeStatic(this.elementMap.get(SLHeading.el));
   private buttonEl = unsafeStatic(this.elementMap.get(SLButton.el));
   private iconCloseEl = unsafeStatic(this.elementMap.get(SLIconClose.el));
+  private focusTrapEl = unsafeStatic(this.elementMap.get(SLFocusTrap.el));
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -84,6 +86,13 @@ export class SLDialog extends SLElement {
   accessor width: number;
 
   /**
+   * Number of ms of the dialog's open/close css transition delay
+   * - Used to delay focus trap activation
+   */
+  @property()
+  accessor transitionDelay: number = 400;
+
+  /**
    * Query the dialog container
    */
   @query('.sl-c-dialog__container')
@@ -93,13 +102,13 @@ export class SLDialog extends SLElement {
    * Query the dialog heading
    */
   @queryAsync('.sl-c-dialog__title > sl-heading')
-  accessor dialogHeading: HTMLElement;
+  accessor dialogHeading: any;
 
   /**
    * Query the dialog close button
    */
   @queryAsync('.sl-c-dialog__close-button')
-  accessor closeButton: HTMLElement;
+  accessor closeButton: any;
 
   /**
    * Query the dialog trigger
@@ -250,24 +259,12 @@ export class SLDialog extends SLElement {
   /**
    * Open dialog
    * 1. Set isActive to true to show the dialog
-   * 2. Focus on the dialog's first focusable element when opened. Timeout is equal to the css transition timing
-   * - The first focusable element defaults to the dialog heading, but if a heading is not present, it defaults to the close button.
-   * 3. Dispatch a custom event on open
+   * 2. Dispatch a custom event on open
    */
   public open() {
     this.isActive = true; /* 1 */
+
     /* 2 */
-     setTimeout(async () => {
-      let firstFocusableEl = await this.dialogHeading;
-
-      if (!firstFocusableEl) {
-        const closeButton = await this.closeButton;
-        firstFocusableEl = closeButton.shadowRoot.querySelector('button');
-      }
-
-      firstFocusableEl.focus();
-    }, 400);
-    /* 3 */
     this.dispatch({
       eventName: 'onDialogOpen',
       detailObj: {
@@ -317,7 +314,7 @@ export class SLDialog extends SLElement {
             </div>
           `
         }
-        <focus-trap>
+        <${this.focusTrapEl} .delay=${this.transitionDelay} .isActive=${this.isActive}>
           <div
             class="sl-c-dialog__container"
             role="dialog"
@@ -331,7 +328,7 @@ export class SLDialog extends SLElement {
                   <div class="sl-c-dialog__title" id=${this.ariaLabelledBy}>
                     ${this.heading &&
                     html`
-                    <${this.headingEl} tagName="h1" tabindex="0">${this.heading}</${this.headingEl}>
+                    <${this.headingEl} tagName="h1">${this.heading}</${this.headingEl}>
                   `}
                     <slot name="header"></slot>
                   </div>
@@ -354,7 +351,7 @@ export class SLDialog extends SLElement {
               `
             }
           </div>
-        </focus-trap>
+        </${this.focusTrapEl}>
       </div>
     ` as TemplateResult<1>;
   }

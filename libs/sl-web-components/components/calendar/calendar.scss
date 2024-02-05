@@ -32,7 +32,7 @@
   @include sl-theme-typography-body-sm;
   display: inline-flex;
   align-items: center;
-  gap: size(1);
+  gap: var(--sl-theme-space-xs);
   background: none;
   cursor: pointer;
   border: 0;
@@ -53,7 +53,6 @@
   &[disabled],
   &[disabled]:focus,
   &[disabled]:hover {
-    color: var(--sl-theme-color-content-default);
     opacity: var(--sl-theme-opacity-disabled);
   }
 }
@@ -152,14 +151,14 @@
    */
   &.sl-is-active,
   &.sl-is-available.sl-is-active {
-    color: var(--sl-theme-color-content-accent-weak);
+    color: var(--sl-theme-color-content-accent-stronger);
     background-color: var(--sl-theme-color-background-accent-default);
 
     /**
      * - Change current day dot indicator to knockout text color
      */
     &.sl-is-today:after {
-      background: var(--sl-theme-color-content-accent-weak); /* 1 */
+      background: var(--sl-theme-color-content-accent-default); /* 1 */
     }
   }
 
@@ -215,7 +214,7 @@
   padding: size(2) 0;
   display: grid;
   grid-template-columns: min-content 1fr;
-  gap: size(2);
+  gap: var(--sl-theme-space);
 
   &:last-of-type {
     border-block-end: none;
@@ -228,7 +227,7 @@
   margin: 0;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-  gap: size(1);
+  gap: var(--sl-theme-space-xs);
 }
 
 .sl-c-month-selector__year-heading {
@@ -307,18 +306,18 @@
    */
   &.sl-is-active,
   &.sl-is-available.sl-is-active {
-    color: var(--sl-theme-color-content-accent-weak);
+    color: var(--sl-theme-color-content-accent-stronger);
     background-color: var(--sl-theme-color-background-accent-default);
 
     /**
-     * - Change current day dot indicator to knockout text color
+     * - Change current day dot indicator text color
      */
     &.sl-is-current:after {
-      background: var(--sl-theme-color-content-accent-weak); /* 1 */
+      background: var(--sl-theme-color-accent-stronger); /* 1 */
     }
 
     abbr {
-      color: var(--sl-theme-color-content-accent-weak);
+      color: var(--sl-theme-color-content-accent-stronger);
     }
   }
 }

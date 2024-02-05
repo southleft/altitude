@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLChip, SLIconEmoji } from '../..';
+import { SLChip, SLIconWarningTriangle } from '../..';
 
 export default {
   title: 'Atoms/Chip',
@@ -53,7 +53,7 @@ export const Danger: StoryObj<typeof SLChip> = { args: {
 export const WithIcon: StoryObj<typeof SLChip> = { args: {
   children: (
     <>
-      <SLIconEmoji></SLIconEmoji>Label
+      <SLIconWarningTriangle></SLIconWarningTriangle>Label
     </>
   )
 } };

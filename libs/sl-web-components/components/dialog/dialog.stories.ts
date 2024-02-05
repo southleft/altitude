@@ -1,5 +1,4 @@
-import { expect } from '@storybook/jest';
-import { userEvent, waitFor, within } from '@storybook/testing-library';
+import { expect, userEvent, waitFor, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
@@ -7,6 +6,9 @@ import '../../.storybook/components/f-po/f-po';
 import '../button-group/button-group';
 import '../button/button';
 import './dialog';
+import '../tab-panel/tab-panel';
+import '../tab/tab';
+import '../tabs/tabs';
 
 export default {
   title: 'Molecules/Dialog',
@@ -21,7 +23,7 @@ export default {
       exclude: ['ariaLabelledBy']
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     heading: {
       type: 'text'
@@ -52,7 +54,7 @@ function openDialog(id) {
 const Template = (args) => html`
   <sl-dialog ${spread(args)} data-testid="dialog">
     <sl-button slot="trigger">Open Dialog</sl-button>
-    <f-po>Dialog content</f-po>
+    <f-po >Dialog content</f-po>
     <sl-button slot="footer" variant="tertiary" @click=${closeDialog}>Close</sl-button>
     <sl-button-group slot="footer" alignment="right">
       <sl-button variant="secondary">Label</sl-button>

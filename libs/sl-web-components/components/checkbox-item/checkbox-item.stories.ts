@@ -1,5 +1,4 @@
-import { expect } from '@storybook/jest';
-import { userEvent, within } from '@storybook/testing-library';
+import { expect, userEvent, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
@@ -19,7 +18,7 @@ export default {
       handles: ['onCheckboxItemChange']
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     isChecked: {
       control: 'boolean'

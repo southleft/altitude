@@ -261,8 +261,8 @@ export class SLSlider extends SLElement {
    */
   generateLinearGradient(value1: number, value2: number) {
     return `linear-gradient(var(--rtlGradientToRight, to right), var(--sl-theme-color-background-accent-default) 0%, var(--sl-theme-color-background-accent-default)
-    ${value1}%, var(--sl-theme-color-background-default-weak)
-    ${value2}%, var(--sl-theme-color-background-default-weak) 100%)`;
+    ${value1}%, var(--sl-theme-color-background-default-strong)
+    ${value2}%, var(--sl-theme-color-background-default-strong) 100%)`;
   }
 
   /**

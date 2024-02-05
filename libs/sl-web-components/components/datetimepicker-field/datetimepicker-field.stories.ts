@@ -16,7 +16,7 @@ export default {
       handles: ['onDatetimepickerFieldOpen', 'onDatetimepickerFieldClose', 'onDatetimepickerFieldDateChange', 'onDatetimepickerFieldTimeChange']
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   args: {
     label: 'Select a Date & Time',
     fieldNote: 'This is a field note.',

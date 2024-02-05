@@ -1,8 +1,8 @@
-import { expect } from '@storybook/jest';
-import { userEvent, waitFor, within } from '@storybook/testing-library';
+import { expect, userEvent, waitFor, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
+import './popover';
 import '../../.storybook/components/f-po/f-po';
 import '../button-group/button-group';
 import '../button/button';
@@ -11,7 +11,6 @@ import '../tab-panel/tab-panel';
 import '../tab/tab';
 import '../tabs/tabs';
 import '../toggle-button/toggle-button';
-import './popover';
 
 export default {
   title: 'Molecules/Popover',
@@ -27,7 +26,7 @@ export default {
       exclude: ['ariaLabelledBy']
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     heading: {
       type: 'text'
@@ -119,17 +118,17 @@ const TemplateWithSlottedContent = (args) => html`
         <sl-tab>Tab 1</sl-tab>
         <sl-tab>Tab 2</sl-tab>
         <sl-tab>Tab 3</sl-tab>
-        <sl-tab-panel slot="popover">
-          <f-po>Tab popover 1 - Instance slot 1</f-po>
-          <f-po>Tab popover 1 - Instance slot 2</f-po>
+        <sl-tab-panel slot="panel">
+          <f-po>Tab panel 1 - Instance slot 1</f-po>
+          <f-po>Tab panel 1 - Instance slot 2</f-po>
         </sl-tab-panel>
-        <sl-tab-panel slot="popover">
-          <f-po>Tab popover 2 - Instance slot 1</f-po>
-          <f-po>Tab popover 2 - Instance slot 2</f-po>
+        <sl-tab-panel slot="panel">
+          <f-po>Tab panel 2 - Instance slot 1</f-po>
+          <f-po>Tab panel 2 - Instance slot 2</f-po>
         </sl-tab-panel>
-        <sl-tab-panel slot="popover">
-          <f-po>Tab popover 3 - Instance slot 1</f-po>
-          <f-po>Tab popover 3 - Instance slot 2</f-po>
+        <sl-tab-panel slot="panel">
+          <f-po>Tab panel 3 - Instance slot 1</f-po>
+          <f-po>Tab panel 3 - Instance slot 2</f-po>
         </sl-tab-panel>
       </sl-tabs>
       <sl-button slot="footer" variant="tertiary" @click=${closePanel}>Close</sl-button>

@@ -19,7 +19,7 @@ export class IconGrid extends LitElement {
       return unsafeHTML(
         `<li class="icon-grid__item">
           <sl-icon-${item.name}></sl-icon-${item.name}>
-          <div class="icon-grid__text">${item.name}</div>
+          <div class="icon-grid__text">${`sl-icon-`}${item.name}</div>
         </li>`
       );
     });
@@ -27,9 +27,15 @@ export class IconGrid extends LitElement {
 
   render() {
     return html`
-      <ul class="icon-grid">
-        ${this.renderIconList()}
-      </ul>
+      <div class="icon-grid">
+        <header>
+          <h1>Icon Grid</h1>
+          <p>Icon names should accurately describe the represented concept or action in a clear and intuitive manner. Avoid obscure or ambiguous names that could lead to confusion or misinterpretation.</p>
+        </header>
+        <ul class="icon-grid__list">
+          ${this.renderIconList()}
+        </ul>
+      </div>
     `;
   }
 }

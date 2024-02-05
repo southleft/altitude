@@ -19,28 +19,44 @@ svg {
   align-items: center;
   justify-content: center;
   fill: var(--sl-icon-fill, currentColor);
-  height: var(--sl-icon-height, size(2));
-  width: var(--sl-icon-width, size(2));
+  height: var(--sl-icon-height, var(--sl-theme-icon));
+  width: var(--sl-icon-width, var(--sl-theme-icon));
 
   .sl-c-icon--md & {
-    height: size(2.5);
-    width: size(2.5);
+    height: var(--sl-theme-icon-md);
+    width: var(--sl-theme-icon-md);
   }
 
   /**
    * LG icon
    */
   .sl-c-icon--lg & {
-    height: size(3);
-    width: size(3);
+    height: var(--sl-theme-icon-lg);
+    width: var(--sl-theme-icon-lg);
   }
 
   /**
    * XL icon
    */
   .sl-c-icon--xl & {
-    height: size(4);
-    width: size(4);
+    height: var(--sl-theme-icon-xl);
+    width: var(--sl-theme-icon-xl);
+  }
+
+  /**
+   * XxL icon
+   */
+   .sl-c-icon--xxl & {
+    height: var(--sl-theme-icon-xxl);
+    width: var(--sl-theme-icon-xxl);
+  }
+
+  /**
+   * XxxL icon
+   */
+   .sl-c-icon--xxxl & {
+    height: var(--sl-theme-icon-xxxl);
+    width: var(--sl-theme-icon-xxxl);
   }
 
   /**

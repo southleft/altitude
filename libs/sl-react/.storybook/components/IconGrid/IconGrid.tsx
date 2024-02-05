@@ -19,8 +19,8 @@ export default function IconGrid() {
   };
 
   return (
-    <div>
-      <ul className="icon-grid">
+    <div className="icon-grid">
+      <ul className="icon-grid__list">
         {ALL_ICONS.map(function (item, index) {
           const TagName = createTagName();
 
@@ -31,7 +31,7 @@ export default function IconGrid() {
             <li className="icon-grid__item" key={`icon-grid-item-${index}`}>
               <TagName />
               <span className="icon-grid__text">
-                {'<'}SLIcon{toPascalCase(item.name)} {'/>'}
+                SLIcon{toPascalCase(item.name)}
               </span>
             </li>
           );

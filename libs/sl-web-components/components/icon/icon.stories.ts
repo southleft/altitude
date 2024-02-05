@@ -11,14 +11,13 @@ export default {
   argTypes: {
     size: {
       control: 'radio',
-      options: ['default', 'md', 'lg', 'xl'],
+      options: ['default', 'md', 'lg', 'xl' , 'xxl' , 'xxxl'],
     },
     iconTitle: {
       control: 'text',
     },
   },
 };
-
 
 const Template = (args) => html`
   <sl-icon-add ${spread(args)}></sl-icon-add>
@@ -40,4 +39,14 @@ SizeLg.args = {
 export const SizeXl = Template.bind({});
 SizeXl.args = {
   size: 'xl',
+};
+
+export const SizeXxl = Template.bind({});
+SizeXxl.args = {
+  size: 'xxl',
+};
+
+export const SizeXxxl = Template.bind({});
+SizeXxxl.args = {
+  size: 'xxxl',
 };

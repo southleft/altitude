@@ -1,4 +1,4 @@
-import { within } from '@storybook/testing-library';
+import { within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
@@ -14,7 +14,7 @@ export default {
       handles: ['onProgressChange' ]
     },
   },
-  decorators: [withActions],
+  decorators: [ withActions ],
   argTypes: {
     isCircle: {
       control: 'boolean'

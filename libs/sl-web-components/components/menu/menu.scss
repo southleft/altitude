@@ -5,7 +5,7 @@
 
 :host {
   display: contents;
-  --sl-menu-panel-offset: #{size(0.5)};
+  --sl-menu-panel-offset: #{var(--sl-theme-space-xxs)};
   --sl-menu-panel-shift: 0;
 }
 
@@ -33,7 +33,7 @@
  */
 .sl-c-menu__panel {
   display: none;
-  padding: size(0.5) 0;
+  padding: var(--sl-theme-space-xxs) 0;
   background: var(--sl-theme-color-background-default);
   border: var(--sl-menu-panel-border, none);
   border-radius: var(--sl-theme-border-radius);

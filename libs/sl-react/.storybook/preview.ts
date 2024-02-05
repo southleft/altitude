@@ -1,16 +1,6 @@
 import type { Preview } from '@storybook/react-webpack5';
 
 /*
- * Storybook styles
- * - Allows for custom styles of the storybook UI
- * - Creating a style element for storybookStyles and appending it to the window parent document head
- */
-import storybookStyles from '../../sl-web-components/styles/storybook.scss';
-const storybookStyleElement = document.createElement('style');
-storybookStyleElement.innerHTML = storybookStyles;
-window.parent.document.head.appendChild(storybookStyleElement);
-
-/*
  * Head styles
  * - Allows for custom styles of the story iframe window
  * - Creating a style element for headStyles and appending it to the document head

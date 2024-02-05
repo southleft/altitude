@@ -4,7 +4,7 @@
 \*------------------------------------ */
 
 :host {
-  --sl-datetimepicker-field-popup-offset-top: #{size(1)};
+  --sl-datetimepicker-field-popup-offset-top: #{var(--sl-theme-space-xs)};
   --sl-datetimepicker-field-popup-offset-bottom: #{size(0.25)};
 }
 
@@ -14,7 +14,7 @@
 .sl-c-datetimepicker-field {
   display: flex;
   flex-direction: column;
-  gap: size(0.5);
+  gap: var(--sl-theme-space-xxs);
 }
 
 /**
@@ -80,7 +80,7 @@
  */
 .sl-c-datetimepicker-field__popup-body {
   box-shadow: var(--sl-theme-box-shadow-md);
-  border-radius: var(--sl-border-radius-lg);
+  border-radius: var(--sl-theme-border-radius-lg);
   background: var(--sl-theme-color-background-default);
   overflow: hidden;
   pointer-events: auto;
@@ -90,7 +90,7 @@
  * Datetimepicker field popup footer
  */
 .sl-c-datetimepicker-field__footer {
-  border-block-start: 1px solid var(--sl-theme-color-border-default-weak);
+  border-block-start: 1px solid var(--sl-theme-color-border-default);
   padding: size(2) size(3);
   grid-column-start: span 2;
   display: flex;
@@ -136,14 +136,14 @@
  * Datetimepicker field calendar (sl-time-selector-list)
  */
 .sl-c-datetimepicker-field__time-selector-list {
-  border-inline-start: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default-weak);
+  border-inline-start: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
 
   /**
    * Small screens
    */
   .sl-c-datetimepicker-field--small-screen & {
     border-inline-start: none;
-    border-block-start: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default-weak);
+    border-block-start: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
   }
 }
 

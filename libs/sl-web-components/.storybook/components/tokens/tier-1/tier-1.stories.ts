@@ -1,8 +1,10 @@
 import { html } from 'lit';
+import type { Meta, StoryObj } from '@storybook/web-components';
 import './tier-1-animation';
 import './tier-1-border';
 import './tier-1-breakpoints';
 import './tier-1-colors';
+import './tier-1-icons';
 import './tier-1-layout';
 import './tier-1-opacity';
 import './tier-1-shadows';
@@ -10,38 +12,32 @@ import './tier-1-spacing';
 import './tier-1-typography';
 import './tier-1-zindex';
 
-export default {
+const meta: Meta = {
   title: 'Fundamentals/Tokens/Tier 1: Definitions',
   component: 'tier-1-tokens',
-  parameters: {
-    docs: {
-      disable: true
-    },
-    viewMode: 'story',
-    previewTabs: {
-      'storybook/docs/panel': {
-        hidden: true
-      }
-    }
-  }
 };
 
-export const Animation = (args, context) => html`<tier-1-animation theme=${context.globals.theme}></tier-1-animation>`;
+export default meta;
+type Story = StoryObj;
 
-export const Border = (args, context) => html`<tier-1-border theme=${context.globals.theme}></tier-1-border>`;
+export const Animation: Story = (args, context) => html`<tier-1-animation theme=${context.globals.theme}></tier-1-animation>`;
 
-export const Breakpoints = (args, context) => html`<tier-1-breakpoints theme=${context.globals.theme}></tier-1-breakpoints>`;
+export const Border: Story = (args, context) => html`<tier-1-border theme=${context.globals.theme}></tier-1-border>`;
 
-export const Colors = (args, context) => html`<tier-1-colors theme=${context.globals.theme}></tier-1-colors>`;
+export const Breakpoints: Story = (args, context) => html`<tier-1-breakpoints theme=${context.globals.theme}></tier-1-breakpoints>`;
 
-export const Layout = (args, context) => html`<tier-1-layout theme=${context.globals.theme}></tier-1-layout>`;
+export const Colors: Story = (args, context) => html`<tier-1-colors theme=${context.globals.theme}></tier-1-colors>`;
 
-export const Opacity = (args, context) => html`<tier-1-opacity theme=${context.globals.theme}></tier-1-opacity>`;
+export const Icons: Story = (args, context) => html`<tier-1-icons theme=${context.globals.theme}></tier-1-icons>`;
 
-export const Shadows = (args, context) => html`<tier-1-shadows theme=${context.globals.theme}></tier-1-shadows>`;
+export const Layout: Story = (args, context) => html`<tier-1-layout theme=${context.globals.theme}></tier-1-layout>`;
 
-export const Spacing = (args, context) => html`<tier-1-spacing theme=${context.globals.theme}></tier-1-spacing>`;
+export const Opacity: Story = (args, context) => html`<tier-1-opacity theme=${context.globals.theme}></tier-1-opacity>`;
 
-export const Typography = (args, context) => html`<tier-1-typography theme=${context.globals.theme}></tier-1-typography>`;
+export const Shadows: Story = (args, context) => html`<tier-1-shadows theme=${context.globals.theme}></tier-1-shadows>`;
 
-export const ZIndex = (args, context) => html`<tier-1-zindex theme=${context.globals.theme}></tier-1-zindex>`;
+export const Spacing: Story = (args, context) => html`<tier-1-spacing theme=${context.globals.theme}></tier-1-spacing>`;
+
+export const Typography: Story = (args, context) => html`<tier-1-typography theme=${context.globals.theme}></tier-1-typography>`;
+
+export const ZIndex: Story = (args, context) => html`<tier-1-zindex theme=${context.globals.theme}></tier-1-zindex>`;
