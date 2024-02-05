@@ -193,7 +193,7 @@ export class SLDialog extends SLElement {
    * 2. If the dialog is inactive, allow scrolling on the body
    */
   setBodyOverflow() {
-    const body = globalThis.querySelector('body');
+    const body = document.querySelector('body');
     if (this.isActive) {
       body.style.overflow = 'hidden'; /* 1 */
     } else {

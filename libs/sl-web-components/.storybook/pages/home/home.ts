@@ -29,7 +29,7 @@ export class SLHome extends LitElement {
 
     return html`
       <sl-basic-page class=${componentClassNames}>
-        <sl-layout-section>
+        <sl-layout-section class="sl-l-home__breadcrumbs">
           ${Breadcrumbs.Truncated({isTruncated: true})}
         </sl-layout-section>
         <sl-layout-section>

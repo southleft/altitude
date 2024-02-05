@@ -35,7 +35,7 @@
   padding: var(--sl-contextual-menu-container-padding, 0 0);
   border-radius: var(--sl-theme-border-radius-lg);
   box-shadow: var(--sl-theme-box-shadow-md);
-  z-index: var(--sl-z-index-500);
+  z-index: var(--sl-z-index-100);
   overflow: hidden;
   background-color: var(--sl-theme-color-background-default);
 
@@ -178,7 +178,7 @@
  * - The trigger slot in the contextual menu
  */
 .sl-c-contextual-menu__trigger {
-  z-index: var(--sl-contextual-menu-trigger-z-index, var(--sl-z-index-400));
+  z-index: var(--sl-contextual-menu-trigger-z-index, 0);
   display: flex;
   align-items: center;
   gap: var(--sl-theme-space-xs);

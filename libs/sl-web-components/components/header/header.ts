@@ -19,7 +19,7 @@ export class SLHeader extends SLElement {
     return html`
       <header class="${componentClassNames}">
         ${this.slotNotEmpty('before') && html`<span class="sl-c-header__before"><slot name="before"></slot></span>`}
-        <slot></slot>
+        <div class="sl-c-header__main"><slot></slot></div>
         ${this.slotNotEmpty('after') && html`<span class="sl-c-header__after"><slot name="after"></slot></span>`}
       </header>
     `;

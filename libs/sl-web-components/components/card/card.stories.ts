@@ -31,15 +31,13 @@ export const Default = Template.bind({});
 Default.args = {};
 
 const TemplateWithContent = (args) => html`
-<div style="max-width: 300px;">
-  <sl-card ${spread(args)}>
-    <sl-chip slot="actions-left">Label</sl-chip>
-    <div slot="actions-right">${ContextualMenu.Default({})}</div>
-    <img slot="image" alt="card image" src="https://fakeimg.pl/600x400" />
-    <sl-heading slot="header" tagName="h3" variant="sm" ?isBold=${true}>Card title</sl-heading>
-    <sl-text-passage>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dui leo, lacinia ut finibus sed, consectetur quis enim.</sl-text-passage>
-  </sl-card>
-</div>`;
+<sl-card ${spread(args)}>
+  <sl-chip slot="actions-left">Label</sl-chip>
+  <div slot="actions-right">${ContextualMenu.Default({})}</div>
+  <img slot="image" alt="card image" src="https://fakeimg.pl/600x400" />
+  <sl-heading slot="header" tagName="h3" variant="sm" ?isBold=${true}>Card title</sl-heading>
+  <sl-text-passage>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dui leo, lacinia ut finibus sed, consectetur quis enim.</sl-text-passage>
+</sl-card>`;
 
 export const WithContent = TemplateWithContent.bind({});
 WithContent.args = {};

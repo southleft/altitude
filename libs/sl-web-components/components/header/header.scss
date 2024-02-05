@@ -8,23 +8,43 @@
  */
 .sl-c-header {
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  gap: var(--sl-theme-space);
   padding: var(--sl-theme-space);
   border-radius: var(--sl-theme-border-radius-lg);
   background-color: var(--sl-theme-color-background-default);
   box-shadow: var(--sl-theme-box-shadow-md);
   --sl-text-input-background: var(--sl-theme-color-background-default);
+
+  @media all and (min-width: $sl-breakpoint-md) {
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
 }
 
 .sl-c-header__before,
 .sl-c-header__after {
-  flex: 1;
+  width: calc(50% - #{var(--sl-theme-space-xs)});
   display: flex;
   align-items: center;
   gap: var(--sl-theme-space);
+
+  @media all and (min-width: $sl-breakpoint-md) {
+    flex: 1;
+  }
 }
 
 .sl-c-header__after {
   justify-content: flex-end;
+}
+
+.sl-c-header__main {
+  flex: 1;
+
+  @media all and (max-width: $sl-breakpoint-md) {
+    order: 3;
+  }
 }

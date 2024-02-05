@@ -2519,14 +2519,14 @@
           "type": "boolean"
         },
         {
-          "name": "ariaLabelledBy",
-          "description": "Aria labelledby attribute",
-          "type": "string"
+          "name": "isActive",
+          "description": "Is active?\n- **true** Shows the drawer container\n- **false** Hides the drawer container",
+          "type": "boolean"
         },
         {
-          "name": "isActive",
-          "description": "Append an active state on the button",
-          "type": "boolean"
+          "name": "ariaLabelledBy",
+          "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+          "type": "string"
         },
         {
           "name": "disableBackdropClick",
@@ -2564,16 +2564,16 @@
           "type": "boolean"
         },
         {
-          "name": "ariaLabelledBy",
-          "attribute": "ariaLabelledBy",
-          "description": "Aria labelledby attribute",
-          "type": "string"
-        },
-        {
           "name": "isActive",
           "attribute": "isActive",
-          "description": "Append an active state on the button",
+          "description": "Is active?\n- **true** Shows the drawer container\n- **false** Hides the drawer container",
           "type": "boolean"
+        },
+        {
+          "name": "ariaLabelledBy",
+          "attribute": "ariaLabelledBy",
+          "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+          "type": "string"
         },
         {
           "name": "disableBackdropClick",
@@ -2582,9 +2582,17 @@
           "type": "boolean"
         },
         {
-          "name": "drawerCloseButton",
-          "description": "Query the drawer close button",
-          "type": "HTMLElement"
+          "name": "closeButton",
+          "description": "Query the drawer close button"
+        },
+        {
+          "name": "drawerTrigger",
+          "description": "Query the drawer trigger",
+          "type": "array"
+        },
+        {
+          "name": "drawerTriggerButton",
+          "description": "Query the drawer trigger inner element"
         },
         {
           "name": "handleOnClickOutside"

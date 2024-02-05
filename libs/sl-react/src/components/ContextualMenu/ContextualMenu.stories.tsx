@@ -1,6 +1,6 @@
 import type { StoryObj } from '@storybook/react-webpack5';
 import React from 'react';
-import { SLContextualMenu, SLIconList, SLButton, SLList, SLListItem } from '../..';
+import { SLContextualMenu, SLIconDotsVertical, SLButton, SLList, SLListItem } from '../..';
 
 export default {
   title: 'Molecules/Contextual Menu',
@@ -15,8 +15,8 @@ export default {
   args: {
     children: (
       <>
-        <SLButton slot="trigger" hideText={true}>
-          Menu<SLIconList slot="after"></SLIconList>
+        <SLButton slot="trigger" hideText={true} variant="tertiary">
+          Menu<SLIconDotsVertical slot="after"></SLIconDotsVertical>
         </SLButton>
         <SLList>
           <SLListItem>List Item 1</SLListItem>

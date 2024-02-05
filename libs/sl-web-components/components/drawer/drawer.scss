@@ -40,7 +40,7 @@
    */
   &.sl-is-active::after {
     background-color: var(--sl-theme-color-background-transparent-strong);
-    z-index: var(--sl-z-index-400);
+    z-index: var(--sl-z-index-500);
   }
 }
 
@@ -59,7 +59,7 @@
   box-shadow: var(--sl-theme-box-shadow-md);
   transition: transform var(--sl-theme-animation-duration-long) var(--sl-theme-animation-timing);
   transform: translateX(-100%);
-  z-index: var(--sl-z-index-500);
+  z-index: var(--sl-z-index-top);
   opacity: 0;
   visibility: hidden;
 
@@ -140,7 +140,7 @@
  * - The trigger slot in the drawer
  */
 .sl-c-drawer__trigger {
-  z-index: var(--sl-drawer-trigger-z-index, var(--sl-z-index-300));
+  z-index: var(--sl-drawer-trigger-z-index, 0);
   display: flex;
   align-items: center;
   gap: var(--sl-theme-space-xs);
