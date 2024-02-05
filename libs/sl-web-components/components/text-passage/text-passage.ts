@@ -1,4 +1,5 @@
-import { html, unsafeCSS } from 'lit';
+import { TemplateResult, unsafeCSS } from 'lit';
+import { html } from 'lit/static-html.js';
 import { property } from 'lit/decorators.js';
 import { SLElement } from '../SLElement';
 import styles from './text-passage.scss';
@@ -32,7 +33,7 @@ export class SLTextPassage extends SLElement {
       <div class="${componentClassName}">
         <slot></slot>
       </div>
-    `;
+    ` as TemplateResult<1>;
   }
 }
 

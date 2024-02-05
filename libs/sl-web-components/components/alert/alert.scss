@@ -8,47 +8,41 @@
  */
 .sl-c-alert {
   display: none;
-  flex-direction: column;
-  border-radius: var(--sl-theme-border-radius-md);
-  background-color: var(--sl-theme-color-background-default);
-  box-shadow: var(--sl-theme-box-shadow-lg);
+  background: transparent;
+  padding: size(2);
 
-  /**
-   * Display the alert when it is active
-   */
   &.sl-is-active {
-    display: block;
+    display: flex;
   }
 }
 
-/**
- * Alert header
- */
-.sl-c-alert__header {
-  @include sl-theme-typography-body-md-bold;
+.sl-c-alert__body {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  background: none;
-  border: none;
-  padding: size(2) size(3);
-  gap: var(--sl-theme-space);
-  color: var(--sl-theme-color-content-default);
-  border-radius: var(--sl-theme-border-radius-md);
+  width: 100%;
+  align-items: center;
 
-  /**
-   * Alert with a panel
-   */
-  .sl-c-alert--has-panel & {
-    cursor: pointer;
+  .sl-has-title & {
+    align-items: flex-end;
   }
+}
 
-  /**
-   * Alert focused
-   */
-  &:focus-visible {
-    @include focus-inset;
-  }
+.sl-c-alert__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.sl-c-alert__actions {
+  display: flex;
+  gap: size(1.5);
+}
+
+/**
+ * Alert title
+ */
+.sl-c-alert__title {
+  @include sl-theme-typography-body-md-bold;
+  margin-block-end: size(1);
 }
 
 /**
@@ -59,6 +53,14 @@
   --sl-icon-width: #{var(--sl-theme-icon-lg)};
   --sl-icon-height: #{var(--sl-theme-icon-lg)};
   --sl-icon-fill: var(--sl-theme-color-content-info-default);
+
+  display: flex;
+  align-items: center;
+  margin-inline-end: size(2);
+
+  .sl-has-title & {
+    align-items: flex-start;
+  }
 
   /**
    * Icon within success alert
@@ -79,59 +81,5 @@
    */
   .sl-c-alert--danger & {
     --sl-icon-fill: var(--sl-theme-color-content-danger-default);
-  }
-}
-
-/**
- * Alert title
- */
-.sl-c-alert__title {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  gap: var(--sl-theme-space);
-}
-
-/**
- * Icon that depicts the expanded state
- */
-.sl-c-alert__icon-expand {
-  transform: rotate(0);
-  transition: transform var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
-  transform-origin: center center;
-
-  /**
-   * Rotate the icon when expanded
-   */
-  .sl-is-expanded & {
-    transform: rotate(-180deg)
-  }
-}
-
-/**
- * Alert panel that contains the description
- */
-.sl-c-alert__panel {
-  @include sl-theme-typography-body-sm;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--sl-theme-space);
-  color: var(--sl-theme-color-content-default-weak);
-  visibility: hidden;
-  opacity: 0;
-  width: 100%;
-  max-height: 0;
-  padding: 0 size(8) 0;
-  transition: opacity var(--sl-theme-animation-duration) var(--sl-theme-animation-timing), visibility var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
-
-  /**
-   * Makes the panel visible when the alert is expanded
-   */
-  .sl-is-expanded & {
-    visibility: visible;
-    opacity: 1;
-    max-height: 100vh;
-    padding-bottom: size(2);
   }
 }
