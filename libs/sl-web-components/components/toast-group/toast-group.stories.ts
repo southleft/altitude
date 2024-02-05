@@ -6,7 +6,6 @@ import '../button/button';
 import '../icon/icons/done';
 import '../toast/toast';
 import './toast-group';
-import '../progress/progress';
 
 export default {
   title: 'Molecules/Toast Group',
@@ -28,12 +27,6 @@ export default {
       options: ['default', 'top', 'bottom']
     },
     isActive: {
-      control: 'boolean'
-    },
-    isGroup: {
-      control: 'boolean'
-    },
-    hasControls: {
       control: 'boolean'
     },
     autoClose: {
@@ -96,17 +89,6 @@ const TemplateDismissible = (args) => html`
   </sl-toast-group>
 `;
 
-const TemplateWithAutoCloseWithProgress = (args) => html`
-  <sl-toast-group ${spread(args)} autoCloseDelay="4">
-    <sl-toast description="This is a toast">
-      Toast title A
-      <sl-button slot="actions" variant="secondary"><sl-icon-done slot="before"></sl-icon-done>Label</sl-button>
-      <sl-button slot="actions"><sl-icon-done slot="before"></sl-icon-done>Label</sl-button>
-    </sl-toast>
-    <sl-progress currentProgress="100", endProgress="0" duration="4"></sl-progress>
-  </sl-toast-group>
-`;
-
 export const Default = Template.bind({});
 Default.args = {};
 
@@ -118,11 +100,6 @@ WithAutoClose.args = {
   autoClose: true,
 };
 
-export const WithAutoCloseWithProgress = TemplateWithAutoCloseWithProgress.bind({});
-WithAutoCloseWithProgress.args = {
-  autoClose: true
-};
-
 export const WithPositionTop = TemplateDismissible.bind({});
 WithPositionTop.args = {
   position: 'top'
@@ -130,43 +107,6 @@ WithPositionTop.args = {
 
 export const WithPositionBottom = TemplateDismissible.bind({});
 WithPositionBottom.args = {
-  position: 'bottom'
-};
-
-export const WithGroup = Template.bind({});
-WithGroup.args = {
-  isGroup: true
-};
-
-export const WithGroupPositionTop = TemplateDismissible.bind({});
-WithGroupPositionTop.args = {
-  isGroup: true,
-  position: 'top'
-};
-
-export const WithGroupPositionBottom = TemplateDismissible.bind({});
-WithGroupPositionBottom.args = {
-  isGroup: true,
-  position: 'bottom'
-};
-
-export const WithGroupControls = Template.bind({});
-WithGroupControls.args = {
-  isGroup: true,
-  hasControls: true
-};
-
-export const WithGroupControlsPositionTop = TemplateDismissible.bind({});
-WithGroupControlsPositionTop.args = {
-  isGroup: true,
-  hasControls: true,
-  position: 'top'
-};
-
-export const WithGroupControlsPositionBottom = TemplateDismissible.bind({});
-WithGroupControlsPositionBottom.args = {
-  isGroup: true,
-  hasControls: true,
   position: 'bottom'
 };
 
@@ -188,13 +128,11 @@ const TemplateWithTriggers = (args) => html`
 export const WithTriggers = TemplateWithTriggers.bind({});
 WithTriggers.args = {
   isActive: false,
-  isGroup: true,
   hasControls: true
 };
 
 export const StorybookTests = TemplateDismissible.bind({});
 StorybookTests.args = {
-  isGroup: true,
   hasControls: true,
   position: 'bottom'
 };
@@ -224,54 +162,6 @@ WithAutoClose.play = async ({ canvasElement }) => {
   await waitFor(() => expect(toastGroup.isActive).toBe(false), {
     timeout: 6000, // A long timeout to make sure it doesn't close
   });
-};
-
-WithGroupPositionBottom.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const toastGroup = canvas.queryByTestId('toast-group') as any;
-  const toasts = canvas.queryAllByTestId(/^toast-0/) as any;
-  const toast1CloseButton = toasts[0].shadowRoot.querySelector('.sl-c-toast__close-button') as HTMLButtonElement;
-  const toast2CloseButton = toasts[1].shadowRoot.querySelector('.sl-c-toast__close-button') as HTMLButtonElement;
-  const toast3CloseButton = toasts[2].shadowRoot.querySelector('.sl-c-toast__close-button') as HTMLButtonElement;
-  const toast4CloseButton = toasts[3].shadowRoot.querySelector('.sl-c-toast__close-button') as HTMLButtonElement;
-
-  // Make assertions
-  expect(toastGroup).toBeInTheDocument();
-  expect(toasts[0]).toBeInTheDocument();
-  expect(toasts[1]).toBeInTheDocument();
-  expect(toasts[2]).toBeInTheDocument();
-  expect(toasts[3]).toBeInTheDocument();
-
-  await waitFor(() => {
-    expect(toast1CloseButton).toBeVisible();
-  });
-  await userEvent.click(toast1CloseButton);
-  expect(toasts[1].isActive).toBe(true);
-
-  await waitFor(() => {
-    expect(toast2CloseButton).toBeVisible();
-  });
-  await userEvent.click(toast2CloseButton);
-  expect(toasts[2].isActive).toBe(true);
-
-  await waitFor(() => {
-    expect(toast3CloseButton).toBeVisible();
-  });
-  await userEvent.click(toast3CloseButton);
-  expect(toasts[3].isActive).toBe(true);
-
-  await waitFor(() => {
-    expect(toast4CloseButton).toBeVisible();
-  });
-  await userEvent.click(toast4CloseButton);
-  expect(toastGroup.isActive).toBe(false);
-
-  // Reset the story
-  toastGroup.isActive = true;
-  toasts[0].isActive = true;
-  toasts[1].isActive = false;
-  toasts[2].isActive = false;
-  toasts[3].isActive = false;
 };
 
 WithTriggers.play = async ({ canvasElement }) => {
