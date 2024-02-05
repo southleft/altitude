@@ -8,15 +8,12 @@ export default {
     status: { type: 'beta' },
     actions: {
       handles: ['onToastClose']
-    },
-    controls: {
-      exclude: ['idx']
     }
   },
   argTypes: {
     variant: {
       control: { type: 'radio' },
-      options: ['default', 'success', 'warning', 'danger'],
+      options: ['default', 'info', 'success', 'warning', 'danger'],
     },
     description: {
       control: 'text'
@@ -25,6 +22,15 @@ export default {
       control: 'boolean',
     },
     isDismissible: {
+      control: 'boolean',
+    },
+    autoClose: {
+      control: 'boolean'
+    },
+    autoCloseDelay: {
+      control: 'number'
+    },
+    showProgress: {
       control: 'boolean',
     },
   },
@@ -36,6 +42,10 @@ export default {
 };
 
 export const Default: StoryObj<typeof SLToast> = { args: {} };
+
+export const Info: StoryObj<typeof SLToast> = { args: {
+  variant: 'info'
+} };
 
 export const Success: StoryObj<typeof SLToast> = { args: {
   variant: 'success'
@@ -49,7 +59,7 @@ export const Danger: StoryObj<typeof SLToast> = { args: {
   variant: 'danger'
 } };
 
-export const WithoutDesciption: StoryObj<typeof SLToast> = { args: {
+export const WithoutDescription: StoryObj<typeof SLToast> = { args: {
   description: false
 } };
 
@@ -65,4 +75,21 @@ export const WithActions: StoryObj<typeof SLToast> = { args: {
 
 export const WithDismissible: StoryObj<typeof SLToast> = { args: {
   isDismissible: true
+} };
+
+export const WithAutoClose: StoryObj<typeof SLToast> = { args: {
+  autoClose: true
+} };
+
+export const WithAutoCloseWithProgress: StoryObj<typeof SLToast> = { args: {
+  ...WithAutoClose.args,
+  showProgress: true,
+  variant: 'info',
+  children: (
+    <>
+      Toast title
+      <SLButton slot="actions" variant="secondary"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
+      <SLButton slot="actions"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
+    </>
+  )
 } };

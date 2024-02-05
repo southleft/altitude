@@ -15,24 +15,17 @@
   @include sl-theme-typography-body-md-bold;
   position: relative;
   display: none;
-  align-items: center;
-  justify-content: space-between;
   z-index: var(--sl-z-index-500);
-  padding-block-start: size(2);
-  padding-inline-end: size(3);
-  padding-block-end: size(2);
-  padding-inline-start: size(3);
   width: 100%;
   border-radius: var(--sl-theme-border-radius-md);
   background-color: var(--sl-theme-color-background-default);
   box-shadow: var(--sl-theme-box-shadow-lg);
-  gap: var(--sl-theme-space);
 
   /**
    * Display the toast when it is active
    */
   &.sl-is-active {
-    display: flex;
+    display: block;
   }
 
   /**
@@ -58,10 +51,18 @@
 }
 
 /**
- * Creates space for slider controls when the toast is part of a group
+ * Wraps the toast body and actions
  */
-.sl-is-grouped {
-  padding-inline-start: size(16);
+.sl-c-toast__wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-block-start: size(2);
+  padding-inline-end: size(3);
+  padding-block-end: size(2);
+  padding-inline-start: size(3);
+  gap: var(--sl-theme-space);
 }
 
 /**
@@ -72,6 +73,8 @@
   --sl-icon-width: #{var(--sl-theme-icon-lg)};
   --sl-icon-height: #{var(--sl-theme-icon-lg)};
   --sl-icon-fill: var(--sl-theme-color-content-info-default);
+
+  align-self: flex-start;
 
   /**
    * Icon within success toast

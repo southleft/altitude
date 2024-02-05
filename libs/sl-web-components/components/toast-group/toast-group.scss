@@ -55,35 +55,3 @@
   inset-block-end: 0;
   inset-block-start: auto;
 }
-
-/**
- * Toast Group controls
- */
-.sl-c-toast-group__controls {
-  display: flex;
-  gap: var(--sl-theme-space-xs);
-  width: fit-content;
-  color: var(--sl-theme-color-content-default-weak);
-  z-index: var(--sl-z-index-top);
-  position: absolute;
-  inset-block-start: size(2);
-  inset-inline-start: size(3);
-
-  /**
-   * Shift the controls to account for the toast group padding
-   */
-  .sl-c-toast-group--position-top &,
-  .sl-c-toast-group--position-bottom & {
-    inset-block-start: size(5);
-    inset-inline-start: size(6);
-  }
-}
-
-/**
- * A signular toast group control button
- */
-.sl-c-toast-group__control {
-  width: size(3);
-  height: size(3);
-  --sl-button-padding: 0 0;
-}

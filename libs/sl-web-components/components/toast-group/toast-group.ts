@@ -1,12 +1,7 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property, query, queryAssignedElements, state } from 'lit/decorators.js';
-import { html, unsafeStatic } from 'lit/static-html.js';
-import register from '../../directives/register';
-import PackageJson from '../../package.json';
+import { property, queryAssignedElements } from 'lit/decorators.js';
+import { html } from 'lit/static-html.js';
 import { SLElement } from '../SLElement';
-import { SLButton } from '../button/button';
-import { SLIconChevronLeft } from '../icon/icons/chevron-left';
-import { SLIconChevronRight } from '../icon/icons/chevron-right';
 import { SLToast } from '../toast/toast';
 import styles from './toast-group.scss';
 
@@ -18,19 +13,6 @@ import styles from './toast-group.scss';
  */
 export class SLToastGroup extends SLElement {
   static el = 'sl-toast-group';
-
-  private elementMap = register({
-    elements: [
-      [SLButton.el, SLButton],
-      [SLIconChevronLeft.el, SLIconChevronLeft],
-      [SLIconChevronRight.el, SLIconChevronRight]
-    ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
-  });
-
-  private buttonEl = unsafeStatic(this.elementMap.get(SLButton.el));
-  private iconChevronLeftEl = unsafeStatic(this.elementMap.get(SLIconChevronLeft.el));
-  private iconChevronRightEl = unsafeStatic(this.elementMap.get(SLIconChevronRight.el));
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -50,107 +32,38 @@ export class SLToastGroup extends SLElement {
    * - **true** Displays the toast group on the screen
    * - **false** Hides the toast group on the screen
    */
-  @property({ type: Boolean })
+  @property()
   accessor isActive: boolean;
 
   /**
-   * Auto close?
-   * - Set whether you want the toast group to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds
-   */
-  @property({ type: Boolean })
-  accessor autoClose: boolean;
-
-  /**
-   * Delay property
-   * 1. Number of seconds to close the toast group when autoClose is enabled
-   * 2. Default amount is 3
-   */
-  @property({ type: Number })
-  accessor autoCloseDelay: number = 3; /* 2 */
-
-  /**
-   * Query the control prev button
-   */
-  @query('.sl-c-toast-group__control--prev')
-  accessor controlPrev: SLButton;
-
-  /**
-   * Query the control next button
-   */
-  @query('.sl-c-toast-group__control--next')
-  accessor controlNext: SLButton;
-
-  /**
-   * Use queryAssignedElements to populate the toastList
+   * Query the toast components in the toast group
    */
   @queryAssignedElements({ flatten: true })
   accessor toastList: Array<SLToast>;
 
   /**
-   * Create an array to store the list of toasts
+   * Connected lifecycle
+   * - Watch for the custom event when a toast in the group is dismissed
    */
-  private toasts: Array<SLToast> = [];
+  connectedCallback() {
+    super.connectedCallback();
 
-  /**
-   * Internal property store setTimeout() method so that we can clear timer later
-   */
-  private _timer: ReturnType<typeof setTimeout>;
-
-  /**
-   * First updated lifecycle
-   * 1. Use timeout to allow for slotted items to load in the DOM
-   * 2. Set the active toasts based on their conditions
-   * 3. Watch for the custom event when a toast is dismissed
-   * 4. Initializes auto close if there is no panel
-   */
-  firstUpdated() {
-    /* 1 */
-    setTimeout(() => {
-      this.toasts = this.toastList;
-      /* 2 */
-      this.setActiveToasts();
-      /* 3 */
-      this.addEventListener('onToastClose', (e: CustomEvent) => {
-        this.handleOnToastClose(e);
-      });
-    }, 1);
-
-    /* 4 */
-    this.handleAutoClose();
-  }
-
-  /**
-   * Set the active toasts
-   * 1. Set the idx on each of the toasts
-   * 2. If is active, make all the toasts active by default
-   */
-  setActiveToasts() {
-    this.toasts.forEach((toast, index) => {
-      /* 1 */
-      toast.idx = index;
-      /* 2 */
-      if (this.isActive) {
-        toast.isActive = true;
-      }
+    this.addEventListener('onToastClose', () => {
+      this.handleOnToastClose();
     });
   }
 
   /**
    * Handle a toast closed event
-   * 1. Create a new array without the dismissed toast
-   * 2. Run setActiveToasts to update the props
-   * 3. If there are no open toasts, then hide the toast group
+   * 1. Find the number of currently active toasts in the group
+   * 2. If there are no active toasts, close the toast group
    */
-  handleOnToastClose(e: CustomEvent) {
-    const closedToastIdx = e.detail.toastIdx;
+  handleOnToastClose() {
     /* 1 */
-    const updatedToasts = this.toasts.filter((_, index) => index !== closedToastIdx);
-    this.toasts = updatedToasts;
+    const numActiveToasts = this.toastList.filter((toast) => toast.isActive).length; 
     /* 2 */
-    this.setActiveToasts();
-    /* 3 */
-    if (this.toasts.length === 0) {
-      this.isActive = false;
+    if (numActiveToasts === 0) {
+      this.close();
     }
   }
 
@@ -190,37 +103,6 @@ export class SLToastGroup extends SLElement {
     });
   }
 
-  /**
-   * Mouseover event
-   * 1. On mouseover of the toast group, clear the timer to pause auto close
-   */
-  handleMouseOver() {
-    if (this.autoClose) {
-      clearTimeout(this._timer); /* 1 */
-    }
-  }
-
-  /**
-   * Mouseleave event
-   * 1. Resume auto close with a new timeout
-   */
-  handleMouseLeave() {
-    this.handleAutoClose(); /* 1 */
-  }
-
-  /**
-   * Auto close
-   * 1. Automatically close the toast group after delay time
-   */
-  handleAutoClose() {
-    if (this.autoClose) {
-      this._timer = setTimeout(() => {
-        this.close();
-        clearTimeout(this._timer);
-      }, this.autoCloseDelay * 1000);
-    }
-  }
-
   render() {
     const componentClassNames = this.componentClassNames('sl-c-toast-group', {
       'sl-c-toast-group--position-top': this.position === 'top',
@@ -229,7 +111,7 @@ export class SLToastGroup extends SLElement {
     });
 
     return html`
-      <div class=${componentClassNames} aria-relevant="additions" role="log" @mouseover=${this.handleMouseOver} @mouseleave=${this.handleMouseLeave}>
+      <div class=${componentClassNames} aria-relevant="additions" role="log">
         <slot></slot>
       </div>
     ` as TemplateResult<1>;

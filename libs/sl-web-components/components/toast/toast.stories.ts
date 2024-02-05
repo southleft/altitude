@@ -1,8 +1,9 @@
-import { expect, userEvent, within } from '@storybook/test';
+import { expect, userEvent, within, waitFor } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
 import '../button/button';
+import '../alert/alert';
 import '../icon/icons/done';
 import './toast';
 
@@ -14,16 +15,13 @@ export default {
     status: { type: 'beta' },
     actions: {
       handles: ['onToastClose']
-    },
-    controls: {
-      exclude: ['idx']
     }
   },
   decorators: [ withActions ],
   argTypes: {
     variant: {
       control: { type: 'radio' },
-      options: ['default', 'success', 'warning', 'danger'],
+      options: ['default', 'info', 'success', 'warning', 'danger'],
     },
     description: {
       control: 'text'
@@ -32,6 +30,15 @@ export default {
       control: 'boolean',
     },
     isDismissible: {
+      control: 'boolean',
+    },
+    autoClose: {
+      control: 'boolean'
+    },
+    autoCloseDelay: {
+      control: 'number'
+    },
+    showProgress: {
       control: 'boolean',
     },
   },
@@ -45,6 +52,11 @@ const Template = (args) => html`<sl-toast data-testid="toast" ${spread(args)}>To
 
 export const Default = Template.bind({});
 Default.args = {};
+
+export const Info = Template.bind({});
+Info.args = {
+  variant: 'info'
+};
 
 export const Success = Template.bind({});
 Success.args = {
@@ -82,6 +94,19 @@ WithDismissible.args = {
   isDismissible: true,
 };
 
+export const WithAutoClose = Default.bind({});
+WithAutoClose.args = {
+  autoClose: true
+};
+
+export const WithAutoCloseWithProgress = TemplateWithActions.bind({});
+WithAutoCloseWithProgress.args = {
+  ...WithAutoClose.args,
+  autoClose: true,
+  showProgress: true,
+  variant: 'info'
+};
+
 /*------------------------------------*\
   #STORYBOOK TESTS
 \*------------------------------------*/
@@ -106,4 +131,18 @@ WithDismissible.play = async ({ canvasElement }) => {
   // Remove focus from button and reset the toast
   toastCloseButton.blur();
   toast.isActive = true;
+};
+
+WithAutoClose.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  const toast = canvas.queryByTestId('toast') as any;
+  const toastEl = toast.shadowRoot.querySelector('.sl-c-toast');
+  expect(toast.isActive).toBe(true);
+  await userEvent.hover(toastEl);
+  await userEvent.unhover(toastEl);
+
+  // Wait for a duration that should be longer than the expected autoClose delay
+  await waitFor(() => expect(toast.isActive).toBe(false), {
+    timeout: 6000, // A long timeout to make sure it doesn't close
+  });
 };
