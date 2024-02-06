@@ -242,7 +242,7 @@ export class SLDropdown extends SLElement {
    * 5. If the panel is active and we've clicked outside of the panel then it should
    * be closed.
    */
-  handleOnClickOutside(event: MouseEvent) {
+  handleOnClickOutside(e: MouseEvent) {
     /* 2 */
     if (!this.isActiveDropdown) {
       return;
@@ -252,7 +252,7 @@ export class SLDropdown extends SLElement {
       throw Error('Could not determine panel context during click handler');
     }
     /* 4 */
-    const didClickInside = event.composedPath().includes(this.shadowRoot.host);
+    const didClickInside = e.composedPath().includes(this.shadowRoot.host);
     /* 5 */
     if (this.isActiveDropdown && !didClickInside) {
       this.toggleActive();

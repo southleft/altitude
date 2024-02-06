@@ -188,10 +188,10 @@ export class SLDrawer extends SLElement {
    * 3. Check if the click occurred outside the active drawer
    * 4. Close the drawer if the click occurred outside it
    */
-  handleOnClickOutside(event: MouseEvent) {
+  handleOnClickOutside(e: MouseEvent) {
     /* 1 */
     if (this.isActive) {
-      const didClickInside = event.composedPath().includes(this.shadowRoot.host); /* 2 */
+      const didClickInside = e.composedPath().includes(this.shadowRoot.host); /* 2 */
       /* 3 */
       if (!didClickInside) {
         /* 4 */

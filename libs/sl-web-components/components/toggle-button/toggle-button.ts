@@ -10,7 +10,7 @@ import styles from './toggle-button.scss';
 /**
  * Component: sl-toggle-button
  *
- * Toggle Button can be used to group related options. 
+ * Toggle Button can be used to group related options.
  * - **slot**: The content to display in the toggle button
  */
 export class SLToggleButton extends SLElement {
@@ -252,10 +252,10 @@ export class SLToggleButton extends SLElement {
    * 3. Check if the click occurred outside the selected toggle button
    * 4. Close the toggle button if the click occurred outside it
    */
-  handleOnClickOutside(event: MouseEvent) {
+  handleOnClickOutside(e: MouseEvent) {
     /* 1 */
     if (this.isSelected) {
-      const didClickInside = event.composedPath().includes(this.shadowRoot.host); /* 2 */
+      const didClickInside = e.composedPath().includes(this.shadowRoot.host); /* 2 */
       /* 3 */
       if (!didClickInside) {
         /* 4 */

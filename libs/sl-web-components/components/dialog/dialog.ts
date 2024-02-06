@@ -218,10 +218,10 @@ export class SLDialog extends SLElement {
    * 3. Check if the click occurred outside the active dialog
    * 4. Close the dialog if the click occurred outside it
    */
-  handleOnClickOutside(event: MouseEvent) {
+  handleOnClickOutside(e: MouseEvent) {
     /* 1 */
     if (this.isActive && !this.disableClickOutside) {
-      const didClickInside = event.composedPath().includes(this.dialogContainer); /* 2 */
+      const didClickInside = e.composedPath().includes(this.dialogContainer); /* 2 */
       /* 3 */
       if (!didClickInside) {
         /* 4 */
