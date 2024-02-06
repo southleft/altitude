@@ -14,7 +14,7 @@ Web Components is the UI library driving all digital products. This document out
 - **Minimize Breaking Changes**: Strive to minimize breaking changes to maintain compatibility.
 - **Predictable Release Cadence**: Follow a sensible and predictable release schedule.
 
-### Release strategy
+## Release strategy
 
 Our approach to releasing new versions of Web Components follows a structured schedule to aid teams in planning and coordinating updates effectively.
 
@@ -23,18 +23,6 @@ During these releases, teams can anticipate a range of new features and fixes de
 In pre-v1.0 releases, there might be adjustments in architecture or naming as the library evolves. If any breaking changes occur before reaching v1.0, our team prioritizes assisting consuming teams in addressing these changes.
 
 Once the component library stabilizes at v1.0, teams can expect Web Components to provide a stable foundation for their projects. We continue to introduce backwards-compatible features and fixes. Any major releases that introduce breaking changes (refer to the "Major changes" section above) are planned in coordination with product teams and their roadmaps.
-
-### Release process
-
-1. Create a release branch, e.g., `release-v0.x.x`.
-2. Execute `yarn update-version`. This updates the version in the `package.json` file.
-3. Manually update the version number and date in the `CHANGELOG.md` file.
-4. Commit the changes: `git commit -am "Updating release version and changelog."`
-5. Push the changes to the remote repository: `git push origin main`
-6. Tag the release: `git tag -a v0.x.x -m "Release v0.x.x"`
-7. Push the tag to the remote: `git push origin -f --tags`
-9. Make a pull request to merge the changes into the `main` branch.
-9. Confirm the new tag in the Github repository's [tags](https://github.com/southleft/altitude/tags) section.
 
 ## Versioning
 
@@ -71,3 +59,15 @@ Patch versions address defects and optimize existing code by:
 - Updating component documentation.
 - Refactoring code without affecting display or functionality.
 - Adding or updating tests.
+
+## Release process
+
+1. Create a release branch, e.g., `release-v0.x.x`.
+2. Execute `yarn update-version`. This updates the version in the `package.json` file.
+3. Manually update the version number and date in the `CHANGELOG.md` file.
+4. Commit the changes: `git commit -am "Updating release version and changelog."`
+5. Push the changes to the remote repository: `git push origin main`
+6. Tag the release: `git tag -a v0.x.x -m "Release v0.x.x"`
+7. Push the tag to the remote: `git push origin -f --tags`
+9. Make a pull request to merge the changes into the `main` branch.
+9. Confirm the new tag in the Github repository's [tags](https://github.com/southleft/altitude/tags) section.
