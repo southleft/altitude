@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLToastGroup, SLToast, SLButton, SLIconDone, SLProgress } from '../..';
+import { SLToastGroup, SLToast, SLButton, SLIconDone } from '../..';
 
 export default {
   title: 'Molecules/Toast Group',
@@ -8,10 +8,10 @@ export default {
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['onToastGroupOpen', 'onToastGroupClose', 'onToastGroupPrevious', 'onToastGroupNext', 'onToastClose']
+      handles: ['onToastGroupOpen', 'onToastGroupClose', 'onToastClose']
     },
     controls: {
-      exclude: ['activeToastIdx', 'prevActiveIdx', 'toasts', 'toastsVisible', 'controlPrev', 'controlNext']
+      exclude: ['toastList']
     }
   },
   argTypes: {
@@ -21,40 +21,28 @@ export default {
     },
     isActive: {
       control: 'boolean'
-    },
-    isGroup: {
-      control: 'boolean'
-    },
-    hasControls: {
-      control: 'boolean'
-    },
-    autoClose: {
-      control: 'boolean'
-    },
-    autoCloseDelay: {
-      control: 'number'
     }
   },
   args: {
     isActive: true,
     children: (
       <>
-        <SLToast description="This is a toast">
+        <SLToast description="This is a toast" isActive="true">
           Toast title A
           <SLButton slot="actions" variant="secondary"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
           <SLButton slot="actions"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
         </SLToast>
-        <SLToast variant="success" description="This is a success toast">
+        <SLToast description="This is a toast" isActive="true">
           Toast title B
           <SLButton slot="actions" variant="secondary"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
           <SLButton slot="actions"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
         </SLToast>
-        <SLToast variant="warning" description="This is a warning toast">
+        <SLToast description="This is a toast" isActive="true">
           Toast title C
           <SLButton slot="actions" variant="secondary"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
           <SLButton slot="actions"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
         </SLToast>
-        <SLToast variant="danger" description="This is a danger toast">
+        <SLToast description="This is a toast" isActive="true">
           Toast title D
           <SLButton slot="actions" variant="secondary"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
           <SLButton slot="actions"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
@@ -64,17 +52,22 @@ export default {
   }
 };
 
-function openToastGroup() {
+let toastCount = 0;
+function addToast(e: MouseEvent) { 
   const toastGroup = document.querySelector<any>('.c-toast-group').querySelector('*');
-  if (toastGroup) {
+  const toastToAdd = document.querySelector<any>(`#toast-0${toastCount + 1}`);
+
+  if (toastGroup && !toastGroup.isActive) {
     toastGroup.open();
   }
-}
 
-function closeToastGroup() {
-  const toastGroup = document.querySelector<any>('.c-toast-group').querySelector('*');
-  if (toastGroup) {
-    toastGroup.close();
+  if (toastToAdd) {
+    toastToAdd.open();
+    toastCount++;
+  }
+  if (toastCount === 4) {
+    e.target.isDisabled = true;
+    toastCount = 0;
   }
 }
 
@@ -84,16 +77,17 @@ export const WithDismissible: StoryObj<typeof SLToastGroup> = {
   args: {
     children: (
       <>
-        <SLToast isDismissible={true} description="This is a toast">
+        <SLToast isDismissible={true} isActive="true" isDismissible="true"
+         description="This is a toast" id="toast-01">
           Toast title A
         </SLToast>
-        <SLToast isDismissible={true} variant="success" description="This is a success toast">
+        <SLToast isDismissible={true} isActive="true" isDismissible="true" description="This is a toast" id="toast-02">
           Toast title B
         </SLToast>
-        <SLToast isDismissible={true} variant="warning" description="This is a warning toast">
+        <SLToast isDismissible={true} isActive="true" isDismissible="true" description="This is a toast" id="toast-03">
           Toast title C
         </SLToast>
-        <SLToast isDismissible={true} variant="danger" description="This is a danger toast">
+        <SLToast isDismissible={true} isActive="true" isDismissible="true" description="This is a toast" id="toast-04">
           Toast title D
         </SLToast>
       </>
@@ -102,100 +96,65 @@ export const WithDismissible: StoryObj<typeof SLToastGroup> = {
 };
 
 export const WithAutoClose: StoryObj<typeof SLToastGroup> = { args: {
-  autoClose: true,
+  children: (
+    <>
+      <SLToast isActive="true" autoClose="true"
+       description="This toast will auto close in 3 seconds">
+        Toast title A
+      </SLToast>
+      <SLToast isActive="true" autoClose="true" autoCloseDelay="4" description="This toast will auto close in 4 seconds">
+        Toast title B
+      </SLToast>
+      <SLToast isActive="true" autoClose="true" autoCloseDelay="5" description="This toast will auto close in 5 seconds">
+        Toast title C
+      </SLToast>
+      <SLToast isActive="true" autoClose="true" autoCloseDelay="6" description="This toast will auto close in 6 seconds">
+        Toast title D
+      </SLToast>
+    </>
+  )
 } };
-
-export const WithAutoCloseWithProgress: StoryObj<typeof SLToastGroup> = {
-  args: {
-    autoClose: true,
-    autoCloseDelay: '4',
-    children: (
-      <>
-        <SLToast description="This is a toast">
-          Toast title A
-          <SLButton slot="actions" variant="secondary"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
-          <SLButton slot="actions"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
-        </SLToast>
-        <SLProgress currentProgress={100} endProgress={0} duration={4}></SLProgress>
-      </>
-    ),
-  }
-};
 
 export const WithPositionTop: StoryObj<typeof SLToastGroup> = {
   args: {
     position: 'top',
-    ...WithDismissible.args,
-  }
-};
-
-export const WithPositionBottom: StoryObj<typeof SLToastGroup> = {
-  args: {
-    position: 'bottom',
-    ...WithDismissible.args,
-  }
-};
-
-export const WithGroup: StoryObj<typeof SLToastGroup> = {
-  args: {
-    isGroup: true
-  }
-};
-
-export const WithGroupPositionTop: StoryObj<typeof SLToastGroup> = {
-  args: {
-    isGroup: true,
-    position: 'top',
-    ...WithDismissible.args,
-  }
-};
-
-export const WithGroupPositionBottom: StoryObj<typeof SLToastGroup> = {
-  args: {
-    isGroup: true,
-    position: 'bottom',
-    ...WithDismissible.args,
-  }
-};
-
-export const WithGroupControls: StoryObj<typeof SLToastGroup> = {
-  args: {
-    isGroup: true,
-    hasControls: true
-  }
-};
-
-export const WithGroupControlsPositionTop: StoryObj<typeof SLToastGroup> = {
-  args: {
-    isGroup: true,
-    hasControls: true,
-    position: 'top',
-    ...WithDismissible.args,
-  }
-};
-
-export const WithGroupControlsPositionBottom: StoryObj<typeof SLToastGroup> = {
-  args: {
-    isGroup: true,
-    hasControls: true,
-    position: 'bottom',
-    ...WithDismissible.args,
-  }
-};
-
-export const WithTriggers: StoryObj<typeof SLToastGroup> = {
-  args: {
     isActive: false,
-    isGroup: true,
-    hasControls: true
+    children: (
+      <>
+        <SLToast description="This is a toast" isDismissible="true" id="toast-01">
+          Toast title A
+        </SLToast>
+        <SLToast description="This is a toast" isDismissible="true" id="toast-02">
+          Toast title B
+        </SLToast>
+        <SLToast description="This is a toast" isDismissible="true" id="toast-03">
+          Toast title C
+        </SLToast>
+        <SLToast description="This is a toast" isDismissible="true" id="toast-04">
+          Toast title D
+        </SLToast>
+      </>
+    )
   },
   decorators: [
     (Story) => (
       <div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <SLButton onClick={openToastGroup}>Open Toast Group</SLButton>
-          <SLButton onClick={closeToastGroup} variant="secondary">Close Toast Group</SLButton>
-        </div>
+        <SLButton onClick={addToast} style={{position: 'absolute', bottom: '16px', right: '16px'}}>Add Toast</SLButton>
+        <div className="c-toast-group">{Story()}</div>
+      </div>
+    )
+  ]
+};
+
+export const WithPositionBottom: StoryObj<typeof SLToastGroup> = {
+  args: {
+    ...WithPositionTop.args,
+    position: 'bottom'
+  },
+  decorators: [
+    (Story) => (
+      <div>
+        <SLButton onClick={addToast}>Add Toast</SLButton>
         <div className="c-toast-group">{Story()}</div>
       </div>
     )
