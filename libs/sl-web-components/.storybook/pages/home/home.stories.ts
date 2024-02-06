@@ -5,7 +5,10 @@ import './home';
 export default {
   title: 'Pages/Home',
   component: 'sl-home',
-  parameters: { status: { type: 'beta' } },
+  parameters: {
+    status: { type: 'beta' },
+    layout: 'fullscreen'
+  },
   tags: [ 'autodocs' ]
 };
 

@@ -6,7 +6,10 @@ import '../../components/f-po/f-po';
 export default {
   title: 'Templates/Basic Page',
   component: 'sl-basic-page',
-  parameters: { status: { type: 'beta' } },
+  parameters: {
+    status: { type: 'beta' },
+    layout: 'fullscreen'
+  },
   tags: [ 'autodocs' ]
 };
 

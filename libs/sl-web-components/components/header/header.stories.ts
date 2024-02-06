@@ -29,7 +29,7 @@ const TemplateWithContent = (args) => html`
 <sl-header ${spread(args)}>
   <img slot="before" src="images/logo.svg" alt="logo" style=${`max-width: 200px;`}/>
   ${SearchForm.Default({})}
-  <div slot="after">${Avatar.WithImage({hasBadge: true, badgeVariant: 'success'})}</div>
+  <div slot="after">${Avatar.HasBadge({hasBadge: true, badgeVariant: 'success'})}</div>
   <div slot="after">${Drawer.WithBackdrop({hasBackdrop: true})}</div>
 </sl-header>`;
 
