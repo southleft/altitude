@@ -3,11 +3,11 @@ import { SLFocusTrap, SLButton, SLButtonGroup, SLDialog, SLTab, SLTabs, SLTabPan
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
-  title: 'Atoms/Focus-Trap',
+  title: 'Atoms/Focus Trap',
   component: SLDialog,
   parameters: { status: { type: 'beta' } },
   args: {
-    isActive: true, 
+    isActive: true,
     disableClickOutside: true,
     heading: 'Dialog with Focus Trap',
     children: (
