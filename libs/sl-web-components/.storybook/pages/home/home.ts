@@ -3,6 +3,7 @@ import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import styles from './home.scss';
 import * as Breadcrumbs from '../../../components/breadcrumbs/breadcrumbs.stories.ts';
+import * as Pagination from '../../../components/pagination/pagination.stories.ts';
 import * as Card from '../../../components/card/card.stories.ts';
 import '../../templates/basic-page/basic-page';
 import '../../../components/layout-section/layout-section';
@@ -58,7 +59,22 @@ export class SLHome extends LitElement {
             <sl-grid-item>
               ${Card.WithContent({})}
             </sl-grid-item>
+            <sl-grid-item>
+              ${Card.WithContent({})}
+            </sl-grid-item>
+            <sl-grid-item>
+              ${Card.WithContent({})}
+            </sl-grid-item>
+            <sl-grid-item>
+              ${Card.WithContent({})}
+            </sl-grid-item>
+            <sl-grid-item>
+              ${Card.WithContent({})}
+            </sl-grid-item>
           </sl-grid>
+        </sl-layout-section>
+        <sl-layout-section class="sl-l-home__breadcrumbs">
+          ${Pagination.Default({totalRecords: '200', pageSize: '20'})}
         </sl-layout-section>
       </sl-basic-page>
     `;

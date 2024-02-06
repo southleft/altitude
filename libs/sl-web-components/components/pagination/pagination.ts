@@ -449,7 +449,7 @@ export class SLPagination extends SLElement {
                       ${
                         isNaN(item as any) //if item is in "..." pattern
                           ? html`
-                            <${this.contextualMenuEl} isDynamic=${true} hasScroll=${this.pageItemsRange.length >= 4}>
+                            <${this.contextualMenuEl} position="top-center" hasScroll=${this.pageItemsRange.length >= 4}>
                               <div role="button" aria-label="More items" slot="trigger">
                                 <${this.iconDotsHorizontalEl} slot="after"></${this.iconDotsHorizontalEl}>
                               </div>

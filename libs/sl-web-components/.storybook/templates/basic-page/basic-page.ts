@@ -6,13 +6,9 @@ import * as Header from '../../../components/header/header.stories.ts';
 import '../../../components/layout-container/layout-container';
 import '../../../components/layout/layout';
 import '../../../components/layout-section/layout-section';
-import '../../../components/grid/grid';
-import '../../../components/grid-item/grid-item';
 import '../../../components/toggle-button/toggle-button';
 import '../../../components/icon/icons/help';
-import '../../../components/popover/popover';
-import '../../../components/drawer/drawer';
-import '../../components/f-po/f-po';
+import '../../../components/popover/popover'
 
 /**
  * Template: sl-l-basic-page
@@ -34,13 +30,13 @@ export class SLBasicPage extends LitElement {
 
     return html`
       <sl-layout-container class=${componentClassNames}>
-        <sl-toggle-button class="l-basic-page__toggle-button" variant="background">
+        <sl-toggle-button class="sl-l-basic-page__toggle-button" variant="background">
           <sl-popover position="top-left">
             <sl-icon-help slot="trigger" size="lg"></sl-icon-help>
             <f-po>Content</f-po>
           </sl-popover>
         </sl-toggle-button>
-        <sl-layout>
+        <sl-layout gap="lg">
           <sl-layout-section>
             ${Header.WithContent({})}
           </sl-layout-section>

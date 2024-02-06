@@ -10,7 +10,7 @@ export default {
   tags: [ 'autodocs' ]
 };
 
-const Template = (args) => html`<sl-basic-page ${spread(args)} data-testid="basic-page"><f-po>Basic Page Content</f-po></sl-basic-page>`;
+const Template = (args) => html`<sl-basic-page ${spread(args)} data-testid="basic-page"><f-po style=${`height: 80vh;`}>Basic Page Content</f-po></sl-basic-page>`;
 
 export const Default = Template.bind({});
 Default.args = {};
