@@ -62,8 +62,8 @@
   height: calc(var(--sl-switch-height) - var(--sl-theme-space-xxs));
   border-radius: var(--sl-switch-height);
   background-color: var(--sl-theme-color-content-default-weak);
-  inset-block-start: size(0.25);
-  inset-inline-start: size(0.25);
+  inset-block-start: var(--sl-theme-space-xxxs);
+  inset-inline-start: var(--sl-theme-space-xxxs);
   box-shadow: var(--sl-theme-box-shadow-xs);
   transition: all var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
 
@@ -72,7 +72,7 @@
    */
   .sl-is-checked & {
     background: var(--sl-theme-color-content-default);
-    inset-inline-start: calc(100% - var(--sl-switch-height) + size(0.25));
+    inset-inline-start: calc(100% - var(--sl-switch-height) + var(--sl-theme-space-xxxs));
   }
 }
 
