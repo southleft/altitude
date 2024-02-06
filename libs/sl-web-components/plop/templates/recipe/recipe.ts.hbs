@@ -1,37 +1,40 @@
 import { LitElement, html, unsafeCSS } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import styles from './{{dashCase name}}.scss';
 
 /**
- * Recipe: c-{{dashCase name}}
- * @slot - The components content
+ * Recipe: sl-c-{{dashCase name}}
+ * @slot - The recipes content
  */
-@customElement('{{dashCase name}}')
-export class {{pascalCase name}} extends LitElement {
+export class SL{{pascalCase name}} extends LitElement {
   static get styles() {
     return unsafeCSS(styles.toString());
   }
 
-  /**
-   * Append to the class name. Used for passing in utility classes
-   */
   @property()
   accessor styleModifier: string;
 
   render() {
-    const componentClassName = classMap({'c-{{dashCase name}}': true, [this.styleModifier]: !!this.styleModifier });
+    const componentClassNames = classMap({
+      'sl-c-{{dashCase name}}': true,
+      [this.styleModifier]: !!this.styleModifier
+    });
 
     return html`
-      <div class="${componentClassName}">
+      <div class=${componentClassNames}>
         <slot></slot>
       </div>
     `;
   }
 }
 
+if (customElements.get('sl-{{dashCase name}}') === undefined) {
+  customElements.define('sl-{{dashCase name}}', SL{{pascalCase name}});
+}
+
 declare global {
   interface HTMLElementTagNameMap {
-    '{{dashCase name}}': {{pascalCase name}};
+    'sl-{{dashCase name}}': SL{{pascalCase name}};
   }
 }

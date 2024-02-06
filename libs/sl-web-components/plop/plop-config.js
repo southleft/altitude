@@ -58,6 +58,34 @@ module.exports = (plop) => {
     ]
   });
 
+  plop.setGenerator('template', {
+    description: 'Create a template',
+    prompts: [
+      {
+        type: 'input',
+        name: 'name',
+        message: 'What is the template name? Note: Name must be in dash case. (e.g. template-name)'
+      }
+    ],
+    actions: [
+      {
+        type: 'add',
+        path: './../.storybook/templates/{{dashCase name}}/{{dashCase name}}.ts',
+        templateFile: 'templates/template/template.ts.hbs'
+      },
+      {
+        type: 'add',
+        path: './../.storybook/templates/{{dashCase name}}/{{dashCase name}}.stories.ts',
+        templateFile: 'templates/template/template.stories.ts.hbs'
+      },
+      {
+        type: 'add',
+        path: './../.storybook/templates/{{dashCase name}}/{{dashCase name}}.scss',
+        templateFile: 'templates/template/template.scss.hbs'
+      }
+    ]
+  });
+
   plop.setGenerator('page', {
     description: 'Create a page',
     prompts: [
@@ -77,6 +105,11 @@ module.exports = (plop) => {
         type: 'add',
         path: './../.storybook/pages/{{dashCase name}}/{{dashCase name}}.stories.ts',
         templateFile: 'templates/page/page.stories.ts.hbs'
+      },
+      {
+        type: 'add',
+        path: './../.storybook/pages/{{dashCase name}}/{{dashCase name}}.scss',
+        templateFile: 'templates/page/page.scss.hbs'
       }
     ]
   });

@@ -19,7 +19,7 @@
  * - The background of the progress bar or circle
  */
 .sl-c-progress__track {
-  height: size(0.5);
+  height: var(--sl-theme-space-xxs);
   width: 100%;
   background: var(--sl-theme-color-background-default-strong);
   position: relative;
@@ -47,7 +47,7 @@
   justify-content: center;
   background: none;
   border-radius: var(--sl-theme-border-radius-round);
-  border: size(0.25) solid var(--sl-theme-color-content-default);
+  border: var(--sl-theme-space-xxxs) solid var(--sl-theme-color-content-default);
 
   /**
    * Medium circular progress track
@@ -55,7 +55,7 @@
   .sl-is-circle-md & {
     height: size(3);
     width: size(3);
-    border-width: size(0.4);
+    border-width: var(--sl-theme-space-xxs);
   }
 
   /**
@@ -116,7 +116,7 @@
    * Adjustment for small circular indicator when there is a visible label
    */
   .sl-has-label:not(.sl-is-circle-md):not(.sl-is-circle-lg):not(.sl-is-circle-xl) & {
-    inset-block-start: size(0.5);
+    inset-block-start: var(--sl-theme-space-xxs);
   }
 }
 

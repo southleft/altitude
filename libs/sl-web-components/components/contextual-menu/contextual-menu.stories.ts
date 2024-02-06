@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
 import '../button/button';
-import '../icon/icons/list';
+import '../icon/icons/dots-vertical';
 import '../list-item/list-item';
 import '../list/list';
 import './contextual-menu';
@@ -23,8 +23,8 @@ export default {
 
 const Template = (args) => html`
   <sl-contextual-menu ${spread(args)}>
-    <sl-button slot="trigger" ?hideText=${true}>
-      Menu<sl-icon-list slot="after"></sl-icon-list>
+    <sl-button slot="trigger" ?hideText=${true} variant="tertiary">
+      Menu<sl-icon-dots-vertical slot="after"></sl-icon-dots-vertical>
     </sl-button>
     <sl-list>
       <sl-list-item>List Item 1</sl-list-item>

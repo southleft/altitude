@@ -4,37 +4,25 @@ import { Meta } from '@storybook/blocks';
 
 # Code Guidelines
 
-Web Components is the web component implementation of SL, providing presentational UI components for web applications.
-
-These coding principles and conventions are followed for HTML, CSS, and JavaScript:
-
-- [Web Components principles](#principles)
 - [HTML](#html)
-  - [HTML principles and conventions](#html-principles)
 - [CSS](#css)
-  - [CSS design principles](#css-design-principles)
-  - [CSS conventions](#css-conventions)
-  - [CSS custom properties](#css-custom-properties)
+  - [CSS Conventions](#css-conventions)
+  - [CSS Custom Properties](#css-custom-properties)
 - [JavaScript](#js)
   - [Component API naming conventions](#api-naming)
-- [Component structure and assets](#component-structure-assets)
-  - [Icons](#icons)
   - [Custom Events](#custom-events)
-  - [Directory Structure](#directory-structure)
-
-## Web Components Principles <a name="principles"></a>
-
-- **A Front-End Source of Truth**: Web Components serve as the UI-specific front-end code source of truth for SL, embodying best practices around accessibility, responsive design, performance, and other front-end practices. Applications can integrate Web Components to deliver high-quality web experiences.
-- **Presentational UI Components Only**: Web Components provide a library of reusable [presentational UI components](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0) consumed by applications. These "dumb" components do not contain application business logic, data models, or rely on specific environments or configurations.
-- **Agnostic**: Web Components are free of any framework, CMS, or implementation-specific conventions, aiming to function in any web-based environment. Framework, CMS, or implementation-specific handling should be managed within the application environment.
-- **Predictable APIs**: Web Components offer consistent, clear [component APIs](#api-naming) to ensure a smooth developer experience.
-- **Composition over Inheritance**: Web Components adhere to the [composition over inheritance](https://en.wikipedia.org/wiki/Composition_over_inheritance) principle, creating clean, extensible components not tied to specific contexts or content.
+- Icons
+  - [Icon Font](/docs/fundamentals-icons-icon-font--docs)
+  - [Icon Svgs](/docs/fundamentals-icons-icon-grid--docs)
+- [Structure](#structure)
+  - [Components](#components)
+  - [Templates](#templates)
+  - [Pages](#pages)
+  - [Recipes](#recipes)
 
 ---
 
 # HTML <a name="html"></a>
-
-## HTML Principles and Conventions <a name="html-principles"></a>
 
 - **Use Semantic Markup**: Utilize markup that describes the data structure behind the information. For example, use `<h1>` for headings, `<p>` for paragraphs, `<ol>` for ordered lists, etc. Minimize the use of generic `<div>` and `<span>` elements.
 - **Clarity over Brevity**: Ensure markup is easily understandable at a glance. Avoid cryptic abbreviations, use proper indentation and spacing, and include clear comments.
@@ -43,16 +31,14 @@ These coding principles and conventions are followed for HTML, CSS, and JavaScri
 
 ---
 
-# CSS
-
-## CSS design principles <a name="css-design-principles"></a>
+# CSS <a name="css"></a>
 
 - **Portable** - The CSS architecture uses CSS classes for styling (versus CSS-in-JS tooling) in order to ensure the CSS is portable across frameworks and web technologies.
 - **Clarity over brevity** CSS class naming conventions are verbose, but they deliver clarity, legibility, and reslience in exchange.
 - **Modular** - Component styles are fully modular in order to keep things tightly scoped and to avoid unintended style bleeding.
 - **Limit chaining and multiple selectors** - Chaining and descendant selectors should be avoided wherever possible in order to keep CSS as DOM-independent and modular as possible.
 
-## CSS conventions <a name="css-conventions"></a>
+## CSS Conventions <a name="css-conventions"></a>
 
 Web Components follows a [BEM](http://getbem.com/introduction/)-like syntax, extending it further to follow more of [BEMIT](http://csswizardry.com/2015/08/bemit-taking-the-bem-naming-convention-a-step-further/)-like conventions.
 
@@ -388,7 +374,7 @@ The library adhreres to the following API naming conventions:
 - `variant` should be used for primary _stylistic_ variations of a component, such as (e.g. `variant="primary"` or `variant="success"`).
 - `inverted` should be used consistently for stylistic variations that "invert" the color schemes (e.g. `<sl-heading ?inverted=${true}>`) to work on a darker background. Note: this is different than dark/light mode support, which is handled elsewhere.
 - `size` should be used for adjusting size attributes (e.g. `size="md"` or `size="lg"`). Default to `sm`, `lg`, `xl` with "md" being the undeclared default. Note: use abbreviated t-shirt sizes — `xs`, `sm`, `md`, `lg`, `xl` — for naming versus spelling out "small", "large" and so on. "Medium" (`md`) is the default value and should be omitted from the available options.
-- `spacing` should be used for adjusting spacing between elements (e.g. `spacing="condensed"`).
+- `spacing` should be used for adjusting spacing between elements (e.g. `spacing="lg"`).
 - `behavior` should be used for functional variations of a pattern, such as `<sl-alert behavior="dismissible">`. `behavior` should be used as the default for introducing a functional variant to a component, and should be used for mutually exclusive behaviors.
 - `is[Behavior]` should be used in conjunction with `behavior` to add additional behavioral variants to a component (e.g. `<sl-alert behavior="dismissible" ?isDraggable=${true}" ?isFadeable="${true}">`). `is[Behavior]` should be the default convention, but sometimes deviating from the `is` language is necessary (for instance, `<sl-accordion allowMultipleOpen="true">`). Whatever the language, the name should be clear to the user whether they're toggling something on or off.
 - `align` should be used for aligning content, and should include `left`, `center`, `right` if needed.
@@ -536,22 +522,6 @@ This commenting format allows slot documentation to appear alongside the prop ta
   - `xl` = Extra large
   - `xxl` = Extra, extra large
 
-# Component structure and assets <a name="component-structure-assets"></a>
-
-## Component Rules and Considerations
-
-### Exactly one component per directory and per folder
-
-Components in this library exist in a flat structure so each component directory needs to contain exactly one component file. Certain components may require several components to properly function (for instance, a `table` may consist of `table-row`, `table-cell`, and `table-header` subcomponents), and these components should live as siblings in the `components/` directory.
-
-## Icons <a name="icons"></a>
-
-Source SVG icons live in the `icons` directory. A `build:icons` script is used to create the directories of icon components in both Web Components and React. These directories contain all individual SVG icon components to be used by the library.
-
-Individaul SVG icon components called `<sl-icon-[icon-name]>` are used in this library (e.g. `<sl-icon-email"></sl-icon-email>`). A reference of all available icons for use can be found on Storybook under "Icon Grid".
-
-To add an icon, add an SVG to the `icons` directory and ensure the SVG code contains no hard-coded `fill` attributes. This allows the icon fill to be controlled dynamically via CSS.
-
 ## Custom Events <a name="custom-events"></a>
 
 Firing `CustomEvent`s in Lit are an important way for framework-specific wrappers and applications to latch onto and change certain reactive properties within the component. All Web Components use the `SLElement.ts` base JS class which has a `dispatch` event built into it to create a consistent way of authoring event emitters. This base element allows users to add `this.dispatch` to a component code method:
@@ -589,33 +559,16 @@ export default {
 
 You can also trigger these by adding child actions to the parent stories file's actions (e.g. a `radio-field-item` custom event within a `radio-field` story's actions). These custom events should be added to React's stories' actions as well. For more information on how custom event emission works, go to [Lit's Documentation on custom events](https://lit.dev/docs/v1/components/events/#fire-event).
 
-## Directory Structure <a name="directory-structure"></a>
+# Structure <a name="structure"></a>
 
-### Components
-
-The design system's component directory (inside `components`) contains all of the design system's components. The structure is as follows:
-
-```
-|--component-name
-|----test/
-|------component-name.test.ts
-|----component-name.scss
-|----component-name.stories.ts
-|----component-name.ts
-```
-
-- `test/component-name.test.ts` contains the unit tests for the component
-- `component-name.scss`contains the styles for the component. All components must include a `.scss` file with the exception of [compound components](#compound-components)
-- `component-name.stories.ts` contains all the Storybook [stories](https://storybook.js.org/basics/writing-stories/) for the component. All components must include a `.stories.ts` file with the exception of [compound components](#compound-components)
-- `component-name.ts` contains the TypeScript source code for the component
-
-### Folder Structure <a name="directory"></a>
+## Storybook Organization
 
 Web Components uses the [atomic design methodology](https://atomicdesign.bradfrost.com/chapter-2/#the-atomic-design-methodology) to organize components into [Atoms](http://atomicdesign.bradfrost.com/chapter-2/#atoms), [Molecules](http://atomicdesign.bradfrost.com/chapter-2/#molecules), and [Organisms](http://atomicdesign.bradfrost.com/chapter-2/#organisms). Therefore the top-level navigation categories for Storybook are:
 
 - Atoms
 - Molecules
 - Organisms
+- Templates
 - Pages
 - Recipes
 
@@ -623,75 +576,147 @@ The component stucture is as follows:
 
 ```
 Atoms
---Component Name
-----Component Stories
+├── Component Name
+│   └── Component Stories
 Molecules
---Component Name
-----Component Stories
+├── Component Name
+│   └── Component Stories
 Organisms
---Component Name
-----Component Stories
+├── Component Name
+│   └── Component Stories
+Templates
+├── Template Name
+│   └── Template Stories
 Pages
---Page Name
-----Default
-----[Other Variations]
+├── Page Name
+│   └── Page Stories
 Recipes
---Recipe Name
-----Recipe Stories
+├── Recipe Name
+│   └── Recipe Stories
 ```
 
 **Atoms**, **Molecules**, and **Organisms** all follow a general pattern of:
 
 ```
---Individual Component Name
-----Individual Component Stories
+Individual Component Name
+├── Individual Component Stories
 ```
 
 For instance, `Atoms/Button` would look something like:
 
 ```
 Atoms
---Button
-----Default
-----Primary
-----Secondary
-----[Other Variations]
+├── Button
+│   └── Default
+│   └── Primary
+│   └── Secondary
+│   └── [Other Variations]
 ```
 
-### Working with pages
+## Components <a name="components"></a>
 
-Pages live in the `.storybook` directory of the project. These do not live in the root of the package since they are not bundled up and shipped with the design system components and assets. These take on the same structure as the components above:
+- Exactly one component per directory and per folder.
+- Components in this library exist in a flat structure, so each component directory needs to contain exactly one component file. Certain components may require several subcomponents to properly function (for instance, a `table` may consist of `table-row`, `table-cell`, and `table-header` subcomponents), and these components should live as siblings in the `components/` directory.
+
+The design system's component directory (inside `components/`) contains all of the design system's components. The structure is as follows:
 
 ```
-.storybook
---pages
-----page-name
-------page-name.ts
-------page-name.stories.ts
+components/
+├── component-name/
+│   └── test/
+│       └── component-name.test.ts
+│   └── component-name.scss
+│   └── component-name.stories.ts
+│   └── component-name.ts
+```
+
+- `test/component-name.test.ts` contains the unit tests for the component
+- `component-name.scss`contains the styles for the component. All components must include a `.scss` file with the exception of [compound components](#compound-components)
+- `component-name.stories.ts` contains all the Storybook [stories](https://storybook.js.org/basics/writing-stories/) for the component. All components must include a `.stories.ts` file with the exception of [compound components](#compound-components)
+- `component-name.ts` contains the TypeScript source code for the component
+
+### Creating a component
+
+1. Run `plop component` in the command line.
+2. Provide a name when asked "What is the component name?"
+3. Plop will generate a component and accompanying stories file at `./components/[your-component-name]/[your-component-name].ts`
+4. Begin editing the component, importing any necessary components and other components.
+5. Create relevant stories for all component variants
+
+## Templates <a name="templates"></a>
+
+Templates serve as high-level organizational structures that arrange components within a defined layout, effectively communicating the design's underlying content structure. Building upon our previous example, we can seamlessly integrate the header organism into a homepage template, showcasing its versatility and adaptability across different contexts.
+
+```
+.storybook/
+├── templates/
+│   └── template-name
+│       └── template-name.scss
+│       └── template-name.ts
+│       └── template-name.stories.ts
+```
+
+- `template-name.ts` contains the HTML and components with mock data applied to render the template
+- `template-name.stories.ts` contains all the [stories](https://storybook.js.org/basics/writing-stories/) for the template.
+
+### Creating a template
+
+1. Run `plop template` in the command line.
+2. Provide a name when asked "What is the template name?"
+3. Plop will generate a template and accompanying stories file at `./storybook/templates/[your-template-name]/[your-template-name].ts`
+4. Begin editing the template, importing any necessary components and other templates.
+5. Create relevant stories for all template variants
+
+Templates live in the `.storybook/templates` directory of the project. These do not live in the root of the package since they are not bundled up and shipped with the design system components and assets.
+
+## Pages <a name="pages"></a>
+
+Pages represent concrete manifestations of templates, providing tangible examples of how a user interface appears when populated with genuine, representative content. Expanding upon our previous example, we can populate the homepage template with authentic text, images, and media, vividly demonstrating the design's effectiveness in real-world scenarios.
+
+```
+.storybook/
+├── pages/
+│   └── page-name
+│       └── page-name.scss
+│       └── page-name.ts
+│       └── page-name.stories.ts
 ```
 
 - `page-name.ts` contains the HTML and components with mock data applied to render the page
 - `page-name.stories.ts` contains all the [stories](https://storybook.js.org/basics/writing-stories/) for the page.
 
-**Pages** follows this organizational structure:
+### Creating a page
 
-```
-Pages
---Page Name
-----Default
-----Additional States (as needed)
-```
+1. Run `plop page` in the command line.
+2. Provide a name when asked "What is the page name?"
+3. Plop will generate a page and accompanying stories file at `./storybook/pages/[your-page-name]/[your-page-name].ts`
+4. Begin editing the page, importing any necessary components and other pages.
+5. Create relevant stories for all page variants
 
-### Working with recipes
+Pages live in the `.storybook/pages` directory of the project. These do not live in the root of the package since they are not bundled up and shipped with the design system components and assets.
+
+## Recipes <a name="recipes"></a>
 
 **[Recipes](https://bradfrost.com/blog/post/design-system-components-recipes-and-snowflakes/)** are specific compositions of design system components (for the most part) that are to be consistently used across a product, but aren’t agnostic enough to live in the Web Components core library. Like pages, recipes live in the `.storybook` directory of the project since they are not packaged up with the design system. Recipe components may be revisited and pulled into Web Components at a later date if they are deemed to be reusable enough to move into the design system library.
 
-Recipe components live in `./storybook/recipes` and take the following shape in Storybook:
-
 ```
-Recipes
---Recipe Name
-----Recipe Stories
+.storybook/
+├── recipes/
+│   └── recipe-name
+│       └── recipe-name.scss
+│       └── recipe-name.ts
+│       └── recipe-name.stories.ts
 ```
 
-Recipe components should _not_ include the `.sl-` CSS prefix, since they are not part of the design system (so a recipe could look like `.c-recipe-name`). However, the other design system CSS conventions should be followed in order to make refactoring into the design system as easy as possible.
+- `recipe-name.ts` contains the HTML and components with mock data applied to render the recipe
+- `recipe-name.stories.ts` contains all the [stories](https://storybook.js.org/basics/writing-stories/) for the recipe.
+
+### Creating a recipe
+
+1. Run `plop recipe` in the command line.
+2. Provide a name when asked "What is the recipe name?"
+3. Plop will generate a recipe and accompanying stories file at `./storybook/recipes/[your-recipe-name]/[your-recipe-name].ts`
+4. Begin editing the recipe, importing any necessary components and other recipes.
+5. Create relevant stories for all recipe variants
+
+Recipes live in the `.storybook/recipes` directory of the project. These do not live in the root of the package since they are not bundled up and shipped with the design system components and assets.

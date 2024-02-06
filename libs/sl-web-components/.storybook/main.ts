@@ -6,11 +6,13 @@ const config: StorybookConfig = {
     options: {},
   },
   stories: [
+    '../docs/*.@(js|jsx|ts|tsx|mdx)',
+    '../components/**/**/*.stories.@(js|jsx|ts|tsx|mdx)',
     './components/**/**/*.mdx',
     './components/**/*.stories.@(js|jsx|ts|tsx|mdx)',
-    '../components/**/**/*.stories.@(js|jsx|ts|tsx|mdx)',
-    '../docs/*.@(js|jsx|ts|tsx|mdx)',
-    './recipes/**/*.stories.@(js|jsx|ts|tsx|mdx)'
+    './recipes/**/*.stories.@(js|jsx|ts|tsx|mdx)',
+    './templates/**/*.stories.@(js|jsx|ts|tsx|mdx)',
+    './pages/**/*.stories.@(js|jsx|ts|tsx|mdx)'
   ],
   addons: [
     '@storybook/addon-essentials',

@@ -10,14 +10,14 @@ import '../tab-panel/tab-panel';
 import '../../.storybook/components/f-po/f-po';
 
 export default {
-  title: 'Atoms/Focus-Trap',
+  title: 'Atoms/Focus Trap',
   component: 'sl-focus-trap',
   parameters: { status: { type: 'beta' } },
   tags: [ 'autodocs' ]
 };
 
 const Template = (args) => html`
-  <sl-dialog ${spread(args)} isActive=${true} disableClickOutside=${true} heading="Dialog with Focus Trap">
+  <sl-dialog ${spread(args)} ?isActive=${true} ?disableClickOutside=${true} heading="Dialog with Focus Trap">
     <sl-tabs variant="stretch">
         <sl-tab>Tab 1</sl-tab>
         <sl-tab>Tab 2</sl-tab>

@@ -641,7 +641,7 @@ export class SLDatetimepickerField extends SLElement {
             ?isActive="${this.isActive}"
           >
             <${this.iconCalendarEl} slot="before"></${this.iconCalendarEl}>
-            <${this.iconChevronDownEl} slot="after" class="sl-c-datetimepicker__icon-arrow"></${this.iconChevronDownEl}>
+            <${this.iconChevronDownEl} size="lg" slot="after" class="sl-c-datetimepicker__icon-arrow"></${this.iconChevronDownEl}>
           </${this.textFieldEl}>
           <div class="sl-c-datetimepicker-field__popup" ?hidden="${!this.isActiveCalendar}" role="dialog">
             <div class="sl-c-datetimepicker-field__popup-body">

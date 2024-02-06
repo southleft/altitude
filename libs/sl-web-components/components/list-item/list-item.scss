@@ -33,15 +33,15 @@
 .sl-c-list-item__link {
   @include sl-theme-typography-body-sm;
   width: var(--sl-list-item-link-width, calc(100% - #{var(--sl-theme-space-xxs)}));
-  margin-inline-start: var(--sl-list-item-link-marign-inline-start, size(0.25));
-  margin-inline-end: var(--sl-list-item-link-marign-inline-start, size(0.25));
+  margin-inline-start: var(--sl-list-item-link-marign-inline-start, var(--sl-theme-space-xxxs));
+  margin-inline-end: var(--sl-list-item-link-marign-inline-start, var(--sl-theme-space-xxxs));
   display: flex;
   justify-content: space-between;
   text-decoration: none;
   border: none;
-  padding-block-start: var(--sl-list-item-link-padding-block-start, size(0.75));
+  padding-block-start: var(--sl-list-item-link-padding-block-start, var(--sl-theme-space-xs));
   padding-inline-start: var(--sl-list-item-link-padding-inline-start, var(--sl-theme-space-xs));
-  padding-block-end: var(--sl-list-item-link-padding-block-end, size(0.75));
+  padding-block-end: var(--sl-list-item-link-padding-block-end, var(--sl-theme-space-xs));
   padding-inline-end: var(--sl-list-item-link-padding-inline-end, var(--sl-theme-space-xs));
   color: inherit;
   transition: background-color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);

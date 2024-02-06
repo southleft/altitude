@@ -181,12 +181,12 @@ export class SLTooltip extends SLElement {
    * 3. Check if the click occurred outside the active tooltip
    * 4. Close the tooltip if the click occurred outside it
    */
-  handleOnClickOutside(event: MouseEvent) {
+  handleOnClickOutside(e: MouseEvent) {
     /* 1 */
     if (this.isActive) {
-      const didClickInside = event.composedPath().includes(this.shadowRoot.host); /* 2 */
+      const didClickInside = e.composedPath().includes(this.shadowRoot.host); /* 2 */
       /* 3 */
-      if (event.target !== document.querySelector('html') && !didClickInside) {
+      if (e.target !== document.querySelector('html') && !didClickInside) {
         /* 4 */
         this.close();
       }

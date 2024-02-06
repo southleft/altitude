@@ -347,7 +347,7 @@ export class SLMenuItem extends SLElement {
             ?hideText=${true}
             ?isDisabled=${this.isDisabled}
           >
-            <${this.iconChevronDownEl} slot="before"></${this.iconChevronDownEl}>
+            <${this.iconChevronDownEl} size="lg" slot="before"></${this.iconChevronDownEl}>
             ${this.isExpanded ? 'Collapse' : 'Expand'}
           </${this.buttonEl}>
         `

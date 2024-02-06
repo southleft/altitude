@@ -15,7 +15,7 @@
   display: flex;
   flex-direction: column;
   height: auto;
-  margin: size(-1.25);
+  margin: calc(#{var(--sl-theme-space-sm)} * -1);
 }
 
 /**
@@ -30,7 +30,7 @@
  * 1. Spacing between grid items is smaller than default
  */
 .sl-c-grid--gap-sm {
-  margin: size(-0.5);
+  margin: calc(#{var(--sl-theme-space-xxs)} * -1);
 }
 
 /**
@@ -38,7 +38,7 @@
  * 1. Spacing between grid items is larger than default
  */
 .sl-c-grid--gap-lg {
-  margin: size(-2);
+  margin: calc(#{var(--sl-theme-space)} * -1);
 }
 
 /**
@@ -239,7 +239,7 @@
  */
 ::slotted(sl-grid-item) {
   display: block;
-  padding: size(1.25);
+  padding: var(--sl-theme-space-sm);
 
   /**
   * Slotted grid item within grid with no gap between items
@@ -259,7 +259,7 @@
   * Slotted grid item within grid with large gap between items
   */
   .sl-c-grid--gap-lg > & {
-    padding: size(2);
+    padding: var(--sl-theme-space);
   }
 
   /**
@@ -347,7 +347,7 @@
   */
   .sl-c-grid--1-3up.sl-c-grid--break-faster.sl-c-grid--separators > & {
     @media all and (min-width: $sl-breakpoint-md) {
-      padding-inline-start: size(2);
+      padding-inline-start: var(--sl-theme-space);
       border-inline-start: 1px solid var(--sl-grid-separators-border-color, var(--sl-theme-color-border-default));
     }
   }
@@ -417,7 +417,7 @@
   */
   .sl-c-grid--separators.sl-c-grid--1-4up > & {
     @media all and (min-width: $sl-breakpoint-md) {
-      padding-inline-start: size(2);
+      padding-inline-start: var(--sl-theme-space);
       border-inline-start: 1px solid var(--sl-grid-separators-border-color, var(--sl-theme-color-border-default));
     }
   }

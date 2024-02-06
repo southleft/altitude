@@ -5,7 +5,7 @@
 
 :host {
   --sl-datetimepicker-field-popup-offset-top: #{var(--sl-theme-space-xs)};
-  --sl-datetimepicker-field-popup-offset-bottom: #{size(0.25)};
+  --sl-datetimepicker-field-popup-offset-bottom: #{var(--sl-theme-space-xxxs)};
 }
 
 /**
@@ -91,7 +91,7 @@
  */
 .sl-c-datetimepicker-field__footer {
   border-block-start: 1px solid var(--sl-theme-color-border-default);
-  padding: size(2) size(3);
+  padding: var(--sl-theme-space) var(--sl-theme-space-lg);
   grid-column-start: span 2;
   display: flex;
   justify-content: flex-end;

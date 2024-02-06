@@ -38,11 +38,4 @@ export const WithContent: StoryObj<typeof SLCard> = {
       </>
     ),
   },
-  decorators: [
-    (Story) => (
-      <div style={{ maxWidth: '300px' }}>
-        {Story()}
-      </div>
-    )
-  ],
 };

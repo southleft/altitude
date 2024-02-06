@@ -2,35 +2,35 @@ import { Meta } from '@storybook/blocks';
 
 <Meta title="Documentation/Components" />
 
-# Working with Web Components Components, Pages, and Recipes
+# Components
 
-This codebase contains all the components, [recipes](https://bradfrost.com/blog/post/design-system-components-recipes-and-snowflakes/), and pages to successfully build the presentation view of product screens.
+- [Creating Components](#creating-components)
+- [Using Components](#using-components)
 
-## Creating components
+## Creating Components <a name="creating-components"></a>
 
 ### Initializing Component Creation
 - Run `yarn workspace sl-web-components plop` for web components and `yarn workspace sl-react plop` for React components.
 - Use dash-case for web components (e.g., my-web-component) and PascalCase for React components (e.g., MyReactComponent).
-- After using templates, start Storybook by running `yarn workspace sl-web-components start`.
+- After ploping the templates, start Storybook by running `yarn workspace sl-web-components start`.
 
 ### Defining Properties
 - Define properties that form the component's structure, typically `string`, `boolean`, or `number`.
-- Make properties required by omitting the `?` if they are integral to the component's functionality.
 
 ### HTML Structure
-- Construct the HTML structure of the component.
+- Construct the HTML structure of the component. See the [code guidelines here](/docs/documentation-code-guidelines--docs#html).
 - Prioritize slot usage to ensure full composability, allowing dynamic content addition.
 - Embed necessary components within the structure (e.g., a close button) if essential.
 
 ### Styling with SCSS and Tokens
-- Use Tier 2 tokens for styling with SCSS.
+- Use Tier 2 tokens for styling with SCSS. See the [code guidelines here](/docs/documentation-code-guidelines--docs#css).
 - Workflow for new tokens added via Figma:
-- Push token studio changes to the `tokens` branch.
-- Create a PR from the tokens branch to master, merge upon approval.
+  - Push token studio changes to the `figma-tokens` branch.
+  - Create a PR from the tokens branch to master, merge upon approval.
 - Run `yarn workspace sl-web-components build:tokens` to update tokens in Storybook docs.
 
 ### Event Handling
-- Implement event handlers within the component as necessary.
+- Implement event handlers within the component as necessary. See the [code guidelines here](/docs/documentation-code-guidelines--docs#custom-events).
 - Prefix method names with 'handle' or 'set' based on their actions to maintain consistency.
 - Avoid using event names (onClick, onHover) that may conflict with React's built-in methods.
 
@@ -44,9 +44,7 @@ This codebase contains all the components, [recipes](https://bradfrost.com/blog/
 - This command packages the WC files for the React wrappers to reference.
 - For any subsequent changes in the WC, rerun the build command to reflect updates in React.
 
-## Working with components
-
-### Using components
+## Using components <a name="using-components"></a>
 
 Using Web Components components in your application involves first installing the Web Components package as a dependency:
 
@@ -67,7 +65,7 @@ import 'sl-web-components/dist/sl/components/button/button';
 2. **Manual registering components method** - This method is necessary when using multiple versions of the Web Components given the global scope of custom elements registry. You'll need to use named imports to import the component and then manually register the component(s) using the `register` function available in the package. This method is not recommended unless you are using multiple versions of the Web Components in your application such as needed with a Micro Frontend Architecture.
 
 ```js
-import { EnButton } from 'sl-web-components/dist/sl/components/button/button';
+import { SLButton } from 'sl-web-components/dist/sl/components/button/button';
 import { SLIconChevronRight } from 'sl-web-components/dist/components/icon/icons/chevron-right';
 import register from 'sl-web-components/dist/directives/register';
 
@@ -140,26 +138,4 @@ style.innerHTML = scopedCss;
 document.head.appendChild(style);
 ```
 
-Each Web Components component is documented in Storybook, which surfaces each component's API and provides copy-and-paste code snippets. If you have questions or are experiencing any issues when working with Web Components's components, please [reach out for support](#) (TODO: provide support link) and the team will be happy to help.
-
-## Working with recipes
-
-**[Recipes](https://bradfrost.com/blog/post/design-system-components-recipes-and-snowflakes/)** are mainly compositions of design system components that are to be consistently used across a product, but aren’t agnostic enough to live in core component library. Like pages, recipes live in the `.storybook` directory of the project since they are not packaged up with the design system. Recipe components may be revisited and pulled into [Name of design system] at a later date if they are deemed to be reusable enough to move into the design system library.
-
-### Creating a recipe
-
-1. Run `plop recipe` in the command line.
-2. Provide a name when asked "What is your recipe name?"
-3. Plop will generate a recipe and accompanying stories file at `./storybook/recipes/[your-recipe-name]/[your-recipe-name].ts`
-4. Begin editing the recipe, importing any necessary components and other recipes.
-5. Create relevant stories for all recipe variants
-
-Note: Recipe components live in `.storybook/recipes` and take the following shape in Storybook:
-
-```
-Recipes
---Recipe Name
-----Recipe Stories
-```
-
-Recipe components should _not_ include the `.sl-` CSS prefix, since they are not part of the design system (so a recipe could look like `.c-recipe-name`). However, the other design system [code conventions](./CODE_GUIDELINES.mdx) should be followed in order to make refactoring into the design system as easy as possible.
+Each Web Components component is documented in Storybook, which surfaces each component's API and provides copy-and-paste code snippets. If you have questions or are experiencing any issues when working with Web Components's components, feel free to contact the [Southleft team](https://southleft.com) for assistance.

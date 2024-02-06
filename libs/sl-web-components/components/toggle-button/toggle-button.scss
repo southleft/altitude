@@ -9,7 +9,7 @@
 .sl-c-toggle-button {
   @include sl-theme-typography-body-sm;
   display: flex;
-  padding: size(0.75);
+  padding: var(--sl-theme-space-xs);
   background: var(--sl-theme-color-background-transparent);
   border: none;
   border-radius: var(--sl-theme-border-radius-lg);
@@ -64,7 +64,7 @@
    * - If parent has selected state, then change the background & color of the content
    */
   .sl-is-selected & {
-    color: var(--sl-theme-color-content-accent-default);
+    color: var(--sl-theme-color-content-default-weak);
     background: var(--sl-theme-color-background-default-weak);
   }
 
@@ -75,8 +75,8 @@
     content: "";
     display: block;
     position: absolute;
-    top: 0;
-    left: 0;
+    inset-inline-start: 0;
+    inset-block-start: 0;
     width: 100%;
     height: 100%;
     z-index: 2;
@@ -98,9 +98,9 @@
  */
 ::slotted(sl-popover) {
   --sl-popover-trigger-z-index: 1;
-  --sl-popover-shift: #{size(-1.75)};
+  --sl-popover-shift: #{calc(#{var(--sl-theme-space-sm)} * -1)};
 
   .sl-c-toggle-button--background & {
-    --sl-popover-offset: #{size(3)};
+    --sl-popover-offset: #{var(--sl-theme-space-lg)};
   }
 }

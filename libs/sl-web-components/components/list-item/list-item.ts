@@ -200,7 +200,7 @@ export class SLListItem extends SLElement {
    * 5. If the navigation is active and we've clicked outside of the nav then it should
    * be closed.
    */
-  handleOnMouseOver(event: MouseEvent) {
+  handleOnMouseOver(e: MouseEvent) {
     if (this.behavior === 'flyout') {
       /* 2 */
       if (!this.isActive) {
@@ -213,7 +213,7 @@ export class SLListItem extends SLElement {
       }
 
       /* 4 */
-      const didClickInside = event.composedPath().includes(this.shadowRoot.host);
+      const didClickInside = e.composedPath().includes(this.shadowRoot.host);
 
       if (this.isActive && !didClickInside) {
         this.handleMouseLeave();

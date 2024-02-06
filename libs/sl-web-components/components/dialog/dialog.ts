@@ -155,6 +155,7 @@ export class SLDialog extends SLElement {
    * First updated lifecycle
    * 1. Wait for slotted components to be loaded
    * 2. Set aria-expanded on the trigger for A11y
+   * 3. Set the width of the dialog container
    */
   async firstUpdated() {
     await this.updateComplete; /* 1 */
@@ -165,19 +166,11 @@ export class SLDialog extends SLElement {
   /**
    * Updated lifecycle
    * 1. Update aria-expanded on the trigger based on if isActive
+   * 2. Set the body overflow based on if the dialog is active
    */
   updated() {
-    this.setAria();
-  }
-
-  /**
-   * Set the width
-   * 1. Add a custom property to adjust the width of the dialog container
-   */
-  setWidth() {
-    if (this.width) {
-      this.style.setProperty('--sl-dialog-container-width', this.width.toString() + 'px');
-    }
+    this.setAria(); /* 1 */
+    this.setBodyOverflow(); /* 2 */
   }
 
   /**
@@ -195,16 +188,40 @@ export class SLDialog extends SLElement {
   }
 
   /**
+   * Set the width
+   * 1. Add a custom property to adjust the width of the dialog container
+   */
+  setWidth() {
+    if (this.width) {
+      this.style.setProperty('--sl-dialog-container-width', this.width.toString() + 'px');
+    }
+  }
+
+  /**
+   * Set body overflow
+   * 1. If the dialog is active, prevent scrolling on the body
+   * 2. If the dialog is inactive, allow scrolling on the body
+   */
+  setBodyOverflow() {
+    const body = document.querySelector('body');
+    if (this.isActive) {
+      body.style.overflow = 'hidden'; /* 1 */
+    } else {
+      body.style.removeProperty('overflow'); /* 2 */
+    }
+  }
+
+  /**
    * Handles the click event outside the component:
    * 1. Check if the dialog is active and disableClickOutside is not true
    * 2. Determine if the click occurred inside the active dialog container
    * 3. Check if the click occurred outside the active dialog
    * 4. Close the dialog if the click occurred outside it
    */
-  handleOnClickOutside(event: MouseEvent) {
+  handleOnClickOutside(e: MouseEvent) {
     /* 1 */
     if (this.isActive && !this.disableClickOutside) {
-      const didClickInside = event.composedPath().includes(this.dialogContainer); /* 2 */
+      const didClickInside = e.composedPath().includes(this.dialogContainer); /* 2 */
       /* 3 */
       if (!didClickInside) {
         /* 4 */

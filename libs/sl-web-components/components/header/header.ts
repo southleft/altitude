@@ -17,9 +17,11 @@ export class SLHeader extends SLElement {
     const componentClassNames = this.componentClassNames('sl-c-header', { });
 
     return html`
-      <div class="${componentClassNames}">
-        <slot></slot>
-      </div>
+      <header class="${componentClassNames}">
+        ${this.slotNotEmpty('before') && html`<span class="sl-c-header__before"><slot name="before"></slot></span>`}
+        <div class="sl-c-header__main"><slot></slot></div>
+        ${this.slotNotEmpty('after') && html`<span class="sl-c-header__after"><slot name="after"></slot></span>`}
+      </header>
     `;
   }
 }

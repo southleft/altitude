@@ -11,7 +11,7 @@
  * Breadcrumb Item
  */
 .sl-c-breadcrumbs-item {
-  @include sl-theme-typography-heading-md;
+  @include sl-theme-typography-body-lg;
   list-style-type: none;
   display: flex;
   align-items: center;
@@ -24,7 +24,7 @@
  * Breadcrumb Item Label
  */
 .sl-c-breadcrumbs-item__label {
-  @include sl-theme-typography-heading-md;
+  @include sl-theme-typography-body-lg;
   display: flex;
   align-items: center;
   gap: var(--sl-theme-space-xs);
@@ -37,8 +37,6 @@
   text-decoration: none;
   transition: all var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
   cursor: pointer;
-  --sl-icon-width: #{var(--sl-theme-icon-lg)};
-  --sl-icon-height: #{var(--sl-theme-icon-lg)};
 
   /**
    * Label - Current state

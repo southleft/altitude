@@ -25,7 +25,7 @@
     inset-inline-start: 0;
     z-index: 0;
     pointer-events: none;
-    transition: background-color var(--sl-animation-move-long) var(--sl-theme-animation-timing);
+    transition: background-color var(--sl-theme-animation-duration-long) var(--sl-theme-animation-timing);
     background-color: transparent;
   }
 
@@ -55,7 +55,7 @@
   transform: translate(var(--rtlTranslateX, -50%), -50%);
   flex-direction: column;
   gap: var(--sl-theme-space-lg);
-  padding: size(3);
+  padding: var(--sl-theme-space-lg);
   border-radius: var(--sl-theme-border-radius-lg);
   box-shadow: var(--sl-theme-box-shadow-md);
   z-index: var(--sl-z-index-top);
@@ -140,5 +140,5 @@
  * - The trigger slot in the dialog
  */
 .sl-c-dialog__trigger {
-  z-index: var(--sl-z-index-400);
+  z-index: var(--sl-dialog-trigger-z-index, 0);
 }

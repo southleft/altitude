@@ -1,14 +1,23 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLDrawer, SLButton, SLButtonGroup } from '../..';
+import { SLDrawer, SLButton, SLIconMenu, SLButtonGroup } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
   title: 'Molecules/Drawer',
   component: SLDrawer,
-  parameters: { status: { type: 'beta' } },
+  parameters: {
+    status: { type: 'beta' },
+    actions: {
+      handles: ['onDrawerOpen', 'onDrawerClose', 'onDrawerCloseButton']
+    },
+    controls: {
+      exclude: ['ariaLabelledBy']
+    },
+  },
   args: {
     children: (
       <>
+        <SLButton slot="trigger" hideText={true} variant="tertiary">Toggle Drawer<SLIconMenu slot="before"></SLIconMenu></SLButton>
         <div  slot="header">
           <Fpo>Drawer Title</Fpo>
         </div>
@@ -19,23 +28,9 @@ export default {
         </SLButtonGroup>
       </>
     )
-  },
-  decorators: [
-    (Story) => (
-      <div>
-        <SLButton onClick={toggleDrawer}>Toggle Drawer</SLButton>
-        <div className="c-drawer">{Story()}</div>
-      </div>
-    )
-  ],
+  }
 };
 
-function toggleDrawer() {
-  const drawer = document.querySelector<any>('.c-drawer').querySelector('*');
-  if (drawer) {
-    drawer.toggle();
-  }
-}
 
 export const Default: StoryObj<typeof SLDrawer> = { args: {} };
 

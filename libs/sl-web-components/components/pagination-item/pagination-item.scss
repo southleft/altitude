@@ -15,7 +15,7 @@
  * Pagination item link
  */
 .sl-c-pagination__link {
-  padding: var(--sl-theme-space-xs) size(2);
+  padding: var(--sl-theme-space-xs) var(--sl-theme-space);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,7 +25,7 @@
   transition: all var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
   border-radius: var(--sl-theme-border-radius);
   background-color: var(--sl-theme-color-background-transparent-default);
-  color: var(--sl-theme-color-content-default-weak);
+  color: var(--sl-theme-color-content-default);
   --sl-icon-width: #{var(--sl-theme-icon-lg)};
   --sl-icon-height: #{var(--sl-theme-icon-lg)};
 
@@ -34,7 +34,7 @@
    */
   &:hover:not(:active, .sl-is-disabled &) {
     background-color: var(--sl-theme-color-background-transparent-default);
-    color: var(--sl-theme-color-content-default);
+    color: var(--sl-theme-color-content-default-weak);
   }
 
   /**

@@ -78,7 +78,7 @@ const TemplateWithDropdown = (args) => html`
   <sl-toggle-button ${spread(args)} data-testid="toggle-button">
     <sl-popover heading="Heading" ?isDismissible=${true}>
       <span slot="trigger">Text label</span>
-      <sl-icon-chevron-down slot="trigger"></sl-icon-chevron-down>
+      <sl-icon-chevron-dow size="lg" slot="trigger"></sl-icon-chevron-dow>
       <f-po>Content</f-po>
     </sl-popover>
   </sl-toggle-button>
@@ -90,7 +90,7 @@ const TemplateWithDropdownIcon = (args) => html`
   <sl-toggle-button ${spread(args)} data-testid="toggle-button">
     <sl-popover>
       <sl-icon-emoji slot="trigger" size="lg"></sl-icon-emoji>
-      <sl-icon-chevron-down slot="trigger"></sl-icon-chevron-down>
+      <sl-icon-chevron-down size="lg" slot="trigger"></sl-icon-chevron-down>
       <f-po>Content</f-po>
     </sl-popover>
   </sl-toggle-button>
@@ -103,7 +103,7 @@ const TemplateWithDropdownPrefixIcon = (args) => html`
     <sl-popover>
       <sl-icon-emoji slot="trigger" size="lg"></sl-icon-emoji>
       <span slot="trigger">Text label</span>
-      <sl-icon-chevron-down slot="trigger"></sl-icon-chevron-down>
+      <sl-icon-chevron-down size="lg" slot="trigger"></sl-icon-chevron-down>
       <f-po>Content</f-po>
     </sl-popover>
   </sl-toggle-button>
@@ -126,7 +126,7 @@ const TemplateWithTooltipAndDropdown = (args) => html`
       <sl-popover>
         <sl-icon-emoji slot="trigger" size="lg"></sl-icon-emoji>
         <span slot="trigger">Text label</span>
-        <sl-icon-chevron-down slot="trigger"></sl-icon-chevron-down>
+        <sl-icon-chevron-down size="lg" slot="trigger"></sl-icon-chevron-down>
         <f-po>Content</f-po>
       </sl-popover>
     </sl-toggle-button>

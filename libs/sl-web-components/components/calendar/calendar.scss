@@ -22,7 +22,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: size(1) size(2.5) size(1);
+  padding: var(--sl-theme-space-xs) var(--sl-theme-space-md) var(--sl-theme-space-xs);
 }
 
 /**
@@ -36,7 +36,7 @@
   background: none;
   cursor: pointer;
   border: 0;
-  padding: size(1);
+  padding: var(--sl-theme-space-xs);
   text-align: center;
   color: var(--sl-theme-color-content-default);
 }
@@ -61,7 +61,7 @@
  * Body wrapper for days
  */
 .sl-c-calendar__table-container {
-  padding: 0 size(2) size(1);
+  padding: 0 var(--sl-theme-space) var(--sl-theme-space-xs);
   text-align: center;
 }
 
@@ -69,7 +69,7 @@
  * Footer container in datepicker
  */
 .sl-c-calendar__footer {
-  padding: 0 size(2) size(2);
+  padding: 0 var(--sl-theme-space) var(--sl-theme-space);
 }
 
 /**
@@ -86,7 +86,7 @@
   @include sl-theme-typography-body-xs;
   text-transform: uppercase;
   color: var(--sl-theme-color-content-default-weak);
-  padding-block-end: size(2);
+  padding-block-end: var(--sl-theme-space);
 }
 
 /**
@@ -99,7 +99,7 @@
   height: 2.25rem;
   width: 2.25rem;
   padding: 0;
-  margin-block-end: size(1);
+  margin-block-end: var(--sl-theme-space-xs);
   position: relative;
   transition: background-color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing), color var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
 
@@ -127,13 +127,13 @@
   &.sl-is-today {
     &:after {
       content: '';
-      width: size(1);
-      height: size(1);
+      width: var(--sl-theme-space-xs);
+      height: var(--sl-theme-space-xs);
       background: var(--sl-theme-color-background-accent-default);
       border-radius: 50%;
       position: absolute;
       inset-block-end: size(0.125);
-      inset-inline-start: calc(50% - size(0.5));
+      inset-inline-start: calc(50% - var(--sl-theme-space-xxs));
     }
   }
 
@@ -200,7 +200,7 @@
     #MONTH SELECTOR
 \*------------------------------------ */
 .sl-c-month-selector {
-  padding: size(2);
+  padding: var(--sl-theme-space);
 }
 
 .sl-c-month-selector__list {
@@ -211,7 +211,7 @@
 
 .sl-c-month-selector__item {
   border-block-end: 1px solid var(--sl-theme-color-border-default);
-  padding: size(2) 0;
+  padding: var(--sl-theme-space) 0;
   display: grid;
   grid-template-columns: min-content 1fr;
   gap: var(--sl-theme-space);
@@ -233,7 +233,7 @@
 .sl-c-month-selector__year-heading {
   @include sl-theme-typography-body-sm;
   color: var(--sl-theme-color-content-default-weak);
-  margin: size(1) 0 0;
+  margin: var(--sl-theme-space-xs) 0 0;
 }
 
 .sl-c-month-selector__button {
@@ -291,8 +291,8 @@
   &.sl-is-current {
     &:after {
       content: '';
-      width: size(1);
-      height: size(1);
+      width: var(--sl-theme-space-xs);
+      height: var(--sl-theme-space-xs);
       background: var(--sl-theme-color-background-accent-default);
       border-radius: 50%;
       position: absolute;

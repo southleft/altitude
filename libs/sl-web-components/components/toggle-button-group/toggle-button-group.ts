@@ -97,12 +97,12 @@ export class SLToggleButtonGroup extends SLElement {
    * 3. Check if the click occurred outside the selected toggle button
    * 4. Close the toggle button if the click occurred outside it
    */
-  handleOnClickOutside(event: MouseEvent) {
+  handleOnClickOutside(e: MouseEvent) {
     /* 1 */
     if (this.selectedItem) {
-      const didClickInside = event.composedPath().includes(this.shadowRoot.host); /* 2 */
+      const didClickInside = e.composedPath().includes(this.shadowRoot.host); /* 2 */
       /* 3 */
-      if (event.target !== document.querySelector('html') && !didClickInside) {
+      if (e.target !== document.querySelector('html') && !didClickInside) {
         /* 4 */
         this.selectedItem.isSelected = false;
       }

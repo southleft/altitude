@@ -8,8 +8,10 @@
  */
 .sl-c-alert {
   display: none;
-  background: transparent;
-  padding: size(2);
+  border-radius: var(--sl-theme-border-radius-md);
+  background-color: var(--sl-theme-color-background-default);
+  box-shadow: var(--sl-theme-box-shadow-lg);
+  padding: var(--sl-theme-space);
 
   &.sl-is-active {
     display: flex;
@@ -34,7 +36,7 @@
 
 .sl-c-alert__actions {
   display: flex;
-  gap: size(1.5);
+  gap: var(--sl-theme-space-sm);
 }
 
 /**
@@ -42,7 +44,7 @@
  */
 .sl-c-alert__title {
   @include sl-theme-typography-body-md-bold;
-  margin-block-end: size(1);
+  margin-block-end: var(--sl-theme-space-xs);
 }
 
 /**
@@ -56,7 +58,7 @@
 
   display: flex;
   align-items: center;
-  margin-inline-end: size(2);
+  margin-inline-end: var(--sl-theme-space);
 
   .sl-has-title & {
     align-items: flex-start;

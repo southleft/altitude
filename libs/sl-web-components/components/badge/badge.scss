@@ -18,7 +18,7 @@
   justify-content: center;
   background: var(--sl-theme-color-background-default);
   color: var(--sl-theme-color-content-default);
-  padding: 0 size(0.5625);
+  padding: 0 var(--sl-theme-space-xxs);
   border-radius: size(2.5);
   min-width: size(2.5);
   min-height: size(2.5);
@@ -30,11 +30,11 @@
    */
   &.sl-is-dot {
     padding: 0;
-    border-radius: size(1);
-    min-width: size(1);
-    min-height: size(1);
-    max-width: size(1);
-    max-height: size(1);
+    border-radius: var(--sl-theme-space-xs);
+    min-width: var(--sl-theme-space-xs);
+    min-height: var(--sl-theme-space-xs);
+    max-width: var(--sl-theme-space-xs);
+    max-height: var(--sl-theme-space-xs);
     text-indent: 9999px; // Prevent the text for showing, but is visible to screen readers
 
     /**
@@ -43,8 +43,8 @@
     &:after {
       position: absolute;
       content: '';
-      min-width: size(1.5);
-      min-height: size(1.5);
+      min-width: var(--sl-theme-space-sm);
+      min-height: var(--sl-theme-space-sm);
       background: transparent;
       border: var(--sl-badge-outline-color, var(--sl-theme-color-background-default)) solid var(--sl-badge-border-width, 0);
       border-radius: var(--sl-theme-border-radius-round);

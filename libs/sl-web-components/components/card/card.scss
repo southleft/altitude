@@ -3,18 +3,22 @@
   #CARD
 \*------------------------------------ */
 
+:host {
+  display: contents;
+}
+
 /**
  * Card
  */
 .sl-c-card {
+  width: 100%;
   display: flex;
-  padding: size(2);
+  padding: var(--sl-theme-space);
   gap: var(--sl-theme-space-xs);
   flex-flow: column wrap;
   border-radius: var(--sl-theme-border-radius);
-  background-color: var(--sl-theme-color-background-default);
   color: var(--sl-theme-color-content-default);
-  box-shadow: var(--sl-theme-box-shadow-md);
+  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
 }
 
 /**
