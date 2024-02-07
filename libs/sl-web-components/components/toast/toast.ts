@@ -10,6 +10,7 @@ import { SLIconDone } from '../icon/icons/done';
 import { SLIconInfo } from '../icon/icons/info';
 import { SLIconWarningCircle } from '../icon/icons/warning-circle';
 import { SLIconWarningTriangle } from '../icon/icons/warning-triangle';
+import { SLProgress } from '../progress/progress';
 import styles from './toast.scss';
 
 /**
@@ -30,7 +31,8 @@ export class SLToast extends SLElement {
       [SLIconDone.el, SLIconDone],
       [SLIconInfo.el, SLIconInfo],
       [SLIconWarningCircle.el, SLIconWarningCircle],
-      [SLIconWarningTriangle.el, SLIconWarningTriangle]
+      [SLIconWarningTriangle.el, SLIconWarningTriangle],
+      [SLProgress.el, SLProgress]
     ],
     suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
   });
@@ -41,6 +43,7 @@ export class SLToast extends SLElement {
   private iconInfoEl = unsafeStatic(this.elementMap.get(SLIconInfo.el));
   private iconWarningEl = unsafeStatic(this.elementMap.get(SLIconWarningCircle.el));
   private iconWarningTriangleEl = unsafeStatic(this.elementMap.get(SLIconWarningTriangle.el));
+  private progressEl = unsafeStatic(this.elementMap.get(SLProgress.el));
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -54,7 +57,7 @@ export class SLToast extends SLElement {
    * - **danger** renders a toast that represents an danger state
    */
   @property()
-  accessor variant: 'success' | 'warning' | 'danger';
+  accessor variant: 'info' | 'success' | 'warning' | 'danger';
 
   /**
    * The toast description text
@@ -64,8 +67,8 @@ export class SLToast extends SLElement {
 
   /**
    * Is active?
-   * 1. Used if the toast is part of a toast group
-   * 2. If true, the toast is the active slide in the toast group
+   * - **true** Displays the toast on the screen
+   * - **false** Hides the toast on the screen
    */
   @property({ type: Boolean })
   accessor isActive: boolean;
@@ -79,22 +82,70 @@ export class SLToast extends SLElement {
   accessor isDismissible: boolean;
 
   /**
-   * Has Controls?
-   * - Dynamically set by the toast group.
-   * - **true** Shifts over the toast content to fit the controls
+   * Auto close?
+   * - Set whether you want the toast group to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds
    */
   @property({ type: Boolean })
-  accessor hasControls: boolean;
+  accessor autoClose: boolean;
 
   /**
-   * The index of the toast within its parent toast group
+   * Delay property
+   * 1. Number of seconds to close the toast group when autoClose is enabled
+   * 2. Default amount is 3
    */
-  @property()
-  accessor idx: number;
+  @property({ type: Number })
+  accessor autoCloseDelay: number = 3; /* 2 */
+
+  @property({ type: Boolean })
+  accessor showProgress: boolean;
+
+  /**
+   * Internal property store setTimeout() method so that we can clear timer later
+   */
+  private _timer: ReturnType<typeof setTimeout>;
+
+  /**
+   * First updated lifecycle
+   * - Initializes auto close
+   */
+  firstUpdated() {
+    this.handleAutoClose();
+  }
+
+  /**
+   * Auto close handler
+   * 1. Automatically close the toast after delay time
+   */
+  handleAutoClose() {
+    if (this.autoClose) {
+      this._timer = setTimeout(() => {
+        this.close();
+        clearTimeout(this._timer);
+      }, this.autoCloseDelay * 1000);
+    }
+  }
+
+   /**
+   * Open toast
+   * 1. Set active to true to show the toast
+   * 2. Dispatch a custom event 
+   */
+   public open() {
+    /* 1 */
+    this.isActive = true;
+
+    /* 2 */
+    this.dispatch({
+      eventName: 'onToastGroupOpen',
+      detailObj: {
+        active: this.isActive
+      }
+    });
+  }
 
   /**
    * Close toast
-   * 1. Set the toast's active state to false
+   * 1. Set active to false to hide the toast
    * 2. Dispatch a custom event
    */
   public close() {
@@ -104,8 +155,7 @@ export class SLToast extends SLElement {
     this.dispatch({
       eventName: 'onToastClose',
       detailObj: {
-        active: this.isActive,
-        toastIdx: this.idx
+        active: this.isActive
       }
     });
   }
@@ -120,6 +170,24 @@ export class SLToast extends SLElement {
     }
   }
 
+  /**
+   * Mouseover event
+   * 1. On mouseover of the toast group, clear the timer to pause auto close
+   */
+  handleMouseOver() {
+    if (this.autoClose) {
+      clearTimeout(this._timer); /* 1 */
+    }
+  }
+
+  /**
+   * Mouseleave event
+   * 1. Resume auto close with a new timeout
+   */
+  handleMouseLeave() {
+    this.handleAutoClose(); /* 1 */
+  }
+
   render() {
     const componentClassNames = this.componentClassNames('sl-c-toast', {
       'sl-c-toast--success': this.variant === 'success',
@@ -127,12 +195,15 @@ export class SLToast extends SLElement {
       'sl-c-toast--danger': this.variant === 'danger',
       'sl-is-active': this.isActive,
       'sl-is-dismissible': this.isDismissible,
-      'sl-has-controls': this.hasControls,
       'sl-has-description': this.description?.length > 0
     });
 
-    let toastIcon = html`<${this.iconInfoEl}></${this.iconInfoEl}>`;
-    if (this.variant === 'success') {
+    console.log("SHOW?", this.showProgress)
+
+    let toastIcon; 
+    if (this.variant === 'info') {
+      toastIcon = html`<${this.iconInfoEl}></${this.iconInfoEl}>`;
+    } if (this.variant === 'success') {
       toastIcon = html`<${this.iconDoneEl}></${this.iconDoneEl}>`;
     } else if (this.variant === 'warning') {
       toastIcon = html`<${this.iconWarningTriangleEl}></${this.iconWarningTriangleEl}>`;
@@ -141,27 +212,35 @@ export class SLToast extends SLElement {
     }
 
     return html`
-      <div role="alert" class=${componentClassNames} @keydown=${this.handleKeyDown}>
-        <div class="sl-c-toast__icon">${this.slotNotEmpty('icon') ? html` <slot name="icon"></slot> ` : html` ${toastIcon} `}</div>
-        <div class="sl-c-toast__body">
-          <slot></slot>
-          ${this.description ? html` <div class="sl-c-toast__description">${this.description}</div> ` : html``}
-        </div>
-        ${this.slotNotEmpty('actions')
-          ? html`
-              <div class="sl-c-toast__actions">
-                <slot name="actions"></slot>
-              </div>
-            `
-          : html``}
-        ${this.isDismissible
-          ? html`
-              <${this.buttonEl} variant="tertiary" class="sl-c-toast__close-button" @click=${this.close} ?hideText=${true}>
-                Close
-                <${this.iconCloseEl} class="sl-c-toast__icon-close" slot="before"></${this.iconCloseEl}>
-              </${this.buttonEl}>
-            `
-          : html``}
+      <div role="alert" 
+        class=${componentClassNames} 
+        @keydown=${this.handleKeyDown}
+        @mouseover=${this.handleMouseOver} 
+        @mouseleave=${this.handleMouseLeave}
+      >
+        <div class="sl-c-toast__wrapper">
+          ${this.variant || this.slotNotEmpty('icon') ? html`<div class="sl-c-toast__icon">${this.slotNotEmpty('icon') ? html` <slot name="icon"></slot> ` : html` ${toastIcon} `}</div>` : html``}
+          <div class="sl-c-toast__body">
+            <slot></slot>
+            ${this.description ? html` <div class="sl-c-toast__description">${this.description}</div> ` : html``}
+          </div>
+          ${this.slotNotEmpty('actions')
+            ? html`
+                <div class="sl-c-toast__actions">
+                  <slot name="actions"></slot>
+                </div>
+              `
+            : html``}
+          ${this.isDismissible
+            ? html`
+                <${this.buttonEl} variant="tertiary" class="sl-c-toast__close-button" @click=${this.close} ?hideText=${true}>
+                  Close
+                  <${this.iconCloseEl} class="sl-c-toast__icon-close" slot="before"></${this.iconCloseEl}>
+                </${this.buttonEl}>
+              `
+            : html``}
+          </div>
+          ${this.autoClose && this.showProgress ? html`<${this.progressEl} duration=${this.autoCloseDelay} currentProgress="100" endProgress="0"></${this.progressEl}>` : html``}
       </div>
     ` as TemplateResult<1>;
   }

@@ -7282,27 +7282,6 @@
           "type": "boolean"
         },
         {
-          "name": "isGroup",
-          "description": "Is a group?\n- **true** Displays the toasts stacked on top of one another\n- **false** Displays the toasts stacked vertically",
-          "type": "boolean"
-        },
-        {
-          "name": "hasControls",
-          "description": "Has controls?\n- **true** Shows controls to scroll through the active toasts\n- **false** Hides controls to scroll through the active toasts",
-          "type": "boolean"
-        },
-        {
-          "name": "autoClose",
-          "description": "Auto close?\n- Set whether you want the toast group to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
-          "type": "boolean"
-        },
-        {
-          "name": "autoCloseDelay",
-          "description": "Delay property\n1. Number of seconds to close the toast group when autoClose is enabled\n2. Default amount is 3",
-          "type": "number",
-          "default": "3"
-        },
-        {
           "name": "styleModifier",
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
@@ -7327,67 +7306,8 @@
           "type": "boolean"
         },
         {
-          "name": "isGroup",
-          "attribute": "isGroup",
-          "description": "Is a group?\n- **true** Displays the toasts stacked on top of one another\n- **false** Displays the toasts stacked vertically",
-          "type": "boolean"
-        },
-        {
-          "name": "hasControls",
-          "attribute": "hasControls",
-          "description": "Has controls?\n- **true** Shows controls to scroll through the active toasts\n- **false** Hides controls to scroll through the active toasts",
-          "type": "boolean"
-        },
-        {
-          "name": "autoClose",
-          "attribute": "autoClose",
-          "description": "Auto close?\n- Set whether you want the toast group to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
-          "type": "boolean"
-        },
-        {
-          "name": "autoCloseDelay",
-          "attribute": "autoCloseDelay",
-          "description": "Delay property\n1. Number of seconds to close the toast group when autoClose is enabled\n2. Default amount is 3",
-          "type": "number",
-          "default": "3"
-        },
-        {
-          "name": "activeToastIdx",
-          "description": "activeToastIdx state\n- The index of the toast that is currently active in the toast group",
-          "type": "number",
-          "default": "0"
-        },
-        {
-          "name": "prevActiveIdx",
-          "description": "prevActiveIdx state\n- Tracks the previously active toast to update the group when controls are used",
-          "type": "number",
-          "default": "0"
-        },
-        {
-          "name": "toastsVisible",
-          "description": "Visible toasts\n- Tracks the number of toasts visible",
-          "type": "number",
-          "default": "0"
-        },
-        {
-          "name": "toastsActive",
-          "description": "Active toasts\n- Tracks the number of toasts active",
-          "type": "number",
-          "default": "0"
-        },
-        {
-          "name": "controlPrev",
-          "description": "Query the control prev button",
-          "type": "SLButton"
-        },
-        {
-          "name": "controlNext",
-          "description": "Query the control next button",
-          "type": "SLButton"
-        },
-        {
           "name": "toastList",
-          "description": "Use queryAssignedElements to populate the toastList",
+          "description": "Query the toast components in the toast group",
           "type": "SLToast[]"
         },
         {
@@ -7406,7 +7326,7 @@
         {
           "name": "variant",
           "description": "Variants\n- **default** renders a toast that represents an informative state\n- **success** renders a toast that represents a success state\n- **warning** renders a toast that represents a warning state\n- **danger** renders a toast that represents an danger state",
-          "type": "\"success\" | \"warning\" | \"danger\""
+          "type": "\"success\" | \"warning\" | \"danger\" | \"info\""
         },
         {
           "name": "description",
@@ -7416,7 +7336,7 @@
         },
         {
           "name": "isActive",
-          "description": "Is active?\n1. Used if the toast is part of a toast group\n2. If true, the toast is the active slide in the toast group",
+          "description": "Is active?\n- **true** Displays the toast on the screen\n- **false** Hides the toast on the screen",
           "type": "boolean"
         },
         {
@@ -7425,14 +7345,19 @@
           "type": "boolean"
         },
         {
-          "name": "hasControls",
-          "description": "Has Controls?\n- Dynamically set by the toast group.\n- **true** Shifts over the toast content to fit the controls",
+          "name": "autoClose",
+          "description": "Auto close?\n- Set whether you want the toast group to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
           "type": "boolean"
         },
         {
-          "name": "idx",
-          "description": "The index of the toast within its parent toast group",
-          "type": "number"
+          "name": "autoCloseDelay",
+          "description": "Delay property\n1. Number of seconds to close the toast group when autoClose is enabled\n2. Default amount is 3",
+          "type": "number",
+          "default": "3"
+        },
+        {
+          "name": "showProgress",
+          "type": "boolean"
         },
         {
           "name": "styleModifier",
@@ -7450,7 +7375,7 @@
           "name": "variant",
           "attribute": "variant",
           "description": "Variants\n- **default** renders a toast that represents an informative state\n- **success** renders a toast that represents a success state\n- **warning** renders a toast that represents a warning state\n- **danger** renders a toast that represents an danger state",
-          "type": "\"success\" | \"warning\" | \"danger\""
+          "type": "\"success\" | \"warning\" | \"danger\" | \"info\""
         },
         {
           "name": "description",
@@ -7462,7 +7387,7 @@
         {
           "name": "isActive",
           "attribute": "isActive",
-          "description": "Is active?\n1. Used if the toast is part of a toast group\n2. If true, the toast is the active slide in the toast group",
+          "description": "Is active?\n- **true** Displays the toast on the screen\n- **false** Hides the toast on the screen",
           "type": "boolean"
         },
         {
@@ -7472,16 +7397,22 @@
           "type": "boolean"
         },
         {
-          "name": "hasControls",
-          "attribute": "hasControls",
-          "description": "Has Controls?\n- Dynamically set by the toast group.\n- **true** Shifts over the toast content to fit the controls",
+          "name": "autoClose",
+          "attribute": "autoClose",
+          "description": "Auto close?\n- Set whether you want the toast group to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
           "type": "boolean"
         },
         {
-          "name": "idx",
-          "attribute": "idx",
-          "description": "The index of the toast within its parent toast group",
-          "type": "number"
+          "name": "autoCloseDelay",
+          "attribute": "autoCloseDelay",
+          "description": "Delay property\n1. Number of seconds to close the toast group when autoClose is enabled\n2. Default amount is 3",
+          "type": "number",
+          "default": "3"
+        },
+        {
+          "name": "showProgress",
+          "attribute": "showProgress",
+          "type": "boolean"
         },
         {
           "name": "styleModifier",
@@ -7560,7 +7491,7 @@
     {
       "name": "sl-toggle-button",
       "path": "./components/toggle-button/toggle-button.ts",
-      "description": "Component: sl-toggle-button\n\nToggle Button can be used to group related options. \n- **slot**: The content to display in the toggle button",
+      "description": "Component: sl-toggle-button\n\nToggle Button can be used to group related options.\n- **slot**: The content to display in the toggle button",
       "attributes": [
         {
           "name": "variant",
