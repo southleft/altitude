@@ -23,8 +23,6 @@ export * from './components/Dropdown';
 export * from './components/DropdownPanel';
 export * from './components/FieldNote';
 export * from './components/FileUpload';
-export * from './components/Grid';
-export * from './components/GridItem';
 export * from './components/Header';
 export * from './components/Heading';
 export * from './components/Icon';

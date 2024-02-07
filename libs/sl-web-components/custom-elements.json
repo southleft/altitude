@@ -3299,111 +3299,6 @@
       ]
     },
     {
-      "name": "sl-grid-item",
-      "path": "./components/grid-item/grid-item.ts",
-      "description": "- **slot**: The content of the grid item",
-      "attributes": [
-        {
-          "name": "styleModifier",
-          "description": "Append to the class name. Used for passing in utility classes",
-          "type": "string"
-        }
-      ],
-      "properties": [
-        {
-          "name": "el",
-          "type": "string",
-          "default": "\"sl-grid-item\""
-        },
-        {
-          "name": "styleModifier",
-          "attribute": "styleModifier",
-          "description": "Append to the class name. Used for passing in utility classes",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "sl-grid",
-      "path": "./components/grid/grid.ts",
-      "description": "Component: sl-grid\n\nGrid provides a responsive layout that adapts to screen size and orientation, ensuring consistency across devices.\n- **slot**: The grid items",
-      "attributes": [
-        {
-          "name": "variant",
-          "description": "Style variant\n- **side-by-side** yields a grid whose grid items display side-by-side (2 per row) on all screen sizes\n- **2up** yields a grid whose grid items are stacked on small screens but display side-by-side when enough screen real estate is available to do so\n- **2-3up** yields a grid whose grid items display side-by-side (2 per row) on small screens and 3 per row on md/lg screens\n- **3up** yields a grid whose grid items are stacked on small screens, transforms to a 2-across pattern and then transforms again to a 3-across pattern\n- **1-3up** yields a grid whose grid items are stacked on small screens and transforms to a 3-across pattern on larger screens\n- **4up** yields a grid whose grid items are stacked on small screens, transforms to a 2-across pattern, transforms again to a 3-across pattern, and ultimately transforms to a 4-across pattern\n- **2-3-4up** yields a grid whose grid items are 2-across on small screens, 3-across on medium screens, and ultimately transforms to a 4-across pattern on  lg screens\n- **2-4up** yields a grid whose grid items are 2-across on small screens and ultimately transforms to a 4-across pattern on md/lg screens\n- **1-2-4up** yields a grid whose grid items are stacked on small screens, transforms to a 2-across pattern, and ultimately transforms to a 4-across pattern\n- **1-4up** yields a grid whose grid items are stacked on small screens, transforms to a 4-across pattern on medium/large screens\n- **2-4-5up** yields a grid whose grid items are 2-across on small screens, 4-across pattern on md screens, and 5up on large screens\n- **5up** yields a grid whose grid items are stacked on small screens, 2up on sm/md screens, 3up on md screens, 4up on md/lg screens, then 5up on lg screens\n- **2-3-4-5up** yields a grid whose grid items are  2up on sm/md screens, 3up on md screens, 4up on md/lg screens, then 5up on lg screens",
-          "type": "\"side-by-side\" | \"2up\" | \"2-3up\" | \"3up\" | \"1-3up\" | \"2-4up\" | \"2-3-4up\" | \"4up\" | \"1-4up\" | \"1-2-4up\" | \"2-4-5up\" | \"2-3-4-5up\" | \"5up\" | \"2-4-6up\""
-        },
-        {
-          "name": "gap",
-          "description": "Style variant\n- **none** yields a grid whose grid items are spaced without any gutter in between\n- **sm** yields a grid whose grid items are spaced with a gap smaller than the default\n- **lg** yields a grid whose grid items are spaced with a gap larger than the default",
-          "type": "\"sm\" | \"none\" | \"lg\""
-        },
-        {
-          "name": "break",
-          "description": "Break variant\n-  **faster** breaks the grid at a smaller width than the default. Example: 2up grid breaks to 2 per row at smaller width than default\n-  **slower** breaks the grid at a larger width than the default. Example: 2up grid breaks to 2 per row at larger width than default\n-  **none** the grid does not break.",
-          "type": "\"none\" | \"faster\" | \"slower\""
-        },
-        {
-          "name": "separators",
-          "description": "Separators\n1. Adds lines between items",
-          "type": "boolean"
-        },
-        {
-          "name": "height",
-          "description": "Height variant\n- **auto** Prevents the grid from stretching so the grid items are staggered in height",
-          "type": "\"auto\""
-        },
-        {
-          "name": "styleModifier",
-          "description": "Append to the class name. Used for passing in utility classes",
-          "type": "string"
-        }
-      ],
-      "properties": [
-        {
-          "name": "el",
-          "type": "string",
-          "default": "\"sl-grid\""
-        },
-        {
-          "name": "variant",
-          "attribute": "variant",
-          "description": "Style variant\n- **side-by-side** yields a grid whose grid items display side-by-side (2 per row) on all screen sizes\n- **2up** yields a grid whose grid items are stacked on small screens but display side-by-side when enough screen real estate is available to do so\n- **2-3up** yields a grid whose grid items display side-by-side (2 per row) on small screens and 3 per row on md/lg screens\n- **3up** yields a grid whose grid items are stacked on small screens, transforms to a 2-across pattern and then transforms again to a 3-across pattern\n- **1-3up** yields a grid whose grid items are stacked on small screens and transforms to a 3-across pattern on larger screens\n- **4up** yields a grid whose grid items are stacked on small screens, transforms to a 2-across pattern, transforms again to a 3-across pattern, and ultimately transforms to a 4-across pattern\n- **2-3-4up** yields a grid whose grid items are 2-across on small screens, 3-across on medium screens, and ultimately transforms to a 4-across pattern on  lg screens\n- **2-4up** yields a grid whose grid items are 2-across on small screens and ultimately transforms to a 4-across pattern on md/lg screens\n- **1-2-4up** yields a grid whose grid items are stacked on small screens, transforms to a 2-across pattern, and ultimately transforms to a 4-across pattern\n- **1-4up** yields a grid whose grid items are stacked on small screens, transforms to a 4-across pattern on medium/large screens\n- **2-4-5up** yields a grid whose grid items are 2-across on small screens, 4-across pattern on md screens, and 5up on large screens\n- **5up** yields a grid whose grid items are stacked on small screens, 2up on sm/md screens, 3up on md screens, 4up on md/lg screens, then 5up on lg screens\n- **2-3-4-5up** yields a grid whose grid items are  2up on sm/md screens, 3up on md screens, 4up on md/lg screens, then 5up on lg screens",
-          "type": "\"side-by-side\" | \"2up\" | \"2-3up\" | \"3up\" | \"1-3up\" | \"2-4up\" | \"2-3-4up\" | \"4up\" | \"1-4up\" | \"1-2-4up\" | \"2-4-5up\" | \"2-3-4-5up\" | \"5up\" | \"2-4-6up\""
-        },
-        {
-          "name": "gap",
-          "attribute": "gap",
-          "description": "Style variant\n- **none** yields a grid whose grid items are spaced without any gutter in between\n- **sm** yields a grid whose grid items are spaced with a gap smaller than the default\n- **lg** yields a grid whose grid items are spaced with a gap larger than the default",
-          "type": "\"sm\" | \"none\" | \"lg\""
-        },
-        {
-          "name": "break",
-          "attribute": "break",
-          "description": "Break variant\n-  **faster** breaks the grid at a smaller width than the default. Example: 2up grid breaks to 2 per row at smaller width than default\n-  **slower** breaks the grid at a larger width than the default. Example: 2up grid breaks to 2 per row at larger width than default\n-  **none** the grid does not break.",
-          "type": "\"none\" | \"faster\" | \"slower\""
-        },
-        {
-          "name": "separators",
-          "attribute": "separators",
-          "description": "Separators\n1. Adds lines between items",
-          "type": "boolean"
-        },
-        {
-          "name": "height",
-          "attribute": "height",
-          "description": "Height variant\n- **auto** Prevents the grid from stretching so the grid items are staggered in height",
-          "type": "\"auto\""
-        },
-        {
-          "name": "styleModifier",
-          "attribute": "styleModifier",
-          "description": "Append to the class name. Used for passing in utility classes",
-          "type": "string"
-        }
-      ]
-    },
-    {
       "name": "sl-header",
       "path": "./components/header/header.ts",
       "description": "Component: sl-header",
@@ -3442,7 +3337,7 @@
         {
           "name": "variant",
           "description": "Heading variants\n- **default** renders a heading with the XL font styles\n- **sm** renders a heading with the SM font styles\n- **md** renders a heading with the MD font styles\n- **lg** renders a heading with the LG font styles\n- **display-sm** renders a heading with the Display SM font styles\n- **display-md** renders a heading with the Display MD font styles\n- **display-lg** renders a heading with the Display LG font styles",
-          "type": "\"sm\" | \"lg\" | \"display-lg\" | \"display-md\" | \"display-sm\" | \"md\""
+          "type": "\"sm\" | \"display-lg\" | \"display-md\" | \"display-sm\" | \"lg\" | \"md\""
         },
         {
           "name": "tagName",
@@ -3471,7 +3366,7 @@
           "name": "variant",
           "attribute": "variant",
           "description": "Heading variants\n- **default** renders a heading with the XL font styles\n- **sm** renders a heading with the SM font styles\n- **md** renders a heading with the MD font styles\n- **lg** renders a heading with the LG font styles\n- **display-sm** renders a heading with the Display SM font styles\n- **display-md** renders a heading with the Display MD font styles\n- **display-lg** renders a heading with the Display LG font styles",
-          "type": "\"sm\" | \"lg\" | \"display-lg\" | \"display-md\" | \"display-sm\" | \"md\""
+          "type": "\"sm\" | \"display-lg\" | \"display-md\" | \"display-sm\" | \"lg\" | \"md\""
         },
         {
           "name": "tagName",
@@ -3819,7 +3714,7 @@
         {
           "name": "gap",
           "description": "Gap variant (Default is 16px)\n- **none** yields a layout whose layout sections are spaced without any gutter in between on large screens.\n- **sm** yields a layout whose layout sections are spaced 8px apart on large screens. Small screens gutters move to 16px between.\n- **lg** yields a layout whose layout sections are spaced 24px apart on large screens. Small screens gutters move to 16px between.\n- **xl** yields a layout whose layout sections are spaced 32px apart on large screens. Small screens gutters move to 16px between.",
-          "type": "\"sm\" | \"none\" | \"lg\" | \"xl\""
+          "type": "\"sm\" | \"lg\" | \"xl\" | \"none\""
         },
         {
           "name": "variant",
@@ -3842,7 +3737,7 @@
           "name": "gap",
           "attribute": "gap",
           "description": "Gap variant (Default is 16px)\n- **none** yields a layout whose layout sections are spaced without any gutter in between on large screens.\n- **sm** yields a layout whose layout sections are spaced 8px apart on large screens. Small screens gutters move to 16px between.\n- **lg** yields a layout whose layout sections are spaced 24px apart on large screens. Small screens gutters move to 16px between.\n- **xl** yields a layout whose layout sections are spaced 32px apart on large screens. Small screens gutters move to 16px between.",
-          "type": "\"sm\" | \"none\" | \"lg\" | \"xl\""
+          "type": "\"sm\" | \"lg\" | \"xl\" | \"none\""
         },
         {
           "name": "variant",
