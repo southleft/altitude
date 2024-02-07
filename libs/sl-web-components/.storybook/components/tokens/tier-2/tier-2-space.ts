@@ -2,8 +2,9 @@ import { html, LitElement, unsafeCSS } from 'lit';
 import tokens from '../../../../styles/tokens.json';
 import styles from '../tokens.scss';
 import '../../token-specimen/token-specimen';
+import '../../f-po/f-po';
 
-export class Tier2Spacing extends LitElement {
+export class Tier2Space extends LitElement {
   static get styles() {
     return unsafeCSS(styles.toString());
   }
@@ -21,12 +22,12 @@ export class Tier2Spacing extends LitElement {
     return html`
       <section>
         <header>
-          <h1>Tier 2: Spacing</h1>
+          <h1>Tier 2: Space</h1>
         </header>
         <table>
           <caption>
             <h2>Sizes</h2>
-            <p>Spacing tokens ensure consistency and cohesion across the user interface by defining standardized intervals for padding, margin, and gap.</p>
+            <p>Space tokens ensure consistency and cohesion across the user interface by defining standardized intervals for padding, margin, and gap.</p>
           </caption>
           <thead>
             <tr>
@@ -53,12 +54,12 @@ export class Tier2Spacing extends LitElement {
   }
 }
 
-if (customElements.get('tier-2-spacing') === undefined) {
-  customElements.define('tier-2-spacing', Tier2Spacing);
+if (customElements.get('tier-2-space') === undefined) {
+  customElements.define('tier-2-space', Tier2Space);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'tier-2-spacing': Tier2Spacing;
+    'tier-2-space': Tier2Space;
   }
 }

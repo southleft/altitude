@@ -11,6 +11,10 @@
   @return calc(var(--sl-base-space) * #{$number});
 }
 
+/* ------------------------------------*\
+  #UTILITIES
+\*------------------------------------ */
+
 /**
  * Visually hidden from display
  */
@@ -27,6 +31,11 @@
 
 .sl-u-is-vishidden {
   @include visuallyHidden;
+}
+
+.sl-u-display-flex {
+  display: flex;
+  flex-direction: column;
 }
 
 /* ------------------------------------*\
@@ -207,13 +216,4 @@
 
 :focus-visible {
   @include focus;
-}
-
-/* ------------------------------------*\
-  #BACKGROUND STYLES
-\*------------------------------------ */
-
-@mixin background-transparent() {
-  background: var(--sl-theme-color-background-transparent-strong);
-  backdrop-filter: blur(8px);
 }

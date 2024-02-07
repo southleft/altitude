@@ -53,7 +53,9 @@ export class SLCard extends SLElement {
             <slot name="header"></slot>
           </div>
         `}
-        <slot></slot>
+        <div class="sl-c-card__body">
+          <slot></slot>
+        </div>
       </div>
     `;
   }

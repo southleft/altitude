@@ -1,0 +1,80 @@
+/* ------------------------------------ *\
+  $GRID
+\* ------------------------------------ */
+@use 'sass:math';
+
+// Grid Variables
+$grid-cols: 12 !default;
+
+@mixin column-generator($suffix) {
+  @for $i from 1 through $grid-cols {
+    // Implicit columns
+    .sl-u-grid.cols\:#{$i}\@#{$suffix} {
+      grid-template-columns: repeat(math.div($grid-cols, $i), 1fr);
+    }
+
+    // Explicit columns
+    .sl-u-grid__item.col\:#{$i},
+    .sl-u-grid .sl-u-grid__item.col\:#{$i}\@#{$suffix} {
+      grid-column: span $i / span $i;
+    }
+  }
+
+  @for $i from 1 through $grid-cols {
+    .offset\:#{$i}\@#{$suffix} {
+      grid-column-start: $i;
+    }
+  }
+}
+
+@include column-generator(null);
+
+@media (min-width: $sl-breakpoint-sm) {
+  @include column-generator('sm');
+}
+@media (min-width: $sl-breakpoint-md) {
+  @include column-generator('md');
+}
+@media (min-width: $sl-breakpoint-lg) {
+  @include column-generator('lg');
+}
+@media (min-width: $sl-breakpoint-xl) {
+  @include column-generator('xl');
+}
+
+// Grid modifiers
+.sl-u-grid {
+  display: grid !important;
+  grid-gap: var(--sl-theme-space);
+  grid-template-columns: repeat(1fr, 1fr);
+
+  &:has(.sl-u-grid__item) {
+    grid-template-columns: repeat($grid-cols, 1fr);
+  }
+}
+
+.sl-u-grid.cols\:\@sm,
+.sl-u-grid.cols\:\@md,
+.sl-u-grid.cols\:\@lg,
+.sl-u-grid.cols\:\@xl {
+  grid-template-columns: #{$grid-cols}fr;
+}
+
+.sl-u-grid__item {
+  display: flex;
+}
+
+// Define placeholder for full-width columns
+%full-width-columns-explicit {
+  grid-column: span $grid-cols;
+}
+
+// Extend full-width columns placeholder
+@for $i from 1 through $grid-cols {
+  .sl-u-grid__item.col\:\@sm,
+  .sl-u-grid__item.col\:\@md,
+  .sl-u-grid__item.col\:\@lg,
+  .sl-u-grid__item.col\:\@xl {
+    @extend %full-width-columns-explicit;
+  }
+}

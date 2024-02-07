@@ -7,7 +7,7 @@ import './tier-2-icons';
 import './tier-2-layout';
 import './tier-2-opacity';
 import './tier-2-shadows';
-import './tier-2-spacing';
+import './tier-2-space';
 import './tier-2-typography';
 
 const meta: Meta = {
@@ -32,6 +32,6 @@ export const Opacity: Story = (args, context) => html`<tier-2-opacity theme=${co
 
 export const Shadows: Story = (args, context) => html`<tier-2-shadows theme=${context.globals.theme}></tier-2-shadows>`;
 
-export const Spacing: Story = (args, context) => html`<tier-2-spacing theme=${context.globals.theme}></tier-2-spacing>`;
+export const Space: Story = (args, context) => html`<tier-2-space theme=${context.globals.theme}></tier-2-space>`;
 
 export const Typography: Story = (args, context) => html`<tier-2-typography theme=${context.globals.theme}></tier-2-typography>`;

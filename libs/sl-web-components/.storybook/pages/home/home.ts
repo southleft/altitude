@@ -7,8 +7,6 @@ import * as Pagination from '../../../components/pagination/pagination.stories.t
 import * as Card from '../../../components/card/card.stories.ts';
 import '../../templates/basic-page/basic-page';
 import '../../../components/layout-section/layout-section';
-import '../../../components/grid/grid';
-import '../../../components/grid-item/grid-item';
 
 /**
  * Page: sl-l-home
@@ -34,44 +32,20 @@ export class SLHome extends LitElement {
           ${Breadcrumbs.Truncated({isTruncated: true})}
         </sl-layout-section>
         <sl-layout-section>
-          <sl-grid variant="4up">
-            <sl-grid-item>
-              ${Card.WithContent({})}
-            </sl-grid-item>
-            <sl-grid-item>
-              ${Card.WithContent({})}
-            </sl-grid-item>
-            <sl-grid-item>
-              ${Card.WithContent({})}
-            </sl-grid-item>
-            <sl-grid-item>
-              ${Card.WithContent({})}
-            </sl-grid-item>
-            <sl-grid-item>
-              ${Card.WithContent({})}
-            </sl-grid-item>
-            <sl-grid-item>
-              ${Card.WithContent({})}
-            </sl-grid-item>
-            <sl-grid-item>
-              ${Card.WithContent({})}
-            </sl-grid-item>
-            <sl-grid-item>
-              ${Card.WithContent({})}
-            </sl-grid-item>
-            <sl-grid-item>
-              ${Card.WithContent({})}
-            </sl-grid-item>
-            <sl-grid-item>
-              ${Card.WithContent({})}
-            </sl-grid-item>
-            <sl-grid-item>
-              ${Card.WithContent({})}
-            </sl-grid-item>
-            <sl-grid-item>
-              ${Card.WithContent({})}
-            </sl-grid-item>
-          </sl-grid>
+          <div class="sl-u-grid cols:6@sm cols:4@md cols:3@lg sl-u-gap--md">
+            ${Card.WithContent({})}
+            ${Card.WithContent({})}
+            ${Card.WithContent({})}
+            ${Card.WithContent({})}
+            ${Card.WithContent({})}
+            ${Card.WithContent({})}
+            ${Card.WithContent({})}
+            ${Card.WithContent({})}
+            ${Card.WithContent({})}
+            ${Card.WithContent({})}
+            ${Card.WithContent({})}
+            ${Card.WithContent({})}
+          </div>
         </sl-layout-section>
         <sl-layout-section class="sl-l-home__breadcrumbs">
           ${Pagination.Default({totalRecords: '200', pageSize: '20'})}

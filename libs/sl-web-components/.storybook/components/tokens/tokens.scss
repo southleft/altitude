@@ -1,6 +1,6 @@
 @import '../../../styles/component';
 /* ------------------------------------*\
-    #TOKENS
+  #TOKENS
 \*------------------------------------ */
 
 section {
@@ -20,13 +20,35 @@ h2 {
   @include sl-theme-typography-heading-md-bold;
 }
 
+h3 {
+  @include sl-theme-typography-body-lg-bold;
+  margin-top: var(--sl-theme-space);
+}
+
+h3 + p {
+  margin-top: 0;
+}
+
 p {
   margin-top: var(--sl-theme-space);
+  max-width: var(--sl-theme-layout-max-width-md);
+}
+
+a {
+  color: var(--sl-theme-color-content-default-weak);
+
+  &:hover {
+    color: var(--sl-theme-color-content-default);
+  }
 }
 
 caption {
   padding-bottom: var(--sl-theme-space-lg);
   text-align: left;
+
+  pre {
+    margin-top: var(--sl-theme-space);
+  }
 }
 
 table {
@@ -42,4 +64,11 @@ th {
   padding: var(--sl-theme-space);
   border-top: var(--sl-theme-border-width) solid var(--sl-theme-color-border-inverse-default);
   border-left: var(--sl-theme-border-width) solid var(--sl-theme-color-border-inverse-default);
+}
+
+hr {
+  width: 100%;
+  height: var(--sl-theme-border-width);
+  background-color: var(--sl-theme-color-border-default);
+  border: none;
 }

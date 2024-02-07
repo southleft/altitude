@@ -4,7 +4,7 @@ import styles from '../tokens.scss';
 import '../../token-specimen/token-specimen';
 import '../../../../components/alert/alert';
 
-export class Tier1Spacing extends LitElement {
+export class Tier1Space extends LitElement {
   static get styles() {
     return unsafeCSS(styles.toString());
   }
@@ -22,7 +22,7 @@ export class Tier1Spacing extends LitElement {
     return html`
       <section>
         <header>
-          <h1>Tier 1: Spacing</h1>
+          <h1>Tier 1: Space</h1>
           <sl-alert ?isActive=${true} variant="warning">IMPORTANT: Avoid direct usage of Tier 1 tokens in code. Tier 2 tokens must exclusively reference Tier 1 tokens.</sl-alert>
         </header>
         <table>
@@ -52,12 +52,12 @@ export class Tier1Spacing extends LitElement {
   }
 }
 
-if (customElements.get('tier-1-spacing') === undefined) {
-  customElements.define('tier-1-spacing', Tier1Spacing);
+if (customElements.get('tier-1-space') === undefined) {
+  customElements.define('tier-1-space', Tier1Space);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'tier-1-spacing': Tier1Spacing;
+    'tier-1-space': Tier1Space;
   }
 }

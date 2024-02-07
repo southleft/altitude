@@ -1,9 +1,9 @@
 import { html, LitElement, unsafeCSS } from 'lit';
-import tokens from '../../../../styles/tokens.json';
-import styles from '../tokens.scss';
-import '../../token-specimen/token-specimen';
+import tokens from '../../../styles/tokens.json';
+import styles from './utilities.scss';
+import '../token-specimen/token-specimen';
 
-export class Tier2Typography extends LitElement {
+export class UtilitiesTypography extends LitElement {
   static get styles() {
     return unsafeCSS(styles.toString());
   }
@@ -21,23 +21,23 @@ export class Tier2Typography extends LitElement {
     return html`
       <section>
         <header>
-          <h1>Tier 2: Typography</h1>
+          <h1>Utilities: Typography</h1>
         </header>
         <table>
           <caption>
-            <h2>Typography Usage</h2>
-            <p> Leverage the type mixins below to achieve modular and reusable typography styles throughout the codebase.</p>
+            <h2>Typography</h2>
+            <p>Typography utility classes provide a set of predefined styles for text elements, allowing developers to apply consistent typography across their web projects. These classes are designed to enhance readability and maintain consistency in text formatting.</p>
           </caption>
           <thead>
             <tr>
-              <th>Include</th>
+              <th>Utility Class</th>
               <th>Example</th>
             </tr>
           </thead>
           <tbody>
             ${this.filterTokens('sl-theme-typography').map((item) => {
               return html`
-                <token-specimen variant="typography" name="@include ${item.name};" exampleClass="${item.name.replace('sl-theme-', 'sl-u-theme-')}"
+                <token-specimen variant="typography" value=".${item.name.replace('sl-theme-', 'sl-u-theme-')}" exampleClass="${item.name.replace('sl-theme-', 'sl-u-theme-')}"
                   >Lorem ipsum dolor sit amet, consectetur adipiscing elit.</token-specimen
                 >
               `;
@@ -49,12 +49,12 @@ export class Tier2Typography extends LitElement {
   }
 }
 
-if (customElements.get('tier-2-typography') === undefined) {
-  customElements.define('tier-2-typography', Tier2Typography);
+if (customElements.get('utilities-typography') === undefined) {
+  customElements.define('utilities-typography', UtilitiesTypography);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'tier-2-typography': Tier2Typography;
+    'utilities-typography': UtilitiesTypography;
   }
 }

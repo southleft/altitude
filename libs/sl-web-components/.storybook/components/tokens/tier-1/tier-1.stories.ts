@@ -8,7 +8,7 @@ import './tier-1-icons';
 import './tier-1-layout';
 import './tier-1-opacity';
 import './tier-1-shadows';
-import './tier-1-spacing';
+import './tier-1-space';
 import './tier-1-typography';
 import './tier-1-zindex';
 
@@ -36,7 +36,7 @@ export const Opacity: Story = (args, context) => html`<tier-1-opacity theme=${co
 
 export const Shadows: Story = (args, context) => html`<tier-1-shadows theme=${context.globals.theme}></tier-1-shadows>`;
 
-export const Spacing: Story = (args, context) => html`<tier-1-spacing theme=${context.globals.theme}></tier-1-spacing>`;
+export const Space: Story = (args, context) => html`<tier-1-space theme=${context.globals.theme}></tier-1-space>`;
 
 export const Typography: Story = (args, context) => html`<tier-1-typography theme=${context.globals.theme}></tier-1-typography>`;
 
