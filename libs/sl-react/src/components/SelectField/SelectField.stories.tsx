@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLDropdown, SLFieldNote, SLIconWarningCircle, SLIconHelp, SLList, SLListItem } from '../..';
+import { SLSelectField, SLFieldNote, SLIconWarningCircle, SLIconHelp, SLList, SLListItem } from '../..';
 
 const dataSource = [
   { label: 'List item 1', value: 'List item 1' },
@@ -15,13 +15,13 @@ const dataSource = [
 ];
 
 export default {
-  title: 'Molecules/Dropdown',
-  component: SLDropdown,
+  title: 'Molecules/Select Field',
+  component: SLSelectField,
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['onDropdownOpen', 'onDropdownClose']
+      handles: ['onSelectFieldOpen', 'onSelectFieldClose']
     }
   },
   args: {
@@ -43,39 +43,39 @@ export default {
   }
 };
 
-export const Default: StoryObj<typeof SLDropdown> = { args: {} };
+export const Default: StoryObj<typeof SLSelectField> = { args: {} };
 
-export const Filled: StoryObj<typeof SLDropdown> = { args: {
+export const Filled: StoryObj<typeof SLSelectField> = { args: {
   value: 'List item 1'
 } };
 
-export const Error: StoryObj<typeof SLDropdown> = { args: {
+export const Error: StoryObj<typeof SLSelectField> = { args: {
   isError: true,
   errorNote: 'This is an error note.',
 } };
 
-export const Disabled: StoryObj<typeof SLDropdown> = { args: {
+export const Disabled: StoryObj<typeof SLSelectField> = { args: {
   isDisabled: true,
 } };
 
-export const Required: StoryObj<typeof SLDropdown> = { args: {
+export const Required: StoryObj<typeof SLSelectField> = { args: {
   isRequired: true,
 } };
 
-export const RequiredHiddenLabel: StoryObj<typeof SLDropdown> = { args: {
+export const RequiredHiddenLabel: StoryObj<typeof SLSelectField> = { args: {
   isRequired: true,
   hideLabel: true,
 } };
 
-export const Optional: StoryObj<typeof SLDropdown> = { args: {
+export const Optional: StoryObj<typeof SLSelectField> = { args: {
   isOptional: true,
 } };
 
-export const HiddenLabel: StoryObj<typeof SLDropdown> = { args: {
+export const HiddenLabel: StoryObj<typeof SLSelectField> = { args: {
   hideLabel: true,
 } };
 
-export const SlottedFieldNote: StoryObj<typeof SLDropdown> = {
+export const SlottedFieldNote: StoryObj<typeof SLSelectField> = {
   args: {
     children: (
       <>
@@ -85,7 +85,7 @@ export const SlottedFieldNote: StoryObj<typeof SLDropdown> = {
   },
 };
 
-export const SlottedErrorNote: StoryObj<typeof SLDropdown> = {
+export const SlottedErrorNote: StoryObj<typeof SLSelectField> = {
   args: {
     isError: true,
     fieldNote: '',
@@ -97,18 +97,18 @@ export const SlottedErrorNote: StoryObj<typeof SLDropdown> = {
   },
 };
 
-export const WithAlignTop: StoryObj<typeof SLDropdown> = {
+export const WithAlignTop: StoryObj<typeof SLSelectField> = {
   args: {
     align: 'top',
   }
 };
 WithAlignTop.decorators = [(Story) => <div style={{ display: 'flex', height: '90vh', alignItems: 'flex-end' }}>{Story()}</div>];
 
-export const WithAlignAuto: StoryObj<typeof SLDropdown> = {args: {}};
+export const WithAlignAuto: StoryObj<typeof SLSelectField> = {args: {}};
 WithAlignAuto.decorators = [
   (Story) => <div style={{ display: 'flex', height: '90vh', alignItems: 'flex-end' }}>{Story()}</div>
 ];
 
-export const WithSearch: StoryObj<typeof SLDropdown> = { args: {
+export const WithSearch: StoryObj<typeof SLSelectField> = { args: {
   hasSearch: true,
 } };

@@ -5,8 +5,7 @@ import '../icon/icons/calendar';
 import '../icon/icons/warning-circle';
 import '../list-item/list-item';
 import '../list/list';
-import './dropdown';
-import '../dropdown-panel/dropdown-panel';
+import './select-field';
 
 const dataSource = [
   { label: 'List item 1', value: 'List item 1' },
@@ -22,14 +21,14 @@ const dataSource = [
 ];
 
 export default {
-  title: 'Molecules/Dropdown',
-  component: 'sl-dropdown',
+  title: 'Molecules/Select Field',
+  component: 'sl-select-field',
   tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['onDropdownOpen', 'onDropdownClose']
+      handles: ['onSelectFieldOpen', 'onSelectFieldClose']
     }
   },
   decorators: [ withActions ],
@@ -42,9 +41,9 @@ export default {
 };
 
 const Template = (args) => html`
-  <sl-dropdown ${spread(args)}>
+  <sl-select-field ${spread(args)}>
     <sl-list>${dataSource.map((item: any) => html`<sl-list-item value=${item.value}>${item.label}</sl-list-item>`)}</sl-list>
-  </sl-dropdown>
+  </sl-select-field>
 `;
 
 export const Default = Template.bind({});
@@ -88,19 +87,19 @@ HiddenLabel.args = {
 };
 
 const TemplateSlottedFieldNote = (args) => html`
-  <sl-dropdown ${spread(args)}>
+  <sl-select-field ${spread(args)}>
     <sl-list>${dataSource.map((item: any) => html`<sl-list-item value=${item.value}>${item.label}</sl-list-item>`)}</sl-list>
     <sl-field-note slot="field-note"><sl-icon-help></sl-icon-help>This is a field note.</sl-field-note>
-  </sl-dropdown>`;
+  </sl-select-field>`;
 
 export const SlottedFieldNote = TemplateSlottedFieldNote.bind({});
 SlottedFieldNote.args = {};
 
 const TemplateSlottedErrorNote = (args) => html`
-  <sl-dropdown ${spread(args)}>
+  <sl-select-field ${spread(args)}>
     <sl-list>${dataSource.map((item: any) => html`<sl-list-item value=${item.value}>${item.label}</sl-list-item>`)}</sl-list>
     <sl-field-note slot="error"><sl-icon-warning-circle></sl-icon-warning-circle>This is an error note.</sl-field-note>
-  </sl-dropdown>`;
+  </sl-select-field>`;
 
 export const SlottedErrorNote = TemplateSlottedErrorNote.bind({});
 SlottedErrorNote.args = {
@@ -110,9 +109,9 @@ SlottedErrorNote.args = {
 
 const TemplateAlignment = (args) => html`
   <div style="display: flex; height: 90vh; max-height: 600px; align-items: flex-end;">
-    <sl-dropdown ${spread(args)}>
+    <sl-select-field ${spread(args)}>
       <sl-list>${dataSource.map((item: any) => html`<sl-list-item value=${item.value}>${item.label}</sl-list-item>`)}</sl-list>
-    </sl-dropdown>
+    </sl-select-field>
   </div>
 `;
 

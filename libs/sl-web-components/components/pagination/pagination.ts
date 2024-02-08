@@ -6,8 +6,8 @@ import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { SLElement } from '../SLElement';
 import { SLContextualMenu } from '../contextual-menu/contextual-menu';
-import { SLDropdown } from '../dropdown/dropdown';
-import { PartialDataSource } from '../dropdown/dropdown.model';
+import { SLSelectField } from '../select-field/select-field';
+import { PartialDataSource } from '../select-field/select-field.model';
 import { SLIconChevronLeft } from '../icon/icons/chevron-left';
 import { SLIconChevronRight } from '../icon/icons/chevron-right';
 import { SLIconDotsHorizontal } from '../icon/icons/dots-horizontal';
@@ -39,7 +39,7 @@ export class SLPagination extends SLElement {
 
   private elementMap = register({
     elements: [
-      [SLDropdown.el, SLDropdown],
+      [SLSelectField.el, SLSelectField],
       [SLList.el, SLList],
       [SLListItem.el, SLListItem],
       [SLPaginationItem.el, SLPaginationItem],
@@ -51,7 +51,7 @@ export class SLPagination extends SLElement {
     suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
   });
 
-  private dropdownEl = unsafeStatic(this.elementMap.get(SLDropdown.el));
+  private selectFieldEl = unsafeStatic(this.elementMap.get(SLSelectField.el));
   private listEl = unsafeStatic(this.elementMap.get(SLList.el));
   private listItemEl = unsafeStatic(this.elementMap.get(SLListItem.el));
   private paginationItemEl = unsafeStatic(this.elementMap.get(SLPaginationItem.el));
@@ -495,7 +495,7 @@ export class SLPagination extends SLElement {
               </${this.paginationItemEl}>
             </ol>
             <div class="sl-c-pagination-dropdown">
-              <${this.dropdownEl}
+              <${this.selectFieldEl}
                 .label=${this.pageSizeLabel}
                 .dataSource=${this.recordsPerPageDropdownData}
                 .value=${`${this.pageSize}`}
@@ -515,7 +515,7 @@ export class SLPagination extends SLElement {
                   `
                   )}
                 </${this.listEl}>
-              </${this.dropdownEl}>
+              </${this.selectFieldEl}>
             </div>
           </div>
         `}

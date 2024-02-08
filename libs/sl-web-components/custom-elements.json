@@ -2670,266 +2670,6 @@
       ]
     },
     {
-      "name": "sl-dropdown",
-      "path": "./components/dropdown/dropdown.ts",
-      "description": "Component: sl-dropdown\n\nDropdown presents a list of options from which a user can select one.\n- **slot**: The dropdown content\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
-      "attributes": [
-        {
-          "name": "isActive",
-          "description": "is Active",
-          "type": "boolean"
-        },
-        {
-          "name": "isActiveDropdown",
-          "description": "is Active dropdown\n1. Dropdown is open when set to true. Close when set to false",
-          "type": "boolean"
-        },
-        {
-          "name": "fieldId",
-          "description": "The unique id of the select field",
-          "type": "string"
-        },
-        {
-          "name": "title",
-          "description": "The select field's title",
-          "type": "string"
-        },
-        {
-          "name": "label",
-          "description": "The select field's label",
-          "type": "string",
-          "default": "\"Label\""
-        },
-        {
-          "name": "name",
-          "description": "The select field's name attribute",
-          "type": "string"
-        },
-        {
-          "name": "value",
-          "description": "The select field's value attribute",
-          "type": "string"
-        },
-        {
-          "name": "placeholder",
-          "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an <input> element",
-          "type": "string"
-        },
-        {
-          "name": "fieldNote",
-          "description": "The dropdown field note",
-          "type": "string"
-        },
-        {
-          "name": "errorNote",
-          "description": "The dropdown error note",
-          "type": "string"
-        },
-        {
-          "name": "ariaDescribedBy",
-          "description": "Aria describedby\n1. Used to connect the field note in select field to the select menu for accessibility",
-          "type": "string"
-        },
-        {
-          "name": "isRequired",
-          "description": "The select field's required attribute",
-          "type": "boolean",
-          "default": "false"
-        },
-        {
-          "name": "isOptional",
-          "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
-          "type": "boolean"
-        },
-        {
-          "name": "isDisabled",
-          "description": "The select field's disabled attribute",
-          "type": "boolean"
-        },
-        {
-          "name": "isError",
-          "description": "Error state",
-          "type": "boolean"
-        },
-        {
-          "name": "isReadonly",
-          "description": "Readonly attribute\n- Specifies that an input field is read-only",
-          "type": "boolean",
-          "default": "true"
-        },
-        {
-          "name": "hideLabel",
-          "description": "Hide the label?",
-          "type": "boolean"
-        },
-        {
-          "name": "hasSearch",
-          "description": "Add a search input to the dropdown panel",
-          "type": "boolean",
-          "default": "false"
-        },
-        {
-          "name": "align",
-          "description": "**Dropdown alignment**\n- **bottom** Dropdown panel appears on the bottom\n- **top** Dropdown panel appears on the top",
-          "type": "\"bottom\" | \"top\"",
-          "default": "\"bottom\""
-        },
-        {
-          "name": "styleModifier",
-          "description": "Append to the class name. Used for passing in utility classes",
-          "type": "string"
-        }
-      ],
-      "properties": [
-        {
-          "name": "el",
-          "type": "string",
-          "default": "\"sl-dropdown\""
-        },
-        {
-          "name": "isActive",
-          "attribute": "isActive",
-          "description": "is Active",
-          "type": "boolean"
-        },
-        {
-          "name": "isActiveDropdown",
-          "attribute": "isActiveDropdown",
-          "description": "is Active dropdown\n1. Dropdown is open when set to true. Close when set to false",
-          "type": "boolean"
-        },
-        {
-          "name": "fieldId",
-          "attribute": "fieldId",
-          "description": "The unique id of the select field",
-          "type": "string"
-        },
-        {
-          "name": "title",
-          "attribute": "title",
-          "description": "The select field's title",
-          "type": "string"
-        },
-        {
-          "name": "label",
-          "attribute": "label",
-          "description": "The select field's label",
-          "type": "string",
-          "default": "\"Label\""
-        },
-        {
-          "name": "dataSource",
-          "description": "Dropdown Datasource",
-          "type": "PartialDataSource[]"
-        },
-        {
-          "name": "name",
-          "attribute": "name",
-          "description": "The select field's name attribute",
-          "type": "string"
-        },
-        {
-          "name": "value",
-          "attribute": "value",
-          "description": "The select field's value attribute",
-          "type": "string"
-        },
-        {
-          "name": "placeholder",
-          "attribute": "placeholder",
-          "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an <input> element",
-          "type": "string"
-        },
-        {
-          "name": "fieldNote",
-          "attribute": "fieldNote",
-          "description": "The dropdown field note",
-          "type": "string"
-        },
-        {
-          "name": "errorNote",
-          "attribute": "errorNote",
-          "description": "The dropdown error note",
-          "type": "string"
-        },
-        {
-          "name": "ariaDescribedBy",
-          "attribute": "ariaDescribedBy",
-          "description": "Aria describedby\n1. Used to connect the field note in select field to the select menu for accessibility",
-          "type": "string"
-        },
-        {
-          "name": "isRequired",
-          "attribute": "isRequired",
-          "description": "The select field's required attribute",
-          "type": "boolean",
-          "default": "false"
-        },
-        {
-          "name": "isOptional",
-          "attribute": "isOptional",
-          "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
-          "type": "boolean"
-        },
-        {
-          "name": "isDisabled",
-          "attribute": "isDisabled",
-          "description": "The select field's disabled attribute",
-          "type": "boolean"
-        },
-        {
-          "name": "isError",
-          "attribute": "isError",
-          "description": "Error state",
-          "type": "boolean"
-        },
-        {
-          "name": "isReadonly",
-          "attribute": "isReadonly",
-          "description": "Readonly attribute\n- Specifies that an input field is read-only",
-          "type": "boolean",
-          "default": "true"
-        },
-        {
-          "name": "hideLabel",
-          "attribute": "hideLabel",
-          "description": "Hide the label?",
-          "type": "boolean"
-        },
-        {
-          "name": "hasSearch",
-          "attribute": "hasSearch",
-          "description": "Add a search input to the dropdown panel",
-          "type": "boolean",
-          "default": "false"
-        },
-        {
-          "name": "align",
-          "attribute": "align",
-          "description": "**Dropdown alignment**\n- **bottom** Dropdown panel appears on the bottom\n- **top** Dropdown panel appears on the top",
-          "type": "\"bottom\" | \"top\"",
-          "default": "\"bottom\""
-        },
-        {
-          "name": "listItems",
-          "description": "Query all the list items",
-          "type": "SLListItem[]"
-        },
-        {
-          "name": "handleOnClickOutside"
-        },
-        {
-          "name": "handleOnChange"
-        },
-        {
-          "name": "styleModifier",
-          "attribute": "styleModifier",
-          "description": "Append to the class name. Used for passing in utility classes",
-          "type": "string"
-        }
-      ]
-    },
-    {
       "name": "sl-field-note",
       "path": "./components/field-note/field-note.ts",
       "description": "Component: sl-field-note\n\nField note is used as helper text for any type of input field.\n- **slot**: The field note content",
@@ -5554,6 +5294,266 @@
         },
         {
           "name": "onChanged"
+        },
+        {
+          "name": "styleModifier",
+          "attribute": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "sl-select-field",
+      "path": "./components/select-field/select-field.ts",
+      "description": "Component: sl-select-field\n\nSelect field presents a list of options from which a user can select one.\n- **slot**: The select-field content\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
+      "attributes": [
+        {
+          "name": "isActive",
+          "description": "is Active",
+          "type": "boolean"
+        },
+        {
+          "name": "isActiveDropdown",
+          "description": "is Active select field\n1. Select field is open when set to true. Close when set to false",
+          "type": "boolean"
+        },
+        {
+          "name": "fieldId",
+          "description": "The unique id of the select field",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "description": "The select field's title",
+          "type": "string"
+        },
+        {
+          "name": "label",
+          "description": "The select field's label",
+          "type": "string",
+          "default": "\"Label\""
+        },
+        {
+          "name": "name",
+          "description": "The select field's name attribute",
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "description": "The select field's value attribute",
+          "type": "string"
+        },
+        {
+          "name": "placeholder",
+          "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an <input> element",
+          "type": "string"
+        },
+        {
+          "name": "fieldNote",
+          "description": "The select field field note",
+          "type": "string"
+        },
+        {
+          "name": "errorNote",
+          "description": "The select field error note",
+          "type": "string"
+        },
+        {
+          "name": "ariaDescribedBy",
+          "description": "Aria describedby\n1. Used to connect the field note in select field to the select menu for accessibility",
+          "type": "string"
+        },
+        {
+          "name": "isRequired",
+          "description": "The select field's required attribute",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "isOptional",
+          "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
+          "type": "boolean"
+        },
+        {
+          "name": "isDisabled",
+          "description": "The select field's disabled attribute",
+          "type": "boolean"
+        },
+        {
+          "name": "isError",
+          "description": "Error state",
+          "type": "boolean"
+        },
+        {
+          "name": "isReadonly",
+          "description": "Readonly attribute\n- Specifies that an input field is read-only",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "name": "hideLabel",
+          "description": "Hide the label?",
+          "type": "boolean"
+        },
+        {
+          "name": "hasSearch",
+          "description": "Add a search input to the dropdown panel",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "align",
+          "description": "**Select field alignment**\n- **bottom** Dropdown panel appears on the bottom\n- **top** Dropdown panel appears on the top",
+          "type": "\"bottom\" | \"top\"",
+          "default": "\"bottom\""
+        },
+        {
+          "name": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "el",
+          "type": "string",
+          "default": "\"sl-select-field\""
+        },
+        {
+          "name": "isActive",
+          "attribute": "isActive",
+          "description": "is Active",
+          "type": "boolean"
+        },
+        {
+          "name": "isActiveDropdown",
+          "attribute": "isActiveDropdown",
+          "description": "is Active select field\n1. Select field is open when set to true. Close when set to false",
+          "type": "boolean"
+        },
+        {
+          "name": "fieldId",
+          "attribute": "fieldId",
+          "description": "The unique id of the select field",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "attribute": "title",
+          "description": "The select field's title",
+          "type": "string"
+        },
+        {
+          "name": "label",
+          "attribute": "label",
+          "description": "The select field's label",
+          "type": "string",
+          "default": "\"Label\""
+        },
+        {
+          "name": "dataSource",
+          "description": "Select field Datasource",
+          "type": "PartialDataSource[]"
+        },
+        {
+          "name": "name",
+          "attribute": "name",
+          "description": "The select field's name attribute",
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "attribute": "value",
+          "description": "The select field's value attribute",
+          "type": "string"
+        },
+        {
+          "name": "placeholder",
+          "attribute": "placeholder",
+          "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an <input> element",
+          "type": "string"
+        },
+        {
+          "name": "fieldNote",
+          "attribute": "fieldNote",
+          "description": "The select field field note",
+          "type": "string"
+        },
+        {
+          "name": "errorNote",
+          "attribute": "errorNote",
+          "description": "The select field error note",
+          "type": "string"
+        },
+        {
+          "name": "ariaDescribedBy",
+          "attribute": "ariaDescribedBy",
+          "description": "Aria describedby\n1. Used to connect the field note in select field to the select menu for accessibility",
+          "type": "string"
+        },
+        {
+          "name": "isRequired",
+          "attribute": "isRequired",
+          "description": "The select field's required attribute",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "isOptional",
+          "attribute": "isOptional",
+          "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
+          "type": "boolean"
+        },
+        {
+          "name": "isDisabled",
+          "attribute": "isDisabled",
+          "description": "The select field's disabled attribute",
+          "type": "boolean"
+        },
+        {
+          "name": "isError",
+          "attribute": "isError",
+          "description": "Error state",
+          "type": "boolean"
+        },
+        {
+          "name": "isReadonly",
+          "attribute": "isReadonly",
+          "description": "Readonly attribute\n- Specifies that an input field is read-only",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "name": "hideLabel",
+          "attribute": "hideLabel",
+          "description": "Hide the label?",
+          "type": "boolean"
+        },
+        {
+          "name": "hasSearch",
+          "attribute": "hasSearch",
+          "description": "Add a search input to the dropdown panel",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "align",
+          "attribute": "align",
+          "description": "**Select field alignment**\n- **bottom** Dropdown panel appears on the bottom\n- **top** Dropdown panel appears on the top",
+          "type": "\"bottom\" | \"top\"",
+          "default": "\"bottom\""
+        },
+        {
+          "name": "listItems",
+          "description": "Query all the list items",
+          "type": "SLListItem[]"
+        },
+        {
+          "name": "handleOnClickOutside"
+        },
+        {
+          "name": "handleOnChange"
         },
         {
           "name": "styleModifier",
