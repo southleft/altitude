@@ -655,7 +655,7 @@ export class SLRange extends SLElement {
     }
     if (this.defaultLabelWrapper) {
       // @ts-ignore
-      this.defaultLabelWrapper.style.insetInlineStart = `calc(${percentage + 0.3}% + (${10 - percentage * 0.2}px))`;
+      this.defaultLabelWrapper.style.insetInlineStart = `calc(${percentage + 0.3}% + (${10 - percentage * 0.24}px))`;
     }
   }
 

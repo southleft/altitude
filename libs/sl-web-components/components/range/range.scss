@@ -45,7 +45,7 @@
   /**
    * Styling for track on range
    */
-  &::-webkit-range-runnable-track {
+  &::-webkit-slider-runnable-track {
     width: 100%;
     height: var(--sl-range-track-height);
     border-radius: var(--sl-theme-border-radius);
@@ -55,14 +55,14 @@
   /**
    * Disabled state for track on range
    */
-  &:disabled::-webkit-range-runnable-track {
+  &:disabled::-webkit-slider-runnable-track {
     background-color: var(--sl-theme-color-background-default);
   }
 
   /**
    * Handle styling on range
    */
-  &::-webkit-range-thumb {
+  &::-webkit-slider-thumb {
     border: none;
     width: var(--sl-range-thumb-size);
     height: var(--sl-range-thumb-size);
@@ -86,7 +86,7 @@
   /**
    * Disabled state on handle on range
    */
-  &:disabled::-webkit-range-thumb {
+  &:disabled::-webkit-slider-thumb {
     background-color: var(--sl-theme-color-content-tertiary);
     cursor: not-allowed;
   }
@@ -94,42 +94,42 @@
   /**
    * disabled Active state on handle
    */
-  &:disabled::-webkit-range-thumb:active {
+  &:disabled::-webkit-slider-thumb:active {
     outline: none;
   }
 
   /**
    * Hover state on handle
    */
-  &:enabled::-webkit-range-thumb:hover {
+  &:enabled::-webkit-slider-thumb:hover {
     background-color: var(--sl-theme-color-background-inverse-default);
   }
 
   /**
    * Active state on handle
    */
-  &:active::-webkit-range-thumb {
+  &:active::-webkit-slider-thumb {
     @include focus;
   }
 
   /**
    * Focus state on handle
    */
-  &:enabled:focus-visible::-webkit-range-thumb {
+  &:enabled:focus-visible::-webkit-slider-thumb {
     @include focus;
   }
 
   /**
    * Active state on handle
    */
-  &:enabled::-webkit-range-thumb:active {
+  &:enabled::-webkit-slider-thumb:active {
     background-color: var(--sl-theme-color-background-inverse-default);
     cursor: grabbing;
     outline: none;
   }
 
   &.sl-c-range-output-active {
-    &::-webkit-range-thumb {
+    &::-webkit-slider-thumb {
       background-color: var(--sl-theme-color-background-inverse-default);
       cursor: grabbing;
       outline: none;
@@ -228,7 +228,7 @@
 .sl-c-range__input-one-label-container,
 .sl-c-range__input-two-label-container {
   position: absolute;
-  inset-block-end: size(3.125);
+  inset-block-end: var(--sl-theme-space);
   transform: translateX(var(--rtlTranslateX, -50%));
   text-align: start;
   overflow: visible;
@@ -295,6 +295,7 @@
    */
   .sl-c-range__tooltip-container {
     flex: 1;
+    display: flex;
   }
 }
 
@@ -331,7 +332,7 @@
     /**
      * Thumb styling on dual range
      */
-    &::-webkit-range-thumb {
+    &::-webkit-slider-thumb {
       position: relative;
       width: var(--sl-range-thumb-size);
       height: var(--sl-range-thumb-size);
@@ -346,7 +347,7 @@
     /**
      * Thumb styling on active state
      */
-    &:active::-webkit-range-thumb {
+    &:active::-webkit-slider-thumb {
       z-index: var(--sl-z-index-500);
       @include focus;
     }
@@ -354,7 +355,7 @@
     /**
      * Thumb styling on focus state
      */
-    &:enabled:focus-visible::-webkit-range-thumb {
+    &:enabled:focus-visible::-webkit-slider-thumb {
       @include focus;
 
       background-color: var(--sl-theme-color-background-inverse-default);
@@ -363,14 +364,14 @@
     /**
      * Applies hover state to the handle on the double range
      */
-    &:enabled::-webkit-range-thumb:hover {
+    &:enabled::-webkit-slider-thumb:hover {
       background-color: var(--sl-theme-color-background-inverse-default);
     }
 
     /**
      * Active state on handle
      */
-    &:enabled::-webkit-range-thumb:active {
+    &:enabled::-webkit-slider-thumb:active {
       outline: none;
       background-color: var(--sl-theme-color-background-inverse-default);
     }
