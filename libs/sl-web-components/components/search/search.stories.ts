@@ -6,7 +6,7 @@ import '../icon/icons/help';
 import '../icon/icons/warning-circle';
 import '../list-item/list-item';
 import '../list/list';
-import './search-form';
+import './search';
 
 const dataSource = [
   { label: 'List item 1', value: 'List item 1' },
@@ -22,14 +22,14 @@ const dataSource = [
 ];
 
 export default {
-  title: 'Molecules/Search Form',
-  component: 'sl-search-form',
+  title: 'Molecules/Search',
+  component: 'sl-search',
   tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['onSearchFormChange']
+      handles: ['onSearchChange']
     }
   },
   decorators: [ withActions ],
@@ -42,9 +42,9 @@ export default {
 };
 
 const Template = (args) => html`
-  <sl-search-form ${spread(args)}>
+  <sl-search ${spread(args)}>
     <sl-list>${dataSource.map((item: any) => html`<sl-list-item value=${item.value}>${item.label}</sl-list-item>`)}</sl-list>
-  </sl-search-form>
+  </sl-search>
 `;
 
 export const Default = Template.bind({});
@@ -72,19 +72,19 @@ HiddenLabel.args = {
 };
 
 const TemplateSlottedFieldNote = (args) => html`
-  <sl-search-form ${spread(args)}>
+  <sl-search ${spread(args)}>
     <sl-list>${dataSource.map((item: any) => html`<sl-list-item value=${item.value}>${item.label}</sl-list-item>`)}</sl-list>
     <sl-field-note slot="field-note"><sl-icon-help></sl-icon-help>This is a field note.</sl-field-note>
-  </sl-search-form>`;
+  </sl-search>`;
 
 export const SlottedFieldNote = TemplateSlottedFieldNote.bind({});
 SlottedFieldNote.args = {};
 
 const TemplateSlottedErrorNote = (args) => html`
-  <sl-search-form ${spread(args)}>
+  <sl-search ${spread(args)}>
     <sl-list>${dataSource.map((item: any) => html`<sl-list-item value=${item.value}>${item.label}</sl-list-item>`)}</sl-list>
     <sl-field-note slot="error"><sl-icon-warning-circle></sl-icon-warning-circle>This is an error note.</sl-field-note>
-  </sl-search-form>`;
+  </sl-search>`;
 
 export const SlottedErrorNote = TemplateSlottedErrorNote.bind({});
 SlottedErrorNote.args = {

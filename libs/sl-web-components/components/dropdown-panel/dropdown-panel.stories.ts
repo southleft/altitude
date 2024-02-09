@@ -3,7 +3,7 @@ import { spread } from '../../directives/spread';
 import '../icon/icons/check';
 import '../list-item/list-item';
 import '../list/list';
-import '../search-form/search-form';
+import '../search/search';
 import './dropdown-panel';
 
 export default {
@@ -64,7 +64,7 @@ export const WithIconList = () => html`
 
 export const WithSearch = () => html`
   <sl-dropdown-panel ?hasHeader=${true} hasScroll=${true}>
-    <sl-search-form slot="header" .value=${''} ?isEmpty=${true}> </sl-search-form>
+    <sl-search slot="header" .value=${''} ?isEmpty=${true}> </sl-search>
     <sl-list>
       <sl-list-item>List Item</sl-list-item>
       <sl-list-item>List Item</sl-list-item>

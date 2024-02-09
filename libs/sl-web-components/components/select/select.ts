@@ -11,7 +11,7 @@ import { SLDropdownPanel } from '../dropdown-panel/dropdown-panel';
 import { SLFieldNote } from '../field-note/field-note';
 import { SLIconChevronDown } from '../icon/icons/chevron-down';
 import { SLListItem } from '../list-item/list-item';
-import { SLSearchForm } from '../search-form/search-form';
+import { SLSearch } from '../search/search';
 import { SLInput } from '../input/input';
 import { PartialDataSource } from './select.model';
 import styles from './select.scss';
@@ -33,7 +33,7 @@ export class SLSelect extends SLElement {
       [SLFieldNote.el, SLFieldNote],
       [SLIconChevronDown.el, SLIconChevronDown],
       [SLInput.el, SLInput],
-      [SLSearchForm.el, SLSearchForm],
+      [SLSearch.el, SLSearch],
       [SLListItem.el, SLListItem],
       [SLCheckboxItem.el, SLCheckboxItem]
     ],
@@ -44,7 +44,7 @@ export class SLSelect extends SLElement {
   private fieldNoteEl = unsafeStatic(this.elementMap.get(SLFieldNote.el));
   private iconChevronDownEl = unsafeStatic(this.elementMap.get(SLIconChevronDown.el));
   private inputEl = unsafeStatic(this.elementMap.get(SLInput.el));
-  private searchFormEl = unsafeStatic(this.elementMap.get(SLSearchForm.el));
+  private searchEl = unsafeStatic(this.elementMap.get(SLSearch.el));
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -452,7 +452,7 @@ export class SLSelect extends SLElement {
             this.isActiveDropdown
               ? html`
                 <${this.dropdownPanelEl} @keydown=${this.handleOnKeydownDropdownPanel} class="sl-c-select__panel" ?hasHeader=${this.hasSearch} ?hasScroll=${true}>
-                  ${this.hasSearch ? html` <${this.searchFormEl} slot="header" .value=${''} ?isEmpty=${true}> </${this.searchFormEl}> ` : html``}
+                  ${this.hasSearch ? html` <${this.searchEl} slot="header" .value=${''} ?isEmpty=${true}> </${this.searchEl}> ` : html``}
                   <slot @select=${this.toggleActive}></slot>
                 </${this.dropdownPanelEl}>
               `

@@ -79,7 +79,7 @@ export class SLListItem extends SLElement {
   accessor href: string;
 
   /**
-   * Value for a list item that needs to return a value to an input in a dropdown. This is required for search-form/drop-down.
+   * Value for a list item that needs to return a value to an input in a dropdown. This is required for search/drop-down.
    * Value can be a string or object ({lable, value} pair)
    */
   @property()
@@ -288,7 +288,7 @@ export class SLListItem extends SLElement {
   /**
    * Handle mouse enter
    * 1. If parent is contextual menu and the item doesn't have subitems, close the contextual menu
-   * 2. If the parent is a search form, close the dropdown if item is selected
+   * 2. If the parent is a search, close the dropdown if item is selected
    */
   handleMouseEnter() {
     if (this.behavior === 'flyout') {
@@ -313,7 +313,7 @@ export class SLListItem extends SLElement {
   /**
    * Handle click
    * 1. If parent is contextual menu and the item doesn't have subitems, close the contextual menu
-   * 2. If the parent is a search form, close the dropdown if item is selected
+   * 2. If the parent is a search, close the dropdown if item is selected
    * @fires select - Fires when the list item  is clicked
    */
   handleClick() {

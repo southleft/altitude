@@ -162,7 +162,7 @@ export class SLDatePicker extends SLElement {
   accessor originalRawValue: any;
 
   /**
-   * Saved input datetime value
+   * Saved input date & time value
    */
   @state()
   accessor originalValue: any;

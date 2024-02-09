@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLDropdownPanel, SLList, SLListItem, SLIconCheck, SLSearchForm } from '../..';
+import { SLDropdownPanel, SLList, SLListItem, SLIconCheck, SLSearch } from '../..';
 
 export default {
   title: 'Atoms/Dropdown Panel',
@@ -70,9 +70,9 @@ export const WithSearch: StoryObj<typeof SLDropdownPanel> = {
     hasScroll: true,
     children: (
       <>
-        <SLSearchForm slot="header" value={''} isEmpty={true}>
+        <SLSearch slot="header" value={''} isEmpty={true}>
           {' '}
-        </SLSearchForm>
+        </SLSearch>
         <SLList>
           <SLListItem>List item</SLListItem>
           <SLListItem>List item</SLListItem>

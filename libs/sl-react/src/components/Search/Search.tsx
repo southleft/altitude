@@ -1,17 +1,17 @@
 import { createComponent } from '@lit/react';
-import { SLSearchForm as SLWebSearchForm } from 'sl-web-components/dist/components/search-form/search-form';
+import { SLSearch as SLWebSearch } from 'sl-web-components/dist/components/search/search';
 import register from 'sl-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 
 const elementMap = register({
-  elements: [SLWebSearchForm.el, SLWebSearchForm],
+  elements: [SLWebSearch.el, SLWebSearch],
   suffix: PackageJson.version
 });
 
-export const SLSearchForm = createComponent({
+export const SLSearch = createComponent({
   react: React,
-  tagName: elementMap.get(SLWebSearchForm.el),
-  elementClass: SLWebSearchForm,
+  tagName: elementMap.get(SLWebSearch.el),
+  elementClass: SLWebSearch,
   events: {}
 });

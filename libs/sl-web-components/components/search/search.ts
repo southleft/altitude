@@ -16,18 +16,18 @@ import { SLIconSearch } from '../icon/icons/search';
 import { SLListItem } from '../list-item/list-item';
 import { SLList } from '../list/list';
 import { SLInput } from '../input/input';
-import styles from './search-form.scss';
+import styles from './search.scss';
 
 /**
- * Component: sl-search-form
+ * Component: sl-search
  *
- * Search Form enables users to specify a word or phrase to find relevant content without navigation.
- * - **slot**: The search form's dropdown content
+ * Search enables users to specify a word or phrase to find relevant content without navigation.
+ * - **slot**: The search's dropdown content
  * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
  * - **slot** "error": If content is slotted, it will display in place of the errorNote property
  */
-export class SLSearchForm extends SLElement {
-  static el = 'sl-search-form';
+export class SLSearch extends SLElement {
+  static el = 'sl-search';
 
   private elementMap = register({
     elements: [
@@ -154,7 +154,7 @@ export class SLSearchForm extends SLElement {
   /**
    * Query the dynamic dropdown panel element
    */
-  @query('.sl-c-search-form--dynamic .sl-c-search-form__dropdown-panel')
+  @query('.sl-c-search--dynamic .sl-c-search__dropdown-panel')
   accessor _enDropdownPanel: HTMLElement;
 
   /**
@@ -164,7 +164,7 @@ export class SLSearchForm extends SLElement {
   accessor position: 'bottom' | 'top' = 'bottom';
 
   /**
-   * Maxlength of characters for the search form
+   * Maxlength of characters for the search
    */
   @property({ type: Number })
   accessor maxlength: number;
@@ -221,7 +221,7 @@ export class SLSearchForm extends SLElement {
   constructor() {
     super();
     this.handleOnClickOutside = this.handleOnClickOutside.bind(this);
-    this.clearSearchForm = this.clearSearchForm.bind(this);
+    this.clearSearch = this.clearSearch.bind(this);
     this.onChanged = this.onChanged.bind(this);
   }
 
@@ -293,12 +293,12 @@ export class SLSearchForm extends SLElement {
    * 3. Set the focus on the input after the clear
    * 4. @fires change event when we click on close icon
    */
-  clearSearchForm() {
+  clearSearch() {
     this.isActiveDropdown = false;
     this.value = '';
-    this.shadowRoot.querySelector<HTMLInputElement>('.sl-c-search-form__input').value = ''; /* 2 */
+    this.shadowRoot.querySelector<HTMLInputElement>('.sl-c-search__input').value = ''; /* 2 */
     this.isError = false;
-    this.shadowRoot.querySelector<HTMLInputElement>('.sl-c-search-form__input').focus(); /* 3 */
+    this.shadowRoot.querySelector<HTMLInputElement>('.sl-c-search__input').focus(); /* 3 */
     this.emitOnChangeEvent(null); /* 4 */
     this.isFocusedIn = false;
     this.updateScroll(null);
@@ -308,7 +308,7 @@ export class SLSearchForm extends SLElement {
    * Emit onChange event
    */
   private emitOnChangeEvent(value: string | null): void {
-    this.dispatch({ eventName: 'onSearchFormChange', detailObj: { value } });
+    this.dispatch({ eventName: 'onSearchChange', detailObj: { value } });
   }
 
   /**
@@ -358,12 +358,12 @@ export class SLSearchForm extends SLElement {
     this.isActiveDropdown = !this.isActiveDropdown;
 
     if ((e.target as SLListItem).value) {
-      this.shadowRoot.querySelector<HTMLInputElement>('.sl-c-search-form__input').value = (e.target as SLListItem).value as string;
+      this.shadowRoot.querySelector<HTMLInputElement>('.sl-c-search__input').value = (e.target as SLListItem).value as string;
       this.isActiveDropdown = true;
     }
 
     setTimeout(() => {
-      const elem = this.shadowRoot.querySelector<HTMLInputElement>('.sl-c-search-form__input');
+      const elem = this.shadowRoot.querySelector<HTMLInputElement>('.sl-c-search__input');
       this.isActiveDropdown === true ? elem.focus() : elem.blur();
     }, 100);
   }
@@ -450,7 +450,7 @@ export class SLSearchForm extends SLElement {
   /**
    * Handle on keydown
    * 1. If the dropdown panel is open and escape is keyed, close the menu and return focus to the trigger button
-   * 2. If the dropdown panel is active but not arrowed into yet and arrow down (or arrow up when dropdown is above search form)
+   * 2. If the dropdown panel is active but not arrowed into yet and arrow down (or arrow up when dropdown is above search)
    *  is keyed, move the `aria-selected` state into the first list item.
    * A while condition is added, so that if there are disabled list items in panel, then it will be skipped and the focus
      will be kept to the first non-disabled list item.
@@ -517,14 +517,14 @@ export class SLSearchForm extends SLElement {
         setTimeout(() => {
           this.closePanel();
           this.shadowRoot
-            .querySelector<HTMLInputElement>('.sl-c-search-form__clear-button')
+            .querySelector<HTMLInputElement>('.sl-c-search__clear-button')
             .shadowRoot.querySelector<HTMLButtonElement>('.sl-c-button')
             .focus();
         }, 1);
       }
       if (e.code === 'Enter') {
         /* 5 */
-        this.shadowRoot.querySelector<HTMLInputElement>('.sl-c-search-form__input').value = this.currentSelectedItem.value as string;
+        this.shadowRoot.querySelector<HTMLInputElement>('.sl-c-search__input').value = this.currentSelectedItem.value as string;
         setTimeout(() => {
           this.closePanel();
         }, 1);
@@ -600,7 +600,7 @@ export class SLSearchForm extends SLElement {
       const body = document.querySelector('body');
       const bodyPosition = body.getBoundingClientRect(); /* 1 */
       const listHeight = this.querySelector(this.elementMap.get(SLList.el))?.shadowRoot?.querySelector('.sl-c-list').clientHeight; /* 2 */
-      const inputBottom = this.shadowRoot.querySelector('.sl-c-search-form__input').getBoundingClientRect().bottom; /* 2 */
+      const inputBottom = this.shadowRoot.querySelector('.sl-c-search__input').getBoundingClientRect().bottom; /* 2 */
       const inputAndListHeight = inputBottom + listHeight; /* 2 */
       if (inputAndListHeight > bodyPosition.bottom) {
         /* 3 */
@@ -612,10 +612,10 @@ export class SLSearchForm extends SLElement {
   }
 
   render() {
-    const componentClassName = this.componentClassNames('sl-c-search-form', {
-      'sl-c-search-form--with-button': this.buttonText,
-      'sl-c-search-form--top': this.position === 'top',
-      'sl-c-search-form--dynamic': this.isDynamic === true,
+    const componentClassName = this.componentClassNames('sl-c-search', {
+      'sl-c-search--with-button': this.buttonText,
+      'sl-c-search--top': this.position === 'top',
+      'sl-c-search--dynamic': this.isDynamic === true,
       'sl-is-disabled': this.isDisabled,
       'sl-is-error': this.isError,
       'sl-is-active': this.isActive === true,
@@ -633,9 +633,9 @@ export class SLSearchForm extends SLElement {
 
     return html`
       <div class="${componentClassName}">
-        <div class="sl-c-search-form__container">
+        <div class="sl-c-search__container">
           <${this.inputEl}
-            class="sl-c-search-form__input"
+            class="sl-c-search__input"
             type="text"
             id="${this.fieldId}"
             label="${this.label}"
@@ -655,11 +655,11 @@ export class SLSearchForm extends SLElement {
             maxLength=${ifDefined(this.maxlength)}
             ?isActive="${this.isActive}"
           >
-            <${this.iconSearchEl} slot="before" class="sl-c-search-form__icon-search"></${this.iconSearchEl}>
+            <${this.iconSearchEl} slot="before" class="sl-c-search__icon-search"></${this.iconSearchEl}>
             ${
               this.value?.length
                 ? html`
-                  <${this.buttonEl} slot="after" @click=${this.clearSearchForm} class="sl-c-search-form__clear-button" ?hideText=${true} variant="tertiary">
+                  <${this.buttonEl} slot="after" @click=${this.clearSearch} class="sl-c-search__clear-button" ?hideText=${true} variant="tertiary">
                     ${this.clearButtonText}
                     <${this.iconCloseEl} slot="after"></${this.iconCloseEl}>
                   </${this.buttonEl}>
@@ -670,11 +670,11 @@ export class SLSearchForm extends SLElement {
           ${
             this.isEmpty && this.slotNotEmpty('emptyMessage')
               ? html`
-                <${this.dropdownPanelEl} class="sl-c-search-form__dropdown-panel" @keydown=${this.handleKeyDown} ?hasScroll=${true}>
+                <${this.dropdownPanelEl} class="sl-c-search__dropdown-panel" @keydown=${this.handleKeyDown} ?hasScroll=${true}>
                   ${
                     this.slotNotEmpty('emptyMessage') &&
                     html`
-                      <div class="sl-c-search-form__empty-message">
+                      <div class="sl-c-search__empty-message">
                         <slot name="emptyMessage"></slot>
                       </div>
                     `
@@ -684,7 +684,7 @@ export class SLSearchForm extends SLElement {
               : this.isEmpty
                 ? ''
                 : html`
-                <${this.dropdownPanelEl} class="sl-c-search-form__dropdown-panel" @keydown=${this.handleKeyDown} ?hasScroll=${true}>
+                <${this.dropdownPanelEl} class="sl-c-search__dropdown-panel" @keydown=${this.handleKeyDown} ?hasScroll=${true}>
                   <slot @select=${this.toggleActive}></slot>
                 </${this.dropdownPanelEl}>
               `
@@ -693,7 +693,7 @@ export class SLSearchForm extends SLElement {
         ${
           this.buttonText
             ? html`
-              <${this.buttonEl} class="sl-c-search-form__submit-button" text=${this.buttonText} variant="primary" ?disabled="${this.isDisabled}">
+              <${this.buttonEl} class="sl-c-search__submit-button" text=${this.buttonText} variant="primary" ?disabled="${this.isDisabled}">
                 ${this.buttonText}
               </${this.buttonEl}>
             `
@@ -722,12 +722,12 @@ export class SLSearchForm extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLSearchForm.el) === undefined) {
-  customElements.define(SLSearchForm.el, SLSearchForm);
+if ((globalThis as any).enAutoRegistry === true && customElements.get(SLSearch.el) === undefined) {
+  customElements.define(SLSearch.el, SLSearch);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sl-search-form': SLSearchForm;
+    'sl-search': SLSearch;
   }
 }

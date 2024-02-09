@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLSearchForm, SLFieldNote, SLIconWarningCircle, SLIconHelp, SLList, SLListItem } from '../..';
+import { SLSearch, SLFieldNote, SLIconWarningCircle, SLIconHelp, SLList, SLListItem } from '../..';
 
 const dataSource = [
   { label: 'List item 1', value: 'List item 1' },
@@ -15,13 +15,13 @@ const dataSource = [
 ];
 
 export default {
-  title: 'Molecules/Search Form',
-  component: SLSearchForm,
+  title: 'Molecules/Search',
+  component: SLSearch,
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['onSearchFormChange']
+      handles: ['onSearchChange']
     }
   },
   args: {
@@ -43,35 +43,35 @@ export default {
   }
 };
 
-export const Default: StoryObj<typeof SLSearchForm> = { args: {} };
+export const Default: StoryObj<typeof SLSearch> = { args: {} };
 
-export const Filled: StoryObj<typeof SLSearchForm> = { args: {
+export const Filled: StoryObj<typeof SLSearch> = { args: {
   value: 'List item 1'
 } };
 
-export const Error: StoryObj<typeof SLSearchForm> = { args: {
+export const Error: StoryObj<typeof SLSearch> = { args: {
   isError: true,
   errorNote: 'This is an error note.',
 } };
 
-export const Disabled: StoryObj<typeof SLSearchForm> = { args: {
+export const Disabled: StoryObj<typeof SLSearch> = { args: {
   isDisabled: true,
 } };
 
-export const Required: StoryObj<typeof SLSearchForm> = { args: {
+export const Required: StoryObj<typeof SLSearch> = { args: {
   isRequired: true,
 } };
 
-export const RequiredHiddenLabel: StoryObj<typeof SLSearchForm> = { args: {
+export const RequiredHiddenLabel: StoryObj<typeof SLSearch> = { args: {
   isRequired: true,
   hideLabel: true,
 } };
 
-export const HiddenLabel: StoryObj<typeof SLSearchForm> = { args: {
+export const HiddenLabel: StoryObj<typeof SLSearch> = { args: {
   hideLabel: true,
 } };
 
-export const SlottedFieldNote: StoryObj<typeof SLSearchForm> = {
+export const SlottedFieldNote: StoryObj<typeof SLSearch> = {
   args: {
     children: (
       <>
@@ -81,7 +81,7 @@ export const SlottedFieldNote: StoryObj<typeof SLSearchForm> = {
   },
 };
 
-export const SlottedErrorNote: StoryObj<typeof SLSearchForm> = {
+export const SlottedErrorNote: StoryObj<typeof SLSearch> = {
   args: {
     isError: true,
     fieldNote: '',
