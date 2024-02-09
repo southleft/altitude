@@ -3,7 +3,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
 import '../badge/badge';
-import '../icon/icons/done';
+import '../icon/icons/check';
 import '../tab-panel/tab-panel';
 import '../tab/tab';
 import './tabs';
@@ -35,8 +35,8 @@ export default {
 
 const Template = (args) => html`
   <sl-tabs ${spread(args)} data-testid="tabs">
-    <sl-tab data-testid="tab-item-01"><sl-icon-done></sl-icon-done><span class="sl-u-is-vishidden">Tab 1</span></sl-tab>
-    <sl-tab data-testid="tab-item-02"><sl-icon-done></sl-icon-done><span class="sl-u-is-vishidden">Tab 2</span></sl-tab>
+    <sl-tab data-testid="tab-item-01"><sl-icon-check></sl-icon-check><span class="sl-u-is-vishidden">Tab 1</span></sl-tab>
+    <sl-tab data-testid="tab-item-02"><sl-icon-check></sl-icon-check><span class="sl-u-is-vishidden">Tab 2</span></sl-tab>
     <sl-tab data-testid="tab-item-03">Tab 3<sl-badge variant="danger">2</sl-badge></sl-tab>
     <sl-tab data-testid="tab-item-04">Tab 4</sl-tab>
     <sl-tab data-testid="tab-item-05">Tab 5</sl-tab>
@@ -74,8 +74,8 @@ WithActiveIndex.args = {
 const TemplateWithScroll = (args) => html`
   <div style="max-width: 530px;">
     <sl-tabs ${spread(args)} data-testid="tabs">
-      <sl-tab data-testid="tab-item-01"><sl-icon-done></sl-icon-done><span class="sl-u-is-vishidden">Tab 1</span></sl-tab>
-      <sl-tab data-testid="tab-item-02"><sl-icon-done></sl-icon-done><span class="sl-u-is-vishidden">Tab 2</span></sl-tab>
+      <sl-tab data-testid="tab-item-01"><sl-icon-check></sl-icon-check><span class="sl-u-is-vishidden">Tab 1</span></sl-tab>
+      <sl-tab data-testid="tab-item-02"><sl-icon-check></sl-icon-check><span class="sl-u-is-vishidden">Tab 2</span></sl-tab>
       <sl-tab data-testid="tab-item-03">Tab 3<sl-badge variant="danger">2</sl-badge></sl-tab>
       <sl-tab data-testid="tab-item-04">Tab 4</sl-tab>
       <sl-tab data-testid="tab-item-05">Tab 5</sl-tab>

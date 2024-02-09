@@ -56,7 +56,7 @@ export class UtilitiesSpacing extends LitElement {
               return html`
                 <token-specimen
                   variant="space"
-                  value=".${item.name.replace('--sl-theme-space', 'sl-u-spacing')}"
+                  name="${item.name.replace('--sl-theme-space', 'sl-u-spacing')}"
                   inlineStyles="width: auto; height: auto;"
                 >
                   <div class="${item.name.replace('--sl-theme-space', 'sl-u-spacing')}">
@@ -88,7 +88,7 @@ export class UtilitiesSpacing extends LitElement {
               return html`
                 <token-specimen
                   variant="space"
-                  value=".${item.name.replace('--sl-theme-space', 'sl-u-gap')}"
+                  name="${item.name.replace('--sl-theme-space', 'sl-u-gap')}"
                   inlineStyles="width: auto; height: auto;"
                 >
                   <div class="${item.name.replace('--sl-theme-space', 'sl-u-gap')}" style="display: flex;">

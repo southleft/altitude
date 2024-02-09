@@ -46,9 +46,13 @@ export class Tier1Typography extends LitElement {
           <tbody>
             ${this.filterType('sl-typography-preset').map((item) => {
               return html`
-                <token-specimen variant="typography" name="@include ${item.name};" value="${item.value}" exampleClass="${item.name}"
-                  >Lorem ipsum dolor sit amet, consectetur adipiscing elit.</token-specimen
-                >
+                <token-specimen
+                  variant="typography"
+                  name="@include ${item.name};"
+                  value="${item.value}"
+                  exampleClass="${item.name}"
+                  ?disableCopy=${true}
+                >Lorem ipsum dolor sit amet, consectetur adipiscing elit.</token-specimen>
               `;
             })}
           </tbody>
@@ -65,9 +69,13 @@ export class Tier1Typography extends LitElement {
           <tbody>
             ${this.filterTokens('sl-font-family').map((item) => {
               return html`
-                <token-specimen variant="typography" name="${item.name}" value="${item.value}" inlineStyles="font-family: var(${item.name});"
-                  >Lorem ipsum dolor sit amet, consectetur adipiscing elit.</token-specimen
-                >
+                <token-specimen
+                  variant="typography"
+                  name="var(${item.name})"
+                  value="${item.value}"
+                  inlineStyles="font-family: var(${item.name});"
+                  ?disableCopy=${true}
+                >Lorem ipsum dolor sit amet, consectetur adipiscing elit.</token-specimen>
               `;
             })}
           </tbody>
@@ -84,7 +92,7 @@ export class Tier1Typography extends LitElement {
           <tbody></tbody>
             ${this.filterTokens('sl-font-size').map((item) => {
               return html`
-                <token-specimen variant="typography" name="${item.name}" value="${item.value}" inlineStyles="font-size: var(${item.name});"
+                <token-specimen variant="typography" name="var(${item.name})" value="${item.value}" inlineStyles="font-size: var(${item.name});"
                   >Aa</token-specimen
                 >
               `;
@@ -103,7 +111,7 @@ export class Tier1Typography extends LitElement {
           <tbody></tbody>
             ${this.filterTokens('sl-line-height').map((item) => {
               return html`
-                <token-specimen variant="typography" name="${item.name}" value="${item.value}" inlineStyles="line-height: var(${item.name});"
+                <token-specimen variant="typography" name="var(${item.name})" value="${item.value}" inlineStyles="line-height: var(${item.name});"
                   >ABCDEFGHIJKLMNOPQRSTUVWXYZ<br />abcdefghijklmnopqrstuvwxyz</token-specimen
                 >
               `;
@@ -123,7 +131,7 @@ export class Tier1Typography extends LitElement {
           <tbody></tbody>
             ${this.filterTokens('sl-font-weight').map((item) => {
               return html`
-                <token-specimen variant="typography" name="${item.name}" value="${item.value}" inlineStyles="font-weight: var(${item.name});"
+                <token-specimen variant="typography" name="var(${item.name})" value="${item.value}" inlineStyles="font-weight: var(${item.name});"
                   >Lorem ipsum dolor sit amet, consectetur adipiscing elit.</token-specimen
                 >
               `;
@@ -142,7 +150,7 @@ export class Tier1Typography extends LitElement {
           <tbody></tbody>
             ${this.filterTokens('sl-letter-spacing').map((item) => {
               return html`
-                <token-specimen variant="typography" name="${item.name}" value="${item.value}" inlineStyles="letter-spacing: var(${item.name});"
+                <token-specimen variant="typography" name="var(${item.name})" value="${item.value}" inlineStyles="letter-spacing: var(${item.name});"
                   >Lorem ipsum dolor sit amet, consectetur adipiscing elit.</token-specimen
                 >
               `;

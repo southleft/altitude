@@ -3,8 +3,8 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
 import '../button/button';
-import '../icon/icons/add-square';
-import '../icon/icons/list';
+import '../icon/icons/add';
+import '../icon/icons/menu';
 import '../menu-item/menu-item';
 import '../toggle-button/toggle-button';
 import './menu';
@@ -69,7 +69,7 @@ export default {
 const Template = (args) => html`
   <sl-menu ${spread(args)} data-testid="menu">
     <sl-menu-item ?isHeader=${true} data-testid="menu-item-01">
-      <sl-icon-add-square slot="before"></sl-icon-add-square>
+      <sl-icon-add slot="before"></sl-icon-add>
       Header
     </sl-menu-item>
     <sl-menu-item data-testid="menu-item-02">Menu Item</sl-menu-item>
@@ -84,7 +84,7 @@ const TemplateWithTrigger = (args) => html`
   <sl-menu ${spread(args)} data-testid="menu">
     <sl-button slot="trigger" data-testid="menu-trigger">Open Menu</sl-button>
     <sl-menu-item ?isHeader=${true} data-testid="menu-item-01">
-      <sl-icon-add-square slot="before"></sl-icon-add-square>
+      <sl-icon-add slot="before"></sl-icon-add>
       Menu Item
     </sl-menu-item>
     <sl-menu-item data-testid="menu-item-02">Menu Item</sl-menu-item>
@@ -101,17 +101,17 @@ const TemplateWithTrigger = (args) => html`
 const TemplateWithGroups = (args) => html`
   <sl-menu ${spread(args)} data-testid="menu">
     <sl-menu-item ?isHeader=${true} data-testid="menu-item-01">
-      <sl-icon-add-square slot="before"></sl-icon-add-square>
+      <sl-icon-add slot="before"></sl-icon-add>
       Menu Item
     </sl-menu-item>
     <sl-menu-item ?isHeader=${true} ?isExpanded=${true} ?isExpandableHeader=${true} data-testid="menu-item-02">
-      <sl-icon-add-square slot="before"></sl-icon-add-square>
+      <sl-icon-add slot="before"></sl-icon-add>
       Menu Item
     </sl-menu-item>
     <sl-menu-item data-testid="menu-item-03">Menu Item</sl-menu-item>
     <sl-menu-item data-testid="menu-item-04">Menu Item</sl-menu-item>
     <sl-menu-item ?isHeader=${true} ?isExpanded=${true} ?isExpandableHeader=${true} data-testid="menu-item-05">
-      <sl-icon-add-square slot="before"></sl-icon-add-square>
+      <sl-icon-add slot="before"></sl-icon-add>
       Menu Item
     </sl-menu-item>
     <sl-menu-item data-testid="menu-item-06">Menu Item</sl-menu-item>
@@ -122,19 +122,19 @@ const TemplateWithGroups = (args) => html`
 
 const TemplateWithGroupsWithTrigger = (args) => html`
   <sl-menu ${spread(args)} data-testid="menu" ?isActive=${false}>
-    <sl-toggle-button slot="trigger" data-testid="menu-trigger" variant="background"><sl-icon-list size="lg"></sl-icon-list></sl-toggle-button>
+    <sl-toggle-button slot="trigger" data-testid="menu-trigger" variant="background"><sl-icon-menu size="lg"></sl-icon-menu></sl-toggle-button>
     <sl-menu-item ?isHeader=${true} data-testid="menu-item-1">
-      <sl-icon-add-square slot="before"></sl-icon-add-square>
+      <sl-icon-add slot="before"></sl-icon-add>
       Menu Item
     </sl-menu-item>
     <sl-menu-item ?isHeader=${true} ?isExpanded=${true} ?isExpandableHeader=${true} data-testid="menu-item-2">
-      <sl-icon-add-square slot="before"></sl-icon-add-square>
+      <sl-icon-add slot="before"></sl-icon-add>
       Menu Item
     </sl-menu-item>
     <sl-menu-item data-testid="menu-item-3">Menu Item</sl-menu-item>
     <sl-menu-item data-testid="menu-item-4">Menu Item</sl-menu-item>
     <sl-menu-item ?isHeader=${true} ?isExpanded=${true} ?isExpandableHeader=${true} data-testid="menu-item-5">
-      <sl-icon-add-square slot="before"></sl-icon-add-square>
+      <sl-icon-add slot="before"></sl-icon-add>
       Menu Item
     </sl-menu-item>
     <sl-menu-item data-testid="menu-item-6">Menu Item</sl-menu-item>
@@ -146,7 +146,7 @@ const TemplateWithGroupsWithTrigger = (args) => html`
 const TemplateWithGroupIndentation = (args) => html`
   <sl-menu ${spread(args)} ?indentGroupItems=${true} data-testid="menu">
     <sl-menu-item ?isHeader=${true} ?isExpanded=${true} ?isExpandableHeader=${true} data-testid="menu-item-01">
-      <sl-icon-add-square slot="before"></sl-icon-add-square>
+      <sl-icon-add slot="before"></sl-icon-add>
       Menu Item
     </sl-menu-item>
     <sl-menu-item data-testid="menu-item-02">Menu Item</sl-menu-item>
@@ -158,16 +158,16 @@ const TemplateWithGroupIndentation = (args) => html`
 const TemplateWithHrefs = (args) => html`
   <sl-menu ${spread(args)} data-testid="menu">
     <sl-menu-item href="#" target="_blank" ?isHeader=${true} data-testid="menu-item-01">
-      <sl-icon-add-square slot="before"></sl-icon-add-square>
+      <sl-icon-add slot="before"></sl-icon-add>
       Menu Item
     </sl-menu-item>
     <sl-menu-item href="#" target="_blank" ?isHeader=${true} ?isExpandableHeader=${true} data-testid="menu-item-02">
-      <sl-icon-add-square slot="before"></sl-icon-add-square>
+      <sl-icon-add slot="before"></sl-icon-add>
       Menu Item
     </sl-menu-item>
     <sl-menu-item href="#" target="_blank" data-testid="menu-item-03">Menu Item</sl-menu-item>
     <sl-menu-item href="#" target="_blank" ?isHeader=${true} ?isExpanded=${true} ?isExpandableHeader=${true} data-testid="menu-item-02">
-      <sl-icon-add-square slot="before"></sl-icon-add-square>
+      <sl-icon-add slot="before"></sl-icon-add>
       Menu Item
     </sl-menu-item>
     <sl-menu-item href="#" target="_blank" data-testid="menu-item-03">Menu Item</sl-menu-item>

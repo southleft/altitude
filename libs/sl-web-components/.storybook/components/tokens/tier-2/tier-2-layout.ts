@@ -38,7 +38,7 @@ export class Tier2Layout extends LitElement {
             ${this.filterTokens('sl-theme-layout').map((item) => {
               return html`
                 <token-specimen
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                 ></token-specimen>
               `;

@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLToastGroup, SLToast, SLButton, SLIconDone } from '../..';
+import { SLToastGroup, SLToast, SLButton, SLIconCheck } from '../..';
 
 export default {
   title: 'Molecules/Toast Group',
@@ -29,23 +29,23 @@ export default {
       <>
         <SLToast description="This is a toast" isActive="true">
           Toast title A
-          <SLButton slot="actions" variant="secondary"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
-          <SLButton slot="actions"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
+          <SLButton slot="actions" variant="secondary"><SLIconCheck slot="before"></SLIconCheck>Label</SLButton>
+          <SLButton slot="actions"><SLIconCheck slot="before"></SLIconCheck>Label</SLButton>
         </SLToast>
         <SLToast description="This is a toast" isActive="true">
           Toast title B
-          <SLButton slot="actions" variant="secondary"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
-          <SLButton slot="actions"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
+          <SLButton slot="actions" variant="secondary"><SLIconCheck slot="before"></SLIconCheck>Label</SLButton>
+          <SLButton slot="actions"><SLIconCheck slot="before"></SLIconCheck>Label</SLButton>
         </SLToast>
         <SLToast description="This is a toast" isActive="true">
           Toast title C
-          <SLButton slot="actions" variant="secondary"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
-          <SLButton slot="actions"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
+          <SLButton slot="actions" variant="secondary"><SLIconCheck slot="before"></SLIconCheck>Label</SLButton>
+          <SLButton slot="actions"><SLIconCheck slot="before"></SLIconCheck>Label</SLButton>
         </SLToast>
         <SLToast description="This is a toast" isActive="true">
           Toast title D
-          <SLButton slot="actions" variant="secondary"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
-          <SLButton slot="actions"><SLIconDone slot="before"></SLIconDone>Label</SLButton>
+          <SLButton slot="actions" variant="secondary"><SLIconCheck slot="before"></SLIconCheck>Label</SLButton>
+          <SLButton slot="actions"><SLIconCheck slot="before"></SLIconCheck>Label</SLButton>
         </SLToast>
       </>
     )

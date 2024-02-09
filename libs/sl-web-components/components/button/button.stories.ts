@@ -3,7 +3,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
 import '../../.storybook/components/f-po/f-po';
-import '../icon/icons/done';
+import '../icon/icons/check';
 import '../icon/icons/send';
 import './button';
 
@@ -72,7 +72,7 @@ const Template = (args) => html` <sl-button ${spread(args)}>Label</sl-button> `;
 
 const TemplateIconBefore = (args) => html`
   <sl-button ${spread(args)}>
-    <sl-icon-done slot="before" data-testid="icon-before"></sl-icon-done>
+    <sl-icon-check slot="before" data-testid="icon-before"></sl-icon-check>
     Label
   </sl-button>
 `;

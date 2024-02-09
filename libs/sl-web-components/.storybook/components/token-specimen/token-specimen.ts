@@ -2,6 +2,9 @@ import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import styles from './token-specimen.scss';
+import '../../../components/icon/icons/copy';
+import '../../../components/icon/icons/check';
+import '../token-code/token-code';
 
 export class TokenSpecimen extends LitElement {
   static get styles() {
@@ -21,10 +24,19 @@ export class TokenSpecimen extends LitElement {
   accessor name: string;
 
   @property()
+  accessor codeUnicode: string;
+
+  @property()
+  accessor codeHtml: string;
+
+  @property()
   accessor inlineStyles: string;
 
   @property()
   accessor exampleClass: string;
+
+  @property({ type: Boolean })
+  accessor disableCopy: boolean;
 
   render() {
     const componentClassNames = classMap({
@@ -42,7 +54,22 @@ export class TokenSpecimen extends LitElement {
 
     return html`
       <tr class=${componentClassNames}>
-        ${this.name && html`<td><code>${this.name}</code></td>`} ${this.value && html`<td>${this.value}</td>`}
+        ${this.name && html`
+          <td>
+            <token-code value="${this.name}" ?disableCopy=${this.disableCopy}></token-code>
+          </td>
+        `}
+        ${this.codeUnicode && html`
+          <td>
+            <token-code value="${this.codeUnicode}" ?disableCopy=${this.disableCopy}></token-code>
+          </td>
+        `}
+        ${this.codeHtml && html`
+          <td>
+            <token-code value="${this.codeHtml}" ?disableCopy=${this.disableCopy}></token-code>
+          </td>
+        `}
+        ${this.value && html`<td>${this.value}</td>`}
         ${(this.inlineStyles || this.exampleClass) &&
         html`
           <td class="token-specimen__example">

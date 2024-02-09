@@ -40,7 +40,7 @@ export class Tier2Shadows extends LitElement {
               return html`
                 <token-specimen
                   variant="shadow"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="box-shadow: var(${item.name});"
                 ></token-specimen>

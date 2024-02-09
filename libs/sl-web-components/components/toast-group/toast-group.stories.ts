@@ -3,7 +3,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
 import '../button/button';
-import '../icon/icons/done';
+import '../icon/icons/check';
 import '../toast/toast';
 import './toast-group';
 
@@ -58,23 +58,23 @@ const Template = (args) => html`
   <sl-toast-group ${spread(args)} data-testid="toast-group">
     <sl-toast ?isActive=${true} description="This is toast" isActive=${true} data-testid="toast-01">
       Toast title A
-      <sl-button slot="actions" variant="secondary"><sl-icon-done slot="before"></sl-icon-done>Label</sl-button>
-      <sl-button slot="actions"><sl-icon-done slot="before"></sl-icon-done>Label</sl-button>
+      <sl-button slot="actions" variant="secondary"><sl-icon-check slot="before"></sl-icon-check>Label</sl-button>
+      <sl-button slot="actions"><sl-icon-check slot="before"></sl-icon-check>Label</sl-button>
     </sl-toast>
     <sl-toast ?isActive=${true} description="This is a toast" data-testid="toast-02">
       Toast title B
-      <sl-button slot="actions" variant="secondary"><sl-icon-done slot="before"></sl-icon-done>Label</sl-button>
-      <sl-button slot="actions"><sl-icon-done slot="before"></sl-icon-done>Label</sl-button>
+      <sl-button slot="actions" variant="secondary"><sl-icon-check slot="before"></sl-icon-check>Label</sl-button>
+      <sl-button slot="actions"><sl-icon-check slot="before"></sl-icon-check>Label</sl-button>
     </sl-toast>
     <sl-toast ?isActive=${true} description="This is a toast" data-testid="toast-03">
       Toast title C
-      <sl-button slot="actions" variant="secondary"><sl-icon-done slot="before"></sl-icon-done>Label</sl-button>
-      <sl-button slot="actions"><sl-icon-done slot="before"></sl-icon-done>Label</sl-button>
+      <sl-button slot="actions" variant="secondary"><sl-icon-check slot="before"></sl-icon-check>Label</sl-button>
+      <sl-button slot="actions"><sl-icon-check slot="before"></sl-icon-check>Label</sl-button>
     </sl-toast>
     <sl-toast ?isActive=${true} description="This is a toast" data-testid="toast-04">
       Toast title D
-      <sl-button slot="actions" variant="secondary"><sl-icon-done slot="before"></sl-icon-done>Label</sl-button>
-      <sl-button slot="actions"><sl-icon-done slot="before"></sl-icon-done>Label</sl-button>
+      <sl-button slot="actions" variant="secondary"><sl-icon-check slot="before"></sl-icon-check>Label</sl-button>
+      <sl-button slot="actions"><sl-icon-check slot="before"></sl-icon-check>Label</sl-button>
     </sl-toast>
   </sl-toast-group>
 `;

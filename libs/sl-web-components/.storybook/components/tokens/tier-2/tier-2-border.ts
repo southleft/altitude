@@ -40,7 +40,7 @@ export class Tier2Border extends LitElement {
               return html`
                 <token-specimen
                   variant="color"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="background-color: var(${item.name});"
                 ></token-specimen>
@@ -65,7 +65,7 @@ export class Tier2Border extends LitElement {
               return html`
                 <token-specimen
                   variant="border"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="border-width: ${item.value};"
                 ></token-specimen>
@@ -90,7 +90,7 @@ export class Tier2Border extends LitElement {
               return html`
                 <token-specimen
                   variant="border"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="border-radius: ${item.value};"
                 ></token-specimen>

@@ -2,13 +2,13 @@ import { html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { SLElement } from '../../SLElement';
 import styles from '../icon.scss';
-import Done from '../svgs/done.svg';
+import Copy from '../svgs/copy.svg';
 
 /**
- * Icon: sl-icon-done
+ * Icon: sl-icon-copy
  */
-export class SLIconDone extends SLElement {
-  static el = 'sl-icon-done';
+export class SLIconCopy extends SLElement {
+  static el = 'sl-icon-copy';
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -23,6 +23,8 @@ export class SLIconDone extends SLElement {
   /**
    * Icon size
    * - Default size is 16px
+   * - **xs** renders a smaller size than default (8px)
+   * - **sm** renders a smaller size than default (12px)
    * - **md** renders a larger size than default (20px)
    * - **lg** renders a larger size than the md variant (24px)
    * - **xl** renders a larger size than the lg variant (32px)
@@ -30,10 +32,12 @@ export class SLIconDone extends SLElement {
    * - **xxxl** renders a larger size than the lg variant (40px)
    */
   @property()
-  accessor size: 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl';
+  accessor size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl';
 
   render() {
     const componentClassName = this.componentClassNames('sl-c-icon', {
+      'sl-c-icon--xs': this.size === 'xs',
+      'sl-c-icon--sm': this.size === 'sm',
       'sl-c-icon--md': this.size === 'md',
       'sl-c-icon--lg': this.size === 'lg',
       'sl-c-icon--xl': this.size === 'xl',
@@ -48,18 +52,18 @@ export class SLIconDone extends SLElement {
         class="${componentClassName}"
         role="${this.iconTitle ? 'img' : 'presentation'}"
       >
-        ${Done}
+        ${Copy}
       </span>
     `;
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIconDone.el) === undefined) {
-  customElements.define(SLIconDone.el, SLIconDone);
+if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIconCopy.el) === undefined) {
+  customElements.define(SLIconCopy.el, SLIconCopy);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sl-icon-done': SLIconDone;
+    'sl-icon-copy': SLIconCopy;
   }
 }

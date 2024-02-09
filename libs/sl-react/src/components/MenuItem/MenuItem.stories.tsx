@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLMenuItem, SLIconAddSquare } from '../..';
+import { SLMenuItem, SLIconAdd } from '../..';
 
 export default {
   title: 'Atoms/Menu Item',
@@ -80,7 +80,7 @@ export const DefaultWithIcon: StoryObj<typeof SLMenuItem> = {
   args: {
     children: (
       <>
-        <SLIconAddSquare slot="before"></SLIconAddSquare>
+        <SLIconAdd slot="before"></SLIconAdd>
         Menu Item
       </>
     )

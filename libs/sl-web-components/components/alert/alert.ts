@@ -4,7 +4,7 @@ import { html, unsafeStatic } from 'lit/static-html.js';
 import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { SLElement } from '../SLElement';
-import { SLIconDone } from '../icon/icons/done';
+import { SLIconCheck } from '../icon/icons/check';
 import { SLIconInfo } from '../icon/icons/info';
 import { SLIconWarningCircle } from '../icon/icons/warning-circle';
 import { SLIconWarningTriangle } from '../icon/icons/warning-triangle';
@@ -24,7 +24,7 @@ export class SLAlert extends SLElement {
 
   private elementMap = register({
     elements: [
-      [SLIconDone.el, SLIconDone],
+      [SLIconCheck.el, SLIconCheck],
       [SLIconInfo.el, SLIconInfo],
       [SLIconWarningCircle.el, SLIconWarningCircle],
       [SLIconWarningTriangle.el, SLIconWarningTriangle],
@@ -34,7 +34,7 @@ export class SLAlert extends SLElement {
     suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
   });
 
-  private iconDoneEl = unsafeStatic(this.elementMap.get(SLIconDone.el));
+  private iconDoneEl = unsafeStatic(this.elementMap.get(SLIconCheck.el));
   private iconInfoEl = unsafeStatic(this.elementMap.get(SLIconInfo.el));
   private iconWarningEl = unsafeStatic(this.elementMap.get(SLIconWarningCircle.el));
   private iconWarningTriangleEl = unsafeStatic(this.elementMap.get(SLIconWarningTriangle.el));
@@ -196,12 +196,12 @@ export class SLAlert extends SLElement {
         role="alert"
         class=${componentClassNames}
       >
-        <div class="sl-c-alert__icon">${this.slotNotEmpty('icon') ? 
+        <div class="sl-c-alert__icon">${this.slotNotEmpty('icon') ?
           html` <slot name="icon"></slot> ` : html` ${alertIcon} `}
         </div>
         <div class="sl-c-alert__body">
           <div class="sl-c-alert__content">
-            ${this.title ? 
+            ${this.title ?
               html`<div class="sl-c-alert__title">${this.title}</div>` : ''}
             <slot></slot>
           </div>
@@ -210,7 +210,7 @@ export class SLAlert extends SLElement {
               html`<div class="sl-c-alert__action">
                 <slot name="action"></slot>
               </div>` : ''}
-            ${this.isDismissible ? 
+            ${this.isDismissible ?
               html`<${this.buttonEl} class="sl-c-alert__close" variant="tertiary" hideText="true" label="Close" @click=${this.close}><${this.iconCloseEl} slot="before"></${this.iconCloseEl}></${this.buttonEl}>` : ''}
             </div>
         </div>

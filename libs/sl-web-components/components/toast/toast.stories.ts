@@ -4,7 +4,7 @@ import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
 import '../button/button';
 import '../alert/alert';
-import '../icon/icons/done';
+import '../icon/icons/check';
 import './toast';
 
 export default {
@@ -81,8 +81,8 @@ WithoutDescription.args = {
 const TemplateWithActions = (args) => html`
   <sl-toast ${spread(args)} data-testid="toast">
     Toast title
-    <sl-button slot="actions" variant="secondary"><sl-icon-done slot="before"></sl-icon-done>Label</sl-button>
-    <sl-button slot="actions"><sl-icon-done slot="before"></sl-icon-done>Label</sl-button>
+    <sl-button slot="actions" variant="secondary"><sl-icon-check slot="before"></sl-icon-check>Label</sl-button>
+    <sl-button slot="actions"><sl-icon-check slot="before"></sl-icon-check>Label</sl-button>
   </sl-toast>
 `;
 

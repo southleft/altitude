@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLTab, SLIconDone, SLBadge } from '../..';
+import { SLTab, SLIconCheck, SLBadge } from '../..';
 
 export default {
   title: 'Atoms/Tab',
@@ -24,7 +24,7 @@ export default {
   args: {
     children: (
       <>
-        <SLIconDone></SLIconDone>Label<SLBadge variant="danger">2</SLBadge>
+        <SLIconCheck></SLIconCheck>Label<SLBadge variant="danger">2</SLBadge>
       </>
     )
   },
@@ -48,7 +48,7 @@ export const DisabledSelected: StoryObj<typeof SLTab> = { args: {
 export const WithIconOnly: StoryObj<typeof SLTab> = { args: {
   children: (
     <>
-      <SLIconDone></SLIconDone>
+      <SLIconCheck></SLIconCheck>
     </>
   )
 } };

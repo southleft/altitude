@@ -40,7 +40,7 @@ export class Tier2Space extends LitElement {
             ${this.filterTokens('sl-theme-space').map((item) => {
               return html`
                 <token-specimen
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="width: 100px; height: var(${item.name});"
                 >

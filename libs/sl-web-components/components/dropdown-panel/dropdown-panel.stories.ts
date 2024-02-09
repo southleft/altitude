@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import '../icon/icons/done';
+import '../icon/icons/check';
 import '../list-item/list-item';
 import '../list/list';
 import '../search-form/search-form';
@@ -50,14 +50,14 @@ export const WithScroll = () => html`
 export const WithIconList = () => html`
   <sl-dropdown-panel>
     <sl-list>
-      <sl-list-item><sl-icon-done slot="before"></sl-icon-done>List Item</sl-list-item>
-      <sl-list-item><sl-icon-done slot="before"></sl-icon-done>List Item</sl-list-item>
-      <sl-list-item><sl-icon-done slot="before"></sl-icon-done>List Item</sl-list-item>
-      <sl-list-item><sl-icon-done slot="before"></sl-icon-done>List Item</sl-list-item>
-      <sl-list-item><sl-icon-done slot="before"></sl-icon-done>List Item</sl-list-item>
-      <sl-list-item><sl-icon-done slot="before"></sl-icon-done>List Item</sl-list-item>
-      <sl-list-item><sl-icon-done slot="before"></sl-icon-done>List Item</sl-list-item>
-      <sl-list-item><sl-icon-done slot="before"></sl-icon-done>List Item</sl-list-item>
+      <sl-list-item><sl-icon-check slot="before"></sl-icon-check>List Item</sl-list-item>
+      <sl-list-item><sl-icon-check slot="before"></sl-icon-check>List Item</sl-list-item>
+      <sl-list-item><sl-icon-check slot="before"></sl-icon-check>List Item</sl-list-item>
+      <sl-list-item><sl-icon-check slot="before"></sl-icon-check>List Item</sl-list-item>
+      <sl-list-item><sl-icon-check slot="before"></sl-icon-check>List Item</sl-list-item>
+      <sl-list-item><sl-icon-check slot="before"></sl-icon-check>List Item</sl-list-item>
+      <sl-list-item><sl-icon-check slot="before"></sl-icon-check>List Item</sl-list-item>
+      <sl-list-item><sl-icon-check slot="before"></sl-icon-check>List Item</sl-list-item>
     </sl-list>
   </sl-dropdown-panel>
 `;

@@ -41,7 +41,7 @@ export class Tier2Animation extends LitElement {
                 <token-specimen
                   styleModifier="token-specimen--animation"
                   variant="animation"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="transition: all var(${item.name}) var(--sl-theme-animation-timing);"
                 ></token-specimen>
@@ -67,7 +67,7 @@ export class Tier2Animation extends LitElement {
                 <token-specimen
                   styleModifier="token-specimen--animation"
                   variant="animation"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="transition: all var(--sl-theme-animation-duration) var(${item.name});"
                 ></token-specimen>

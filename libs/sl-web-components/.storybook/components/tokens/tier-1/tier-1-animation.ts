@@ -40,9 +40,10 @@ export class Tier1Animation extends LitElement {
                 <token-specimen
                   styleModifier="token-specimen--animation"
                   variant="animation"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="transition: all var(${item.name}) ease;"
+                  ?disableCopy=${true}
                 ></token-specimen>
               `;
             })}
@@ -63,9 +64,10 @@ export class Tier1Animation extends LitElement {
                 <token-specimen
                   styleModifier="token-specimen--animation"
                   variant="animation"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="transition: all 0.4s var(${item.name});"
+                  ?disableCopy=${true}
                 ></token-specimen>
               `;
             })}

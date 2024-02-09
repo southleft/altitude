@@ -91,7 +91,7 @@ module.exports = (env) => {
         },
         {
           test: /\.scss$/,
-          exclude: /head\.scss$/,
+          exclude: [/head\.scss$/],
           use: ['css-loader', 'sass-loader'],
         },
         {

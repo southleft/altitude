@@ -37,8 +37,11 @@ export class UtilitiesTypography extends LitElement {
           <tbody>
             ${this.filterTokens('sl-theme-typography').map((item) => {
               return html`
-                <token-specimen variant="typography" value=".${item.name.replace('sl-theme-', 'sl-u-theme-')}" exampleClass="${item.name.replace('sl-theme-', 'sl-u-theme-')}"
-                  >Lorem ipsum dolor sit amet, consectetur adipiscing elit.</token-specimen
+                <token-specimen
+                  variant="typography"
+                  name="${item.name.replace('sl-theme-', 'sl-u-theme-')}"
+                  exampleClass="${item.name.replace('sl-theme-', 'sl-u-theme-')}"
+                >Lorem ipsum dolor sit amet, consectetur adipiscing elit.</token-specimen
                 >
               `;
             })}

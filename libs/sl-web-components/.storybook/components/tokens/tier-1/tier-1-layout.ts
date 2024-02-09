@@ -37,7 +37,7 @@ export class Tier1Layout extends LitElement {
           </thead>
           <tbody>
             ${this.filterTokens('sl-layout').map((item) => {
-              return html` <token-specimen name="${item.name}" value="${item.value}"></token-specimen> `;
+              return html` <token-specimen name="var(${item.name})" value="${item.value}" disableCopy=${true}></token-specimen> `;
             })}
           </tbody>
         </table>

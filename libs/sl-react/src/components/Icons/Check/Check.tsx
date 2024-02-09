@@ -1,17 +1,17 @@
 import { createComponent } from '@lit/react';
-import { SLIconDone as SLWebIconDone } from 'sl-web-components/dist/components/icon/icons/done';
+import { SLIconCheck as SLWebIconCheck } from 'sl-web-components/dist/components/icon/icons/check';
 import register from 'sl-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../../package.json';
 
 const elementMap = register({
-  elements: [SLWebIconDone.el, SLWebIconDone],
+  elements: [SLWebIconCheck.el, SLWebIconCheck],
   suffix: PackageJson.version
 });
 
-export const SLIconDone = createComponent({
+export const SLIconCheck = createComponent({
   react: React,
-  tagName: elementMap.get(SLWebIconDone.el),
-  elementClass: SLWebIconDone,
+  tagName: elementMap.get(SLWebIconCheck.el),
+  elementClass: SLWebIconCheck,
   events: {}
 });

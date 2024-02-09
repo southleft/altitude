@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLMenu, SLMenuItem, SLIconAdd, SLIconList, SLButton, SLToggleButton } from '../..';
+import { SLMenu, SLMenuItem, SLIconAdd, SLIconMenu, SLButton, SLToggleButton } from '../..';
 
 export default {
   title: 'Molecules/Menu',
@@ -136,7 +136,7 @@ export const WithGroupsWithTrigger: StoryObj<typeof SLMenu> = {
     isActive: false,
     children: (
       <>
-        <SLToggleButton slot="trigger" variant="background"><SLIconList size="lg"></SLIconList></SLToggleButton>
+        <SLToggleButton slot="trigger" variant="background"><SLIconMenu size="lg"></SLIconMenu></SLToggleButton>
         <SLMenuItem isHeader={true}>
           <SLIconAdd slot="before"></SLIconAdd>
           Menu Item

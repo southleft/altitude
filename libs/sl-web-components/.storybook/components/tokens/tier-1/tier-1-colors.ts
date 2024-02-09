@@ -43,9 +43,10 @@ export class Tier1Colors extends LitElement {
               return html`
                 <token-specimen
                   variant="color"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="background-color: var(${item.name});"
+                  ?disableCopy=${true}
                 ></token-specimen>
               `;
             })}
@@ -68,9 +69,10 @@ export class Tier1Colors extends LitElement {
               return html`
                 <token-specimen
                   variant="color"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="background-color: var(${item.name});"
+                  ?disableCopy=${true}
                 ></token-specimen>
               `;
             })}
@@ -93,9 +95,10 @@ export class Tier1Colors extends LitElement {
               return html`
                 <token-specimen
                   variant="color"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="background-color: var(${item.name});"
+                  ?disableCopy=${true}
                 ></token-specimen>
               `;
             })}
@@ -118,9 +121,10 @@ export class Tier1Colors extends LitElement {
               return html`
                 <token-specimen
                   variant="color"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="background-color: var(${item.name});"
+                  ?disableCopy=${true}
                 ></token-specimen>
               `;
             })}

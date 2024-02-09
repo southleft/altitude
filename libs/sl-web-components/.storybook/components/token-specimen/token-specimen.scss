@@ -1,4 +1,4 @@
-@import '../../../styles/component.scss';
+@import '../../../styles/docs';
 /* ------------------------------------*\
   #TOKEN-SPECIMEN
 \*------------------------------------ */
@@ -7,23 +7,19 @@
   display: contents;
 }
 
-td {
-  text-align: left;
-  margin: 0;
-  padding: var(--sl-theme-space);
-  border-top: var(--sl-theme-border-width) solid var(--sl-theme-color-border-inverse-default);
-  border-left: var(--sl-theme-border-width) solid var(--sl-theme-color-border-inverse-default);
-  vertical-align: middle;
-}
-
-code {
+.token-specimen__code {
   font-family: monospace;
-  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-inverse-default);
-  padding: var(--sl-theme-space-xxs) var(--sl-theme-space-xs);
+  padding: var(--sl-theme-space-xxs);
+  padding-inline-start: var(--sl-theme-space-sm);
   border-radius: var(--sl-theme-border-radius);
   white-space: nowrap;
   position: relative;
   overflow: hidden;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--sl-theme-space-sm);
+  width: fit-content;
 
   &::after {
     content: "";
@@ -34,8 +30,47 @@ code {
     position: absolute;
     inset-inline-start: 0;
     inset-block-start: 0;
-    background-color: var(--sl-theme-color-border-inverse-default);
+    background-color: var(--sl-theme-color-border-default);
     opacity: 0.2;
+    pointer-events: none;
+  }
+
+  .has-disable-copy & {
+    user-select: none;
+  }
+}
+
+.token-specimen__button {
+  cursor: pointer;
+  border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
+  background-color: var(--sl-theme-color-background-default-strong);
+  color: var(--sl-theme-color-content-default);
+  padding: var(--sl-theme-space-xs);
+  margin: 0;
+  border-radius: var(--sl-theme-border-radius);
+
+  &:hover {
+    background-color: var(--sl-theme-color-background-default-stronger);
+  }
+
+  > * {
+    pointer-events: none;
+  }
+}
+
+.token-specimen__icon-copy {
+  display: block;
+
+  .is-copied & {
+    display: none;
+  }
+}
+
+.token-specimen__icon-check {
+  display: none;
+
+  .is-copied & {
+    display: block;
   }
 }
 
@@ -45,7 +80,7 @@ code {
     display: block;
     width: 48px;
     height: 48px;
-    border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-inverse-default);
+    border: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
     background-color: var(--sl-theme-color-background-default-stronger);
 
     .token-specimen--color & {

@@ -15,29 +15,40 @@ class IconFont extends React.Component {
 
   renderIconList(iconMap) {
     return iconMap.map((item) => (
-      <li key={item.name} className="icon-font__item">
-        <div className={`icon icon-${item.name}`}></div>
-        <div className="icon-font__text">
-          icon-{item.name}<br />
-          <span className="icon-font__text-unicode">
-            <strong>unicode:</strong> <code>{item.code.replace(`\\`, '\\u')}</code>
-          </span>
-          <span className="icon-font__text-unicode">
-            <strong>html:</strong> <code>{item.code.replace(`\\`, '&#x') + ';'}</code>
-          </span>
-        </div>
-      </li>
+      <tr key={item.name}>
+        <td><code>icon-{item.name}</code></td>
+        <td><code>{item.code.replace(`\\`, '\\u')}</code></td>
+        <td><code>{item.code.replace(`\\`, '&#x') + ';'}</code></td>
+        <td>{item.name}</td>
+        <td><div className={`icon icon-${item.name}`}></div></td>
+      </tr>
     ));
   }
 
   render() {
     const iconMap = this.getIconMap();
     return (
-      <div className="icon-font">
-        <ul className="icon-font__list">
-          {this.renderIconList(iconMap)}
-        </ul>
-      </div>
+      <section>
+        <header>
+          <h1>Icon Font</h1>
+          <p>Icon names should accurately describe the represented concept or action in a clear and intuitive manner. Avoid obscure or ambiguous names that could lead to confusion or misinterpretation.</p>
+        </header>
+        <table>
+          <caption><h2>Sizes</h2></caption>
+          <thead>
+            <tr>
+              <th>Utility Class</th>
+              <th>Unicode</th>
+              <th>HTML</th>
+              <th>Name</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.renderIconList(iconMap)}
+          </tbody>
+        </table>
+      </section>
     );
   }
 }

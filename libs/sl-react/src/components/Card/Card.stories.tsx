@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLCard, SLHeading, SLButton, SLChip, SLIconDone, SLIconEmoji, SLTextPassage } from '../..';
+import { SLCard, SLHeading, SLButton, SLChip, SLIconCheck, SLIconEmoji, SLTextPassage } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
@@ -30,7 +30,7 @@ export const WithContent: StoryObj<typeof SLCard> = {
     children: (
       <>
         <SLChip slot="actions-left">Label</SLChip>
-        <SLButton slot="actions-right" variant="secondary" hideText={true}>Button<SLIconDone slot="after"></SLIconDone></SLButton>
+        <SLButton slot="actions-right" variant="secondary" hideText={true}>Button<SLIconCheck slot="after"></SLIconCheck></SLButton>
         <img slot="image" alt="card image" src="https://fakeimg.pl/600x400" />
         <SLIconEmoji size="md" slot="header"></SLIconEmoji>
         <SLHeading slot="header" tagName="h3" variant="sm">Card title</SLHeading>

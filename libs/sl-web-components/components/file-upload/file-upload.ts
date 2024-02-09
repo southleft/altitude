@@ -10,7 +10,7 @@ import { SLButton } from '../button/button';
 import { SLFieldNote } from '../field-note/field-note';
 import { SLIconClose } from '../icon/icons/close';
 import { SLIconDocument } from '../icon/icons/document';
-import { SLIconDone } from '../icon/icons/done';
+import { SLIconCheck } from '../icon/icons/check';
 import { SLIconWarningCircle } from '../icon/icons/warning-circle';
 import { SLProgress } from '../progress/progress';
 import styles from './file-upload.scss';
@@ -55,7 +55,7 @@ export class SLFileUpload extends SLElement {
       [SLFieldNote.el, SLFieldNote],
       [SLIconClose.el, SLIconClose],
       [SLIconWarningCircle.el, SLIconWarningCircle],
-      [SLIconDone.el, SLIconDone],
+      [SLIconCheck.el, SLIconCheck],
       [SLIconDocument.el, SLIconDocument],
       [SLProgress.el, SLProgress],
       [SLButton.el, SLButton]
@@ -66,7 +66,7 @@ export class SLFileUpload extends SLElement {
   private fieldNoteEl = unsafeStatic(this.elementMap.get(SLFieldNote.el));
   private iconCloseEl = unsafeStatic(this.elementMap.get(SLIconClose.el));
   private iconWarningEl = unsafeStatic(this.elementMap.get(SLIconWarningCircle.el));
-  private iconDoneEl = unsafeStatic(this.elementMap.get(SLIconDone.el));
+  private iconDoneEl = unsafeStatic(this.elementMap.get(SLIconCheck.el));
   private iconDocumentEl = unsafeStatic(this.elementMap.get(SLIconDocument.el));
   private progressEl = unsafeStatic(this.elementMap.get(SLProgress.el));
   private buttonEl = unsafeStatic(this.elementMap.get(SLButton.el));

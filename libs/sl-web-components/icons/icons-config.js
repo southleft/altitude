@@ -109,7 +109,7 @@ function processTemplate(templatePath, outputPath, svgData, plainFileName = '', 
 // Append to storybook
 function appendToStorybook(plainFileName) {
   const importStatement = `import '../../../components/icon/icons/${plainFileName}';`;
-  const filePath = './.storybook/components/icon-grid/icons.ts';
+  const filePath = './.storybook/components/icon-svgs/icons.ts';
 
   fs.readFile(filePath, 'utf8', (readErr, data) => {
     if (readErr) {

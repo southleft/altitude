@@ -1,6 +1,7 @@
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import styles from './icon-font.scss';
+import '../token-code/token-code';
 
 @customElement('icon-font')
 export class IconFont extends LitElement {
@@ -21,35 +22,45 @@ export class IconFont extends LitElement {
 
   renderIconList(iconMap: { name: string; code: string }[]) {
     return iconMap.map((item) => {
-      return html`<li class="icon-font__item">
-        <div class="icon icon-${item.name}"></div>
-        <div class="icon-font__text">
-          icon-${item.name}<br />
-          <span class="icon-font__text-unicode">
-            <strong>unicode:</strong> <code>${item.code.replace(`\\`, '\\u')}</code>
-          </span>
-          <span class="icon-font__text-unicode">
-            <strong>html:</strong> <code>${item.code.replace(`\\`, '&#x') + ';'}</code>
-          </span>
-        </div>
-      </li>`;
+      return html`
+        <token-specimen
+          variant="icon"
+          name="icon-${item.name}"
+          value="${item.name}"
+          codeUnicode="${item.code.replace(`\\`, '\\u')}"
+          codeHtml="${item.code.replace(`\\`, '&#x') + ';'}"
+          exampleClass="icon"
+        >
+          <div class="icon icon-${item.name}"></div>
+        </token-specimen>
+      `;
     });
   }
 
   render() {
     const iconMap = this.getIconMap();
     return html`
-      <div class="icon-font">
+      <section>
         <header>
           <h1>Icon Font</h1>
           <p>Icon names should accurately describe the represented concept or action in a clear and intuitive manner. Avoid obscure or ambiguous names that could lead to confusion or misinterpretation.</p>
         </header>
-          <ul class="icon-font__list">
-            <slot>
-              ${this.renderIconList(iconMap)}
-            </slot>
-          </ul>
-      </div>
+        <table>
+          <caption><h2>Sizes</h2></caption>
+          <thead>
+            <tr>
+              <th>Utility Class</th>
+              <th>Unicode</th>
+              <th>HTML</th>
+              <th>Name</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${this.renderIconList(iconMap)}
+          </tbody>
+        </table>
+      </section>
     `;
   }
 }

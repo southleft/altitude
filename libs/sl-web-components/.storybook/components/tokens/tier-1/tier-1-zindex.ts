@@ -32,7 +32,7 @@ export class Tier1Zindex extends LitElement {
           </thead>
           <tbody>
             ${this.filterTokens('sl-z-index').map((item) => {
-              return html` <token-specimen name="${item.name}" value="${item.value}"></token-specimen> `;
+              return html` <token-specimen name="var(${item.name})" value="${item.value}"></token-specimen> `;
             })}
           </tbody>
         </table>

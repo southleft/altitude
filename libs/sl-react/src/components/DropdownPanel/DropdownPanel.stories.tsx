@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLDropdownPanel, SLList, SLListItem, SLIconDone, SLSearchForm } from '../..';
+import { SLDropdownPanel, SLList, SLListItem, SLIconCheck, SLSearchForm } from '../..';
 
 export default {
   title: 'Atoms/Dropdown Panel',
@@ -38,25 +38,25 @@ export const WithIconList: StoryObj<typeof SLDropdownPanel> = {
     children: (
       <>
         <SLList>
-          <SLListItem><SLIconDone slot="before"></SLIconDone>
+          <SLListItem><SLIconCheck slot="before"></SLIconCheck>
             List item</SLListItem>
-          <SLListItem><SLIconDone slot="before"></SLIconDone>
+          <SLListItem><SLIconCheck slot="before"></SLIconCheck>
             List item</SLListItem>
-          <SLListItem><SLIconDone slot="before"></SLIconDone>
+          <SLListItem><SLIconCheck slot="before"></SLIconCheck>
             List item</SLListItem>
-          <SLListItem><SLIconDone slot="before"></SLIconDone>
+          <SLListItem><SLIconCheck slot="before"></SLIconCheck>
             List item</SLListItem>
-          <SLListItem><SLIconDone slot="before"></SLIconDone>
+          <SLListItem><SLIconCheck slot="before"></SLIconCheck>
             List item</SLListItem>
-          <SLListItem><SLIconDone slot="before"></SLIconDone>
+          <SLListItem><SLIconCheck slot="before"></SLIconCheck>
             List item</SLListItem>
-          <SLListItem><SLIconDone slot="before"></SLIconDone>
+          <SLListItem><SLIconCheck slot="before"></SLIconCheck>
             List item</SLListItem>
-          <SLListItem><SLIconDone slot="before"></SLIconDone>
+          <SLListItem><SLIconCheck slot="before"></SLIconCheck>
             List item</SLListItem>
-          <SLListItem><SLIconDone slot="before"></SLIconDone>
+          <SLListItem><SLIconCheck slot="before"></SLIconCheck>
             List item</SLListItem>
-          <SLListItem><SLIconDone slot="before"></SLIconDone>
+          <SLListItem><SLIconCheck slot="before"></SLIconCheck>
             List item</SLListItem>
       </SLList>
       </>

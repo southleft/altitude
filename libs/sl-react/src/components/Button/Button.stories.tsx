@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLButton, SLIconDone, SLIconSend, SLProgress} from '../..';
+import { SLButton, SLIconCheck, SLIconSend, SLProgress} from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
@@ -71,7 +71,7 @@ export const DefaultIcon: StoryObj<typeof SLButton> = {
     hideText: true,
     children: (
       <>
-        <SLIconDone slot="before"></SLIconDone>
+        <SLIconCheck slot="before"></SLIconCheck>
         Label
       </>
     ),
@@ -82,7 +82,7 @@ export const DefaultIconBefore: StoryObj<typeof SLButton> = {
   args: {
     children: (
       <>
-        <SLIconDone slot="before"></SLIconDone>
+        <SLIconCheck slot="before"></SLIconCheck>
         Label
       </>
     ),

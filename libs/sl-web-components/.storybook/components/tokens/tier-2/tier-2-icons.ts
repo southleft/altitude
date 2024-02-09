@@ -41,7 +41,7 @@ export class Tier2Icons extends LitElement {
               return html`
                 <token-specimen
                   variant="icon"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="--sl-icon-width: ${item.value}; --sl-icon-height: ${item.value};"
                 >

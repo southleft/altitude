@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLTabs, SLTab, SLTabPanel, SLIconDone, SLBadge } from '../..';
+import { SLTabs, SLTab, SLTabPanel, SLIconCheck, SLBadge } from '../..';
 
 export default {
   title: 'Molecules/Tabs',
@@ -27,8 +27,8 @@ export default {
     onTabChange: (event) => getActiveIndex(event),
     children: (
       <>
-        <SLTab><SLIconDone></SLIconDone><span className="sl-u-is-vishidden">Tab 1</span></SLTab>
-        <SLTab><SLIconDone></SLIconDone><span className="sl-u-is-vishidden">Tab 2</span></SLTab>
+        <SLTab><SLIconCheck></SLIconCheck><span className="sl-u-is-vishidden">Tab 1</span></SLTab>
+        <SLTab><SLIconCheck></SLIconCheck><span className="sl-u-is-vishidden">Tab 2</span></SLTab>
         <SLTab>Tab 3<SLBadge variant="danger">2</SLBadge></SLTab>
         <SLTab>Tab 4</SLTab>
         <SLTab>Tab 5</SLTab>

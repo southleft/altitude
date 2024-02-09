@@ -39,9 +39,10 @@ export class Tier1Border extends LitElement {
               return html`
                 <token-specimen
                   variant="border"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="border-width: var(${item.name});"
+                  ?disableCopy=${true}
                 ></token-specimen>
               `;
             })}
@@ -61,9 +62,10 @@ export class Tier1Border extends LitElement {
               return html`
                 <token-specimen
                   variant="border"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="border-radius: var(${item.name});"
+                  ?disableCopy=${true}
                 ></token-specimen>
               `;
             })}

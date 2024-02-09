@@ -11,7 +11,7 @@ export default {
   argTypes: {
     size: {
       control: 'radio',
-      options: ['default', 'md', 'lg', 'xl' , 'xxl' , 'xxxl'],
+      options: ['default', 'xs', 'sm', 'md', 'lg', 'xl' , 'xxl' , 'xxxl'],
     },
     iconTitle: {
       control: 'text',
@@ -25,6 +25,16 @@ const Template = (args) => html`
 
 export const Default = Template.bind({});
 Default.args = {};
+
+export const SizeXs = Template.bind({});
+SizeXs.args = {
+  size: 'xs',
+};
+
+export const SizeSm = Template.bind({});
+SizeSm.args = {
+  size: 'sm',
+};
 
 export const SizeMd = Template.bind({});
 SizeMd.args = {

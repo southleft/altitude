@@ -1,9 +1,9 @@
 import { Meta, Canvas } from '@storybook/blocks';
-import * as Stories from './icon-grid.stories';
+import * as Stories from './icon-svgs.stories';
 
 <Meta of={Stories} />
 
-# Icons
+# Icon Svgs
 
 Incorporating SVG icons offers numerous benefits, providing scalability without loss of quality, enhancing accessibility through customizable styling, improving performance with smaller file sizes, supporting interactivity and animation, offering flexibility for customization, ensuring cross-browser compatibility, and remaining future-proof as web standards evolve. By leveraging SVG icons effectively, developers can create visually compelling, accessible, and engaging user interfaces across various platforms and devices.
 
@@ -55,7 +55,7 @@ Removing icons must be done manually to prevent breaking changes. Follow these s
 sl-web-components/components/icon/fonts/*
 sl-web-components/components/icon/icons/*
 sl-web-components/components/icon/svgs/*
-sl-web-components/.storybook/components/icon-grid/icons.ts
+sl-web-components/.storybook/components/icon-svgs/icons.ts
 sl-react/components/Icons/*
 sl-react/src/index.ts
 ```
@@ -88,6 +88,6 @@ For icons used solely within a `<slot>` of a component, style the slotted sl-ico
 }
 ```
 
-<Canvas of={Stories.IconGrid} sourceState="none" />
+<Canvas of={Stories.IconSvgs} sourceState="none" />
 
-{ /* icon-grid.mdx */ }
+{ /* icon-svgs.mdx */ }

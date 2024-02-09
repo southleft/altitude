@@ -41,7 +41,7 @@ export class Tier2Colors extends LitElement {
               return html`
                 <token-specimen
                   variant="color"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="background-color: var(${item.name});"
                 ></token-specimen>
@@ -66,7 +66,7 @@ export class Tier2Colors extends LitElement {
               return html`
                 <token-specimen
                   variant="color"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="background-color: var(${item.name});"
                 ></token-specimen>

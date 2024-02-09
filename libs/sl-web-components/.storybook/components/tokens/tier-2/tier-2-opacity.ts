@@ -40,7 +40,7 @@ export class Tier2Opacity extends LitElement {
               return html`
                 <token-specimen
                   variant="opacity"
-                  name="${item.name}"
+                  name="var(${item.name})"
                   value="${item.value}"
                   inlineStyles="opacity: var(${item.name});"
                 ></token-specimen>

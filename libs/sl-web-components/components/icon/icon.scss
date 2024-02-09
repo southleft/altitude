@@ -22,6 +22,25 @@ svg {
   height: var(--sl-icon-height, var(--sl-theme-icon));
   width: var(--sl-icon-width, var(--sl-theme-icon));
 
+  /**
+   * XS icon
+   */
+  .sl-c-icon--xs & {
+    height: var(--sl-theme-icon-xs);
+    width: var(--sl-theme-icon-xs);
+  }
+
+  /**
+   * SM icon
+   */
+  .sl-c-icon--sm & {
+    height: var(--sl-theme-icon-sm);
+    width: var(--sl-theme-icon-sm);
+  }
+
+  /**
+   * MD icon
+   */
   .sl-c-icon--md & {
     height: var(--sl-theme-icon-md);
     width: var(--sl-theme-icon-md);
@@ -44,7 +63,7 @@ svg {
   }
 
   /**
-   * XxL icon
+   * XXL icon
    */
    .sl-c-icon--xxl & {
     height: var(--sl-theme-icon-xxl);
@@ -52,17 +71,10 @@ svg {
   }
 
   /**
-   * XxxL icon
+   * XXXL icon
    */
    .sl-c-icon--xxxl & {
     height: var(--sl-theme-icon-xxxl);
     width: var(--sl-theme-icon-xxxl);
-  }
-
-  /**
-   * Rotate the icon 90 degrees
-   */
-  .sl-c-icon--rotate & {
-    transform: rotate(90deg);
   }
 }

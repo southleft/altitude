@@ -6,7 +6,7 @@ import PackageJson from '../../package.json';
 import { SLElement } from '../SLElement';
 import { SLButton } from '../button/button';
 import { SLIconClose } from '../icon/icons/close';
-import { SLIconDone } from '../icon/icons/done';
+import { SLIconCheck } from '../icon/icons/check';
 import { SLIconInfo } from '../icon/icons/info';
 import { SLIconWarningCircle } from '../icon/icons/warning-circle';
 import { SLIconWarningTriangle } from '../icon/icons/warning-triangle';
@@ -28,7 +28,7 @@ export class SLToast extends SLElement {
     elements: [
       [SLButton.el, SLButton],
       [SLIconClose.el, SLIconClose],
-      [SLIconDone.el, SLIconDone],
+      [SLIconCheck.el, SLIconCheck],
       [SLIconInfo.el, SLIconInfo],
       [SLIconWarningCircle.el, SLIconWarningCircle],
       [SLIconWarningTriangle.el, SLIconWarningTriangle],
@@ -39,7 +39,7 @@ export class SLToast extends SLElement {
 
   private buttonEl = unsafeStatic(this.elementMap.get(SLButton.el));
   private iconCloseEl = unsafeStatic(this.elementMap.get(SLIconClose.el));
-  private iconDoneEl = unsafeStatic(this.elementMap.get(SLIconDone.el));
+  private iconDoneEl = unsafeStatic(this.elementMap.get(SLIconCheck.el));
   private iconInfoEl = unsafeStatic(this.elementMap.get(SLIconInfo.el));
   private iconWarningEl = unsafeStatic(this.elementMap.get(SLIconWarningCircle.el));
   private iconWarningTriangleEl = unsafeStatic(this.elementMap.get(SLIconWarningTriangle.el));

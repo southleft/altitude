@@ -5,7 +5,7 @@ import { html, unsafeStatic } from 'lit/static-html.js';
 import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { SLElement } from '../SLElement';
-import { SLIconDone } from '../icon/icons/done';
+import { SLIconCheck } from '../icon/icons/check';
 import styles from './stepper-item.scss';
 
 /**
@@ -20,11 +20,11 @@ export class SLStepperItem extends SLElement {
   static el = 'sl-stepper-item';
 
   private elementMap = register({
-    elements: [[SLIconDone.el, SLIconDone]],
+    elements: [[SLIconCheck.el, SLIconCheck]],
     suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
   });
 
-  private iconCheckEl = unsafeStatic(this.elementMap.get(SLIconDone.el));
+  private iconCheckEl = unsafeStatic(this.elementMap.get(SLIconCheck.el));
 
   static get styles() {
     return unsafeCSS(styles.toString());

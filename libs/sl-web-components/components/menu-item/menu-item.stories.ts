@@ -2,7 +2,7 @@ import { expect, userEvent, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
-import '../icon/icons/add-square';
+import '../icon/icons/add';
 import '../icon/icons/chevron-down';
 import './menu-item';
 
@@ -66,7 +66,7 @@ const Template = (args) => html`<sl-menu-item ${spread(args)} data-testid="menu-
 
 const TemplateWithIcon = (args) => html`
   <sl-menu-item ${spread(args)} data-testid="menu-item">
-    <sl-icon-add-square slot="before"></sl-icon-add-square>
+    <sl-icon-add slot="before"></sl-icon-add>
     Menu Item
   </sl-menu-item>
 `;
