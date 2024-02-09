@@ -12,7 +12,7 @@ import { SLFieldNote } from '../field-note/field-note';
 import { SLIconChevronDown } from '../icon/icons/chevron-down';
 import { SLListItem } from '../list-item/list-item';
 import { SLSearchForm } from '../search-form/search-form';
-import { SLTextField } from '../text-field/text-field';
+import { SLInput } from '../input/input';
 import { PartialDataSource } from './select.model';
 import styles from './select.scss';
 
@@ -32,7 +32,7 @@ export class SLSelect extends SLElement {
       [SLDropdownPanel.el, SLDropdownPanel],
       [SLFieldNote.el, SLFieldNote],
       [SLIconChevronDown.el, SLIconChevronDown],
-      [SLTextField.el, SLTextField],
+      [SLInput.el, SLInput],
       [SLSearchForm.el, SLSearchForm],
       [SLListItem.el, SLListItem],
       [SLCheckboxItem.el, SLCheckboxItem]
@@ -43,7 +43,7 @@ export class SLSelect extends SLElement {
   private dropdownPanelEl = unsafeStatic(this.elementMap.get(SLDropdownPanel.el));
   private fieldNoteEl = unsafeStatic(this.elementMap.get(SLFieldNote.el));
   private iconChevronDownEl = unsafeStatic(this.elementMap.get(SLIconChevronDown.el));
-  private textFieldEl = unsafeStatic(this.elementMap.get(SLTextField.el));
+  private inputEl = unsafeStatic(this.elementMap.get(SLInput.el));
   private searchFormEl = unsafeStatic(this.elementMap.get(SLSearchForm.el));
 
   static get styles() {
@@ -426,7 +426,7 @@ export class SLSelect extends SLElement {
     return html`
       <div class="${componentClassNames}">
         <div class="sl-c-select__container">
-          <${this.textFieldEl}
+          <${this.inputEl}
             class="sl-c-select__input"
             type="text"
             label="${this.label}"
@@ -447,7 +447,7 @@ export class SLSelect extends SLElement {
             ?isActive="${this.isActive}"
           >
             <${this.iconChevronDownEl} size="lg" slot="after" class="sl-c-select__icon-arrow"></${this.iconChevronDownEl}>
-          </${this.textFieldEl}>
+          </${this.inputEl}>
           ${
             this.isActiveDropdown
               ? html`

@@ -1863,9 +1863,9 @@
           "type": "HTMLElement"
         },
         {
-          "name": "textField",
-          "description": "Query the text field",
-          "type": "SLTextField"
+          "name": "input",
+          "description": "Query the input",
+          "type": "SLInput"
         },
         {
           "name": "handleOnClickOutside"
@@ -2320,9 +2320,9 @@
           "type": "SLTimeSelectorList"
         },
         {
-          "name": "textField",
-          "description": "Query the text field",
-          "type": "SLTextField"
+          "name": "input",
+          "description": "Query the input",
+          "type": "SLInput"
         },
         {
           "name": "handleOnClickOutside"
@@ -3387,6 +3387,292 @@
           "description": "Inremental/Decremental range",
           "type": "number",
           "default": "1"
+        },
+        {
+          "name": "styleModifier",
+          "attribute": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "sl-input",
+      "path": "./components/input/input.ts",
+      "description": "Component: sl-input\n\nInput allows users to input alphanumeric data when the expected input is short.\n- **slot** \"before\": The content that appears before the text in the input\n- **slot** \"after\": The content that appears after the text in the input\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
+      "attributes": [
+        {
+          "name": "type",
+          "description": "Type variants\n- Specifies the type <input> element to display\n- **text** renders a standar text input\n- **email** renders a text input specifically for an email format\n- **number** renders an input for number values only\n- **password** renders an input for a password input format\n- **url** renders an input for urls only\n- **tel** renders an input for telephone number values only",
+          "type": "\"number\" | \"text\" | \"email\" | \"password\" | \"url\" | \"hidden\" | \"tel\"",
+          "default": "\"text\""
+        },
+        {
+          "name": "isActive",
+          "description": "isActive\n- Dynamically sets to true if the input has a value",
+          "type": "boolean"
+        },
+        {
+          "name": "isReadonly",
+          "description": "Readonly attribute\n- Specifies that an input field is read-only",
+          "type": "boolean"
+        },
+        {
+          "name": "isError",
+          "description": "Error state\n- Changes the component's treatment to represent an error state",
+          "type": "boolean"
+        },
+        {
+          "name": "isDisabled",
+          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
+          "type": "boolean"
+        },
+        {
+          "name": "isRequired",
+          "description": "Required attribute\n- Specifies that an input field must be filled out before submitting the form",
+          "type": "boolean"
+        },
+        {
+          "name": "isOptional",
+          "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
+          "type": "boolean"
+        },
+        {
+          "name": "isFocused",
+          "description": "Autofocus attribute\n- When present, it specifies that the text area should automatically get focus when the page loads",
+          "type": "boolean"
+        },
+        {
+          "name": "hideLabel",
+          "description": "Hide label?\n- If true, hides the label from displaying",
+          "type": "boolean"
+        },
+        {
+          "name": "label",
+          "description": "Label attribute\n- Specifies what content to enter within the <input> element",
+          "type": "string",
+          "default": "\"Label\""
+        },
+        {
+          "name": "placeholder",
+          "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an <input> element",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "description": "Name attribute\n- Specifies the name of an <input> element",
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "description": "Value attribute\n- Specifies the value of an <input> element",
+          "type": "string"
+        },
+        {
+          "name": "errorNote",
+          "description": "Error message\n- An error field note that displays below the input",
+          "type": "string"
+        },
+        {
+          "name": "fieldNote",
+          "description": "Field note\n- The helper text that displays below the input",
+          "type": "string"
+        },
+        {
+          "name": "fieldId",
+          "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
+          "type": "string"
+        },
+        {
+          "name": "ariaDescribedBy",
+          "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
+          "type": "string"
+        },
+        {
+          "name": "minLength",
+          "description": "Min length\n- Specifies the minimum number of characters required in an <input> element",
+          "type": "number"
+        },
+        {
+          "name": "maxLength",
+          "description": "Max length\n- Specifies the maximum number of characters required in an <input> element",
+          "type": "number"
+        },
+        {
+          "name": "maxLengthValue",
+          "description": "Maxlength value\n- Dynamically outputs the number of characters inside the input field",
+          "type": "number"
+        },
+        {
+          "name": "min",
+          "description": "Minimum value\n- Specifies a minimum value for an <input> element",
+          "type": "number"
+        },
+        {
+          "name": "max",
+          "description": "Maximum value\n- Specifies a maximum value for an <input> element",
+          "type": "number"
+        },
+        {
+          "name": "autoComplete",
+          "description": "Autocomplete property\n- Specifies whether an <input> element should have autocomplete enabled",
+          "type": "\"on\" | \"off\""
+        },
+        {
+          "name": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "el",
+          "type": "string",
+          "default": "\"sl-input\""
+        },
+        {
+          "name": "type",
+          "attribute": "type",
+          "description": "Type variants\n- Specifies the type <input> element to display\n- **text** renders a standar text input\n- **email** renders a text input specifically for an email format\n- **number** renders an input for number values only\n- **password** renders an input for a password input format\n- **url** renders an input for urls only\n- **tel** renders an input for telephone number values only",
+          "type": "\"number\" | \"text\" | \"email\" | \"password\" | \"url\" | \"hidden\" | \"tel\"",
+          "default": "\"text\""
+        },
+        {
+          "name": "isActive",
+          "attribute": "isActive",
+          "description": "isActive\n- Dynamically sets to true if the input has a value",
+          "type": "boolean"
+        },
+        {
+          "name": "isReadonly",
+          "attribute": "isReadonly",
+          "description": "Readonly attribute\n- Specifies that an input field is read-only",
+          "type": "boolean"
+        },
+        {
+          "name": "isError",
+          "attribute": "isError",
+          "description": "Error state\n- Changes the component's treatment to represent an error state",
+          "type": "boolean"
+        },
+        {
+          "name": "isDisabled",
+          "attribute": "isDisabled",
+          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
+          "type": "boolean"
+        },
+        {
+          "name": "isRequired",
+          "attribute": "isRequired",
+          "description": "Required attribute\n- Specifies that an input field must be filled out before submitting the form",
+          "type": "boolean"
+        },
+        {
+          "name": "isOptional",
+          "attribute": "isOptional",
+          "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
+          "type": "boolean"
+        },
+        {
+          "name": "isFocused",
+          "attribute": "isFocused",
+          "description": "Autofocus attribute\n- When present, it specifies that the text area should automatically get focus when the page loads",
+          "type": "boolean"
+        },
+        {
+          "name": "hideLabel",
+          "attribute": "hideLabel",
+          "description": "Hide label?\n- If true, hides the label from displaying",
+          "type": "boolean"
+        },
+        {
+          "name": "label",
+          "attribute": "label",
+          "description": "Label attribute\n- Specifies what content to enter within the <input> element",
+          "type": "string",
+          "default": "\"Label\""
+        },
+        {
+          "name": "placeholder",
+          "attribute": "placeholder",
+          "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an <input> element",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "attribute": "name",
+          "description": "Name attribute\n- Specifies the name of an <input> element",
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "attribute": "value",
+          "description": "Value attribute\n- Specifies the value of an <input> element",
+          "type": "string"
+        },
+        {
+          "name": "errorNote",
+          "attribute": "errorNote",
+          "description": "Error message\n- An error field note that displays below the input",
+          "type": "string"
+        },
+        {
+          "name": "fieldNote",
+          "attribute": "fieldNote",
+          "description": "Field note\n- The helper text that displays below the input",
+          "type": "string"
+        },
+        {
+          "name": "fieldId",
+          "attribute": "fieldId",
+          "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
+          "type": "string"
+        },
+        {
+          "name": "ariaDescribedBy",
+          "attribute": "ariaDescribedBy",
+          "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
+          "type": "string"
+        },
+        {
+          "name": "minLength",
+          "attribute": "minLength",
+          "description": "Min length\n- Specifies the minimum number of characters required in an <input> element",
+          "type": "number"
+        },
+        {
+          "name": "maxLength",
+          "attribute": "maxLength",
+          "description": "Max length\n- Specifies the maximum number of characters required in an <input> element",
+          "type": "number"
+        },
+        {
+          "name": "maxLengthValue",
+          "attribute": "maxLengthValue",
+          "description": "Maxlength value\n- Dynamically outputs the number of characters inside the input field",
+          "type": "number"
+        },
+        {
+          "name": "min",
+          "attribute": "min",
+          "description": "Minimum value\n- Specifies a minimum value for an <input> element",
+          "type": "number"
+        },
+        {
+          "name": "max",
+          "attribute": "max",
+          "description": "Maximum value\n- Specifies a maximum value for an <input> element",
+          "type": "number"
+        },
+        {
+          "name": "autoComplete",
+          "attribute": "autoComplete",
+          "description": "Autocomplete property\n- Specifies whether an <input> element should have autocomplete enabled",
+          "type": "\"on\" | \"off\""
+        },
+        {
+          "name": "beforeEl",
+          "description": "Queries content before the input label"
         },
         {
           "name": "styleModifier",
@@ -6391,292 +6677,6 @@
         },
         {
           "name": "handleOnResize"
-        },
-        {
-          "name": "styleModifier",
-          "attribute": "styleModifier",
-          "description": "Append to the class name. Used for passing in utility classes",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "sl-text-field",
-      "path": "./components/text-field/text-field.ts",
-      "description": "Component: sl-text-field\n\nText Field allows users to input alphanumeric data when the expected input is short.\n- **slot** \"before\": The content that appears before the text in the input\n- **slot** \"after\": The content that appears after the text in the input\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
-      "attributes": [
-        {
-          "name": "type",
-          "description": "Type variants\n- Specifies the type <input> element to display\n- **text** renders a standar text input\n- **email** renders a text input specifically for an email format\n- **number** renders an input for number values only\n- **password** renders an input for a password input format\n- **url** renders an input for urls only\n- **tel** renders an input for telephone number values only",
-          "type": "\"number\" | \"text\" | \"email\" | \"password\" | \"url\" | \"hidden\" | \"tel\"",
-          "default": "\"text\""
-        },
-        {
-          "name": "isActive",
-          "description": "isActive\n- Dynamically sets to true if the input has a value",
-          "type": "boolean"
-        },
-        {
-          "name": "isReadonly",
-          "description": "Readonly attribute\n- Specifies that an input field is read-only",
-          "type": "boolean"
-        },
-        {
-          "name": "isError",
-          "description": "Error state\n- Changes the component's treatment to represent an error state",
-          "type": "boolean"
-        },
-        {
-          "name": "isDisabled",
-          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
-          "type": "boolean"
-        },
-        {
-          "name": "isRequired",
-          "description": "Required attribute\n- Specifies that an input field must be filled out before submitting the form",
-          "type": "boolean"
-        },
-        {
-          "name": "isOptional",
-          "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
-          "type": "boolean"
-        },
-        {
-          "name": "isFocused",
-          "description": "Autofocus attribute\n- When present, it specifies that the text area should automatically get focus when the page loads",
-          "type": "boolean"
-        },
-        {
-          "name": "hideLabel",
-          "description": "Hide label?\n- If true, hides the label from displaying",
-          "type": "boolean"
-        },
-        {
-          "name": "label",
-          "description": "Label attribute\n- Specifies what content to enter within the <input> element",
-          "type": "string",
-          "default": "\"Label\""
-        },
-        {
-          "name": "placeholder",
-          "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an <input> element",
-          "type": "string"
-        },
-        {
-          "name": "name",
-          "description": "Name attribute\n- Specifies the name of an <input> element",
-          "type": "string"
-        },
-        {
-          "name": "value",
-          "description": "Value attribute\n- Specifies the value of an <input> element",
-          "type": "string"
-        },
-        {
-          "name": "errorNote",
-          "description": "Error message\n- An error field note that displays below the input",
-          "type": "string"
-        },
-        {
-          "name": "fieldNote",
-          "description": "Field note\n- The helper text that displays below the input",
-          "type": "string"
-        },
-        {
-          "name": "fieldId",
-          "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
-          "type": "string"
-        },
-        {
-          "name": "ariaDescribedBy",
-          "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
-          "type": "string"
-        },
-        {
-          "name": "minLength",
-          "description": "Min length\n- Specifies the minimum number of characters required in an <input> element",
-          "type": "number"
-        },
-        {
-          "name": "maxLength",
-          "description": "Max length\n- Specifies the maximum number of characters required in an <input> element",
-          "type": "number"
-        },
-        {
-          "name": "maxLengthValue",
-          "description": "Maxlength value\n- Dynamically outputs the number of characters inside the input field",
-          "type": "number"
-        },
-        {
-          "name": "min",
-          "description": "Minimum value\n- Specifies a minimum value for an <input> element",
-          "type": "number"
-        },
-        {
-          "name": "max",
-          "description": "Maximum value\n- Specifies a maximum value for an <input> element",
-          "type": "number"
-        },
-        {
-          "name": "autoComplete",
-          "description": "Autocomplete property\n- Specifies whether an <input> element should have autocomplete enabled",
-          "type": "\"on\" | \"off\""
-        },
-        {
-          "name": "styleModifier",
-          "description": "Append to the class name. Used for passing in utility classes",
-          "type": "string"
-        }
-      ],
-      "properties": [
-        {
-          "name": "el",
-          "type": "string",
-          "default": "\"sl-text-field\""
-        },
-        {
-          "name": "type",
-          "attribute": "type",
-          "description": "Type variants\n- Specifies the type <input> element to display\n- **text** renders a standar text input\n- **email** renders a text input specifically for an email format\n- **number** renders an input for number values only\n- **password** renders an input for a password input format\n- **url** renders an input for urls only\n- **tel** renders an input for telephone number values only",
-          "type": "\"number\" | \"text\" | \"email\" | \"password\" | \"url\" | \"hidden\" | \"tel\"",
-          "default": "\"text\""
-        },
-        {
-          "name": "isActive",
-          "attribute": "isActive",
-          "description": "isActive\n- Dynamically sets to true if the input has a value",
-          "type": "boolean"
-        },
-        {
-          "name": "isReadonly",
-          "attribute": "isReadonly",
-          "description": "Readonly attribute\n- Specifies that an input field is read-only",
-          "type": "boolean"
-        },
-        {
-          "name": "isError",
-          "attribute": "isError",
-          "description": "Error state\n- Changes the component's treatment to represent an error state",
-          "type": "boolean"
-        },
-        {
-          "name": "isDisabled",
-          "attribute": "isDisabled",
-          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
-          "type": "boolean"
-        },
-        {
-          "name": "isRequired",
-          "attribute": "isRequired",
-          "description": "Required attribute\n- Specifies that an input field must be filled out before submitting the form",
-          "type": "boolean"
-        },
-        {
-          "name": "isOptional",
-          "attribute": "isOptional",
-          "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
-          "type": "boolean"
-        },
-        {
-          "name": "isFocused",
-          "attribute": "isFocused",
-          "description": "Autofocus attribute\n- When present, it specifies that the text area should automatically get focus when the page loads",
-          "type": "boolean"
-        },
-        {
-          "name": "hideLabel",
-          "attribute": "hideLabel",
-          "description": "Hide label?\n- If true, hides the label from displaying",
-          "type": "boolean"
-        },
-        {
-          "name": "label",
-          "attribute": "label",
-          "description": "Label attribute\n- Specifies what content to enter within the <input> element",
-          "type": "string",
-          "default": "\"Label\""
-        },
-        {
-          "name": "placeholder",
-          "attribute": "placeholder",
-          "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an <input> element",
-          "type": "string"
-        },
-        {
-          "name": "name",
-          "attribute": "name",
-          "description": "Name attribute\n- Specifies the name of an <input> element",
-          "type": "string"
-        },
-        {
-          "name": "value",
-          "attribute": "value",
-          "description": "Value attribute\n- Specifies the value of an <input> element",
-          "type": "string"
-        },
-        {
-          "name": "errorNote",
-          "attribute": "errorNote",
-          "description": "Error message\n- An error field note that displays below the input",
-          "type": "string"
-        },
-        {
-          "name": "fieldNote",
-          "attribute": "fieldNote",
-          "description": "Field note\n- The helper text that displays below the input",
-          "type": "string"
-        },
-        {
-          "name": "fieldId",
-          "attribute": "fieldId",
-          "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
-          "type": "string"
-        },
-        {
-          "name": "ariaDescribedBy",
-          "attribute": "ariaDescribedBy",
-          "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
-          "type": "string"
-        },
-        {
-          "name": "minLength",
-          "attribute": "minLength",
-          "description": "Min length\n- Specifies the minimum number of characters required in an <input> element",
-          "type": "number"
-        },
-        {
-          "name": "maxLength",
-          "attribute": "maxLength",
-          "description": "Max length\n- Specifies the maximum number of characters required in an <input> element",
-          "type": "number"
-        },
-        {
-          "name": "maxLengthValue",
-          "attribute": "maxLengthValue",
-          "description": "Maxlength value\n- Dynamically outputs the number of characters inside the input field",
-          "type": "number"
-        },
-        {
-          "name": "min",
-          "attribute": "min",
-          "description": "Minimum value\n- Specifies a minimum value for an <input> element",
-          "type": "number"
-        },
-        {
-          "name": "max",
-          "attribute": "max",
-          "description": "Maximum value\n- Specifies a maximum value for an <input> element",
-          "type": "number"
-        },
-        {
-          "name": "autoComplete",
-          "attribute": "autoComplete",
-          "description": "Autocomplete property\n- Specifies whether an <input> element should have autocomplete enabled",
-          "type": "\"on\" | \"off\""
-        },
-        {
-          "name": "beforeEl",
-          "description": "Queries content before the text field label"
         },
         {
           "name": "styleModifier",

@@ -15,7 +15,7 @@ import { SLIconClose } from '../icon/icons/close';
 import { SLIconSearch } from '../icon/icons/search';
 import { SLListItem } from '../list-item/list-item';
 import { SLList } from '../list/list';
-import { SLTextField } from '../text-field/text-field';
+import { SLInput } from '../input/input';
 import styles from './search-form.scss';
 
 /**
@@ -31,7 +31,7 @@ export class SLSearchForm extends SLElement {
 
   private elementMap = register({
     elements: [
-      [SLTextField.el, SLTextField],
+      [SLInput.el, SLInput],
       [SLFieldNote.el, SLFieldNote],
       [SLButton.el, SLButton],
       [SLDropdownPanel.el, SLDropdownPanel],
@@ -43,7 +43,7 @@ export class SLSearchForm extends SLElement {
     suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
   });
 
-  private textFieldEl = unsafeStatic(this.elementMap.get(SLTextField.el));
+  private inputEl = unsafeStatic(this.elementMap.get(SLInput.el));
   private fieldNoteEl = unsafeStatic(this.elementMap.get(SLFieldNote.el));
   private buttonEl = unsafeStatic(this.elementMap.get(SLButton.el));
   private dropdownPanelEl = unsafeStatic(this.elementMap.get(SLDropdownPanel.el));
@@ -634,7 +634,7 @@ export class SLSearchForm extends SLElement {
     return html`
       <div class="${componentClassName}">
         <div class="sl-c-search-form__container">
-          <${this.textFieldEl}
+          <${this.inputEl}
             class="sl-c-search-form__input"
             type="text"
             id="${this.fieldId}"
@@ -666,7 +666,7 @@ export class SLSearchForm extends SLElement {
                 `
                 : html``
             }
-          </${this.textFieldEl}>
+          </${this.inputEl}>
           ${
             this.isEmpty && this.slotNotEmpty('emptyMessage')
               ? html`

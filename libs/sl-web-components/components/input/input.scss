@@ -1,33 +1,33 @@
 @import '../../styles/component';
 /*------------------------------------*\
-  #TEXT-FIELD
+  #INPUT
 \*------------------------------------*/
 
 /**
- * Text Field
+ * Input
  */
-.sl-c-text-field {
+.sl-c-input {
   display: flex;
   flex-direction: column;
   gap: var(--sl-theme-space-xxs);
 }
 
 /**
- * Text field container
+ * Input container
  * - Holds the input element and label
  */
-.sl-c-text-field__container {
+.sl-c-input__container {
   position: relative;
 }
 
 /**
- * Text field input
- * - The actual input element of the text field
+ * Input input
+ * - The actual input element of the input
  */
-.sl-c-text-field__input {
+.sl-c-input__input {
   @include input-styles;
-  padding-inline-start: var(--sl-text-field-padding-start, var(--sl-theme-space));
-  padding-inline-end: var(--sl-text-field-padding-end, var(--sl-theme-space));
+  padding-inline-start: var(--sl-input-padding-start, var(--sl-theme-space));
+  padding-inline-end: var(--sl-input-padding-end, var(--sl-theme-space));
 
   /**
    * Show the placeholder if the label is hidden
@@ -49,25 +49,25 @@
 }
 
 /**
- * Text field label
+ * Input label
  * - The floating label that appears inside of the input field
  */
-.sl-c-text-field__label {
+.sl-c-input__label {
   @include label-styles;
   position: absolute;
   margin: auto;
   inset-block-start: 0;
   inset-block-end: 0;
-  inset-inline-start: var(--sl-text-field-padding-start, var(--sl-theme-space));
+  inset-inline-start: var(--sl-input-padding-start, var(--sl-theme-space));
   display: flex;
   align-items: center;
   gap: var(--sl-theme-space-xxs);
-  pointer-events:  var(--sl-text-field-label-pointer-events, none); /* Allows hover to work properly */
+  pointer-events:  var(--sl-input-label-pointer-events, none); /* Allows hover to work properly */
 
   /**
    * If the input is focused or active, position the label above the input
    */
-  .sl-c-text-field__input:focus + &,
+  .sl-c-input__input:focus + &,
   .sl-is-active & {
     @include sl-theme-typography-body-xs;
     padding: 0 var(--sl-theme-space-xxs);
@@ -80,7 +80,7 @@
   /**
    * A fix for the input border being visible through the label when filled and disabled
    */
-  .sl-c-text-field__input:disabled + & {
+  .sl-c-input__input:disabled + & {
     opacity: 1;
 
     /**
@@ -110,27 +110,27 @@
 }
 
 /**
- * Text field optional
+ * Input optional
  * - The `(Optional)` text that appears in the label if isOptional is true
  */
-.sl-c-text-field__optional {
+.sl-c-input__optional {
   @include sl-theme-typography-body-xs;
 }
 
 /**
- * Text field footer
+ * Input footer
  * - The container that holds the field notes and max length
  */
-.sl-c-text-field__footer {
+.sl-c-input__footer {
   display: flex;
   gap: var(--sl-theme-space);
 }
 
 /**
- * Text field field notes
+ * Input field notes
  * - The container that holds the field notes
  */
-.sl-c-text-field__field-notes {
+.sl-c-input__field-notes {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -138,11 +138,11 @@
 }
 
 /**
- * Text field slot before and after
+ * Input slot before and after
  * - The slots for icons or prefix/suffix text inside the input field
  */
-.sl-c-text-field__before,
-.sl-c-text-field__after {
+.sl-c-input__before,
+.sl-c-input__after {
   display: flex;
   align-items: center;
   gap: var(--sl-theme-space-xxs);
@@ -154,40 +154,40 @@
   --sl-icon-width: var(--sl-theme-icon-md);
 }
 
-.sl-c-text-field__before {
-  pointer-events: var(--sl-text-field-slot-before-pointer-events, none); /* Allows hover to work properly */
+.sl-c-input__before {
+  pointer-events: var(--sl-input-slot-before-pointer-events, none); /* Allows hover to work properly */
 }
 
-.sl-c-text-field__after {
-  pointer-events: var(--sl-text-field-slot-after-pointer-events, none); /* Allows hover to work properly */
+.sl-c-input__after {
+  pointer-events: var(--sl-input-slot-after-pointer-events, none); /* Allows hover to work properly */
 }
 
 /**
- * Text field slot before
+ * Input slot before
  * - The slot for elements positioned absolutely to the left of the input
  */
-.sl-c-text-field__before {
+.sl-c-input__before {
   inset-inline-start: var(--sl-theme-space);
 }
 
 /**
- * Text field slot after
+ * Input slot after
  * - The slot for elements positioned absolutely to the right of the input
  */
-.sl-c-text-field__after {
+.sl-c-input__after {
   inset-inline-end: var(--sl-theme-space);
 }
 
 /**
- * Text field asterick
+ * Input asterick
  * - The asterick that displays if the field is required
  */
-.sl-c-text-field__asterisk {
+.sl-c-input__asterisk {
   color: var(--sl-theme-color-border-danger-default);
 }
 
 /**
- * Text field slots
+ * Input slots
  * - Adds spacing between multiple items slotted
  */
 slot[name="before"],
@@ -197,7 +197,7 @@ slot[name="after"] {
 }
 
 /**
- * Text field note slotted
+ * Input note slotted
  * 1. Targets field notes that are added via a slot
  */
 slot[name="field-note"]::slotted(*),

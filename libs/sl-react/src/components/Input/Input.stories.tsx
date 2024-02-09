@@ -1,14 +1,14 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLTextField, SLFieldNote, SLIconEmoji, SLIconAttachment, SLIconWarningCircle, SLIconHelp } from '../..';
+import { SLInput, SLFieldNote, SLIconEmoji, SLIconAttachment, SLIconWarningCircle, SLIconHelp } from '../..';
 
 export default {
-  title: 'Molecules/Text Field',
-  component: SLTextField,
+  title: 'Molecules/Input',
+  component: SLInput,
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['onTextFieldChange']
+      handles: ['onInputChange']
     },
   },
   argTypes: {
@@ -87,44 +87,44 @@ export default {
   args: {
     label: 'Label',
     placeholder: 'Placeholder',
-    name: 'Text Field',
+    name: 'Input',
     fieldnote: 'This is a field note.',
   },
 };
 
-export const Default: StoryObj<typeof SLTextField> = { args: {} };
+export const Default: StoryObj<typeof SLInput> = { args: {} };
 
-export const Filled: StoryObj<typeof SLTextField> = { args: {
+export const Filled: StoryObj<typeof SLInput> = { args: {
   value: 'Inputted text'
 } };
 
-export const Error: StoryObj<typeof SLTextField> = { args: {
+export const Error: StoryObj<typeof SLInput> = { args: {
   isError: true,
   errorNote: 'This is an error note.',
 } };
 
-export const Disabled: StoryObj<typeof SLTextField> = { args: {
+export const Disabled: StoryObj<typeof SLInput> = { args: {
   isDisabled: true,
 } };
 
-export const Required: StoryObj<typeof SLTextField> = { args: {
+export const Required: StoryObj<typeof SLInput> = { args: {
   isRequired: true,
 } };
 
-export const RequiredHiddenLabel: StoryObj<typeof SLTextField> = { args: {
+export const RequiredHiddenLabel: StoryObj<typeof SLInput> = { args: {
   isRequired: true,
   hideLabel: true,
 } };
 
-export const Optional: StoryObj<typeof SLTextField> = { args: {
+export const Optional: StoryObj<typeof SLInput> = { args: {
   isOptional: true,
 } };
 
-export const HiddenLabel: StoryObj<typeof SLTextField> = { args: {
+export const HiddenLabel: StoryObj<typeof SLInput> = { args: {
   hideLabel: true,
 } };
 
-export const SlottedFieldNote: StoryObj<typeof SLTextField> = {
+export const SlottedFieldNote: StoryObj<typeof SLInput> = {
   args: {
     children: (
       <>
@@ -134,7 +134,7 @@ export const SlottedFieldNote: StoryObj<typeof SLTextField> = {
   },
 };
 
-export const SlottedErrorNote: StoryObj<typeof SLTextField> = {
+export const SlottedErrorNote: StoryObj<typeof SLInput> = {
   args: {
     isError: true,
     fieldNote: '',
@@ -146,7 +146,7 @@ export const SlottedErrorNote: StoryObj<typeof SLTextField> = {
   },
 };
 
-export const WithIconBefore: StoryObj<typeof SLTextField> = {
+export const WithIconBefore: StoryObj<typeof SLInput> = {
   args: {
     children: (
       <>
@@ -156,7 +156,7 @@ export const WithIconBefore: StoryObj<typeof SLTextField> = {
   },
 };
 
-export const WithIconAfter: StoryObj<typeof SLTextField> = {
+export const WithIconAfter: StoryObj<typeof SLInput> = {
   args: {
     children: (
       <>
@@ -166,7 +166,7 @@ export const WithIconAfter: StoryObj<typeof SLTextField> = {
   },
 };
 
-export const WithIconBeforeAfter: StoryObj<typeof SLTextField> = {
+export const WithIconBeforeAfter: StoryObj<typeof SLInput> = {
   args: {
     children: (
       <>
@@ -178,19 +178,19 @@ export const WithIconBeforeAfter: StoryObj<typeof SLTextField> = {
   },
 };
 
-export const WithIconBeforeAfterDisabled: StoryObj<typeof SLTextField> = {
+export const WithIconBeforeAfterDisabled: StoryObj<typeof SLInput> = {
   args: {
     ...WithIconBeforeAfter.args,
     isDisabled: true,
   },
 };
 
-export const WithMaxLength: StoryObj<typeof SLTextField> = { args: {
+export const WithMaxLength: StoryObj<typeof SLInput> = { args: {
   value: 'Inputted value',
   minLength: 15,
   maxLength: 250,
 } };
 
-export const WithAutoFocus: StoryObj<typeof SLTextField> = { args: {
+export const WithAutoFocus: StoryObj<typeof SLInput> = { args: {
   isFocused: true,
 } };

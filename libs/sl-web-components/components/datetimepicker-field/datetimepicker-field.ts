@@ -13,7 +13,7 @@ import { SLCalendar } from '../calendar/calendar';
 import { SLFieldNote } from '../field-note/field-note';
 import { SLIconCalendar } from '../icon/icons/calendar';
 import { SLIconChevronDown } from '../icon/icons/chevron-down';
-import { SLTextField } from '../text-field/text-field';
+import { SLInput } from '../input/input';
 import { SLTimeSelectorList } from '../time-selector-list/time-selector-list';
 import styles from './datetimepicker-field.scss';
 
@@ -29,7 +29,7 @@ export class SLDatetimepickerField extends SLElement {
 
   private elementMap = register({
     elements: [
-      [SLTextField.el, SLTextField],
+      [SLInput.el, SLInput],
       [SLFieldNote.el, SLFieldNote],
       [SLCalendar.el, SLCalendar],
       [SLIconCalendar.el, SLIconCalendar],
@@ -41,7 +41,7 @@ export class SLDatetimepickerField extends SLElement {
     suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
   });
 
-  private textFieldEl = unsafeStatic(this.elementMap.get(SLTextField.el));
+  private inputEl = unsafeStatic(this.elementMap.get(SLInput.el));
   private fieldNoteEl = unsafeStatic(this.elementMap.get(SLFieldNote.el));
   private calendarEl = unsafeStatic(this.elementMap.get(SLCalendar.el));
   private iconCalendarEl = unsafeStatic(this.elementMap.get(SLIconCalendar.el));
@@ -322,10 +322,10 @@ export class SLDatetimepickerField extends SLElement {
   accessor timeSelectorList: SLTimeSelectorList;
 
   /**
-   * Query the text field
+   * Query the input
    */
   @query('.sl-c-datetimepicker-field__input')
-  accessor textField: SLTextField;
+  accessor input: SLInput;
 
   /**
    * Initializations
@@ -534,7 +534,7 @@ export class SLDatetimepickerField extends SLElement {
   handleOnClickCancel() {
     this.toggleActiveCalendar(); /* 1 */
     /* 2 */
-    const inputField = this.textField?.shadowRoot?.querySelector('input');
+    const inputField = this.input?.shadowRoot?.querySelector('input');
     if (inputField) {
       inputField.focus();
     }
@@ -578,7 +578,7 @@ export class SLDatetimepickerField extends SLElement {
     if (!this.disabledSubmit) {
       this.toggleActiveCalendar(); /* 2 */
       /* 3 */
-      const inputField = this.textField?.shadowRoot?.querySelector('input');
+      const inputField = this.input?.shadowRoot?.querySelector('input');
       if (inputField) {
         inputField.focus();
       }
@@ -621,7 +621,7 @@ export class SLDatetimepickerField extends SLElement {
     return html`
       <div class="${componentClassNames}">
         <div class="sl-c-datetimepicker-field__body">
-          <${this.textFieldEl}
+          <${this.inputEl}
             class="sl-c-datetimepicker-field__input"
             label="${this.label}"
             id="${this.fieldId}"
@@ -642,7 +642,7 @@ export class SLDatetimepickerField extends SLElement {
           >
             <${this.iconCalendarEl} slot="before"></${this.iconCalendarEl}>
             <${this.iconChevronDownEl} size="lg" slot="after" class="sl-c-datetimepicker__icon-arrow"></${this.iconChevronDownEl}>
-          </${this.textFieldEl}>
+          </${this.inputEl}>
           <div class="sl-c-datetimepicker-field__popup" ?hidden="${!this.isActiveCalendar}" role="dialog">
             <div class="sl-c-datetimepicker-field__popup-body">
               <div class="sl-c-datetimepicker-field__calendar-container">

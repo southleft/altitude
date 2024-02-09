@@ -7,19 +7,19 @@ import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { SLElement } from '../SLElement';
 import { SLFieldNote } from '../field-note/field-note';
-import styles from './text-field.scss';
+import styles from './input.scss';
 
 /**
- * Component: sl-text-field
+ * Component: sl-input
  *
- * Text Field allows users to input alphanumeric data when the expected input is short.
+ * Input allows users to input alphanumeric data when the expected input is short.
  * - **slot** "before": The content that appears before the text in the input
  * - **slot** "after": The content that appears after the text in the input
  * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
  * - **slot** "error": If content is slotted, it will display in place of the errorNote property
  */
-export class SLTextField extends SLElement {
-  static el = 'sl-text-field';
+export class SLInput extends SLElement {
+  static el = 'sl-input';
 
   private elementMap = register({
     elements: [[SLFieldNote.el, SLFieldNote]],
@@ -200,9 +200,9 @@ export class SLTextField extends SLElement {
   accessor autoComplete: 'on' | 'off';
 
   /**
-   * Queries content before the text field label
+   * Queries content before the input label
    */
-  @queryAsync('.sl-c-text-field__before')
+  @queryAsync('.sl-c-input__before')
   accessor beforeEl: any;
 
   /**
@@ -234,7 +234,7 @@ export class SLTextField extends SLElement {
     }
     /* 3 */
     if (this.isFocused) {
-      this.shadowRoot.querySelector<HTMLTextAreaElement>('.sl-c-text-field__input').focus();
+      this.shadowRoot.querySelector<HTMLTextAreaElement>('.sl-c-input__input').focus();
     }
   }
 
@@ -259,7 +259,7 @@ export class SLTextField extends SLElement {
 
     /* 4 */
     this.dispatch({
-      eventName: 'onTextFieldChange',
+      eventName: 'onInputChange',
       detailObj: {
         value: this.value
       }
@@ -276,7 +276,7 @@ export class SLTextField extends SLElement {
     } else {
       beforeWidth = beforeEl.clientWidth + 24;
     }
-    this.style.setProperty('--sl-text-field-padding-start', beforeWidth + 'px');
+    this.style.setProperty('--sl-input-padding-start', beforeWidth + 'px');
   }
 
   /**
@@ -299,15 +299,15 @@ export class SLTextField extends SLElement {
       }
     }
     /* 2 */
-    const afterEl = this.shadowRoot.querySelector<HTMLElement>('.sl-c-text-field__after');
+    const afterEl = this.shadowRoot.querySelector<HTMLElement>('.sl-c-input__after');
     if (afterEl) {
       const afterWidth = afterEl.clientWidth + 24;
-      this.style.setProperty('--sl-text-field-padding-end', afterWidth + 'px');
+      this.style.setProperty('--sl-input-padding-end', afterWidth + 'px');
     }
   }
 
   render() {
-    const componentClassNames = this.componentClassNames('sl-c-text-field', {
+    const componentClassNames = this.componentClassNames('sl-c-input', {
       'sl-has-hidden-label': this.hideLabel,
       'sl-is-disabled': this.isDisabled,
       'sl-is-required': this.isRequired,
@@ -317,9 +317,9 @@ export class SLTextField extends SLElement {
 
     return html`
       <div class="${componentClassNames}">
-        <div class="sl-c-text-field__container">
+        <div class="sl-c-input__container">
           <input
-            class="sl-c-text-field__input"
+            class="sl-c-input__input"
             type="${this.type}"
             id="${this.fieldId}"
             name="${ifDefined(this.name)}"
@@ -337,24 +337,24 @@ export class SLTextField extends SLElement {
             @input=${(e: Event) => this.handleOnChange(e)}
             .autofocus=${this.isFocused}
           />
-          <label ?hidden="${this.type === 'hidden'}" class="sl-c-text-field__label" for="${this.fieldId}">
-            ${this.isRequired ? html`<span class="sl-c-text-field__asterisk">*</span>` : html``}
+          <label ?hidden="${this.type === 'hidden'}" class="sl-c-input__label" for="${this.fieldId}">
+            ${this.isRequired ? html`<span class="sl-c-input__asterisk">*</span>` : html``}
             <span>${this.label}</span>
-            ${this.isOptional ? html`<em class="sl-c-text-field__optional">(Optional)</em>` : html``}
+            ${this.isOptional ? html`<em class="sl-c-input__optional">(Optional)</em>` : html``}
           </label>
           ${this.slotNotEmpty('before') || (this.isRequired && this.hideLabel)
             ? html`
-                <div class="sl-c-text-field__before">
+                <div class="sl-c-input__before">
                   ${this.slotNotEmpty('before') ? html` <slot name="before"></slot> ` : html``}
                   ${this.isRequired && this.hideLabel
-                    ? html` <span class="sl-c-text-field__asterisk sl-c-text-field__asterisk--hidden-label">*</span> `
+                    ? html` <span class="sl-c-input__asterisk sl-c-input__asterisk--hidden-label">*</span> `
                     : html``}
                 </div>
               `
             : html``}
           ${this.slotNotEmpty('after')
             ? html`
-                <div class="sl-c-text-field__after">
+                <div class="sl-c-input__after">
                   <slot name="after"></slot>
                 </div>
               `
@@ -362,8 +362,8 @@ export class SLTextField extends SLElement {
         </div>
         ${this.maxLength || this.fieldNote || this.errorNote || this.slotNotEmpty('field-note') || this.slotNotEmpty('error')
           ? html`
-              <div class="sl-c-text-field__footer">
-                <div class="sl-c-text-field__field-notes">
+              <div class="sl-c-input__footer">
+                <div class="sl-c-input__field-notes">
                   ${this.fieldNote || this.slotNotEmpty('field-note')
                     ? html`
                         <slot name="field-note">
@@ -396,12 +396,12 @@ export class SLTextField extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLTextField.el) === undefined) {
-  customElements.define(SLTextField.el, SLTextField);
+if ((globalThis as any).enAutoRegistry === true && customElements.get(SLInput.el) === undefined) {
+  customElements.define(SLInput.el, SLInput);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sl-text-field': SLTextField;
+    'sl-input': SLInput;
   }
 }

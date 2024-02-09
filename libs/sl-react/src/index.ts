@@ -78,7 +78,7 @@ export * from './components/Tab';
 export * from './components/TabPanel';
 export * from './components/Tabs';
 export * from './components/Textarea';
-export * from './components/TextField';
+export * from './components/Input';
 export * from './components/TextPassage';
 export * from './components/TimeSelectorList';
 export * from './components/Toast';

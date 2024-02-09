@@ -7,17 +7,17 @@ import '../icon/icons/attachment';
 import '../icon/icons/emoji';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
-import './text-field';
+import './input';
 
 export default {
-  title: 'Molecules/Text Field',
-  component: 'sl-text-field',
+  title: 'Molecules/Input',
+  component: 'sl-input',
   tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['onTextFieldChange']
+      handles: ['onInputChange']
     },
   },
   decorators: [ withActions ],
@@ -97,12 +97,12 @@ export default {
   args: {
     label: 'Label',
     placeholder: 'Placeholder',
-    name: 'Text Field',
+    name: 'Input',
     fieldnote: 'This is a field note.',
   },
 };
 
-const Template = (args) => html`<sl-text-field ${spread(args)} data-testid="text-field"></sl-text-field>`;
+const Template = (args) => html`<sl-input ${spread(args)} data-testid="input"></sl-input>`;
 
 export const Default = Template.bind({});
 Default.args = {};
@@ -145,18 +145,18 @@ HiddenLabel.args = {
 };
 
 const TemplateSlottedFieldNote = (args) => html`
-  <sl-text-field ${spread(args)}>
+  <sl-input ${spread(args)}>
     <sl-field-note slot="field-note"><sl-icon-help></sl-icon-help>This is a field note.</sl-field-note>
-  </sl-text-field>`;
+  </sl-input>`;
 
 export const SlottedFieldNote = TemplateSlottedFieldNote.bind({});
 SlottedFieldNote.args = {
 };
 
 const TemplateSlottedErrorNote = (args) => html`
-  <sl-text-field ${spread(args)}>
+  <sl-input ${spread(args)}>
     <sl-field-note slot="error"><sl-icon-warning-circle></sl-icon-warning-circle>This is an error note.</sl-field-note>
-  </sl-text-field>`;
+  </sl-input>`;
 
 export const SlottedErrorNote = TemplateSlottedErrorNote.bind({});
 SlottedErrorNote.args = {
@@ -165,28 +165,28 @@ SlottedErrorNote.args = {
 };
 
 const TemplateIconBefore = (args) => html`
-  <sl-text-field ${spread(args)}>
+  <sl-input ${spread(args)}>
     <sl-icon-emoji slot="before"></sl-icon-emoji>
-  </sl-text-field>
+  </sl-input>
 `;
 export const WithIconBefore = TemplateIconBefore.bind({});
 WithIconBefore.args = {};
 
 const TemplateIconAfter= (args) => html`
-  <sl-text-field ${spread(args)}>
+  <sl-input ${spread(args)}>
     <sl-icon-attachment slot="after"></sl-icon-attachment>
-  </sl-text-field>
+  </sl-input>
 `;
 
 export const WithIconAfter = TemplateIconAfter.bind({});
 WithIconAfter.args = {};
 
 const TemplateIconBeforeAfter= (args) => html`
-  <sl-text-field ${spread(args)}>
+  <sl-input ${spread(args)}>
     <sl-icon-emoji slot="before"></sl-icon-emoji>
     <span slot="after">gb</span>
     <sl-icon-attachment slot="after"></sl-icon-attachment>
-  </sl-text-field>
+  </sl-input>
 `;
 export const WithIconBeforeAfter = TemplateIconBeforeAfter.bind({});
 WithIconBeforeAfter.args = {};
@@ -214,23 +214,23 @@ WithAutoFocus.args = {
 
 Default.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement);
-  const textField = canvas.queryByTestId('text-field') as any;
-  const textFieldEl = textField?.shadowRoot?.querySelector('.sl-c-text-field__input') as HTMLInputElement;
+  const input = canvas.queryByTestId('input') as any;
+  const inputEl = input?.shadowRoot?.querySelector('.sl-c-input__input') as HTMLInputElement;
 
   // Make assertions
-  expect(textField).toBeInTheDocument();
-  expect(textFieldEl).toBeInTheDocument();
+  expect(input).toBeInTheDocument();
+  expect(inputEl).toBeInTheDocument();
 
   // Simulate a change event with a value
   let inputValue = '';
   inputValue = 'Inputted text';
-  fireEvent.input(textFieldEl, { target: { value: inputValue } });
-  expect(textFieldEl.value).toBe(inputValue);
-  expect(textField.isActive).toBe(true);
+  fireEvent.input(inputEl, { target: { value: inputValue } });
+  expect(inputEl.value).toBe(inputValue);
+  expect(input.isActive).toBe(true);
 
   // Simulate a change event with the value removed
   inputValue = '';
-  fireEvent.input(textFieldEl, { target: { value: inputValue } });
-  expect(textFieldEl.value).toBe(inputValue);
-  expect(textField.isActive).toBe(false);
+  fireEvent.input(inputEl, { target: { value: inputValue } });
+  expect(inputEl.value).toBe(inputValue);
+  expect(input.isActive).toBe(false);
 };
