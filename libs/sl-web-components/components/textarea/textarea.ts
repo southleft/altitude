@@ -237,7 +237,7 @@ export class SLTextarea extends SLElement {
 
     /* 4 */
     this.dispatch({
-      eventName: 'onTextareaFieldChange',
+      eventName: 'onTextareaChange',
       detailObj: {
         value: this.value
       }
@@ -246,8 +246,8 @@ export class SLTextarea extends SLElement {
 
   /**
    * Set textarea padding
-   * 1. Set the padding-left for the textarea field based on the before slotted content
-   * 2. Set the padding-right for the textarea field based on the after slotted content
+   * 1. Set the padding-left for the Textarea based on the before slotted content
+   * 2. Set the padding-right for the Textarea based on the after slotted content
    */
   setInputPadding() {
     /* 1 */

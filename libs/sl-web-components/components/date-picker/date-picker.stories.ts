@@ -4,16 +4,16 @@ import { withActions } from '@storybook/addon-actions/decorator';
 import '../field-note/field-note';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
-import './datepicker-field';
+import './date-picker';
 
 export default {
-  title: 'Molecules/Datepicker Field',
-  component: 'sl-datepicker-field',
+  title: 'Molecules/Date Picker',
+  component: 'sl-date-picker',
   tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['onDatepickerFieldOpen', 'onDatepickerFieldClose', 'onDatepickerFieldChange']
+      handles: ['onDatePickerOpen', 'onDatePickerClose', 'onDatePickerChange']
     },
   },
   decorators: [ withActions ],
@@ -24,7 +24,7 @@ export default {
   },
 };
 
-const Template = (args) => html`<sl-datepicker-field ${spread(args)} data-testid="datepicker-field"></sl-datepicker-field>`;
+const Template = (args) => html`<sl-date-picker ${spread(args)} data-testid="date-picker"></sl-date-picker>`;
 
 export const Default = Template.bind({});
 Default.args = {};
@@ -67,9 +67,9 @@ HiddenLabel.args = {
 };
 
 const TemplateSlottedFieldNote = (args) => html`
-  <sl-datepicker-field ${spread(args)}>
+  <sl-date-picker ${spread(args)}>
     <sl-field-note slot="field-note"><sl-icon-help></sl-icon-help>This is a field note.</sl-field-note>
-  </sl-datepicker-field>
+  </sl-date-picker>
 `;
 
 export const SlottedFieldNote = TemplateSlottedFieldNote.bind({});
@@ -77,9 +77,9 @@ SlottedFieldNote.args = {
 };
 
 const TemplateSlottedErrorNote = (args) => html`
-  <sl-datepicker-field ${spread(args)}>
+  <sl-date-picker ${spread(args)}>
     <sl-field-note slot="error"><sl-icon-warning-circle></sl-icon-warning-circle>This is an error note.</sl-field-note>
-  </sl-datepicker-field>
+  </sl-date-picker>
 `;
 
 export const SlottedErrorNote = TemplateSlottedErrorNote.bind({});
@@ -97,7 +97,7 @@ WithCustomDateFormat.args = {
 
 const TemplateWithDynamicPlacement = (args) => html`
   <div style="height: 90vh; max-height: 600px; display: flex; justify-content: center; align-items: flex-end;">
-    <sl-datepicker-field ${spread(args)}></sl-datepicker-field>
+    <sl-date-picker ${spread(args)}></sl-date-picker>
   </div>
 `;
 

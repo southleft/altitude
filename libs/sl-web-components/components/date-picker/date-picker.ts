@@ -11,17 +11,17 @@ import { SLFieldNote } from '../field-note/field-note';
 import { SLIconCalendar } from '../icon/icons/calendar';
 import { SLIconChevronDown } from '../icon/icons/chevron-down';
 import { SLInput } from '../input/input';
-import styles from './datepicker-field.scss';
+import styles from './date-picker.scss';
 
 /**
- * Component: sl-datepicker-field
+ * Component: sl-date-picker
  *
- * Datepicker Field allows a user to select a date.
+ * Date Picker allows a user to select a date.
  * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
  * - **slot** "error": If content is slotted, it will display in place of the errorNote property
  */
-export class SLDatepickerField extends SLElement {
-  static el = 'sl-datepicker-field';
+export class SLDatePicker extends SLElement {
+  static el = 'sl-date-picker';
 
   private elementMap = register({
     elements: [
@@ -132,7 +132,7 @@ export class SLDatepickerField extends SLElement {
   accessor isActive: boolean;
 
   /**
-   * Tracks the display state of the datepicker
+   * Tracks the display state of the date picker
    */
   @state()
   accessor isActiveCalendar: boolean;
@@ -224,13 +224,13 @@ export class SLDatepickerField extends SLElement {
   /**
    * Query the popup
    */
-  @query('.sl-c-datepicker-field__popup')
+  @query('.sl-c-date-picker__popup')
   accessor popup: HTMLElement;
 
   /**
    * Query the input
    */
-  @query('.sl-c-datepicker-field__input')
+  @query('.sl-c-date-picker__input')
   accessor input: SLInput;
 
   /**
@@ -284,14 +284,14 @@ export class SLDatepickerField extends SLElement {
     /* 4 */
     if (this.isActiveCalendar) {
       this.dispatch({
-        eventName: 'onDatepickerFieldOpen',
+        eventName: 'onDatePickerOpen',
         detailObj: {
           activeCalendar: this.isActiveCalendar
         }
       });
     } else {
       this.dispatch({
-        eventName: 'onDatepickerFieldClose',
+        eventName: 'onDatePickerClose',
         detailObj: {
           activeCalendar: this.isActiveCalendar
         }
@@ -340,14 +340,14 @@ export class SLDatepickerField extends SLElement {
     setTimeout(() => {
       if (this.popup) {
         /* 2 */
-        this.popup.classList.remove('sl-c-datepicker-field__popup--top');
+        this.popup.classList.remove('sl-c-date-picker__popup--top');
         const body = this.closest('#root-inner') || document.querySelector('body');
         const bodyRect = body.getBoundingClientRect();
         const calendarPopup = this.popup.getBoundingClientRect();
 
         /* 3 */
         if (bodyRect.height > calendarPopup.height && calendarPopup.bottom > bodyRect.height) {
-          this.popup.classList.add('sl-c-datepicker-field__popup--top');
+          this.popup.classList.add('sl-c-date-picker__popup--top');
         }
       }
     }, 1);
@@ -369,7 +369,7 @@ export class SLDatepickerField extends SLElement {
     this.isActive = true; /* 4 */
     /* 5 */
     this.dispatch({
-      eventName: 'onDatepickerFieldChange',
+      eventName: 'onDatePickerChange',
       detailObj: {
         value: this.value
       }
@@ -377,7 +377,7 @@ export class SLDatepickerField extends SLElement {
   }
 
   render() {
-    const componentClassNames = this.componentClassNames('sl-c-datepicker-field', {
+    const componentClassNames = this.componentClassNames('sl-c-date-picker', {
       'sl-has-hidden-label': this.hideLabel,
       'sl-is-disabled': this.isDisabled,
       'sl-is-required': this.isRequired,
@@ -388,9 +388,9 @@ export class SLDatepickerField extends SLElement {
 
     return html`
       <div class="${componentClassNames}">
-        <div class="sl-c-datepicker-field__body">
+        <div class="sl-c-date-picker__body">
           <${this.inputEl}
-            class="sl-c-datepicker-field__input"
+            class="sl-c-date-picker__input"
             label="${this.label}"
             id="${this.fieldId}"
             name="${ifDefined(this.name)}"
@@ -409,12 +409,12 @@ export class SLDatepickerField extends SLElement {
             ?isActive="${this.isActive}"
           >
             <${this.iconCalendarEl} slot="before"></${this.iconCalendarEl}>
-            <${this.iconChevronDownEl} size="lg" slot="after" class="sl-c-datepicker__icon-arrow"></${this.iconChevronDownEl}>
+            <${this.iconChevronDownEl} size="lg" slot="after" class="sl-c-date-picker__icon-arrow"></${this.iconChevronDownEl}>
           </${this.inputEl}>
-          <div class="sl-c-datepicker-field__popup" ?hidden="${!this.isActiveCalendar}" role="dialog">
-            <div class="sl-c-datepicker-field__popup-body">
+          <div class="sl-c-date-picker__popup" ?hidden="${!this.isActiveCalendar}" role="dialog">
+            <div class="sl-c-date-picker__popup-body">
               <${this.calendarEl}
-                class="sl-c-datepicker-field__calendar"
+                class="sl-c-date-picker__calendar"
                 @onCalendarChange=${this.handleOnChangeDate}
                 .setActiveDate=${this.setActiveDate}
                 .disabledMinDate=${this.disabledMinDate}
@@ -452,12 +452,12 @@ export class SLDatepickerField extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLDatepickerField.el) === undefined) {
-  customElements.define(SLDatepickerField.el, SLDatepickerField);
+if ((globalThis as any).enAutoRegistry === true && customElements.get(SLDatePicker.el) === undefined) {
+  customElements.define(SLDatePicker.el, SLDatePicker);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sl-datepicker-field': SLDatepickerField;
+    'sl-date-picker': SLDatePicker;
   }
 }

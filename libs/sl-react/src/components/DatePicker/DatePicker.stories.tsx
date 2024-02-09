@@ -1,14 +1,14 @@
 import type { StoryObj } from '@storybook/react-webpack5';
 import React from 'react';
-import { SLDatepickerField, SLFieldNote, SLIconWarningCircle, SLIconHelp } from '../..';
+import { SLDatePicker, SLFieldNote, SLIconWarningCircle, SLIconHelp } from '../..';
 
 export default {
-  title: 'Molecules/Datepicker Field',
-  component: SLDatepickerField,
+  title: 'Molecules/Date Picker',
+  component: SLDatePicker,
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['onDatepickerFieldOpen', 'onDatepickerFieldClose', 'onDatepickerFieldChange']
+      handles: ['onDatePickerOpen', 'onDatePickerClose', 'onDatePickerChange']
     },
   },
   args: {
@@ -18,39 +18,39 @@ export default {
   },
 };
 
-export const Default: StoryObj<typeof SLDatepickerField> = { args: {} };
+export const Default: StoryObj<typeof SLDatePicker> = { args: {} };
 
-export const Filled: StoryObj<typeof SLDatepickerField> = { args: {
+export const Filled: StoryObj<typeof SLDatePicker> = { args: {
   value: 'Nov 01, 2023'
 } };
 
-export const Error: StoryObj<typeof SLDatepickerField> = { args: {
+export const Error: StoryObj<typeof SLDatePicker> = { args: {
   isError: true,
   errorNote: 'This is an error note.',
 } };
 
-export const Disabled: StoryObj<typeof SLDatepickerField> = { args: {
+export const Disabled: StoryObj<typeof SLDatePicker> = { args: {
   isDisabled: true,
 } };
 
-export const Required: StoryObj<typeof SLDatepickerField> = { args: {
+export const Required: StoryObj<typeof SLDatePicker> = { args: {
   isRequired: true,
 } };
 
-export const RequiredHiddenLabel: StoryObj<typeof SLDatepickerField> = { args: {
+export const RequiredHiddenLabel: StoryObj<typeof SLDatePicker> = { args: {
   isRequired: true,
   hideLabel: true,
 } };
 
-export const Optional: StoryObj<typeof SLDatepickerField> = { args: {
+export const Optional: StoryObj<typeof SLDatePicker> = { args: {
   isOptional: true,
 } };
 
-export const HiddenLabel: StoryObj<typeof SLDatepickerField> = { args: {
+export const HiddenLabel: StoryObj<typeof SLDatePicker> = { args: {
   hideLabel: true,
 } };
 
-export const SlottedFieldNote: StoryObj<typeof SLDatepickerField> = {
+export const SlottedFieldNote: StoryObj<typeof SLDatePicker> = {
   args: {
     children: (
       <>
@@ -60,7 +60,7 @@ export const SlottedFieldNote: StoryObj<typeof SLDatepickerField> = {
   },
 };
 
-export const SlottedErrorNote: StoryObj<typeof SLDatepickerField> = {
+export const SlottedErrorNote: StoryObj<typeof SLDatePicker> = {
   args: {
     isError: true,
     fieldNote: '',
@@ -72,7 +72,7 @@ export const SlottedErrorNote: StoryObj<typeof SLDatepickerField> = {
   },
 };
 
-export const WithCustomDateFormat: StoryObj<typeof SLDatepickerField> = {
+export const WithCustomDateFormat: StoryObj<typeof SLDatePicker> = {
   args: {
     dateFormat: 'MM/dd/yyyy',
     disabledMinDate: '2023/10/03',
@@ -80,6 +80,6 @@ export const WithCustomDateFormat: StoryObj<typeof SLDatepickerField> = {
   }
 };
 
-export const WithDynamicPlacement: StoryObj<typeof SLDatepickerField> = { args: {} };
+export const WithDynamicPlacement: StoryObj<typeof SLDatePicker> = { args: {} };
 WithDynamicPlacement.decorators = [(Story) => <div style={{ height: '90vh', display: 'flex', justifyContent: 'center', alignItems: 'flex-end' }}>{Story()}</div>];
 

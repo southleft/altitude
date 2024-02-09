@@ -8,7 +8,7 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['onTextareaFieldChange']
+      handles: ['onTextareaChange']
     },
   },
   argTypes: {

@@ -4,33 +4,33 @@
 \*------------------------------------ */
 
 :host {
-  --sl-datetimepicker-field-popup-offset-top: #{var(--sl-theme-space-xs)};
-  --sl-datetimepicker-field-popup-offset-bottom: #{var(--sl-theme-space-xxxs)};
+  --sl-date-time-picker-popup-offset-top: #{var(--sl-theme-space-xs)};
+  --sl-date-time-picker-popup-offset-bottom: #{var(--sl-theme-space-xxxs)};
 }
 
 /**
- * Datetimepicker field
+ * Date time picker
  */
-.sl-c-datetimepicker-field {
+.sl-c-date-time-picker {
   display: flex;
   flex-direction: column;
   gap: var(--sl-theme-space-xxs);
 }
 
 /**
- * Datetimepicker field body
+ * Date time picker body
  */
-.sl-c-datetimepicker-field__body {
+.sl-c-date-time-picker__body {
   position: relative;
 }
 
 /**
- * Datetimepicker field popup
+ * Date time picker popup
  */
-.sl-c-datetimepicker-field__popup {
+.sl-c-date-time-picker__popup {
   position: absolute;
   z-index: 1;
-  inset-block-start: calc(100% + var(--sl-datetimepicker-field-popup-offset-bottom));
+  inset-block-start: calc(100% + var(--sl-date-time-picker-popup-offset-bottom));
 
   /**
    * Small screens position the popup to be fullscreen
@@ -53,21 +53,21 @@
 }
 
 /**
- * Datetimepicker field popup - placement top
+ * Date time picker popup - placement top
  * - If there's no room at the bottom of the browser to open the calendar, open it on top
  */
-.sl-c-datetimepicker-field__popup--top {
+.sl-c-date-time-picker__popup--top {
   @media all and (min-width: $sl-breakpoint-sm) {
     inset-block-start: auto;
-    inset-block-end: calc(100% + var(--sl-datetimepicker-field-popup-offset-top));
+    inset-block-end: calc(100% + var(--sl-date-time-picker-popup-offset-top));
   }
 }
 
 /**
- * Datetimepicker field popup - placement left
+ * Date time picker popup - placement left
  * - If there's no room to the right, open on the left
  */
-.sl-c-datetimepicker-field__popup--left {
+.sl-c-date-time-picker__popup--left {
   @media all and (min-width: $sl-breakpoint-sm) {
     inset-inline-start: auto;
     inset-inline-end: 0;
@@ -75,10 +75,10 @@
 }
 
 /**
- * Datetimepicker field popup body
+ * Date time picker popup body
  * - Popup body, containing the calendar w/ optional time selector list
  */
-.sl-c-datetimepicker-field__popup-body {
+.sl-c-date-time-picker__popup-body {
   box-shadow: var(--sl-theme-box-shadow-md);
   border-radius: var(--sl-theme-border-radius-lg);
   background: var(--sl-theme-color-background-default);
@@ -87,9 +87,9 @@
 }
 
 /**
- * Datetimepicker field popup footer
+ * Date time picker popup footer
  */
-.sl-c-datetimepicker-field__footer {
+.sl-c-date-time-picker__footer {
   border-block-start: 1px solid var(--sl-theme-color-border-default);
   padding: var(--sl-theme-space) var(--sl-theme-space-lg);
   grid-column-start: span 2;
@@ -98,9 +98,9 @@
 }
 
 /**
- * Datetimepicker field arrow icon
+ * Date time picker arrow icon
  */
-.sl-c-datetimepicker__icon-arrow {
+.sl-c-date-time-picker__icon-arrow {
   /**
    * Active state
    */
@@ -110,45 +110,45 @@
 }
 
 /**
- * Datetimepicker field calendar container
+ * Date time picker calendar container
  */
-.sl-c-datetimepicker-field__calendar-container {
+.sl-c-date-time-picker__calendar-container {
   display: flex;
 
   /**
    * Small screens
    */
-  .sl-c-datetimepicker-field--small-screen & {
+  .sl-c-date-time-picker--small-screen & {
     flex-direction: column;
   }
 }
 
 /**
- * Datetimepicker field calendar (sl-calendar)
+ * Date time picker calendar (sl-calendar)
  */
-.sl-c-datetimepicker-field__calendar {
+.sl-c-date-time-picker__calendar {
   --sl-calendar-background-color: transparent;
   --sl-calendar-box-shadow: none;
   --sl-calendar-border-radius: none;
 }
 
 /**
- * Datetimepicker field calendar (sl-time-selector-list)
+ * Date time picker calendar (sl-time-selector-list)
  */
-.sl-c-datetimepicker-field__time-selector-list {
+.sl-c-date-time-picker__time-selector-list {
   border-inline-start: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
 
   /**
    * Small screens
    */
-  .sl-c-datetimepicker-field--small-screen & {
+  .sl-c-date-time-picker--small-screen & {
     border-inline-start: none;
     border-block-start: var(--sl-theme-border-width) solid var(--sl-theme-color-border-default);
   }
 }
 
 /**
- * Datetimepicker field note slotted
+ * Date time picker note slotted
  * 1. Targets field notes that are added via a slot
  */
 slot[name="field-note"]::slotted(*),

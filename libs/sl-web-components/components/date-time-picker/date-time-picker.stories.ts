@@ -4,16 +4,16 @@ import { withActions } from '@storybook/addon-actions/decorator';
 import '../field-note/field-note';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
-import './datetimepicker-field';
+import './date-time-picker';
 
 export default {
-  title: 'Molecules/Datetimepicker Field',
-  component: 'sl-datetimepicker-field',
+  title: 'Molecules/Date & Time Picker',
+  component: 'sl-date-time-picker',
   tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['onDatetimepickerFieldOpen', 'onDatetimepickerFieldClose', 'onDatetimepickerFieldDateChange', 'onDatetimepickerFieldTimeChange']
+      handles: ['onDateTimePickerOpen', 'onDateTimePickerClose', 'onDateTimePickerDateChange', 'onDateTimePickerTimeChange']
     },
   },
   decorators: [ withActions ],
@@ -24,7 +24,7 @@ export default {
   },
 };
 
-const Template = (args) => html`<sl-datetimepicker-field ${spread(args)} data-testid="datetimepicker-field"></sl-datetimepicker-field>`;
+const Template = (args) => html`<sl-date-time-picker ${spread(args)} data-testid="date-time-picker"></sl-date-time-picker>`;
 
 export const Default = Template.bind({});
 Default.args = {};
@@ -67,9 +67,9 @@ HiddenLabel.args = {
 };
 
 const TemplateSlottedFieldNote = (args) => html`
-  <sl-datetimepicker-field ${spread(args)}>
+  <sl-date-time-picker ${spread(args)}>
     <sl-field-note slot="field-note"><sl-icon-help></sl-icon-help>This is a field note.</sl-field-note>
-  </sl-datetimepicker-field>
+  </sl-date-time-picker>
 `;
 
 export const SlottedFieldNote = TemplateSlottedFieldNote.bind({});
@@ -77,9 +77,9 @@ SlottedFieldNote.args = {
 };
 
 const TemplateSlottedErrorNote = (args) => html`
-  <sl-datetimepicker-field ${spread(args)}>
+  <sl-date-time-picker ${spread(args)}>
     <sl-field-note slot="error"><sl-icon-warning-circle></sl-icon-warning-circle>This is an error note.</sl-field-note>
-  </sl-datetimepicker-field>
+  </sl-date-time-picker>
 `;
 
 export const SlottedErrorNote = TemplateSlottedErrorNote.bind({});
@@ -97,7 +97,7 @@ WithCustomDateFormat.args = {
 
 const TemplateWithDynamicPlacement = (args) => html`
   <div style="height: 90vh; max-height: 600px; display: flex; justify-content: center; align-items: flex-end;">
-    <sl-datetimepicker-field ${spread(args)}></sl-datetimepicker-field>
+    <sl-date-time-picker ${spread(args)}></sl-date-time-picker>
   </div>
 `;
 

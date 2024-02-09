@@ -140,10 +140,10 @@ export class SLCalendar extends SLElement {
   accessor setActiveDate: any;
 
   /**
-   * Internal ID only for labeling datepicker popup
+   * Internal ID only for labeling date picker popup
    */
   @property()
-  accessor datepickerId: any;
+  accessor datePickerId: any;
 
   /**
    * Specify date format for UI display
@@ -564,7 +564,7 @@ export class SLCalendar extends SLElement {
             <${this.iconChevronLeftEl}></${this.iconChevronLeftEl}>
           </slot>
           </${this.buttonEl}>
-          <button class="sl-c-calendar__month-selector-button" data-year="${format(this.navDate, 'y')}" id="${this.datepickerId}"
+          <button class="sl-c-calendar__month-selector-button" data-year="${format(this.navDate, 'y')}" id="${this.datePickerId}"
           aria-live="polite" @click=${() => this.toggleMonthPopup()}>
             ${format(this.navDate, 'MMMM yyyy')}
             <${this.iconChevronDownEl} class="sl-c-calendar__month-selector-button-icon"></${this.iconChevronDownEl}>
