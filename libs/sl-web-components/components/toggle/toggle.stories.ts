@@ -2,17 +2,17 @@ import { expect, userEvent, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
-import './switch';
+import './toggle';
 
 export default {
-  title: 'Atoms/Switch',
-  component: 'sl-switch',
+  title: 'Atoms/Toggle',
+  component: 'sl-toggle',
   tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['onSwitchChange']
+      handles: ['onToggleChange']
     }
   },
   decorators: [ withActions ],
@@ -34,12 +34,12 @@ export default {
     }
   },
   args: {
-    label: 'Switch label',
-    name: 'Switch name'
+    label: 'Toggle label',
+    name: 'Toggle name'
   },
 };
 
-const Template = (args) => html`<sl-switch data-testid="sl-switch" ${spread(args)}></sl-switch> `;
+const Template = (args) => html`<sl-toggle data-testid="sl-toggle" ${spread(args)}></sl-toggle> `;
 
 export const Default = Template.bind({});
 Default.args = {};
@@ -66,11 +66,11 @@ DisabledChecked.args = {
 
 Default.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement);
-  const switchComponent = canvas.queryByTestId('sl-switch');
-  const checkbox = switchComponent?.shadowRoot?.querySelector('input') as HTMLInputElement;
+  const toggleComponent = canvas.queryByTestId('sl-toggle');
+  const checkbox = toggleComponent?.shadowRoot?.querySelector('input') as HTMLInputElement;
 
   // Make assertions
-  expect(switchComponent).toBeInTheDocument();
+  expect(toggleComponent).toBeInTheDocument();
   expect(checkbox).toBeInTheDocument();
 
   // Simulate a keyboard event (pressing Enter key)

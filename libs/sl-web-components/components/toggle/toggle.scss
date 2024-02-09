@@ -1,50 +1,50 @@
 @import '../../styles/component';
 
 /* ------------------------------------*\
-  #SWITCH
+  #TOGGLE
 \*------------------------------------ */
 
 /**
- * Switch variables which allow an application to change the width and height of the switch if needed
+ * Toggle variables which allow an application to change the width and height of the toggle if needed
  */
 :host {
-  --sl-switch-width: 40px;
-  --sl-switch-height: 22px;
+  --sl-toggle-width: 40px;
+  --sl-toggle-height: 22px;
 }
 
 /**
- * Switch
- * 1. On/Off switch
+ * Toggle
+ * 1. On/Off toggle
  */
-.sl-c-switch {
+.sl-c-toggle {
   position: relative;
 }
 
 /**
- * Switch label
+ * Toggle label
  * 1. The label element that is styled in a pill shape
  */
-.sl-c-switch__label {
+.sl-c-toggle__label {
   position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: var(--sl-switch-width);
-  height: var(--sl-switch-height);
-  border-radius: var(--sl-switch-height);
+  width: var(--sl-toggle-width);
+  height: var(--sl-toggle-height);
+  border-radius: var(--sl-toggle-height);
   background-color: var(--sl-theme-color-background-default-strong);
   cursor: pointer;
   transition: all var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
 
   /**
-   * If the switch state is checked, changes the background color of the label
+   * If the toggle state is checked, changes the background color of the label
    */
   .sl-is-checked & {
     background-color: var(--sl-theme-color-background-accent-default);
   }
 
   /**
-   * If the switch state is disabled, prevent it from being clickable
+   * If the toggle state is disabled, prevent it from being clickable
    */
   .sl-is-disabled & {
     cursor: not-allowed;
@@ -52,39 +52,39 @@
 }
 
 /**
- * Switch label after
+ * Toggle label after
  * 1. The inner pill that slides based on the checked state
  */
-.sl-c-switch__label:after {
+.sl-c-toggle__label:after {
   content: '';
   position: absolute;
-  width: calc(var(--sl-switch-height) - var(--sl-theme-space-xxs));
-  height: calc(var(--sl-switch-height) - var(--sl-theme-space-xxs));
-  border-radius: var(--sl-switch-height);
-  background-color: var(--sl-theme-color-content-default-weak);
+  width: calc(var(--sl-toggle-height) - var(--sl-theme-space-xxs));
+  height: calc(var(--sl-toggle-height) - var(--sl-theme-space-xxs));
+  border-radius: var(--sl-toggle-height);
+  background-color: var(--sl-theme-color-content-default);
   inset-block-start: var(--sl-theme-space-xxxs);
   inset-inline-start: var(--sl-theme-space-xxxs);
   box-shadow: var(--sl-theme-box-shadow-xs);
   transition: all var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
 
   /**
-   * If the switch state is checked, moves the pill to the right
+   * If the toggle state is checked, moves the pill to the right
    */
   .sl-is-checked & {
     background: var(--sl-theme-color-content-default);
-    inset-inline-start: calc(100% - var(--sl-switch-height) + var(--sl-theme-space-xxxs));
+    inset-inline-start: calc(100% - var(--sl-toggle-height) + var(--sl-theme-space-xxxs));
   }
 }
 
 /**
- * Switch checkbox
+ * Toggle checkbox
  * 1. The checkbox element that is visually hidden, but styled for focus-visible
  */
-.sl-c-switch__checkbox {
+.sl-c-toggle__checkbox {
   display: block;
-  width: var(--sl-switch-width);
-  height: var(--sl-switch-height);
-  border-radius: var(--sl-switch-height);
+  width: var(--sl-toggle-width);
+  height: var(--sl-toggle-height);
+  border-radius: var(--sl-toggle-height);
   border: 0;
   margin: 0;
   padding: 0;
@@ -102,8 +102,8 @@
 }
 
 /**
- * Switch disabled state
- * 1. Changes the opacity of the switch
+ * Toggle disabled state
+ * 1. Changes the opacity of the toggle
  */
 .sl-is-disabled {
   opacity: var(--sl-theme-opacity-disabled);

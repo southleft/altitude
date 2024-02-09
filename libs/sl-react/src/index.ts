@@ -74,7 +74,7 @@ export * from './components/Skeleton';
 export * from './components/Spinner';
 export * from './components/Stepper';
 export * from './components/StepperItem';
-export * from './components/Switch';
+export * from './components/Toggle';
 export * from './components/Tab';
 export * from './components/TabPanel';
 export * from './components/Tabs';

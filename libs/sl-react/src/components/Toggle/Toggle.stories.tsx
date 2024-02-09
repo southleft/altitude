@@ -1,14 +1,14 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLSwitch } from '../..';
+import { SLToggle } from '../..';
 
 export default {
-  title: 'Atoms/Switch',
-  component: SLSwitch,
+  title: 'Atoms/Toggle',
+  component: SLToggle,
   parameters: {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['onSwitchChange']
+      handles: ['onToggleChange']
     },
   },
   argTypes: {
@@ -31,26 +31,26 @@ export default {
   args: {
     isChecked: false,
     isDisabled: false,
-    label: 'Switch label',
-    name: 'Switch name'
+    label: 'Toggle label',
+    name: 'Toggle name'
   },
 };
 
-export const Default: StoryObj<typeof SLSwitch> = { args: {} };
+export const Default: StoryObj<typeof SLToggle> = { args: {} };
 
-export const Checked: StoryObj<typeof SLSwitch> = {
+export const Checked: StoryObj<typeof SLToggle> = {
   args: {
     isChecked: true
   }
 };
 
-export const Disabed: StoryObj<typeof SLSwitch> = {
+export const Disabed: StoryObj<typeof SLToggle> = {
   args: {
     isDisabled: true
   }
 };
 
-export const DisabledChecked: StoryObj<typeof SLSwitch> = {
+export const DisabledChecked: StoryObj<typeof SLToggle> = {
   args: {
     isDisabled: true,
     isChecked: true
