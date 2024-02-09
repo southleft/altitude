@@ -1,18 +1,17 @@
 @import '../../styles/component';
 /*------------------------------------*\
-  #SLIDER
+  #RANGE
 \*------------------------------------*/
 
 /**
- * 1) Slider is an input range that can have
- * 1 slider value, 2 slider values (range),
+ * Range is an input range that can have 1. range value, 2 range values (range)
  */
  :host {
-  --sl-slider-thumb-size: #{var(--sl-theme-space-lg)};
-  --sl-slider-track-height: 0.25rem;
+  --sl-range-thumb-size: #{var(--sl-theme-space-lg)};
+  --sl-range-track-height: 0.25rem;
 }
 
-.sl-c-slider {
+.sl-c-range {
   display: flex;
   flex-direction: column;
   gap: var(--sl-theme-space-xxs);
@@ -21,14 +20,14 @@
 /**
  * Container wrapping input and label
  */
-.sl-c-slider__tooltip-container {
+.sl-c-range__tooltip-container {
   position: relative;
 }
 
 /**
- * Styling for default slider
+ * Styling for default range
  */
-.sl-c-slider__input {
+.sl-c-range__input {
   background: linear-gradient(
     var(--rtlGradientToRight, 90deg),
     var(--sl-theme-color-background-default-strong) 0%,
@@ -37,46 +36,46 @@
     var(--sl-theme-color-background-default-strong) 100%
   );
   border-radius: var(--sl-theme-border-radius);
-  height: var(--sl-slider-track-height);
+  height: var(--sl-range-track-height);
   width: 100%;
   outline: none;
   transition: background 450ms ease-in;
   appearance: none;
 
   /**
-   * Styling for track on slider
+   * Styling for track on range
    */
-  &::-webkit-slider-runnable-track {
+  &::-webkit-range-runnable-track {
     width: 100%;
-    height: var(--sl-slider-track-height);
+    height: var(--sl-range-track-height);
     border-radius: var(--sl-theme-border-radius);
     border: none;
   }
 
   /**
-   * Disabled state for track on slider
+   * Disabled state for track on range
    */
-  &:disabled::-webkit-slider-runnable-track {
+  &:disabled::-webkit-range-runnable-track {
     background-color: var(--sl-theme-color-background-default);
   }
 
   /**
-   * Handle styling on slider
+   * Handle styling on range
    */
-  &::-webkit-slider-thumb {
+  &::-webkit-range-thumb {
     border: none;
-    width: var(--sl-slider-thumb-size);
-    height: var(--sl-slider-thumb-size);
+    width: var(--sl-range-thumb-size);
+    height: var(--sl-range-thumb-size);
     border-radius: 50%;
     background-color: var(--sl-theme-color-background-inverse-default);
     appearance: none;
-    margin-block-start: calc(var(--sl-slider-thumb-size) / -2 + var(--sl-slider-track-height) / 2);
+    margin-block-start: calc(var(--sl-range-thumb-size) / -2 + var(--sl-range-track-height) / 2);
     cursor: grab;
 
     /**
      *  Styling and positiioning on thumb for dual range
      */
-    .sl-c-slider__range & {
+    .sl-c-range__input & {
       position: relative;
       z-index: var(--sl-z-index-100);
       appearance: none;
@@ -85,9 +84,9 @@
   }
 
   /**
-   * Disabled state on handle on slider
+   * Disabled state on handle on range
    */
-  &:disabled::-webkit-slider-thumb {
+  &:disabled::-webkit-range-thumb {
     background-color: var(--sl-theme-color-content-tertiary);
     cursor: not-allowed;
   }
@@ -95,42 +94,42 @@
   /**
    * disabled Active state on handle
    */
-  &:disabled::-webkit-slider-thumb:active {
+  &:disabled::-webkit-range-thumb:active {
     outline: none;
   }
 
   /**
    * Hover state on handle
    */
-  &:enabled::-webkit-slider-thumb:hover {
+  &:enabled::-webkit-range-thumb:hover {
     background-color: var(--sl-theme-color-background-inverse-default);
   }
 
   /**
    * Active state on handle
    */
-  &:active::-webkit-slider-thumb {
+  &:active::-webkit-range-thumb {
     @include focus;
   }
 
   /**
    * Focus state on handle
    */
-  &:enabled:focus-visible::-webkit-slider-thumb {
+  &:enabled:focus-visible::-webkit-range-thumb {
     @include focus;
   }
 
   /**
    * Active state on handle
    */
-  &:enabled::-webkit-slider-thumb:active {
+  &:enabled::-webkit-range-thumb:active {
     background-color: var(--sl-theme-color-background-inverse-default);
     cursor: grabbing;
     outline: none;
   }
 
-  &.sl-c-slider-output-active {
-    &::-webkit-slider-thumb {
+  &.sl-c-range-output-active {
+    &::-webkit-range-thumb {
       background-color: var(--sl-theme-color-background-inverse-default);
       cursor: grabbing;
       outline: none;
@@ -145,31 +144,31 @@
   }
 
   /**
-   * Targets the progress track on the input slider
+   * Targets the progress track on the input range
    */
   &::-moz-range-progress {
     background-color: var(--sl-theme-color-background-accent-default);
     border-radius: var(--sl-theme-border-radius);
-    height: var(--sl-slider-track-height);
+    height: var(--sl-range-track-height);
   }
 
   /**
-   * Targets the track on the input slider
+   * Targets the track on the input range
    */
   &::-moz-range-track {
     width: 100%;
-    height: var(--sl-slider-track-height);
+    height: var(--sl-range-track-height);
     background-color: var(--sl-theme-color-background-default-strong);
     border-radius: var(--sl-theme-border-radius);
     border: none;
   }
 
   /**
-   * Targets the handle on the input slider
+   * Targets the handle on the input range
    */
   &::-moz-range-thumb {
-    height: var(--sl-slider-thumb-size);
-    width: var(--sl-slider-thumb-size);
+    height: var(--sl-range-thumb-size);
+    width: var(--sl-range-thumb-size);
     border-radius: 50%;
     background-color: var(--sl-theme-color-background-inverse-default);
     border: none;
@@ -177,7 +176,7 @@
   }
 
   /**
-   * Applies hover state to the handle on the input slider
+   * Applies hover state to the handle on the input range
    */
   &:enabled::-moz-range-thumb:hover {
     background-color: var(--sl-theme-color-background-inverse-default);
@@ -191,14 +190,14 @@
   }
 
   /**
-   * Applies focus state to the handle on the input slider
+   * Applies focus state to the handle on the input range
    */
   &:enabled:focus-visible::-moz-range-thumb {
     @include focus;
   }
 
   /**
-   * Applies active state to the handle on the input slider
+   * Applies active state to the handle on the input range
    */
   &:enabled::-moz-range-thumb:active {
     background-color: var(--sl-theme-color-background-inverse-default);
@@ -208,26 +207,26 @@
 }
 
 /**
- * disabled state styling for range slider
+ * disabled state styling for range
  */
 .sl-is-disabled {
   opacity: var(--sl-theme-opacity-disabled);
   cursor: not-allowed;
 }
 
-.sl-c-slider__output-range-one,
-.sl-c-slider__output-range-two {
+.sl-c-range__output-range-one,
+.sl-c-range__output-range-two {
   @include input-styles;
   min-width: size(7);
   width: max-content;
 }
 
 /**
- * Slider range label that depicts current value
+ * Range label that depicts current value
  */
-.sl-c-slider__tooltip-wrapper,
-.sl-c-slider__range-one-label-container,
-.sl-c-slider__range-two-label-container {
+.sl-c-range__tooltip-wrapper,
+.sl-c-range__input-one-label-container,
+.sl-c-range__input-two-label-container {
   position: absolute;
   inset-block-end: size(3.125);
   transform: translateX(var(--rtlTranslateX, -50%));
@@ -258,14 +257,14 @@
   }
 }
 
-.sl-c-slider__range-one-label-container,
-.sl-c-slider__range-two-label-container {
+.sl-c-range__input-one-label-container,
+.sl-c-range__input-two-label-container {
   inset-block-end: var(--sl-theme-space);
 }
 
-.sl-c-slider__tooltip,
-.sl-c-slider__range-one-label,
-.sl-c-slider__range-two-label {
+.sl-c-range__tooltip,
+.sl-c-range__input-one-label,
+.sl-c-range__input-two-label {
   display: block;
   background-color: var(--sl-theme-color-background-default-strong);
   border-radius: var(--sl-theme-border-radius);
@@ -275,8 +274,8 @@
   text-align: center;
 }
 
-.sl-c-slider__output-range-one-text,
-.sl-c-slider__output-range-two-text {
+.sl-c-range__output-range-one-text,
+.sl-c-range__output-range-two-text {
   @include sl-theme-typography-body-xs;
   margin-block-start: var(--sl-theme-space-xxs);
 }
@@ -284,17 +283,17 @@
 /**
  * Applies flex to container to place input side by side
  */
-.sl-c-slider__output-container,
-.sl-c-slider__slot-container,
-.sl-c-slider__range-container {
+.sl-c-range__output-container,
+.sl-c-range__slot-container,
+.sl-c-range__input-container {
   display: flex;
   align-items: center;
   gap: var(--sl-theme-space);
 
   /**
-   * Applies to make the slider as full width.
+   * Applies to make the range as full width.
    */
-  .sl-c-slider__tooltip-container {
+  .sl-c-range__tooltip-container {
     flex: 1;
   }
 }
@@ -302,26 +301,26 @@
 /**
  * Apply relative positioning on range container
  */
-.sl-c-slider--range {
+.sl-c-range--range {
   position: relative;
 }
 
 /**
- * Double range slider container
+ * Double range container
  */
-.sl-c-slider__range {
+.sl-c-range__input {
   position: relative;
   flex: 1 1 0%;
 
   /**
-   * Input ranges for slider
+   * Input ranges for range
    */
-  .sl-c-slider__range-one,
-  .sl-c-slider__range-two {
+  .sl-c-range__input-one,
+  .sl-c-range__input-two {
     position: absolute;
     appearance: none;
     width: 100%;
-    height: var(--sl-slider-track-height);
+    height: var(--sl-range-track-height);
     background-color: var(--sl-theme-color-background-default-strong);
     border-radius: var(--sl-theme-border-radius);
     margin: 0;
@@ -330,12 +329,12 @@
     pointer-events: none;
 
     /**
-     * Thumb styling on dual range slider
+     * Thumb styling on dual range
      */
-    &::-webkit-slider-thumb {
+    &::-webkit-range-thumb {
       position: relative;
-      width: var(--sl-slider-thumb-size);
-      height: var(--sl-slider-thumb-size);
+      width: var(--sl-range-thumb-size);
+      height: var(--sl-range-thumb-size);
       border-radius: 50%;
       background-color: var(--sl-theme-color-background-inverse-default);
       z-index: var(--sl-z-index-200);
@@ -347,7 +346,7 @@
     /**
      * Thumb styling on active state
      */
-    &:active::-webkit-slider-thumb {
+    &:active::-webkit-range-thumb {
       z-index: var(--sl-z-index-500);
       @include focus;
     }
@@ -355,23 +354,23 @@
     /**
      * Thumb styling on focus state
      */
-    &:enabled:focus-visible::-webkit-slider-thumb {
+    &:enabled:focus-visible::-webkit-range-thumb {
       @include focus;
 
       background-color: var(--sl-theme-color-background-inverse-default);
     }
 
     /**
-     * Applies hover state to the handle on the double range slider
+     * Applies hover state to the handle on the double range
      */
-    &:enabled::-webkit-slider-thumb:hover {
+    &:enabled::-webkit-range-thumb:hover {
       background-color: var(--sl-theme-color-background-inverse-default);
     }
 
     /**
      * Active state on handle
      */
-    &:enabled::-webkit-slider-thumb:active {
+    &:enabled::-webkit-range-thumb:active {
       outline: none;
       background-color: var(--sl-theme-color-background-inverse-default);
     }
@@ -382,8 +381,8 @@
     &::-moz-range-thumb {
       position: relative;
       z-index: var(--sl-z-index-100);
-      width: var(--sl-slider-thumb-size);
-      height: var(--sl-slider-thumb-size);
+      width: var(--sl-range-thumb-size);
+      height: var(--sl-range-thumb-size);
       border-radius: 50%;
       background-color: var(--sl-theme-color-background-inverse-default);
       appearance: none;
@@ -405,7 +404,7 @@
     }
 
     /**
-     * Applies hover state to the handle on the double range slider
+     * Applies hover state to the handle on the double range
      */
     &:enabled::-moz-range-thumb:hover {
       background-color: var(--sl-theme-color-background-inverse-default);
@@ -414,8 +413,8 @@
     &::-ms-thumb {
       position: relative;
       z-index: var(--sl-z-index-200);
-      width: var(--sl-slider-thumb-size);
-      height: var(--sl-slider-thumb-size);
+      width: var(--sl-range-thumb-size);
+      height: var(--sl-range-thumb-size);
       border-radius: 50%;
       background-color: var(--sl-theme-color-background-inverse-default);
       cursor: pointer;
@@ -427,7 +426,7 @@
       width: 100%;
       cursor: pointer;
 
-      /* Hides the slider so custom styles can be added */
+      /* Hides the range so custom styles can be added */
       background: transparent;
       border-color: transparent;
       color: transparent;
@@ -440,15 +439,15 @@
   }
 }
 
-.sl-c-slider__range-lower-active-thumb,
-.sl-c-slider__range-upper-active-thumb {
+.sl-c-range__input-lower-active-thumb,
+.sl-c-range__input-upper-active-thumb {
   z-index: var(--sl-z-index-300);
 }
 
 /**
- * Double range slider color span
+ * Double range color span
  */
-.sl-c-slider__range-color {
+.sl-c-range__input-color {
   position: absolute;
   display: block;
   z-index: var(--sl-z-index-100);
@@ -461,7 +460,7 @@
 /**
  * Apply input styles to output variant input
  */
-.sl-c-slider__output {
+.sl-c-range__output {
   @include input-styles;
   min-width: size(7);
   width: max-content;
@@ -470,16 +469,16 @@
 /**
  * Apply styles to label / heading part
  */
-.sl-c-slider__label {
+.sl-c-range__label {
   @include label-styles;
   display: inline-block;
 
-  .sl-c-slider--range &,
+  .sl-c-range--range &,
   .sl-has-tooltip & {
     padding-block-end: size(5);
   }
 
-  .sl-c-slider--range.sl-has-output & {
+  .sl-c-range--range.sl-has-output & {
     padding-block-end: var(--sl-theme-space);
   }
 }
@@ -487,7 +486,7 @@
 /**
   * Apply styles to prefix and suffix values (which displays min and max)
   */
-.sl-c-slider-prefix-text,
-.sl-c-slider-suffix-text {
+.sl-c-range-prefix-text,
+.sl-c-range-suffix-text {
   color: var(--sl-theme-color-content-default);
 }

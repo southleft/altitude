@@ -1,16 +1,16 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
-import './slider';
+import './range';
 
 export default {
-  title: 'Molecules/Slider',
-  component: 'sl-slider',
+  title: 'Molecules/Range',
+  component: 'sl-range',
   tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['onSliderDrag', 'onSliderOutputValueChange']
+      handles: ['onRangeDrag', 'onRangeOutputValueChange']
     }
   },
   decorators: [ withActions ],
@@ -20,7 +20,7 @@ export default {
   }
 };
 
-const Template = (args) => html`<sl-slider ${spread(args)} data-testid="slider"></sl-slider>`;
+const Template = (args) => html`<sl-range ${spread(args)} data-testid="range"></sl-range>`;
 
 export const Default = Template.bind({});
 Default.args = {};

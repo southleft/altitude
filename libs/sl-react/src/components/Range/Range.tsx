@@ -1,17 +1,17 @@
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { SLSlider as SLWebSlider } from 'sl-web-components/dist/components/slider/slider';
+import { SLRange as SLWebRange } from 'sl-web-components/dist/components/range/range';
 import register from 'sl-web-components/dist/directives/register';
 import PackageJson from '../../../package.json';
 
 const elementMap = register({
-  elements: [SLWebSlider.el, SLWebSlider],
+  elements: [SLWebRange.el, SLWebRange],
   suffix: PackageJson.version
 });
 
-export const SLSlider = createComponent({
+export const SLRange = createComponent({
   react: React,
-  tagName: elementMap.get(SLWebSlider.el),
-  elementClass: SLWebSlider,
+  tagName: elementMap.get(SLWebRange.el),
+  elementClass: SLWebRange,
   events: {}
 });

@@ -5255,6 +5255,338 @@
       ]
     },
     {
+      "name": "sl-range",
+      "path": "./components/range/range.ts",
+      "description": "Component: sl-range\n\nRange provides a visual indication of adjustable content, where the user can increment or decrement the value by moving the handle along a track, or via text input.\n- **slot** \"label\": If content is slotted, it will override the default range label\n- **slot** \"before\": If content is slotted, it will override the default range \"min\" label text\n- **slot** \"after\": If content is slotted, it will override the default range \"max\" label text",
+      "attributes": [
+        {
+          "name": "hideLabel",
+          "description": "Hide label?\n- If true, hides the label from displaying",
+          "type": "boolean"
+        },
+        {
+          "name": "isError",
+          "description": "Error state",
+          "type": "boolean"
+        },
+        {
+          "name": "isDisabled",
+          "description": "Disabled attribute",
+          "type": "boolean"
+        },
+        {
+          "name": "handleLabelUnit",
+          "description": "Handle label unit attribute",
+          "type": "string"
+        },
+        {
+          "name": "min",
+          "description": "Min property for range",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "name": "minSelected",
+          "description": "Minselected property for range",
+          "type": "number"
+        },
+        {
+          "name": "max",
+          "description": "Max property for range",
+          "type": "number",
+          "default": "100"
+        },
+        {
+          "name": "maxSelected",
+          "description": "Maxselected property for range",
+          "type": "number"
+        },
+        {
+          "name": "step",
+          "description": "Step for range",
+          "type": "number",
+          "default": "1"
+        },
+        {
+          "name": "hasOutput",
+          "description": "Shows input value",
+          "type": "boolean"
+        },
+        {
+          "name": "value",
+          "description": "Input value",
+          "type": "number"
+        },
+        {
+          "name": "lowerRangeValue",
+          "description": "Input value for lower range of range",
+          "type": "number"
+        },
+        {
+          "name": "upperRangeValue",
+          "description": "Input value for upper range of range",
+          "type": "number"
+        },
+        {
+          "name": "label",
+          "description": "Slide Label",
+          "type": "string"
+        },
+        {
+          "name": "fieldNote",
+          "description": "Field note text",
+          "type": "string"
+        },
+        {
+          "name": "errorNote",
+          "description": "Error note text",
+          "type": "string"
+        },
+        {
+          "name": "ariaDescribedBy",
+          "description": "Aria described by\n- Used to connect the field note in select to the select menu for accessibility",
+          "type": "string"
+        },
+        {
+          "name": "fieldId",
+          "description": "The unique id of the field",
+          "type": "string"
+        },
+        {
+          "name": "hasTooltip",
+          "description": "Displays value label above range",
+          "type": "boolean"
+        },
+        {
+          "name": "behavior",
+          "description": "Behavior property for slide",
+          "type": "\"range\""
+        },
+        {
+          "name": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "el",
+          "type": "string",
+          "default": "\"sl-range\""
+        },
+        {
+          "name": "hideLabel",
+          "attribute": "hideLabel",
+          "description": "Hide label?\n- If true, hides the label from displaying",
+          "type": "boolean"
+        },
+        {
+          "name": "isError",
+          "attribute": "isError",
+          "description": "Error state",
+          "type": "boolean"
+        },
+        {
+          "name": "isDisabled",
+          "attribute": "isDisabled",
+          "description": "Disabled attribute",
+          "type": "boolean"
+        },
+        {
+          "name": "handleLabelUnit",
+          "attribute": "handleLabelUnit",
+          "description": "Handle label unit attribute",
+          "type": "string"
+        },
+        {
+          "name": "min",
+          "attribute": "min",
+          "description": "Min property for range",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "name": "minSelected",
+          "attribute": "minSelected",
+          "description": "Minselected property for range",
+          "type": "number"
+        },
+        {
+          "name": "max",
+          "attribute": "max",
+          "description": "Max property for range",
+          "type": "number",
+          "default": "100"
+        },
+        {
+          "name": "maxSelected",
+          "attribute": "maxSelected",
+          "description": "Maxselected property for range",
+          "type": "number"
+        },
+        {
+          "name": "step",
+          "attribute": "step",
+          "description": "Step for range",
+          "type": "number",
+          "default": "1"
+        },
+        {
+          "name": "hasOutput",
+          "attribute": "hasOutput",
+          "description": "Shows input value",
+          "type": "boolean"
+        },
+        {
+          "name": "value",
+          "attribute": "value",
+          "description": "Input value",
+          "type": "number"
+        },
+        {
+          "name": "lowerRangeValue",
+          "attribute": "lowerRangeValue",
+          "description": "Input value for lower range of range",
+          "type": "number"
+        },
+        {
+          "name": "upperRangeValue",
+          "attribute": "upperRangeValue",
+          "description": "Input value for upper range of range",
+          "type": "number"
+        },
+        {
+          "name": "label",
+          "attribute": "label",
+          "description": "Slide Label",
+          "type": "string"
+        },
+        {
+          "name": "fieldNote",
+          "attribute": "fieldNote",
+          "description": "Field note text",
+          "type": "string"
+        },
+        {
+          "name": "errorNote",
+          "attribute": "errorNote",
+          "description": "Error note text",
+          "type": "string"
+        },
+        {
+          "name": "ariaDescribedBy",
+          "attribute": "ariaDescribedBy",
+          "description": "Aria described by\n- Used to connect the field note in select to the select menu for accessibility",
+          "type": "string"
+        },
+        {
+          "name": "fieldId",
+          "attribute": "fieldId",
+          "description": "The unique id of the field",
+          "type": "string"
+        },
+        {
+          "name": "hasTooltip",
+          "attribute": "hasTooltip",
+          "description": "Displays value label above range",
+          "type": "boolean"
+        },
+        {
+          "name": "behavior",
+          "attribute": "behavior",
+          "description": "Behavior property for slide",
+          "type": "\"range\""
+        },
+        {
+          "name": "defaultRange",
+          "description": "Queries the default range",
+          "type": "HTMLInputElement"
+        },
+        {
+          "name": "lowerRange",
+          "description": "Queries the lower range/lower input of range",
+          "type": "HTMLInputElement"
+        },
+        {
+          "name": "upperRange",
+          "description": "Queries the upper range/upper input of range",
+          "type": "HTMLInputElement"
+        },
+        {
+          "name": "lowerRangeLabelContainer",
+          "description": "Queries the container for the label of the lower range in the range",
+          "type": "HTMLElement"
+        },
+        {
+          "name": "upperRangeLabelContainer",
+          "description": "Queries the container for the label of the upper range in the range",
+          "type": "HTMLElement"
+        },
+        {
+          "name": "rangeColor",
+          "description": "Queries the element for the range color in the range",
+          "type": "HTMLElement"
+        },
+        {
+          "name": "defaultLabelWrapper",
+          "description": "Queries the wrapper for the tooltip associated with the range",
+          "type": "HTMLElement"
+        },
+        {
+          "name": "result",
+          "description": "Represents the result as a string",
+          "type": "string"
+        },
+        {
+          "name": "outputValue",
+          "description": "Represents the output value as a number",
+          "type": "number"
+        },
+        {
+          "name": "outputValueLowerRange",
+          "description": "Represents the output value of the lower range as a number for a range",
+          "type": "number"
+        },
+        {
+          "name": "outputValueUpperRange",
+          "description": "Represents the output value of the upper range as a number for a range",
+          "type": "number"
+        },
+        {
+          "name": "Value",
+          "description": "Set the value",
+          "type": "number"
+        },
+        {
+          "name": "updateValue"
+        },
+        {
+          "name": "syncOutFieldToRangeField"
+        },
+        {
+          "name": "syncOutFieldToLowerRange"
+        },
+        {
+          "name": "syncOutFieldToUpperRange"
+        },
+        {
+          "name": "upperRangeOnInput"
+        },
+        {
+          "name": "lowerRangeOnInput"
+        },
+        {
+          "name": "toggleZIndexonLowerRange"
+        },
+        {
+          "name": "styleModifier",
+          "attribute": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ]
+    },
+    {
       "name": "sl-search",
       "path": "./components/search/search.ts",
       "description": "Component: sl-search\n\nSearch enables users to specify a word or phrase to find relevant content without navigation.\n- **slot**: The search's dropdown content\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
@@ -5849,338 +6181,6 @@
           "attribute": "height",
           "description": "The height of the skeleton\n- If no value is entered, it defaults to auto",
           "type": "number"
-        },
-        {
-          "name": "styleModifier",
-          "attribute": "styleModifier",
-          "description": "Append to the class name. Used for passing in utility classes",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "sl-slider",
-      "path": "./components/slider/slider.ts",
-      "description": "Component: sl-slider\n\nSlider provides a visual indication of adjustable content, where the user can increment or decrement the value by moving the handle along a track, or via text input.\n- **slot** \"label\": If content is slotted, it will override the default slider label\n- **slot** \"before\": If content is slotted, it will override the default slider \"min\" label text\n- **slot** \"after\": If content is slotted, it will override the default slider \"max\" label text",
-      "attributes": [
-        {
-          "name": "hideLabel",
-          "description": "Hide label?\n- If true, hides the label from displaying",
-          "type": "boolean"
-        },
-        {
-          "name": "isError",
-          "description": "Error state",
-          "type": "boolean"
-        },
-        {
-          "name": "isDisabled",
-          "description": "Disabled attribute",
-          "type": "boolean"
-        },
-        {
-          "name": "handleLabelUnit",
-          "description": "Handle label unit attribute",
-          "type": "string"
-        },
-        {
-          "name": "min",
-          "description": "Min property for slider",
-          "type": "number",
-          "default": "0"
-        },
-        {
-          "name": "minSelected",
-          "description": "Minselected property for range slider",
-          "type": "number"
-        },
-        {
-          "name": "max",
-          "description": "Max property for slider",
-          "type": "number",
-          "default": "100"
-        },
-        {
-          "name": "maxSelected",
-          "description": "Maxselected property for range slider",
-          "type": "number"
-        },
-        {
-          "name": "step",
-          "description": "Step for slider",
-          "type": "number",
-          "default": "1"
-        },
-        {
-          "name": "hasOutput",
-          "description": "Shows input value",
-          "type": "boolean"
-        },
-        {
-          "name": "value",
-          "description": "Input value",
-          "type": "number"
-        },
-        {
-          "name": "lowerSliderValue",
-          "description": "Input value for lower slider of range slider",
-          "type": "number"
-        },
-        {
-          "name": "upperSliderValue",
-          "description": "Input value for upper slider of range slider",
-          "type": "number"
-        },
-        {
-          "name": "label",
-          "description": "Slide Label",
-          "type": "string"
-        },
-        {
-          "name": "fieldNote",
-          "description": "Field note text",
-          "type": "string"
-        },
-        {
-          "name": "errorNote",
-          "description": "Error note text",
-          "type": "string"
-        },
-        {
-          "name": "ariaDescribedBy",
-          "description": "Aria described by\n- Used to connect the field note in select to the select menu for accessibility",
-          "type": "string"
-        },
-        {
-          "name": "fieldId",
-          "description": "The unique id of the field",
-          "type": "string"
-        },
-        {
-          "name": "hasTooltip",
-          "description": "Displays value label above slider",
-          "type": "boolean"
-        },
-        {
-          "name": "behavior",
-          "description": "Behavior property for slide",
-          "type": "\"range\""
-        },
-        {
-          "name": "styleModifier",
-          "description": "Append to the class name. Used for passing in utility classes",
-          "type": "string"
-        }
-      ],
-      "properties": [
-        {
-          "name": "el",
-          "type": "string",
-          "default": "\"sl-slider\""
-        },
-        {
-          "name": "hideLabel",
-          "attribute": "hideLabel",
-          "description": "Hide label?\n- If true, hides the label from displaying",
-          "type": "boolean"
-        },
-        {
-          "name": "isError",
-          "attribute": "isError",
-          "description": "Error state",
-          "type": "boolean"
-        },
-        {
-          "name": "isDisabled",
-          "attribute": "isDisabled",
-          "description": "Disabled attribute",
-          "type": "boolean"
-        },
-        {
-          "name": "handleLabelUnit",
-          "attribute": "handleLabelUnit",
-          "description": "Handle label unit attribute",
-          "type": "string"
-        },
-        {
-          "name": "min",
-          "attribute": "min",
-          "description": "Min property for slider",
-          "type": "number",
-          "default": "0"
-        },
-        {
-          "name": "minSelected",
-          "attribute": "minSelected",
-          "description": "Minselected property for range slider",
-          "type": "number"
-        },
-        {
-          "name": "max",
-          "attribute": "max",
-          "description": "Max property for slider",
-          "type": "number",
-          "default": "100"
-        },
-        {
-          "name": "maxSelected",
-          "attribute": "maxSelected",
-          "description": "Maxselected property for range slider",
-          "type": "number"
-        },
-        {
-          "name": "step",
-          "attribute": "step",
-          "description": "Step for slider",
-          "type": "number",
-          "default": "1"
-        },
-        {
-          "name": "hasOutput",
-          "attribute": "hasOutput",
-          "description": "Shows input value",
-          "type": "boolean"
-        },
-        {
-          "name": "value",
-          "attribute": "value",
-          "description": "Input value",
-          "type": "number"
-        },
-        {
-          "name": "lowerSliderValue",
-          "attribute": "lowerSliderValue",
-          "description": "Input value for lower slider of range slider",
-          "type": "number"
-        },
-        {
-          "name": "upperSliderValue",
-          "attribute": "upperSliderValue",
-          "description": "Input value for upper slider of range slider",
-          "type": "number"
-        },
-        {
-          "name": "label",
-          "attribute": "label",
-          "description": "Slide Label",
-          "type": "string"
-        },
-        {
-          "name": "fieldNote",
-          "attribute": "fieldNote",
-          "description": "Field note text",
-          "type": "string"
-        },
-        {
-          "name": "errorNote",
-          "attribute": "errorNote",
-          "description": "Error note text",
-          "type": "string"
-        },
-        {
-          "name": "ariaDescribedBy",
-          "attribute": "ariaDescribedBy",
-          "description": "Aria described by\n- Used to connect the field note in select to the select menu for accessibility",
-          "type": "string"
-        },
-        {
-          "name": "fieldId",
-          "attribute": "fieldId",
-          "description": "The unique id of the field",
-          "type": "string"
-        },
-        {
-          "name": "hasTooltip",
-          "attribute": "hasTooltip",
-          "description": "Displays value label above slider",
-          "type": "boolean"
-        },
-        {
-          "name": "behavior",
-          "attribute": "behavior",
-          "description": "Behavior property for slide",
-          "type": "\"range\""
-        },
-        {
-          "name": "defaultSlider",
-          "description": "Queries the default slider",
-          "type": "HTMLInputElement"
-        },
-        {
-          "name": "lowerSlider",
-          "description": "Queries the lower slider/lower input of range slider",
-          "type": "HTMLInputElement"
-        },
-        {
-          "name": "upperSlider",
-          "description": "Queries the upper slider/upper input of range slider",
-          "type": "HTMLInputElement"
-        },
-        {
-          "name": "lowerSliderLabelContainer",
-          "description": "Queries the container for the label of the lower slider in the range slider",
-          "type": "HTMLElement"
-        },
-        {
-          "name": "upperSliderLabelContainer",
-          "description": "Queries the container for the label of the upper slider in the range slider",
-          "type": "HTMLElement"
-        },
-        {
-          "name": "rangeColor",
-          "description": "Queries the element for the range color in the slider",
-          "type": "HTMLElement"
-        },
-        {
-          "name": "defaultLabelWrapper",
-          "description": "Queries the wrapper for the tooltip associated with the slider",
-          "type": "HTMLElement"
-        },
-        {
-          "name": "result",
-          "description": "Represents the result as a string",
-          "type": "string"
-        },
-        {
-          "name": "outputValue",
-          "description": "Represents the output value as a number",
-          "type": "number"
-        },
-        {
-          "name": "outputValueLowerSlider",
-          "description": "Represents the output value of the lower slider as a number for a range slider",
-          "type": "number"
-        },
-        {
-          "name": "outputValueUpperSlider",
-          "description": "Represents the output value of the upper slider as a number for a range slider",
-          "type": "number"
-        },
-        {
-          "name": "Value",
-          "description": "Set the value",
-          "type": "number"
-        },
-        {
-          "name": "updateValue"
-        },
-        {
-          "name": "syncOutFieldToSliderField"
-        },
-        {
-          "name": "syncOutFieldToLowerRange"
-        },
-        {
-          "name": "syncOutFieldToUpperRange"
-        },
-        {
-          "name": "upperSliderOnInput"
-        },
-        {
-          "name": "lowerSliderOnInput"
-        },
-        {
-          "name": "toggleZIndexonLowerSlider"
         },
         {
           "name": "styleModifier",
