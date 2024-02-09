@@ -1,5 +1,5 @@
 import { createComponent } from '@lit/react';
-import { SLSelect as SLWebSelect } from 'sl-web-components/dist/components/select-field/select-field';
+import { SLSelect as SLWebSelect } from 'sl-web-components/dist/components/select/select';
 import register from 'sl-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';

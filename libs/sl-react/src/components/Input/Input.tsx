@@ -1,5 +1,5 @@
 import { createComponent } from '@lit/react';
-import { SLInput as SLWebInput } from 'sl-web-components/dist/components/text-field/text-field';
+import { SLInput as SLWebInput } from 'sl-web-components/dist/components/input/input';
 import register from 'sl-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
