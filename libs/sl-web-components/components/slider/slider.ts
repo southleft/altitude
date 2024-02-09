@@ -137,7 +137,7 @@ export class SLSlider extends SLElement {
 
   /**
    * Aria described by
-   * - Used to connect the field note in select field to the select menu for accessibility
+   * - Used to connect the field note in select to the select menu for accessibility
    */
   @property()
   accessor ariaDescribedBy: string;

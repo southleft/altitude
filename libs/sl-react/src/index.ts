@@ -68,7 +68,7 @@ export * from './components/Progress';
 export * from './components/Radio';
 export * from './components/RadioItem';
 export * from './components/SearchForm';
-export * from './components/SelectField';
+export * from './components/Select';
 export * from './components/Skeleton';
 export * from './components/Slider';
 export * from './components/Stepper';

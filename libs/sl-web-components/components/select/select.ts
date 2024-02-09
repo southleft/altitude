@@ -13,19 +13,19 @@ import { SLIconChevronDown } from '../icon/icons/chevron-down';
 import { SLListItem } from '../list-item/list-item';
 import { SLSearchForm } from '../search-form/search-form';
 import { SLTextField } from '../text-field/text-field';
-import { PartialDataSource } from './select-field.model';
-import styles from './select-field.scss';
+import { PartialDataSource } from './select.model';
+import styles from './select.scss';
 
 /**
- * Component: sl-select-field
+ * Component: sl-select
  *
- * Select field presents a list of options from which a user can select one.
- * - **slot**: The select-field content
+ * Select presents a list of options from which a user can select one.
+ * - **slot**: The select content
  * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
  * - **slot** "error": If content is slotted, it will display in place of the errorNote property
  */
-export class SLSelectField extends SLElement {
-  static el = 'sl-select-field';
+export class SLSelect extends SLElement {
+  static el = 'sl-select';
 
   private elementMap = register({
     elements: [
@@ -57,44 +57,44 @@ export class SLSelectField extends SLElement {
   accessor isActive: boolean;
 
   /**
-   * is Active select field
-   * 1. Select field is open when set to true. Close when set to false
+   * is Active select
+   * 1. Select is open when set to true. Close when set to false
    */
   @property({ type: Boolean })
   accessor isActiveDropdown: boolean;
 
   /**
-   * The unique id of the select field
+   * The unique id of the select
    */
   @property()
   accessor fieldId: string;
 
   /**
-   * The select field's title
+   * The select's title
    */
   @property()
   accessor title: string;
 
   /**
-   * The select field's label
+   * The select's label
    */
   @property()
   accessor label: string = 'Label';
 
   /**
-   * Select field Datasource
+   * Select Datasource
    */
   @property({ attribute: false })
   accessor dataSource: Array<PartialDataSource>;
 
   /**
-   * The select field's name attribute
+   * The select's name attribute
    */
   @property()
   accessor name: string;
 
   /**
-   * The select field's value attribute
+   * The select's value attribute
    */
   @property()
   accessor value: string;
@@ -107,26 +107,26 @@ export class SLSelectField extends SLElement {
   accessor placeholder: string;
 
   /**
-   * The select field field note
+   * The select field note
    */
   @property()
   accessor fieldNote: string;
 
   /**
-   * The select field error note
+   * The select error note
    */
   @property()
   accessor errorNote: string;
 
   /**
    * Aria describedby
-   * 1. Used to connect the field note in select field to the select menu for accessibility
+   * 1. Used to connect the field note in select to the select menu for accessibility
    */
   @property()
   accessor ariaDescribedBy: string;
 
   /**
-   * The select field's required attribute
+   * The select's required attribute
    */
   @property({ type: Boolean })
   accessor isRequired: boolean = false;
@@ -139,7 +139,7 @@ export class SLSelectField extends SLElement {
   accessor isOptional: boolean;
 
   /**
-   * The select field's disabled attribute
+   * The select's disabled attribute
    */
   @property({ type: Boolean })
   accessor isDisabled: boolean;
@@ -170,7 +170,7 @@ export class SLSelectField extends SLElement {
   accessor hasSearch: boolean = false;
 
   /**
-   * **Select field alignment**
+   * **Select alignment**
    * - **bottom** Dropdown panel appears on the bottom
    * - **top** Dropdown panel appears on the top
    */
@@ -270,26 +270,26 @@ export class SLSelectField extends SLElement {
     }
     if (this.isActiveDropdown === true) {
       this.handleOnActiveDropdown();
-      this.dispatch({ eventName: 'onSelectFieldOpen', detailObj: { active: true } });
+      this.dispatch({ eventName: 'onSelectOpen', detailObj: { active: true } });
     } else {
-      this.dispatch({ eventName: 'onSelectFieldClose', detailObj: { active: false } });
+      this.dispatch({ eventName: 'onSelectClose', detailObj: { active: false } });
     }
   }
 
   /**
-   * Handles the activation behavior of the select field:
+   * Handles the activation behavior of the select:
    * 1. Positions the dropdown panel based on available viewport space
    * 2. Sets focus to the first element in the dropdown panel or the search box (if available) when active
-   * 3. When the select field is active:
+   * 3. When the select is active:
    *    3.1. If hasSearch is false and a value is available, focuses on the selected item & scrolls to view it
    *    3.2. If hasSearch is true and a value is available, focuses on the search box (no need to focus the active element) & scrolls to view it
-   * 4. When the select field is active and no value is available:
+   * 4. When the select is active and no value is available:
    *    4.1. If hasSearch is false, focuses on the first non-disabled element
    *    4.2. If hasSearch is true, as the search box has focus, no need to focus the first non-disabled element
    */
   handleOnActiveDropdown() {
     setTimeout(() => {
-      const dropdownPanel = this.shadowRoot.querySelector<HTMLElement>('.sl-c-select-field__panel')?.getBoundingClientRect();
+      const dropdownPanel = this.shadowRoot.querySelector<HTMLElement>('.sl-c-select__panel')?.getBoundingClientRect();
       const body = this.closest('#root-inner') || document.querySelector('body');
       const bodyPosition = body.getBoundingClientRect();
       if (bodyPosition.height > dropdownPanel?.height && dropdownPanel?.bottom > bodyPosition.bottom) {
@@ -367,11 +367,11 @@ export class SLSelectField extends SLElement {
 
   /**
    * Lifecycle method triggered when the component is first updated on the page
-   * 1. Attaches click handlers to SLListItem components within the select field that do not contain children
+   * 1. Attaches click handlers to SLListItem components within the select that do not contain children
    * 2. If the component is not readonly, clears the input value
-   * 3. If the component is not readonly, focuses on the select field after selecting an item
-   * 4. Sets the select field value with the text content of the selected list item
-   * 5. Resizes the select field to fit the value width if the variant is bare
+   * 3. If the component is not readonly, focuses on the select after selecting an item
+   * 4. Sets the select value with the text content of the selected list item
+   * 5. Resizes the select to fit the value width if the variant is bare
    * 6. Ensures only the last selected item remains active
    */
   addClickHandlers() {
@@ -382,8 +382,8 @@ export class SLSelectField extends SLElement {
         const listItemTrigger = element?.shadowRoot.querySelector('.sl-c-list-item__link');
         if (listItemTrigger) {
           listItemTrigger?.addEventListener('click', () => {
-            this.shadowRoot.querySelector<HTMLInputElement>('.sl-c-select-field__input').value = ''; /* 2 */
-            this.shadowRoot.querySelector<HTMLInputElement>('.sl-c-select-field__input').focus(); /* 3 */
+            this.shadowRoot.querySelector<HTMLInputElement>('.sl-c-select__input').value = ''; /* 2 */
+            this.shadowRoot.querySelector<HTMLInputElement>('.sl-c-select__input').focus(); /* 3 */
             this.value = listItemText; /* 4 */
             this.isActive = true;
             /* 6 */
@@ -402,7 +402,7 @@ export class SLSelectField extends SLElement {
    * Change output binding
    * 1. If the input field is not readonly, then allow typing
    * 2. Clear the label & value's to show the filling text
-   * 3. Set the select field to active while filling
+   * 3. Set the select to active while filling
    */
   handleOnChange() {
     this.value = '';
@@ -411,7 +411,7 @@ export class SLSelectField extends SLElement {
   }
 
   render() {
-    const componentClassNames = this.componentClassNames('sl-c-select-field', {
+    const componentClassNames = this.componentClassNames('sl-c-select', {
       'sl-is-disabled': this.isDisabled,
       'sl-is-required': this.isRequired,
       'sl-is-error': this.isError,
@@ -419,15 +419,15 @@ export class SLSelectField extends SLElement {
       'sl-is-active-dropdown': this.isActiveDropdown === true,
       'sl-has-search': this.hasSearch,
       'sl-has-hidden-label': this.hideLabel === true,
-      'sl-c-select-field--align-bottom': this.align === 'bottom',
-      'sl-c-select-field--align-top': this.align === 'top'
+      'sl-c-select--align-bottom': this.align === 'bottom',
+      'sl-c-select--align-top': this.align === 'top'
     });
 
     return html`
       <div class="${componentClassNames}">
-        <div class="sl-c-select-field__container">
+        <div class="sl-c-select__container">
           <${this.textFieldEl}
-            class="sl-c-select-field__input"
+            class="sl-c-select__input"
             type="text"
             label="${this.label}"
             id="${this.fieldId}"
@@ -446,12 +446,12 @@ export class SLSelectField extends SLElement {
             @input=${this.handleOnChange}
             ?isActive="${this.isActive}"
           >
-            <${this.iconChevronDownEl} size="lg" slot="after" class="sl-c-select-field__icon-arrow"></${this.iconChevronDownEl}>
+            <${this.iconChevronDownEl} size="lg" slot="after" class="sl-c-select__icon-arrow"></${this.iconChevronDownEl}>
           </${this.textFieldEl}>
           ${
             this.isActiveDropdown
               ? html`
-                <${this.dropdownPanelEl} @keydown=${this.handleOnKeydownDropdownPanel} class="sl-c-select-field__panel" ?hasHeader=${this.hasSearch} ?hasScroll=${true}>
+                <${this.dropdownPanelEl} @keydown=${this.handleOnKeydownDropdownPanel} class="sl-c-select__panel" ?hasHeader=${this.hasSearch} ?hasScroll=${true}>
                   ${this.hasSearch ? html` <${this.searchFormEl} slot="header" .value=${''} ?isEmpty=${true}> </${this.searchFormEl}> ` : html``}
                   <slot @select=${this.toggleActive}></slot>
                 </${this.dropdownPanelEl}>
@@ -482,12 +482,12 @@ export class SLSelectField extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLSelectField.el) === undefined) {
-  customElements.define(SLSelectField.el, SLSelectField);
+if ((globalThis as any).enAutoRegistry === true && customElements.get(SLSelect.el) === undefined) {
+  customElements.define(SLSelect.el, SLSelect);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sl-select-field': SLSelectField;
+    'sl-select': SLSelect;
   }
 }

@@ -113,7 +113,7 @@ export class SLFileUpload extends SLElement {
 
   /**
    * Aria described-by attribute
-   * - Connects the field note in the select field to the select menu for accessibility
+   * - Connects the field note in the select to the select menu for accessibility
    */
   @property()
   accessor ariaDescribedBy: string;

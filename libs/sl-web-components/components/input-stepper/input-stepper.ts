@@ -97,7 +97,7 @@ export class SLInputStepper extends SLElement {
 
   /**
    * Aria describedby
-   * 1) Used to connect the field note in select field to the select menu for accessibility
+   * 1) Used to connect the field note in select to the select menu for accessibility
    */
   @property()
   accessor ariaDescribedBy: string;

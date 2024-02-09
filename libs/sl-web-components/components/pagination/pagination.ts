@@ -6,8 +6,8 @@ import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { SLElement } from '../SLElement';
 import { SLContextualMenu } from '../contextual-menu/contextual-menu';
-import { SLSelectField } from '../select-field/select-field';
-import { PartialDataSource } from '../select-field/select-field.model';
+import { SLSelect } from '../select/select';
+import { PartialDataSource } from '../select/select.model';
 import { SLIconChevronLeft } from '../icon/icons/chevron-left';
 import { SLIconChevronRight } from '../icon/icons/chevron-right';
 import { SLIconDotsHorizontal } from '../icon/icons/dots-horizontal';
@@ -39,7 +39,7 @@ export class SLPagination extends SLElement {
 
   private elementMap = register({
     elements: [
-      [SLSelectField.el, SLSelectField],
+      [SLSelect.el, SLSelect],
       [SLList.el, SLList],
       [SLListItem.el, SLListItem],
       [SLPaginationItem.el, SLPaginationItem],
@@ -51,7 +51,7 @@ export class SLPagination extends SLElement {
     suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
   });
 
-  private selectFieldEl = unsafeStatic(this.elementMap.get(SLSelectField.el));
+  private selectFieldEl = unsafeStatic(this.elementMap.get(SLSelect.el));
   private listEl = unsafeStatic(this.elementMap.get(SLList.el));
   private listItemEl = unsafeStatic(this.elementMap.get(SLListItem.el));
   private paginationItemEl = unsafeStatic(this.elementMap.get(SLPaginationItem.el));

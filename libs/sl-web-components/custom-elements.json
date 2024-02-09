@@ -2753,7 +2753,7 @@
         },
         {
           "name": "ariaDescribedBy",
-          "description": "Aria described-by attribute\n- Connects the field note in the select field to the select menu for accessibility",
+          "description": "Aria described-by attribute\n- Connects the field note in the select to the select menu for accessibility",
           "type": "string"
         },
         {
@@ -2860,7 +2860,7 @@
         {
           "name": "ariaDescribedBy",
           "attribute": "ariaDescribedBy",
-          "description": "Aria described-by attribute\n- Connects the field note in the select field to the select menu for accessibility",
+          "description": "Aria described-by attribute\n- Connects the field note in the select to the select menu for accessibility",
           "type": "string"
         },
         {
@@ -3229,7 +3229,7 @@
         },
         {
           "name": "ariaDescribedBy",
-          "description": "Aria describedby\n1) Used to connect the field note in select field to the select menu for accessibility",
+          "description": "Aria describedby\n1) Used to connect the field note in select to the select menu for accessibility",
           "type": "string"
         },
         {
@@ -3340,7 +3340,7 @@
         {
           "name": "ariaDescribedBy",
           "attribute": "ariaDescribedBy",
-          "description": "Aria describedby\n1) Used to connect the field note in select field to the select menu for accessibility",
+          "description": "Aria describedby\n1) Used to connect the field note in select to the select menu for accessibility",
           "type": "string"
         },
         {
@@ -5304,9 +5304,9 @@
       ]
     },
     {
-      "name": "sl-select-field",
-      "path": "./components/select-field/select-field.ts",
-      "description": "Component: sl-select-field\n\nSelect field presents a list of options from which a user can select one.\n- **slot**: The select-field content\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
+      "name": "sl-select",
+      "path": "./components/select/select.ts",
+      "description": "Component: sl-select\n\nSelect presents a list of options from which a user can select one.\n- **slot**: The select content\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
       "attributes": [
         {
           "name": "isActive",
@@ -5315,33 +5315,33 @@
         },
         {
           "name": "isActiveDropdown",
-          "description": "is Active select field\n1. Select field is open when set to true. Close when set to false",
+          "description": "is Active select\n1. Select is open when set to true. Close when set to false",
           "type": "boolean"
         },
         {
           "name": "fieldId",
-          "description": "The unique id of the select field",
+          "description": "The unique id of the select",
           "type": "string"
         },
         {
           "name": "title",
-          "description": "The select field's title",
+          "description": "The select's title",
           "type": "string"
         },
         {
           "name": "label",
-          "description": "The select field's label",
+          "description": "The select's label",
           "type": "string",
           "default": "\"Label\""
         },
         {
           "name": "name",
-          "description": "The select field's name attribute",
+          "description": "The select's name attribute",
           "type": "string"
         },
         {
           "name": "value",
-          "description": "The select field's value attribute",
+          "description": "The select's value attribute",
           "type": "string"
         },
         {
@@ -5351,22 +5351,22 @@
         },
         {
           "name": "fieldNote",
-          "description": "The select field field note",
+          "description": "The select field note",
           "type": "string"
         },
         {
           "name": "errorNote",
-          "description": "The select field error note",
+          "description": "The select error note",
           "type": "string"
         },
         {
           "name": "ariaDescribedBy",
-          "description": "Aria describedby\n1. Used to connect the field note in select field to the select menu for accessibility",
+          "description": "Aria describedby\n1. Used to connect the field note in select to the select menu for accessibility",
           "type": "string"
         },
         {
           "name": "isRequired",
-          "description": "The select field's required attribute",
+          "description": "The select's required attribute",
           "type": "boolean",
           "default": "false"
         },
@@ -5377,7 +5377,7 @@
         },
         {
           "name": "isDisabled",
-          "description": "The select field's disabled attribute",
+          "description": "The select's disabled attribute",
           "type": "boolean"
         },
         {
@@ -5404,7 +5404,7 @@
         },
         {
           "name": "align",
-          "description": "**Select field alignment**\n- **bottom** Dropdown panel appears on the bottom\n- **top** Dropdown panel appears on the top",
+          "description": "**Select alignment**\n- **bottom** Dropdown panel appears on the bottom\n- **top** Dropdown panel appears on the top",
           "type": "\"bottom\" | \"top\"",
           "default": "\"bottom\""
         },
@@ -5418,7 +5418,7 @@
         {
           "name": "el",
           "type": "string",
-          "default": "\"sl-select-field\""
+          "default": "\"sl-select\""
         },
         {
           "name": "isActive",
@@ -5429,43 +5429,43 @@
         {
           "name": "isActiveDropdown",
           "attribute": "isActiveDropdown",
-          "description": "is Active select field\n1. Select field is open when set to true. Close when set to false",
+          "description": "is Active select\n1. Select is open when set to true. Close when set to false",
           "type": "boolean"
         },
         {
           "name": "fieldId",
           "attribute": "fieldId",
-          "description": "The unique id of the select field",
+          "description": "The unique id of the select",
           "type": "string"
         },
         {
           "name": "title",
           "attribute": "title",
-          "description": "The select field's title",
+          "description": "The select's title",
           "type": "string"
         },
         {
           "name": "label",
           "attribute": "label",
-          "description": "The select field's label",
+          "description": "The select's label",
           "type": "string",
           "default": "\"Label\""
         },
         {
           "name": "dataSource",
-          "description": "Select field Datasource",
+          "description": "Select Datasource",
           "type": "PartialDataSource[]"
         },
         {
           "name": "name",
           "attribute": "name",
-          "description": "The select field's name attribute",
+          "description": "The select's name attribute",
           "type": "string"
         },
         {
           "name": "value",
           "attribute": "value",
-          "description": "The select field's value attribute",
+          "description": "The select's value attribute",
           "type": "string"
         },
         {
@@ -5477,25 +5477,25 @@
         {
           "name": "fieldNote",
           "attribute": "fieldNote",
-          "description": "The select field field note",
+          "description": "The select field note",
           "type": "string"
         },
         {
           "name": "errorNote",
           "attribute": "errorNote",
-          "description": "The select field error note",
+          "description": "The select error note",
           "type": "string"
         },
         {
           "name": "ariaDescribedBy",
           "attribute": "ariaDescribedBy",
-          "description": "Aria describedby\n1. Used to connect the field note in select field to the select menu for accessibility",
+          "description": "Aria describedby\n1. Used to connect the field note in select to the select menu for accessibility",
           "type": "string"
         },
         {
           "name": "isRequired",
           "attribute": "isRequired",
-          "description": "The select field's required attribute",
+          "description": "The select's required attribute",
           "type": "boolean",
           "default": "false"
         },
@@ -5508,7 +5508,7 @@
         {
           "name": "isDisabled",
           "attribute": "isDisabled",
-          "description": "The select field's disabled attribute",
+          "description": "The select's disabled attribute",
           "type": "boolean"
         },
         {
@@ -5540,7 +5540,7 @@
         {
           "name": "align",
           "attribute": "align",
-          "description": "**Select field alignment**\n- **bottom** Dropdown panel appears on the bottom\n- **top** Dropdown panel appears on the top",
+          "description": "**Select alignment**\n- **bottom** Dropdown panel appears on the bottom\n- **top** Dropdown panel appears on the top",
           "type": "\"bottom\" | \"top\"",
           "default": "\"bottom\""
         },
@@ -5711,7 +5711,7 @@
         },
         {
           "name": "ariaDescribedBy",
-          "description": "Aria described by\n- Used to connect the field note in select field to the select menu for accessibility",
+          "description": "Aria described by\n- Used to connect the field note in select to the select menu for accessibility",
           "type": "string"
         },
         {
@@ -5843,7 +5843,7 @@
         {
           "name": "ariaDescribedBy",
           "attribute": "ariaDescribedBy",
-          "description": "Aria described by\n- Used to connect the field note in select field to the select menu for accessibility",
+          "description": "Aria described by\n- Used to connect the field note in select to the select menu for accessibility",
           "type": "string"
         },
         {
