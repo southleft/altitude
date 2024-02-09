@@ -1,20 +1,20 @@
 @import '../../styles/component';
 /* ------------------------------------*\
-  #LOADING-INDICATOR
+  #SPINNER
 \*------------------------------------ */
 
 /**
- * 1) Loading indicator wrapper, e.g., the host
+ * Spinner wrapper, e.g., the host
  */
- :host {
+:host {
   display: block;
   line-height: 0;
 }
 
 /**
- * Loading indicator element
+ * Spinner element
  */
-.sl-c-loading-indicator {
+.sl-c-spinner {
   display: inline-block;
   height: var(--sl-theme-icon-lg);
   width: var(--sl-theme-icon-lg);
@@ -25,7 +25,7 @@
 }
 
 svg {
-  .sl-c-loading-indicator & {
+  .sl-c-spinner & {
     display: block;
     width: 100%;
     height: 100%;
@@ -33,9 +33,9 @@ svg {
 }
 
 /**
- * Loader SVG paths
+ * Spinner SVG paths
  */
-[class^='sl-loader-path'] {
+[class^='sl-c-spinner__path'] {
   fill: var(--sl-theme-color-content-default);
   animation: fadeInOut 0.8s linear infinite;
   opacity: 0;
@@ -44,7 +44,7 @@ svg {
   /**
    * Inverted loader
    */
-  .sl-c-loading-indicator--inverted & {
+  .sl-c-spinner--inverted & {
     fill: var(--sl-theme-color-background-default);
   }
 }
@@ -52,35 +52,35 @@ svg {
 /**
  * SVG path animation delays
  */
-.sl-loader-path--1 {
+.sl-c-spinner__path--1 {
   animation-delay: 0s;
 }
 
-.sl-loader-path--2 {
+.sl-c-spinner__path--2 {
   animation-delay: 0.1s;
 }
 
-.sl-loader-path--3 {
+.sl-c-spinner__path--3 {
   animation-delay: 0.2s;
 }
 
-.sl-loader-path--4 {
+.sl-c-spinner__path--4 {
   animation-delay: 0.3s;
 }
 
-.sl-loader-path--5 {
+.sl-c-spinner__path--5 {
   animation-delay: 0.4s;
 }
 
-.sl-loader-path--6 {
+.sl-c-spinner__path--6 {
   animation-delay: 0.5s;
 }
 
-.sl-loader-path--7 {
+.sl-c-spinner__path--7 {
   animation-delay: 0.6s;
 }
 
-.sl-loader-path--8 {
+.sl-c-spinner__path--8 {
   animation-delay: 0.7s;
 }
 
@@ -108,7 +108,7 @@ svg {
 /**
  * Small loader
  */
-.sl-c-loading-indicator--small {
+.sl-c-spinner--small {
   height: var(--sl-theme-icon);
   width: var(--sl-theme-icon);
 }

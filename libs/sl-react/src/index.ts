@@ -58,7 +58,7 @@ export * from './components/LayoutSection';
 export * from './components/Link';
 export * from './components/List';
 export * from './components/ListItem';
-export * from './components/LoadingIndicator';
+export * from './components/Spinner';
 export * from './components/Menu';
 export * from './components/MenuItem';
 export * from './components/Pagination';
