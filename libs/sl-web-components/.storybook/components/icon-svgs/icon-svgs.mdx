@@ -18,7 +18,7 @@ Within this design system, individual icon components containing SVGs are utiliz
 If an icon is embedded into a component (e.g., an accordion with only chevron-down), import the individual component.
 
 ```html
-import { SLIconAdd } from '../icon/icons/add';
+import { SLIconChevronDown } from '../icon/icons/chevron-down';
 ```
 
 ## Adding Icons
@@ -75,15 +75,7 @@ The sl-icon component comes with default height, width, and fill settings, which
 The icon inherits the color property from the component it resides within. If the color needs to be overridden, set the fill at the component level where the icon lives:
 
 ```scss
-sl-icon {
-  --sl-icon-fill: blue;
-}
-```
-
-For icons used solely within a `<slot>` of a component, style the slotted sl-icon in your new-component.scss file:
-
-```scss
-::slotted(sl-icon) {
+.my-class {
   --sl-icon-fill: blue;
 }
 ```
