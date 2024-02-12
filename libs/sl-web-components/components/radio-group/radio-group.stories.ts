@@ -6,7 +6,7 @@ import '../field-note/field-note';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
 import '../radio/radio';
-import './radio';
+import './radio-group';
 
 export default {
   title: 'Molecules/Radio Group',
@@ -56,7 +56,7 @@ export default {
     }
   },
   args: {
-    label: 'Radio legend label',
+    label: 'Radio group legend label',
     fieldNote: 'This is a field note.'
   }
 };

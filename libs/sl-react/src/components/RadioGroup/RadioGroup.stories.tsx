@@ -45,7 +45,7 @@ export default {
     }
   },
   args: {
-    label: 'Radio legend label',
+    label: 'Radio group legend label',
     children: (
       <>
         <SLRadio name="radio-name" value="radio-value-1">Radio 1</SLRadio>
