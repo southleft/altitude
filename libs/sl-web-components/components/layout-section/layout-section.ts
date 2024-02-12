@@ -23,7 +23,7 @@ export class SLLayoutSection extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLLayoutSection.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLLayoutSection.el) === undefined) {
   customElements.define(SLLayoutSection.el, SLLayoutSection);
 }
 

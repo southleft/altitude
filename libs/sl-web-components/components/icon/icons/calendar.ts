@@ -58,7 +58,7 @@ export class SLIconCalendar extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIconCalendar.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLIconCalendar.el) === undefined) {
   customElements.define(SLIconCalendar.el, SLIconCalendar);
 }
 

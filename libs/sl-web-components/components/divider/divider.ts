@@ -32,7 +32,7 @@ export class SLDivider extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLDivider.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLDivider.el) === undefined) {
   customElements.define(SLDivider.el, SLDivider);
 }
 

@@ -58,7 +58,7 @@ export class SLIconCopy extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIconCopy.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLIconCopy.el) === undefined) {
   customElements.define(SLIconCopy.el, SLIconCopy);
 }
 

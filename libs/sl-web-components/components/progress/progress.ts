@@ -328,7 +328,7 @@ export class SLProgress extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLProgress.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLProgress.el) === undefined) {
   customElements.define(SLProgress.el, SLProgress);
 }
 

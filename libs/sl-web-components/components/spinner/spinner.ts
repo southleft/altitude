@@ -75,7 +75,7 @@ export class SLSpinner extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLSpinner.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLSpinner.el) === undefined) {
   customElements.define(SLSpinner.el, SLSpinner);
 }
 

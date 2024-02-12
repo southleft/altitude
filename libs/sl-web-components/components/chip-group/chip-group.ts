@@ -18,7 +18,7 @@ export class SLChipGroup extends SLElement {
 
   private elementMap = register({
     elements: [[SLChip.el, SLChip]],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private chipEl = unsafeStatic(this.elementMap.get(SLChip.el));
@@ -109,7 +109,7 @@ export class SLChipGroup extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLChipGroup.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLChipGroup.el) === undefined) {
   customElements.define(SLChipGroup.el, SLChipGroup);
 }
 

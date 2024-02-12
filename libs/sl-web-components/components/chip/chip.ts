@@ -18,7 +18,7 @@ export class SLChip extends SLElement {
 
   private elementMap = register({
     elements: [[SLIconClose.el, SLIconClose]],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private iconCloseEl = unsafeStatic(this.elementMap.get(SLIconClose.el));
@@ -105,7 +105,7 @@ export class SLChip extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLChip.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLChip.el) === undefined) {
   customElements.define(SLChip.el, SLChip);
 }
 

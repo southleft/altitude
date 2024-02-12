@@ -58,7 +58,7 @@ export class SLIconCheck extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIconCheck.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLIconCheck.el) === undefined) {
   customElements.define(SLIconCheck.el, SLIconCheck);
 }
 

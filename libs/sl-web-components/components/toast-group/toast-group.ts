@@ -118,7 +118,7 @@ export class SLToastGroup extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLToastGroup.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLToastGroup.el) === undefined) {
   customElements.define(SLToastGroup.el, SLToastGroup);
 }
 

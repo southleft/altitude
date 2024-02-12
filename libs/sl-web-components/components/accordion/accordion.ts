@@ -90,7 +90,7 @@ export class SLAccordion extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLAccordion.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLAccordion.el) === undefined) {
   customElements.define(SLAccordion.el, SLAccordion);
 }
 

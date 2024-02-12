@@ -30,7 +30,7 @@ export class SLPopover extends SLElement {
       [SLIconClose.el, SLIconClose],
       [SLFocusTrap.el, SLFocusTrap]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private headingEl = unsafeStatic(this.elementMap.get(SLHeading.el));
@@ -365,7 +365,7 @@ export class SLPopover extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLPopover.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLPopover.el) === undefined) {
   customElements.define(SLPopover.el, SLPopover);
 }
 

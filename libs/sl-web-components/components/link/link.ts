@@ -112,7 +112,7 @@ export class SLLink extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLLink.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLLink.el) === undefined) {
   customElements.define(SLLink.el, SLLink);
 }
 

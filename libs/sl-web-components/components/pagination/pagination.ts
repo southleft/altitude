@@ -48,7 +48,7 @@ export class SLPagination extends SLElement {
       [SLIconDotsHorizontal.el, SLIconDotsHorizontal],
       [SLContextualMenu.el, SLContextualMenu]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private selectFieldEl = unsafeStatic(this.elementMap.get(SLSelect.el));
@@ -524,7 +524,7 @@ export class SLPagination extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLPagination.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLPagination.el) === undefined) {
   customElements.define(SLPagination.el, SLPagination);
 }
 

@@ -58,7 +58,7 @@ export class SLIconAttachment extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIconAttachment.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLIconAttachment.el) === undefined) {
   customElements.define(SLIconAttachment.el, SLIconAttachment);
 }
 

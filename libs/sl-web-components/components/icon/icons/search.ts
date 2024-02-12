@@ -58,7 +58,7 @@ export class SLIconSearch extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIconSearch.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLIconSearch.el) === undefined) {
   customElements.define(SLIconSearch.el, SLIconSearch);
 }
 

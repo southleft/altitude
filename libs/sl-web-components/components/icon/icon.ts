@@ -59,7 +59,7 @@ export class SLIcon extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIcon.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLIcon.el) === undefined) {
   customElements.define(SLIcon.el, SLIcon);
 }
 

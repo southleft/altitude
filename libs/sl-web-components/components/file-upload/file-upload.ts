@@ -60,7 +60,7 @@ export class SLFileUpload extends SLElement {
       [SLProgress.el, SLProgress],
       [SLButton.el, SLButton]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private fieldNoteEl = unsafeStatic(this.elementMap.get(SLFieldNote.el));
@@ -515,7 +515,7 @@ export class SLFileUpload extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLFileUpload.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLFileUpload.el) === undefined) {
   customElements.define(SLFileUpload.el, SLFileUpload);
 }
 

@@ -25,7 +25,7 @@ export class SLRange extends SLElement {
 
   private elementMap = register({
     elements: [[SLFieldNote.el, SLFieldNote]],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private fieldNoteEl = unsafeStatic(this.elementMap.get(SLFieldNote.el));
@@ -834,7 +834,7 @@ export class SLRange extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLRange.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLRange.el) === undefined) {
   customElements.define(SLRange.el, SLRange);
 }
 

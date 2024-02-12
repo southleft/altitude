@@ -58,7 +58,7 @@ export class SLIconEmoji extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIconEmoji.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLIconEmoji.el) === undefined) {
   customElements.define(SLIconEmoji.el, SLIconEmoji);
 }
 

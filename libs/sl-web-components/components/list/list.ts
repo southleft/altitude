@@ -17,7 +17,7 @@ export class SLList extends SLElement {
 
   private elementMap = register({
     elements: [[SLListItem.el, SLListItem]],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   static get styles() {
@@ -197,7 +197,7 @@ export class SLList extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLList.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLList.el) === undefined) {
   customElements.define(SLList.el, SLList);
 }
 

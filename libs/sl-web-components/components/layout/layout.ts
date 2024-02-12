@@ -51,7 +51,7 @@ export class SLLayout extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLLayout.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLLayout.el) === undefined) {
   customElements.define(SLLayout.el, SLLayout);
 }
 

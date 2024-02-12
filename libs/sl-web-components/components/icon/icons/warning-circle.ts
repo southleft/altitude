@@ -58,7 +58,7 @@ export class SLIconWarningCircle extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIconWarningCircle.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLIconWarningCircle.el) === undefined) {
   customElements.define(SLIconWarningCircle.el, SLIconWarningCircle);
 }
 

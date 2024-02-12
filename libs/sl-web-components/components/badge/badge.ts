@@ -81,7 +81,7 @@ export class SLBadge extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLBadge.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLBadge.el) === undefined) {
   customElements.define(SLBadge.el, SLBadge);
 }
 

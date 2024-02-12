@@ -31,7 +31,7 @@ export class SLDatePicker extends SLElement {
       [SLIconCalendar.el, SLIconCalendar],
       [SLIconChevronDown.el, SLIconChevronDown]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private inputEl = unsafeStatic(this.elementMap.get(SLInput.el));
@@ -452,7 +452,7 @@ export class SLDatePicker extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLDatePicker.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLDatePicker.el) === undefined) {
   customElements.define(SLDatePicker.el, SLDatePicker);
 }
 

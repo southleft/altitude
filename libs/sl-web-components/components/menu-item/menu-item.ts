@@ -25,7 +25,7 @@ export class SLMenuItem extends SLElement {
       [SLButton.el, SLButton],
       [SLIconChevronDown.el, SLIconChevronDown]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private linkEl = unsafeStatic(this.elementMap.get(SLLink.el));
@@ -358,7 +358,7 @@ export class SLMenuItem extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLMenuItem.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLMenuItem.el) === undefined) {
   customElements.define(SLMenuItem.el, SLMenuItem);
 }
 

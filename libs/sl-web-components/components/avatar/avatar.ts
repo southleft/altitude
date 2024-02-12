@@ -19,7 +19,7 @@ export class SLAvatar extends SLElement {
 
   private elementMap = register({
     elements: [[SLBadge.el, SLBadge]],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private badgeEl = unsafeStatic(this.elementMap.get(SLBadge.el));
@@ -77,7 +77,7 @@ export class SLAvatar extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLAvatar.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLAvatar.el) === undefined) {
   customElements.define(SLAvatar.el, SLAvatar);
 }
 

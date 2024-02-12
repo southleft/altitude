@@ -58,7 +58,7 @@ export class SLIconChevronUp extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIconChevronUp.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLIconChevronUp.el) === undefined) {
   customElements.define(SLIconChevronUp.el, SLIconChevronUp);
 }
 

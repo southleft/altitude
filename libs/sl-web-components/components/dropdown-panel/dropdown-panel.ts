@@ -63,7 +63,7 @@ export class SLDropdownPanel extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLDropdownPanel.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLDropdownPanel.el) === undefined) {
   customElements.define(SLDropdownPanel.el, SLDropdownPanel);
 }
 

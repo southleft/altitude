@@ -91,7 +91,7 @@ export class SLBreadcrumbsItem extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLBreadcrumbsItem.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLBreadcrumbsItem.el) === undefined) {
   customElements.define(SLBreadcrumbsItem.el, SLBreadcrumbsItem);
 }
 

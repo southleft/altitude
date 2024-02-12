@@ -23,7 +23,7 @@ export class SLDrawer extends SLElement {
       [SLButton.el, SLButton],
       [SLIconClose.el, SLIconClose]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private buttonEl = unsafeStatic(this.elementMap.get(SLButton.el));
@@ -336,7 +336,7 @@ export class SLDrawer extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLDrawer.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLDrawer.el) === undefined) {
   customElements.define(SLDrawer.el, SLDrawer);
 }
 

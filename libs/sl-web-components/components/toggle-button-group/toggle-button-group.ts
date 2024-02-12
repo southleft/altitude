@@ -124,7 +124,7 @@ export class SLToggleButtonGroup extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLToggleButtonGroup.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLToggleButtonGroup.el) === undefined) {
   customElements.define(SLToggleButtonGroup.el, SLToggleButtonGroup);
 }
 

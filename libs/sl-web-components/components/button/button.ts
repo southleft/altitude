@@ -201,7 +201,7 @@ export class SLButton extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLButton.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLButton.el) === undefined) {
   customElements.define(SLButton.el, SLButton);
 }
 

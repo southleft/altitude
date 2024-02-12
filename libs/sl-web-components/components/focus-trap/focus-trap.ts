@@ -133,7 +133,7 @@ export class SLFocusTrap extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLFocusTrap.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLFocusTrap.el) === undefined) {
   customElements.define(SLFocusTrap.el, SLFocusTrap);
 }
 

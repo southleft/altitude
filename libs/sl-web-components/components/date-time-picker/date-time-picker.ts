@@ -38,7 +38,7 @@ export class SLDateTimePicker extends SLElement {
       [SLButtonGroup.el, SLButtonGroup],
       [SLButton.el, SLButton]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private inputEl = unsafeStatic(this.elementMap.get(SLInput.el));
@@ -713,7 +713,7 @@ export class SLDateTimePicker extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLDateTimePicker.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLDateTimePicker.el) === undefined) {
   customElements.define(SLDateTimePicker.el, SLDateTimePicker);
 }
 

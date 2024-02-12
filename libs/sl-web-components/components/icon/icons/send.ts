@@ -58,7 +58,7 @@ export class SLIconSend extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIconSend.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLIconSend.el) === undefined) {
   customElements.define(SLIconSend.el, SLIconSend);
 }
 

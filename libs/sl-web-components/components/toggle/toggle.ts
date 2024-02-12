@@ -118,7 +118,7 @@ export class SLToggle extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLToggle.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLToggle.el) === undefined) {
   customElements.define(SLToggle.el, SLToggle);
 }
 

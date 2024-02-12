@@ -58,7 +58,7 @@ export class SLIconMinus extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIconMinus.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLIconMinus.el) === undefined) {
   customElements.define(SLIconMinus.el, SLIconMinus);
 }
 

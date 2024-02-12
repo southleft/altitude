@@ -22,7 +22,7 @@ export class SLContextualMenu extends SLElement {
     elements: [
       [SLFocusTrap.el, SLFocusTrap]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private focusTrapEl = unsafeStatic(this.elementMap.get(SLFocusTrap.el));
@@ -295,7 +295,7 @@ export class SLContextualMenu extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLContextualMenu.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLContextualMenu.el) === undefined) {
   customElements.define(SLContextualMenu.el, SLContextualMenu);
 }
 

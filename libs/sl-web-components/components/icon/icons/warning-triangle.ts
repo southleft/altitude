@@ -58,7 +58,7 @@ export class SLIconWarningTriangle extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIconWarningTriangle.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLIconWarningTriangle.el) === undefined) {
   customElements.define(SLIconWarningTriangle.el, SLIconWarningTriangle);
 }
 

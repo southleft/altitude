@@ -34,7 +34,7 @@ export class SLToast extends SLElement {
       [SLIconWarningTriangle.el, SLIconWarningTriangle],
       [SLProgress.el, SLProgress]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private buttonEl = unsafeStatic(this.elementMap.get(SLButton.el));
@@ -246,7 +246,7 @@ export class SLToast extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLToast.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLToast.el) === undefined) {
   customElements.define(SLToast.el, SLToast);
 }
 

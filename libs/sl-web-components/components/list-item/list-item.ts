@@ -26,7 +26,7 @@ export class SLListItem extends SLElement {
       [SLIconChevronRight.el, SLIconChevronRight],
       [SLListItem.el, SLListItem]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private dropdownPanelEl = unsafeStatic(this.elementMap.get(SLDropdownPanel.el));
@@ -463,7 +463,7 @@ export class SLListItem extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLListItem.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLListItem.el) === undefined) {
   customElements.define(SLListItem.el, SLListItem);
 }
 

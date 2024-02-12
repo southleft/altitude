@@ -592,7 +592,7 @@ export class SLMenu extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLMenu.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLMenu.el) === undefined) {
   customElements.define(SLMenu.el, SLMenu);
 }
 

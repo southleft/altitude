@@ -70,7 +70,7 @@ export class SLSkeleton extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLSkeleton.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLSkeleton.el) === undefined) {
   customElements.define(SLSkeleton.el, SLSkeleton);
 }
 

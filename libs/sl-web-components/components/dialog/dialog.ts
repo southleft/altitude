@@ -29,7 +29,7 @@ export class SLDialog extends SLElement {
       [SLIconClose.el, SLIconClose],
       [SLFocusTrap.el, SLFocusTrap]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private headingEl = unsafeStatic(this.elementMap.get(SLHeading.el));
@@ -374,7 +374,7 @@ export class SLDialog extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLDialog.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLDialog.el) === undefined) {
   customElements.define(SLDialog.el, SLDialog);
 }
 

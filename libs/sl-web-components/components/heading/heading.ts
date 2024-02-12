@@ -77,7 +77,7 @@ export class SLHeading extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLHeading.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLHeading.el) === undefined) {
   customElements.define(SLHeading.el, SLHeading);
 }
 

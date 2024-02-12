@@ -26,7 +26,7 @@ export class SL{{pascalCase name}} extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SL{{pascalCase name}}.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SL{{pascalCase name}}.el) === undefined) {
   customElements.define(SL{{pascalCase name}}.el, SL{{pascalCase name}});
 }
 

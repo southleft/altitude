@@ -95,7 +95,7 @@ export class SLTab extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLTab.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLTab.el) === undefined) {
   customElements.define(SLTab.el, SLTab);
 }
 

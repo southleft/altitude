@@ -311,7 +311,7 @@ export class SLTimeSelectorList extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLTimeSelectorList.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLTimeSelectorList.el) === undefined) {
   customElements.define(SLTimeSelectorList.el, SLTimeSelectorList);
 }
 

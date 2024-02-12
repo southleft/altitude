@@ -12,7 +12,7 @@ setCustomElementsManifest(customElements);
  * MFE's
  * - Setting auto registry to true to allow storybook to automatically register components
  */
-globalThis.enAutoRegistry = true;
+globalThis.slAutoRegistry = true;
 
 /*
  * Head styles

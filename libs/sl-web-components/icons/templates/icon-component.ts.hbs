@@ -58,7 +58,7 @@ export class SLIcon{{pascalCase name}} extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIcon{{pascalCase name}}.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLIcon{{pascalCase name}}.el) === undefined) {
   customElements.define(SLIcon{{pascalCase name}}.el, SLIcon{{pascalCase name}});
 }
 

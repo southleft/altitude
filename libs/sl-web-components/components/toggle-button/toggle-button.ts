@@ -21,7 +21,7 @@ export class SLToggleButton extends SLElement {
       [SLPopover.el, SLPopover],
       [SLMenu.el, SLMenu]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   static get styles() {
@@ -282,7 +282,7 @@ export class SLToggleButton extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLToggleButton.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLToggleButton.el) === undefined) {
   customElements.define(SLToggleButton.el, SLToggleButton);
 }
 

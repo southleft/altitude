@@ -25,7 +25,7 @@ export class SLLayoutContainer extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLLayoutContainer.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLLayoutContainer.el) === undefined) {
   customElements.define(SLLayoutContainer.el, SLLayoutContainer);
 }
 

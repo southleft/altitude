@@ -23,7 +23,7 @@ export class SLTextarea extends SLElement {
 
   private elementMap = register({
     elements: [[SLFieldNote.el, SLFieldNote]],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private fieldNoteEl = unsafeStatic(this.elementMap.get(SLFieldNote.el));
@@ -357,7 +357,7 @@ export class SLTextarea extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLTextarea.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLTextarea.el) === undefined) {
   customElements.define(SLTextarea.el, SLTextarea);
 }
 

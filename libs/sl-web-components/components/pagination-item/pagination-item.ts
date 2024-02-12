@@ -62,7 +62,7 @@ export class SLPaginationItem extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLPaginationItem.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLPaginationItem.el) === undefined) {
   customElements.define(SLPaginationItem.el, SLPaginationItem);
 }
 

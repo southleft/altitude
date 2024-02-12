@@ -21,7 +21,7 @@ export class SLStepperItem extends SLElement {
 
   private elementMap = register({
     elements: [[SLIconCheck.el, SLIconCheck]],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private iconCheckEl = unsafeStatic(this.elementMap.get(SLIconCheck.el));
@@ -117,7 +117,7 @@ export class SLStepperItem extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLStepperItem.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLStepperItem.el) === undefined) {
   customElements.define(SLStepperItem.el, SLStepperItem);
 }
 

@@ -40,7 +40,7 @@ export class SLSearch extends SLElement {
       [SLList.el, SLList],
       [SLListItem.el, SLListItem]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private inputEl = unsafeStatic(this.elementMap.get(SLInput.el));
@@ -722,7 +722,7 @@ export class SLSearch extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLSearch.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLSearch.el) === undefined) {
   customElements.define(SLSearch.el, SLSearch);
 }
 

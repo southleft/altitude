@@ -86,7 +86,7 @@ export class SLStepper extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLStepper.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLStepper.el) === undefined) {
   customElements.define(SLStepper.el, SLStepper);
 }
 

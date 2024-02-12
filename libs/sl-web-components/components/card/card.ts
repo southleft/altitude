@@ -61,7 +61,7 @@ export class SLCard extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLCard.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLCard.el) === undefined) {
   customElements.define(SLCard.el, SLCard);
 }
 

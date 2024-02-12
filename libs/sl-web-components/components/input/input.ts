@@ -23,7 +23,7 @@ export class SLInput extends SLElement {
 
   private elementMap = register({
     elements: [[SLFieldNote.el, SLFieldNote]],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private fieldNoteEl = unsafeStatic(this.elementMap.get(SLFieldNote.el));
@@ -396,7 +396,7 @@ export class SLInput extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLInput.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLInput.el) === undefined) {
   customElements.define(SLInput.el, SLInput);
 }
 

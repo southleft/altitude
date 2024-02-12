@@ -58,7 +58,7 @@ export class SLIconHelp extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIconHelp.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLIconHelp.el) === undefined) {
   customElements.define(SLIconHelp.el, SLIconHelp);
 }
 

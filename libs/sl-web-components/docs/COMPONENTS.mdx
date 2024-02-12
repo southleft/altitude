@@ -54,18 +54,18 @@ Next, import any needed components from the Web Components component library int
 
 ```js
 // Set once at the application level
-window.enAutoRegistry = true;
+window.slAutoRegistry = true;
 ```
 
 ```js
 // Now in your application you can import the component and it will be auto registered
-import 'sl-web-components/dist/sl/components/button/button';
+import 'sl-web-components/dist/components/button/button';
 ```
 
 2. **Manual registering components method** - This method is necessary when using multiple versions of the Web Components given the global scope of custom elements registry. You'll need to use named imports to import the component and then manually register the component(s) using the `register` function available in the package. This method is not recommended unless you are using multiple versions of the Web Components in your application such as needed with a Micro Frontend Architecture.
 
 ```js
-import { SLButton } from 'sl-web-components/dist/sl/components/button/button';
+import { SLButton } from 'sl-web-components/dist/components/button/button';
 import { SLIconChevronRight } from 'sl-web-components/dist/components/icon/icons/chevron-right';
 import register from 'sl-web-components/dist/directives/register';
 
@@ -125,7 +125,7 @@ import 'sl-web-components/dist/css/head.css';
 2. **Using the scopeStyles function** - This method is recommended when using multiple versions of the Web Components in your application such as needed with a Micro Frontend Architecture. This approach will scope the CSS to the element selector provided.
 
 ```js
-import { scopeStyles } from 'sl-web-components/dist/sl/directives/scope-styles';
+import { scopeStyles } from 'sl-web-components/dist/directives/scope-styles';
 
 ...
 

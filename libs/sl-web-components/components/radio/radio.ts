@@ -24,7 +24,7 @@ export class SLRadio extends SLElement {
     elements: [
       [SLFieldNote.el, SLFieldNote]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private fieldNoteEl = unsafeStatic(this.elementMap.get(SLFieldNote.el));
@@ -205,7 +205,7 @@ export class SLRadio extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLRadio.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLRadio.el) === undefined) {
   customElements.define(SLRadio.el, SLRadio);
 }
 

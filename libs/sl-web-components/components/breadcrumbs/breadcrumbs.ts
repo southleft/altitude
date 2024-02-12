@@ -30,7 +30,7 @@ export class SLBreadcrumbs extends SLElement {
       [SLButton.el, SLButton],
       [SLIconDotsHorizontal.el, SLIconDotsHorizontal]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private breadcrumbsItemEl = unsafeStatic(this.elementMap.get(SLBreadcrumbsItem.el));
@@ -174,7 +174,7 @@ export class SLBreadcrumbs extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLBreadcrumbs.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLBreadcrumbs.el) === undefined) {
   customElements.define(SLBreadcrumbs.el, SLBreadcrumbs);
 }
 

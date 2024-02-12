@@ -31,7 +31,7 @@ export class SLAlert extends SLElement {
       [SLIconClose.el, SLIconClose],
       [SLButton.el, SLButton]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private iconDoneEl = unsafeStatic(this.elementMap.get(SLIconCheck.el));
@@ -219,7 +219,7 @@ export class SLAlert extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLAlert.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLAlert.el) === undefined) {
   customElements.define(SLAlert.el, SLAlert);
 }
 

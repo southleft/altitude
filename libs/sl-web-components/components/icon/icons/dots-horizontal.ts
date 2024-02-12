@@ -58,7 +58,7 @@ export class SLIconDotsHorizontal extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLIconDotsHorizontal.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLIconDotsHorizontal.el) === undefined) {
   customElements.define(SLIconDotsHorizontal.el, SLIconDotsHorizontal);
 }
 

@@ -20,7 +20,7 @@ export class SLAccordionPanel extends SLElement {
 
   private elementMap = register({
     elements: [[SLIconChevronDown.el, SLIconChevronDown]],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private iconChevronDownEl = unsafeStatic(this.elementMap.get(SLIconChevronDown.el));
@@ -167,7 +167,7 @@ export class SLAccordionPanel extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLAccordionPanel.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLAccordionPanel.el) === undefined) {
   customElements.define(SLAccordionPanel.el, SLAccordionPanel);
 }
 

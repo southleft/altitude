@@ -37,7 +37,7 @@ export class SLTextPassage extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLTextPassage.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLTextPassage.el) === undefined) {
   customElements.define(SLTextPassage.el, SLTextPassage);
 }
 

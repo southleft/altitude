@@ -44,7 +44,7 @@ export class SLFieldNote extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLFieldNote.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLFieldNote.el) === undefined) {
   customElements.define(SLFieldNote.el, SLFieldNote);
 }
 

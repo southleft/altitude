@@ -37,7 +37,7 @@ export class SLSelect extends SLElement {
       [SLListItem.el, SLListItem],
       [SLCheckbox.el, SLCheckbox]
     ],
-    suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
+    suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
   private dropdownPanelEl = unsafeStatic(this.elementMap.get(SLDropdownPanel.el));
@@ -482,7 +482,7 @@ export class SLSelect extends SLElement {
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLSelect.el) === undefined) {
+if ((globalThis as any).slAutoRegistry === true && customElements.get(SLSelect.el) === undefined) {
   customElements.define(SLSelect.el, SLSelect);
 }
 
