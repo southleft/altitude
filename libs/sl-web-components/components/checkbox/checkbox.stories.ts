@@ -1,24 +1,31 @@
+import { expect, userEvent, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
-import '../checkbox-item/checkbox-item';
 import '../field-note/field-note';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
 import './checkbox';
+import { SLCheckbox } from './checkbox';
 
 export default {
-  title: 'Molecules/Checkbox',
+  title: 'Atoms/Checkbox',
   component: 'sl-checkbox',
   tags: [ 'autodocs' ],
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['onCheckboxItemChange']
-    }
+      handles: ['onCheckboxChange']
+    },
   },
   decorators: [ withActions ],
   argTypes: {
+    isChecked: {
+      control: 'boolean'
+    },
+    isIndeterminate: {
+      control: 'boolean'
+    },
     isError: {
       control: 'boolean'
     },
@@ -28,10 +35,13 @@ export default {
     isRequired: {
       control: 'boolean'
     },
-    hideLegend: {
+    hideLabel: {
       control: 'boolean'
     },
-    label: {
+    name: {
+      control: 'text'
+    },
+    value: {
       control: 'text'
     },
     errorNote: {
@@ -46,75 +56,140 @@ export default {
     ariaDescribedBy: {
       control: 'text'
     },
-    variant: {
-      control: 'radio',
-      options: ['default', 'horizontal']
-    }
   },
   args: {
-    label: 'Checkbox legend label',
-    fieldNote: 'This is a field note.'
-  }
+    name: 'checkbox-name',
+    value: 'checkbox-value',
+    fieldNote: 'This is a field note.',
+  },
 };
 
-const Template = (args) =>
-  html` <sl-checkbox ${spread(args)} data-testid="checkbox">
-    <sl-checkbox-item name="checkbox-name" value="checkbox-value-1">Checkbox item 1</sl-checkbox-item>
-    <sl-checkbox-item name="checkbox-name" value="checkbox-value-2">Checkbox item 2</sl-checkbox-item>
-    <sl-checkbox-item name="checkbox-name" value="checkbox-value-3">Checkbox item 3</sl-checkbox-item>
-    <sl-checkbox-item name="checkbox-name" value="checkbox-value-4" ?isDisabled=${true}>Checkbox item 4</sl-checkbox-item>
+const Template = (args) => html`
+  <sl-checkbox ${spread(args)} data-testid="checkbox">
+    Checkbox
   </sl-checkbox>`;
 
 export const Default = Template.bind({});
 Default.args = {};
+
+export const Checked = Template.bind({});
+Checked.args = {
+  isChecked: true,
+};
+
+export const Indeterminate = Template.bind({});
+Indeterminate.args = {
+  isIndeterminate: true,
+};
 
 export const Error = Template.bind({});
 Error.args = {
   isError: true,
   isRequired: true,
   fieldNote: false,
-  errorNote: 'This is an error note.'
+  errorNote: 'This is an error note.',
 };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-  isDisabled: true
+  isDisabled: true,
 };
 
-export const HiddenLegend = Template.bind({});
-HiddenLegend.args = {
-  hideLegend: true
+export const DisabledChecked = Template.bind({});
+DisabledChecked.args = {
+  isDisabled: true,
+  isChecked: true,
 };
 
-export const Horizontal = Template.bind({});
-Horizontal.args = {
-  variant: 'horizontal'
+export const DisabledIndeterminate = Template.bind({});
+DisabledIndeterminate.args = {
+  isDisabled: true,
+  isIndeterminate: true,
 };
 
-const TemplateSlottedFieldNote = (args) =>
-  html` <sl-checkbox ${spread(args)}>
-    <sl-checkbox-item name="checkbox-name" value="checkbox-value-1">Checkbox item 1</sl-checkbox-item>
-    <sl-checkbox-item name="checkbox-name" value="checkbox-value-2">Checkbox item 2</sl-checkbox-item>
-    <sl-checkbox-item name="checkbox-name" value="checkbox-value-3">Checkbox item 3</sl-checkbox-item>
-    <sl-checkbox-item name="checkbox-name" value="checkbox-value-4" ?isDisabled=${true}>Checkbox item 4</sl-checkbox-item>
+export const DisabledError = Template.bind({});
+DisabledError.args = {
+  isError: true,
+  isDisabled: true,
+  isRequired: true,
+  fieldNote: false,
+  errorNote: 'This is an error note.',
+};
+
+export const HiddenLabel = Template.bind({});
+HiddenLabel.args = {
+  hideLabel: true,
+  fieldNote: false,
+};
+
+const TemplateSlottedFieldNote = (args) => html`
+  <sl-checkbox ${spread(args)}>
+    Checkbox
     <sl-field-note slot="field-note"><sl-icon-help></sl-icon-help>This is a field note.</sl-field-note>
   </sl-checkbox>`;
 
 export const SlottedFieldNote = TemplateSlottedFieldNote.bind({});
-SlottedFieldNote.args = {};
+SlottedFieldNote.args = {
+};
 
-const TemplateSlottedErrorNote = (args) =>
-  html` <sl-checkbox ${spread(args)}>
-    <sl-checkbox-item name="checkbox-name" value="checkbox-value-1">Checkbox item 1</sl-checkbox-item>
-    <sl-checkbox-item name="checkbox-name" value="checkbox-value-2">Checkbox item 2</sl-checkbox-item>
-    <sl-checkbox-item name="checkbox-name" value="checkbox-value-3">Checkbox item 3</sl-checkbox-item>
-    <sl-checkbox-item name="checkbox-name" value="checkbox-value-4" ?isDisabled=${true}>Checkbox item 4</sl-checkbox-item>
+const TemplateSlottedErrorNote = (args) => html`
+  <sl-checkbox ${spread(args)}>
+    Checkbox
     <sl-field-note slot="error"><sl-icon-warning-circle></sl-icon-warning-circle>This is an error note.</sl-field-note>
   </sl-checkbox>`;
 
 export const SlottedErrorNote = TemplateSlottedErrorNote.bind({});
 SlottedErrorNote.args = {
   isError: true,
-  isRequired: true,
-  fieldNote: false
+  fieldNote: false,
 };
+
+/*------------------------------------*\
+  #STORYBOOK TESTS
+\*------------------------------------*/
+
+Checked.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  const checkboxItem = canvas.queryByTestId('checkbox') as any;
+  const checkboxItemInput = checkboxItem?.shadowRoot?.querySelector('input') as HTMLInputElement;
+
+  // Make assertions
+  expect(checkboxItem).toBeInTheDocument();
+
+  // Simulate a click event
+  await userEvent.click(checkboxItemInput);
+
+  // Check that the checkbox is checked
+  expect(checkboxItem.isChecked).toBe(false);
+
+  // Simulate a keyboard event (pressing Enter key)
+  await userEvent.keyboard('{Enter}');
+
+  // Check that the checkbox is no longer checked
+  expect(checkboxItem.isChecked).toBe(true);
+
+  // Remove focus from the input element
+  checkboxItemInput.blur();
+};
+
+Indeterminate.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  const checkboxItem = canvas.queryByTestId<SLCheckbox>('checkbox')?.shadowRoot?.querySelector('.sl-c-checkbox');
+  const checkboxItemInput = checkboxItem?.querySelector('input') as HTMLInputElement ;
+
+  // Check that it starts as indeterminate
+  expect(checkboxItem).toHaveClass('sl-is-indeterminate');
+
+  // Simulate a click event
+  await userEvent.click(checkboxItemInput);
+
+  // Check that it's no longer indeterminate
+  expect(checkboxItem).not.toHaveClass('sl-is-indeterminate');
+
+  // Change the state of the checkbox back to isIndeterminate
+  canvas.queryByTestId<any>('checkbox').isIndeterminate = true;
+
+  // Remove focus from the input element
+  checkboxItemInput.blur();
+};
+

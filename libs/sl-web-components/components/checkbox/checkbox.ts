@@ -1,20 +1,19 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property, queryAssignedNodes } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import { nanoid } from 'nanoid';
 import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { SLElement } from '../SLElement';
-import { SLCheckboxItem } from '../checkbox-item/checkbox-item';
 import { SLFieldNote } from '../field-note/field-note';
 import styles from './checkbox.scss';
 
 /**
  * Component: sl-checkbox
  *
- * Checkbox lets a user select one or more items from a list, or turn an item on or off.
- * - **slot**: The component content, a set of checkbox items
+ * Checkbox is a singular checkbox that is used within the checkbox component.
+ * - **slot**: The component content that appears next to the checkbox
  * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
  * - **slot** "error": If content is slotted, it will display in place of the errorNote property
  */
@@ -31,6 +30,20 @@ export class SLCheckbox extends SLElement {
   static get styles() {
     return unsafeCSS(styles.toString());
   }
+
+  /**
+   * Checked attribute
+   * - Changes the component's treatment to represent an checked state
+   */
+  @property({ type: Boolean })
+  accessor isChecked: boolean;
+
+  /**
+   * Indeterminate state
+   * - Changes the component's treatment to represent an indeterminate state
+   */
+  @property({ type: Boolean })
+  accessor isIndeterminate: boolean;
 
   /**
    * Error state
@@ -54,18 +67,23 @@ export class SLCheckbox extends SLElement {
   accessor isRequired: boolean;
 
   /**
-   * Hide legend?
-   * - If true, hides the legend from displaying
+   * Hide label?
+   * - If true, hides the label from displaying
    */
   @property({ type: Boolean })
-  accessor hideLegend: boolean;
+  accessor hideLabel: boolean;
 
   /**
-   * Label
-   * - Displays inside the legend
+   * Name attribute
    */
   @property()
-  accessor label: string;
+  accessor name: string;
+
+  /**
+   * Value attribute
+   */
+  @property()
+  accessor value: string;
 
   /**
    *  Error message
@@ -96,22 +114,8 @@ export class SLCheckbox extends SLElement {
   accessor ariaDescribedBy: string;
 
   /**
-   * Variant
-   * - **default** Displays the checkbox items in a column
-   * - **horizontal** Displays the checkbox items in a row
-   */
-  @property()
-  accessor variant: 'horizontal';
-
-  /**
-   * Query all the checkbox-item's
-   */
-  @queryAssignedNodes({ flatten: true })
-  private accessor checkboxItems: Array<SLCheckboxItem>;
-
-  /**
    * Connected callback
-   * 1. Dynamically sets the fieldId and ariaDescribedBy for A11y
+   * - Dynamically sets the fieldId and ariaDescribedBy for A11y
    */
   connectedCallback() {
     super.connectedCallback();
@@ -123,36 +127,71 @@ export class SLCheckbox extends SLElement {
   }
 
   /**
-   * First updated lifecycle
-   * 1. If isRequired is true, set isRequired on all the checkbox items
-   * 2. If isDisabled is true, set isDisabled on all the checkbox items
+   * Handle on change events
+   * 1. Toggle the checked state
+   * 2. If isIndeterminate is true, then on change set it to false
+   * 3. Dispatch the custom event
    */
-  firstUpdated() {
-    this.checkboxItems.forEach((checkboxItems) => {
-      /* 1 */
-      if (this.isRequired) {
-        checkboxItems.isRequired = this.isRequired;
-      }
-      /* 2 */
-      if (this.isDisabled) {
-        checkboxItems.isDisabled = this.isDisabled;
+  handleOnChange() {
+    /* 1 */
+    this.isChecked = !this.isChecked;
+    /* 2 */
+    if (this.isIndeterminate === true) {
+      this.isIndeterminate = false;
+    }
+    /* 3 */
+    this.dispatch({
+      eventName: 'onCheckboxChange',
+      detailObj: {
+        checked: this.isChecked,
+        indeterminate: this.isIndeterminate,
+        value: this.value
       }
     });
   }
 
+  /**
+   * Handle on keydown events
+   * 1. If the Enter key is pressed, then check the checkbox and dispatch the custom event
+   */
+  handleOnKeydown(e: KeyboardEvent) {
+    if (e.code === 'Enter') {
+      this.handleOnChange();
+    }
+  }
+
   render() {
     const componentClassNames = this.componentClassNames('sl-c-checkbox', {
+      'sl-is-indeterminate': this.isIndeterminate === true,
       'sl-is-error': this.isError === true,
       'sl-is-disabled': this.isDisabled === true,
-      'sl-has-hidden-legend': this.hideLegend,
-      'sl-c-checkbox--horizontal': this.variant === 'horizontal'
+      'sl-has-hidden-label': this.hideLabel
     });
 
     return html`
-      <fieldset class="${componentClassNames}">
-        ${this.label && html` <legend class="sl-c-checkbox__legend" aria-describedby="${this.ariaDescribedBy}">${this.label}</legend> `}
-        <div class="sl-c-checkbox__list">
-          <slot></slot>
+      <div class="${componentClassNames}">
+        <div class="sl-c-checkbox__container">
+          <div class="sl-c-checkbox__checkbox">
+            <input
+              class="sl-c-checkbox__input"
+              type="checkbox"
+              id="${this.fieldId}"
+              name="${this.name}"
+              .value="${this.value}"
+              .checked="${this.isChecked}"
+              ?disabled="${this.isDisabled}"
+              ?required=${this.isRequired}
+              @change=${this.handleOnChange}
+              @keydown=${this.handleOnKeydown}
+              aria-describedby="${ifDefined(this.ariaDescribedBy)}"
+              tabindex="0"
+            />
+            <span class="sl-c-checkbox__custom-check"></span>
+            <span class="sl-c-checkbox__ripple"></span>
+          </div>
+          <label class="sl-c-checkbox__label" for="${this.fieldId}">
+            <slot></slot>
+          </label>
         </div>
         ${this.fieldNote || this.slotNotEmpty('field-note')
           ? html`
@@ -168,7 +207,7 @@ export class SLCheckbox extends SLElement {
               </slot>
             `
           : html``}
-      </fieldset>
+      </div>
     ` as TemplateResult<1>;
   }
 }

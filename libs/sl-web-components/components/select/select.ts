@@ -6,7 +6,7 @@ import { nanoid } from 'nanoid';
 import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { SLElement } from '../SLElement';
-import { SLCheckboxItem } from '../checkbox-item/checkbox-item';
+import { SLCheckbox } from '../checkbox/checkbox';
 import { SLDropdownPanel } from '../dropdown-panel/dropdown-panel';
 import { SLFieldNote } from '../field-note/field-note';
 import { SLIconChevronDown } from '../icon/icons/chevron-down';
@@ -35,7 +35,7 @@ export class SLSelect extends SLElement {
       [SLInput.el, SLInput],
       [SLSearch.el, SLSearch],
       [SLListItem.el, SLListItem],
-      [SLCheckboxItem.el, SLCheckboxItem]
+      [SLCheckbox.el, SLCheckbox]
     ],
     suffix: (globalThis as any).enAutoRegistry === true ? '' : PackageJson.version
   });

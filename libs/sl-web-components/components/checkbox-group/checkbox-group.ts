@@ -1,24 +1,25 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, queryAssignedNodes } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import { nanoid } from 'nanoid';
 import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { SLElement } from '../SLElement';
+import { SLCheckbox } from '../checkbox/checkbox';
 import { SLFieldNote } from '../field-note/field-note';
-import styles from './checkbox-item.scss';
+import styles from './checkbox-group.scss';
 
 /**
- * Component: sl-checkbox-item
+ * Component: sl-checkbox-group
  *
- * Checkbox Item is a singular checkbox that is used within the checkbox component.
- * - **slot**: The component content that appears next to the checkbox
+ * Checkbox group lets a user select one or more items from a list, or turn an item on or off.
+ * - **slot**: The component content, a set of checkbox items
  * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
  * - **slot** "error": If content is slotted, it will display in place of the errorNote property
  */
-export class SLCheckboxItem extends SLElement {
-  static el = 'sl-checkbox-item';
+export class SLCheckboxGroup extends SLElement {
+  static el = 'sl-checkbox-group';
 
   private elementMap = register({
     elements: [[SLFieldNote.el, SLFieldNote]],
@@ -30,20 +31,6 @@ export class SLCheckboxItem extends SLElement {
   static get styles() {
     return unsafeCSS(styles.toString());
   }
-
-  /**
-   * Checked attribute
-   * - Changes the component's treatment to represent an checked state
-   */
-  @property({ type: Boolean })
-  accessor isChecked: boolean;
-
-  /**
-   * Indeterminate state
-   * - Changes the component's treatment to represent an indeterminate state
-   */
-  @property({ type: Boolean })
-  accessor isIndeterminate: boolean;
 
   /**
    * Error state
@@ -67,23 +54,18 @@ export class SLCheckboxItem extends SLElement {
   accessor isRequired: boolean;
 
   /**
-   * Hide label?
-   * - If true, hides the label from displaying
+   * Hide legend?
+   * - If true, hides the legend from displaying
    */
   @property({ type: Boolean })
-  accessor hideLabel: boolean;
+  accessor hideLegend: boolean;
 
   /**
-   * Name attribute
+   * Label
+   * - Displays inside the legend
    */
   @property()
-  accessor name: string;
-
-  /**
-   * Value attribute
-   */
-  @property()
-  accessor value: string;
+  accessor label: string;
 
   /**
    *  Error message
@@ -114,8 +96,22 @@ export class SLCheckboxItem extends SLElement {
   accessor ariaDescribedBy: string;
 
   /**
+   * Variant
+   * - **default** Displays the checkbox items in a column
+   * - **horizontal** Displays the checkbox items in a row
+   */
+  @property()
+  accessor variant: 'horizontal';
+
+  /**
+   * Query all the checkbox's
+   */
+  @queryAssignedNodes({ flatten: true })
+  private accessor checkboxItems: Array<SLCheckbox>;
+
+  /**
    * Connected callback
-   * - Dynamically sets the fieldId and ariaDescribedBy for A11y
+   * 1. Dynamically sets the fieldId and ariaDescribedBy for A11y
    */
   connectedCallback() {
     super.connectedCallback();
@@ -127,71 +123,36 @@ export class SLCheckboxItem extends SLElement {
   }
 
   /**
-   * Handle on change events
-   * 1. Toggle the checked state
-   * 2. If isIndeterminate is true, then on change set it to false
-   * 3. Dispatch the custom event
+   * First updated lifecycle
+   * 1. If isRequired is true, set isRequired on all the checkbox items
+   * 2. If isDisabled is true, set isDisabled on all the checkbox items
    */
-  handleOnChange() {
-    /* 1 */
-    this.isChecked = !this.isChecked;
-    /* 2 */
-    if (this.isIndeterminate === true) {
-      this.isIndeterminate = false;
-    }
-    /* 3 */
-    this.dispatch({
-      eventName: 'onCheckboxItemChange',
-      detailObj: {
-        checked: this.isChecked,
-        indeterminate: this.isIndeterminate,
-        value: this.value
+  firstUpdated() {
+    this.checkboxItems.forEach((checkboxItems) => {
+      /* 1 */
+      if (this.isRequired) {
+        checkboxItems.isRequired = this.isRequired;
+      }
+      /* 2 */
+      if (this.isDisabled) {
+        checkboxItems.isDisabled = this.isDisabled;
       }
     });
   }
 
-  /**
-   * Handle on keydown events
-   * 1. If the Enter key is pressed, then check the checkbox and dispatch the custom event
-   */
-  handleOnKeydown(e: KeyboardEvent) {
-    if (e.code === 'Enter') {
-      this.handleOnChange();
-    }
-  }
-
   render() {
-    const componentClassNames = this.componentClassNames('sl-c-checkbox-item', {
-      'sl-is-indeterminate': this.isIndeterminate === true,
+    const componentClassNames = this.componentClassNames('sl-c-checkbox-group', {
       'sl-is-error': this.isError === true,
       'sl-is-disabled': this.isDisabled === true,
-      'sl-has-hidden-label': this.hideLabel
+      'sl-has-hidden-legend': this.hideLegend,
+      'sl-c-checkbox-group--horizontal': this.variant === 'horizontal'
     });
 
     return html`
-      <div class="${componentClassNames}">
-        <div class="sl-c-checkbox-item__container">
-          <div class="sl-c-checkbox-item__checkbox">
-            <input
-              class="sl-c-checkbox-item__input"
-              type="checkbox"
-              id="${this.fieldId}"
-              name="${this.name}"
-              .value="${this.value}"
-              .checked="${this.isChecked}"
-              ?disabled="${this.isDisabled}"
-              ?required=${this.isRequired}
-              @change=${this.handleOnChange}
-              @keydown=${this.handleOnKeydown}
-              aria-describedby="${ifDefined(this.ariaDescribedBy)}"
-              tabindex="0"
-            />
-            <span class="sl-c-checkbox-item__custom-check"></span>
-            <span class="sl-c-checkbox-item__ripple"></span>
-          </div>
-          <label class="sl-c-checkbox-item__label" for="${this.fieldId}">
-            <slot></slot>
-          </label>
+      <fieldset class="${componentClassNames}">
+        ${this.label && html` <legend class="sl-c-checkbox-group__legend" aria-describedby="${this.ariaDescribedBy}">${this.label}</legend> `}
+        <div class="sl-c-checkbox-group__list">
+          <slot></slot>
         </div>
         ${this.fieldNote || this.slotNotEmpty('field-note')
           ? html`
@@ -207,17 +168,17 @@ export class SLCheckboxItem extends SLElement {
               </slot>
             `
           : html``}
-      </div>
+      </fieldset>
     ` as TemplateResult<1>;
   }
 }
 
-if ((globalThis as any).enAutoRegistry === true && customElements.get(SLCheckboxItem.el) === undefined) {
-  customElements.define(SLCheckboxItem.el, SLCheckboxItem);
+if ((globalThis as any).enAutoRegistry === true && customElements.get(SLCheckboxGroup.el) === undefined) {
+  customElements.define(SLCheckboxGroup.el, SLCheckboxGroup);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sl-checkbox-item': SLCheckboxItem;
+    'sl-checkbox-group': SLCheckboxGroup;
   }
 }

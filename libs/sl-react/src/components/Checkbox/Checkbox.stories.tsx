@@ -1,17 +1,22 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLCheckbox, SLCheckboxItem, SLFieldNote, SLIconWarningCircle, SLIconHelp } from '../..';
+import { SLCheckbox, SLFieldNote, SLIconWarningCircle, SLIconHelp } from '../..';
 
 export default {
-  title: 'Molecules/Checkbox',
+  title: 'Atoms/Checkbox',
   component: SLCheckbox,
-  subcomponents: { SLCheckboxItem },
   parameters: {
     status: { type: 'beta' },
     actions: {
-      handles: ['onCheckboxItemChange']
+      handles: ['onCheckboxChange']
     },
   },
   argTypes: {
+    isChecked: {
+      control: 'boolean'
+    },
+    isIndeterminate: {
+      control: 'boolean'
+    },
     isError: {
       control: 'boolean'
     },
@@ -21,10 +26,13 @@ export default {
     isRequired: {
       control: 'boolean'
     },
-    hideLegend: {
+    hideLabel: {
       control: 'boolean'
     },
-    label: {
+    name: {
+      control: 'text'
+    },
+    value: {
       control: 'text'
     },
     errorNote: {
@@ -39,19 +47,13 @@ export default {
     ariaDescribedBy: {
       control: 'text'
     },
-    variant: {
-      control: 'radio',
-      options: ['default', 'horizontal']
-    }
   },
   args: {
-    label: 'Checkbox legend label',
+    name: 'checkbox-name',
+    value: 'checkbox-value',
     children: (
       <>
-        <SLCheckboxItem name="checkbox-name" value="checkbox-value-1">Checkbox item 1</SLCheckboxItem>
-        <SLCheckboxItem name="checkbox-name" value="checkbox-value-2">Checkbox item 2</SLCheckboxItem>
-        <SLCheckboxItem name="checkbox-name" value="checkbox-value-3">Checkbox item 3</SLCheckboxItem>
-        <SLCheckboxItem name="checkbox-name" value="checkbox-value-4" isDisabled={true}>Checkbox item 4</SLCheckboxItem>
+        Checkbox
       </>
     ),
     fieldNote: 'This is a field note.',
@@ -59,6 +61,14 @@ export default {
 };
 
 export const Default: StoryObj<typeof SLCheckbox> = { args: {} };
+
+export const Checked: StoryObj<typeof SLCheckbox> = { args: {
+  isChecked: true,
+} };
+
+export const Indeterminate: StoryObj<typeof SLCheckbox> = { args: {
+  isIndeterminate: true,
+} };
 
 export const Error: StoryObj<typeof SLCheckbox> = {
   args: {
@@ -73,22 +83,36 @@ export const Disabled: StoryObj<typeof SLCheckbox> = { args: {
   isDisabled: true,
 } };
 
-export const HiddenLegend: StoryObj<typeof SLCheckbox> = { args: {
-  hideLegend: true,
+export const DisabledChecked: StoryObj<typeof SLCheckbox> = { args: {
+  isDisabled: true,
+  isChecked: true,
 } };
 
-export const Horizontal: StoryObj<typeof SLCheckbox> = { args: {
-  variant: 'horizontal',
+export const DisabledIndeterminate: StoryObj<typeof SLCheckbox> = { args: {
+  isDisabled: true,
+  isIndeterminate: true,
+} };
+
+export const DisabledError: StoryObj<typeof SLCheckbox> = {
+  args: {
+    isError: true,
+    isDisabled: true,
+    isRequired: true,
+    fieldNote: '',
+    errorNote: 'This is an error note.',
+  },
+};
+
+export const HiddenLabel: StoryObj<typeof SLCheckbox> = { args: {
+  hideLabel: true,
+  fieldNote: '',
 } };
 
 export const SlottedFieldNote: StoryObj<typeof SLCheckbox> = {
   args: {
     children: (
       <>
-        <SLCheckboxItem name="checkbox-name" value="checkbox-value-1">Checkbox item 1</SLCheckboxItem>
-        <SLCheckboxItem name="checkbox-name" value="checkbox-value-2">Checkbox item 2</SLCheckboxItem>
-        <SLCheckboxItem name="checkbox-name" value="checkbox-value-3">Checkbox item 3</SLCheckboxItem>
-        <SLCheckboxItem name="checkbox-name" value="checkbox-value-4" isDisabled={true}>Checkbox item 4</SLCheckboxItem>
+        Checkbox
         <SLFieldNote slot="field-note"><SLIconHelp></SLIconHelp>This is a field note.</SLFieldNote>
       </>
     ),
@@ -102,10 +126,7 @@ export const SlottedErrorNote: StoryObj<typeof SLCheckbox> = {
     fieldNote: '',
     children: (
       <>
-        <SLCheckboxItem name="checkbox-name" value="checkbox-value-1">Checkbox item 1</SLCheckboxItem>
-        <SLCheckboxItem name="checkbox-name" value="checkbox-value-2">Checkbox item 2</SLCheckboxItem>
-        <SLCheckboxItem name="checkbox-name" value="checkbox-value-3">Checkbox item 3</SLCheckboxItem>
-        <SLCheckboxItem name="checkbox-name" value="checkbox-value-4" isDisabled={true}>Checkbox item 4</SLCheckboxItem>
+        Checkbox
         <SLFieldNote slot="error"><SLIconWarningCircle></SLIconWarningCircle>This is an error note.</SLFieldNote>
       </>
     ),

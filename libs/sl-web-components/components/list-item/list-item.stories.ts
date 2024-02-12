@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
-import '../checkbox-item/checkbox-item';
+import '../checkbox/checkbox';
 import '../list/list';
 import './list-item';
 
@@ -40,7 +40,7 @@ WithStatic.args = {
 
 export const WithCheckbox = () => html`
   <sl-list-item>
-    <sl-checkbox-item>List Item</sl-checkbox-item>
+    <sl-checkbox>List Item</sl-checkbox>
   </sl-list-item>
 `;
 

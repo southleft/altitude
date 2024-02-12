@@ -14,6 +14,6 @@ export const SLCheckbox = createComponent({
   tagName: elementMap.get(SLWebCheckbox.el),
   elementClass: SLWebCheckbox,
   events: {
-    onChange: 'change',
-  },
+    onChange: 'change'
+  }
 });

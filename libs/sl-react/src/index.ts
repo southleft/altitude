@@ -11,7 +11,7 @@ export * from './components/ButtonGroup';
 export * from './components/Calendar';
 export * from './components/Card';
 export * from './components/Checkbox';
-export * from './components/CheckboxItem';
+export * from './components/CheckboxGroup';
 export * from './components/Chip';
 export * from './components/ChipGroup';
 export * from './components/ContextualMenu';

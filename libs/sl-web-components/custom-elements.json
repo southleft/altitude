@@ -1026,9 +1026,144 @@
       ]
     },
     {
-      "name": "sl-checkbox-item",
-      "path": "./components/checkbox-item/checkbox-item.ts",
-      "description": "Component: sl-checkbox-item\n\nCheckbox Item is a singular checkbox that is used within the checkbox component.\n- **slot**: The component content that appears next to the checkbox\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
+      "name": "sl-checkbox-group",
+      "path": "./components/checkbox-group/checkbox-group.ts",
+      "description": "Component: sl-checkbox-group\n\nCheckbox group lets a user select one or more items from a list, or turn an item on or off.\n- **slot**: The component content, a set of checkbox items\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
+      "attributes": [
+        {
+          "name": "isError",
+          "description": "Error state\n- Changes the component's treatment to represent an error state",
+          "type": "boolean"
+        },
+        {
+          "name": "isDisabled",
+          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
+          "type": "boolean"
+        },
+        {
+          "name": "isRequired",
+          "description": "Required attribute\n- Sets the checkbox to be required for validation",
+          "type": "boolean"
+        },
+        {
+          "name": "hideLegend",
+          "description": "Hide legend?\n- If true, hides the legend from displaying",
+          "type": "boolean"
+        },
+        {
+          "name": "label",
+          "description": "Label\n- Displays inside the legend",
+          "type": "string"
+        },
+        {
+          "name": "errorNote",
+          "description": "Error message\n- An error field note that displays below the checkbox input",
+          "type": "string"
+        },
+        {
+          "name": "fieldNote",
+          "description": "Field note\n- The helper text that displays below the checkbox input",
+          "type": "string"
+        },
+        {
+          "name": "fieldId",
+          "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
+          "type": "string"
+        },
+        {
+          "name": "ariaDescribedBy",
+          "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
+          "type": "string"
+        },
+        {
+          "name": "variant",
+          "description": "Variant\n- **default** Displays the checkbox items in a column\n- **horizontal** Displays the checkbox items in a row",
+          "type": "\"horizontal\""
+        },
+        {
+          "name": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "el",
+          "type": "string",
+          "default": "\"sl-checkbox-group\""
+        },
+        {
+          "name": "isError",
+          "attribute": "isError",
+          "description": "Error state\n- Changes the component's treatment to represent an error state",
+          "type": "boolean"
+        },
+        {
+          "name": "isDisabled",
+          "attribute": "isDisabled",
+          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
+          "type": "boolean"
+        },
+        {
+          "name": "isRequired",
+          "attribute": "isRequired",
+          "description": "Required attribute\n- Sets the checkbox to be required for validation",
+          "type": "boolean"
+        },
+        {
+          "name": "hideLegend",
+          "attribute": "hideLegend",
+          "description": "Hide legend?\n- If true, hides the legend from displaying",
+          "type": "boolean"
+        },
+        {
+          "name": "label",
+          "attribute": "label",
+          "description": "Label\n- Displays inside the legend",
+          "type": "string"
+        },
+        {
+          "name": "errorNote",
+          "attribute": "errorNote",
+          "description": "Error message\n- An error field note that displays below the checkbox input",
+          "type": "string"
+        },
+        {
+          "name": "fieldNote",
+          "attribute": "fieldNote",
+          "description": "Field note\n- The helper text that displays below the checkbox input",
+          "type": "string"
+        },
+        {
+          "name": "fieldId",
+          "attribute": "fieldId",
+          "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
+          "type": "string"
+        },
+        {
+          "name": "ariaDescribedBy",
+          "attribute": "ariaDescribedBy",
+          "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
+          "type": "string"
+        },
+        {
+          "name": "variant",
+          "attribute": "variant",
+          "description": "Variant\n- **default** Displays the checkbox items in a column\n- **horizontal** Displays the checkbox items in a row",
+          "type": "\"horizontal\""
+        },
+        {
+          "name": "styleModifier",
+          "attribute": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "sl-checkbox",
+      "path": "./components/checkbox/checkbox.ts",
+      "description": "Component: sl-checkbox\n\nCheckbox is a singular checkbox that is used within the checkbox component.\n- **slot**: The component content that appears next to the checkbox\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
       "attributes": [
         {
           "name": "isChecked",
@@ -1100,7 +1235,7 @@
         {
           "name": "el",
           "type": "string",
-          "default": "\"sl-checkbox-item\""
+          "default": "\"sl-checkbox\""
         },
         {
           "name": "isChecked",
@@ -1173,141 +1308,6 @@
           "attribute": "ariaDescribedBy",
           "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
           "type": "string"
-        },
-        {
-          "name": "styleModifier",
-          "attribute": "styleModifier",
-          "description": "Append to the class name. Used for passing in utility classes",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "sl-checkbox",
-      "path": "./components/checkbox/checkbox.ts",
-      "description": "Component: sl-checkbox\n\nCheckbox lets a user select one or more items from a list, or turn an item on or off.\n- **slot**: The component content, a set of checkbox items\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
-      "attributes": [
-        {
-          "name": "isError",
-          "description": "Error state\n- Changes the component's treatment to represent an error state",
-          "type": "boolean"
-        },
-        {
-          "name": "isDisabled",
-          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
-          "type": "boolean"
-        },
-        {
-          "name": "isRequired",
-          "description": "Required attribute\n- Sets the checkbox to be required for validation",
-          "type": "boolean"
-        },
-        {
-          "name": "hideLegend",
-          "description": "Hide legend?\n- If true, hides the legend from displaying",
-          "type": "boolean"
-        },
-        {
-          "name": "label",
-          "description": "Label\n- Displays inside the legend",
-          "type": "string"
-        },
-        {
-          "name": "errorNote",
-          "description": "Error message\n- An error field note that displays below the checkbox input",
-          "type": "string"
-        },
-        {
-          "name": "fieldNote",
-          "description": "Field note\n- The helper text that displays below the checkbox input",
-          "type": "string"
-        },
-        {
-          "name": "fieldId",
-          "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
-          "type": "string"
-        },
-        {
-          "name": "ariaDescribedBy",
-          "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
-          "type": "string"
-        },
-        {
-          "name": "variant",
-          "description": "Variant\n- **default** Displays the checkbox items in a column\n- **horizontal** Displays the checkbox items in a row",
-          "type": "\"horizontal\""
-        },
-        {
-          "name": "styleModifier",
-          "description": "Append to the class name. Used for passing in utility classes",
-          "type": "string"
-        }
-      ],
-      "properties": [
-        {
-          "name": "el",
-          "type": "string",
-          "default": "\"sl-checkbox\""
-        },
-        {
-          "name": "isError",
-          "attribute": "isError",
-          "description": "Error state\n- Changes the component's treatment to represent an error state",
-          "type": "boolean"
-        },
-        {
-          "name": "isDisabled",
-          "attribute": "isDisabled",
-          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
-          "type": "boolean"
-        },
-        {
-          "name": "isRequired",
-          "attribute": "isRequired",
-          "description": "Required attribute\n- Sets the checkbox to be required for validation",
-          "type": "boolean"
-        },
-        {
-          "name": "hideLegend",
-          "attribute": "hideLegend",
-          "description": "Hide legend?\n- If true, hides the legend from displaying",
-          "type": "boolean"
-        },
-        {
-          "name": "label",
-          "attribute": "label",
-          "description": "Label\n- Displays inside the legend",
-          "type": "string"
-        },
-        {
-          "name": "errorNote",
-          "attribute": "errorNote",
-          "description": "Error message\n- An error field note that displays below the checkbox input",
-          "type": "string"
-        },
-        {
-          "name": "fieldNote",
-          "attribute": "fieldNote",
-          "description": "Field note\n- The helper text that displays below the checkbox input",
-          "type": "string"
-        },
-        {
-          "name": "fieldId",
-          "attribute": "fieldId",
-          "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
-          "type": "string"
-        },
-        {
-          "name": "ariaDescribedBy",
-          "attribute": "ariaDescribedBy",
-          "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
-          "type": "string"
-        },
-        {
-          "name": "variant",
-          "attribute": "variant",
-          "description": "Variant\n- **default** Displays the checkbox items in a column\n- **horizontal** Displays the checkbox items in a row",
-          "type": "\"horizontal\""
         },
         {
           "name": "styleModifier",

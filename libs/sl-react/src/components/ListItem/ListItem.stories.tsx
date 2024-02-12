@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLListItem, SLList, SLCheckboxItem } from '../..'
+import { SLListItem, SLList, SLCheckbox } from '../..'
 
 export default {
   title: 'Atoms/List Item',
@@ -43,7 +43,7 @@ export const WithCheckbox: StoryObj<typeof SLListItem> = {
   args: {
     children: (
       <>
-        <SLCheckboxItem>List Item</SLCheckboxItem>
+        <SLCheckbox>List Item</SLCheckbox>
       </>
     )
   }
