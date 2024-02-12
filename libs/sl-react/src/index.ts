@@ -66,7 +66,7 @@ export * from './components/PaginationItem';
 export * from './components/Popover';
 export * from './components/Progress';
 export * from './components/Radio';
-export * from './components/RadioItem';
+export * from './components/RadioGroup';
 export * from './components/Range';
 export * from './components/Search';
 export * from './components/Select';

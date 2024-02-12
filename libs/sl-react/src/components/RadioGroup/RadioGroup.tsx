@@ -1,17 +1,17 @@
 import { createComponent } from '@lit/react';
-import { SLRadioItem as SLWebRadioItem } from 'sl-web-components/dist/components/radio-item/radio-item';
+import { SLRadioGroup as SLWebRadioGroup } from 'sl-web-components/dist/components/radio-group/radio-group';
 import register from 'sl-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 
 const elementMap = register({
-  elements: [SLWebRadioItem.el, SLWebRadioItem],
+  elements: [SLWebRadioGroup.el, SLWebRadioGroup],
   suffix: PackageJson.version
 });
 
-export const SLRadioItem = createComponent({
+export const SLRadioGroup = createComponent({
   react: React,
-  tagName: elementMap.get(SLWebRadioItem.el),
-  elementClass: SLWebRadioItem,
+  tagName: elementMap.get(SLWebRadioGroup.el),
+  elementClass: SLWebRadioGroup,
   events: {}
 });

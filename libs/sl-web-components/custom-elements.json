@@ -4969,9 +4969,149 @@
       ]
     },
     {
-      "name": "sl-radio-item",
-      "path": "./components/radio-item/radio-item.ts",
-      "description": "Component: sl-radio-item\n\nRadio Item is a singular radio button within the radio component.\n- **slot**: The component content that appears next to the radio\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
+      "name": "sl-radio-group",
+      "path": "./components/radio-group/radio-group.ts",
+      "description": "Component: sl-radio-group\n\nRadio group allows users to choose one option from a set of mutually exclusive options.\n- **slot**: The radio content, a set of radio items\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
+      "attributes": [
+        {
+          "name": "isError",
+          "description": "Error state\n- Changes the component's treatment to represent an error state",
+          "type": "boolean"
+        },
+        {
+          "name": "isDisabled",
+          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
+          "type": "boolean"
+        },
+        {
+          "name": "isRequired",
+          "description": "Required attribute\n- Sets the radio to be required for validation",
+          "type": "boolean"
+        },
+        {
+          "name": "hideLegend",
+          "description": "Hide legend?\n- If true, hides the legend from displaying",
+          "type": "boolean"
+        },
+        {
+          "name": "label",
+          "description": "Label\n- Displays inside the legend",
+          "type": "string"
+        },
+        {
+          "name": "errorNote",
+          "description": "Error message\n- An error field note that displays below the radio input",
+          "type": "string"
+        },
+        {
+          "name": "fieldNote",
+          "description": "Field note\n- The helper text that displays below the radio input",
+          "type": "string"
+        },
+        {
+          "name": "fieldId",
+          "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
+          "type": "string"
+        },
+        {
+          "name": "ariaDescribedBy",
+          "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
+          "type": "string"
+        },
+        {
+          "name": "variant",
+          "description": "Variant\n- **default** Displays the radio items in a column\n- **horizontal** Displays the radio items in a row",
+          "type": "\"horizontal\""
+        },
+        {
+          "name": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "el",
+          "type": "string",
+          "default": "\"sl-radio-group\""
+        },
+        {
+          "name": "isError",
+          "attribute": "isError",
+          "description": "Error state\n- Changes the component's treatment to represent an error state",
+          "type": "boolean"
+        },
+        {
+          "name": "isDisabled",
+          "attribute": "isDisabled",
+          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
+          "type": "boolean"
+        },
+        {
+          "name": "isRequired",
+          "attribute": "isRequired",
+          "description": "Required attribute\n- Sets the radio to be required for validation",
+          "type": "boolean"
+        },
+        {
+          "name": "hideLegend",
+          "attribute": "hideLegend",
+          "description": "Hide legend?\n- If true, hides the legend from displaying",
+          "type": "boolean"
+        },
+        {
+          "name": "label",
+          "attribute": "label",
+          "description": "Label\n- Displays inside the legend",
+          "type": "string"
+        },
+        {
+          "name": "errorNote",
+          "attribute": "errorNote",
+          "description": "Error message\n- An error field note that displays below the radio input",
+          "type": "string"
+        },
+        {
+          "name": "fieldNote",
+          "attribute": "fieldNote",
+          "description": "Field note\n- The helper text that displays below the radio input",
+          "type": "string"
+        },
+        {
+          "name": "fieldId",
+          "attribute": "fieldId",
+          "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
+          "type": "string"
+        },
+        {
+          "name": "ariaDescribedBy",
+          "attribute": "ariaDescribedBy",
+          "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
+          "type": "string"
+        },
+        {
+          "name": "variant",
+          "attribute": "variant",
+          "description": "Variant\n- **default** Displays the radio items in a column\n- **horizontal** Displays the radio items in a row",
+          "type": "\"horizontal\""
+        },
+        {
+          "name": "checkedItem",
+          "description": "The currently checked radio in the radio group",
+          "type": "SLRadio"
+        },
+        {
+          "name": "styleModifier",
+          "attribute": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "sl-radio",
+      "path": "./components/radio/radio.ts",
+      "description": "Component: sl-radio\n\nRadio is a singular radio button within the radio component.\n- **slot**: The component content that appears next to the radio\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
       "attributes": [
         {
           "name": "isChecked",
@@ -5038,7 +5178,7 @@
         {
           "name": "el",
           "type": "string",
-          "default": "\"sl-radio-item\""
+          "default": "\"sl-radio\""
         },
         {
           "name": "isChecked",
@@ -5105,146 +5245,6 @@
           "attribute": "ariaDescribedBy",
           "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
           "type": "string"
-        },
-        {
-          "name": "styleModifier",
-          "attribute": "styleModifier",
-          "description": "Append to the class name. Used for passing in utility classes",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "sl-radio",
-      "path": "./components/radio/radio.ts",
-      "description": "Component: sl-radio\n\nRadio allows users to choose one option from a set of mutually exclusive options.\n- **slot**: The radio content, a set of radio items\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
-      "attributes": [
-        {
-          "name": "isError",
-          "description": "Error state\n- Changes the component's treatment to represent an error state",
-          "type": "boolean"
-        },
-        {
-          "name": "isDisabled",
-          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
-          "type": "boolean"
-        },
-        {
-          "name": "isRequired",
-          "description": "Required attribute\n- Sets the radio to be required for validation",
-          "type": "boolean"
-        },
-        {
-          "name": "hideLegend",
-          "description": "Hide legend?\n- If true, hides the legend from displaying",
-          "type": "boolean"
-        },
-        {
-          "name": "label",
-          "description": "Label\n- Displays inside the legend",
-          "type": "string"
-        },
-        {
-          "name": "errorNote",
-          "description": "Error message\n- An error field note that displays below the radio input",
-          "type": "string"
-        },
-        {
-          "name": "fieldNote",
-          "description": "Field note\n- The helper text that displays below the radio input",
-          "type": "string"
-        },
-        {
-          "name": "fieldId",
-          "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
-          "type": "string"
-        },
-        {
-          "name": "ariaDescribedBy",
-          "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
-          "type": "string"
-        },
-        {
-          "name": "variant",
-          "description": "Variant\n- **default** Displays the radio items in a column\n- **horizontal** Displays the radio items in a row",
-          "type": "\"horizontal\""
-        },
-        {
-          "name": "styleModifier",
-          "description": "Append to the class name. Used for passing in utility classes",
-          "type": "string"
-        }
-      ],
-      "properties": [
-        {
-          "name": "el",
-          "type": "string",
-          "default": "\"sl-radio\""
-        },
-        {
-          "name": "isError",
-          "attribute": "isError",
-          "description": "Error state\n- Changes the component's treatment to represent an error state",
-          "type": "boolean"
-        },
-        {
-          "name": "isDisabled",
-          "attribute": "isDisabled",
-          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
-          "type": "boolean"
-        },
-        {
-          "name": "isRequired",
-          "attribute": "isRequired",
-          "description": "Required attribute\n- Sets the radio to be required for validation",
-          "type": "boolean"
-        },
-        {
-          "name": "hideLegend",
-          "attribute": "hideLegend",
-          "description": "Hide legend?\n- If true, hides the legend from displaying",
-          "type": "boolean"
-        },
-        {
-          "name": "label",
-          "attribute": "label",
-          "description": "Label\n- Displays inside the legend",
-          "type": "string"
-        },
-        {
-          "name": "errorNote",
-          "attribute": "errorNote",
-          "description": "Error message\n- An error field note that displays below the radio input",
-          "type": "string"
-        },
-        {
-          "name": "fieldNote",
-          "attribute": "fieldNote",
-          "description": "Field note\n- The helper text that displays below the radio input",
-          "type": "string"
-        },
-        {
-          "name": "fieldId",
-          "attribute": "fieldId",
-          "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
-          "type": "string"
-        },
-        {
-          "name": "ariaDescribedBy",
-          "attribute": "ariaDescribedBy",
-          "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
-          "type": "string"
-        },
-        {
-          "name": "variant",
-          "attribute": "variant",
-          "description": "Variant\n- **default** Displays the radio items in a column\n- **horizontal** Displays the radio items in a row",
-          "type": "\"horizontal\""
-        },
-        {
-          "name": "checkedItem",
-          "description": "The currently checked radio in the radio list",
-          "type": "SLRadioItem"
         },
         {
           "name": "styleModifier",
