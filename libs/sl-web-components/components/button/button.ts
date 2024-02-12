@@ -84,6 +84,9 @@ export class SLButton extends SLElement {
   @property({ type: Boolean })
   accessor isDisabled: boolean;
 
+  @property({ type: Boolean })
+  accessor isAriaDisabled: boolean;
+
   /**
    * Indicates this button is a toggle button and whether it is pressed or not.
    */
@@ -184,7 +187,7 @@ export class SLButton extends SLElement {
           value=${ifDefined(this.value)}
           name=${ifDefined(this.name)}
           aria-label=${ifDefined(this.label)}
-          ?disabled=${this.isDisabled}
+          aria-disabled=${ifDefined(this.isDisabled)}
           aria-pressed=${ifDefined(this.isPressed)}
           aria-expanded=${ifDefined(this.isExpanded)}
           part="button"

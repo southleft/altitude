@@ -6,7 +6,10 @@ import '../chip/chip';
 import '../heading/heading';
 import '../icon/icons/dots-vertical';
 import '../text-passage/text-passage';
-import * as ContextualMenu from '../contextual-menu/contextual-menu.stories';
+import '../button/button';
+import '../popover/popover';
+import '../menu/menu';
+import '../menu-item/menu-item';
 
 export default {
   title: 'Molecules/Card',
@@ -33,7 +36,19 @@ Default.args = {};
 const TemplateWithContent = (args) => html`
 <sl-card ${spread(args)}>
   <sl-chip slot="actions-left">Label</sl-chip>
-  <div slot="actions-right">${ContextualMenu.Default({})}</div>
+    <sl-popover slot="actions-right" menuId="card-menu">
+      <sl-button slot="trigger" variant="tertiary" ?hideText=${true}>
+        <sl-icon-dots-vertical slot="before"></sl-icon-dots-vertical>
+      </sl-button>
+      <sl-menu id="card-menu">
+        <sl-menu-item>List Item 1</sl-menu-item>
+        <sl-menu-item>List Item 2</sl-menu-item>
+        <sl-menu-item>List Item 3</sl-menu-item>
+        <sl-menu-item>List Item 1</sl-menu-item>
+        <sl-menu-item>List Item 2</sl-menu-item>
+        <sl-menu-item>List Item 3</sl-menu-item>
+      </sl-menu>
+    </sl-popover>
   <img slot="image" alt="card image" src="https://fakeimg.pl/600x400" />
   <sl-heading slot="header" tagName="h3" variant="sm" ?isBold=${true}>Card title</sl-heading>
   <sl-text-passage>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dui leo, lacinia ut finibus sed, consectetur quis enim.</sl-text-passage>

@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLPopover, SLButton, SLButtonGroup, SLTabs, SLTab, SLTabPanel, SLToggleButton, SLIconHelp } from '../..';
+import { SLPopover, SLButton, SLMenu, SLMenuItem, SLToggleButton, SLIconDocument, SLIconMenu } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
@@ -25,18 +25,13 @@ export default {
     },
     isActive: {
       type: 'boolean'
-    },
-    isDismissible: {
-      type: 'boolean'
-    },
+    }
   },
   args: {
-    heading: 'Panel heading',
-    isDismissible: true,
     children: (
       <>
-        <SLButton slot="trigger">Open Panel</SLButton>
-        <Fpo>Panel content</Fpo>
+        <SLButton slot="trigger">Open Popover</SLButton>
+        <Fpo>Popover content</Fpo>
       </>
     )
   },
@@ -87,43 +82,66 @@ export const PositionRightTop: StoryObj<typeof SLPopover> = { args: {
   position: 'right-top',
 } };
 
-export const WithSlottedContent: StoryObj<typeof SLPopover> = {
+export const WithMenu: StoryObj<typeof SLPopover> = {
   args: {
-    position: 'top-left',
+    position: 'bottom-right',
     children: (
       <>
-        <SLToggleButton slot="trigger"><SLIconHelp size="lg"></SLIconHelp></SLToggleButton>
-        <SLTabs variant="stretch">
-          <SLTab>Tab 1</SLTab>
-          <SLTab>Tab 2</SLTab>
-          <SLTab>Tab 3</SLTab>
-          <SLTabPanel slot="panel">
-            <Fpo>Tab panel 1 - Instance slot 1</Fpo>
-            <Fpo>Tab panel 1 - Instance slot 2</Fpo>
-          </SLTabPanel>
-          <SLTabPanel slot="panel">
-            <Fpo>Tab panel 2 - Instance slot 1</Fpo>
-            <Fpo>Tab panel 2 - Instance slot 2</Fpo>
-          </SLTabPanel>
-          <SLTabPanel slot="panel">
-            <Fpo>Tab panel 3 - Instance slot 1</Fpo>
-            <Fpo>Tab panel 3 - Instance slot 2</Fpo>
-          </SLTabPanel>
-        </SLTabs>
-        <SLButton slot="footer" variant="tertiary" onClick={closePanel}>Close</SLButton>
-        <SLButtonGroup slot="footer" alignment="right">
-          <SLButton variant="secondary">Label</SLButton>
-          <SLButton>Label</SLButton>
-        </SLButtonGroup>
+        <SLButton slot="trigger" variant="tertiary" hideText={true}>
+          <SLIconMenu slot="before"></SLIconMenu>
+          Menu
+        </SLButton>
+        <SLMenu data-testid="menu" id="menu-123">
+        <SLMenuItem isHeader={true} data-testid="menu-item-01">
+          <SLIconDocument slot="before"></SLIconDocument>
+          Header
+        </SLMenuItem>
+        <SLMenuItem data-testid="menu-item-02">Menu Item</SLMenuItem>
+        <SLMenuItem data-testid="menu-item-03">Menu Item</SLMenuItem>
+        <SLMenuItem data-testid="menu-item-04">Menu Item</SLMenuItem>
+        <SLMenuItem isDisabled={true} data-testid="menu-item-05">Menu Item</SLMenuItem>
+        <SLMenuItem data-testid="menu-item-06">Menu Item</SLMenuItem>
+      </SLMenu>
       </>
     )
   },
   parameters: {
     layout: 'fullscreen'
-  },
-  decorators: [
-    (Story) => (
-      <div className="c-panel" style={{ position: 'fixed', insetBlockEnd: '1rem', insetInlineEnd: '1rem' }}>{Story()}</div>
+  }
+};
+
+export const WithMenWithGroups: StoryObj<typeof SLPopover> = {
+  args: {
+    position: 'bottom-right',
+    children: (
+      <>
+        <SLButton slot="trigger" variant="tertiary" hideText={true}>
+          <SLIconMenu slot="before"></SLIconMenu>
+          Menu
+        </SLButton>
+        <SLMenu data-testid="menu" id="group-menu-123">
+          <SLMenuItem isHeader={true} data-testid="menu-item-01">
+            <SLIconDocument slot="before"></SLIconDocument>
+            Menu Item
+          </SLMenuItem>
+          <SLMenuItem isHeader={true} isExpanded={true} isExpandableHeader={true} data-testid="menu-item-02">
+            <SLIconDocument slot="before"></SLIconDocument>
+            Menu Item
+          </SLMenuItem>
+          <SLMenuItem data-testid="menu-item-03">Menu Item</SLMenuItem>
+          <SLMenuItem data-testid="menu-item-04">Menu Item</SLMenuItem>
+          <SLMenuItem isHeader={true} isExpanded={true} isExpandableHeader={true} data-testid="menu-item-05">
+            <SLIconDocument slot="before"></SLIconDocument>
+            Menu Item
+          </SLMenuItem>
+          <SLMenuItem data-testid="menu-item-06">Menu Item</SLMenuItem>
+          <SLMenuItem data-testid="menu-item-07">Menu Item</SLMenuItem>
+          <SLMenuItem data-testid="menu-item-08">Menu Item</SLMenuItem>
+        </SLMenu>
+      </>
     )
-  ]
+  },
+  parameters: {
+    layout: 'fullscreen'
+  }
 };

@@ -50,9 +50,6 @@ export default {
     isHidden: {
       control: 'boolean'
     },
-    indentation: {
-      control: 'number'
-    },
     label: {
       control: 'text'
     },

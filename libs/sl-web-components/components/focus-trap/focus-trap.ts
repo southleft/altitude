@@ -16,27 +16,33 @@ export class SLFocusTrap extends SLElement {
   /**
    * Is the focus trap active?
    */
-  @property()
+  @property({ type: Boolean })
   accessor isActive: boolean;
 
   /**
    * Delay in milliseconds before the focus trap is activated. 
    * - Can be set by the component using focus trap, when there is a css transition that needs to complete before the focus trap activates.
    */
-  @property()
-  accessor delay: number = 0;
+  @property({ type: Number })
+  accessor transitionDelay: number = 0;
 
   /**
    * First element that can recieve focus in the focus trap (e.g. button, input, a, etc.).
    */
-  @property()
+  @property({ attribute: false})
   accessor firstFocusableEl: HTMLElement;
 
   /**
    * Last element that can recieve focus in the focus trap (e.g. button, input, a, etc.).
    */
-  @property()
+  @property({ attribute: false})
   accessor lastFocusableEl: HTMLElement;
+
+  /**
+   * Element to recieve intitla focus when the focus trap is opened
+   */
+  @property({ attribute: false})
+  accessor initialFocusEl: HTMLElement;
 
   /**
    * Slotted elements contain the component that will be included in the focus trap.
@@ -62,7 +68,7 @@ export class SLFocusTrap extends SLElement {
     if (changedProperties.has('isActive')) { 
       /* 2 */
       if (this.isActive === true) {
-        setTimeout(() => this.applyFocusTrap(), this.delay);
+        setTimeout(() => this.applyFocusTrap(), this.transitionDelay);
       /* 3 */
       } else if (this.isActive === false) {
         this.removeFocusTrap();
@@ -94,21 +100,38 @@ export class SLFocusTrap extends SLElement {
     }
   }
 
-  /**
+ /**
    * Apply the focus trap
    * 1. Query all focusable elements within the focus trap, including those nested within the shadow DOM.
-   * 2. Store the first and last focusable element on the focus trap state.
-   * 3. Send focus to the first focusable element.
-   * 4. Apply keydown listeners to the first and last focusable elements to enable the focus trap functionality.
+   * 2. If there are no focusable elements, set the sloted content as the initial focus. and first and last focusable, element.
+   * 3. Store the first and last focusable elements on state.
+   * 4. Set the initial focus element as either the selected item, or the first focusable element.
+   * 5. Send focus to the initial focus element.
+   * 6. Apply keydown listeners to the first and last focusable elements to enable the focus trap functionality.
    */
   applyFocusTrap() {
     const focusableElements = getFocusableElements(this.slottedContent[0]); /* 1 */
+    
     /* 2 */
-    this.firstFocusableEl = focusableElements[0];
-    this.lastFocusableEl = focusableElements[focusableElements.length - 1];
-    /* 3 */
-    this.firstFocusableEl.focus();
-    /* 4 */
+    if (!focusableElements.length) { 
+      this.slottedContent[0].setAttribute("tabindex", "-1");
+
+      this.initialFocusEl = this.slottedContent[0];
+      this.firstFocusableEl = this.slottedContent[0];
+      this.lastFocusableEl = this.slottedContent[0];
+    } 
+    else {
+      /* 3 */
+      this.firstFocusableEl = focusableElements[0];
+      this.lastFocusableEl = focusableElements[focusableElements.length - 1];
+
+      const selectedItem = focusableElements.find(item => item.classList.contains('sl-is-selected'));
+      this.initialFocusEl = selectedItem || this.firstFocusableEl; /* 4 */
+    }
+
+    this.initialFocusEl.focus(); /* 5 */
+
+    /* 6 */
     this.lastFocusableEl.addEventListener('keydown', this.trapFocusEnd);
     this.firstFocusableEl.addEventListener('keydown', this.trapFocusStart);
   }

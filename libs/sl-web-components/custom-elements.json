@@ -464,6 +464,11 @@
           "default": "1"
         },
         {
+          "name": "menuId",
+          "description": "Menu id\n- Unique id that associates the menu and popover components used in truncated breadcrumbs, so that the popover closes when a menu item is selected",
+          "type": "string"
+        },
+        {
           "name": "styleModifier",
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
@@ -501,6 +506,12 @@
           "description": "Number of items to display before the Panel in the Truncated treatment\n- Default is 1",
           "type": "number",
           "default": "1"
+        },
+        {
+          "name": "menuId",
+          "attribute": "menuId",
+          "description": "Menu id\n- Unique id that associates the menu and popover components used in truncated breadcrumbs, so that the popover closes when a menu item is selected",
+          "type": "string"
         },
         {
           "name": "breadcrumbsItems",
@@ -613,6 +624,10 @@
           "type": "boolean"
         },
         {
+          "name": "isAriaDisabled",
+          "type": "boolean"
+        },
+        {
           "name": "isExpanded",
           "description": "Indicates this button is a toggle button and whether it is pressed or not.",
           "type": "boolean"
@@ -696,6 +711,11 @@
           "name": "isDisabled",
           "attribute": "isDisabled",
           "description": "Disabled attribute",
+          "type": "boolean"
+        },
+        {
+          "name": "isAriaDisabled",
+          "attribute": "isAriaDisabled",
           "type": "boolean"
         },
         {
@@ -1423,118 +1443,6 @@
           "attribute": "isDismissed",
           "description": "Is dismissed property\n- **true** Hides the chip\n- **false** Shows the chip",
           "type": "boolean"
-        },
-        {
-          "name": "styleModifier",
-          "attribute": "styleModifier",
-          "description": "Append to the class name. Used for passing in utility classes",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "sl-contextual-menu",
-      "path": "./components/contextual-menu/contextual-menu.ts",
-      "description": "Component: sl-contextual-menu\n\nContextual Menu is a list of options that is opened/closed by a trigger and positioned around the trigger.\n- **slot**: The main body of the contextual menu\n- **slot** \"trigger\": The trigger that opens/closes the contextual menu",
-      "attributes": [
-        {
-          "name": "heading",
-          "description": "Heading text that appears in the header region",
-          "type": "string"
-        },
-        {
-          "name": "position",
-          "description": "Positions the dropdown contextual menu absolutely to the trigger.\n- **default** places the contextual menuto the bottom left\n- **bottom-center** places the contextual menuto the bottom center\n- **bottom-right** places the contextual menuto the bottom right\n- **bottom-left** places the contextual menuto the bottom left\n- **top-center** places the contextual menuto the top center\n- **top-right** places the contextual menuto the top right\n- **top-left** places the contextual menuto the top left\n- **left** places the contextual menuto the left\n- **right** places the contextual menuto the right",
-          "type": "\"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\" | \"right\" | \"bottom-center\" | \"top-center\" | \"left\"",
-          "default": "\"bottom-left\""
-        },
-        {
-          "name": "isActive",
-          "description": "Is active?\n- **true** Shows the contextual menucontainer\n- **false** Hides the contextual menucontainer",
-          "type": "boolean"
-        },
-        {
-          "name": "isDismissible",
-          "description": "Is dismissible?\n- **true** Shows the contextual menuclose button\n- **false** Hides the contextual menuclose button",
-          "type": "boolean"
-        },
-        {
-          "name": "ariaLabelledBy",
-          "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
-          "type": "string"
-        },
-        {
-          "name": "transitionDelay",
-          "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
-          "type": "number",
-          "default": "400"
-        },
-        {
-          "name": "styleModifier",
-          "description": "Append to the class name. Used for passing in utility classes",
-          "type": "string"
-        }
-      ],
-      "properties": [
-        {
-          "name": "el",
-          "type": "string",
-          "default": "\"sl-contextual-menu\""
-        },
-        {
-          "name": "heading",
-          "attribute": "heading",
-          "description": "Heading text that appears in the header region",
-          "type": "string"
-        },
-        {
-          "name": "position",
-          "attribute": "position",
-          "description": "Positions the dropdown contextual menu absolutely to the trigger.\n- **default** places the contextual menuto the bottom left\n- **bottom-center** places the contextual menuto the bottom center\n- **bottom-right** places the contextual menuto the bottom right\n- **bottom-left** places the contextual menuto the bottom left\n- **top-center** places the contextual menuto the top center\n- **top-right** places the contextual menuto the top right\n- **top-left** places the contextual menuto the top left\n- **left** places the contextual menuto the left\n- **right** places the contextual menuto the right",
-          "type": "\"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\" | \"right\" | \"bottom-center\" | \"top-center\" | \"left\"",
-          "default": "\"bottom-left\""
-        },
-        {
-          "name": "isActive",
-          "attribute": "isActive",
-          "description": "Is active?\n- **true** Shows the contextual menucontainer\n- **false** Hides the contextual menucontainer",
-          "type": "boolean"
-        },
-        {
-          "name": "isDismissible",
-          "attribute": "isDismissible",
-          "description": "Is dismissible?\n- **true** Shows the contextual menuclose button\n- **false** Hides the contextual menuclose button",
-          "type": "boolean"
-        },
-        {
-          "name": "ariaLabelledBy",
-          "attribute": "ariaLabelledBy",
-          "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
-          "type": "string"
-        },
-        {
-          "name": "transitionDelay",
-          "attribute": "transitionDelay",
-          "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
-          "type": "number",
-          "default": "400"
-        },
-        {
-          "name": "contextualMenuTrigger",
-          "description": "Query the contextual menutrigger",
-          "type": "array"
-        },
-        {
-          "name": "menuList",
-          "description": "Query the list component in the menu's default slot",
-          "type": "array"
-        },
-        {
-          "name": "contextualMenuTriggerButton",
-          "description": "Query the contextual menutrigger inner element"
-        },
-        {
-          "name": "handleOnClickOutside"
         },
         {
           "name": "styleModifier",
@@ -2967,20 +2875,10 @@
           "type": "boolean"
         },
         {
-          "name": "delay",
+          "name": "transitionDelay",
           "description": "Delay in milliseconds before the focus trap is activated. \n- Can be set by the component using focus trap, when there is a css transition that needs to complete before the focus trap activates.",
           "type": "number",
           "default": "0"
-        },
-        {
-          "name": "firstFocusableEl",
-          "description": "First element that can recieve focus in the focus trap (e.g. button, input, a, etc.).",
-          "type": "HTMLElement"
-        },
-        {
-          "name": "lastFocusableEl",
-          "description": "Last element that can recieve focus in the focus trap (e.g. button, input, a, etc.).",
-          "type": "HTMLElement"
         },
         {
           "name": "styleModifier",
@@ -3001,22 +2899,25 @@
           "type": "boolean"
         },
         {
-          "name": "delay",
-          "attribute": "delay",
+          "name": "transitionDelay",
+          "attribute": "transitionDelay",
           "description": "Delay in milliseconds before the focus trap is activated. \n- Can be set by the component using focus trap, when there is a css transition that needs to complete before the focus trap activates.",
           "type": "number",
           "default": "0"
         },
         {
           "name": "firstFocusableEl",
-          "attribute": "firstFocusableEl",
           "description": "First element that can recieve focus in the focus trap (e.g. button, input, a, etc.).",
           "type": "HTMLElement"
         },
         {
           "name": "lastFocusableEl",
-          "attribute": "lastFocusableEl",
           "description": "Last element that can recieve focus in the focus trap (e.g. button, input, a, etc.).",
+          "type": "HTMLElement"
+        },
+        {
+          "name": "initialFocusEl",
+          "description": "Element to recieve intitla focus when the focus trap is opened",
           "type": "HTMLElement"
         },
         {
@@ -4167,11 +4068,6 @@
           "type": "number"
         },
         {
-          "name": "indentation",
-          "description": "Indentation\n- Dynamically set by the menu parent component\n- Adds padding to a menu item to left-align its text with that of its Header",
-          "type": "number"
-        },
-        {
           "name": "label",
           "description": "Label attribute\n- Sets the ariaLabel for A11y",
           "type": "string"
@@ -4267,12 +4163,6 @@
           "type": "number"
         },
         {
-          "name": "indentation",
-          "attribute": "indentation",
-          "description": "Indentation\n- Dynamically set by the menu parent component\n- Adds padding to a menu item to left-align its text with that of its Header",
-          "type": "number"
-        },
-        {
           "name": "label",
           "attribute": "label",
           "description": "Label attribute\n- Sets the ariaLabel for A11y",
@@ -4315,23 +4205,12 @@
     {
       "name": "sl-menu",
       "path": "./components/menu/menu.ts",
-      "description": "Component: sl-menu\n\nMenu displays a list of interactive options on a temporary surface.\n- **slot**: The menu items in the menu\n- **slot** \"trigger\": A button to trigger the active state of the menu",
+      "description": "Component: sl-menu\n\nMenu displays a list of interactive options.\n- **slot**: The menu items in the menu",
       "attributes": [
         {
           "name": "variant",
-          "description": "Variant\n- **default** Displays the menu items in a panel\n- **cascading** Display the menu items without a panel",
-          "type": "\"cascading\""
-        },
-        {
-          "name": "position",
-          "description": "Positions the menu panel absolutely to the trigger.\n- **default** places the menu panel to the bottom right of the trigger\n- **bottom-right** places the menu panel to the bottom right of the trigger\n- **bottom-left** places the menu panel to the bottom left of the trigger\n- **top-right** places the menu panel to the top right of the trigger\n- **top-left** places the menu panel to the top left of the trigger\n- **left** places the menu panel to the left of the trigger\n- **right** places the menu panel to the right of the trigger",
-          "type": "\"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\" | \"right\" | \"left\"",
-          "default": "\"bottom-right\""
-        },
-        {
-          "name": "isActive",
-          "description": "Active property\n- **true** Displays the menu on the page\n- **false** Hides the menu on the page",
-          "type": "boolean"
+          "description": "Variant\n- **default** Display the menu items with a background and padding\n- **simple** Display the menu items without a background and padding",
+          "type": "\"simple\""
         },
         {
           "name": "width",
@@ -4344,7 +4223,7 @@
           "type": "number"
         },
         {
-          "name": "menuId",
+          "name": "id",
           "description": "Id attribute\n- Unique id used for A11y\n- Associate the menu with the trigger that controls its open/close state",
           "type": "string"
         },
@@ -4353,11 +4232,6 @@
           "description": "Label attribute\n- Sets ariaLabel for A11y",
           "type": "string",
           "default": "\"Menu\""
-        },
-        {
-          "name": "indentGroupItems",
-          "description": "Indent group items attribute\n**true** - Applies padding to left align the text on group Menu Items with the text of the group Header\n**false** - Does not apply extra padding",
-          "type": "boolean"
         },
         {
           "name": "styleModifier",
@@ -4374,21 +4248,8 @@
         {
           "name": "variant",
           "attribute": "variant",
-          "description": "Variant\n- **default** Displays the menu items in a panel\n- **cascading** Display the menu items without a panel",
-          "type": "\"cascading\""
-        },
-        {
-          "name": "position",
-          "attribute": "position",
-          "description": "Positions the menu panel absolutely to the trigger.\n- **default** places the menu panel to the bottom right of the trigger\n- **bottom-right** places the menu panel to the bottom right of the trigger\n- **bottom-left** places the menu panel to the bottom left of the trigger\n- **top-right** places the menu panel to the top right of the trigger\n- **top-left** places the menu panel to the top left of the trigger\n- **left** places the menu panel to the left of the trigger\n- **right** places the menu panel to the right of the trigger",
-          "type": "\"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\" | \"right\" | \"left\"",
-          "default": "\"bottom-right\""
-        },
-        {
-          "name": "isActive",
-          "attribute": "isActive",
-          "description": "Active property\n- **true** Displays the menu on the page\n- **false** Hides the menu on the page",
-          "type": "boolean"
+          "description": "Variant\n- **default** Display the menu items with a background and padding\n- **simple** Display the menu items without a background and padding",
+          "type": "\"simple\""
         },
         {
           "name": "width",
@@ -4403,8 +4264,8 @@
           "type": "number"
         },
         {
-          "name": "menuId",
-          "attribute": "menuId",
+          "name": "id",
+          "attribute": "id",
           "description": "Id attribute\n- Unique id used for A11y\n- Associate the menu with the trigger that controls its open/close state",
           "type": "string"
         },
@@ -4414,18 +4275,6 @@
           "description": "Label attribute\n- Sets ariaLabel for A11y",
           "type": "string",
           "default": "\"Menu\""
-        },
-        {
-          "name": "indentGroupItems",
-          "attribute": "indentGroupItems",
-          "description": "Indent group items attribute\n**true** - Applies padding to left align the text on group Menu Items with the text of the group Header\n**false** - Does not apply extra padding",
-          "type": "boolean"
-        },
-        {
-          "name": "tabIndex",
-          "description": "- Dynamically sets the menu's tab index for keyboard navigation",
-          "type": "number",
-          "default": "0"
         },
         {
           "name": "hasOverflow",
@@ -4450,17 +4299,6 @@
           "default": "0"
         },
         {
-          "name": "firstValidItem",
-          "description": "The first valid item in the menu list, used to control keyboard focus",
-          "type": "SLMenuItem"
-        },
-        {
-          "name": "handleActiveMenu",
-          "description": "Flag that limits method calls to run only once when the menu is first active\n- Is set to false after the methods run once",
-          "type": "boolean",
-          "default": "true"
-        },
-        {
           "name": "menuItems",
           "description": "Query the menu item components within the menu",
           "type": "SLMenuItem[]"
@@ -4469,18 +4307,6 @@
           "name": "menuList",
           "description": "Query the UL element within the menu",
           "type": "HTMLElement"
-        },
-        {
-          "name": "menuTrigger",
-          "description": "Query the button that triggers the opening of the menu",
-          "type": "array"
-        },
-        {
-          "name": "menuTriggerButton",
-          "description": "Query the trigger inner elements"
-        },
-        {
-          "name": "handleOnClickOutside"
         },
         {
           "name": "styleModifier",
@@ -4508,6 +4334,11 @@
         {
           "name": "isSelected",
           "description": "Selected state",
+          "type": "boolean"
+        },
+        {
+          "name": "isExpandable",
+          "description": "Expandable\n- **true** the item contains a popover with a list of page links\n- **false** the item contains a single page link",
           "type": "boolean"
         },
         {
@@ -4543,6 +4374,12 @@
           "name": "isSelected",
           "attribute": "isSelected",
           "description": "Selected state",
+          "type": "boolean"
+        },
+        {
+          "name": "isExpandable",
+          "attribute": "isExpandable",
+          "description": "Expandable\n- **true** the item contains a popover with a list of page links\n- **false** the item contains a single page link",
           "type": "boolean"
         },
         {
@@ -4696,9 +4533,9 @@
           "default": "[]"
         },
         {
-          "name": "contextualMenus",
-          "description": "Query for all contextual menus within the pagination component",
-          "type": "SLContextualMenu[]"
+          "name": "popovers",
+          "description": "Query for all popovers within the pagination component",
+          "type": "SLPopover[]"
         },
         {
           "name": "label",
@@ -4738,7 +4575,7 @@
         {
           "name": "position",
           "description": "Positions the dropdown popover absolutely to the trigger.\n- **default** places the popover to the bottom left\n- **bottom-center** places the popover to the bottom center\n- **bottom-right** places the popover to the bottom right\n- **bottom-left** places the popover to the bottom left\n- **top-center** places the popover to the top center\n- **top-right** places the popover to the top right\n- **top-left** places the popover to the top left\n- **left** places the popover to the left\n- **left-top** places the popover to the left top\n- **right** places the popover to the right\n- **right-top** places the popover to the right top",
-          "type": "\"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\" | \"right\" | \"bottom-center\" | \"top-center\" | \"left\" | \"left-top\" | \"right-top\"",
+          "type": "\"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\" | \"right\" | \"left\" | \"bottom-center\" | \"top-center\" | \"left-top\" | \"right-top\"",
           "default": "\"bottom-left\""
         },
         {
@@ -4763,6 +4600,11 @@
           "default": "400"
         },
         {
+          "name": "menuId",
+          "description": "Menu id\n- Unique id used to associate popover with a slotted menu component, so that the popover closes when a menu item is selected",
+          "type": "string"
+        },
+        {
           "name": "styleModifier",
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
@@ -4784,7 +4626,7 @@
           "name": "position",
           "attribute": "position",
           "description": "Positions the dropdown popover absolutely to the trigger.\n- **default** places the popover to the bottom left\n- **bottom-center** places the popover to the bottom center\n- **bottom-right** places the popover to the bottom right\n- **bottom-left** places the popover to the bottom left\n- **top-center** places the popover to the top center\n- **top-right** places the popover to the top right\n- **top-left** places the popover to the top left\n- **left** places the popover to the left\n- **left-top** places the popover to the left top\n- **right** places the popover to the right\n- **right-top** places the popover to the right top",
-          "type": "\"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\" | \"right\" | \"bottom-center\" | \"top-center\" | \"left\" | \"left-top\" | \"right-top\"",
+          "type": "\"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\" | \"right\" | \"left\" | \"bottom-center\" | \"top-center\" | \"left-top\" | \"right-top\"",
           "default": "\"bottom-left\""
         },
         {
@@ -4813,12 +4655,10 @@
           "default": "400"
         },
         {
-          "name": "popoverHeading",
-          "description": "Query the popover heading"
-        },
-        {
-          "name": "closeButton",
-          "description": "Query the popover close button"
+          "name": "menuId",
+          "attribute": "menuId",
+          "description": "Menu id\n- Unique id used to associate popover with a slotted menu component, so that the popover closes when a menu item is selected",
+          "type": "string"
         },
         {
           "name": "popoverTrigger",

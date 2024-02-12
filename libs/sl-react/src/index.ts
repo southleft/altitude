@@ -14,7 +14,6 @@ export * from './components/Checkbox';
 export * from './components/CheckboxGroup';
 export * from './components/Chip';
 export * from './components/ChipGroup';
-export * from './components/ContextualMenu';
 export * from './components/DatePicker';
 export * from './components/DateTimePicker';
 export * from './components/Dialog';

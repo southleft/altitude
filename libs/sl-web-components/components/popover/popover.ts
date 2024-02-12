@@ -1,13 +1,10 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property, queryAsync, queryAssignedElements } from 'lit/decorators.js';
+import { property, queryAssignedElements } from 'lit/decorators.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import { nanoid } from 'nanoid';
 import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { SLElement } from '../SLElement';
-import { SLButton } from '../button/button';
-import { SLHeading } from '../heading/heading';
-import { SLIconClose } from '../icon/icons/close';
 import { SLFocusTrap } from '../focus-trap/focus-trap';
 import styles from './popover.scss';
 
@@ -25,17 +22,11 @@ export class SLPopover extends SLElement {
 
   private elementMap = register({
     elements: [
-      [SLHeading.el, SLHeading],
-      [SLButton.el, SLButton],
-      [SLIconClose.el, SLIconClose],
       [SLFocusTrap.el, SLFocusTrap]
     ],
     suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
 
-  private headingEl = unsafeStatic(this.elementMap.get(SLHeading.el));
-  private buttonEl = unsafeStatic(this.elementMap.get(SLButton.el));
-  private iconCloseEl = unsafeStatic(this.elementMap.get(SLIconClose.el));
   private focusTrapEl = unsafeStatic(this.elementMap.get(SLFocusTrap.el));
 
   static get styles() {
@@ -102,20 +93,15 @@ export class SLPopover extends SLElement {
    * Number of ms of the dialog's open/close css transition delay
    * - Used to delay focus trap activation
    */
-   @property()
-   accessor transitionDelay: number = 400;
+  @property()
+  accessor transitionDelay: number = 400;
 
    /**
-   * Query the popover heading
+   * Menu id
+   * - Unique id used to associate popover with a slotted menu component, so that the popover closes when a menu item is selected
    */
-   @queryAsync('.sl-c-popover__title > sl-heading')
-   accessor popoverHeading: any;
-
-   /**
-    * Query the popover close button
-    */
-   @queryAsync('.sl-c-popover__close-button')
-   accessor closeButton: any;
+  @property({ type: String })
+  accessor menuId: string;
 
   /**
    * Query the popover trigger
@@ -133,11 +119,19 @@ export class SLPopover extends SLElement {
   }
 
   /**
-   * Initialize functions
+   * Contructor
+   * 1. Bind the context of the handleOnClickOutside method
+   * 2. Add a listener that closes the popover when a selection is made within its slotted menu component (if it has one)
    */
   constructor() {
     super();
-    this.handleOnClickOutside = this.handleOnClickOutside.bind(this);
+    this.handleOnClickOutside = this.handleOnClickOutside.bind(this); /* 1 */
+    /* 2 */
+    this.addEventListener('onMenuSelect', (e: CustomEvent) => {
+      if (e.detail.id === this.menuId) {
+        this.close();
+      }
+    });
   }
 
   /**
@@ -211,35 +205,12 @@ export class SLPopover extends SLElement {
 
   /**
    * Handle on keydown events
-   * 1. When the Enter key is pressed on the trigger, open the popover and prevent default button click
-   * 2. If the popover is open and escape is keyed, close the popover and return focus to the trigger button
+   * - If the popover is open and escape is keyed, close the popover and return focus to the trigger button
    */
   handleOnKeydown(e: KeyboardEvent) {
-    const { target } = e as any;
-    /* 1 */
-    if (this.slotNotEmpty('trigger') && target.matches('[slot="trigger"]') && e.code === 'Enter') {
-      e.preventDefault();
-      this.toggleActive();
-    }
-    /* 2 */
     if (this.isActive === true && e.code === 'Escape') {
       this.close();
     }
-  }
-
-  /**
-   * Handle on click of close button
-   * 1. Toggle the active state between true and false
-   * 2. Dispatch a custom event on click of close button
-   */
-  handleOnCloseButton() {
-    this.toggleActive();
-    this.dispatch({
-      eventName: 'onPopoverCloseButton',
-      detailObj: {
-        active: this.isActive
-      }
-    });
   }
 
   /**
@@ -320,44 +291,13 @@ export class SLPopover extends SLElement {
             <slot name="trigger"></slot>
           </div>
         `}
-        <${this.focusTrapEl} .delay=${this.transitionDelay} .isActive=${this.isActive}>
+        <${this.focusTrapEl} .transitionDelay=${this.transitionDelay} ?isActive=${this.isActive}>
           <div
             class="sl-c-popover__container"
-            role="region"
+            role="dialog"
             aria-labelledby=${this.ariaLabelledBy}
-            aria-hidden=${this.isActive ? false : true}
           >
-            ${(this.slotNotEmpty('header') || this.heading || this.isDismissible) &&
-            html`
-              <div class="sl-c-popover__header">
-                ${(this.slotNotEmpty('header') || this.heading) &&
-                html`
-                  <div class="sl-c-popover__title" id=${this.ariaLabelledBy}>
-                    ${this.heading &&
-                    html`
-                      <${this.headingEl} tagName="h1">${this.heading}</${this.headingEl}>
-                    `}
-                    <slot name="header"></slot>
-                  </div>
-                `}
-                ${this.isDismissible
-                  ? html`
-                  <${this.buttonEl} class="sl-c-popover__close-button" variant="tertiary" ?hideText=${true} @click=${this.handleOnCloseButton}>
-                    Close<${this.iconCloseEl} class="sl-c-popover__icon-close" slot="after"></${this.iconCloseEl}>
-                  </${this.buttonEl}>
-                `
-                  : html``}
-              </div>
-            `}
-            <div class="sl-c-popover__body">
-              <slot></slot>
-            </div>
-            ${this.slotNotEmpty('footer') &&
-            html`
-              <div class="sl-c-popover__footer">
-                <slot name="footer"></slot>
-              </div>
-            `}
+            <slot></slot>
           </div>
         </${this.focusTrapEl}>
       </div>

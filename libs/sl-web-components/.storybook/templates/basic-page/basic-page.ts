@@ -33,7 +33,7 @@ export class SLBasicPage extends LitElement {
         <sl-toggle-button class="sl-l-basic-page__toggle-button" variant="background">
           <sl-popover position="top-left">
             <sl-icon-help slot="trigger" size="lg"></sl-icon-help>
-            <f-po>Content</f-po>
+            <f-po style="padding: 8px; width: 432px">Content</f-po>
           </sl-popover>
         </sl-toggle-button>
         <sl-layout gap="lg">

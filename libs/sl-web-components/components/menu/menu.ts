@@ -8,9 +8,8 @@ import styles from './menu.scss';
 /**
  * Component: sl-menu
  *
- * Menu displays a list of interactive options on a temporary surface.
+ * Menu displays a list of interactive options.
  * - **slot**: The menu items in the menu
- * - **slot** "trigger": A button to trigger the active state of the menu
  */
 export class SLMenu extends SLElement {
   static el = 'sl-menu';
@@ -21,32 +20,11 @@ export class SLMenu extends SLElement {
 
   /**
    * Variant
-   * - **default** Displays the menu items in a panel
-   * - **cascading** Display the menu items without a panel
+   * - **default** Display the menu items with a background and padding
+   * - **simple** Display the menu items without a background and padding
    */
   @property()
-  accessor variant: 'cascading';
-
-  /**
-   * Positions the menu panel absolutely to the trigger.
-   * - **default** places the menu panel to the bottom right of the trigger
-   * - **bottom-right** places the menu panel to the bottom right of the trigger
-   * - **bottom-left** places the menu panel to the bottom left of the trigger
-   * - **top-right** places the menu panel to the top right of the trigger
-   * - **top-left** places the menu panel to the top left of the trigger
-   * - **left** places the menu panel to the left of the trigger
-   * - **right** places the menu panel to the right of the trigger
-   */
-  @property()
-  accessor position: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left' | 'left' | 'right' = 'bottom-right';
-
-  /**
-   * Active property
-   * - **true** Displays the menu on the page
-   * - **false** Hides the menu on the page
-   */
-  @property({ type: Boolean })
-  accessor isActive: boolean;
+  accessor variant: 'simple';
 
   /**
    * Width property
@@ -68,7 +46,7 @@ export class SLMenu extends SLElement {
    * - Associate the menu with the trigger that controls its open/close state
    */
   @property()
-  accessor menuId: string;
+  accessor id: string;
 
   /**
    * Label attribute
@@ -76,20 +54,6 @@ export class SLMenu extends SLElement {
    */
   @property()
   accessor label: string = 'Menu';
-
-  /**
-   * Indent group items attribute
-   * **true** - Applies padding to left align the text on group Menu Items with the text of the group Header
-   * **false** - Does not apply extra padding
-   */
-  @property({ type: Boolean })
-  accessor indentGroupItems: boolean;
-
-  /* Tab index attribute
-   * - Dynamically sets the menu's tab index for keyboard navigation
-   */
-  @state()
-  accessor tabIndex: number = 0;
 
   /**
    * Is set to true when the total height of items in the menu is greater than the menu's height attribute
@@ -118,19 +82,6 @@ export class SLMenu extends SLElement {
   accessor validItemCount: number = 0;
 
   /**
-   * The first valid item in the menu list, used to control keyboard focus
-   */
-  @state()
-  accessor firstValidItem: SLMenuItem;
-
-  /**
-   * Flag that limits method calls to run only once when the menu is first active
-   * - Is set to false after the methods run once
-   */
-  @state()
-  accessor handleActiveMenu: boolean = true;
-
-  /**
    * Query the menu item components within the menu
    */
   @queryAssignedElements({ flatten: true })
@@ -141,23 +92,6 @@ export class SLMenu extends SLElement {
    */
   @query('.sl-c-menu__list')
   accessor menuList: HTMLElement;
-
-  /**
-   * Query the button that triggers the opening of the menu
-   */
-  @queryAssignedElements({ slot: 'trigger' })
-  accessor menuTrigger: any[];
-
-  /**
-   * Query the trigger inner elements
-   */
-  get menuTriggerButton(): any {
-    if (this.menuTrigger[0].shadowRoot) {
-      return this.menuTrigger[0].shadowRoot.querySelector('*');
-    } else {
-      return this.menuTrigger[0].querySelector('*');
-    }
-  }
 
   /**
    * The last index of menu items, used to control keyboard focus
@@ -171,7 +105,7 @@ export class SLMenu extends SLElement {
    */
   constructor() {
     super();
-    this.handleOnClickOutside = this.handleOnClickOutside.bind(this);
+
     /**
      * Observe changes to the expanded state of menu items and update the menu
      */
@@ -186,41 +120,26 @@ export class SLMenu extends SLElement {
 
   /**
    * Connected callback lifecycle
-   * 1. Add mousedown event listener
-   * 2. Dynamically set the id for A11y. This id should be set as the 'ariaControls' attribute on the trigger button
+   * 1. Dynamically set the id for A11y. This id should be set as the 'ariaControls' attribute on the trigger button
    */
   connectedCallback() {
     super.connectedCallback();
-    globalThis.addEventListener('mousedown', this.handleOnClickOutside, false); /* 1 */
-    this.menuId = this.menuId || nanoid(); /* 2 */
-  }
 
-  /**
-   * Disconnected callback lifecycle
-   * 1. Remove mousedown event listener
-   */
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    globalThis.removeEventListener('mousedown', this.handleOnClickOutside, false); /* 1 */
+    this.id = this.id || nanoid(); /* 1 */
   }
 
   /**
    * First updated lifecycle
-   * If the Menu is Active
-   * 1. Dynamically set the menu panel's width and height and scroll behavior
-   * 2. Synchronize items with their Group Headers and apply indexes for keyboard
-   * 3. Set the handleActiveMenu flag to false to prevent running duplicate logic
+   * 1. Dynamically set the menu's width, height, and scroll behavior
+   * 2. Synchronize items with their Group Headers and apply indexes for keyboard navigation
    */
   firstUpdated() {
-    if (this.isActive) {
-      this.setWidthHeight(); /* 1 */
-      this.syncHeadersWithItems(); /* 2 */
-      this.handleActiveMenu = false; /* 3 */
-    }
+    this.setWidthHeight(); /* 1 */
+    this.syncHeadersWithItems(); /* 2 */
   }
 
   /**
-   * Dynamically associates Group Menu items with their Headers, and sets indexes on items for keyboard navigation
+   * Dynamically associate Group Menu items with their Headers, and set indexes on items for keyboard navigation
    * 1. Initalize the valid item count at 0
    * 2. Iterate over all menu items
    * 3. Initialize the items index to null
@@ -234,10 +153,9 @@ export class SLMenu extends SLElement {
    * - Assign the item the current group id
    * - Apply the item a unique id
    * - Add this unique id to the aria-controls attribute for the group's expand control
-   * 8. If required, apply padding to align the items's text with its Header
-   * 9. If the item's Group Header is expanded: assign its index and increment the valid item count
-   * 10. When the next item is not a header, remove the stored Group Header
-   * 11. If the item is not a Header or part of a group, assign its index and increment the valid item count
+   * 8. If the item's Group Header is expanded: assign its index and increment the valid item count
+   * 9. When the next item is not a header, remove the stored Group Header
+   * 10. If the item is not a Header or part of a group, assign its index and increment the valid item count
    */
   syncHeadersWithItems() {
     let groupHeader: SLMenuItem;
@@ -270,12 +188,8 @@ export class SLMenu extends SLElement {
           item.groupId = groupId;
           item.id = `group-${groupId}-item-${i}`;
           groupHeader.ariaControls += ` ${item.id}`;
-          /* 8 */
-          if (this.indentGroupItems) {
-            this.setIndentation(groupHeader, item);
-          }
         }
-        /* 9 */
+        /* 8 */
         if (groupHeader.isExpanded) {
           item.idx = this.validItemCount;
           this.validItemCount++;
@@ -283,12 +197,12 @@ export class SLMenu extends SLElement {
         } else {
           item.isHidden = true;
         }
-        /* 10 */
+        /* 9 */
         if (nextItem?.isHeader) {
           groupHeader = null;
         }
       } else {
-        /* 11 */
+        /* 10 */
         item.idx = this.validItemCount;
         this.validItemCount++;
       }
@@ -296,33 +210,16 @@ export class SLMenu extends SLElement {
   }
 
   /**
-   * Dynamically set inline start padding on child menu items
-   * 1. Reset the padding to 0
-   * 2. If the Group Header has prefix content, Get the width of this content
-   * 3. Add padding to the item to account for prefix content width, plus existing padding and gap widths
-   */
-  async setIndentation(currentHeader: SLMenuItem, item: SLMenuItem) {
-    item.indentation = 0; /* 1 */
-    await this.updateComplete;
-    /* 2 */
-    if (currentHeader.slotNotEmpty('before')) {
-      const prefixContent = currentHeader.shadowRoot.querySelector<HTMLElement>('.sl-c-menu-item__prefix');
-      /* 3 */
-      item.indentation = prefixContent.clientWidth + item.indentation + 24;
-    }
-  }
-
-  /**
    * Set the width and height
-   * 1. Add a custom property to adjust the width of the menu panel
-   * 2. Add a custom property to adjust the height of the menu panel and enable scroll
+   * 1. Add a custom property to adjust the width of the menu list
+   * 2. Add a custom property to adjust the height of the menu list and enable scroll
    */
   setWidthHeight() {
     if (this.width) {
-      this.style.setProperty('--sl-menu-panel-width', this.width.toString() + 'px');
+      this.style.setProperty('--sl-menu-width', this.width.toString() + 'px');
     }
     if (this.height) {
-      this.style.setProperty('--sl-menu-panel-height', this.height.toString() + 'px');
+      this.style.setProperty('--sl-menu-height', this.height.toString() + 'px');
       this.hasOverflow = true;
     }
   }
@@ -334,8 +231,7 @@ export class SLMenu extends SLElement {
    * 1. Calculate the index of the new menu item based on the 'isPrevious' flag
    * 2. Handle boundary conditions by looping to the other end if necessary
    * 3. Find the new item to focus based on the new index
-   * 4. If the new item is valid (not disabled), return it
-   * 5. If the new item not valid, repeat recursively until a valid item is found
+   * 4. Return the new item
    */
   getNewValidItem(currentIndex: number, isPrevious: boolean): SLMenuItem {
     /* 1 */
@@ -343,16 +239,12 @@ export class SLMenu extends SLElement {
     /* 2 */
     if (newIndex < 0) {
       newIndex = this._maxIndex;
-    } else if (newIndex >= this._maxIndex) {
+    } else if (newIndex > this._maxIndex) {
       newIndex = 0;
     }
     /* 3 */
     const newItem = this.menuItems.find((item) => item.idx === newIndex);
-    if (!newItem.isDisabled) {
-      return newItem; /* 4 */
-    } else {
-      return this.getNewValidItem(newItem.idx, isPrevious); /* 5 */
-    }
+    return newItem; /* 4 */
   }
 
   /**
@@ -375,66 +267,41 @@ export class SLMenu extends SLElement {
    * @param isPrevious - A flag indicating whether to focus the previous item (true) or the next item (false)
    * 1. Get the next or previous valid item that will receive focus
    * 2. Set focus to the new item's inner element
-   * 3. Set the new item as the currently focused item in the menu
    */
   setFocusAdjacentItem(currentItem: SLMenuItem, isPrevious: boolean) {
     const newFocusItem = this.getNewValidItem(currentItem.idx, isPrevious); /* 1 */
-    this.setFocusedItem(newFocusItem);
-  }
-
-  /**
-   * Handle focus event
-   * 1. Remove the menu from tab order so that "Shift + Tab" will send focus back to the trigger button
-   * 2. If there is a selected menu item, send focus to that item
-   * 3. If there is not a selected menu item, send focus to the first valid item in the menu
-   */
-  handleOnFocus() {
-    this.tabIndex = -1; /* 1 */
-    /* 2 */
-    if (this.selectedItem) {
-      this.setFocusedItem(this.selectedItem);
-    } else {
-      /* 3 */
-      this.firstValidItem = this.getNewValidItem(-1, false);
-      this.setFocusedItem(this.firstValidItem);
+    if (newFocusItem) {
+      this.setFocusedItem(newFocusItem); /* 2 */
     }
   }
 
   /**
    * Handle keydown event
-   * 1. When the Enter key is pressed on the trigger, open the menu and prevent default button click
-   * 2. When the Escape key is pressed, close the menu
-   * 3. On Down Arrow key, move focus to the next item. Or, if focus is on the last valid item, move focus to the first valid item in the list.
-   * 4. On Up Arrow key, move focus to the previous item. Or, if focus is on the first valid item, move focus to the last valid item in the list.
-   * 5. On Home key, move focus to the first valid item in the list.
-   * 6. On End key, move focus to the last valid item in the list.
+   * 1. On Down Arrow or Right Arrow key, move focus to the next item. Or, if focus is on the last valid item, move focus to the first valid item in the list.
+   * 2. On Up Arrow or Left Arrow key, move focus to the previous item. Or, if focus is on the first valid item, move focus to the last valid item in the list.
+   * 3. On Home key, move focus to the first valid item in the list.
+   * 4. On End key, move focus to the last valid item in the list.
    */
   handleOnKeydown(e: KeyboardEvent) {
     const { target } = e as any;
-    /* 1 */
-    if (this.slotNotEmpty('trigger') && target.matches('[slot="trigger"]') && e.key === 'Enter') {
-      e.preventDefault();
-      this.open();
-    }
-    /* 2 */
-    if (this.slotNotEmpty('trigger') && e.key === 'Escape') {
-      this.close();
-    }
+
     if (target.matches('sl-menu-item')) {
       switch (e.key) {
-        case 'ArrowDown' /* 3 */:
+        case 'ArrowDown' /* 1 */:
+        case 'ArrowRight':
           this.setFocusAdjacentItem(target as SLMenuItem, false);
           break;
-        case 'ArrowUp' /* 4 */:
+        case 'ArrowUp' /* 2 */:
+        case 'ArrowLeft':
           this.setFocusAdjacentItem(target as SLMenuItem, true);
           break;
-        case 'Home' /* 5 */:
+        case 'Home' /* 3 */:
           this.setFocusAdjacentItem(
-            this.menuItems.find((item) => item.idx === this._maxIndex - 1),
+            this.menuItems.find((item) => item.idx === this._maxIndex),
             false
           );
           break;
-        case 'End' /* 6 */:
+        case 'End' /* 4 */:
           this.setFocusAdjacentItem(
             this.menuItems.find((item) => item.idx === 0),
             true
@@ -454,6 +321,13 @@ export class SLMenu extends SLElement {
       this.selectedItem.isSelected = false; /* 1 */
     }
     this.selectedItem = item; /* 2 */
+
+    this.dispatch({
+      eventName: 'onMenuSelect',
+      detailObj: {
+        id: this.id
+      }
+    });
   }
 
   /**
@@ -464,129 +338,22 @@ export class SLMenu extends SLElement {
     this.syncHeadersWithItems();
   }
 
-  /**
-   * Handles the click event outside the component:
-   * 1. Check if the menu is active
-   * 2. Determine if the click occurred inside the active menu
-   * 3. Check if the click occurred outside the active menu
-   * 4. Close the menu if the click occurred outside it
-   */
-  handleOnClickOutside(e: MouseEvent) {
-    /* 1 */
-    if (this.slotNotEmpty('trigger') && this.isActive) {
-      const didClickInside = e.composedPath().includes(this.shadowRoot.host); /* 2 */
-      /* 3 */
-      if (!didClickInside) {
-        /* 4 */
-        this.close();
-      }
-    }
-  }
-
-  /**
-   * Set menu active state
-   * 1. Toggle the active state between true and false
-   * 2. Open/close the panel container based on isActive
-   */
-  public toggleActive() {
-    this.isActive = !this.isActive; /* 1 */
-    /* 2 */
-    if (this.isActive) {
-      this.open();
-    } else {
-      this.close();
-    }
-  }
-
-  /**
-   * Open menu
-   * - When the menu is opened:
-   * 1. Set the isActive property to true to display the menu
-   * 2. Focus the menu list element
-   * 3. Dispatch the custom event
-   * 4. If the active menu methods have not run, execute them and set the flag to false
-   */
-  public open() {
-    this.isActive = true; /* 1 */
-    setTimeout(() => {
-      this.menuList.focus(); /* 2 */
-    }, 1);
-    /* 3 */
-    this.dispatch({
-      eventName: 'onMenuOpen',
-      detailObj: {
-        active: this.isActive
-      }
-    });
-    /* 4 */
-    if (this.handleActiveMenu) {
-      this.setWidthHeight();
-      this.syncHeadersWithItems();
-      this.handleActiveMenu = false;
-    }
-  }
-
-  /**
-   * Close menu
-   * - When the menu is closed:
-   * 1. Set the isActive property to false to hide the menu
-   * 2. If there is no selected item, reset the menu's tab index so it is focusable
-   * 3. Set focus to the trigger button element
-   * 4. Dispatch the custom event
-   */
-  public close() {
-    this.isActive = false; /* 1 */
-    if (!this.selectedItem) {
-      this.tabIndex = 0; /* 2 */
-    }
-    /* 3 */
-    setTimeout(() => {
-      if (this.menuTriggerButton) {
-        this.menuTriggerButton.focus();
-      }
-    }, 1);
-    /* 4 */
-    this.dispatch({
-      eventName: 'onMenuClose',
-      detailObj: {
-        active: this.isActive
-      }
-    });
-  }
-
   render() {
     const componentClassNames = this.componentClassNames('sl-c-menu', {
-      'sl-c-menu--cascading': this.variant === 'cascading',
-      'sl-c-menu--top-left': this.position === 'top-left',
-      'sl-c-menu--top-right': this.position === 'top-right',
-      'sl-c-menu--bottom-left': this.position === 'bottom-left',
-      'sl-c-menu--bottom-right': this.position === 'bottom-right',
-      'sl-c-menu--left': this.position === 'left',
-      'sl-c-menu--right': this.position === 'right',
-      'sl-is-active': this.isActive,
-      'sl-has-overflow': this.hasOverflow,
-      'sl-has-trigger': this.slotNotEmpty('trigger')
+      'sl-c-menu--simple': this.variant === 'simple',
+      'sl-has-overflow': this.hasOverflow
     });
 
     return html`
       <div class="${componentClassNames}">
-        ${this.slotNotEmpty('trigger') &&
-        html`
-          <div class="sl-c-menu__trigger" @click=${this.toggleActive} @keydown=${this.handleOnKeydown} aria-controls=${this.menuId}>
-            <slot name="trigger"></slot>
-          </div>
-        `}
-        <nav class="sl-c-menu__panel" id=${this.menuId}>
-          <ul
-            class="sl-c-menu__list"
-            aria-label=${this.label}
-            tabindex=${this.tabIndex}
-            @focus=${this.handleOnFocus}
-            @keydown=${this.handleOnKeydown}
-          >
-            <slot></slot>
-          </ul>
-        </nav>
+        <ul
+          class="sl-c-menu__list"
+          role="menu"
+          aria-label=${this.label}
+          @keydown=${this.handleOnKeydown}
+        >
+          <slot></slot>
+        </ul>
       </div>
     `;
   }

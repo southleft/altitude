@@ -125,14 +125,6 @@ export class SLMenuItem extends SLElement {
   accessor idx: number;
 
   /**
-   * Indentation
-   * - Dynamically set by the menu parent component
-   * - Adds padding to a menu item to left-align its text with that of its Header
-   */
-  @property({ type: Number })
-  accessor indentation: number;
-
-  /**
    * Label attribute
    * - Sets the ariaLabel for A11y
    */
@@ -183,7 +175,6 @@ export class SLMenuItem extends SLElement {
    */
   async firstUpdated() {
     await this.updateComplete;
-    this.setIndentation();
     this.setLinkClasses();
     this.setControlClasses();
   }
@@ -193,7 +184,6 @@ export class SLMenuItem extends SLElement {
    * 1. Wait for slotted elements to be loaded
    */
   updated() {
-    this.setIndentation();
     this.setLinkClasses();
     this.setControlClasses();
   }
@@ -240,16 +230,6 @@ export class SLMenuItem extends SLElement {
   }
 
   /**
-   * Set indentation
-   * 1. Set the indentation on the menu item link to align with header items
-   */
-  setIndentation() {
-    if (this.indentation) {
-      this.style.setProperty('--sl-link-padding-inline-start', this.indentation.toString() + 'px'); /* 1 */
-    }
-  }
-
-  /**
    * Set selected item
    * 1. If the item is not disabled or already selected, set its selected state to true
    * 2. Dispatch the custom event
@@ -278,6 +258,7 @@ export class SLMenuItem extends SLElement {
     /* 1 */
     if (this.isHeader && this.groupId) {
       this.isExpanded = !this.isExpanded;
+
       /* 2 */
       this.dispatch({
         eventName: 'onMenuItemExpand',
