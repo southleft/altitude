@@ -7,6 +7,10 @@ import * as Search from '../../components/search/search.stories.ts';
 import * as Drawer from '../../components/drawer/drawer.stories.ts';
 import * as Avatar from '../../components/avatar/avatar.stories.ts';
 import '../../components/icon/icons/menu';
+import '../../components/popover/popover';
+import '../../components/menu/menu';
+import '../../components/menu-item/menu-item';
+import '../../components/divider/divider';
 
 export default {
   title: 'Organisms/Header',
@@ -24,14 +28,3 @@ const Template = (args) => html`
 
 export const Default = Template.bind({});
 Default.args = {};
-
-const TemplateWithContent = (args) => html`
-<sl-header ${spread(args)}>
-  <img slot="before" src="images/logo.svg" alt="logo" style=${`max-width: 200px;`}/>
-  ${Search.Default({})}
-  <div slot="after">${Avatar.HasBadge({hasBadge: true, badgeVariant: 'success'})}</div>
-  <div slot="after">${Drawer.WithBackdrop({hasBackdrop: true})}</div>
-</sl-header>`;
-
-export const WithContent = TemplateWithContent.bind({});
-WithContent.args = {};

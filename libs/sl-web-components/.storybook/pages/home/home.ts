@@ -2,11 +2,7 @@ import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import styles from './home.scss';
-import * as Breadcrumbs from '../../../components/breadcrumbs/breadcrumbs.stories.ts';
-import * as Pagination from '../../../components/pagination/pagination.stories.ts';
-import * as Card from '../../../components/card/card.stories.ts';
-import '../../templates/basic-page/basic-page';
-import '../../../components/layout-section/layout-section';
+import '../../templates/dashboard/dashboard';
 
 /**
  * Page: sl-l-home
@@ -27,30 +23,14 @@ export class SLHome extends LitElement {
     });
 
     return html`
-      <sl-basic-page class=${componentClassNames}>
-        <sl-layout-section>
-          ${Breadcrumbs.Truncated({isTruncated: true})}
-        </sl-layout-section>
-        <sl-layout-section>
-          <div class="sl-u-grid cols:6@sm cols:4@md cols:3@lg sl-u-gap--md">
-            ${Card.WithContent({})}
-            ${Card.WithContent({})}
-            ${Card.WithContent({})}
-            ${Card.WithContent({})}
-            ${Card.WithContent({})}
-            ${Card.WithContent({})}
-            ${Card.WithContent({})}
-            ${Card.WithContent({})}
-            ${Card.WithContent({})}
-            ${Card.WithContent({})}
-            ${Card.WithContent({})}
-            ${Card.WithContent({})}
-          </div>
-        </sl-layout-section>
-        <sl-layout-section>
-          ${Pagination.Default({totalRecords: '200', pageSize: '20'})}
-        </sl-layout-section>
-      </sl-basic-page>
+      <sl-dashboard class=${componentClassNames}>
+        <div class="sl-u-grid sl-u-gap--lg" style="height: 100%">
+          <f-po class="sl-u-grid__item col:7@md">Coming soon</f-po>
+          <f-po class="sl-u-grid__item col:5@md row:2@md">Coming soon</f-po>
+          <f-po class="sl-u-grid__item col:7@md">Coming soon</f-po>
+          <f-po class="sl-u-grid__item col:12@md">Coming soon</f-po>
+        </div>
+      </sl-dashboard>
     `;
   }
 }

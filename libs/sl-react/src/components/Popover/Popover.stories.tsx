@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLPopover, SLButton, SLButtonGroup, SLTabs, SLTab, SLTabPanel, SLToggleButton, SLIconHelp } from '../..';
+import { SLPopover, SLButton, SLButtonGroup, SLTabs, SLTab, SLTabPanel, SLToggleButton, SLIconHelp, SLIconDotsVertical } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
@@ -16,6 +16,10 @@ export default {
     },
   },
   argTypes: {
+    variant: {
+      options: ['default', 'menu'],
+      control: { type: 'radio' }
+    },
     heading: {
       type: 'text'
     },
@@ -85,6 +89,16 @@ export const PositionRight: StoryObj<typeof SLPopover> = { args: {
 
 export const PositionRightTop: StoryObj<typeof SLPopover> = { args: {
   position: 'right-top',
+} };
+
+export const Menu: StoryObj<typeof SLPopover> = { args: {
+  variant: 'menu',
+  children: (
+    <>
+      <SLButton slot="trigger" hideText={true} variant="tertiary"><SLIconDotsVertical slot="after"></SLIconDotsVertical>Open Panel</SLButton>
+      <Fpo>Panel content</Fpo>
+    </>
+  )
 } };
 
 export const WithSlottedContent: StoryObj<typeof SLPopover> = {

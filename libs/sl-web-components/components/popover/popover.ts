@@ -43,6 +43,14 @@ export class SLPopover extends SLElement {
   }
 
   /**
+   * Variants
+   * - **default** Displays the popover panel with padding
+   * - **menu** Displays the popover panel without padding
+   */
+  @property()
+  accessor variant: 'menu';
+
+  /**
    * Heading text that appears in the header region
    */
   @property()
@@ -299,6 +307,7 @@ export class SLPopover extends SLElement {
 
   render() {
     const componentClassNames = this.componentClassNames('sl-c-popover', {
+      'sl-c-popover--menu': this.variant === 'menu',
       'sl-c-popover--bottom-center': this.position === 'bottom-center',
       'sl-c-popover--bottom-right': this.position === 'bottom-right',
       'sl-c-popover--bottom-left': this.position === 'bottom-left',

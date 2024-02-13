@@ -11,6 +11,7 @@ import '../tab-panel/tab-panel';
 import '../tab/tab';
 import '../tabs/tabs';
 import '../toggle-button/toggle-button';
+import '../icon/icons/dots-vertical';
 
 export default {
   title: 'Molecules/Popover',
@@ -28,6 +29,10 @@ export default {
   },
   decorators: [ withActions ],
   argTypes: {
+    variant: {
+      options: ['default', 'menu'],
+      control: { type: 'radio' }
+    },
     heading: {
       type: 'text'
     },
@@ -42,10 +47,6 @@ export default {
       type: 'boolean'
     },
   },
-  args: {
-    heading: 'Panel heading',
-    isDismissible: true,
-  },
 };
 
 function closePanel() {
@@ -56,7 +57,7 @@ function closePanel() {
 }
 
 const Template = (args) => html`
-  <sl-popover ${spread(args)} data-testid="popover">
+  <sl-popover ${spread(args)} data-testid="popover" ?isDismissible=${true} heading="Panel heading">
     <sl-button slot="trigger">Open Popover</sl-button>
     <f-po>Panel content</f-po>
   </sl-popover>
@@ -110,10 +111,22 @@ PositionRightTop.args = {
   position: 'right-top'
 };
 
-const TemplateWithSlottedContent = (args) => html`
-  <div style="position: absolute; inset-block-end: 1rem; inset-inline-end: 1rem;">
+const TemplateMenu = (args) => html`
+  <sl-popover ${spread(args)} data-testid="popover">
+    <sl-button slot="trigger" ?hideText=${true} variant="tertiary"><sl-icon-dots-vertical slot="after"></sl-icon-dots-vertical>Open Popover</sl-button>
+    <f-po>Panel content</f-po>
+  </sl-popover>
+`;
+
+export const Menu = TemplateMenu.bind({});
+Menu.args = {
+  variant: 'menu'
+};
+
+const TemplateWithContent = (args) => html`
+  <div style="position: fixed; inset-block-end: var(--sl-theme-space); inset-inline-end: var(--sl-theme-space); z-index: var(--sl-z-index-top);">
     <sl-popover ${spread(args)} data-testid="popover">
-      <sl-toggle-button slot="trigger" data-testid="popover-trigger"><sl-icon-help size="lg"></sl-icon-help></sl-toggle-button>
+      <sl-toggle-button slot="trigger" variant="background" data-testid="popover-trigger"><sl-icon-help size="lg"></sl-icon-help></sl-toggle-button>
       <sl-tabs variant="stretch">
         <sl-tab>Tab 1</sl-tab>
         <sl-tab>Tab 2</sl-tab>
@@ -139,12 +152,12 @@ const TemplateWithSlottedContent = (args) => html`
     </sl-popover>
   </div>
 `;
-export const WithSlottedContent = TemplateWithSlottedContent.bind({});
-WithSlottedContent.args = {
+export const WithContent = TemplateWithContent.bind({});
+WithContent.args = {
   position: 'top-left'
 };
 
-WithSlottedContent.parameters = {
+WithContent.parameters = {
   layout: 'fullscreen'
 };
 
@@ -152,7 +165,7 @@ WithSlottedContent.parameters = {
   #STORYBOOK TESTS
 \*------------------------------------*/
 
-WithSlottedContent.play = async ({ canvasElement }) => {
+WithContent.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement);
   const popover = canvas.queryByTestId('popover') as any;
   const popoverTrigger = canvas.queryByTestId('popover-trigger') as any;

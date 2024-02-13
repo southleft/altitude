@@ -5,7 +5,10 @@ import './{{dashCase name}}';
 export default {
   title: 'Templates/{{titleCase name}}',
   component: 'sl-{{dashCase name}}',
-  parameters: { status: { type: 'beta' } },
+  parameters: {
+    status: { type: 'beta' },
+    layout: 'fullscreen'
+  },
   tags: [ 'autodocs' ]
 };
 

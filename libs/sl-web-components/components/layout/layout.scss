@@ -7,6 +7,7 @@
   display: grid;
   gap: var(--sl-theme-space);
   grid-template-columns: repeat(1, 1fr);
+  min-height: 100vh;
 }
 
 /**
@@ -51,7 +52,7 @@
  */
 .sl-c-layout--sidebar-left {
   @media all and (min-width: $sl-breakpoint-md) {
-    grid-template-columns: calc(var(--sl-layout-width-sidebar, 40%) - (var(--sl-theme-space-xs))) minmax(0, 1fr); /* 2 */
+    grid-template-columns: calc(var(--sl-theme-layout-width-sidebar, 40%) - (var(--sl-theme-space-xs))) minmax(0, 1fr); /* 2 */
   }
 }
 
@@ -65,6 +66,6 @@
  */
 .sl-c-layout--sidebar-right {
   @media all and (min-width: $sl-breakpoint-md) {
-    grid-template-columns: minmax(0, 1fr) calc(var(--sl-layout-width-sidebar, 40%) - (var(--sl-theme-space-xs))); /* 2 */
+    grid-template-columns: minmax(0, 1fr) calc(var(--sl-theme-layout-width-sidebar, 40%) - (var(--sl-theme-space-xs))); /* 2 */
   }
 }
