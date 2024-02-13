@@ -1,11 +1,10 @@
 import { getStyles } from '@enhance/arc-plugin-styles'
-const { linkTag } = getStyles
 
+const { linkTag } = getStyles
 export default function Head(state) {
   const { store = {} } = state
   // pageTitle is set in /app/preflight.mjs
   const { pageTitle = '' } = store
-  this.slAutoRegistry = true;
   return `
     <!DOCTYPE html>
     <html lang="en">
@@ -16,6 +15,8 @@ export default function Head(state) {
       ${linkTag()}
       <link rel="icon" href="/_public/favicon.svg">
       <meta name="description" content="The HTML first full stack web framework.">
+      <script>window.slAutoRegistry = true;</script>
+      <link rel="stylesheet" href="/_public/head.css">
     </head>
 `
 }

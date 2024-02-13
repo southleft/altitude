@@ -28,7 +28,7 @@ export class SLHome extends LitElement {
 
     return html`
       <sl-basic-page class=${componentClassNames}>
-        <sl-layout-section class="sl-l-home__breadcrumbs">
+        <sl-layout-section>
           ${Breadcrumbs.Truncated({isTruncated: true})}
         </sl-layout-section>
         <sl-layout-section>
@@ -47,7 +47,7 @@ export class SLHome extends LitElement {
             ${Card.WithContent({})}
           </div>
         </sl-layout-section>
-        <sl-layout-section class="sl-l-home__breadcrumbs">
+        <sl-layout-section>
           ${Pagination.Default({totalRecords: '200', pageSize: '20'})}
         </sl-layout-section>
       </sl-basic-page>

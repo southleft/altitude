@@ -29,20 +29,22 @@ export class SLBasicPage extends LitElement {
     });
 
     return html`
-      <sl-layout-container class=${componentClassNames}>
+      <main class=${componentClassNames}>
         <sl-toggle-button class="sl-l-basic-page__toggle-button" variant="background">
           <sl-popover position="top-left">
             <sl-icon-help slot="trigger" size="lg"></sl-icon-help>
             <f-po>Content</f-po>
           </sl-popover>
         </sl-toggle-button>
-        <sl-layout gap="lg">
-          <sl-layout-section>
-            ${Header.WithContent({})}
-          </sl-layout-section>
-          <slot></slot>
-        </sl-layout>
-      </sl-layout-container>
+        <sl-layout-container>
+          <sl-layout gap="lg">
+            <sl-layout-section>
+              ${Header.WithContent({})}
+            </sl-layout-section>
+            <slot></slot>
+          </sl-layout>
+        </sl-layout-container>
+      </main>
     `;
   }
 }
