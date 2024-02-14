@@ -46,7 +46,7 @@ export default {
     isActive: {
       type: 'boolean'
     },
-    isDismissible: {      
+    isDismissible: {
       type: 'boolean'
     }
   }
@@ -179,7 +179,7 @@ WithMenuWithGroups.parameters = {
 };
 
 const TemplateWithContent = (args) => html`
-  <div style="position: fixed; inset-block-end: var(--sl-theme-space); inset-inline-end: var(--sl-theme-space); z-index: var(--sl-z-index-top);">
+  <div style="position: fixed; inset-block-end: var(--sl-theme-space); inset-inline-end: var(--sl-theme-space); z-index: var(--sl-z-index-400);">
     <sl-popover ${spread(args)} data-testid="popover">
       <sl-toggle-button slot="trigger" variant="background" data-testid="popover-trigger"><sl-icon-help size="lg"></sl-icon-help></sl-toggle-button>
       <sl-tabs variant="stretch">
@@ -235,7 +235,7 @@ Default.play = async ({ canvasElement }) => {
   await waitFor(() => {
     userEvent.type(popoverContainer, '{Escape}');
     expect(popover.isActive).toBe(false);
-  }, {  timeout: 500 }); 
+  }, {  timeout: 500 });
 
   await userEvent.click(canvasElement);
 }

@@ -104,7 +104,7 @@ export class SLDashboard extends LitElement {
                 </sl-list>
               </sl-search>
               <div slot="after">
-                <sl-drawer alignment="right">
+                <sl-drawer alignment="right" ?hasBackdrop=${true}>
                   <sl-button slot="trigger" ?hideText=${true} variant="tertiary"><sl-icon-settings slot="after"></sl-icon-settings></sl-button>
                   <div slot="header">Settings</div>
                   <div>Coming Soon</div>

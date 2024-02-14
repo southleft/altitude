@@ -3,6 +3,7 @@ import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import styles from './home.scss';
 import '../../templates/dashboard/dashboard';
+import '../../../components/calendar/calendar';
 
 /**
  * Page: sl-l-home
@@ -26,7 +27,7 @@ export class SLHome extends LitElement {
       <sl-dashboard class=${componentClassNames}>
         <div class="sl-u-grid sl-u-gap--lg" style="height: 100%">
           <f-po class="sl-u-grid__item col:7@md">Coming soon</f-po>
-          <f-po class="sl-u-grid__item col:5@md row:2@md">Coming soon</f-po>
+          <sl-calendar class="sl-u-grid__item col:5@md row:2@md"></sl-calendar>
           <f-po class="sl-u-grid__item col:7@md">Coming soon</f-po>
           <f-po class="sl-u-grid__item col:12@md">Coming soon</f-po>
         </div>

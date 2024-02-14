@@ -144,7 +144,12 @@ export class SLJobBoard extends LitElement {
               </sl-select>
             </div>
             <sl-card>
-              <sl-heading variant="sm" tagName="h3">UX Designer</sl-heading>
+              <div class="sl-u-gap sl-u-gap--row">
+                <sl-heading variant="sm" tagName="h3">UX Designer</sl-heading>
+                <sl-chip variant="warning">Front-end Development</sl-chip>
+                <sl-chip variant="danger">Remote</sl-chip>
+              </div>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
             </sl-card>
           </div>
         </div>

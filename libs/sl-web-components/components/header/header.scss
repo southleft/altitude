@@ -3,6 +3,10 @@
   #HEADER
 \*------------------------------------*/
 
+:host {
+  display: contents;
+}
+
 /**
  * Header
  */
@@ -21,7 +25,7 @@
   padding: var(--sl-theme-space);
   background-color: var(--sl-theme-color-background-default);
   box-shadow: var(--sl-theme-box-shadow-md);
-  z-index: var(--sl-z-index-500);
+  z-index: var(--sl-z-index-400);
 
   @media all and (min-width: $sl-breakpoint-md) {
     flex-direction: row;
