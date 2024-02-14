@@ -189,7 +189,10 @@ export class SLList extends SLElement {
       `;
     } else {
       return html`
-        <ul role="list" class="${componentClassName}">
+        <ul 
+          class="${componentClassName}" 
+          role="list" 
+        >
           <slot></slot>
         </ul>
       `;

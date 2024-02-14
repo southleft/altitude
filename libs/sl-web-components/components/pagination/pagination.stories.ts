@@ -11,7 +11,8 @@ export default {
     status: { type: 'beta' },
     actions: {
       handles: ['onPaginationChange']
-    }
+    },
+    layout: 'centered'
   },
   decorators: [ withActions ],
   args: {

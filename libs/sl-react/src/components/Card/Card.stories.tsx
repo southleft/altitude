@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLCard, SLHeading, SLButton, SLChip, SLIconCheck, SLIconEmoji, SLTextPassage } from '../..';
+import { SLCard, SLHeading, SLButton, SLChip, SLIconDotsVertical, SLPopover, SLMenu, SLMenuItem, SLTextPassage } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
@@ -30,9 +30,20 @@ export const WithContent: StoryObj<typeof SLCard> = {
     children: (
       <>
         <SLChip slot="actions-left">Label</SLChip>
-        <SLButton slot="actions-right" variant="secondary" hideText={true}>Button<SLIconCheck slot="after"></SLIconCheck></SLButton>
+        <SLPopover slot="actions-right" menuId="card-menu">
+          <SLButton slot="trigger" hideText={true} variant="tertiary">
+            <SLIconDotsVertical slot="before"></SLIconDotsVertical>
+          </SLButton>
+          <SLMenu id="card-menu">
+            <SLMenuItem>List Item 1</SLMenuItem>
+            <SLMenuItem>List Item 2</SLMenuItem>
+            <SLMenuItem>List Item 3</SLMenuItem>
+            <SLMenuItem>List Item 1</SLMenuItem>
+            <SLMenuItem>List Item 2</SLMenuItem>
+            <SLMenuItem>List Item 3</SLMenuItem>
+          </SLMenu>
+        </SLPopover>
         <img slot="image" alt="card image" src="https://fakeimg.pl/600x400" />
-        <SLIconEmoji size="md" slot="header"></SLIconEmoji>
         <SLHeading slot="header" tagName="h3" variant="sm">Card title</SLHeading>
         <SLTextPassage>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dui leo, lacinia ut finibus sed, consectetur quis enim.</SLTextPassage>
       </>

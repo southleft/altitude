@@ -11,7 +11,10 @@ import '../tab-panel/tab-panel';
 import '../tab/tab';
 import '../tabs/tabs';
 import '../toggle-button/toggle-button';
-import '../icon/icons/dots-vertical';
+import '../menu/menu';
+import '../menu-item/menu-item';
+import '../icon/icons/document';
+import '../icon/icons/menu';
 
 export default {
   title: 'Molecules/Popover',
@@ -24,14 +27,14 @@ export default {
       handles: ['onPopoverOpen', 'onPopoverClose', 'onPopoverCloseButton']
     },
     controls: {
-      exclude: ['ariaLabelledBy']
-    },
+      exclude: ['ariaLabelledBy', 'popoverTrigger', 'popoverTriggerButton', 'handleOnClickOutside', 'transitionDelay']
+    }
   },
   decorators: [ withActions ],
   argTypes: {
     variant: {
       options: ['default', 'menu'],
-      control: { type: 'radio' }
+      control: { type: 'radio' },
     },
     heading: {
       type: 'text'
@@ -43,13 +46,13 @@ export default {
     isActive: {
       type: 'boolean'
     },
-    isDismissible: {
+    isDismissible: {      
       type: 'boolean'
-    },
-  },
+    }
+  }
 };
 
-function closePanel() {
+function closePopover() {
   const popover = document.querySelector<any>('sl-popover');
   if (popover) {
     popover.close();
@@ -57,9 +60,9 @@ function closePanel() {
 }
 
 const Template = (args) => html`
-  <sl-popover ${spread(args)} data-testid="popover" ?isDismissible=${true} heading="Panel heading">
-    <sl-button slot="trigger">Open Popover</sl-button>
-    <f-po>Panel content</f-po>
+  <sl-popover ${spread(args)} data-testid="popover">
+    <sl-button data-testid="popover-trigger" slot="trigger">Open Popover</sl-button>
+    <f-po style="width: 432px" width=>Popover content</f-po>
   </sl-popover>
 `;
 
@@ -111,16 +114,68 @@ PositionRightTop.args = {
   position: 'right-top'
 };
 
-const TemplateMenu = (args) => html`
-  <sl-popover ${spread(args)} data-testid="popover">
-    <sl-button slot="trigger" ?hideText=${true} variant="tertiary"><sl-icon-dots-vertical slot="after"></sl-icon-dots-vertical>Open Popover</sl-button>
-    <f-po>Panel content</f-po>
-  </sl-popover>
-`;
+const TemplateWithMenu = (args) => html`
+  <sl-popover ${spread(args)} data-testid="popover" menuId="menu-123">
+    <sl-button data-testid="popover-trigger" slot="trigger" variant="tertiary" ?hideText=${true}>
+      <sl-icon-menu slot="before"></sl-icon-menu>
+      Menu
+    </sl-button>
+    <sl-menu data-testid="menu" id="menu-123">
+      <sl-menu-item ?isHeader=${true} data-testid="menu-item-01">
+        <sl-icon-document slot="before"></sl-icon-document>
+        Header
+      </sl-menu-item>
+      <sl-menu-item data-testid="menu-item-02">Menu Item</sl-menu-item>
+      <sl-menu-item data-testid="menu-item-03">Menu Item</sl-menu-item>
+      <sl-menu-item data-testid="menu-item-04">Menu Item</sl-menu-item>
+      <sl-menu-item ?isDisabled=${true} data-testid="menu-item-05">Menu Item</sl-menu-item>
+      <sl-menu-item data-testid="menu-item-06">Menu Item</sl-menu-item>
+    </sl-menu>
+  </sl-popover>`
+;
 
-export const Menu = TemplateMenu.bind({});
-Menu.args = {
-  variant: 'menu'
+export const WithMenu = TemplateWithMenu.bind({});
+WithMenu.args = {
+  variant: 'menu',
+  position: 'bottom-right'
+};
+WithMenu.parameters = {
+  layout: 'fullscreen'
+};
+
+const TemplateMenuWithGroups = (args) => html`
+  <sl-popover ${spread(args)} data-testid="popover" menuId="group-menu-123">
+    <sl-button slot="trigger" variant="tertiary" ?hideText=${true}>
+      <sl-icon-menu slot="before"></sl-icon-menu>
+      Menu
+    </sl-button>
+    <sl-menu data-testid="menu" id="group-menu-123">
+    <sl-menu-item ?isHeader=${true} data-testid="menu-item-01">
+      <sl-icon-document slot="before"></sl-icon-document>
+      Menu Item
+    </sl-menu-item>
+    <sl-menu-item ?isHeader=${true} ?isExpanded=${true} ?isExpandableHeader=${true} data-testid="menu-item-02">
+      <sl-icon-document slot="before"></sl-icon-document>
+      Menu Item
+    </sl-menu-item>
+    <sl-menu-item data-testid="menu-item-03">Menu Item</sl-menu-item>
+    <sl-menu-item data-testid="menu-item-04">Menu Item</sl-menu-item>
+    <sl-menu-item ?isHeader=${true} ?isExpanded=${true} ?isExpandableHeader=${true} data-testid="menu-item-05">
+      <sl-icon-document slot="before"></sl-icon-document>
+      Menu Item
+    </sl-menu-item>
+    <sl-menu-item data-testid="menu-item-06">Menu Item</sl-menu-item>
+    <sl-menu-item data-testid="menu-item-07">Menu Item</sl-menu-item>
+    <sl-menu-item data-testid="menu-item-08">Menu Item</sl-menu-item>
+  </sl-menu>
+</sl-popover>`;
+
+export const WithMenuWithGroups = TemplateMenuWithGroups.bind({});
+WithMenuWithGroups.args = {
+  ...WithMenu.args
+};
+WithMenuWithGroups.parameters = {
+  layout: 'fullscreen'
 };
 
 const TemplateWithContent = (args) => html`
@@ -144,7 +199,7 @@ const TemplateWithContent = (args) => html`
           <f-po>Tab panel 3 - Instance slot 2</f-po>
         </sl-tab-panel>
       </sl-tabs>
-      <sl-button slot="footer" variant="tertiary" @click=${closePanel}>Close</sl-button>
+      <sl-button slot="footer" variant="tertiary" @click=${closePopover}>Close</sl-button>
       <sl-button-group slot="footer" alignment="right">
         <sl-button variant="secondary">Label</sl-button>
         <sl-button>Label</sl-button>
@@ -154,7 +209,9 @@ const TemplateWithContent = (args) => html`
 `;
 export const WithContent = TemplateWithContent.bind({});
 WithContent.args = {
-  position: 'top-left'
+  position: 'top-left',
+  heading: "Popover heading",
+  isDismissible: true
 };
 
 WithContent.parameters = {
@@ -165,12 +222,30 @@ WithContent.parameters = {
   #STORYBOOK TESTS
 \*------------------------------------*/
 
-WithContent.play = async ({ canvasElement }) => {
+Default.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement);
   const popover = canvas.queryByTestId('popover') as any;
   const popoverTrigger = canvas.queryByTestId('popover-trigger') as any;
   const popoverContainer = popover.shadowRoot.querySelector('.sl-c-popover__container') as HTMLElement;
-  const popoverCloseButton = popover.shadowRoot.querySelector('.sl-c-popover__close-button') as HTMLElement;
+
+  await userEvent.click(popoverTrigger);
+  expect(popover.isActive).toBe(true);
+
+  // Timeout for transition delay to complete
+  await waitFor(() => {
+    userEvent.type(popoverContainer, '{Escape}');
+    expect(popover.isActive).toBe(false);
+  }, {  timeout: 500 }); 
+
+  await userEvent.click(canvasElement);
+}
+
+WithMenu.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  const popover = canvas.queryByTestId('popover') as any;
+  const popoverTrigger = canvas.queryByTestId('popover-trigger') as any;
+  const popoverContainer = popover.shadowRoot.querySelector('.sl-c-popover__container') as HTMLElement;
+  const firstMenuItem = canvas.queryByTestId('menu-item-01').shadowRoot.querySelector('.sl-c-menu-item__link').shadowRoot.querySelector('*') as any;
 
   await userEvent.click(popoverTrigger);
   expect(popover.isActive).toBe(true);
@@ -184,22 +259,35 @@ WithContent.play = async ({ canvasElement }) => {
   await waitFor(() => expect(popoverContainer).toBeVisible(), {
     timeout: 400, // A long timeout to make sure it doesn't close
   });
-  await userEvent.type(popoverCloseButton, '{Escape}');
+  await userEvent.type(firstMenuItem, '{Escape}');
   expect(popover.isActive).toBe(false);
 
   popoverTrigger.focus();
   await userEvent.type(popoverTrigger, '{Enter}');
   expect(popover.isActive).toBe(true);
 
-  await userEvent.click(popoverCloseButton);
+  await userEvent.click(canvasElement);
   expect(popover.isActive).toBe(false);
 
-  await userEvent.click(popoverTrigger);
-  expect(popover.isActive).toBe(true);
-
+  await userEvent.click(firstMenuItem);
   await userEvent.click(canvasElement);
   expect(popover.isActive).toBe(false);
 
   popoverTrigger.blur();
   await userEvent.click(canvasElement);
 };
+
+WithContent.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  const popover = canvas.queryByTestId('popover') as any;
+  const popoverTrigger = canvas.queryByTestId('popover-trigger') as any;
+  const popoverCloseButton = popover.shadowRoot.querySelector('.sl-c-popover__close-button') as HTMLElement;
+
+  await userEvent.type(popoverTrigger, '{Enter}');
+  expect(popover.isActive).toBe(true);
+
+  await userEvent.type(popoverCloseButton, '{Escape}');
+  expect(popover.isActive).toBe(false);
+
+  popoverTrigger.blur();
+}

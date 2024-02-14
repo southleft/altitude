@@ -35,6 +35,14 @@ export class SLPaginationItem extends SLElement {
   accessor isSelected: boolean;
 
   /**
+   * Expandable
+   * - **true** the item contains a popover with a list of page links
+   * - **false** the item contains a single page link
+   */
+  @property({ type: Boolean })
+  accessor isExpandable: boolean;
+
+  /**
    * Aria label for the link for accessibility
    */
   @property({ type: String })
@@ -48,15 +56,20 @@ export class SLPaginationItem extends SLElement {
 
     return html`
       <li role="listitem" class="${componentClassNames}">
-        <a
-          href="${ifDefined(this.href)}"
-          class="sl-c-pagination__link"
-          aria-label=${ifDefined(this.ariaLabel)}
-          aria-disabled=${this.isDisabled === true ? 'true' : 'false'}
-          tabindex=${this.isDisabled === true ? '-1' : '0'}
-        >
-          <slot></slot>
-        </a>
+        ${this.isExpandable ? 
+          html`<slot></slot>` :
+          html`
+            <a
+              href="${ifDefined(this.href)}"
+              class="sl-c-pagination__link"
+              aria-label=${ifDefined(this.ariaLabel)}
+              aria-disabled=${this.isDisabled === true ? 'true' : 'false'}
+              tabindex=${this.isDisabled === true ? '-1' : '0'}
+            >
+              <slot></slot>
+            </a>
+          `
+        }
       </li>
     `;
   }

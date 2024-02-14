@@ -11,6 +11,8 @@ import { SLButton } from '../button/button';
 import { SLIconDotsHorizontal } from '../icon/icons/dots-horizontal';
 import { SLMenuItem } from '../menu-item/menu-item';
 import { SLMenu } from '../menu/menu';
+import { SLPopover } from '../popover/popover';
+import { nanoid } from 'nanoid';
 import styles from './breadcrumbs.scss';
 
 /**
@@ -28,7 +30,8 @@ export class SLBreadcrumbs extends SLElement {
       [SLMenu.el, SLMenu],
       [SLMenuItem.el, SLMenuItem],
       [SLButton.el, SLButton],
-      [SLIconDotsHorizontal.el, SLIconDotsHorizontal]
+      [SLIconDotsHorizontal.el, SLIconDotsHorizontal],
+      [SLPopover.el, SLPopover]
     ],
     suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
@@ -38,6 +41,7 @@ export class SLBreadcrumbs extends SLElement {
   private menuItemEl = unsafeStatic(this.elementMap.get(SLMenuItem.el));
   private buttonEl = unsafeStatic(this.elementMap.get(SLButton.el));
   private iconDotsHorizontalEl = unsafeStatic(this.elementMap.get(SLIconDotsHorizontal.el));
+  private popoverEl = unsafeStatic(this.elementMap.get(SLPopover.el));
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -73,6 +77,13 @@ export class SLBreadcrumbs extends SLElement {
   accessor itemsBeforeCollapse: number = 1;
 
   /**
+   * Menu id
+   * - Unique id that associates the menu and popover components used in truncated breadcrumbs, so that the popover closes when a menu item is selected
+   */
+  @property()
+  accessor menuId: string;
+
+  /**
    * Query all the SLBreadcrumbsItem's
    * - Use get as truncated items do not pull from the slot
    */
@@ -83,9 +94,11 @@ export class SLBreadcrumbs extends SLElement {
   /**
    * First updated lifecycle
    * 1. If the component has slotted breadcrumb items, apply separators to the items
+   * 2. Generate a unique menu id
    */
   firstUpdated() {
-    this.setHasSeparators();
+    this.setHasSeparators(); /* 1 */
+    this.menuId = nanoid(); /* 2 */
   }
 
   /**
@@ -142,18 +155,20 @@ export class SLBreadcrumbs extends SLElement {
       endIndex,
       html`
         <${this.breadcrumbsItemEl} ?hasSeparator=${true} ?isTruncated=${true}>
-          <${this.menuEl}>
+        <${this.popoverEl} position="bottom-right" .menuId=${this.menuId}>
             <${this.buttonEl} slot="trigger" variant="tertiary" ?hideText=${true}>
               <${this.iconDotsHorizontalEl} slot="before"></${this.iconDotsHorizontalEl}>More Items
             </${this.buttonEl}>
-            ${collapsedItems.map((item: any) => {
-              return html`
-                <${this.menuItemEl} href=${ifDefined(item.href)} target=${ifDefined(item.target)}>
-                  ${unsafeHTML(item.innerHTML)}
-                </${this.menuItemEl}>
-              `;
-            })}
-          </${this.menuEl}>
+            <${this.menuEl} id=${this.menuId}>
+              ${collapsedItems.map((item: any) => {
+                return html`
+                  <${this.menuItemEl} href=${ifDefined(item.href)} target=${ifDefined(item.target)}>
+                    ${unsafeHTML(item.innerHTML)}
+                  </${this.menuItemEl}>
+                `;
+              })}
+            </${this.menuEl}>
+          </${this.popoverEl}>
         </${this.breadcrumbsItemEl}>
       `
     );

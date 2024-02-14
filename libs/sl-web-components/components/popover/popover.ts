@@ -1,5 +1,5 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property, queryAsync, queryAssignedElements } from 'lit/decorators.js';
+import { property, queryAssignedElements } from 'lit/decorators.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import { nanoid } from 'nanoid';
 import register from '../../directives/register';
@@ -110,20 +110,15 @@ export class SLPopover extends SLElement {
    * Number of ms of the dialog's open/close css transition delay
    * - Used to delay focus trap activation
    */
-   @property()
-   accessor transitionDelay: number = 400;
+  @property()
+  accessor transitionDelay: number = 400;
 
-   /**
-   * Query the popover heading
+  /**
+   * Menu id
+   * - Unique id used to associate popover with a slotted menu component, so that the popover closes when a menu item is selected
    */
-   @queryAsync('.sl-c-popover__title > sl-heading')
-   accessor popoverHeading: any;
-
-   /**
-    * Query the popover close button
-    */
-   @queryAsync('.sl-c-popover__close-button')
-   accessor closeButton: any;
+  @property({ type: String })
+  accessor menuId: string;
 
   /**
    * Query the popover trigger
@@ -141,11 +136,19 @@ export class SLPopover extends SLElement {
   }
 
   /**
-   * Initialize functions
+   * Contructor
+   * 1. Bind the context of the handleOnClickOutside method
+   * 2. Add a listener that closes the popover when a selection is made within its slotted menu component (if it has one)
    */
   constructor() {
     super();
-    this.handleOnClickOutside = this.handleOnClickOutside.bind(this);
+    this.handleOnClickOutside = this.handleOnClickOutside.bind(this); /* 1 */
+    /* 2 */
+    this.addEventListener('onMenuSelect', (e: CustomEvent) => {
+      if (e.detail.id === this.menuId) {
+        this.close();
+      }
+    });
   }
 
   /**
@@ -329,14 +332,13 @@ export class SLPopover extends SLElement {
             <slot name="trigger"></slot>
           </div>
         `}
-        <${this.focusTrapEl} .delay=${this.transitionDelay} .isActive=${this.isActive}>
+        <${this.focusTrapEl} .transitionDelay=${this.transitionDelay} ?isActive=${this.isActive}>
           <div
             class="sl-c-popover__container"
-            role="region"
+            role="dialog"
             aria-labelledby=${this.ariaLabelledBy}
-            aria-hidden=${this.isActive ? false : true}
           >
-            ${(this.slotNotEmpty('header') || this.heading || this.isDismissible) &&
+          ${(this.slotNotEmpty('header') || this.heading || this.isDismissible) &&
             html`
               <div class="sl-c-popover__header">
                 ${(this.slotNotEmpty('header') || this.heading) &&

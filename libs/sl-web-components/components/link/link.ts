@@ -103,7 +103,7 @@ export class SLLink extends SLElement {
           aria-label=${ifDefined(this.label)}
           aria-labelledby=${ifDefined(this.ariaLabelledBy)}
           title=${ifDefined(this.linkTitle)}
-          ?disabled=${this.isDisabled}
+          aria-disabled=${ifDefined(this.isDisabled)}
         >
           <slot></slot>
         </button>

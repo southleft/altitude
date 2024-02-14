@@ -5,7 +5,6 @@ import { html, unsafeStatic } from 'lit/static-html.js';
 import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { SLElement } from '../SLElement';
-import { SLContextualMenu } from '../contextual-menu/contextual-menu';
 import { SLSelect } from '../select/select';
 import { PartialDataSource } from '../select/select.model';
 import { SLIconChevronLeft } from '../icon/icons/chevron-left';
@@ -14,6 +13,8 @@ import { SLIconDotsHorizontal } from '../icon/icons/dots-horizontal';
 import { SLListItem } from '../list-item/list-item';
 import { SLList } from '../list/list';
 import { SLPaginationItem } from '../pagination-item/pagination-item';
+import { SLPopover } from '../popover/popover';
+import { SLButton } from '../button/button';
 import styles from './pagination.scss';
 
 /**
@@ -46,7 +47,8 @@ export class SLPagination extends SLElement {
       [SLIconChevronRight.el, SLIconChevronRight],
       [SLIconChevronLeft.el, SLIconChevronLeft],
       [SLIconDotsHorizontal.el, SLIconDotsHorizontal],
-      [SLContextualMenu.el, SLContextualMenu]
+      [SLPopover.el, SLPopover],
+      [SLButton.el, SLButton]
     ],
     suffix: (globalThis as any).slAutoRegistry === true ? '' : PackageJson.version
   });
@@ -58,7 +60,8 @@ export class SLPagination extends SLElement {
   private iconChevronRightEl = unsafeStatic(this.elementMap.get(SLIconChevronRight.el));
   private iconChevronLeftEl = unsafeStatic(this.elementMap.get(SLIconChevronLeft.el));
   private iconDotsHorizontalEl = unsafeStatic(this.elementMap.get(SLIconDotsHorizontal.el));
-  private contextualMenuEl = unsafeStatic(this.elementMap.get(SLContextualMenu.el));
+  private popoverEl = unsafeStatic(this.elementMap.get(SLPopover.el));
+  private buttonEl = unsafeStatic(this.elementMap.get(SLButton.el));
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -126,6 +129,9 @@ export class SLPagination extends SLElement {
   @state()
   accessor pageItems: string[] = [];
 
+  /** 
+   * Stores an array of objects containing label and value properties
+   */
   private recordsPerPageDropdownData: PartialDataSource[];
 
   /**
@@ -140,10 +146,10 @@ export class SLPagination extends SLElement {
   accessor pageItemsRange: string[] = [];
 
   /**
-   * Query for all contextual menus within the pagination component
+   * Query for all popovers within the pagination component
    */
-  get contextualMenus(): Array<SLContextualMenu> {
-    return [...this.querySelectorAll<SLContextualMenu>(this.elementMap.get(SLContextualMenu.el))];
+  get popovers(): Array<SLPopover> {
+    return [...this.querySelectorAll<SLPopover>(this.elementMap.get(SLPopover.el))];
   }
 
   /**
@@ -195,24 +201,15 @@ export class SLPagination extends SLElement {
 
   /**
    * Handles keyboard events (keydown)
-   * 1. Closes all contextual menus if 'Escape' key is pressed
-   * 2. Opens contextual menus based on the selected item (ellipses or dots)
-   * 3. Handles page item click based on the selected item
+   * 1. Closes all popovers if 'Escape' key is pressed
+   * 2. Handles page item click based on the selected item
    */
   handleOnKeydown(evt: KeyboardEvent, selectedItem: string): void {
     /* 1 */
     if (evt.code === 'Escape') {
-      this.contextualMenus.forEach((menu) => menu.close());
+      this.popovers.forEach((popover) => popover.close());
     } else if (evt.code === 'Enter') {
       /* 2 */
-      if (selectedItem == endDot) {
-        this.contextualMenus[1].open();
-      } else if (selectedItem == initialDot) {
-        this.contextualMenus[0].open();
-      } else if (selectedItem == dot) {
-        this.contextualMenus.forEach((menu) => menu.open());
-      }
-      /* 3 */
       this.handleOnClickPageItem(selectedItem);
     }
   }
@@ -440,43 +437,44 @@ export class SLPagination extends SLElement {
                   html`
                     <${this.paginationItemEl}
                       ariaLabel=${item}
-                      @click=${() => {
-                        this.handleOnClickPageItem(item);
-                      }}
                       ?isSelected=${this.currentItem.toString() === item}
+                      ?isExpandable=${item === dot || item === initialDot || item === endDot}
+                      @click=${() => this.handleOnClickPageItem(item)}
                       @keydown=${(e: KeyboardEvent) => this.handleOnKeydown(e, item)}
                     >
                       ${
-                        isNaN(item as any) //if item is in "..." pattern
+                        isNaN(item as any) // if item is in "..." pattern
                           ? html`
-                            <${this.contextualMenuEl} position="top-center" hasScroll=${this.pageItemsRange.length >= 4}>
-                              <div role="button" aria-label="More items" slot="trigger">
-                                <${this.iconDotsHorizontalEl} slot="after"></${this.iconDotsHorizontalEl}>
-                              </div>
-                              ${this.pageItemsRange.map((option, index) => {
-                                return html`
-                                  <${this.listItemEl}
-                                    class="sl-c-contextual-pagination-list-item"
-                                    value=${option}
-                                    key=${index}
-                                    @blur=${() => {
-                                      if (index === this.pageItemsRange.length - 1) {
-                                        this.contextualMenus.forEach((menu) => menu.close());
-                                      }
-                                    }}
-                                    @click=${(e: MouseEvent) => {
-                                      e.stopPropagation();
-                                    }}
-                                    @select=${() => {
-                                      this.handleOnClickPageItem(option);
-                                      this.contextualMenus.forEach((menu) => menu.close());
-                                    }}
-                                  >
-                                    <span class="sl-c-contextual-pagination-item-text">${option}</span>
-                                  </${this.listItemEl}>
-                                `;
-                              })}
-                            </${this.contextualMenuEl}>
+                            <${this.popoverEl} position="top-center">
+                              <${this.buttonEl} variant="tertiary" hideText=${true} slot="trigger">
+                                <${this.iconDotsHorizontalEl} slot="before"></${this.iconDotsHorizontalEl}>
+                                More Items
+                              </${this.buttonEl}>
+                              <${this.listEl}
+                                .behavior=${ this.pageItemsRange.length >= 4 ? 'overflow' : '' }>
+                                ${this.pageItemsRange.map((option, index) => {
+                                  return html`
+                                    <${this.listItemEl}
+                                      class="sl-c-pagination-menu-item"
+                                      value=${option}
+                                      key=${index}
+                                      @blur=${() => {
+                                        if (index === this.pageItemsRange.length - 1) {
+                                          this.popovers.forEach((popover) => popover.close());
+                                        }
+                                      }}
+                                      @click=${(e: MouseEvent) => {
+                                        e.stopPropagation();
+                                        this.handleOnClickPageItem(option);
+                                        this.popovers.forEach((popover) => popover.close());
+                                      }}
+                                    >
+                                      <span class="sl-c-pagination-menu-item-text">${option}</span>
+                                    </${this.listItemEl}>
+                                  `;
+                                })}
+                              </${this.listEl}>
+                            </${this.popoverEl}>
                           `
                           : item
                       }

@@ -8,7 +8,8 @@ export default {
     status: { type: 'beta' },
     actions: {
       handles: ['onPaginationChange']
-    }
+    },
+    layout: 'centered'
   },
   args: {
     totalRecords: 200,

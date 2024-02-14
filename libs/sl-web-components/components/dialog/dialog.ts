@@ -331,7 +331,7 @@ export class SLDialog extends SLElement {
             </div>
           `
         }
-        <${this.focusTrapEl} .delay=${this.transitionDelay} .isActive=${this.isActive}>
+        <${this.focusTrapEl} .transitionDelay=${this.transitionDelay} ?isActive=${this.isActive}>
           <div
             class="sl-c-dialog__container"
             role="dialog"

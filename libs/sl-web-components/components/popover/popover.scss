@@ -15,14 +15,14 @@
   position: relative;
   display: flex;
   width: 100%;
-  --sl-popover-offset: #{var(--sl-theme-space)};
+  --sl-popover-offset: #{var(--sl-theme-space-xs)};
   --sl-popover-shift: 0;
 }
 
 /**
  * Popover menu variant
  */
-.sl-c-popover--menu {
+ .sl-c-popover--menu {
   --sl-popover-offset: #{size(0)};
 }
 
@@ -229,7 +229,7 @@
  */
 .sl-c-popover__header {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: flex-end;
   gap: var(--sl-theme-space);
 }
@@ -250,7 +250,7 @@
  * Popover body
  * - The body/content slot in the popover
  */
-.sl-c-popover__body {
+ .sl-c-popover__body {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -277,7 +277,6 @@
   display: flex;
   align-items: center;
   gap: var(--sl-theme-space-xs);
-  width: var(--sl-popover-trigger-width, max-content);
   cursor: pointer;
 }
 

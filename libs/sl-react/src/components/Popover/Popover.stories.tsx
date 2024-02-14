@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLPopover, SLButton, SLButtonGroup, SLTabs, SLTab, SLTabPanel, SLToggleButton, SLIconHelp, SLIconDotsVertical } from '../..';
+import { SLPopover, SLMenu, SLMenuItem, SLButton, SLButtonGroup, SLTabs, SLTab, SLTabPanel,SLToggleButton, SLIconDocument, SLIconHelp, SLIconMenu } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
@@ -12,13 +12,13 @@ export default {
       handles: ['onPopoverOpen', 'onPopoverClose', 'onPopoverCloseButton']
     },
     controls: {
-      exclude: ['ariaLabelledBy']
+      exclude: ['ariaLabelledBy', 'popoverTrigger', 'popoverTriggerButton', 'handleOnClickOutside', 'transitionDelay']
     },
   },
   argTypes: {
     variant: {
       options: ['default', 'menu'],
-      control: { type: 'radio' }
+      control: { type: 'radio' },
     },
     heading: {
       type: 'text'
@@ -30,26 +30,24 @@ export default {
     isActive: {
       type: 'boolean'
     },
-    isDismissible: {
+    isDismissible: {      
       type: 'boolean'
-    },
+    }
   },
   args: {
-    heading: 'Panel heading',
-    isDismissible: true,
     children: (
       <>
-        <SLButton slot="trigger">Open Panel</SLButton>
-        <Fpo>Panel content</Fpo>
+        <SLButton slot="trigger">Open Popover</SLButton>
+        <Fpo>Popover content</Fpo>
       </>
     )
   },
 };
 
-function closePanel() {
-  const panel = document.querySelector<any>('.c-panel').querySelector('*');
-  if (panel) {
-    panel.close();
+function closePopover() {
+  const popover = document.querySelector<any>('sl-popover');
+  if (popover) {
+    popover.close();
   }
 }
 
@@ -91,19 +89,75 @@ export const PositionRightTop: StoryObj<typeof SLPopover> = { args: {
   position: 'right-top',
 } };
 
-export const Menu: StoryObj<typeof SLPopover> = { args: {
-  variant: 'menu',
-  children: (
-    <>
-      <SLButton slot="trigger" hideText={true} variant="tertiary"><SLIconDotsVertical slot="after"></SLIconDotsVertical>Open Panel</SLButton>
-      <Fpo>Panel content</Fpo>
-    </>
-  )
-} };
+export const WithMenu: StoryObj<typeof SLPopover> = {
+  args: {
+    position: 'bottom-right',
+    children: (
+      <>
+        <SLButton slot="trigger" variant="tertiary" hideText={true}>
+          <SLIconMenu slot="before"></SLIconMenu>
+          Menu
+        </SLButton>
+        <SLMenu data-testid="menu" id="menu-123">
+        <SLMenuItem isHeader={true} data-testid="menu-item-01">
+          <SLIconDocument slot="before"></SLIconDocument>
+          Header
+        </SLMenuItem>
+        <SLMenuItem data-testid="menu-item-02">Menu Item</SLMenuItem>
+        <SLMenuItem data-testid="menu-item-03">Menu Item</SLMenuItem>
+        <SLMenuItem data-testid="menu-item-04">Menu Item</SLMenuItem>
+        <SLMenuItem isDisabled={true} data-testid="menu-item-05">Menu Item</SLMenuItem>
+        <SLMenuItem data-testid="menu-item-06">Menu Item</SLMenuItem>
+      </SLMenu>
+      </>
+    )
+  },
+  parameters: {
+    layout: 'fullscreen'
+  }
+};
 
-export const WithSlottedContent: StoryObj<typeof SLPopover> = {
+export const WithMenWithGroups: StoryObj<typeof SLPopover> = {
+  args: {
+    position: 'bottom-right',
+    children: (
+      <>
+        <SLButton slot="trigger" variant="tertiary" hideText={true}>
+          <SLIconMenu slot="before"></SLIconMenu>
+          Menu
+        </SLButton>
+        <SLMenu data-testid="menu" id="group-menu-123">
+          <SLMenuItem isHeader={true} data-testid="menu-item-01">
+            <SLIconDocument slot="before"></SLIconDocument>
+            Menu Item
+          </SLMenuItem>
+          <SLMenuItem isHeader={true} isExpanded={true} isExpandableHeader={true} data-testid="menu-item-02">
+            <SLIconDocument slot="before"></SLIconDocument>
+            Menu Item
+          </SLMenuItem>
+          <SLMenuItem data-testid="menu-item-03">Menu Item</SLMenuItem>
+          <SLMenuItem data-testid="menu-item-04">Menu Item</SLMenuItem>
+          <SLMenuItem isHeader={true} isExpanded={true} isExpandableHeader={true} data-testid="menu-item-05">
+            <SLIconDocument slot="before"></SLIconDocument>
+            Menu Item
+          </SLMenuItem>
+          <SLMenuItem data-testid="menu-item-06">Menu Item</SLMenuItem>
+          <SLMenuItem data-testid="menu-item-07">Menu Item</SLMenuItem>
+          <SLMenuItem data-testid="menu-item-08">Menu Item</SLMenuItem>
+        </SLMenu>
+      </>
+    )
+  },
+  parameters: {
+    layout: 'fullscreen'
+  }
+};
+
+export const WithContent: StoryObj<typeof SLPopover> = {
   args: {
     position: 'top-left',
+    heading: "Popover heading",
+    isDismissible: true,
     children: (
       <>
         <SLToggleButton slot="trigger"><SLIconHelp size="lg"></SLIconHelp></SLToggleButton>
@@ -124,7 +178,7 @@ export const WithSlottedContent: StoryObj<typeof SLPopover> = {
             <Fpo>Tab panel 3 - Instance slot 2</Fpo>
           </SLTabPanel>
         </SLTabs>
-        <SLButton slot="footer" variant="tertiary" onClick={closePanel}>Close</SLButton>
+        <SLButton slot="footer" variant="tertiary" onClick={closePopover}>Close</SLButton>
         <SLButtonGroup slot="footer" alignment="right">
           <SLButton variant="secondary">Label</SLButton>
           <SLButton>Label</SLButton>
@@ -137,7 +191,7 @@ export const WithSlottedContent: StoryObj<typeof SLPopover> = {
   },
   decorators: [
     (Story) => (
-      <div className="c-panel" style={{ position: 'fixed', insetBlockEnd: '1rem', insetInlineEnd: '1rem' }}>{Story()}</div>
+      <div className="c-popover" style={{ position: 'fixed', insetBlockEnd: '1rem', insetInlineEnd: '1rem' }}>{Story()}</div>
     )
   ]
 };
