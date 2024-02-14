@@ -7,6 +7,11 @@
  * Header
  */
 .sl-c-header {
+  position: sticky;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 100%;
+  height: var(--sl-theme-layout-height-header);
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -14,9 +19,9 @@
   justify-content: space-between;
   gap: var(--sl-theme-space);
   padding: var(--sl-theme-space);
-  border-radius: var(--sl-theme-border-radius-lg);
   background-color: var(--sl-theme-color-background-default);
   box-shadow: var(--sl-theme-box-shadow-md);
+  z-index: var(--sl-z-index-500);
   --sl-text-input-background: var(--sl-theme-color-background-default);
 
   @media all and (min-width: $sl-breakpoint-md) {

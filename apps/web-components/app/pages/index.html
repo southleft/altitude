@@ -1,0 +1,115 @@
+<main style="position: relative; display: block; margin-block-start: var(--sl-theme-space); margin-block-end: var(--sl-theme-space);">
+  <sl-toggle-button variant="background" style="position: fixed; inset-block-end: var(--sl-theme-space); inset-inline-end: var(--sl-theme-space);">
+    <sl-popover position="top-left">
+      <sl-icon-help slot="trigger" size="lg"></sl-icon-help>
+      <div>Content</div>
+    </sl-popover>
+  </sl-toggle-button>
+  <sl-layout-container>
+    <sl-layout gap="lg">
+      <sl-layout-section>
+        <sl-header>
+          <img slot="before" src="/_public/logo.svg" alt="logo" style="max-width: 200px;" />
+          <sl-search label="Search">
+            <sl-list>
+              <sl-list-item>List item 1</sl-list-item>
+              <sl-list-item>List item 2</sl-list-item>
+              <sl-list-item>List item 3</sl-list-item>
+              <sl-list-item>List item 4</sl-list-item>
+              <sl-list-item>List item 5</sl-list-item>
+              <sl-list-item>List item 6</sl-list-item>
+            </sl-list>
+          </sl-search>
+          <div slot="after">
+            <sl-toggle-button>
+              <sl-popover position="bottom-left">
+                <sl-avatar slot="trigger" hasBadge="true" badgeVariant="success">WW</sl-avatar>
+                <sl-menu variant="cascading">
+                  <sl-menu-item>List item 1</sl-menu-item>
+                  <sl-menu-item>List item 2</sl-menu-item>
+                  <sl-menu-item>List item 3</sl-menu-item>
+                </sl-menu>
+              </sl-popover>
+            </sl-toggle-button>
+          </div>
+          <div slot="after">
+            <sl-drawer hasBackdrop="true">
+              <sl-button slot="trigger" hideText="true" variant="tertiary">Toggle Drawer<sl-icon-menu slot="before"></sl-icon-menu></sl-button>
+              <div slot="header">Drawer Title</div>
+              <div>Drawer content</div>
+              <sl-button-group slot="footer">
+                <sl-button variant="secondary">Submit</sl-button>
+                <sl-button>Cancel</sl-button>
+              </sl-button-group>
+            </sl-drawer>
+          </div>
+        </sl-header>
+      </sl-layout-section>
+      <sl-layout-section>
+        <sl-breadcrumbs isTruncated="true">
+          <sl-breadcrumbs-item>
+            <sl-icon-document></sl-icon-document>
+            Page Name 1
+          </sl-breadcrumbs-item>
+          <sl-breadcrumbs-item>
+            <sl-icon-document></sl-icon-document>
+            Page Name 2
+          </sl-breadcrumbs-item>
+          <sl-breadcrumbs-item>
+            <sl-icon-document></sl-icon-document>
+            Page Name 3
+          </sl-breadcrumbs-item>
+          <sl-breadcrumbs-item>
+            <sl-icon-document></sl-icon-document>
+            Page Name 4
+          </sl-breadcrumbs-item>
+          <sl-breadcrumbs-item>
+            <sl-icon-document></sl-icon-document>
+            Page Name 5
+          </sl-breadcrumbs-item>
+          <sl-breadcrumbs-item>
+            <sl-icon-document></sl-icon-document>
+            Page Name 6
+          </sl-breadcrumbs-item>
+          <sl-breadcrumbs-item>
+            <sl-icon-document></sl-icon-document>
+            Page Name 7
+          </sl-breadcrumbs-item>
+          <sl-breadcrumbs-item>
+            <sl-icon-document></sl-icon-document>
+            Page Name 8
+          </sl-breadcrumbs-item>
+        </sl-breadcrumbs>
+      </sl-layout-section>
+      <sl-layout-section>
+        <div class="sl-u-grid cols:6@sm cols:4@md cols:3@lg sl-u-gap--md">
+          <sl-card>
+            <sl-chip slot="actions-left">Label</sl-chip>
+            <div slot="actions-right">
+              <sl-contextual-menu>
+                <sl-button slot="trigger" hideText="true" variant="tertiary">
+                  Menu<sl-icon-dots-vertical slot="after"></sl-icon-dots-vertical>
+                </sl-button>
+                <sl-list>
+                  <sl-list-item>List Item 1</sl-list-item>
+                  <sl-list-item>List Item 2</sl-list-item>
+                  <sl-list-item>List Item 3</sl-list-item>
+                  <sl-list-item>List Item 4</sl-list-item>
+                  <sl-list-item>List Item 5</sl-list-item>
+                  <sl-list-item>List Item 6</sl-list-item>
+                </sl-list>
+              </sl-contextual-menu>
+            </div>
+            <img slot="image" alt="card image" src="https://fakeimg.pl/600x400" />
+            <sl-heading slot="header" tagName="h3" variant="sm" isBold="true">Card title</sl-heading>
+            <sl-text-passage>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dui leo, lacinia ut finibus sed, consectetur quis enim.</sl-text-passage>
+          </sl-card>
+        </div>
+      </sl-layout-section>
+      <sl-layout-section>
+        <sl-pagination totalRecords="200" pageSize="20"></sl-pagination>
+      </sl-layout-section>
+    </sl-layout>
+  </sl-layout-container>
+</main>
+<script type="module" src="/_public/browser/index.mjs"></script>

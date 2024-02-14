@@ -83,7 +83,7 @@ module.exports = (env) => {
       rules: [
         {
           test: /head\.scss$/,
-          use: ['css-loader', 'sass-loader'],
+          use: ['sass-loader'],
           type: 'asset/resource',
           generator: {
             filename: `css/head.css`

@@ -18,13 +18,9 @@ $sizes: (
 );
 
 @each $size_key, $size_value in $sizes {
-  .sl-u-spacing#{$size_key} {
-    & > * + * {
-      margin-block-start: #{$size_value};
-    }
-  }
-
   .sl-u-gap#{$size_key} {
+    display: flex;
+    flex-direction: column;
     gap: #{$size_value};
   }
 }

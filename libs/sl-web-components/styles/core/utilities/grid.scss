@@ -18,8 +18,15 @@ $grid-cols: 12 !default;
     .sl-u-grid .sl-u-grid__item.col\:#{$i}\@#{$suffix} {
       grid-column: span $i / span $i;
     }
+
+    // Explicit row
+    .sl-u-grid__item.row\:#{$i},
+    .sl-u-grid .sl-u-grid__item.row\:#{$i}\@#{$suffix} {
+      grid-row: span $i / span $i;
+    }
   }
 
+  // Offset
   @for $i from 1 through $grid-cols {
     .offset\:#{$i}\@#{$suffix} {
       grid-column-start: $i;
