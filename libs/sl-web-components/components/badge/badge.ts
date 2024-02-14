@@ -26,6 +26,7 @@ export class SLBadge extends SLElement {
   /**
    * State variant
    * - **default** Displays a badge with the default state
+   * - **info** renders a badge with info state treatment
    * - **success** renders a badge with success state treatment
    * - **warning** renders a badge with warning state treatment
    * - **danger** renders a badge with danger state treatment
@@ -63,6 +64,7 @@ export class SLBadge extends SLElement {
 
   render() {
     const componentClassNames = this.componentClassNames('sl-c-badge', {
+      'sl-c-badge--info': this.variant === 'info',
       'sl-c-badge--success': this.variant === 'success',
       'sl-c-badge--warning': this.variant === 'warning',
       'sl-c-badge--danger': this.variant === 'danger',

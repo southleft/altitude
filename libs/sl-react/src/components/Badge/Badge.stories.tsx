@@ -15,7 +15,7 @@ export default {
     },
     variant: {
       control: 'radio',
-      options: ['default', 'success', 'warning', 'danger']
+      options: ['default', 'info', 'success', 'warning', 'danger']
     },
     position: {
       control: 'radio',
@@ -28,6 +28,12 @@ export default {
 };
 
 export const Default: StoryObj<typeof SLBadge> = { args: {} };
+
+export const DefaultInfo: StoryObj<typeof SLBadge> = {
+  args: {
+    variant: 'info',
+  }
+};
 
 export const DefaultSuccess: StoryObj<typeof SLBadge> = {
   args: {
@@ -50,6 +56,13 @@ export const DefaultDanger: StoryObj<typeof SLBadge> = {
 export const Dot: StoryObj<typeof SLBadge> = {
   args: {
     isDot: true,
+  }
+};
+
+export const DotInfo: StoryObj<typeof SLBadge> = {
+  args: {
+    ...Dot.args,
+    variant: 'info',
   }
 };
 

@@ -23,11 +23,26 @@ const codeImplicitColumns = String.raw`<div class="sl-u-grid cols:6@md cols:4@lg
   <div>4</div>
   <div>5</div>
   <div>6</div>
+  <div>7</div>
+  <div>8</div>
 </div>`;
 
 const codeExplicitColumns = String.raw`<div class="sl-u-grid">
   <div class="sl-u-grid__item col:8@md">1</div>
   <div class="sl-u-grid__item col:4@md">2</div>
+  <div class="sl-u-grid__item col:8@md">3</div>
+  <div class="sl-u-grid__item col:4@md">4</div>
+</div>`;
+
+const codeExplicitRows = String.raw`<div class="sl-u-grid">
+  <div class="sl-u-grid__item col:8@md">1</div>
+  <div class="sl-u-grid__item col:4@md row:2@md">2</div>
+  <div class="sl-u-grid__item col:4@md">3</div>
+</div>`;
+
+const codeOffsetColumns = String.raw`<div class="sl-u-grid">
+  <div class="sl-u-grid__item col:7@md offset:2@md">1</div>
+  <div class="sl-u-grid__item col:3@md">2</div>
 </div>`;
 
 const codeFullGridLayout = String.raw`<div class="sl-u-grid">
@@ -75,6 +90,45 @@ export class UtilitiesGrid extends LitElement {
           <p>To adjust the grid gap, use the <a href="/?path=/story/fundamentals-utilities--spacing">spacing utitlity classes</a></p>
         </header>
         <hr />
+        <table>
+          <caption>
+            <h2>Alignment Utility Classes</h2>
+            <p>Alignment utility classes controls how items are aligned along the main axis of the grid container.</p>
+          </caption>
+          <thead>
+            <tr>
+              <th>Utility Class</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><token-code value="sl-u-grid--align-center"></token-code></td>
+              <td>Aligns items to the center of the cross axis.</td>
+            </tr>
+            <tr>
+              <td><token-code value="sl-u-grid--align-end"></token-code></td>
+              <td>Aligns items to the end of the cross axis.</td>
+            </tr>
+            <tr>
+              <td><token-code value="sl-u-grid--align-stretch"></token-code></td>
+              <td>Stretches items to fill the cross axis.</td>
+            </tr>
+            <tr>
+              <td><token-code value="sl-u-grid--justify-center"></token-code></td>
+              <td>Aligns items to the center of the main axis.</td>
+            </tr>
+            <tr>
+              <td><token-code value="sl-u-grid--justify-end"></token-code></td>
+              <td>Aligns items to the end of the main axis.</td>
+            </tr>
+            <tr>
+              <td><token-code value="sl-u-grid--justify-space-between"></token-code></td>
+              <td>Aligns items with space between them along the main axis.</td>
+            </tr>
+          </tbody>
+        </table>
+        <hr />
         <div>
           <h2>Responsive Columns</h2>
           <p>Responsive column utilities are available. Column breakpoints can be stacked. Column breakpoints are adjustable using the Sass variables.</p>
@@ -103,6 +157,8 @@ export class UtilitiesGrid extends LitElement {
           <f-po>4</f-po>
           <f-po>5</f-po>
           <f-po>6</f-po>
+          <f-po>7</f-po>
+          <f-po>8</f-po>
         </div>
         <pre><code>${codeImplicitColumns}</code></pre>
         <hr />
@@ -111,10 +167,33 @@ export class UtilitiesGrid extends LitElement {
           <p>Columns that are not uniform can define their column span value directly on the column element. Column properties can be placed directly on the element with no need for wrapper elements.</p>
         </div>
         <div class="sl-u-grid">
-          <f-po class="sl-u-grid__item col:8">1</f-po>
-          <f-po class="sl-u-grid__item col:4">2</f-po>
+          <f-po class="sl-u-grid__item col:8@md">1</f-po>
+          <f-po class="sl-u-grid__item col:4@md">2</f-po>
+          <f-po class="sl-u-grid__item col:8@md">3</f-po>
+          <f-po class="sl-u-grid__item col:4@md">4</f-po>
         </div>
         <pre><code>${codeExplicitColumns}</code></pre>
+        <hr />
+        <div>
+          <h2>Explicit Rows</h2>
+          <p>Rows that are not uniform can define their row span value directly on the row element. Row properties can be placed directly on the element with no need for wrapper elements.</p>
+        </div>
+        <div class="sl-u-grid">
+          <f-po class="sl-u-grid__item col:8@md">1</f-po>
+          <f-po class="sl-u-grid__item col:4@md row:2@md">2</f-po>
+          <f-po class="sl-u-grid__item col:8@md">3</f-po>
+        </div>
+        <pre><code>${codeExplicitRows}</code></pre>
+        <hr />
+        <div>
+          <h2>Offset Columns</h2>
+          <p></p>
+        </div>
+        <div class="sl-u-grid">
+          <f-po class="sl-u-grid__item col:7@md offset:2@md">1</f-po>
+          <f-po class="sl-u-grid__item col:3@md">2</f-po>
+        </div>
+        <pre><code>${codeOffsetColumns}</code></pre>
         <hr />
         <div>
           <h2>Full Grid Layout</h2>

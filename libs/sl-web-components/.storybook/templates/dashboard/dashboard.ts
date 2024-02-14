@@ -41,6 +41,16 @@ export class SLDashboard extends LitElement {
   @property()
   accessor styleModifier: string;
 
+  firstUpdated() {
+    const storyId = new URLSearchParams(window.location.search).get('id');
+    const menuItems = this.shadowRoot.querySelectorAll('.sl-l-dashboard__sidebar-menu > *');
+    menuItems.forEach((item) => {
+      if (item.getAttribute('href') === `/?path=/story/${storyId}`) {
+        item.setAttribute('isSelected', 'true');
+      }
+    });
+  }
+
   render() {
     const componentClassNames = classMap({
       'sl-l-dashboard': true,
@@ -59,7 +69,7 @@ export class SLDashboard extends LitElement {
               </div>
               <sl-menu class="sl-l-dashboard__sidebar-menu" variant="cascading" ?isActive=${true}>
                 <sl-menu-item href="/?path=/story/pages-home--default" ?isHeader=${true}><sl-icon-home></sl-icon-home>Dashboard<sl-badge variant="danger">12</sl-badge></sl-badge></sl-menu-item>
-                <sl-menu-item href="/?path=/story/pages-job-board--default" ?isHeader=${true} ?isSelected=${true} ><sl-icon-list></sl-icon-list>Job Board</sl-menu-item>
+                <sl-menu-item href="/?path=/story/pages-job-board--default" ?isHeader=${true}><sl-icon-list></sl-icon-list>Job Board</sl-menu-item>
                 <sl-menu-item ?isHeader=${true}><sl-icon-calendar></sl-icon-calendar>Schedule</sl-menu-item>
                 <sl-menu-item ?isHeader=${true} ?isExpandableHeader=${true}><sl-icon-support></sl-icon-support>Resources</sl-menu-item>
                 <sl-menu-item>Contact Us</sl-menu-item>

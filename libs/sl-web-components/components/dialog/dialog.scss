@@ -3,12 +3,17 @@
   #DIALOG
 \*------------------------------------*/
 
+:host {
+  display: contents;
+}
+
 /**
  * Dialog -the main content wrapper of the header, body, and footer
  */
 .sl-c-dialog {
   position: relative;
   display: flex;
+  width: 100%;
 }
 
 /**
@@ -47,7 +52,8 @@
   display: flex;
   opacity: 0;
   visibility: hidden;
-  width: var(--sl-dialog-container-width, #{size(54)});
+  width: var(--sl-dialog-container-width, max-content);
+  min-width: var(--sl-dialog-container-width, #{size(54)});
   max-width: 100vw;
   position: fixed;
   inset-block-start: 50%;
@@ -69,6 +75,7 @@
     margin: auto;
     width: 100vw;
     height: 100vh;
+    min-width: 100vw;
     max-width: 100vw;
     max-height: 100vh;
     white-space: inherit;
@@ -141,4 +148,9 @@
  */
 .sl-c-dialog__trigger {
   z-index: var(--sl-dialog-trigger-z-index, 0);
+  display: flex;
+  align-items: center;
+  gap: var(--sl-theme-space-xs);
+  cursor: pointer;
+  width: var(--sl-dialog-trigger-width, max-content);
 }
