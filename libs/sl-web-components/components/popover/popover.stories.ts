@@ -6,6 +6,11 @@ import './popover';
 import '../../.storybook/components/f-po/f-po';
 import '../button-group/button-group';
 import '../button/button';
+import '../icon/icons/help';
+import '../tab-panel/tab-panel';
+import '../tab/tab';
+import '../tabs/tabs';
+import '../toggle-button/toggle-button';
 import '../menu/menu';
 import '../menu-item/menu-item';
 import '../icon/icons/document';
@@ -19,28 +24,45 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['onPopoverOpen', 'onPopoverClose']
+      handles: ['onPopoverOpen', 'onPopoverClose', 'onPopoverCloseButton']
     },
     controls: {
-      exclude: ['ariaLabelledBy']
-    },
+      exclude: ['ariaLabelledBy', 'popoverTrigger', 'popoverTriggerButton', 'handleOnClickOutside', 'transitionDelay']
+    }
   },
   decorators: [ withActions ],
   argTypes: {
+    variant: {
+      options: ['default', 'menu'],
+      control: { type: 'radio' },
+    },
+    heading: {
+      type: 'text'
+    },
     position: {
       options: ['bottom-center', 'bottom-right', 'bottom-left', 'top-center', 'top-right', 'top-left', 'left', 'left-top', 'right', 'right-top'],
       control: { type: 'radio' }
     },
     isActive: {
       type: 'boolean'
+    },
+    isDismissible: {      
+      type: 'boolean'
     }
   }
 };
 
+function closePopover() {
+  const popover = document.querySelector<any>('sl-popover');
+  if (popover) {
+    popover.close();
+  }
+}
+
 const Template = (args) => html`
   <sl-popover ${spread(args)} data-testid="popover">
     <sl-button data-testid="popover-trigger" slot="trigger">Open Popover</sl-button>
-    <f-po style="padding: 8px; width: 432px" width=>Popover content</f-po>
+    <f-po style="width: 432px" width=>Popover content</f-po>
   </sl-popover>
 `;
 
@@ -114,6 +136,7 @@ const TemplateWithMenu = (args) => html`
 
 export const WithMenu = TemplateWithMenu.bind({});
 WithMenu.args = {
+  variant: 'menu',
   position: 'bottom-right'
 };
 WithMenu.parameters = {
@@ -149,9 +172,49 @@ const TemplateMenuWithGroups = (args) => html`
 
 export const WithMenuWithGroups = TemplateMenuWithGroups.bind({});
 WithMenuWithGroups.args = {
-  position: 'bottom-right'
+  ...WithMenu.args
 };
 WithMenuWithGroups.parameters = {
+  layout: 'fullscreen'
+};
+
+const TemplateWithContent = (args) => html`
+  <div style="position: fixed; inset-block-end: var(--sl-theme-space); inset-inline-end: var(--sl-theme-space); z-index: var(--sl-z-index-top);">
+    <sl-popover ${spread(args)} data-testid="popover">
+      <sl-toggle-button slot="trigger" variant="background" data-testid="popover-trigger"><sl-icon-help size="lg"></sl-icon-help></sl-toggle-button>
+      <sl-tabs variant="stretch">
+        <sl-tab>Tab 1</sl-tab>
+        <sl-tab>Tab 2</sl-tab>
+        <sl-tab>Tab 3</sl-tab>
+        <sl-tab-panel slot="panel">
+          <f-po>Tab panel 1 - Instance slot 1</f-po>
+          <f-po>Tab panel 1 - Instance slot 2</f-po>
+        </sl-tab-panel>
+        <sl-tab-panel slot="panel">
+          <f-po>Tab panel 2 - Instance slot 1</f-po>
+          <f-po>Tab panel 2 - Instance slot 2</f-po>
+        </sl-tab-panel>
+        <sl-tab-panel slot="panel">
+          <f-po>Tab panel 3 - Instance slot 1</f-po>
+          <f-po>Tab panel 3 - Instance slot 2</f-po>
+        </sl-tab-panel>
+      </sl-tabs>
+      <sl-button slot="footer" variant="tertiary" @click=${closePopover}>Close</sl-button>
+      <sl-button-group slot="footer" alignment="right">
+        <sl-button variant="secondary">Label</sl-button>
+        <sl-button>Label</sl-button>
+      </sl-button-group>
+    </sl-popover>
+  </div>
+`;
+export const WithContent = TemplateWithContent.bind({});
+WithContent.args = {
+  position: 'top-left',
+  heading: "Popover heading",
+  isDismissible: true
+};
+
+WithContent.parameters = {
   layout: 'fullscreen'
 };
 
@@ -173,6 +236,8 @@ Default.play = async ({ canvasElement }) => {
     userEvent.type(popoverContainer, '{Escape}');
     expect(popover.isActive).toBe(false);
   }, {  timeout: 500 }); 
+
+  await userEvent.click(canvasElement);
 }
 
 WithMenu.play = async ({ canvasElement }) => {
@@ -211,3 +276,18 @@ WithMenu.play = async ({ canvasElement }) => {
   popoverTrigger.blur();
   await userEvent.click(canvasElement);
 };
+
+WithContent.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  const popover = canvas.queryByTestId('popover') as any;
+  const popoverTrigger = canvas.queryByTestId('popover-trigger') as any;
+  const popoverCloseButton = popover.shadowRoot.querySelector('.sl-c-popover__close-button') as HTMLElement;
+
+  await userEvent.type(popoverTrigger, '{Enter}');
+  expect(popover.isActive).toBe(true);
+
+  await userEvent.type(popoverCloseButton, '{Escape}');
+  expect(popover.isActive).toBe(false);
+
+  popoverTrigger.blur();
+}

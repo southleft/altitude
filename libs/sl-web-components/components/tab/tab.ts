@@ -1,4 +1,5 @@
-import { html, unsafeCSS } from 'lit';
+import { TemplateResult, unsafeCSS } from 'lit';
+import { html } from 'lit/static-html.js';
 import { property, query } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { SLElement } from '../SLElement';
@@ -91,7 +92,7 @@ export class SLTab extends SLElement {
       >
         <slot></slot>
       </button>
-    `;
+    ` as TemplateResult<1>;
   }
 }
 

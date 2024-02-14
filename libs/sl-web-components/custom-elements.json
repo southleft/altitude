@@ -4568,6 +4568,11 @@
       "description": "Component: sl-popover\n\nPopover is used to display content on top of other elements, and is positioned around the trigger that opens it.\n- **slot**: The main body of the popover\n- **slot** \"header\": The header of the popover that appears above the main slot\n- **slot** \"footer\": The footer of the popover that appears below the main slot\n- **slot** \"trigger\": The trigger that opens/closes the popover",
       "attributes": [
         {
+          "name": "variant",
+          "description": "Variants\n- **default** Displays the popover panel with padding\n- **menu** Displays the popover panel without padding",
+          "type": "\"menu\""
+        },
+        {
           "name": "heading",
           "description": "Heading text that appears in the header region",
           "type": "string"
@@ -4615,6 +4620,12 @@
           "name": "el",
           "type": "string",
           "default": "\"sl-popover\""
+        },
+        {
+          "name": "variant",
+          "attribute": "variant",
+          "description": "Variants\n- **default** Displays the popover panel with padding\n- **menu** Displays the popover panel without padding",
+          "type": "\"menu\""
         },
         {
           "name": "heading",

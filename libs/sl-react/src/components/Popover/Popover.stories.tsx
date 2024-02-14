@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { SLPopover, SLButton, SLMenu, SLMenuItem, SLToggleButton, SLIconDocument, SLIconMenu } from '../..';
+import { SLPopover, SLMenu, SLMenuItem, SLButton, SLButtonGroup, SLTabs, SLTab, SLTabPanel,SLToggleButton, SLIconDocument, SLIconHelp, SLIconMenu } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
@@ -12,10 +12,14 @@ export default {
       handles: ['onPopoverOpen', 'onPopoverClose', 'onPopoverCloseButton']
     },
     controls: {
-      exclude: ['ariaLabelledBy']
+      exclude: ['ariaLabelledBy', 'popoverTrigger', 'popoverTriggerButton', 'handleOnClickOutside', 'transitionDelay']
     },
   },
   argTypes: {
+    variant: {
+      options: ['default', 'menu'],
+      control: { type: 'radio' },
+    },
     heading: {
       type: 'text'
     },
@@ -24,6 +28,9 @@ export default {
       control: { type: 'radio' }
     },
     isActive: {
+      type: 'boolean'
+    },
+    isDismissible: {      
       type: 'boolean'
     }
   },
@@ -37,10 +44,10 @@ export default {
   },
 };
 
-function closePanel() {
-  const panel = document.querySelector<any>('.c-panel').querySelector('*');
-  if (panel) {
-    panel.close();
+function closePopover() {
+  const popover = document.querySelector<any>('sl-popover');
+  if (popover) {
+    popover.close();
   }
 }
 
@@ -144,4 +151,47 @@ export const WithMenWithGroups: StoryObj<typeof SLPopover> = {
   parameters: {
     layout: 'fullscreen'
   }
+};
+
+export const WithContent: StoryObj<typeof SLPopover> = {
+  args: {
+    position: 'top-left',
+    heading: "Popover heading",
+    isDismissible: true,
+    children: (
+      <>
+        <SLToggleButton slot="trigger"><SLIconHelp size="lg"></SLIconHelp></SLToggleButton>
+        <SLTabs variant="stretch">
+          <SLTab>Tab 1</SLTab>
+          <SLTab>Tab 2</SLTab>
+          <SLTab>Tab 3</SLTab>
+          <SLTabPanel slot="panel">
+            <Fpo>Tab panel 1 - Instance slot 1</Fpo>
+            <Fpo>Tab panel 1 - Instance slot 2</Fpo>
+          </SLTabPanel>
+          <SLTabPanel slot="panel">
+            <Fpo>Tab panel 2 - Instance slot 1</Fpo>
+            <Fpo>Tab panel 2 - Instance slot 2</Fpo>
+          </SLTabPanel>
+          <SLTabPanel slot="panel">
+            <Fpo>Tab panel 3 - Instance slot 1</Fpo>
+            <Fpo>Tab panel 3 - Instance slot 2</Fpo>
+          </SLTabPanel>
+        </SLTabs>
+        <SLButton slot="footer" variant="tertiary" onClick={closePopover}>Close</SLButton>
+        <SLButtonGroup slot="footer" alignment="right">
+          <SLButton variant="secondary">Label</SLButton>
+          <SLButton>Label</SLButton>
+        </SLButtonGroup>
+      </>
+    )
+  },
+  parameters: {
+    layout: 'fullscreen'
+  },
+  decorators: [
+    (Story) => (
+      <div className="c-popover" style={{ position: 'fixed', insetBlockEnd: '1rem', insetInlineEnd: '1rem' }}>{Story()}</div>
+    )
+  ]
 };
