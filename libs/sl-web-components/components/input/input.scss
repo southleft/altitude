@@ -77,7 +77,7 @@
   .sl-is-active & {
     @include sl-theme-typography-body-xs;
     padding: 0 var(--sl-theme-space-xxs);
-    background-color: var(--sl-input-label-background, var(--sl-theme-color-background-default));
+    background-color: var(--sl-input-label-background, var(--sl-theme-color-background-default-weak));
     inset-block-start: calc(#{var(--sl-theme-space-sm)} * -1);
     inset-block-end: auto;
     inset-inline-start: var(--sl-theme-space-sm);
@@ -100,7 +100,7 @@
      * Prevents the input border from showing through the label
      */
     &::before {
-      background-color: var(--sl-input-label-background, var(--sl-theme-color-background-default));
+      background-color: var(--sl-input-label-background, var(--sl-theme-color-background-default-weak));
       content: "";
       display: block;
       position: absolute;

@@ -137,7 +137,7 @@ export class SLPopover extends SLElement {
     super();
     this.handleOnClickOutside = this.handleOnClickOutside.bind(this); /* 1 */
     /* 2 */
-    this.addEventListener('onMenuItemSelect', (e: CustomEvent) => {
+    this.addEventListener('onMenuItemSelect', () => {
       if (this.variant == 'menu') {
         this.close();
       }

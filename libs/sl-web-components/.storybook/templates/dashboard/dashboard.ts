@@ -94,7 +94,7 @@ export class SLDashboard extends LitElement {
             </slot>
           </div>
           <div class="sl-l-dashboard__content">
-            <sl-header>
+            <sl-header class="sl-l-dashboard__header">
               <sl-search slot="before">
                 <sl-list>
                   <sl-list-item>Dashboard</sl-list-item>

@@ -18,7 +18,7 @@ export default {
     },
     variant: {
       control: 'radio',
-      options: ['default', 'info', 'success', 'warning', 'danger']
+      options: ['default', 'success', 'warning', 'danger']
     },
     position: {
       control: 'radio',
@@ -31,11 +31,6 @@ const Template = (args) => html`<sl-badge ${spread(args)}>0</sl-badge>`;
 
 export const Default = Template.bind({});
 Default.args = {};
-
-export const DefaultInfo = Template.bind({});
-DefaultInfo.args = {
-  variant: 'info'
-};
 
 export const DefaultSuccess = Template.bind({});
 DefaultSuccess.args = {
@@ -55,12 +50,6 @@ DefaultDanger.args = {
 export const Dot = Template.bind({});
 Dot.args = {
   isDot: true
-};
-
-export const DotInfo = Template.bind({});
-DotInfo.args = {
-  isDot: true,
-  variant: 'info'
 };
 
 export const DotSuccess = Template.bind({});

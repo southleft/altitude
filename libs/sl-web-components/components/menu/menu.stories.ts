@@ -208,7 +208,7 @@ Default.play = async ({ canvasElement }) => {
   // Remove selected item and focus
   menuItems[1].isSelected = false;
   menu.selectedItem = undefined
-  menuItems[0].blur();
+  menuItems[1].blur();
 };
 
 

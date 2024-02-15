@@ -1026,6 +1026,10 @@
       "description": "Component: sl-card\n\nCard displays content and actions on a single topic in a concise, scannable format.\n- **slot**: The main content of the card that appers below the header\n- **slot** \"actions-left\": The actions the appear to the top-left of the card\n- **slot** \"action-right\": The actions the appear to the top-right of the card\n- **slot** \"image\": The main image of the card that appears below the actions\n- **slot** \"header\": The main title of the card that appears below the image",
       "attributes": [
         {
+          "name": "variant",
+          "type": "\"inline\""
+        },
+        {
           "name": "styleModifier",
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
@@ -1036,6 +1040,11 @@
           "name": "el",
           "type": "string",
           "default": "\"sl-card\""
+        },
+        {
+          "name": "variant",
+          "attribute": "variant",
+          "type": "\"inline\""
         },
         {
           "name": "styleModifier",
@@ -1390,8 +1399,8 @@
       "attributes": [
         {
           "name": "variant",
-          "description": "Variant\n- **default** A chip with a strong contrast background\n- **info** A chip with a info background\n- **success** A chip with a success background\n- **warning** A chip with a warning background\n- **danger** A chip with a danger background",
-          "type": "\"success\" | \"warning\" | \"danger\" | \"info\""
+          "description": "Variant\n- **default** A chip with a strong contrast background\n- **secondary** A chip with a outline\n- **info** A chip with a info background\n- **success** A chip with a success background\n- **warning** A chip with a warning background\n- **danger** A chip with a danger background",
+          "type": "\"success\" | \"warning\" | \"danger\" | \"secondary\" | \"info\""
         },
         {
           "name": "type",
@@ -1423,8 +1432,8 @@
         {
           "name": "variant",
           "attribute": "variant",
-          "description": "Variant\n- **default** A chip with a strong contrast background\n- **info** A chip with a info background\n- **success** A chip with a success background\n- **warning** A chip with a warning background\n- **danger** A chip with a danger background",
-          "type": "\"success\" | \"warning\" | \"danger\" | \"info\""
+          "description": "Variant\n- **default** A chip with a strong contrast background\n- **secondary** A chip with a outline\n- **info** A chip with a info background\n- **success** A chip with a success background\n- **warning** A chip with a warning background\n- **danger** A chip with a danger background",
+          "type": "\"success\" | \"warning\" | \"danger\" | \"secondary\" | \"info\""
         },
         {
           "name": "type",
@@ -2246,7 +2255,7 @@
     {
       "name": "sl-dialog",
       "path": "./components/dialog/dialog.ts",
-      "description": "Component: sl-dialog\n\nDialog informs users about a task and can contain critical information, require decisions, or involve multiple tasks.\n- **slot**: The main body of the dialog\n- **slot** \"header\": The header of the dialog that appears above the main slot\n- **slot** \"footer\": The footer of the dialog that appears below the main slot",
+      "description": "Component: sl-dialog\n\nDialog informs users about a task and can contain critical information, require decisions, or involve multiple tasks. It blocks interaction and scrolling on the rest of the screen, and should be used sparingly.\n- **slot**: The main body of the dialog\n- **slot** \"trigger\": The trigger that opens/closes the dialog\n- **slot** \"header\": The header of the dialog that appears above the main slot\n- **slot** \"footer\": The footer of the dialog that appears below the main slot",
       "attributes": [
         {
           "name": "heading",
@@ -2264,11 +2273,6 @@
           "type": "string"
         },
         {
-          "name": "hasBackdrop",
-          "description": "Has backdrop?\n- **true** Displays a dimmed background behind the dialog container\n- **false** Hides the dimmed background behind the dialog container",
-          "type": "boolean"
-        },
-        {
           "name": "disableClickOutside",
           "description": "Disable click outside\n- **true** Disables closing the dialog on click outside of the dialog container\n- **false** Enables closing the dialog on click outside of the dialog container",
           "type": "boolean"
@@ -2283,6 +2287,10 @@
           "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
           "type": "number",
           "default": "400"
+        },
+        {
+          "name": "dialogTrigger",
+          "description": "The modal trigger if it not slotted in the 'trigger' slot\n- Must be set by the trigger's click callback when it calls the modal's open method"
         },
         {
           "name": "styleModifier",
@@ -2313,12 +2321,6 @@
           "attribute": "ariaLabelledBy",
           "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
           "type": "string"
-        },
-        {
-          "name": "hasBackdrop",
-          "attribute": "hasBackdrop",
-          "description": "Has backdrop?\n- **true** Displays a dimmed background behind the dialog container\n- **false** Hides the dimmed background behind the dialog container",
-          "type": "boolean"
         },
         {
           "name": "disableClickOutside",
@@ -2353,9 +2355,14 @@
           "description": "Query the dialog close button"
         },
         {
-          "name": "dialogTrigger",
+          "name": "slottedTrigger",
           "description": "Query the dialog trigger",
           "type": "array"
+        },
+        {
+          "name": "dialogTrigger",
+          "attribute": "dialogTrigger",
+          "description": "The modal trigger if it not slotted in the 'trigger' slot\n- Must be set by the trigger's click callback when it calls the modal's open method"
         },
         {
           "name": "dialogTriggerButton",
@@ -4605,11 +4612,6 @@
           "default": "400"
         },
         {
-          "name": "menuId",
-          "description": "Menu id\n- Unique id used to associate popover with a slotted menu component, so that the popover closes when a menu item is selected",
-          "type": "string"
-        },
-        {
           "name": "styleModifier",
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
@@ -4664,12 +4666,6 @@
           "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
           "type": "number",
           "default": "400"
-        },
-        {
-          "name": "menuId",
-          "attribute": "menuId",
-          "description": "Menu id\n- Unique id used to associate popover with a slotted menu component, so that the popover closes when a menu item is selected",
-          "type": "string"
         },
         {
           "name": "popoverTrigger",
