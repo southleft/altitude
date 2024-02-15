@@ -1,4 +1,5 @@
 import { html, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
 import { SLElement } from '../SLElement';
 import styles from './card.scss';
 
@@ -19,26 +20,26 @@ export class SLCard extends SLElement {
     return unsafeCSS(styles.toString());
   }
 
+  @property()
+  accessor variant: 'inline'
+
   render() {
-    const componentClassNames = this.componentClassNames('sl-c-card', {});
+    const componentClassNames = this.componentClassNames('sl-c-card', {
+      'sl-c-card--inline': this.variant === 'inline'
+    });
 
     return html`
       <div class="${componentClassNames}">
-        ${(this.slotNotEmpty('actions-left') || this.slotNotEmpty('actions-right')) &&
+        ${this.slotNotEmpty('actions-left') &&
         html`
-          <div class="sl-c-card__actions">
-            ${this.slotNotEmpty('actions-left') &&
-            html`
-              <div class="sl-c-card__actions-left">
-                <slot name="actions-left"></slot>
-              </div>
-            `}
-            ${this.slotNotEmpty('actions-right') &&
-            html`
-              <div class="sl-c-card__actions-right">
-                <slot name="actions-right"></slot>
-              </div>
-            `}
+          <div class="sl-c-card__actions-left">
+            <slot name="actions-left"></slot>
+          </div>
+        `}
+        ${this.slotNotEmpty('actions-right') &&
+        html`
+          <div class="sl-c-card__actions-right">
+            <slot name="actions-right"></slot>
           </div>
         `}
         ${this.slotNotEmpty('image') &&

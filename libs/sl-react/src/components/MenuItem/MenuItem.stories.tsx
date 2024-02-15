@@ -8,7 +8,7 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['onMenuItemSelect', 'onMenuExpand'],
+      handles: ['onMenuItemSelect', 'onMenuItemExpand'],
     },
     controls: {
       exclude: ['isFocused', 'idx', 'ariaControls', 'menuItemLink', 'menuItemControl', 'menuItemLinkEl', 'menuItemControlEl']

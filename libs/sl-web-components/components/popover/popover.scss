@@ -14,7 +14,7 @@
 .sl-c-popover {
   position: relative;
   display: flex;
-  width: 100%;
+  width: var(--sl-popover-width, max-content);
   --sl-popover-offset: #{var(--sl-theme-space-xs)};
   --sl-popover-shift: 0;
 }
@@ -22,7 +22,7 @@
 /**
  * Popover menu variant
  */
- .sl-c-popover--menu {
+.sl-c-popover--menu {
   --sl-popover-offset: #{size(0)};
 }
 
@@ -85,7 +85,7 @@
   .sl-c-popover--menu & {
     padding: 0;
     border-radius: var(--sl-theme-border-radius-md);
-    box-shadow: var(--sl-theme-box-shadow-sm);
+    box-shadow: var(--sl-theme-box-shadow);
   }
 
   /**
@@ -250,7 +250,7 @@
  * Popover body
  * - The body/content slot in the popover
  */
- .sl-c-popover__body {
+.sl-c-popover__body {
   flex: 1;
   display: flex;
   flex-direction: column;

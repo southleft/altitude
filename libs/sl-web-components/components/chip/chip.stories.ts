@@ -19,7 +19,7 @@ export default {
   argTypes: {
     variant: {
       control: { type: 'radio' },
-      options: ['default', 'info', 'success', 'warning', 'danger'],
+      options: ['default', 'secondary', 'info', 'success', 'warning', 'danger'],
     },
     type: {
       control: { type: 'radio' },
@@ -35,6 +35,11 @@ const Template = (args) => html`<sl-chip ${spread(args)}>Label</sl-chip>`;
 
 export const Default = Template.bind({});
 Default.args = {};
+
+export const Secondary = Template.bind({});
+Secondary.args = {
+  variant: 'secondary'
+};
 
 export const Info = Template.bind({});
 Info.args = {

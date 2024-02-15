@@ -4,8 +4,9 @@ import { classMap } from 'lit/directives/class-map.js';
 import styles from './job-board.scss';
 import '../../templates/dashboard/dashboard';
 import '../../../components/badge/badge';
-import '../../../components/button/button';
 import '../../../components/button-group/button-group';
+import '../../../components/button/button';
+import '../../../components/card/card';
 import '../../../components/checkbox-group/checkbox-group';
 import '../../../components/checkbox/checkbox';
 import '../../../components/chip-group/chip-group';
@@ -15,14 +16,16 @@ import '../../../components/divider/divider';
 import '../../../components/heading/heading';
 import '../../../components/icon/icons/filter';
 import '../../../components/icon/icons/pin';
+import '../../../components/icon/icons/star';
 import '../../../components/input/input';
+import '../../../components/link/link';
+import '../../../components/pagination/pagination';
 import '../../../components/radio-group/radio-group';
 import '../../../components/radio/radio';
 import '../../../components/range/range';
 import '../../../components/search/search';
 import '../../../components/select/select';
 import '../../../components/text-passage/text-passage';
-import '../../../components/card/card';
 
 /**
  * Page: sl-l-job-board
@@ -74,7 +77,7 @@ export class SLJobBoard extends LitElement {
               <sl-dialog class="sl-u-grid__item col:12 col:6@lg col:3@xxl" ?hasBackdrop=${true}>
                 <sl-input label="Filters" ?isReadonly=${true} slot="trigger">
                   <sl-icon-filter slot="before"></sl-icon-filter>
-                  <sl-badge slot="after" variant="info">4</sl-badge>
+                  <sl-badge slot="after">4</sl-badge>
                 </sl-input>
                 <sl-heading slot="header" ?isBold=${true} variant="md" tagName="h2">Filter</sl-heading>
                 <div class="sl-l-job-board__filter-dialog sl-u-gap">
@@ -143,15 +146,138 @@ export class SLJobBoard extends LitElement {
                 </sl-list>
               </sl-select>
             </div>
-            <sl-card>
-              <div class="sl-u-gap sl-u-gap--row">
-                <sl-heading variant="sm" tagName="h3">UX Designer</sl-heading>
-                <sl-chip variant="warning">Front-end Development</sl-chip>
-                <sl-chip variant="danger">Remote</sl-chip>
+            <sl-card variant="inline">
+              <div slot="image" class="sl-l-job-board__card-image">
+                <sl-icon-star size="xl"></sl-icon-star>
               </div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
               <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <div class="sl-u-gap-xs sl-u-gap--row">
+                <sl-chip variant="secondary">Front-end Development</sl-chip>
+                <sl-chip variant="secondary">Remote</sl-chip>
+              </div>
+              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
+              <sl-button slot="actions-right">View</sl-button>
+            </sl-card>
+            <sl-card variant="inline">
+              <div slot="image" class="sl-l-job-board__card-image">
+                <sl-icon-star size="xl"></sl-icon-star>
+              </div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <div class="sl-u-gap-xs sl-u-gap--row">
+                <sl-chip variant="secondary">Front-end Development</sl-chip>
+                <sl-chip variant="secondary">Remote</sl-chip>
+              </div>
+              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
+              <sl-button slot="actions-right">View</sl-button>
+            </sl-card>
+            <sl-card variant="inline">
+              <div slot="image" class="sl-l-job-board__card-image">
+                <sl-icon-star size="xl"></sl-icon-star>
+              </div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <div class="sl-u-gap-xs sl-u-gap--row">
+                <sl-chip variant="secondary">Front-end Development</sl-chip>
+                <sl-chip variant="secondary">Remote</sl-chip>
+              </div>
+              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
+              <sl-button slot="actions-right">View</sl-button>
+            </sl-card>
+            <sl-card variant="inline">
+              <div slot="image" class="sl-l-job-board__card-image">
+                <sl-icon-star size="xl"></sl-icon-star>
+              </div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <div class="sl-u-gap-xs sl-u-gap--row">
+                <sl-chip variant="secondary">Front-end Development</sl-chip>
+                <sl-chip variant="secondary">Remote</sl-chip>
+              </div>
+              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
+              <sl-button slot="actions-right">View</sl-button>
+            </sl-card>
+            <sl-card variant="inline">
+              <div slot="image" class="sl-l-job-board__card-image">
+                <sl-icon-star size="xl"></sl-icon-star>
+              </div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <div class="sl-u-gap-xs sl-u-gap--row">
+                <sl-chip variant="secondary">Front-end Development</sl-chip>
+                <sl-chip variant="secondary">Remote</sl-chip>
+              </div>
+              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
+              <sl-button slot="actions-right">View</sl-button>
+            </sl-card>
+            <sl-card variant="inline">
+              <div slot="image" class="sl-l-job-board__card-image">
+                <sl-icon-star size="xl"></sl-icon-star>
+              </div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <div class="sl-u-gap-xs sl-u-gap--row">
+                <sl-chip variant="secondary">Front-end Development</sl-chip>
+                <sl-chip variant="secondary">Remote</sl-chip>
+              </div>
+              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
+              <sl-button slot="actions-right">View</sl-button>
+            </sl-card>
+            <sl-card variant="inline">
+              <div slot="image" class="sl-l-job-board__card-image">
+                <sl-icon-star size="xl"></sl-icon-star>
+              </div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <div class="sl-u-gap-xs sl-u-gap--row">
+                <sl-chip variant="secondary">Front-end Development</sl-chip>
+                <sl-chip variant="secondary">Remote</sl-chip>
+              </div>
+              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
+              <sl-button slot="actions-right">View</sl-button>
+            </sl-card>
+            <sl-card variant="inline">
+              <div slot="image" class="sl-l-job-board__card-image">
+                <sl-icon-star size="xl"></sl-icon-star>
+              </div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <div class="sl-u-gap-xs sl-u-gap--row">
+                <sl-chip variant="secondary">Front-end Development</sl-chip>
+                <sl-chip variant="secondary">Remote</sl-chip>
+              </div>
+              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
+              <sl-button slot="actions-right">View</sl-button>
+            </sl-card>
+            <sl-card variant="inline">
+              <div slot="image" class="sl-l-job-board__card-image">
+                <sl-icon-star size="xl"></sl-icon-star>
+              </div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <div class="sl-u-gap-xs sl-u-gap--row">
+                <sl-chip variant="secondary">Front-end Development</sl-chip>
+                <sl-chip variant="secondary">Remote</sl-chip>
+              </div>
+              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
+              <sl-button slot="actions-right">View</sl-button>
+            </sl-card>
+            <sl-card variant="inline">
+              <div slot="image" class="sl-l-job-board__card-image">
+                <sl-icon-star size="xl"></sl-icon-star>
+              </div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <div class="sl-u-gap-xs sl-u-gap--row">
+                <sl-chip variant="secondary">Front-end Development</sl-chip>
+                <sl-chip variant="secondary">Remote</sl-chip>
+              </div>
+              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
+              <sl-button slot="actions-right">View</sl-button>
             </sl-card>
           </div>
+          <sl-pagination totalRecords="32"></sl-pagination>
         </div>
       </sl-dashboard>
     `;

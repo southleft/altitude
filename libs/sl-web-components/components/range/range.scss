@@ -77,7 +77,7 @@
      */
     .sl-c-range__input & {
       position: relative;
-      z-index: var(--sl-z-index-100);
+      z-index: var(--sl-z-index-200);
       appearance: none;
       pointer-events: all;
     }
@@ -234,7 +234,7 @@
   overflow: visible;
   min-width: size(3.75);
   width: max-content;
-  z-index: var(--sl-z-index-top);
+  z-index: var(--sl-z-index-200);
   background-color: var(--sl-theme-color-background-default-strong);
   border-radius: var(--sl-theme-border-radius);
   color: var(--sl-theme-color-content-default);
@@ -270,7 +270,7 @@
   border-radius: var(--sl-theme-border-radius);
   padding: var(--sl-theme-space-xs);
   position: relative;
-  z-index: var(--sl-z-index-top);
+  z-index: var(--sl-z-index-200);
   text-align: center;
 }
 
@@ -348,7 +348,7 @@
      * Thumb styling on active state
      */
     &:active::-webkit-slider-thumb {
-      z-index: var(--sl-z-index-500);
+      z-index: var(--sl-z-index-200);
       @include focus;
     }
 
@@ -381,7 +381,7 @@
      */
     &::-moz-range-thumb {
       position: relative;
-      z-index: var(--sl-z-index-100);
+      z-index: var(--sl-z-index-200);
       width: var(--sl-range-thumb-size);
       height: var(--sl-range-thumb-size);
       border-radius: 50%;
@@ -442,7 +442,7 @@
 
 .sl-c-range__input-lower-active-thumb,
 .sl-c-range__input-upper-active-thumb {
-  z-index: var(--sl-z-index-300);
+  z-index: var(--sl-z-index-200);
 }
 
 /**

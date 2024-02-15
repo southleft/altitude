@@ -30,13 +30,14 @@ export class SLChip extends SLElement {
   /**
    * Variant
    * - **default** A chip with a strong contrast background
+   * - **secondary** A chip with a outline
    * - **info** A chip with a info background
    * - **success** A chip with a success background
    * - **warning** A chip with a warning background
    * - **danger** A chip with a danger background
    */
   @property()
-  accessor variant: 'success' | 'danger' | 'info' | 'warning';
+  accessor variant: 'secondary' | 'info' | 'success' | 'warning' | 'danger';
 
   /**
    * Type variant
@@ -87,10 +88,11 @@ export class SLChip extends SLElement {
 
   render() {
     const componentClassNames = this.componentClassNames('sl-c-chip', {
+      'sl-c-chip--secondary': this.variant === 'secondary',
       'sl-c-chip--success': this.variant === 'success',
-      'sl-c-chip--danger': this.variant === 'danger',
       'sl-c-chip--info': this.variant === 'info',
       'sl-c-chip--warning': this.variant === 'warning',
+      'sl-c-chip--danger': this.variant === 'danger',
       'sl-c-chip--squared': this.type === 'squared',
       'sl-is-dismissible': this.isDismissible,
       'sl-is-dismissed': this.isDismissed

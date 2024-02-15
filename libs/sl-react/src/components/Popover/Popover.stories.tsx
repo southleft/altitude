@@ -9,7 +9,7 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['onPopoverOpen', 'onPopoverClose', 'onPopoverCloseButton']
+      handles: ['onPopoverOpen', 'onPopoverClose', 'onPopoverCloseButton', 'onMenuItemSelect', 'onMenuItemExpand']
     },
     controls: {
       exclude: ['ariaLabelledBy', 'popoverTrigger', 'popoverTriggerButton', 'handleOnClickOutside', 'transitionDelay']
@@ -30,7 +30,7 @@ export default {
     isActive: {
       type: 'boolean'
     },
-    isDismissible: {      
+    isDismissible: {
       type: 'boolean'
     }
   },
@@ -89,6 +89,11 @@ export const PositionRightTop: StoryObj<typeof SLPopover> = { args: {
   position: 'right-top',
 } };
 
+export const WithDismissible: StoryObj<typeof SLPopover> = { args: {
+  isDismissible: true,
+  heading: "Popover heading",
+} };
+
 export const WithMenu: StoryObj<typeof SLPopover> = {
   args: {
     position: 'bottom-right',
@@ -98,16 +103,16 @@ export const WithMenu: StoryObj<typeof SLPopover> = {
           <SLIconMenu slot="before"></SLIconMenu>
           Menu
         </SLButton>
-        <SLMenu data-testid="menu" id="menu-123">
-        <SLMenuItem isHeader={true} data-testid="menu-item-01">
+        <SLMenu>
+        <SLMenuItem isHeader={true}>
           <SLIconDocument slot="before"></SLIconDocument>
           Header
         </SLMenuItem>
-        <SLMenuItem data-testid="menu-item-02">Menu Item</SLMenuItem>
-        <SLMenuItem data-testid="menu-item-03">Menu Item</SLMenuItem>
-        <SLMenuItem data-testid="menu-item-04">Menu Item</SLMenuItem>
-        <SLMenuItem isDisabled={true} data-testid="menu-item-05">Menu Item</SLMenuItem>
-        <SLMenuItem data-testid="menu-item-06">Menu Item</SLMenuItem>
+        <SLMenuItem>Menu Item</SLMenuItem>
+        <SLMenuItem>Menu Item</SLMenuItem>
+        <SLMenuItem>Menu Item</SLMenuItem>
+        <SLMenuItem isDisabled={true}>Menu Item</SLMenuItem>
+        <SLMenuItem>Menu Item</SLMenuItem>
       </SLMenu>
       </>
     )
@@ -126,24 +131,24 @@ export const WithMenWithGroups: StoryObj<typeof SLPopover> = {
           <SLIconMenu slot="before"></SLIconMenu>
           Menu
         </SLButton>
-        <SLMenu data-testid="menu" id="group-menu-123">
-          <SLMenuItem isHeader={true} data-testid="menu-item-01">
+        <SLMenu>
+          <SLMenuItem isHeader={true}>
             <SLIconDocument slot="before"></SLIconDocument>
             Menu Item
           </SLMenuItem>
-          <SLMenuItem isHeader={true} isExpanded={true} isExpandableHeader={true} data-testid="menu-item-02">
+          <SLMenuItem isHeader={true} isExpanded={true} isExpandableHeader={true}>
             <SLIconDocument slot="before"></SLIconDocument>
             Menu Item
           </SLMenuItem>
-          <SLMenuItem data-testid="menu-item-03">Menu Item</SLMenuItem>
-          <SLMenuItem data-testid="menu-item-04">Menu Item</SLMenuItem>
-          <SLMenuItem isHeader={true} isExpanded={true} isExpandableHeader={true} data-testid="menu-item-05">
+          <SLMenuItem>Menu Item</SLMenuItem>
+          <SLMenuItem>Menu Item</SLMenuItem>
+          <SLMenuItem isHeader={true} isExpanded={true} isExpandableHeader={true}>
             <SLIconDocument slot="before"></SLIconDocument>
             Menu Item
           </SLMenuItem>
-          <SLMenuItem data-testid="menu-item-06">Menu Item</SLMenuItem>
-          <SLMenuItem data-testid="menu-item-07">Menu Item</SLMenuItem>
-          <SLMenuItem data-testid="menu-item-08">Menu Item</SLMenuItem>
+          <SLMenuItem>Menu Item</SLMenuItem>
+          <SLMenuItem>Menu Item</SLMenuItem>
+          <SLMenuItem>Menu Item</SLMenuItem>
         </SLMenu>
       </>
     )

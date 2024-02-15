@@ -11,14 +11,19 @@
 }
 
 /**
+ * Dashboard content
+ */
+.sl-l-dashboard__content {
+  overflow: auto;
+  max-height: 100vh;
+}
+
+/**
  * Dashboard body
  */
 .sl-l-dashboard__body {
   display: flex;
-  height: 100%;
-  max-height: calc(100vh - #{var(--sl-theme-layout-height-header)});
-  overflow: auto;
-  padding: var(--sl-theme-space-lg) 0;
+  padding: var(--sl-theme-space-lg) 0 var(--sl-theme-space-super) 0;
 }
 
 /**
@@ -71,6 +76,7 @@
  * Dashboard sidebar user
  */
 .sl-l-dashboard__sidebar-user {
+  --sl-popover-width: 100%;
   --sl-popover-trigger-width: 100%;
   --sl-popover-offset: 0;
   --sl-popover-shift: 0;

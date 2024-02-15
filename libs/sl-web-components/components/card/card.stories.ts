@@ -33,10 +33,15 @@ const Template = (args) => html`
 export const Default = Template.bind({});
 Default.args = {};
 
+export const Inline = Template.bind({});
+Inline.args = {
+  variant: 'inline'
+};
+
 const TemplateWithContent = (args) => html`
 <sl-card ${spread(args)}>
   <sl-chip slot="actions-left">Label</sl-chip>
-    <sl-popover slot="actions-right" menuId="card-menu">
+    <sl-popover slot="actions-right" menuId="card-menu" variant="menu">
       <sl-button slot="trigger" variant="tertiary" ?hideText=${true}>
         <sl-icon-dots-vertical slot="before"></sl-icon-dots-vertical>
       </sl-button>

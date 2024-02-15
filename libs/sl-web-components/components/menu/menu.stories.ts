@@ -21,7 +21,6 @@ export default {
     },
     controls: {
       exclude: [
-        'menuId',
         'menuItems',
         'menuList',
         'focusedItem',
@@ -46,9 +45,6 @@ export default {
     label: {
       control: 'text'
     },
-    menuId: {
-      control: 'text'
-    }
   },
   args: {
     width: '280',

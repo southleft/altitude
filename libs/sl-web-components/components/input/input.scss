@@ -73,7 +73,7 @@
   /**
    * If the input is focused or active, position the label above the input
    */
-  .sl-c-input__input:focus + &,
+  .sl-c-input__input:focus:not(:read-only) + &,
   .sl-is-active & {
     @include sl-theme-typography-body-xs;
     padding: 0 var(--sl-theme-space-xxs);

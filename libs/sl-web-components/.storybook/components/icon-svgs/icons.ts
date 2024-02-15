@@ -33,3 +33,5 @@ import '../../../components/icon/icons/settings';
 import '../../../components/icon/icons/sign-in';
 import '../../../components/icon/icons/support';
 import '../../../components/icon/icons/clock';
+import '../../../components/icon/icons/star';
+import '../../../components/icon/icons/bookmark';

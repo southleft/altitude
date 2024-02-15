@@ -17,6 +17,22 @@
   &.sl-is-bold {
     @include sl-theme-typography-heading-sm-bold;
   }
+
+  /**
+   * Links slotted in the heading
+   */
+  ::slotted(a) {
+    text-decoration: none;
+    color: inherit;
+    transition: all var(--sl-theme-animation-duration) var(--sl-theme-animation-timing);
+  }
+
+  /**
+   * Hover forlinks slotted in the heading
+   */
+  ::slotted(a:hover) {
+    color: var(--sl-theme-color-content-default-weak);
+  }
 }
 
 /**

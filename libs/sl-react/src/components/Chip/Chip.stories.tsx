@@ -13,7 +13,7 @@ export default {
   argTypes: {
     variant: {
       control: { type: 'radio' },
-      options: ['default', 'info', 'success', 'warning', 'danger'],
+      options: ['default', 'secondary', 'info', 'success', 'warning', 'danger'],
     },
     type: {
       control: { type: 'radio' },

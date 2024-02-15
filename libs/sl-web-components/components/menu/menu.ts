@@ -321,13 +321,6 @@ export class SLMenu extends SLElement {
       this.selectedItem.isSelected = false; /* 1 */
     }
     this.selectedItem = item; /* 2 */
-
-    this.dispatch({
-      eventName: 'onMenuSelect',
-      detailObj: {
-        id: this.id
-      }
-    });
   }
 
   /**

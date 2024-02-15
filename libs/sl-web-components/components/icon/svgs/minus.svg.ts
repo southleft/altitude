@@ -1,5 +1,13 @@
 import {html} from 'lit';
 
 export default html`
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M1,12c0-.55.45-1,1-1h20c.55,0,1,.45,1,1s-.45,1-1,1H2c-.55,0-1-.45-1-1Z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 20 20" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FEFEFC;}
+</style>
+<path class="st0" d="M16.8,10.7H3.2c-0.4,0-0.7-0.3-0.7-0.7c0-0.4,0.3-0.7,0.7-0.7h13.6c0.4,0,0.7,0.3,0.7,0.7
+	C17.5,10.4,17.2,10.7,16.8,10.7z"/>
+</svg>
+
 `;

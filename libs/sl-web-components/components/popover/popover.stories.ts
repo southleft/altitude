@@ -6,15 +6,15 @@ import './popover';
 import '../../.storybook/components/f-po/f-po';
 import '../button-group/button-group';
 import '../button/button';
+import '../icon/icons/document';
+import '../icon/icons/menu';
 import '../icon/icons/help';
+import '../menu-item/menu-item';
+import '../menu/menu';
 import '../tab-panel/tab-panel';
 import '../tab/tab';
 import '../tabs/tabs';
 import '../toggle-button/toggle-button';
-import '../menu/menu';
-import '../menu-item/menu-item';
-import '../icon/icons/document';
-import '../icon/icons/menu';
 
 export default {
   title: 'Molecules/Popover',
@@ -24,7 +24,7 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['onPopoverOpen', 'onPopoverClose', 'onPopoverCloseButton']
+      handles: ['onPopoverOpen', 'onPopoverClose', 'onPopoverCloseButton', 'onMenuItemSelect', 'onMenuItemExpand']
     },
     controls: {
       exclude: ['ariaLabelledBy', 'popoverTrigger', 'popoverTriggerButton', 'handleOnClickOutside', 'transitionDelay']
@@ -114,13 +114,19 @@ PositionRightTop.args = {
   position: 'right-top'
 };
 
+export const WithDismissible = Template.bind({});
+WithDismissible.args = {
+  isDismissible: true,
+  heading: "Popover heading",
+};
+
 const TemplateWithMenu = (args) => html`
-  <sl-popover ${spread(args)} data-testid="popover" menuId="menu-123">
+  <sl-popover ${spread(args)} data-testid="popover" variant="menu">
     <sl-button data-testid="popover-trigger" slot="trigger" variant="tertiary" ?hideText=${true}>
       <sl-icon-menu slot="before"></sl-icon-menu>
       Menu
     </sl-button>
-    <sl-menu data-testid="menu" id="menu-123">
+    <sl-menu data-testid="menu">
       <sl-menu-item ?isHeader=${true} data-testid="menu-item-01">
         <sl-icon-document slot="before"></sl-icon-document>
         Header
@@ -144,12 +150,12 @@ WithMenu.parameters = {
 };
 
 const TemplateMenuWithGroups = (args) => html`
-  <sl-popover ${spread(args)} data-testid="popover" menuId="group-menu-123">
+  <sl-popover ${spread(args)} data-testid="popover">
     <sl-button slot="trigger" variant="tertiary" ?hideText=${true}>
       <sl-icon-menu slot="before"></sl-icon-menu>
       Menu
     </sl-button>
-    <sl-menu data-testid="menu" id="group-menu-123">
+    <sl-menu data-testid="menu">
     <sl-menu-item ?isHeader=${true} data-testid="menu-item-01">
       <sl-icon-document slot="before"></sl-icon-document>
       Menu Item
@@ -175,7 +181,8 @@ WithMenuWithGroups.args = {
   ...WithMenu.args
 };
 WithMenuWithGroups.parameters = {
-  layout: 'fullscreen'
+  layout: 'fullscreen',
+  position: 'bottom-right'
 };
 
 const TemplateWithContent = (args) => html`

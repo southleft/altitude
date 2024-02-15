@@ -67,7 +67,7 @@ export class SLDashboard extends LitElement {
                 <a href="/?path=/story/pages-home--default"><img src="images/logo.svg" alt="logo" /></a>
                 <sl-divider></sl-divider>
               </div>
-              <sl-menu class="sl-l-dashboard__sidebar-menu" variant="cascading" ?isActive=${true}>
+              <sl-menu class="sl-l-dashboard__sidebar-menu">
                 <sl-menu-item href="/?path=/story/pages-home--default" ?isHeader=${true}><sl-icon-home></sl-icon-home>Dashboard<sl-badge variant="danger">12</sl-badge></sl-badge></sl-menu-item>
                 <sl-menu-item href="/?path=/story/pages-job-board--default" ?isHeader=${true}><sl-icon-list></sl-icon-list>Job Board</sl-menu-item>
                 <sl-menu-item ?isHeader=${true}><sl-icon-calendar></sl-icon-calendar>Schedule</sl-menu-item>
@@ -83,7 +83,7 @@ export class SLDashboard extends LitElement {
                     <p>TJ Pitre</p>
                     <sl-button variant="tertiary" ?hideText=${true}><sl-icon-chevron-up slot="before"></sl-icon-chevron-down></sl-button>
                   </div>
-                  <sl-menu ?isActive=${true} variant="cascading">
+                  <sl-menu>
                     <sl-menu-item><sl-icon-user></sl-icon-user>Profile</sl-menu-item>
                     <sl-menu-item><sl-icon-settings></sl-icon-settings>Settings</sl-menu-item>
                     <sl-menu-item><sl-icon-support></sl-icon-support>Support</sl-menu-item>
@@ -114,7 +114,7 @@ export class SLDashboard extends LitElement {
               <div slot="after">
                 <sl-popover variant="menu">
                   <sl-avatar slot="trigger">TP</sl-avatar>
-                  <sl-menu variant="cascading" ?isActive=${true}>
+                  <sl-menu>
                     <sl-menu-item><sl-icon-user></sl-icon-user>Profile</sl-menu-item>
                     <sl-menu-item><sl-icon-settings></sl-icon-settings>Settings</sl-menu-item>
                     <sl-menu-item><sl-icon-support></sl-icon-support>Support</sl-menu-item>
@@ -123,7 +123,7 @@ export class SLDashboard extends LitElement {
                 </sl-popover>
               </div>
             </sl-header>
-            <sl-layout-container  class="sl-l-dashboard__body">
+            <sl-layout-container class="sl-l-dashboard__body">
               <slot>
                 <f-po>Body content</f-po>
               </slot>

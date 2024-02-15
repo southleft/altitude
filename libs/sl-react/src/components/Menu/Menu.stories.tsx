@@ -8,11 +8,10 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
     actions: {
-      handles: ['onMenuOpen', 'onMenuClose', 'onMenuItemExpand', 'onMenuItemSelect'],
+      handles: ['onMenuItemExpand', 'onMenuItemSelect'],
     },
     controls: {
       exclude: [
-        'menuId',
         'menuItems',
         'menuList',
         'focusedItem',
@@ -34,9 +33,6 @@ export default {
       control: 'number'
     },
     label: {
-      control: 'text'
-    },
-    menuId: {
       control: 'text'
     },
   },

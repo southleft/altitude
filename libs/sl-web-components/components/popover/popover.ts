@@ -114,13 +114,6 @@ export class SLPopover extends SLElement {
   accessor transitionDelay: number = 400;
 
   /**
-   * Menu id
-   * - Unique id used to associate popover with a slotted menu component, so that the popover closes when a menu item is selected
-   */
-  @property({ type: String })
-  accessor menuId: string;
-
-  /**
    * Query the popover trigger
    */
   @queryAssignedElements({ slot: 'trigger' })
@@ -144,8 +137,8 @@ export class SLPopover extends SLElement {
     super();
     this.handleOnClickOutside = this.handleOnClickOutside.bind(this); /* 1 */
     /* 2 */
-    this.addEventListener('onMenuSelect', (e: CustomEvent) => {
-      if (e.detail.id === this.menuId) {
+    this.addEventListener('onMenuItemSelect', (e: CustomEvent) => {
+      if (this.variant == 'menu') {
         this.close();
       }
     });

@@ -73,7 +73,7 @@
   /**
    * If the textarea is focused or active, position the label above the textarea
    */
-  .sl-c-textarea__input:focus + &,
+  .sl-c-textarea__input:focus:not(:read-only) + &,
   .sl-is-active & {
     @include sl-theme-typography-body-xs;
     padding: 0 var(--sl-theme-space-xxs);
