@@ -11,7 +11,7 @@ export default {
       handles: ['onDialogOpen', 'onDialogClose', 'onDialogCloseButton']
     },
     controls: {
-      exclude: ['ariaLabelledBy']
+      exclude: ['ariaLabelledBy', 'transitionDelay', 'dialogContainer', 'dialogHeading', 'closeButton', 'slottedTrigger', 'externalTrigger', 'handleOnClickOutside']
     },
   },
   argTypes: {
@@ -38,18 +38,25 @@ export default {
   }
 };
 
-function closeDialog() {
-  const dialog = document.querySelector<any>('.c-dialog').querySelector('*');
+function openDialog(e: MouseEvent) {
+  const trigger = e.target as HTMLElement;
+  const dialogId = trigger?.getAttribute('aria-controls') as string;
+  const dialog = dialogId ? 
+    document.getElementById(dialogId) as any :
+    document.querySelector<any>('sl-dialog');
+
   if (dialog) {
-    dialog.close();
+    dialog.open(e);
   }
 }
 
-function openDialog(id) {
-  const dialogWrapper = document.getElementById(id) as any;
-  const dialog = dialogWrapper.querySelector('*') as any;
+function closeDialog(e: MouseEvent, id?: string): void {
+  const dialog = id ? 
+    document.getElementById(id) as any :
+    document.querySelector<any>('sl-dialog');
+
   if (dialog) {
-    dialog.open();
+    dialog.close(e);
   }
 }
 
@@ -66,10 +73,6 @@ export const WithWidth: StoryObj<typeof SLDialog> = { args: {
   width: '600'
 } };
 
-export const WithBackdrop: StoryObj<typeof SLDialog> = { args: {
-  hasBackdrop: true
-} };
-
 export const WithDisableClickOutside: StoryObj<typeof SLDialog> = { args: {
   disableClickOutside: true,
   hasBackdrop: true
@@ -77,10 +80,11 @@ export const WithDisableClickOutside: StoryObj<typeof SLDialog> = { args: {
 
 export const WithTriggerOutside: StoryObj<typeof SLDialog> = {
   args: {
+    id: "dialog-1",
     children: (
       <>
         <Fpo>Dialog content</Fpo>
-        <SLButton slot="footer" variant="tertiary" onClick={closeDialog}>Close</SLButton>
+        <SLButton slot="footer" variant="tertiary" onClick={(e: MouseEvent) => closeDialog(e, 'dialog-1')}>Close</SLButton>
         <SLButtonGroup slot="footer" alignment="right">
           <SLButton variant="secondary">Label</SLButton>
           <SLButton>Label</SLButton>
@@ -91,10 +95,8 @@ export const WithTriggerOutside: StoryObj<typeof SLDialog> = {
   decorators: [
     (Story) => (
       <div>
-        <SLButton onClick={() => openDialog('dialog-1')}>Open Dialog 1</SLButton>
-        <SLButton onClick={() => openDialog('dialog-2')}>Open Dialog 2</SLButton>
-        <div id="dialog-1">{Story()}</div>
-        <div id="dialog-2">{Story()}</div>
+        <SLButton aria-controls="dialog-1" onClick={openDialog}>Open Dialog 1</SLButton>
+        <div>{Story()}</div>
       </div>
     )
   ],

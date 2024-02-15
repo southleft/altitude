@@ -2246,7 +2246,7 @@
     {
       "name": "sl-dialog",
       "path": "./components/dialog/dialog.ts",
-      "description": "Component: sl-dialog\n\nDialog informs users about a task and can contain critical information, require decisions, or involve multiple tasks.\n- **slot**: The main body of the dialog\n- **slot** \"header\": The header of the dialog that appears above the main slot\n- **slot** \"footer\": The footer of the dialog that appears below the main slot",
+      "description": "Component: sl-dialog\n\nDialog informs users about a task and can contain critical information, require decisions, or involve multiple tasks. It blocks interaction and scrolling on the rest of the screen, and should be used sparingly.\n- **slot**: The main body of the dialog\n- **slot** \"trigger\": The trigger that opens/closes the dialog\n- **slot** \"header\": The header of the dialog that appears above the main slot\n- **slot** \"footer\": The footer of the dialog that appears below the main slot",
       "attributes": [
         {
           "name": "heading",
@@ -2264,11 +2264,6 @@
           "type": "string"
         },
         {
-          "name": "hasBackdrop",
-          "description": "Has backdrop?\n- **true** Displays a dimmed background behind the dialog container\n- **false** Hides the dimmed background behind the dialog container",
-          "type": "boolean"
-        },
-        {
           "name": "disableClickOutside",
           "description": "Disable click outside\n- **true** Disables closing the dialog on click outside of the dialog container\n- **false** Enables closing the dialog on click outside of the dialog container",
           "type": "boolean"
@@ -2283,6 +2278,10 @@
           "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
           "type": "number",
           "default": "400"
+        },
+        {
+          "name": "dialogTrigger",
+          "description": "The modal trigger if it not slotted in the 'trigger' slot\n- Must be set by the trigger's click callback when it calls the modal's open method"
         },
         {
           "name": "styleModifier",
@@ -2313,12 +2312,6 @@
           "attribute": "ariaLabelledBy",
           "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
           "type": "string"
-        },
-        {
-          "name": "hasBackdrop",
-          "attribute": "hasBackdrop",
-          "description": "Has backdrop?\n- **true** Displays a dimmed background behind the dialog container\n- **false** Hides the dimmed background behind the dialog container",
-          "type": "boolean"
         },
         {
           "name": "disableClickOutside",
@@ -2353,9 +2346,14 @@
           "description": "Query the dialog close button"
         },
         {
-          "name": "dialogTrigger",
+          "name": "slottedTrigger",
           "description": "Query the dialog trigger",
           "type": "array"
+        },
+        {
+          "name": "dialogTrigger",
+          "attribute": "dialogTrigger",
+          "description": "The modal trigger if it not slotted in the 'trigger' slot\n- Must be set by the trigger's click callback when it calls the modal's open method"
         },
         {
           "name": "dialogTriggerButton",
