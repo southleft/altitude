@@ -6,9 +6,6 @@ import '../../.storybook/components/f-po/f-po';
 import '../button-group/button-group';
 import '../button/button';
 import './dialog';
-import '../tab-panel/tab-panel';
-import '../tab/tab';
-import '../tabs/tabs';
 
 export default {
   title: 'Molecules/Dialog',
@@ -20,7 +17,7 @@ export default {
       handles: ['onDialogOpen', 'onDialogClose', 'onDialogCloseButton']
     },
     controls: {
-      exclude: ['ariaLabelledBy']
+      exclude: ['ariaLabelledBy', 'transitionDelay', 'dialogContainer', 'dialogHeading', 'closeButton', 'slottedTrigger', 'externalTrigger', 'handleOnClickOutside']
     },
   },
   decorators: [ withActions ],
@@ -37,17 +34,25 @@ export default {
   },
 };
 
-function closeDialog() {
-  const dialog = document.querySelector<any>('sl-dialog');
+function openDialog(e: MouseEvent) {
+  const trigger = e.target as HTMLElement;
+  const dialogId = trigger?.getAttribute('aria-controls') as string;
+  const dialog = dialogId ? 
+    document.getElementById(dialogId) as any :
+    document.querySelector<any>('sl-dialog');
+
   if (dialog) {
-    dialog.close();
+    dialog.open(e);
   }
 }
 
-function openDialog(id) {
-  const dialog = document.getElementById(id) as any;
+function closeDialog(e: MouseEvent, id: string | null) {
+  const dialog = id ? 
+    document.getElementById(id) as any :
+    document.querySelector<any>('sl-dialog');
+
   if (dialog) {
-    dialog.open();
+    dialog.close(e);
   }
 }
 
@@ -71,31 +76,25 @@ WithWidth.args = {
   width: '600'
 };
 
-export const WithBackdrop = Template.bind({});
-WithBackdrop.args = {
-  hasBackdrop: true
-};
-
 export const WithDisableClickOutside = Template.bind({});
 WithDisableClickOutside.args = {
-  disableClickOutside: true,
-  hasBackdrop: true
+  disableClickOutside: true
 };
 
 const TemplateWithTriggerOutside = () => html`
-  <sl-button @click=${() => openDialog('dialog-1')}>Open Dialog 1</sl-button>
-  <sl-button @click=${() => openDialog('dialog-2')}>Open Dialog 2</sl-button>
-  <sl-dialog id="dialog-1" heading="Dialog 1" ?hasBackdrop=${true}>
+  <sl-button aria-controls="dialog-1" @click=${openDialog} data-testId="dialog-1-trigger">Open Dialog 1</sl-button>
+  <sl-button aria-controls="dialog-2" @click=${openDialog}>Open Dialog 2</sl-button>
+  <sl-dialog id="dialog-1" heading="Dialog 1" data-testid="dialog-1">
     <f-po>Dialog content</f-po>
-    <sl-button slot="footer" variant="tertiary" @click=${closeDialog}>Close</sl-button>
+    <sl-button aria-controls="dialog-1" slot="footer" variant="tertiary" @click=${(e) => closeDialog(e, 'dialog-1')}>Close</sl-button>
     <sl-button-group slot="footer" alignment="right">
       <sl-button variant="secondary">Label</sl-button>
       <sl-button>Label</sl-button>
     </sl-button-group>
   </sl-dialog>
-  <sl-dialog id="dialog-2" heading="Dialog 2" ?hasBackdrop=${true}>
+  <sl-dialog id="dialog-2" heading="Dialog 2">
     <f-po>Dialog content</f-po>
-    <sl-button slot="footer" variant="tertiary" @click=${closeDialog}>Close</sl-button>
+    <sl-button slot="footer" variant="tertiary" @click=${(e) => closeDialog(e, 'dialog-2')}>Close</sl-button>
     <sl-button-group slot="footer" alignment="right">
       <sl-button variant="secondary">Label</sl-button>
       <sl-button>Label</sl-button>
@@ -123,15 +122,16 @@ Default.play = async ({ canvasElement }) => {
   await waitFor(() => expect(dialogContainer).toBeVisible(), {
     timeout: 400, // A long timeout to make sure it doesn't close
   });
-  await userEvent.type(dialogCloseButton, '{Escape}');
+
+  await userEvent.type(dialog, '{Escape}');
   expect(dialog.isActive).toBe(false);
 
   await userEvent.type(dialogTrigger, '{Enter}');
   expect(dialog.isActive).toBe(true);
 
-  await userEvent.click(dialogCloseButton);
+  await userEvent.type(dialogCloseButton, '{Enter}');
   expect(dialog.isActive).toBe(false);
-
+  
   await userEvent.click(dialogTrigger);
   expect(dialog.isActive).toBe(true);
 

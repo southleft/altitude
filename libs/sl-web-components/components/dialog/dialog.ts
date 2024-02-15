@@ -14,8 +14,9 @@ import styles from './dialog.scss';
 /**
  * Component: sl-dialog
  *
- * Dialog informs users about a task and can contain critical information, require decisions, or involve multiple tasks.
+ * Dialog informs users about a task and can contain critical information, require decisions, or involve multiple tasks. It blocks interaction and scrolling on the rest of the screen, and should be used sparingly.
  * - **slot**: The main body of the dialog
+ * - **slot** "trigger": The trigger that opens/closes the dialog
  * - **slot** "header": The header of the dialog that appears above the main slot
  * - **slot** "footer": The footer of the dialog that appears below the main slot
  */
@@ -63,14 +64,6 @@ export class SLDialog extends SLElement {
   accessor ariaLabelledBy: string;
 
   /**
-   * Has backdrop?
-   * - **true** Displays a dimmed background behind the dialog container
-   * - **false** Hides the dimmed background behind the dialog container
-   */
-  @property({ type: Boolean })
-  accessor hasBackdrop: boolean;
-
-  /**
    * Disable click outside
    * - **true** Disables closing the dialog on click outside of the dialog container
    * - **false** Enables closing the dialog on click outside of the dialog container
@@ -114,14 +107,21 @@ export class SLDialog extends SLElement {
    * Query the dialog trigger
    */
   @queryAssignedElements({ slot: 'trigger' })
-  accessor dialogTrigger: any[];
+  accessor slottedTrigger: any[];
+
+  /**
+   * The modal trigger if it not slotted in the 'trigger' slot
+   * - Must be set by the trigger's click callback when it calls the modal's open method
+   */
+  @property()
+  accessor dialogTrigger: any;
 
   /**
    * Query the dialog trigger inner element
    */
   get dialogTriggerButton(): any {
-    if (this.dialogTrigger[0] && this.dialogTrigger[0].shadowRoot) {
-      return this.dialogTrigger[0].shadowRoot.querySelector('*');
+    if (this.dialogTrigger && this.dialogTrigger.shadowRoot) {
+      return this.dialogTrigger.shadowRoot.querySelector('*');
     }
   }
 
@@ -181,9 +181,10 @@ export class SLDialog extends SLElement {
   setAria() {
     /* 1 */
     this.ariaLabelledBy = this.ariaLabelledBy || nanoid();
+
     /* 2 */
-    if (this.dialogTriggerButton) {
-      this.dialogTriggerButton.isExpanded = this.isActive || false;
+    if (this.dialogTrigger) {
+      this.dialogTrigger.isExpanded = this.isActive || false;
     }
   }
 
@@ -225,7 +226,7 @@ export class SLDialog extends SLElement {
       /* 3 */
       if (!didClickInside) {
         /* 4 */
-        this.close();
+        this.close(e);
       }
     }
   }
@@ -237,17 +238,18 @@ export class SLDialog extends SLElement {
   handleOnKeydown(e: KeyboardEvent) {
     /* 1 */
     if (this.isActive === true && e.code === 'Escape') {
-      this.close();
+      this.close(e);
     }
   }
 
   /**
    * Handle on click of close button
-   * 1. Toggle the active state between true and false
+   * 1. Close the dialog
    * 2. Dispatch a custom event on click of close button
    */
-  handleOnCloseButton() {
-    this.toggleActive();
+  handleOnCloseButton(e: MouseEvent) {
+    this.close(e); /* 2 */
+    /* 3 */
     this.dispatch({
       eventName: 'onDialogCloseButton',
       detailObj: {
@@ -257,53 +259,39 @@ export class SLDialog extends SLElement {
     });
   }
 
-  /**
-   * Set dialog active state
-   * 1. Toggle the active state between true and false
-   * 2. Open/close the dialog container based on isActive
-   */
-  public toggleActive() {
-    this.isActive = !this.isActive; /* 1 */
-
-    /* 2 */
-    if (this.isActive) {
-      this.open();
-    } else {
-      this.close();
+ /**
+  * Open dialog
+  * 1. Set isActive to true to show the dialog
+  * 2. Store the dialog trigger on the component state, so that it can be focused later when the dialog is closed
+  * 3. Dispatch a custom event on open
+  */
+ public open(e?: MouseEvent) {
+  this.isActive = true; /* 1 */
+  /* 2 */
+  this.dialogTrigger = e?.target || this.slottedTrigger[0] || null;
+  /* 3 */
+  this.dispatch({
+    eventName: 'onDialogOpen',
+    detailObj: {
+      active: this.isActive,
+      item: this
     }
-  }
-
-  /**
-   * Open dialog
-   * 1. Set isActive to true to show the dialog
-   * 2. Dispatch a custom event on open
-   */
-  public open() {
-    this.isActive = true; /* 1 */
-
-    /* 2 */
-    this.dispatch({
-      eventName: 'onDialogOpen',
-      detailObj: {
-        active: this.isActive,
-        item: this
-      }
-    });
-  }
+  });
+}
 
   /**
    * Close dialog
    * 1. Set isActive to false to hide the dialog
-   * 2. Set the focus on trigger button element when the dialog is closed
+   * 2. If the close event was a keyboard event, send focus to the trigger button
    * 3. Dispatch a custom event on close
    */
-  public close() {
+  public close(e?: MouseEvent | KeyboardEvent) {
     this.isActive = false; /* 1 */
+
     /* 2 */
-    if (this.dialogTriggerButton) {
-      setTimeout(() => {
-        this.dialogTriggerButton.focus();
-      }, 1);
+    const isKeyboardEvent = e?.detail === 0; /* 1 */
+    if (isKeyboardEvent) {
+      this.sendFocusToTrigger();
     }
     /* 3 */
     this.dispatch({
@@ -315,10 +303,23 @@ export class SLDialog extends SLElement {
     });
   }
 
+  /**
+   * Send focus to the trigger button that opened the modal
+   * 1. Get the trigger that is either an external or slotted element
+   * 2. Allow a short timeout for the modal to close
+   * 3. Focus the focusable element inside the trigger
+   */
+  sendFocusToTrigger() {
+    if (this.dialogTriggerButton) { /* 1 */
+      setTimeout(() => { /* 2 */
+        this.dialogTriggerButton.focus(); /* 3 */
+      }, 1);
+    }
+  }
+
   render() {
     const componentClassNames = this.componentClassNames('sl-c-dialog', {
-      'sl-is-active': this.isActive === true,
-      'sl-has-backdrop': this.hasBackdrop === true
+      'sl-is-active': this.isActive === true
     });
 
     return html`
@@ -326,7 +327,7 @@ export class SLDialog extends SLElement {
         ${
           this.slotNotEmpty('trigger') &&
           html`
-            <div class="sl-c-dialog__trigger" @click=${this.toggleActive}>
+            <div class="sl-c-dialog__trigger" @click=${this.open}>
               <slot name="trigger"></slot>
             </div>
           `
@@ -336,7 +337,7 @@ export class SLDialog extends SLElement {
             class="sl-c-dialog__container"
             role="dialog"
             aria-labelledby=${this.ariaLabelledBy}
-            aria-hidden=${this.isActive ? false : true}
+            aria-modal=${this.isActive ? false : true}
           >
             <div class="sl-c-dialog__header">
               ${

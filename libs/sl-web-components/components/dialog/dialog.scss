@@ -5,16 +5,12 @@
 
 /**
  * Dialog -the main content wrapper of the header, body, and footer
+ * - Displays a dimmed background when dialog is active
  */
 .sl-c-dialog {
   position: relative;
   display: flex;
-}
 
-/**
- * Dialog with a dimmed backdrop
- */
-.sl-has-backdrop {
   &::after {
     content: "";
     display: block;
