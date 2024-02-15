@@ -285,7 +285,7 @@ export class SLMenu extends SLElement {
   handleOnKeydown(e: KeyboardEvent) {
     const { target } = e as any;
 
-    if (target.matches('sl-menu-item')) {
+    if (target instanceof SLMenuItem || target.tagName.match("SL-MENU-ITEM")) {
       switch (e.key) {
         case 'ArrowDown' /* 1 */:
         case 'ArrowRight':
