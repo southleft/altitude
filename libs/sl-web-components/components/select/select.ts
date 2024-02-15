@@ -446,6 +446,7 @@ export class SLSelect extends SLElement {
             @input=${this.handleOnChange}
             ?isActive="${this.isActive}"
           >
+            ${this.slotNotEmpty('before') ? html`<div class="sl-c-select__icon-before" slot="before"><slot name="before"></slot></div>` : html``}
             <${this.iconChevronDownEl} size="lg" slot="after" class="sl-c-select__icon-arrow"></${this.iconChevronDownEl}>
           </${this.inputEl}>
           ${
