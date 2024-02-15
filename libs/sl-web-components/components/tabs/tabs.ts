@@ -269,9 +269,9 @@ export class SLTabs extends SLElement {
    * @fires tabChange
    */
   handleOnTabKeydown(e: KeyboardEvent) {
-    const { target } = e;
+    const { target } = e as any;
     const focused = document.activeElement as SLTab;
-    if (focused.matches('sl-tab')) {
+    if (focused && focused instanceof SLTab || focused.tagName.match('SL-TAB')) {
       switch (e.key) {
         case 'ArrowRight':
           e.preventDefault();
@@ -352,7 +352,7 @@ export class SLTabs extends SLElement {
     } else {
       this.setTabFocus();
       const target = e.target as SLButton;
-      if (target.matches('sl-button')) {
+      if (target && target instanceof SLButton || target.tagName.match('SL-BUTTON')) {
         target.shadowRoot.querySelector<HTMLButtonElement>('.sl-c-button').focus();
       }
     }
