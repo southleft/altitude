@@ -19,12 +19,22 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
   },
+  argTypes: {
+    layout: {
+      control: 'radio',
+      options: ['default', 'row']
+    },
+    variant: {
+      control: 'radio',
+      options: ['default', 'bare']
+    },
+  }
 };
 
 const Template = (args) => html`
 <sl-card ${spread(args)}>
-  <f-po slot="actions-left">Card Actions Left</f-po>
-  <f-po slot="actions-right">Card Actions Right</f-po>
+  <f-po slot="actions-start">Card Action Start</f-po>
+  <f-po slot="actions-end">Card Action End</f-po>
   <f-po slot="image">Card Image</f-po>
   <f-po slot="header">Card Header</f-po>
   <f-po>Card Content</f-po>
@@ -33,15 +43,20 @@ const Template = (args) => html`
 export const Default = Template.bind({});
 Default.args = {};
 
-export const Inline = Template.bind({});
-Inline.args = {
-  variant: 'inline'
+export const Bare = Template.bind({});
+Bare.args = {
+  variant: 'bare'
+};
+
+export const LayoutInline = Template.bind({});
+LayoutInline.args = {
+  layout: 'inline'
 };
 
 const TemplateWithContent = (args) => html`
 <sl-card ${spread(args)}>
-  <sl-chip slot="actions-left">Label</sl-chip>
-    <sl-popover slot="actions-right" menuId="card-menu" variant="menu">
+  <sl-chip slot="actions-start">Label</sl-chip>
+    <sl-popover slot="actions-end" menuId="card-menu" variant="menu">
       <sl-button slot="trigger" variant="tertiary" ?hideText=${true}>
         <sl-icon-dots-vertical slot="before"></sl-icon-dots-vertical>
       </sl-button>

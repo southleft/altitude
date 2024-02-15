@@ -8,7 +8,7 @@ import styles from './card.scss';
  *
  * Card displays content and actions on a single topic in a concise, scannable format.
  * - **slot**: The main content of the card that appers below the header
- * - **slot** "actions-left": The actions the appear to the top-left of the card
+ * - **slot** "actions-start": The actions the appear to the top-left of the card
  * - **slot** "action-right": The actions the appear to the top-right of the card
  * - **slot** "image": The main image of the card that appears below the actions
  * - **slot** "header": The main title of the card that appears below the image
@@ -20,28 +20,44 @@ export class SLCard extends SLElement {
     return unsafeCSS(styles.toString());
   }
 
+  /**
+   * Layout
+   * - **default** Displays the slotted items stacked in a column
+   * - **row** Displays the slotted items inline in a row
+   */
   @property()
-  accessor variant: 'inline'
+  accessor layout: 'inline'
+
+  /**
+   * Variant
+   * - **default** Renders a card with a background color, box shadow, or border radius
+   * - **bare** Renders a card without a background color, box shadow, or border radius
+   */
+  @property()
+  accessor variant: 'bare'
 
   render() {
     const componentClassNames = this.componentClassNames('sl-c-card', {
-      'sl-c-card--inline': this.variant === 'inline'
+      'sl-c-card--inline': this.layout === 'inline',
+      'sl-c-card--bare': this.variant === 'bare'
     });
 
     return html`
       <div class="${componentClassNames}">
-        ${this.slotNotEmpty('actions-left') &&
-        html`
-          <div class="sl-c-card__actions-left">
-            <slot name="actions-left"></slot>
+        ${this.slotNotEmpty('actions-start') || this.slotNotEmpty('actions-end') ? html`
+          <div class="sl-c-card__actions">
+            ${this.slotNotEmpty('actions-start') && html`
+              <div class="sl-c-card__actions-start">
+                <slot name="actions-start"></slot>
+              </div>
+            `}
+            ${this.slotNotEmpty('actions-end') && html`
+              <div class="sl-c-card__actions-end">
+                <slot name="actions-end"></slot>
+              </div>
+            `}
           </div>
-        `}
-        ${this.slotNotEmpty('actions-right') &&
-        html`
-          <div class="sl-c-card__actions-right">
-            <slot name="actions-right"></slot>
-          </div>
-        `}
+        `: html``}
         ${this.slotNotEmpty('image') &&
         html`
           <div class="sl-c-card__image">

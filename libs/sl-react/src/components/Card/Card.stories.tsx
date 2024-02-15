@@ -9,14 +9,24 @@ export default {
     status: { type: 'beta' },
     layout: 'centered',
   },
+  argTypes: {
+    layout: {
+      control: 'radio',
+      options: ['default', 'row']
+    },
+    variant: {
+      control: 'radio',
+      options: ['default', 'bare']
+    },
+  }
 };
 
 export const Default: StoryObj<typeof SLCard> = {
   args: {
     children: (
       <>
-        <div slot="actions-left"><Fpo>Card Actions Left</Fpo></div>
-        <div slot="actions-right"><Fpo>Card Actions Right</Fpo></div>
+        <div slot="actions-start"><Fpo>Card Actions Start</Fpo></div>
+        <div slot="actions-end"><Fpo>Card Actions End</Fpo></div>
         <div slot="image"><Fpo>Card Image</Fpo></div>
         <div slot="header"><Fpo>Card Header</Fpo></div>
         <div><Fpo>Card Content</Fpo></div>
@@ -25,12 +35,20 @@ export const Default: StoryObj<typeof SLCard> = {
   },
 };
 
+export const Bare: StoryObj<typeof SLCard> = { args: {
+  variant: 'bare',
+} };
+
+export const LayoutInline: StoryObj<typeof SLCard> = { args: {
+  variant: 'inline',
+} };
+
 export const WithContent: StoryObj<typeof SLCard> = {
   args: {
     children: (
       <>
-        <SLChip slot="actions-left">Label</SLChip>
-        <SLPopover slot="actions-right" menuId="card-menu">
+        <SLChip slot="actions-start">Label</SLChip>
+        <SLPopover slot="actions-end" menuId="card-menu">
           <SLButton slot="trigger" hideText={true} variant="tertiary">
             <SLIconDotsVertical slot="before"></SLIconDotsVertical>
           </SLButton>
