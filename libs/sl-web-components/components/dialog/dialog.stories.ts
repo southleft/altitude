@@ -46,7 +46,7 @@ function openDialog(e: MouseEvent) {
   }
 }
 
-function closeDialog(e: MouseEvent, id: string | null) {
+function closeDialog(e: MouseEvent, id?: string) {
   const dialog = id ? 
     document.getElementById(id) as any :
     document.querySelector<any>('sl-dialog');
@@ -82,9 +82,9 @@ WithDisableClickOutside.args = {
 };
 
 const TemplateWithTriggerOutside = () => html`
-  <sl-button aria-controls="dialog-1" @click=${openDialog} data-testId="dialog-1-trigger">Open Dialog 1</sl-button>
+  <sl-button aria-controls="dialog-1" @click=${openDialog}>Open Dialog 1</sl-button>
   <sl-button aria-controls="dialog-2" @click=${openDialog}>Open Dialog 2</sl-button>
-  <sl-dialog id="dialog-1" heading="Dialog 1" data-testid="dialog-1">
+  <sl-dialog id="dialog-1" heading="Dialog 1">
     <f-po>Dialog content</f-po>
     <sl-button aria-controls="dialog-1" slot="footer" variant="tertiary" @click=${(e) => closeDialog(e, 'dialog-1')}>Close</sl-button>
     <sl-button-group slot="footer" alignment="right">
