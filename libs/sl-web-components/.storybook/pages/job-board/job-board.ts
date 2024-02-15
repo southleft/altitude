@@ -105,7 +105,7 @@ export class SLJobBoard extends LitElement {
                   </div>
                   <sl-divider></sl-divider>
                   <sl-radio-group label="Posted At">
-                    <sl-radio ?isChecked=${true}>Any time</sl-radio>
+                    <sl-radio>Any time</sl-radio>
                     <sl-radio>Last 24 hours</sl-radio>
                     <sl-radio>Last 3 days</sl-radio>
                     <sl-radio>Last 7 days</sl-radio>

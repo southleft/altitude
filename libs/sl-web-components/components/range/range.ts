@@ -336,7 +336,7 @@ export class SLRange extends SLElement {
    * i.e when the element gets user input
    */
   upperRangeOnInput(e: Event) {
-    this.upperRangeLabelContainer.style.zIndex = '100000';
+    this.upperRangeLabelContainer.style.zIndex = 'var(--sl-z-index-300)';
     this.upperRangeValue = Number((e.target as HTMLInputElement).value !== '' ? (e.target as HTMLInputElement).value : '0');
     const percentage = this.calculatePercentage(+this.upperRangeValue);
     this.setUpperPercentageRangeLabel(percentage);
@@ -411,7 +411,7 @@ export class SLRange extends SLElement {
    * called when user drags the lower range of range (the left-side range)
    */
   lowerRangeOnInput(evt: Event) {
-    this.lowerRangeLabelContainer.style.zIndex = '100000';
+    this.lowerRangeLabelContainer.style.zIndex = 'var(--sl-z-index-300)';
     this.lowerRangeValue = Number((evt.target as HTMLInputElement).value !== '' ? (evt.target as HTMLInputElement).value : '0');
 
     const lowerVal = this.lowerRangeValue;
@@ -474,7 +474,7 @@ export class SLRange extends SLElement {
    */
   toggleZIndexonLowerRange() {
     if (!(this.upperRangeValue - this.lowerRangeValue <= 3)) {
-      this.lowerRangeLabelContainer.style.zIndex = `var(--sl-z-index-top)`;
+      this.lowerRangeLabelContainer.style.zIndex = `var(--sl-z-index-300)`;
     }
     if (this.upperRangeValue !== this.lowerRangeValue) {
       if (this.lowerRange.classList.contains('sl-c-range__input-lower-active-thumb')) {
@@ -489,7 +489,7 @@ export class SLRange extends SLElement {
    */
   toggleZIndexonUppserRange() {
     if (!(this.upperRangeValue - this.lowerRangeValue <= 2)) {
-      this.upperRangeLabelContainer.style.zIndex = `var(--sl-z-index-top)`;
+      this.upperRangeLabelContainer.style.zIndex = `var(--sl-z-index-300)`;
     }
     if (this.upperRangeValue !== this.lowerRangeValue) {
       if (this.upperRange.classList.contains('sl-c-range__input-upper-active-thumb')) {
