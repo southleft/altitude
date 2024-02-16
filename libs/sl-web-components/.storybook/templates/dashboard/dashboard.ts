@@ -2,7 +2,6 @@ import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import styles from './dashboard.scss';
-import * as Popover from '../../../components/popover/popover.stories.ts';
 import '../../../components/avatar/avatar';
 import '../../../components/badge/badge';
 import '../../../components/divider/divider';
@@ -26,9 +25,10 @@ import '../../../components/list-item/list-item';
 import '../../../components/list/list';
 import '../../../components/menu-item/menu-item';
 import '../../../components/menu/menu';
+import '../../../components/popover/popover';
 import '../../../components/search/search';
-import '../../../components/toggle/toggle';
 import '../../../components/toggle-button/toggle-button';
+import '../../../components/toggle/toggle';
 
 /**
  * Page: sl-l-dashboard
@@ -60,7 +60,18 @@ export class SLDashboard extends LitElement {
 
     return html`
       <main class=${componentClassNames}>
-        ${Popover.WithContent({position: 'top-left'})}
+        <div class="sl-l-dashboard__help-popover">
+          <sl-popover position="top-left" ?isDismissible=${true}>
+            <sl-toggle-button slot="trigger" variant="background" data-testid="popover-trigger"><sl-icon-help size="lg"></sl-icon-help></sl-toggle-button>
+            <sl-heading slot="header" tagName="h3" variant="sm">Help Center</sl-heading>
+            <p>Welcome to our Job Board Help Center! Whether you're a first-time user or seeking a refresher, this guide will walk you through the steps to navigate our platform with ease. Let's get started!</p>
+            <p class="sl-u-theme-typography-body-xs" slot="footer">1 of 4</p>
+            <sl-button-group slot="footer" alignment="right">
+              <sl-button variant="secondary">Learn more</sl-button>
+              <sl-button>Next</sl-button>
+            </sl-button-group>
+          </sl-popover>
+        </div>
         <sl-layout variant="sidebar-left" gap="none">
           <div class="sl-l-dashboard__sidebar">
             <slot name="sidebar">
