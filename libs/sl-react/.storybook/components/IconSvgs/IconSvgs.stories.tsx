@@ -2,7 +2,7 @@ import type { ComponentStoryObj } from '@storybook/react';
 import IconSvgs from './IconSvgs';
 
 export default {
-  title: 'Fundamentals/Icons/Icon Svgs',
+  title: 'Foundations/Icons/Icon Svgs',
   component: IconSvgs,
   parameters: { status: { type: 'beta' } }
 };

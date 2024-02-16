@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import './icon-font';
 
 const meta: Meta = {
-  title: 'Fundamentals/Icons/Icon Font',
+  title: 'Foundations/Icons/Icon Font',
   component: 'icon-font',
 };
 

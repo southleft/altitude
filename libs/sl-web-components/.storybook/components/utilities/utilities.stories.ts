@@ -5,7 +5,7 @@ import './utilities-spacing';
 import './utilities-typography';
 
 const meta: Meta = {
-  title: 'Fundamentals/Utilities',
+  title: 'Foundations/Utilities',
   component: 'utilities',
 };
 

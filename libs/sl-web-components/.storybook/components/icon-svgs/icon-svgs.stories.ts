@@ -4,7 +4,7 @@ import './icon-svgs';
 import './icons';
 
 const meta: Meta = {
-  title: 'Fundamentals/Icons/Icon Svgs',
+  title: 'Foundations/Icons/Icon Svgs',
   component: 'icon-svgs',
 };
 

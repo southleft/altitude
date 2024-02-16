@@ -11,7 +11,7 @@ import './tier-2-space';
 import './tier-2-typography';
 
 const meta: Meta = {
-  title: 'Fundamentals/Tokens/Tier 2: Usage',
+  title: 'Foundations/Tokens/Tier 2: Usage',
   component: 'tier-2-tokens',
 };
 
