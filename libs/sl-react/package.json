@@ -7,6 +7,9 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "storybook dev -p 9009",
+    "build": "npm run dist",
+    "dist": "npm run dist.clear && tsc",
+    "dist.clear": "del-cli dist",
     "build-storybook": "storybook build",
     "plop": "plop --plopfile plop/plop-config.js"
   },
