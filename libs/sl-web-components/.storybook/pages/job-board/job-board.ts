@@ -77,7 +77,7 @@ export class SLJobBoard extends LitElement {
               <sl-dialog class="sl-u-grid__item col:12 col:6@lg col:3@xxl" ?hasBackdrop=${true}>
                 <sl-input label="Filters" ?isReadonly=${true} slot="trigger">
                   <sl-icon-filter slot="before"></sl-icon-filter>
-                  <sl-badge slot="after">4</sl-badge>
+                  <sl-badge slot="after">3</sl-badge>
                 </sl-input>
                 <sl-heading slot="header" ?isBold=${true} variant="md" tagName="h2">Filter</sl-heading>
                 <div class="sl-l-job-board__filter-dialog sl-u-gap">
@@ -105,7 +105,7 @@ export class SLJobBoard extends LitElement {
                   </div>
                   <sl-divider></sl-divider>
                   <sl-radio-group label="Posted At">
-                    <sl-radio ?isChecked=${true}>Any time</sl-radio>
+                    <sl-radio>Any time</sl-radio>
                     <sl-radio>Last 24 hours</sl-radio>
                     <sl-radio>Last 3 days</sl-radio>
                     <sl-radio>Last 7 days</sl-radio>
@@ -146,135 +146,137 @@ export class SLJobBoard extends LitElement {
                 </sl-list>
               </sl-select>
             </div>
-            <sl-card variant="inline">
+            <sl-card layout="inline">
               <div slot="image" class="sl-l-job-board__card-image">
                 <sl-icon-star size="xl"></sl-icon-star>
               </div>
               <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
-              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New Orleans, LA</p></div>
               <div class="sl-u-gap-xs sl-u-gap--row">
-                <sl-chip variant="secondary">Front-end Development</sl-chip>
+                <sl-chip variant="secondary">Design</sl-chip>
                 <sl-chip variant="secondary">Remote</sl-chip>
               </div>
-              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
-              <sl-button slot="actions-right">View</sl-button>
+              <sl-button slot="actions-start">Apply</sl-button>
+              <div slot="actions-end" class="sl-u-theme-typography-body-xs">1 day ago</div>
             </sl-card>
-            <sl-card variant="inline">
+            <sl-card layout="inline">
               <div slot="image" class="sl-l-job-board__card-image">
                 <sl-icon-star size="xl"></sl-icon-star>
               </div>
-              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
-              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">Senior Front-end Developer</a></sl-heading>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New Orleans, LA</p></div>
               <div class="sl-u-gap-xs sl-u-gap--row">
-                <sl-chip variant="secondary">Front-end Development</sl-chip>
-                <sl-chip variant="secondary">Remote</sl-chip>
+                <sl-chip variant="secondary">Front-end Developer</sl-chip>
+                <sl-chip variant="secondary">Design Systems</sl-chip>
               </div>
-              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
-              <sl-button slot="actions-right">View</sl-button>
+              <sl-button slot="actions-start">Apply</sl-button>
+              <div slot="actions-end" class="sl-u-theme-typography-body-xs">1 day ago</div>
             </sl-card>
-            <sl-card variant="inline">
+            <sl-card layout="inline">
               <div slot="image" class="sl-l-job-board__card-image">
                 <sl-icon-star size="xl"></sl-icon-star>
               </div>
-              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
-              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">Junior Front-end Developer</a></sl-heading>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New Orleans, LA</p></div>
               <div class="sl-u-gap-xs sl-u-gap--row">
-                <sl-chip variant="secondary">Front-end Development</sl-chip>
+                <sl-chip variant="secondary">Front-end Developer</sl-chip>
+                <sl-chip variant="secondary">Design Systems</sl-chip>
                 <sl-chip variant="secondary">Remote</sl-chip>
               </div>
-              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
-              <sl-button slot="actions-right">View</sl-button>
+              <sl-button slot="actions-start">Apply</sl-button>
+              <div slot="actions-end" class="sl-u-theme-typography-body-xs">1 day ago</div>
             </sl-card>
-            <sl-card variant="inline">
+            <sl-card layout="inline">
               <div slot="image" class="sl-l-job-board__card-image">
                 <sl-icon-star size="xl"></sl-icon-star>
               </div>
-              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
-              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">Back-end Developer</a></sl-heading>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New Orleans, LA</p></div>
               <div class="sl-u-gap-xs sl-u-gap--row">
-                <sl-chip variant="secondary">Front-end Development</sl-chip>
-                <sl-chip variant="secondary">Remote</sl-chip>
+                <sl-chip variant="secondary">Software</sl-chip>
+                <sl-chip variant="secondary">API</sl-chip>
               </div>
-              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
-              <sl-button slot="actions-right">View</sl-button>
+              <sl-button slot="actions-start">Apply</sl-button>
+              <div slot="actions-end" class="sl-u-theme-typography-body-xs">2 days ago</div>
             </sl-card>
-            <sl-card variant="inline">
+            <sl-card layout="inline">
               <div slot="image" class="sl-l-job-board__card-image">
                 <sl-icon-star size="xl"></sl-icon-star>
               </div>
               <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
-              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New Orleans, LA</p></div>
               <div class="sl-u-gap-xs sl-u-gap--row">
-                <sl-chip variant="secondary">Front-end Development</sl-chip>
+                <sl-chip variant="secondary">Design</sl-chip>
                 <sl-chip variant="secondary">Remote</sl-chip>
               </div>
-              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
-              <sl-button slot="actions-right">View</sl-button>
+              <sl-button slot="actions-start">Apply</sl-button>
+              <div slot="actions-end" class="sl-u-theme-typography-body-xs">2 days ago</div>
             </sl-card>
-            <sl-card variant="inline">
+            <sl-card layout="inline">
               <div slot="image" class="sl-l-job-board__card-image">
                 <sl-icon-star size="xl"></sl-icon-star>
               </div>
-              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
-              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">Senior Front-end Developer</a></sl-heading>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New Orleans, LA</p></div>
               <div class="sl-u-gap-xs sl-u-gap--row">
-                <sl-chip variant="secondary">Front-end Development</sl-chip>
-                <sl-chip variant="secondary">Remote</sl-chip>
+                <sl-chip variant="secondary">Front-end Developer</sl-chip>
+                <sl-chip variant="secondary">Design Systems</sl-chip>
               </div>
-              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
-              <sl-button slot="actions-right">View</sl-button>
+              <sl-button slot="actions-start">Apply</sl-button>
+              <div slot="actions-end" class="sl-u-theme-typography-body-xs">3 days ago</div>
             </sl-card>
-            <sl-card variant="inline">
+            <sl-card layout="inline">
               <div slot="image" class="sl-l-job-board__card-image">
                 <sl-icon-star size="xl"></sl-icon-star>
               </div>
-              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
-              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">Junior Front-end Developer</a></sl-heading>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New Orleans, LA</p></div>
               <div class="sl-u-gap-xs sl-u-gap--row">
-                <sl-chip variant="secondary">Front-end Development</sl-chip>
+                <sl-chip variant="secondary">Front-end Developer</sl-chip>
+                <sl-chip variant="secondary">Design Systems</sl-chip>
                 <sl-chip variant="secondary">Remote</sl-chip>
               </div>
-              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
-              <sl-button slot="actions-right">View</sl-button>
+              <sl-button slot="actions-start">Apply</sl-button>
+              <div slot="actions-end" class="sl-u-theme-typography-body-xs">3 days ago</div>
             </sl-card>
-            <sl-card variant="inline">
+            <sl-card layout="inline">
               <div slot="image" class="sl-l-job-board__card-image">
                 <sl-icon-star size="xl"></sl-icon-star>
               </div>
-              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
-              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">Back-end Developer</a></sl-heading>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New Orleans, LA</p></div>
               <div class="sl-u-gap-xs sl-u-gap--row">
-                <sl-chip variant="secondary">Front-end Development</sl-chip>
-                <sl-chip variant="secondary">Remote</sl-chip>
+                <sl-chip variant="secondary">Software</sl-chip>
+                <sl-chip variant="secondary">API</sl-chip>
               </div>
-              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
-              <sl-button slot="actions-right">View</sl-button>
+              <sl-button slot="actions-start">Apply</sl-button>
+              <div slot="actions-end" class="sl-u-theme-typography-body-xs">3 days ago</div>
             </sl-card>
-            <sl-card variant="inline">
+            <sl-card layout="inline">
               <div slot="image" class="sl-l-job-board__card-image">
                 <sl-icon-star size="xl"></sl-icon-star>
               </div>
               <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
-              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New Orleans, LA</p></div>
               <div class="sl-u-gap-xs sl-u-gap--row">
-                <sl-chip variant="secondary">Front-end Development</sl-chip>
+                <sl-chip variant="secondary">Design</sl-chip>
                 <sl-chip variant="secondary">Remote</sl-chip>
               </div>
-              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
-              <sl-button slot="actions-right">View</sl-button>
+              <sl-button slot="actions-start">Apply</sl-button>
+              <div slot="actions-end" class="sl-u-theme-typography-body-xs">4 days ago</div>
             </sl-card>
-            <sl-card variant="inline">
+            <sl-card layout="inline">
               <div slot="image" class="sl-l-job-board__card-image">
                 <sl-icon-star size="xl"></sl-icon-star>
               </div>
-              <sl-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></sl-heading>
-              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New York, NY</p></div>
+              <sl-heading variant="sm" tagName="h3"><a href="#">Senior Front-end Developer</a></sl-heading>
+              <div class="sl-u-gap-xs sl-u-gap--row"><sl-icon-pin></sl-icon-pin><p>New Orleans, LA</p></div>
               <div class="sl-u-gap-xs sl-u-gap--row">
-                <sl-chip variant="secondary">Front-end Development</sl-chip>
-                <sl-chip variant="secondary">Remote</sl-chip>
+                <sl-chip variant="secondary">Front-end Developer</sl-chip>
+                <sl-chip variant="secondary">Design Systems</sl-chip>
               </div>
-              <div slot="actions-right" class="sl-u-theme-typography-body-xs">2 days ago</div>
-              <sl-button slot="actions-right">View</sl-button>
+              <sl-button slot="actions-start">Apply</sl-button>
+              <div slot="actions-end" class="sl-u-theme-typography-body-xs">4 days ago</div>
             </sl-card>
           </div>
           <sl-pagination totalRecords="32"></sl-pagination>

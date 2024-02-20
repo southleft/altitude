@@ -13,7 +13,7 @@ import './tier-1-typography';
 import './tier-1-zindex';
 
 const meta: Meta = {
-  title: 'Fundamentals/Tokens/Tier 1: Definitions',
+  title: 'Foundations/Tokens/Tier 1: Definitions',
   component: 'tier-1-tokens',
 };
 

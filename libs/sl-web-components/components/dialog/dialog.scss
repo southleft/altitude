@@ -49,8 +49,8 @@
   opacity: 0;
   visibility: hidden;
   width: var(--sl-dialog-container-width, max-content);
-  min-width: var(--sl-dialog-container-width, #{size(54)});
-  max-width: 100vw;
+  min-width: var(--sl-dialog-container-width, #{var(--sl-theme-layout-max-width-sm)});
+  max-width: var(--sl-theme-layout-max-width-md);
   max-height: 80vh;
   overflow: auto;
   position: fixed;

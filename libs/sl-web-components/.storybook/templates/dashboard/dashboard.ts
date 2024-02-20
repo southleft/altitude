@@ -2,12 +2,12 @@ import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import styles from './dashboard.scss';
-import * as Popover from '../../../components/popover/popover.stories.ts';
 import '../../../components/avatar/avatar';
 import '../../../components/badge/badge';
 import '../../../components/divider/divider';
 import '../../../components/drawer/drawer';
 import '../../../components/header/header';
+import '../../../components/heading/heading';
 import '../../../components/icon/icons/bell';
 import '../../../components/icon/icons/calendar';
 import '../../../components/icon/icons/chevron-up';
@@ -25,9 +25,10 @@ import '../../../components/list-item/list-item';
 import '../../../components/list/list';
 import '../../../components/menu-item/menu-item';
 import '../../../components/menu/menu';
+import '../../../components/popover/popover';
 import '../../../components/search/search';
-import '../../../components/toggle/toggle';
 import '../../../components/toggle-button/toggle-button';
+import '../../../components/toggle/toggle';
 
 /**
  * Page: sl-l-dashboard
@@ -59,7 +60,18 @@ export class SLDashboard extends LitElement {
 
     return html`
       <main class=${componentClassNames}>
-        ${Popover.WithContent({position: 'top-left'})}
+        <div class="sl-l-dashboard__help-popover">
+          <sl-popover position="top-left" ?isDismissible=${true}>
+            <sl-toggle-button slot="trigger" variant="background" data-testid="popover-trigger"><sl-icon-help size="lg"></sl-icon-help></sl-toggle-button>
+            <sl-heading slot="header" tagName="h3" variant="sm">Help Center</sl-heading>
+            <p>Welcome to our Job Board Help Center! Whether you're a first-time user or seeking a refresher, this guide will walk you through the steps to navigate our platform with ease. Let's get started!</p>
+            <p class="sl-u-theme-typography-body-xs" slot="footer">1 of 4</p>
+            <sl-button-group slot="footer" alignment="right">
+              <sl-button variant="secondary">Learn more</sl-button>
+              <sl-button>Next</sl-button>
+            </sl-button-group>
+          </sl-popover>
+        </div>
         <sl-layout variant="sidebar-left" gap="none">
           <div class="sl-l-dashboard__sidebar">
             <slot name="sidebar">
@@ -104,11 +116,34 @@ export class SLDashboard extends LitElement {
                 </sl-list>
               </sl-search>
               <div slot="after">
-                <sl-drawer alignment="right" ?hasBackdrop=${true}>
-                  <sl-button slot="trigger" ?hideText=${true} variant="tertiary"><sl-icon-settings slot="after"></sl-icon-settings></sl-button>
-                  <div slot="header">Settings</div>
-                  <div>Coming Soon</div>
-                  <div slot="footer"><sl-button>Save Changes</sl-button></div>
+                <sl-drawer alignment="right" ?hasBackdrop=${true} width="400">
+                  <sl-button slot="trigger" ?hideText=${true} variant="tertiary"><sl-badge variant="danger" slot="after" ?isDot=${true} class="sl-l-dashboard__notifications-badge"></sl-badge><sl-icon-bell slot="after"></sl-icon-bell></sl-button>
+                  <sl-heading slot="header" tagName="h3" variant="sm" ?isBold=${true}>Notifications</sl-heading>
+                  <div class="sl-u-gap-xs">
+                    <sl-card variant="bare" layout="inline" href="#">
+                      <sl-avatar slot="image" ?hasBadge=${true} badgeVariant="success">KP</sl-avatar>
+                      <p class="sl-u-theme-typography-body-sm"><strong>@kploransky</strong> sent you a message</p>
+                      <p class="sl-u-theme-typography-body-xs">Thursday 4:20pm</p>
+                      <sl-badge slot="actions-start" variant="warning" ?isDot=${true}></sl-badge>
+                      <p slot="actions-end" class="sl-u-theme-typography-body-xs">2 hours ago</p>
+                    </sl-card>
+                    <sl-divider></sl-divider>
+                    <sl-card variant="bare" layout="inline" href="#">
+                      <sl-avatar slot="image">EB</sl-avatar>
+                      <p class="sl-u-theme-typography-body-sm"><strong>@ebrown</strong> sent you a message</p>
+                      <p class="sl-u-theme-typography-body-xs">Thursday 5:14pm</p>
+                      <sl-badge slot="actions-start" variant="warning" ?isDot=${true}></sl-badge>
+                      <p slot="actions-end" class="sl-u-theme-typography-body-xs">3 hours ago</p>
+                    </sl-card>
+                    <sl-divider></sl-divider>
+                    <sl-card variant="bare" layout="inline" href="#">
+                      <sl-avatar slot="image">BV</sl-avatar>
+                      <p class="sl-u-theme-typography-body-sm"><strong>@bvoran</strong> invited you to a <strong>Design Systems Workshop</strong></p>
+                      <p class="sl-u-theme-typography-body-xs">Wednesday 6:32pm</p>
+                      <p slot="actions-end" class="sl-u-theme-typography-body-xs">1 day ago</p>
+                    </sl-card>
+                  </div>
+                  <sl-button slot="footer">Mark all as read</sl-button>
                 </sl-drawer>
               </div>
               <div slot="after">
