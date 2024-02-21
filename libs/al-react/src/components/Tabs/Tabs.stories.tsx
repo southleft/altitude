@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { ALTabs, ALTab, ALTabPanel, ALIconCheck, ALBadge } from '../..';
+import { ALTabs, ALTab, ALTabPanel, ALIconSuccess, ALBadge } from '../..';
 
 export default {
   title: 'Molecules/Tabs',
@@ -27,8 +27,8 @@ export default {
     onTabChange: (event) => getActiveIndex(event),
     children: (
       <>
-        <ALTab><ALIconCheck></ALIconCheck><span className="al-u-is-vishidden">Tab 1</span></ALTab>
-        <ALTab><ALIconCheck></ALIconCheck><span className="al-u-is-vishidden">Tab 2</span></ALTab>
+        <ALTab><ALIconSuccess></ALIconSuccess><span className="al-u-is-vishidden">Tab 1</span></ALTab>
+        <ALTab><ALIconSuccess></ALIconSuccess><span className="al-u-is-vishidden">Tab 2</span></ALTab>
         <ALTab>Tab 3<ALBadge variant="danger">2</ALBadge></ALTab>
         <ALTab>Tab 4</ALTab>
         <ALTab>Tab 5</ALTab>

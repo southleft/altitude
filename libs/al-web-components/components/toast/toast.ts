@@ -6,7 +6,7 @@ import PackageJson from '../../package.json';
 import { ALElement } from '../ALElement';
 import { ALButton } from '../button/button';
 import { ALIconClose } from '../icon/icons/close';
-import { ALIconCheck } from '../icon/icons/check';
+import { ALIconSuccess } from '../icon/icons/success';
 import { ALIconInfo } from '../icon/icons/info';
 import { ALIconWarningCircle } from '../icon/icons/warning-circle';
 import { ALIconWarningTriangle } from '../icon/icons/warning-triangle';
@@ -26,7 +26,7 @@ export class ALToast extends ALElement {
     elements: [
       [ALButton.el, ALButton],
       [ALIconClose.el, ALIconClose],
-      [ALIconCheck.el, ALIconCheck],
+      [ALIconSuccess.el, ALIconSuccess],
       [ALIconInfo.el, ALIconInfo],
       [ALIconWarningCircle.el, ALIconWarningCircle],
       [ALIconWarningTriangle.el, ALIconWarningTriangle],
@@ -37,7 +37,7 @@ export class ALToast extends ALElement {
 
   private buttonEl = unsafeStatic(this.elementMap.get(ALButton.el));
   private iconCloseEl = unsafeStatic(this.elementMap.get(ALIconClose.el));
-  private iconDoneEl = unsafeStatic(this.elementMap.get(ALIconCheck.el));
+  private iconDoneEl = unsafeStatic(this.elementMap.get(ALIconSuccess.el));
   private iconInfoEl = unsafeStatic(this.elementMap.get(ALIconInfo.el));
   private iconWarningEl = unsafeStatic(this.elementMap.get(ALIconWarningCircle.el));
   private iconWarningTriangleEl = unsafeStatic(this.elementMap.get(ALIconWarningTriangle.el));

@@ -4,7 +4,7 @@ import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
 import '../button/button';
 import '../alert/alert';
-import '../icon/icons/check';
+import '../icon/icons/success';
 import './toast';
 
 export default {
@@ -81,8 +81,8 @@ WithoutDescription.args = {
 const TemplateWithActions = (args) => html`
   <al-toast ${spread(args)} data-testid="toast">
     Toast title
-    <al-button slot="actions" variant="secondary"><al-icon-check slot="before"></al-icon-check>Label</al-button>
-    <al-button slot="actions"><al-icon-check slot="before"></al-icon-check>Label</al-button>
+    <al-button slot="actions" variant="secondary"><al-icon-success slot="before"></al-icon-success>Label</al-button>
+    <al-button slot="actions"><al-icon-success slot="before"></al-icon-success>Label</al-button>
   </al-toast>
 `;
 

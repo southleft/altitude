@@ -3,7 +3,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
 import '../../.storybook/components/f-po/f-po';
-import '../icon/icons/check';
+import '../icon/icons/success';
 import '../icon/icons/send';
 import './button';
 
@@ -72,7 +72,7 @@ const Template = (args) => html` <al-button ${spread(args)}>Label</al-button> `;
 
 const TemplateIconBefore = (args) => html`
   <al-button ${spread(args)}>
-    <al-icon-check slot="before" data-testid="icon-before"></al-icon-check>
+    <al-icon-success slot="before" data-testid="icon-before"></al-icon-success>
     Label
   </al-button>
 `;

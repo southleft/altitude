@@ -5,7 +5,7 @@ import { html, unsafeStatic } from 'lit/static-html.js';
 import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { ALElement } from '../ALElement';
-import { ALIconCheck } from '../icon/icons/check';
+import { ALIconSuccess } from '../icon/icons/success';
 import styles from './stepper-item.scss';
 
 /**
@@ -18,11 +18,11 @@ export class ALStepperItem extends ALElement {
   static el = 'al-stepper-item';
 
   private elementMap = register({
-    elements: [[ALIconCheck.el, ALIconCheck]],
+    elements: [[ALIconSuccess.el, ALIconSuccess]],
     suffix: (globalThis as any).alAutoRegistry === true ? '' : PackageJson.version
   });
 
-  private iconCheckEl = unsafeStatic(this.elementMap.get(ALIconCheck.el));
+  private iconCheckEl = unsafeStatic(this.elementMap.get(ALIconSuccess.el));
 
   static get styles() {
     return unsafeCSS(styles.toString());

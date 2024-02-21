@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { ALToast, ALButton, ALIconCheck } from '../..';
+import { ALToast, ALButton, ALIconSuccess } from '../..';
 
 export default {
   title: 'Atoms/Toast',
@@ -67,8 +67,8 @@ export const WithActions: StoryObj<typeof ALToast> = { args: {
   children: (
     <>
       Toast title
-      <ALButton slot="actions" variant="secondary"><ALIconCheck slot="before"></ALIconCheck>Label</ALButton>
-      <ALButton slot="actions"><ALIconCheck slot="before"></ALIconCheck>Label</ALButton>
+      <ALButton slot="actions" variant="secondary"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
+      <ALButton slot="actions"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
     </>
   )
 } };
@@ -88,8 +88,8 @@ export const WithAutoCloseWithProgress: StoryObj<typeof ALToast> = { args: {
   children: (
     <>
       Toast title
-      <ALButton slot="actions" variant="secondary"><ALIconCheck slot="before"></ALIconCheck>Label</ALButton>
-      <ALButton slot="actions"><ALIconCheck slot="before"></ALIconCheck>Label</ALButton>
+      <ALButton slot="actions" variant="secondary"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
+      <ALButton slot="actions"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
     </>
   )
 } };

@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { ALDropdownPanel, ALList, ALListItem, ALIconCheck, ALSearch } from '../..';
+import { ALDropdownPanel, ALList, ALListItem, ALIconSuccess, ALSearch } from '../..';
 
 export default {
   title: 'Atoms/Dropdown Panel',
@@ -38,25 +38,25 @@ export const WithIconList: StoryObj<typeof ALDropdownPanel> = {
     children: (
       <>
         <ALList>
-          <ALListItem><ALIconCheck slot="before"></ALIconCheck>
+          <ALListItem><ALIconSuccess slot="before"></ALIconSuccess>
             List item</ALListItem>
-          <ALListItem><ALIconCheck slot="before"></ALIconCheck>
+          <ALListItem><ALIconSuccess slot="before"></ALIconSuccess>
             List item</ALListItem>
-          <ALListItem><ALIconCheck slot="before"></ALIconCheck>
+          <ALListItem><ALIconSuccess slot="before"></ALIconSuccess>
             List item</ALListItem>
-          <ALListItem><ALIconCheck slot="before"></ALIconCheck>
+          <ALListItem><ALIconSuccess slot="before"></ALIconSuccess>
             List item</ALListItem>
-          <ALListItem><ALIconCheck slot="before"></ALIconCheck>
+          <ALListItem><ALIconSuccess slot="before"></ALIconSuccess>
             List item</ALListItem>
-          <ALListItem><ALIconCheck slot="before"></ALIconCheck>
+          <ALListItem><ALIconSuccess slot="before"></ALIconSuccess>
             List item</ALListItem>
-          <ALListItem><ALIconCheck slot="before"></ALIconCheck>
+          <ALListItem><ALIconSuccess slot="before"></ALIconSuccess>
             List item</ALListItem>
-          <ALListItem><ALIconCheck slot="before"></ALIconCheck>
+          <ALListItem><ALIconSuccess slot="before"></ALIconSuccess>
             List item</ALListItem>
-          <ALListItem><ALIconCheck slot="before"></ALIconCheck>
+          <ALListItem><ALIconSuccess slot="before"></ALIconSuccess>
             List item</ALListItem>
-          <ALListItem><ALIconCheck slot="before"></ALIconCheck>
+          <ALListItem><ALIconSuccess slot="before"></ALIconSuccess>
             List item</ALListItem>
       </ALList>
       </>

@@ -3,7 +3,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
 import '../badge/badge';
-import '../icon/icons/check';
+import '../icon/icons/success';
 import '../tab-panel/tab-panel';
 import '../tab/tab';
 import './tabs';
@@ -35,8 +35,8 @@ export default {
 
 const Template = (args) => html`
   <al-tabs ${spread(args)} data-testid="tabs">
-    <al-tab data-testid="tab-item-01"><al-icon-check></al-icon-check><span class="al-u-is-vishidden">Tab 1</span></al-tab>
-    <al-tab data-testid="tab-item-02"><al-icon-check></al-icon-check><span class="al-u-is-vishidden">Tab 2</span></al-tab>
+    <al-tab data-testid="tab-item-01"><al-icon-success></al-icon-success><span class="al-u-is-vishidden">Tab 1</span></al-tab>
+    <al-tab data-testid="tab-item-02"><al-icon-success></al-icon-success><span class="al-u-is-vishidden">Tab 2</span></al-tab>
     <al-tab data-testid="tab-item-03">Tab 3<al-badge variant="danger">2</al-badge></al-tab>
     <al-tab data-testid="tab-item-04">Tab 4</al-tab>
     <al-tab data-testid="tab-item-05">Tab 5</al-tab>
@@ -74,8 +74,8 @@ WithActiveIndex.args = {
 const TemplateWithScroll = (args) => html`
   <div style="max-width: 530px;">
     <al-tabs ${spread(args)} data-testid="tabs">
-      <al-tab data-testid="tab-item-01"><al-icon-check></al-icon-check><span class="al-u-is-vishidden">Tab 1</span></al-tab>
-      <al-tab data-testid="tab-item-02"><al-icon-check></al-icon-check><span class="al-u-is-vishidden">Tab 2</span></al-tab>
+      <al-tab data-testid="tab-item-01"><al-icon-success></al-icon-success><span class="al-u-is-vishidden">Tab 1</span></al-tab>
+      <al-tab data-testid="tab-item-02"><al-icon-success></al-icon-success><span class="al-u-is-vishidden">Tab 2</span></al-tab>
       <al-tab data-testid="tab-item-03">Tab 3<al-badge variant="danger">2</al-badge></al-tab>
       <al-tab data-testid="tab-item-04">Tab 4</al-tab>
       <al-tab data-testid="tab-item-05">Tab 5</al-tab>
