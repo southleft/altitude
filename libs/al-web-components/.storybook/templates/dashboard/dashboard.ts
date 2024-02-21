@@ -75,7 +75,7 @@ export class ALDashboard extends LitElement {
           <div class="al-l-dashboard__sidebar">
             <slot name="sidebar">
               <div class="al-l-dashboard__sidebar-logo">
-                <a href="/?path=/story/pages-home--default"><img src="images/logo.svg" alt="logo" /></a>
+                <a href="/?path=/story/pages-home--default"><img src="logo.svg" alt="logo" /></a>
                 <al-divider></al-divider>
               </div>
               <al-menu class="al-l-dashboard__sidebar-menu">

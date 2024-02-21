@@ -12,7 +12,7 @@ const dest_large_svg_directory_name = dest_directory_name + '/iconFontFiles';
 const dest_ts_directory_name = './components/icon/icons';
 const dest_iconfonts_directory_name = 'components/icon/fonts';
 const dest_dist_iconfonts_directory_name = 'dist/fonts';
-// const dest_tsx_index = path.join(__dirname, '../../al-react/src/index.ts');
+const dest_tsx_index = path.join(__dirname, '../../al-react/src/index.ts');
 const dest_tsx_directory_name = path.join(__dirname, '../../al-react/src/components/Icons');
 
 // Templates
@@ -133,7 +133,7 @@ function appendToStorybook(plainFileName) {
 
 // Append to index for exporting
 function appendToIndex(indexFilePath, pascalCaseName) {
-  const exportStatement = `export * from './components/Icons/${pascalCaseName}';`;
+  const exportStatement = `\n` + `export * from './components/Icons/${pascalCaseName}';`;
 
   fs.readFile(indexFilePath, 'utf8', (readErr, data) => {
     if (readErr) {
@@ -146,7 +146,7 @@ function appendToIndex(indexFilePath, pascalCaseName) {
     }
 
     // Append the export statement to the file
-    fs.appendFile(indexFilePath, exportStatement + `\n`, (appendErr) => {
+    fs.appendFile(indexFilePath, exportStatement, (appendErr) => {
       if (appendErr) {
         return console.error('Error appending to index:', appendErr);
       }
@@ -249,7 +249,7 @@ filenames.forEach((file) => {
 
       // Append to storybook and index
       appendToStorybook(plainFileName);
-      // appendToIndex(dest_tsx_index, pascalCaseName);
+      appendToIndex(dest_tsx_index, pascalCaseName);
     });
   }
 });

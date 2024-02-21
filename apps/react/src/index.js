@@ -1,13 +1,13 @@
 import ReactDOM from 'react-dom/client';
-import { ALButton } from 'al-react/dist/src';
+import JobBoard from './components/JobBoard';
 import 'al-web-components/dist/css/head.css';
 
 function App() {
-  console.log("BUTTON: ", ALButton)
   return (
     <div>
-      <h1>Hello, React!</h1>
-      <ALButton>Button</ALButton>
+      <JobBoard>
+        <h1>JobBoard</h1>
+      </JobBoard>
     </div>
   );
 }
