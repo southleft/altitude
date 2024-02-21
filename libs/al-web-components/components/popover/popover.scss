@@ -1,0 +1,298 @@
+@import '../../styles/component';
+
+/* ------------------------------------*\
+  #POPOVER
+\*------------------------------------ */
+
+:host {
+  display: contents;
+}
+
+/**
+ * Popover -the main content wrapper of the header, body, and footer
+ */
+.al-c-popover {
+  position: relative;
+  display: flex;
+  width: var(--al-popover-width, max-content);
+  --al-popover-offset: #{var(--al-theme-space-xs)};
+  --al-popover-shift: 0;
+}
+
+/**
+ * Popover menu variant
+ */
+.al-c-popover--menu {
+  --al-popover-offset: #{size(0)};
+}
+
+/**
+ * Popover container
+ */
+.al-c-popover__container {
+  transition: opacity var(--al-theme-animation-duration-long) var(--al-theme-animation-timing), visibility var(--al-theme-animation-duration-long) var(--al-theme-animation-timing);
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  width: var(--al-popover-container-width, max-content);
+  height: var(--al-popover-container-height, auto);
+  max-width: size(54);
+  max-height: 100vh;
+  overflow: auto;
+  position: absolute;
+  inset-inline-end: var(--al-popover-shift);
+  inset-block-start: calc(100% + var(--al-popover-offset));
+  flex-direction: column;
+  gap: var(--al-theme-space);
+  padding: var(--al-popover-container-padding, #{var(--al-theme-space)} #{var(--al-theme-space)}#{var(--al-theme-space)} #{var(--al-theme-space)});
+  border-radius: var(--al-theme-border-radius-lg);
+  box-shadow: var(--al-theme-box-shadow-md);
+  z-index: var(--al-z-index-500);
+  background-color: var(--al-theme-color-background-default);
+  word-break: break-word;
+
+  /**
+   * Adjust the popover container to be full screen
+   */
+  @media all and (max-width: $al-breakpoint-sm) {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100vh;
+    box-shadow: none;
+    border-radius: 0;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+  }
+
+  /**
+   * Remove focus outline
+   */
+  &:focus-visible {
+    outline: none;
+  }
+
+  /**
+   * Active state for popover container
+   */
+  .al-is-active & {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /**
+   * Popover container with menu variant
+   */
+  .al-c-popover--menu & {
+    padding: 0;
+    border-radius: var(--al-theme-border-radius-md);
+    box-shadow: var(--al-theme-box-shadow);
+  }
+
+  /**
+   * Popover container positioned to the bottom center of the trigger
+   */
+  .al-c-popover--bottom-center & {
+    inset-block-start: calc(100% + var(--al-popover-offset));
+    inset-block-end: auto;
+    inset-inline-start: 50%;
+    inset-inline-end: auto;
+    transform: translateX(var(--rtlTranslateX, -50%));
+  }
+
+  /**
+   * Popover container positioned to the bottom right of the trigger
+   */
+  .al-c-popover--bottom-right & {
+    inset-block-start: calc(100% + var(--al-popover-offset));
+    inset-block-end: auto;
+    inset-inline-start: var(--al-popover-shift);
+    inset-inline-end: auto;
+  }
+
+  /**
+   * Popover container positioned to the bottom left of the trigger
+   */
+  .al-c-popover--bottom-left & {
+    inset-block-start: calc(100% + var(--al-popover-offset));
+    inset-block-end: auto;
+    inset-inline-start: auto;
+    inset-inline-end: var(--al-popover-shift);
+  }
+
+  /**
+   * Popover container positioned to the top center of the trigger
+   */
+  .al-c-popover--top-center & {
+    inset-block-start: auto;
+    inset-block-end: calc(100% + var(--al-popover-offset));
+    inset-inline-start: 50%;
+    inset-inline-end: auto;
+    transform: translateX(var(--rtlTranslateX, -50%));
+  }
+
+  /**
+   * Popover container positioned to the top right of the trigger
+   */
+  .al-c-popover--top-right & {
+    inset-block-start: auto;
+    inset-block-end: calc(100% + var(--al-popover-offset));
+    inset-inline-start: var(--al-popover-shift);
+    inset-inline-end: auto;
+  }
+
+  /**
+   * Popover container positioned to the top left of the trigger
+   */
+  .al-c-popover--top-left & {
+    inset-block-start: auto;
+    inset-block-end: calc(100% + var(--al-popover-offset));
+    inset-inline-start: auto;
+    inset-inline-end: var(--al-popover-shift);
+  }
+
+  /**
+   * Popover container positioned to the left of the trigger
+   */
+  .al-c-popover--left & {
+    inset-block-start: var(--al-popover-shift);
+    inset-block-end: auto;
+    inset-inline-start: auto;
+    inset-inline-end: calc(100% + var(--al-popover-offset));
+  }
+
+  /**
+   * Popover container positioned to the left top of the trigger
+   */
+   .al-c-popover--left-top & {
+    inset-block-start: auto;
+    inset-block-end: var(--al-popover-shift);
+    inset-inline-start: auto;
+    inset-inline-end: calc(100% + var(--al-popover-offset));
+  }
+
+  /**
+   * Popover container positioned to the right of the trigger
+   */
+  .al-c-popover--right & {
+    inset-block-start: var(--al-popover-shift);
+    inset-block-end: auto;
+    inset-inline-start: calc(100% + var(--al-popover-offset));
+    inset-inline-end: auto;
+  }
+
+  /**
+   * Popover container positioned to the right top of the trigger
+   */
+   .al-c-popover--right-top & {
+    inset-block-start: auto;
+    inset-block-end: var(--al-popover-shift);
+    inset-inline-start: calc(100% + var(--al-popover-offset));
+    inset-inline-end: auto;
+  }
+}
+
+/**
+ * Popover container on small screens
+ * - Makes the popover fixed and the width of the screen on small devices
+ */
+.al-c-popover,
+.al-c-popover--bottom-center,
+.al-c-popover--bottom-right,
+.al-c-popover--bottom-left,
+.al-c-popover--top-center,
+.al-c-popover--top-right,
+.al-c-popover--top-left,
+.al-c-popover--left,
+.al-c-popover--left-top,
+.al-c-popover--right,
+.al-c-popover--right-top {
+  .al-c-popover__container {
+    @media all and (max-width: $al-breakpoint-sm) {
+      position: fixed;
+      inset-block-start: 50%;
+      inset-block-end: auto;
+      inset-inline-start: 50%;
+      inset-inline-end: auto;
+      transform: translate(var(--rtlTranslateX, -50%), -50%);
+      margin: auto;
+      width: 100vw;
+      max-width: 100vw;
+      max-height: 100vh;
+      white-space: inherit;
+    }
+  }
+}
+
+/**
+ * Popover header
+ * - The container that holds the header slot, close button, and title
+ */
+.al-c-popover__header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--al-theme-space);
+}
+
+/**
+ * Popover title
+ * - The container the holds the header slot and heading text
+ */
+.al-c-popover__title {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--al-theme-space);
+}
+
+/**
+ * Popover body
+ * - The body/content slot in the popover
+ */
+.al-c-popover__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-popover-body-gap, #{var(--al-theme-space)});
+}
+
+/**
+ * Popover footer
+ * - The footer slot in the popover
+ */
+.al-c-popover__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--al-theme-space);
+}
+
+/**
+ * Popover trigger
+ * - The trigger slot in the popover
+ */
+.al-c-popover__trigger {
+  z-index: var(--al-popover-trigger-z-index, 0);
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-xs);
+  cursor: pointer;
+  width: var(--al-popover-trigger-width, max-content);
+}
+
+/**
+ * Popover slotted chevron down icons
+ * - See an example in the control button
+ */
+::slotted(al-icon-chevron-down) {
+  transition: transform var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  transform: rotate(0);
+
+  /**
+   * Rotate the icon when the popover is active
+   */
+  .al-is-active & {
+    transform: rotate(-180deg);
+  }
+}

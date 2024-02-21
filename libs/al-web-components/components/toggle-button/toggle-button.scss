@@ -1,0 +1,106 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #TOGGLE-BUTTON
+\*------------------------------------ */
+
+/**
+ * Toggle Button
+ */
+.al-c-toggle-button {
+  @include al-theme-typography-body-sm;
+  display: flex;
+  padding: var(--al-theme-space-xs);
+  background: var(--al-theme-color-background-transparent);
+  border: none;
+  border-radius: var(--al-theme-border-radius-lg);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/**
+ * Toggle Button - Background variant
+ */
+.al-c-toggle-button--background {
+  background-color: var(--al-theme-color-background-default);
+  box-shadow: var(--al-theme-box-shadow-md);
+}
+
+/**
+ * Toggle Button content
+ */
+.al-c-toggle-button__content {
+  display: flex;
+  align-items: center;
+  justify-content: var(--al-toggle-button-justify-content, center);
+  gap: var(--al-theme-space-xs);
+  height: size(5);
+  min-width: size(5);
+  width: var(--al-toggle-button-content-width, auto);
+  color: var(--al-theme-color-content-default);
+  background: var(--al-theme-color-background-transparent);
+  border-radius: var(--al-theme-border-radius);
+  padding: var(--al-theme-space-xs);
+  transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing), background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  white-space: nowrap;
+  position: relative;
+
+  /**
+   * Remove padding for small variants
+   */
+  .al-c-toggle-button--small & {
+    padding: 0;
+  }
+
+  /**
+   * Hover state
+   * - If parent is hovered, then change the background color of the content
+   */
+  &:hover:not(:active, .al-is-selected &) {
+    background: var(--al-theme-color-background-default-strong);
+  }
+
+  /**
+   * Selected state
+   * - If parent has selected state, then change the background & color of the content
+   */
+  .al-is-selected & {
+    color: var(--al-theme-color-content-default-weak);
+    background: var(--al-theme-color-background-default-weak);
+  }
+
+  /**
+   * Overlay for click events on content
+   */
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+  }
+}
+
+/**
+ * Slotted content
+ * - Adjust to allow for the component click event to work normally
+ */
+::slotted(*) {
+  position: relative;
+  z-index: 3;
+}
+
+/**
+ * Slotted popovers
+ * - Adjust the positioning of the popover to account for control button padding
+ */
+::slotted(al-popover) {
+  --al-popover-trigger-z-index: 1;
+  --al-popover-shift: #{calc(#{var(--al-theme-space-sm)} * -1)};
+
+  .al-c-toggle-button--background & {
+    --al-popover-offset: #{var(--al-theme-space-lg)};
+  }
+}

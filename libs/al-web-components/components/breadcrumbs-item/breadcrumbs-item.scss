@@ -1,0 +1,56 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #BREADCRUMBS-ITEM
+\*------------------------------------ */
+
+:host {
+  display: contents;
+}
+
+/**
+ * Breadcrumb Item
+ */
+.al-c-breadcrumbs-item {
+  @include al-theme-typography-body-lg;
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--al-theme-space-xxs);
+  color: var(--al-theme-color-content-default-weak);
+}
+
+/**
+ * Breadcrumb Item Label
+ */
+.al-c-breadcrumbs-item__label {
+  @include al-theme-typography-body-lg;
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-xs);
+  margin: 0;
+  padding: var(--al-theme-space-xxs) var(--al-theme-space-xs);
+  border: none;
+  background-color: var(--al-theme-color-background-transparent);
+  border-radius: var(--al-theme-border-radius-md);
+  color: var(--al-theme-color-content-default-weak);
+  text-decoration: none;
+  transition: all var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  cursor: pointer;
+
+  /**
+   * Label - Current state
+   */
+  .al-is-current & {
+    color: var(--al-theme-color-content-default);
+    pointer-events: none;
+  }
+
+  /**
+   * Label - Hover state
+   */
+  &:hover:not(:active) {
+    color: var(--al-theme-color-content-default);
+    background: var(--al-theme-color-background-default);
+  }
+}

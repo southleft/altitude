@@ -1,0 +1,52 @@
+@import '../../styles/component';
+/*------------------------------------*\
+ #MENU
+\*------------------------------------*/
+
+:host {
+  display: contents;
+}
+
+/**
+ * Menu component
+ * - Prevents the menu trigger from taking on the width of the menu when the menu is closed
+ */
+.al-c-menu {
+  width: 100%;
+  height: auto;
+  min-width: fit-content;
+  position: relative;
+  padding: var(--al-theme-space-xxs) 0;
+  background: var(--al-theme-color-background-default);
+  border: var(--al-menu-border, none);
+  border-radius: var(--al-theme-border-radius);
+
+  /**
+   * Simple variant
+   */
+  &.al-c-menu--simple {
+    padding: 0;
+    background-color: var(--al-theme-color-background-transparent);
+    border-radius: none;
+  }
+}
+
+/**
+ * Menu list
+ * - The UL element inside the menu component
+ */
+.al-c-menu__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: var(--al-menu-width, 100%);
+  height: var(--al-menu-height, auto);
+
+  /**
+   * Enable vertical scrolling
+   */
+  .al-has-overflow & {
+    overflow-y: auto;
+    --al-focus-outline-offset: calc(#{var(--al-theme-border-width-md)} * -1);
+  }
+}

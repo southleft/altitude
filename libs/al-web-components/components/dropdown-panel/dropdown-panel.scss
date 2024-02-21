@@ -1,0 +1,69 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #DROPDOWN-PANEL
+\*------------------------------------ */
+
+/**
+ * Dropdown panel
+ */
+.al-c-dropdown-panel {
+  background-color: var(--al-theme-color-background-default);
+  box-shadow: var(--al-panel-box-shadow, var(--al-theme-box-shadow-md));
+  border-start-start-radius: var(--al-dropdown-panel-border-block-start-left-radius, var(--al-theme-border-radius));
+  border-start-end-radius: var(--al-dropdown-panel-border-block-start-right-radius, var(--al-theme-border-radius));
+  border-end-end-radius: var(--al-dropdown-panel-border-block-end-right-radius, var(--al-theme-border-radius));
+  border-end-start-radius: var(--al-dropdown-panel-border-block-end-left-radius, var(--al-theme-border-radius));
+  height: auto;
+  z-index: var(--al-z-index-400);
+}
+
+/**
+ * Give padding and border styling to panel body
+ */
+.al-c-dropdown-panel__body {
+  padding: var(--al-theme-space-xxs) 0;
+  border-start-start-radius: var(--al-dropdown-panel-border-block-start-left-radius, var(--al-theme-border-radius));
+  border-start-end-radius: var(--al-dropdown-panel-border-block-start-right-radius, var(--al-theme-border-radius));
+  border-end-end-radius: var(--al-dropdown-panel-border-block-end-right-radius, var(--al-theme-border-radius));
+  border-end-start-radius: var(--al-dropdown-panel-border-block-end-left-radius, var(--al-theme-border-radius));
+
+  /**
+  * Change border radius on body container if header is present
+  */
+  .al-has-header & {
+    border-radius: 0 0 var(--al-theme-border-radius) var(--al-theme-border-radius);
+  }
+
+  /**
+  * Change border radius on body container if footer is present
+  */
+  .al-has-footer & {
+    border-radius: var(--al-theme-border-radius) var(--al-theme-border-radius) 0 0;
+  }
+
+  /**
+  * Adds a max height and scrolling of the panel
+  */
+  .al-has-scroll & {
+    overflow: auto;
+    max-height: size(20);
+  }
+}
+
+/**
+ * Optional dropdown panel header
+ */
+.al-c-dropdown-panel__header {
+  padding: var(--al-theme-space-xs);
+  border: var(--al-theme-border-width) solid var(--al-dropdown-panel-border-color, var(--al-theme-color-border-default));
+  border-radius: var(--al-theme-border-radius) var(--al-theme-border-radius) 0 0;
+  margin-block-end: -1px;
+}
+
+/**
+ * Dropdown panel footer
+ * - Add padding to footer
+ */
+.al-c-dropdown-panel__footer {
+  padding: var(--al-theme-space-xs);
+}

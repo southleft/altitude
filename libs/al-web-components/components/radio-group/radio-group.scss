@@ -1,0 +1,77 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #RADIO-GROUP
+\*------------------------------------*/
+
+/**
+ * Radio
+ */
+.al-c-radio-group {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-xxs);
+}
+
+/**
+ * Radio group legend
+ */
+.al-c-radio-group__legend {
+  @include al-theme-typography-body-sm;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  color: var(--al-theme-color-content-default-weak);
+
+  /**
+   * Visually hide the legend
+   */
+  .al-has-hidden-legend & {
+    @include visuallyHidden;
+  }
+}
+
+/**
+ * Radio list
+ * 1. The div that holds all the radio items
+ */
+.al-c-radio-group__list {
+  display: flex;
+  flex-direction: column;
+
+  /**
+   * Radios in displayed in a horizontal row
+   */
+  .al-c-radio-group--horizontal & {
+    flex-direction: row;
+    column-gap: var(--al-theme-space);
+    row-gap: 0;
+    flex-wrap: wrap;
+  }
+}
+
+/**
+ * Radio field note slotted
+ * 1. Targets field notes that are added via a slot
+ */
+slot[name="field-note"]::slotted(*),
+slot[name="error"]::slotted(*) {
+  /**
+   * Field note with error state
+   * 1. Ensures the error styles are still applied even if a slotted field note does not have ?isError applied
+   */
+  .al-is-error & {
+    --al-field-note-color: var(--al-theme-color-border-danger-default);
+  }
+
+  /**
+   * Field note with disabled state
+   * 1. Ensures the disabled styles are still applied even if a slotted field note does not have ?isDisabled applied
+   */
+  .al-is-disabled & {
+    opacity: var(--al-theme-opacity-disabled);
+  }
+}
+

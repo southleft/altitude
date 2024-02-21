@@ -1,0 +1,41 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #TOGGLE-BUTTON-GROUP
+\*------------------------------------*/
+
+:host {
+  display: contents;
+}
+
+/**
+ * Toggle Button Group
+ */
+.al-c-toggle-button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: max-content;
+  border-radius: var(--al-theme-border-radius-lg);
+}
+
+/**
+ * Toggle Button Group - Background variant
+ */
+.al-c-toggle-button-group--background {
+  background-color: var(--al-theme-color-background-default);
+  box-shadow: var(--al-theme-box-shadow-md);
+}
+
+/**
+ * Toggle Button Group - Vertical orientation
+ */
+.al-c-toggle-button-group--vertical {
+  flex-direction: column;
+}
+
+/**
+ * Toggle Button Group - Gap SM
+ */
+.al-c-toggle-button-group--gap-sm {
+  gap: var(--al-theme-space);
+}

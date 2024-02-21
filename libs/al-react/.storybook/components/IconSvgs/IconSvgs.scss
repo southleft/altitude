@@ -1,0 +1,29 @@
+/* ------------------------------------*\
+    #ICON-GRID
+\*------------------------------------ */
+
+.icon-grid__list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-gap: var(--al-theme-space);
+  padding: 0;
+  margin-top: var(--al-theme-space-lg);
+}
+
+.icon-grid__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--al-theme-space);
+  text-align: center;
+  border-radius: var(--al-theme-border-radius);
+  border: var(--al-theme-border-width) solid var(--al-theme-color-border-inverse-default);
+  padding: var(--al-theme-space);
+  aspect-ratio: 1/1;
+}
+
+.icon-grid__text {
+  display: block;
+}

@@ -1,0 +1,59 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #HEADER
+\*------------------------------------*/
+
+:host {
+  display: contents;
+}
+
+/**
+ * Header
+ */
+.al-c-header {
+  position: sticky;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 100%;
+  height: var(--al-theme-layout-height-header);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--al-theme-space);
+  padding: var(--al-theme-space);
+  background-color: var(--al-theme-color-background-default);
+  box-shadow: var(--al-theme-box-shadow-md);
+  z-index: var(--al-z-index-400);
+  --al-input-label-background: var(--al-theme-color-background-default);
+
+  @media all and (min-width: $al-breakpoint-md) {
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+}
+
+.al-c-header__before,
+.al-c-header__after {
+  width: calc(50% - #{var(--al-theme-space-xs)});
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space);
+
+  @media all and (min-width: $al-breakpoint-md) {
+    flex: 1;
+  }
+}
+
+.al-c-header__after {
+  justify-content: flex-end;
+}
+
+.al-c-header__main {
+  flex: 1;
+
+  @media all and (max-width: $al-breakpoint-md) {
+    order: 3;
+  }
+}

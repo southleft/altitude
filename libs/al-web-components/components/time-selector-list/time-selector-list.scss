@@ -1,0 +1,125 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #TIME-SELECTOR-LIST
+\*------------------------------------*/
+
+/**
+ * Time selector list
+ * - Container for a heading and list of times
+ */
+.al-c-time-selector-list {
+  max-width: 6.3rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/**
+ * Time selector list inner
+ * - Inner container for list of times and set min height as per the figma to render time selector
+ */
+.al-c-time-selector-list__inner {
+  flex: 1 0 0;
+  overflow: auto;
+  min-height: size(35.125);
+  height: 100%;
+
+  .al-c-time-selector-list--horizontal & {
+    display: flex;
+    min-height: auto;
+  }
+}
+
+/**
+ * Time selector list horizontal
+ * - Displays all the content in a row
+ */
+.al-c-time-selector-list--horizontal {
+  flex-direction: row;
+  max-width: none;
+  height: auto;
+}
+
+/**
+ * Time selector list heading
+ * - Heading appearing before list of times
+ */
+.al-c-time-selector-list__heading {
+  @include al-theme-typography-body-md-bold;
+  color: var(--al-theme-color-content-default);
+  background: var(--al-theme-color-background-default-stronger);
+  box-shadow: var(--al-theme-box-shadow-sm);
+  text-align: center;
+  padding: var(--al-theme-space-xs);
+  margin: 0;
+  position: sticky;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  z-index: 1;
+
+  .al-c-time-selector-list--horizontal & {
+    padding: var(--al-theme-space-xs) var(--al-theme-space);
+  }
+}
+
+/**
+ * Time selector list ul
+ * - The actual list of times
+ */
+.al-c-time-selector-list__list {
+  list-style: none;
+  padding: var(--al-theme-space-xs) 0;
+  margin: 0;
+  display: grid;
+  justify-content: center;
+  gap: var(--al-theme-space-xxs);
+
+  .al-c-time-selector-list--horizontal & {
+    display: flex;
+    align-items: center;
+    padding: 0 var(--al-theme-space-xs);
+  }
+}
+
+/**
+ * Time selector list button
+ * - Individual time button
+ */
+.al-c-time-selector-list__button {
+  @include al-theme-typography-body-sm;
+  text-transform: uppercase;
+  color: var(--al-theme-color-content-default);
+  background: var(--al-theme-color-background-transparent-default);
+  border-radius: 40px;
+  border: none;
+  padding: var(--al-theme-space-xs);
+  position: relative;
+  cursor: pointer;
+  white-space: nowrap;
+  width: 100%;
+  min-width: 5.5rem;
+  transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing), color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+
+  /**
+   * Hover state
+   */
+  &:hover:not(:active, :disabled, &.al-is-active) {
+    background-color: var(--al-theme-color-background-default-strong);
+  }
+
+  /**
+   * Active state
+   */
+  &.al-is-active {
+    color: var(--al-theme-color-content-accent-stronger);
+    background-color: var(--al-theme-color-background-accent-weak);
+  }
+
+  /**
+   * Disabled state
+   */
+  &:disabled {
+    cursor: not-allowed;
+    opacity: var(--al-theme-opacity-disabled);
+  }
+}

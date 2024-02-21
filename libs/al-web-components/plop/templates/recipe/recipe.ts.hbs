@@ -1,0 +1,39 @@
+import { LitElement, html, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
+import styles from './{{dashCase name}}.scss';
+
+/**
+ * Recipe: al-c-{{dashCase name}}
+ */
+export class AL{{pascalCase name}} extends LitElement {
+  static get styles() {
+    return unsafeCSS(styles.toString());
+  }
+
+  @property()
+  accessor styleModifier: string;
+
+  render() {
+    const componentClassNames = classMap({
+      'al-c-{{dashCase name}}': true,
+      [this.styleModifier]: !!this.styleModifier
+    });
+
+    return html`
+      <div class=${componentClassNames}>
+        <slot></slot>
+      </div>
+    `;
+  }
+}
+
+if (customElements.get('al-{{dashCase name}}') === undefined) {
+  customElements.define('al-{{dashCase name}}', AL{{pascalCase name}});
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'al-{{dashCase name}}': AL{{pascalCase name}};
+  }
+}

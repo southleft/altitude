@@ -1,0 +1,30 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #FIELD-NOTE
+\*------------------------------------*/
+
+/**
+ * Field Note
+ */
+.al-c-field-note {
+  @include al-theme-typography-body-sm;
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-xs);
+  color: var(--al-field-note-color, var(--al-theme-color-content-default-weak));
+  margin-inline-start: var(--al-field-note-margin-inline-start, 0);
+}
+
+/**
+ * Field note with error state
+ */
+.al-is-error {
+  color: var(--al-theme-color-content-danger-default);
+}
+
+/**
+ * Field note with disabled state
+ */
+.al-is-disabled {
+  opacity: var(--al-theme-opacity-disabled);
+}

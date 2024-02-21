@@ -1,0 +1,38 @@
+@import '../../../styles/component';
+/* ------------------------------------*\
+  #F-PO
+\*------------------------------------ */
+
+:host {
+  display: flex;
+}
+
+.f-po {
+  border: var(--al-theme-border-width) dashed var(--al-theme-color-border-default);
+  color: var(--al-theme-color-content-default-weak);
+  width: 100%;
+  height: 100%;
+  border-radius: var(--al-theme-border-radius);
+  padding: var(--al-theme-space);
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0;
+    background-color: var(--al-theme-color-border-default);
+    opacity: 0.2;
+  }
+}

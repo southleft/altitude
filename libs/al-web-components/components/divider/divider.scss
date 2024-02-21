@@ -1,0 +1,28 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #DIVIDER
+\*------------------------------------ */
+
+:host {
+  display: flex;
+}
+
+/**
+ * Horizontal rule separator between content
+ */
+.al-c-divider {
+  display: block;
+  width: 100%;
+  height: var(--al-theme-border-width);
+  background-color: var(--al-theme-color-border-default);
+  margin: 0;
+  border: 0;
+}
+
+/**
+ * Vertical rule separator between content
+ */
+.al-c-divider--vertical {
+  width: var(--al-theme-border-width);
+  height: 100%;
+}

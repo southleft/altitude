@@ -1,0 +1,77 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #CHECKBOX-GROUP
+\*------------------------------------*/
+
+/**
+ * Checkbox
+ */
+.al-c-checkbox-group {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-xxs);
+}
+
+/**
+ * Checkbox group legend
+ */
+.al-c-checkbox-group__legend {
+  @include al-theme-typography-body-sm;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  color: var(--al-theme-color-content-default-weak);
+
+  /**
+   * Visually hide the legend
+   */
+  .al-has-hidden-legend & {
+    @include visuallyHidden;
+  }
+}
+
+/**
+ * Checkbox list
+ * 1. The div that holds all the checkbox items
+ */
+.al-c-checkbox-group__list {
+  display: flex;
+  flex-direction: column;
+
+  /**
+   * Checkboxs in displayed in a horizontal row
+   */
+  .al-c-checkbox-group--horizontal & {
+    flex-direction: row;
+    column-gap: var(--al-theme-space);
+    row-gap: 0;
+    flex-wrap: wrap;
+  }
+}
+
+/**
+ * Checkbox field note slotted
+ * 1. Targets field notes that are added via a slot
+ */
+slot[name="field-note"]::slotted(*),
+slot[name="error"]::slotted(*) {
+  /**
+   * Field note with error state
+   * 1. Ensures the error styles are still applied even if a slotted field note does not have ?isError applied
+   */
+  .al-is-error & {
+    --al-field-note-color: var(--al-theme-color-border-danger-default);
+  }
+
+  /**
+   * Field note with disabled state
+   * 1. Ensures the disabled styles are still applied even if a slotted field note does not have ?isDisabled applied
+   */
+  .al-is-disabled & {
+    opacity: var(--al-theme-opacity-disabled);
+  }
+}
+

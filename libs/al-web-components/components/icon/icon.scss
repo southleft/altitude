@@ -1,0 +1,80 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #ICON
+\*------------------------------------ */
+
+/**
+ * Icons span wrapper
+ */
+.al-c-icon {
+  display: block;
+}
+
+/**
+ * Graphic used to supplement text or represent functionality
+ */
+::slotted(svg),
+svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  fill: var(--al-icon-fill, currentColor);
+  height: var(--al-icon-height, var(--al-theme-icon));
+  width: var(--al-icon-width, var(--al-theme-icon));
+
+  /**
+   * XS icon
+   */
+  .al-c-icon--xs & {
+    height: var(--al-theme-icon-xs);
+    width: var(--al-theme-icon-xs);
+  }
+
+  /**
+   * SM icon
+   */
+  .al-c-icon--sm & {
+    height: var(--al-theme-icon-sm);
+    width: var(--al-theme-icon-sm);
+  }
+
+  /**
+   * MD icon
+   */
+  .al-c-icon--md & {
+    height: var(--al-theme-icon-md);
+    width: var(--al-theme-icon-md);
+  }
+
+  /**
+   * LG icon
+   */
+  .al-c-icon--lg & {
+    height: var(--al-theme-icon-lg);
+    width: var(--al-theme-icon-lg);
+  }
+
+  /**
+   * XL icon
+   */
+  .al-c-icon--xl & {
+    height: var(--al-theme-icon-xl);
+    width: var(--al-theme-icon-xl);
+  }
+
+  /**
+   * XXL icon
+   */
+   .al-c-icon--xxl & {
+    height: var(--al-theme-icon-xxl);
+    width: var(--al-theme-icon-xxl);
+  }
+
+  /**
+   * XXXL icon
+   */
+   .al-c-icon--xxxl & {
+    height: var(--al-theme-icon-xxxl);
+    width: var(--al-theme-icon-xxxl);
+  }
+}

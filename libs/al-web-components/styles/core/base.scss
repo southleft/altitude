@@ -1,0 +1,33 @@
+/* ------------------------------------ *\
+  $BASE
+\* ------------------------------------ */
+
+/**
+ * RTL support for values logical properties can't automatically adjust for
+ * 1. Percentage based horizontal translate values need to be flipped
+ * 2. Background gradients using "to right" or "to left" need to be toggleed to using deg values
+ * 3. Background Position From is used for reversing animation from right to left at 0%
+ * 4. Background Position To is used for reversing animation from right to left at 100%
+ */
+[dir='rtl'] {
+  --rtlTranslateX: 50%; /* 1 */
+  --rtlGradientToRight: 270deg; /* 2 */
+  --rtlBackgroundPositionFrom: -135%; /* 3 */
+  --rtlBackgroundPositionTo: 0%; /* 4 */
+}
+
+html {
+  font-size: var(--al-base-font);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  color: var(--al-theme-color-content-default);
+  background: var(--al-theme-color-background-default-weak);
+  font: var(--al-theme-typography-body-md);
+}
+
+strong {
+  font-weight: var(--al-font-weight-bold);
+}

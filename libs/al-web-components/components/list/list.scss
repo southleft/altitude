@@ -1,0 +1,79 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #LIST
+\*------------------------------------ */
+
+:host {
+  display: contents;
+}
+
+/**
+ * 1) Generic stacked list that allows for styling of borders in between items
+ */
+.al-c-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/**
+ * 1) Container that becomes a scrolling carousel of components that you place inside when not enough room exists for all to display
+ * 2) Wrapper needed around base list for shadows
+ */
+.al-c-list-overflow-wrapper {
+  overflow: auto;
+  position: relative;
+
+  /**
+   * Left overflow gradient for the overflow list
+   */
+  &.al-is-overflow-left:before {
+    content: '';
+    display: block;
+    position: absolute;
+    background: linear-gradient(to left, transparent 0%, var(--al-theme-color-background-default) 100%);
+    height: 100%;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    width: size(6);
+    z-index: 1;
+  }
+
+  /**
+   * Right overflow gradient for the overflow list
+   */
+  &.al-is-overflow-right:after {
+    content: '';
+    display: block;
+    position: absolute;
+    background: linear-gradient(to right, transparent 0%, var(--al-theme-color-background-default) 100%);
+    height: 100%;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    width: size(6);
+    z-index: 1;
+  }
+}
+
+/**
+ * Horizontal list
+ * 1) Displays list item in a row
+ */
+.al-c-list--horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--al-theme-space-xs);
+}
+
+/**
+ * Overflow list
+ * 1) Displays list item in a row that scrolls if the wrapper overflows
+ */
+.al-c-list--overflow {
+  flex-wrap: nowrap;
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

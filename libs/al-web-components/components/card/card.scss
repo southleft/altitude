@@ -1,0 +1,132 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #CARD
+\*------------------------------------ */
+
+:host {
+  display: contents;
+}
+
+/**
+ * Card
+ */
+.al-c-card {
+  width: 100%;
+  display: flex;
+  padding: var(--al-theme-space);
+  gap: var(--al-theme-space-xs);
+  flex-flow: row wrap;
+  border-radius: var(--al-theme-border-radius-lg);
+  color: var(--al-theme-color-content-default);
+  background-color: var(--al-theme-color-background-default);
+  box-shadow: var(--al-theme-box-shadow);
+
+  > * {
+    width: 100%;
+  }
+}
+
+/**
+ * Card inline
+ */
+.al-c-card--inline {
+  gap: var(--al-theme-space);
+
+  > * {
+    width: auto;
+  }
+}
+
+/**
+ * Card bare
+ */
+.al-c-card--bare {
+  background-color: transparent;
+  border-radius: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+/**
+ * Card actions
+ */
+.al-c-card__actions {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--al-theme-space);
+
+  .al-c-card--inline & {
+    flex-direction: column;
+    order: 4;
+  }
+}
+
+/**
+ * Card actions start and end
+ */
+.al-c-card__actions-start,
+.al-c-card__actions-end {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: var(--al-theme-space);
+}
+
+/**
+ * Card actions start
+ */
+.al-c-card__actions-start {
+  justify-content: flex-start;
+
+  .al-c-card--inline & {
+    justify-content: flex-end;
+    align-content: flex-start;
+  }
+}
+
+/**
+ * Card actions end
+ */
+.al-c-card__actions-end {
+  justify-content: flex-end;
+
+  .al-c-card--inline & {
+    flex: 1;
+    align-content: flex-end;
+  }
+}
+
+/**
+ * Card image
+ */
+.al-c-card__image {
+  display: block;
+  height: auto;
+}
+
+/**
+ * Card image slotted items
+ */
+::slotted([slot='image']) {
+  width: 100%;
+  height: auto;
+}
+
+/**
+ * Card header
+ */
+.al-c-card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--al-theme-space-xs);
+}
+
+/**
+ * Card body
+ */
+.al-c-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-xs);
+}
