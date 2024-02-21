@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "license": "UNLICENSED",
-  "packageManager": "yarn@1.22.19",
+  "packageManager": "yarn@1.22.21",
   "workspaces": [
     "libs/*",
     "apps/*"
@@ -12,6 +12,6 @@
   "scripts": {
     "build:storybook-web-components": "yarn workspace al-web-components build:storybook --output-dir ../../dist/storybook-web-components",
     "build:storybook-react": "yarn workspace al-react build:storybook --output-dir ../../dist/storybook-react",
-    "build:all": "yarn build:storybook-web-components && yarn build:storybook-react"
+    "build:all": "yarn --version && yarn build:storybook-web-components && yarn build:storybook-react"
   }
 }
