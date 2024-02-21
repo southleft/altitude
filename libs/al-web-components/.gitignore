@@ -1,9 +1,23 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+
+# production
+dist
+storybook-static
+storybook
+storybook-components
+coverage
+
+# misc
 .DS_Store
 .DS_S
-dist
-node_modules
-/.vscode
-/*.tgz
-storybook-static
-coverage/storybook/coverage-storybook.json
-build-storybook.log
+.env.local
+.env.development.local
+.env.production.local
+.cache
+.vscode
+
+*.log
+*.lock
