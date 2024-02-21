@@ -6,8 +6,6 @@ import styles from './stepper.scss';
 
 /**
  * Component: al-stepper
- *
- * Stepper keeps track of a user's progress by indicating where the user is in a multi-step process.
  * - **slot**: The stepper content, a set of stepper items
  */
 export class ALStepper extends ALElement {

@@ -6,8 +6,6 @@ import styles from './pagination-item.scss';
 
 /**
  * Component: al-pagination-item
- *
- * Pagination Item is a singular link used within the pagination component.
  * - **slot**: The pagination item's content
  */
 export class ALPaginationItem extends ALElement {
@@ -56,7 +54,7 @@ export class ALPaginationItem extends ALElement {
 
     return html`
       <li role="listitem" class="${componentClassNames}">
-        ${this.isExpandable ? 
+        ${this.isExpandable ?
           html`<slot></slot>` :
           html`
             <a

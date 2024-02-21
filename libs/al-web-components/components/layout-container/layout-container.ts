@@ -4,8 +4,6 @@ import styles from './layout-container.scss';
 
 /**
  * Component: al-layout-container
- *
- * Layout Container caps the width of content sections and centers content within it.
  */
 export class ALLayoutContainer extends ALElement {
   static el = 'al-layout-container';

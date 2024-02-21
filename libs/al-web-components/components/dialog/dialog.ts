@@ -13,8 +13,6 @@ import styles from './dialog.scss';
 
 /**
  * Component: al-dialog
- *
- * Dialog informs users about a task and can contain critical information, require decisions, or involve multiple tasks. It blocks interaction and scrolling on the rest of the screen, and should be used sparingly.
  * - **slot**: The main body of the dialog
  * - **slot** "trigger": The trigger that opens/closes the dialog
  * - **slot** "header": The header of the dialog that appears above the main slot

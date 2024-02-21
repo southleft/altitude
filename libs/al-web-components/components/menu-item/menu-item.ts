@@ -12,8 +12,6 @@ import styles from './menu-item.scss';
 
 /**
  * Component: al-menu-item
- *
- * Menu item is a single item within a menu.
  * - **slot**: The content to display in the menu item
  * - **slot** "before": Optional prefix content to display in the menu item
  */

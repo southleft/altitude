@@ -6,8 +6,6 @@ import styles from './link.scss';
 
 /**
  * Component: al-link
- *
- * Link provides consistent formatting to navigational elements.
  * - **slot**: The link text
  */
 export class ALLink extends ALElement {

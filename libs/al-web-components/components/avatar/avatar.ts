@@ -10,8 +10,6 @@ import styles from './avatar.scss';
 
 /**
  * Component: al-avatar
- *
- * Avatars are used to represent a user and can hold strings, icons, and images. Avatars can also be used with dot badges.
  * - **slot**: The avatar content
  */
 export class ALAvatar extends ALElement {

@@ -6,8 +6,6 @@ import styles from './breadcrumbs-item.scss';
 
 /**
  * Component: al-breadcrumbs-item
- *
- * Breadcrumbs Item is a singular link used within the breadcrumbs component.
  * - **slot**: The breadcrumb item's content, typically text
  */
 export class ALBreadcrumbsItem extends ALElement {

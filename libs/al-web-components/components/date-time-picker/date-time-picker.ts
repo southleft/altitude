@@ -19,8 +19,6 @@ import styles from './date-time-picker.scss';
 
 /**
  * Component: al-date-time-picker
- *
- * Date Time Picker allows the user to select a date and time.
  * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
  * - **slot** "error": If content is slotted, it will display in place of the errorNote property
  */

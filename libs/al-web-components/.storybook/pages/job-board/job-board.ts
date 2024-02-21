@@ -29,7 +29,6 @@ import '../../../components/text-passage/text-passage';
 
 /**
  * Page: al-l-job-board
- * @slot - The pages content
  */
 export class ALJobBoard extends LitElement {
   static get styles() {

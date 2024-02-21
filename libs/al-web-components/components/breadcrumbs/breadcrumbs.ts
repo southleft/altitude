@@ -17,8 +17,6 @@ import styles from './breadcrumbs.scss';
 
 /**
  * Component: al-breadcrumbs
- *
- * Breadcrumbs are a list of links that help a user visualize a page's location within the hierarchical structure of a website. They provide navigation to any of the page's ancestors.
  * - **slot**: The breadcrumbs content, a set of breadcrumb items
  */
 export class ALBreadcrumbs extends ALElement {

@@ -43,8 +43,6 @@ export const defaultTextConfig: FileUploadTextConfig = {
 
 /**
  * Component: al-file-upload
- *
- * File Upload provides a way for users to upload files from their operating system.
  * - **slot**: The component's content
  */
 export class ALFileUpload extends ALElement {

@@ -7,8 +7,6 @@ import styles from './toggle.scss';
 
 /**
  * Component: al-toggle
- *
- * Toggle is used to toggle the on/off state of a single setting.
  */
 export class ALToggle extends ALElement {
   static el = 'al-toggle';

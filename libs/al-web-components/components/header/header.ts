@@ -4,7 +4,7 @@ import styles from './header.scss';
 
 /**
  * Component: al-header
- * @slot - The components content
+ * - **slot**: The components content
  */
 export class ALHeader extends ALElement {
   static el = 'al-header';

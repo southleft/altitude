@@ -7,7 +7,6 @@ import '../../../components/calendar/calendar';
 
 /**
  * Page: al-l-home
- * @slot - The pages content
  */
 export class ALHome extends LitElement {
   static get styles() {

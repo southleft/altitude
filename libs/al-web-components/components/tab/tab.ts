@@ -7,8 +7,6 @@ import styles from './tab.scss';
 
 /**
  * Component: al-tab
- *
- * Tab is a singular interactive item within the tabs component.
  * - **slot**: The tab label
  */
 export class ALTab extends ALElement {

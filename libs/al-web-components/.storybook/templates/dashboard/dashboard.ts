@@ -32,7 +32,6 @@ import '../../../components/toggle/toggle';
 
 /**
  * Page: al-l-dashboard
- * @slot - The templates content
  */
 export class ALDashboard extends LitElement {
   static get styles() {

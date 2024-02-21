@@ -22,8 +22,6 @@ import styles from './time-selector-list.scss';
 
 /**
  * Component: al-time-selector-list
- *
- * Time Selector List lets a user select a time from a list of options.
  */
 export class ALTimeSelectorList extends ALElement {
   static el = 'al-time-selector-list';

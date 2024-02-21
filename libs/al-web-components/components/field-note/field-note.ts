@@ -5,8 +5,6 @@ import styles from './field-note.scss';
 
 /**
  * Component: al-field-note
- *
- * Field note is used as helper text for any type of input field.
  * - **slot**: The field note content
  */
 export class ALFieldNote extends ALElement {

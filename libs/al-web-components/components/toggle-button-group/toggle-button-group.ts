@@ -6,8 +6,6 @@ import styles from './toggle-button-group.scss';
 
 /**
  * Component: al-toggle-button-group
- *
- * Toggle Button Group is a grouping of related toggle buttons.
  * - **slot**: A set of toggle buttons
  */
 export class ALToggleButtonGroup extends ALElement {

@@ -8,8 +8,6 @@ import styles from './list.scss';
 
 /**
  * Component: al-list
- *
- * List is a vertical or horizontal grouping of related content or links.
  * - **slot**: The list items
  */
 export class ALList extends ALElement {
@@ -189,9 +187,9 @@ export class ALList extends ALElement {
       `;
     } else {
       return html`
-        <ul 
-          class="${componentClassName}" 
-          role="list" 
+        <ul
+          class="${componentClassName}"
+          role="list"
         >
           <slot></slot>
         </ul>

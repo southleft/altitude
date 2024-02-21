@@ -6,8 +6,6 @@ import styles from './tab-panel.scss';
 
 /**
  * Component: al-tab-panel
- *
- * Tab Panel displays content for a single tab within the tabs component.
  * - **slot**: The tab panel content
  */
 export class ALTabPanel extends ALElement {

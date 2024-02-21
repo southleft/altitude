@@ -14,8 +14,6 @@ import styles from './alert.scss';
 
 /**
  * Component: al-alert
- *
- * Alert displays a short important message that will attract a user's attention without interrupting the user's task.
  * - **slot**: The alert's main content or title
  * - **slot** "icon": Slot in an icon to override the default one
  * */

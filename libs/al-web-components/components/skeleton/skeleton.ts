@@ -5,8 +5,6 @@ import styles from './skeleton.scss';
 
 /**
  * Component: al-skeleton
- *
- * Skeleton provides a low fidelity representation of content before it appears in a view. This improves the perceived loading time for users.
  */
 export class ALSkeleton extends ALElement {
   static el = 'al-skeleton';

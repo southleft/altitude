@@ -14,8 +14,6 @@ import styles from './input-stepper.scss';
 
 /**
  * Component: al-input-stepper
- *
- * Input Stepper lets users enter a numeric value and incrementally increase or decrease the value with a two-segment control.
  * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
  * - **slot** "error": If content is slotted, it will display in place of the errorNote property
  */

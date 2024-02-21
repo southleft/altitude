@@ -11,8 +11,6 @@ import styles from './accordion-panel.scss';
 
 /**
  * Component: al-accordion-panel
- *
- * Accordion Panel shows and hides content within the accordion component.
  * - **slot**: The accordion panel content
  */
 export class ALAccordionPanel extends ALElement {

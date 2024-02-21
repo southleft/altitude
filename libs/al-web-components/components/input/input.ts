@@ -11,8 +11,6 @@ import styles from './input.scss';
 
 /**
  * Component: al-input
- *
- * Input allows users to input alphanumeric data when the expected input is short.
  * - **slot** "before": The content that appears before the text in the input
  * - **slot** "after": The content that appears after the text in the input
  * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property

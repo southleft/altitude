@@ -5,8 +5,6 @@ import styles from './badge.scss';
 
 /**
  * Component: al-badge
- *
- * Badges are labels that hold small amounts of information. Badges can hold a number and can be paired with other components including icons, text, or avatars.
  * - **slot**: The badge content
  */
 export class ALBadge extends ALElement {

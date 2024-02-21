@@ -7,8 +7,6 @@ import styles from './button.scss';
 
 /**
  * Component: al-button
- *
- * Buttons are interactive elements that enable users to execute actions.
  * - **slot**: The button text content
  * - **slot** "before": Content to display before the button text, typically an icon
  * - **slot** "after": Content to display after the button text, typically an icon
@@ -137,7 +135,7 @@ export class ALButton extends ALElement {
    */
   connectedCallback() {
     super.connectedCallback();
-    
+
     /* 1 */
     if (!this.label) {
       setTimeout(() => {

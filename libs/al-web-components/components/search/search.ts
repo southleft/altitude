@@ -20,8 +20,6 @@ import styles from './search.scss';
 
 /**
  * Component: al-search
- *
- * Search enables users to specify a word or phrase to find relevant content without navigation.
  * - **slot**: The search's dropdown content
  * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
  * - **slot** "error": If content is slotted, it will display in place of the errorNote property

@@ -14,8 +14,6 @@ const UPPER_RANGE = 'UPPERRANGE';
 
 /**
  * Component: al-range
- *
- * Range provides a visual indication of adjustable content, where the user can increment or decrement the value by moving the handle along a track, or via text input.
  * - **slot** "label": If content is slotted, it will override the default range label
  * - **slot** "before": If content is slotted, it will override the default range "min" label text
  * - **slot** "after": If content is slotted, it will override the default range "max" label text

@@ -12,8 +12,6 @@ import styles from './list-item.scss';
 
 /**
  * Component: al-list-item
- *
- * List Item is a single item in a list.
  * - **slot**: The content of the list item
  */
 export class ALListItem extends ALElement {

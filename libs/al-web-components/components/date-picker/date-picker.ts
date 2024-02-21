@@ -15,8 +15,6 @@ import styles from './date-picker.scss';
 
 /**
  * Component: al-date-picker
- *
- * Date Picker allows a user to select a date.
  * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
  * - **slot** "error": If content is slotted, it will display in place of the errorNote property
  */

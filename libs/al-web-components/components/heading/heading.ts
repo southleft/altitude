@@ -5,8 +5,6 @@ import styles from './heading.scss';
 
 /**
  * Component: al-heading
- *
- * Heading is used to render semantic heading tags with specific styles.
  * - **slot**: The heading content
  */
 export class ALHeading extends ALElement {

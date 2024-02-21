@@ -14,8 +14,6 @@ import styles from './tabs.scss';
 
 /**
  * Component: al-tabs
- *
- * Tabs organize related content at the same level of hierarchy, and allow navigation between distinct groups of content.
  * - **slot**: The tab items for the tabs
  * - **slot** "panel": The tab panels that correspond to the slotted tab items
  */

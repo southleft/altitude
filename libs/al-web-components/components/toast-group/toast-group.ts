@@ -7,8 +7,6 @@ import styles from './toast-group.scss';
 
 /**
  * Component: al-toast-group
- *
- * Toast Group contains one or multiple toasts, and provides positioning and group interactivity.
  * - **slot**: One or more individual toast components
  */
 export class ALToastGroup extends ALElement {
@@ -60,7 +58,7 @@ export class ALToastGroup extends ALElement {
    */
   handleOnToastClose() {
     /* 1 */
-    const numActiveToasts = this.toastList.filter((toast) => toast.isActive).length; 
+    const numActiveToasts = this.toastList.filter((toast) => toast.isActive).length;
     /* 2 */
     if (numActiveToasts === 0) {
       this.close();

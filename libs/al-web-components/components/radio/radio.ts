@@ -11,8 +11,6 @@ import styles from './radio.scss';
 
 /**
  * Component: al-radio
- *
- * Radio is a singular radio button within the radio component.
  * - **slot**: The component content that appears next to the radio
  * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
  * - **slot** "error": If content is slotted, it will display in place of the errorNote property

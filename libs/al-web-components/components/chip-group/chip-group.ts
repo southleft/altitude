@@ -9,8 +9,6 @@ import styles from './chip-group.scss';
 
 /**
  * Component: al-chip-group
- *
- * Chip Group is used to display chips in a row, with the ability to expand the row and increase the number of visible chips.
  * - **slot**: The chip group content, a set of chips
  */
 export class ALChipGroup extends ALElement {

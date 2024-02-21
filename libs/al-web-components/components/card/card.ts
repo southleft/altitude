@@ -5,8 +5,6 @@ import styles from './card.scss';
 
 /**
  * Component: al-card
- *
- * Card displays content and actions on a single topic in a concise, scannable format.
  * - **slot**: The main content of the card that appers below the header
  * - **slot** "actions-start": The actions the appear to the top-left of the card
  * - **slot** "action-right": The actions the appear to the top-right of the card

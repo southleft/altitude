@@ -5,8 +5,6 @@ import styles from './progress.scss';
 
 /**
  * Component: al-progress
- *
- * Progress provides feedback about the duration and progression of a process to indicate how long a user will be waiting.
  */
 export class ALProgress extends ALElement {
   static el = 'al-progress';

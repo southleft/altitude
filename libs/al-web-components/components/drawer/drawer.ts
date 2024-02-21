@@ -11,8 +11,6 @@ import { ALIconClose } from '../icon/icons/close';
 
 /**
  * Component: al-drawer
- *
- * Drawer provides ergonomic access to context-sensitive actions and information.
  * - **slot**: The drawer content
  */
 export class ALDrawer extends ALElement {
@@ -41,8 +39,7 @@ export class ALDrawer extends ALElement {
   accessor alignment: 'right';
 
   /**
-   * width of drawer panel when expanded / collapsed as side panel
-   *
+   * Width of drawer panel when expanded / collapsed as side panel
    */
   @property({ type: Number })
   accessor width: number;

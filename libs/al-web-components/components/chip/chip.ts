@@ -9,8 +9,6 @@ import styles from './chip.scss';
 
 /**
  * Component: al-chip
- *
- * Chips are compact elements that represent an input, attribute, or action.
  * - **slot**: The chip content
  */
 export class ALChip extends ALElement {

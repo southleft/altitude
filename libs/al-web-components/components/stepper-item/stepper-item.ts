@@ -10,8 +10,6 @@ import styles from './stepper-item.scss';
 
 /**
  * Component: al-stepper-item
- *
- * Stepper Item is a single step within a stepper.
  * - **slot**: The label for each stepper item
  * - **slot** "icon": The icon that displays next to the label
  * - **slot** "description": The description that displays below the label

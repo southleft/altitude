@@ -5,8 +5,6 @@ import styles from './icon.scss';
 
 /**
  * Component: al-icon-[ICON_NAME]
- *
- * Icons are symbols that provide meaning. Icon component is used to display any icon from the Altitude icon library.
  */
 export class ALIcon extends ALElement {
   static el = 'al-icon';

@@ -12,8 +12,6 @@ import styles from './checkbox-group.scss';
 
 /**
  * Component: al-checkbox-group
- *
- * Checkbox group lets a user select one or more items from a list, or turn an item on or off.
  * - **slot**: The component content, a set of checkbox items
  * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
  * - **slot** "error": If content is slotted, it will display in place of the errorNote property

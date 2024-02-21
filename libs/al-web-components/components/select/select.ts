@@ -18,8 +18,6 @@ import styles from './select.scss';
 
 /**
  * Component: al-select
- *
- * Select presents a list of options from which a user can select one.
  * - **slot**: The select content
  * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
  * - **slot** "error": If content is slotted, it will display in place of the errorNote property

@@ -7,8 +7,6 @@ import styles from './menu.scss';
 
 /**
  * Component: al-menu
- *
- * Menu displays a list of interactive options.
  * - **slot**: The menu items in the menu
  */
 export class ALMenu extends ALElement {

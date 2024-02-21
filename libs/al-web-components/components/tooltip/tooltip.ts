@@ -6,8 +6,6 @@ import styles from './tooltip.scss';
 
 /**
  * Component: al-tooltip
- *
- * Tooltips display informative text when users hover over, focus on, or tap an element.
  * - **slot**: The content that appears inside the tooltip
  * - **slot** "prefix": The content that appears before the main content
  * - **slot** "trigger": The trigger that opens the tooltip

@@ -5,8 +5,6 @@ import styles from './divider.scss';
 
 /**
  * Component: al-divider
- *
- * A divider is a thin line that groups content in lists and layouts.
  */
 export class ALDivider extends ALElement {
   static el = 'al-divider';

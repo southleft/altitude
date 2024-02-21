@@ -5,8 +5,6 @@ import styles from './layout.scss';
 
 /**
  * Component: al-layout
- *
- * Layout provides a responsive structure for content that ensures consistency across an application.
  */
 export class ALLayout extends ALElement {
   static el = 'al-layout';

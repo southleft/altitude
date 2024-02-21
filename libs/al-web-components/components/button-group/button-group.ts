@@ -5,8 +5,6 @@ import styles from './button-group.scss';
 
 /**
  * Component: al-button-group
- *
- * Button Group is used to group buttons and provide proper alignment.
  * - **slot**: The button group content, a set of buttons
  */
 export class ALButtonGroup extends ALElement {

@@ -6,8 +6,6 @@ import styles from './text-passage.scss';
 
 /**
  * Component: al-text-passage
- *
- * Text Passage provides a layout with consistent spacing for any content related items.
  * - **slot**: The text passage content
  */
 export class ALTextPassage extends ALElement {

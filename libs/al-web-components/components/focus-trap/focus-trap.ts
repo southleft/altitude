@@ -5,9 +5,6 @@ import getFocusableElements from '../../directives/getFocusableElements';
 
 /**
  * Component: al-focus-trap
- * 
- * Focus Trap is used as a wrapper around dialogs, popovers, and other overlays to trap focus within them, enabling accessible keyboard navigation.
- * 
  * - **slot**: The content to trap in the focus trap
  */
 export class ALFocusTrap extends ALElement {
@@ -20,7 +17,7 @@ export class ALFocusTrap extends ALElement {
   accessor isActive: boolean;
 
   /**
-   * Delay in milliseconds before the focus trap is activated. 
+   * Delay in milliseconds before the focus trap is activated.
    * - Can be set by the component using focus trap, when there is a css transition that needs to complete before the focus trap activates.
    */
   @property({ type: Number })
@@ -65,7 +62,7 @@ export class ALFocusTrap extends ALElement {
    */
   updated(changedProperties: Map<string, unknown>) {
     /* 1 */
-    if (changedProperties.has('isActive')) { 
+    if (changedProperties.has('isActive')) {
       /* 2 */
       if (this.isActive === true) {
         setTimeout(() => this.applyFocusTrap(), this.transitionDelay);
@@ -111,15 +108,15 @@ export class ALFocusTrap extends ALElement {
    */
   applyFocusTrap() {
     const focusableElements = getFocusableElements(this.slottedContent[0]); /* 1 */
-    
+
     /* 2 */
-    if (!focusableElements.length) { 
+    if (!focusableElements.length) {
       this.slottedContent[0].setAttribute("tabindex", "-1");
 
       this.initialFocusEl = this.slottedContent[0];
       this.firstFocusableEl = this.slottedContent[0];
       this.lastFocusableEl = this.slottedContent[0];
-    } 
+    }
     else {
       /* 3 */
       this.firstFocusableEl = focusableElements[0];

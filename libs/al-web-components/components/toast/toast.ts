@@ -15,8 +15,6 @@ import styles from './toast.scss';
 
 /**
  * Component: al-toast
- *
- * Toast provides a brief, temporary notification without interrupting a user's task.
  * - **slot**: The toast title or primary text
  * - **slot** "actions": Actions to optionally display in the toast
  * - **slot** "icon": Slot in an icon to override the default one
@@ -128,7 +126,7 @@ export class ALToast extends ALElement {
    /**
    * Open toast
    * 1. Set active to true to show the toast
-   * 2. Dispatch a custom event 
+   * 2. Dispatch a custom event
    */
    public open() {
     /* 1 */
@@ -200,7 +198,7 @@ export class ALToast extends ALElement {
 
     console.log("SHOW?", this.showProgress)
 
-    let toastIcon; 
+    let toastIcon;
     if (this.variant === 'info') {
       toastIcon = html`<${this.iconInfoEl}></${this.iconInfoEl}>`;
     } if (this.variant === 'success') {
@@ -212,10 +210,10 @@ export class ALToast extends ALElement {
     }
 
     return html`
-      <div role="alert" 
-        class=${componentClassNames} 
+      <div role="alert"
+        class=${componentClassNames}
         @keydown=${this.handleKeyDown}
-        @mouseover=${this.handleMouseOver} 
+        @mouseover=${this.handleMouseOver}
         @mouseleave=${this.handleMouseLeave}
       >
         <div class="al-c-toast__wrapper">

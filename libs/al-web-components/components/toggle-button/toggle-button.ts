@@ -9,8 +9,6 @@ import styles from './toggle-button.scss';
 
 /**
  * Component: al-toggle-button
- *
- * Toggle Button can be used to group related options.
  * - **slot**: The content to display in the toggle button
  */
 export class ALToggleButton extends ALElement {
