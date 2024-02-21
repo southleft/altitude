@@ -3,7 +3,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
 import '../button/button';
-import '../icon/icons/check';
+import '../icon/icons/success';
 import '../toast/toast';
 import './toast-group';
 
@@ -58,23 +58,23 @@ const Template = (args) => html`
   <al-toast-group ${spread(args)} data-testid="toast-group">
     <al-toast ?isActive=${true} description="This is toast" isActive=${true} data-testid="toast-01">
       Toast title A
-      <al-button slot="actions" variant="secondary"><al-icon-check slot="before"></al-icon-check>Label</al-button>
-      <al-button slot="actions"><al-icon-check slot="before"></al-icon-check>Label</al-button>
+      <al-button slot="actions" variant="secondary"><al-icon-success slot="before"></al-icon-success>Label</al-button>
+      <al-button slot="actions"><al-icon-success slot="before"></al-icon-success>Label</al-button>
     </al-toast>
     <al-toast ?isActive=${true} description="This is a toast" data-testid="toast-02">
       Toast title B
-      <al-button slot="actions" variant="secondary"><al-icon-check slot="before"></al-icon-check>Label</al-button>
-      <al-button slot="actions"><al-icon-check slot="before"></al-icon-check>Label</al-button>
+      <al-button slot="actions" variant="secondary"><al-icon-success slot="before"></al-icon-success>Label</al-button>
+      <al-button slot="actions"><al-icon-success slot="before"></al-icon-success>Label</al-button>
     </al-toast>
     <al-toast ?isActive=${true} description="This is a toast" data-testid="toast-03">
       Toast title C
-      <al-button slot="actions" variant="secondary"><al-icon-check slot="before"></al-icon-check>Label</al-button>
-      <al-button slot="actions"><al-icon-check slot="before"></al-icon-check>Label</al-button>
+      <al-button slot="actions" variant="secondary"><al-icon-success slot="before"></al-icon-success>Label</al-button>
+      <al-button slot="actions"><al-icon-success slot="before"></al-icon-success>Label</al-button>
     </al-toast>
     <al-toast ?isActive=${true} description="This is a toast" data-testid="toast-04">
       Toast title D
-      <al-button slot="actions" variant="secondary"><al-icon-check slot="before"></al-icon-check>Label</al-button>
-      <al-button slot="actions"><al-icon-check slot="before"></al-icon-check>Label</al-button>
+      <al-button slot="actions" variant="secondary"><al-icon-success slot="before"></al-icon-success>Label</al-button>
+      <al-button slot="actions"><al-icon-success slot="before"></al-icon-success>Label</al-button>
     </al-toast>
   </al-toast-group>
 `;

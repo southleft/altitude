@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { ALButton, ALIconCheck, ALIconSend, ALProgress} from '../..';
+import { ALButton, ALIconSuccess, ALIconSend, ALProgress} from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
@@ -71,7 +71,7 @@ export const DefaultIcon: StoryObj<typeof ALButton> = {
     hideText: true,
     children: (
       <>
-        <ALIconCheck slot="before"></ALIconCheck>
+        <ALIconSuccess slot="before"></ALIconSuccess>
         Label
       </>
     ),
@@ -82,7 +82,7 @@ export const DefaultIconBefore: StoryObj<typeof ALButton> = {
   args: {
     children: (
       <>
-        <ALIconCheck slot="before"></ALIconCheck>
+        <ALIconSuccess slot="before"></ALIconSuccess>
         Label
       </>
     ),

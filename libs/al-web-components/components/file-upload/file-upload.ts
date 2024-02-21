@@ -10,7 +10,7 @@ import { ALButton } from '../button/button';
 import { ALFieldNote } from '../field-note/field-note';
 import { ALIconClose } from '../icon/icons/close';
 import { ALIconDocument } from '../icon/icons/document';
-import { ALIconCheck } from '../icon/icons/check';
+import { ALIconSuccess } from '../icon/icons/success';
 import { ALIconWarningCircle } from '../icon/icons/warning-circle';
 import { ALProgress } from '../progress/progress';
 import styles from './file-upload.scss';
@@ -53,7 +53,7 @@ export class ALFileUpload extends ALElement {
       [ALFieldNote.el, ALFieldNote],
       [ALIconClose.el, ALIconClose],
       [ALIconWarningCircle.el, ALIconWarningCircle],
-      [ALIconCheck.el, ALIconCheck],
+      [ALIconSuccess.el, ALIconSuccess],
       [ALIconDocument.el, ALIconDocument],
       [ALProgress.el, ALProgress],
       [ALButton.el, ALButton]
@@ -64,7 +64,7 @@ export class ALFileUpload extends ALElement {
   private fieldNoteEl = unsafeStatic(this.elementMap.get(ALFieldNote.el));
   private iconCloseEl = unsafeStatic(this.elementMap.get(ALIconClose.el));
   private iconWarningEl = unsafeStatic(this.elementMap.get(ALIconWarningCircle.el));
-  private iconDoneEl = unsafeStatic(this.elementMap.get(ALIconCheck.el));
+  private iconDoneEl = unsafeStatic(this.elementMap.get(ALIconSuccess.el));
   private iconDocumentEl = unsafeStatic(this.elementMap.get(ALIconDocument.el));
   private progressEl = unsafeStatic(this.elementMap.get(ALProgress.el));
   private buttonEl = unsafeStatic(this.elementMap.get(ALButton.el));

@@ -2,7 +2,7 @@ import { expect, userEvent, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from '@storybook/addon-actions/decorator';
-import '../icon/icons/check';
+import '../icon/icons/success';
 import './tab';
 
 export default {
@@ -29,7 +29,7 @@ export default {
   },
 };
 
-const Template = (args) => html`<al-tab ${spread(args)} data-testid="tab"><al-icon-check></al-icon-check>Label<al-badge variant="danger">2</al-badge></al-tab>`;
+const Template = (args) => html`<al-tab ${spread(args)} data-testid="tab"><al-icon-success></al-icon-success>Label<al-badge variant="danger">2</al-badge></al-tab>`;
 
 export const Default = Template.bind({});
 Default.args = {};
@@ -50,7 +50,7 @@ DisabledSelected.args = {
   isDisabled: true,
 };
 
-const TemplateWithIconOnly = (args) => html`<al-tab ${spread(args)} data-testid="tab"><al-icon-check></al-icon-check><span class="al-u-is-vishidden">Label</span></al-tab>`;
+const TemplateWithIconOnly = (args) => html`<al-tab ${spread(args)} data-testid="tab"><al-icon-success></al-icon-success><span class="al-u-is-vishidden">Label</span></al-tab>`;
 
 export const WithIconOnly = TemplateWithIconOnly.bind({});
 WithIconOnly.args = {

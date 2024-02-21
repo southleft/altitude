@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
-import { ALTab, ALIconCheck, ALBadge } from '../..';
+import { ALTab, ALIconSuccess, ALBadge } from '../..';
 
 export default {
   title: 'Atoms/Tab',
@@ -24,7 +24,7 @@ export default {
   args: {
     children: (
       <>
-        <ALIconCheck></ALIconCheck>Label<ALBadge variant="danger">2</ALBadge>
+        <ALIconSuccess></ALIconSuccess>Label<ALBadge variant="danger">2</ALBadge>
       </>
     )
   },
@@ -48,7 +48,7 @@ export const DisabledSelected: StoryObj<typeof ALTab> = { args: {
 export const WithIconOnly: StoryObj<typeof ALTab> = { args: {
   children: (
     <>
-      <ALIconCheck></ALIconCheck>
+      <ALIconSuccess></ALIconSuccess>
     </>
   )
 } };

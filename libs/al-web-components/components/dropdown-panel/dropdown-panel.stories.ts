@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import '../icon/icons/check';
+import '../icon/icons/success';
 import '../list-item/list-item';
 import '../list/list';
 import '../search/search';
@@ -50,14 +50,14 @@ export const WithScroll = () => html`
 export const WithIconList = () => html`
   <al-dropdown-panel>
     <al-list>
-      <al-list-item><al-icon-check slot="before"></al-icon-check>List Item</al-list-item>
-      <al-list-item><al-icon-check slot="before"></al-icon-check>List Item</al-list-item>
-      <al-list-item><al-icon-check slot="before"></al-icon-check>List Item</al-list-item>
-      <al-list-item><al-icon-check slot="before"></al-icon-check>List Item</al-list-item>
-      <al-list-item><al-icon-check slot="before"></al-icon-check>List Item</al-list-item>
-      <al-list-item><al-icon-check slot="before"></al-icon-check>List Item</al-list-item>
-      <al-list-item><al-icon-check slot="before"></al-icon-check>List Item</al-list-item>
-      <al-list-item><al-icon-check slot="before"></al-icon-check>List Item</al-list-item>
+      <al-list-item><al-icon-success slot="before"></al-icon-success>List Item</al-list-item>
+      <al-list-item><al-icon-success slot="before"></al-icon-success>List Item</al-list-item>
+      <al-list-item><al-icon-success slot="before"></al-icon-success>List Item</al-list-item>
+      <al-list-item><al-icon-success slot="before"></al-icon-success>List Item</al-list-item>
+      <al-list-item><al-icon-success slot="before"></al-icon-success>List Item</al-list-item>
+      <al-list-item><al-icon-success slot="before"></al-icon-success>List Item</al-list-item>
+      <al-list-item><al-icon-success slot="before"></al-icon-success>List Item</al-list-item>
+      <al-list-item><al-icon-success slot="before"></al-icon-success>List Item</al-list-item>
     </al-list>
   </al-dropdown-panel>
 `;
