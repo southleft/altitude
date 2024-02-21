@@ -1,13 +1,13 @@
 import ReactDOM from 'react-dom/client';
-import { SLButton } from 'sl-react/dist/src';
-import 'sl-web-components/dist/css/head.css';
+import { ALButton } from 'al-react/dist/src';
+import 'al-web-components/dist/css/head.css';
 
 function App() {
-  console.log("BUTTON: ", SLButton)
+  console.log("BUTTON: ", ALButton)
   return (
     <div>
       <h1>Hello, React!</h1>
-      <SLButton>Button</SLButton>
+      <ALButton>Button</ALButton>
     </div>
   );
 }

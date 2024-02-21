@@ -7,6 +7,9 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "storybook dev -p 9009",
+    "build": "npm run dist",
+    "dist": "npm run dist.clear && tsc",
+    "dist.clear": "del-cli dist",
     "build-storybook": "storybook build",
     "plop": "plop --plopfile plop/plop-config.js"
   },
@@ -15,9 +18,6 @@
   "files": [
     "dist"
   ],
-  "peerDependencies": {
-    "al-web-components": "^0.0.1"
-  },
   "dependencies": {
     "@lit/react": "^1.0.2",
     "react": "^18.2.0",
@@ -41,6 +41,7 @@
     "babel-loader": "^9.1.3",
     "classnames": "^2.5.1",
     "css-loader": "^6.10.0",
+    "del-cli": "^5.1.0",
     "plop": "^4.0.1",
     "raw-loader": "^4.0.2",
     "sass": "^1.70.0",
