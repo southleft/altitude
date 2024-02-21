@@ -1,0 +1,18 @@
+import {html} from 'lit';
+import { spread } from '../../../directives/spread';
+import './{{dashCase name}}';
+
+export default {
+  title: 'Pages/{{titleCase name}}',
+  component: 'al-{{dashCase name}}',
+  parameters: {
+    status: { type: 'beta' },
+    layout: 'fullscreen'
+  },
+  tags: [ 'autodocs' ]
+};
+
+const Template = (args) => html`<al-{{dashCase name}} ${spread(args)} data-testid="{{dashCase name}}">Hello world</al-{{dashCase name}}>`;
+
+export const Default = Template.bind({});
+Default.args = {};

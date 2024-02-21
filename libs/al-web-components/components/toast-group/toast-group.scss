@@ -1,0 +1,57 @@
+@import '../../styles/component';
+
+/* ------------------------------------*\
+  #TOAST-GROUP
+\*------------------------------------ */
+
+:host {
+  display: contents;
+}
+
+/**
+ * Toast Group
+ */
+.al-c-toast-group {
+  display: none;
+  width: 100%;
+  flex-direction: column;
+  gap: var(--al-theme-space-xxl);
+  position: relative;
+
+  /**
+    * Displays the toast group when it is active
+    */
+  &.al-is-active {
+    display: flex;
+  }
+}
+
+/**
+ * Toast Group with position
+ */
+.al-c-toast-group--position-top,
+.al-c-toast-group--position-bottom {
+  position: fixed;
+  z-index: var(--al-z-index-500);
+  inset-inline-start: 50%;
+  inset-inline-end: 0;
+  transform: translateX(-50%);
+  padding: var(--al-theme-space-lg);
+  max-width: var(--al-theme-layout-width-container);
+}
+
+/**
+ * Toast Group positioned to the top of the page
+ */
+.al-c-toast-group--position-top {
+  inset-block-start: 0;
+  inset-block-end: auto;
+}
+
+/**
+ * Toast Group positioned to the bottom of the page
+ */
+.al-c-toast-group--position-bottom {
+  inset-block-end: 0;
+  inset-block-start: auto;
+}

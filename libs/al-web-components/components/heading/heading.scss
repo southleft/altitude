@@ -1,0 +1,106 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #HEADING
+\*------------------------------------*/
+
+/**
+ * Heading
+ */
+.al-c-heading {
+  @include al-theme-typography-heading-sm;
+  color: var(--al-theme-color-content-default);
+  margin: 0;
+
+  /**
+   * Heading with bold
+   */
+  &.al-is-bold {
+    @include al-theme-typography-heading-sm-bold;
+  }
+
+  /**
+   * Links slotted in the heading
+   */
+  ::slotted(a) {
+    text-decoration: none;
+    color: inherit;
+    transition: all var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  }
+
+  /**
+   * Hover forlinks slotted in the heading
+   */
+  ::slotted(a:hover) {
+    color: var(--al-theme-color-content-default-weak);
+  }
+}
+
+/**
+ * Heading medium
+ */
+.al-c-heading--md {
+  @include al-theme-typography-heading-md;
+
+  /**
+   * Heading medium with bold
+   */
+  &.al-is-bold {
+    @include al-theme-typography-heading-md-bold;
+  }
+}
+
+/**
+ * Heading large
+ */
+.al-c-heading--lg {
+  @include al-theme-typography-heading-lg;
+
+  /**
+   * Heading large with bold
+   */
+  &.al-is-bold {
+    @include al-theme-typography-heading-lg-bold;
+  }
+}
+
+/**
+ * Heading display small
+ */
+.al-c-heading--display-sm {
+  @include al-theme-typography-display-sm;
+
+  /**
+   * Heading display small with bold
+   */
+  &.al-is-bold {
+    @include al-theme-typography-display-sm-bold;
+  }
+}
+
+/**
+ * Heading display medium
+ */
+.al-c-heading--display-md {
+  @include al-theme-typography-display-md;
+
+  /**
+   * Heading display medium with bold
+   */
+  &.al-is-bold {
+    @include al-theme-typography-display-md-bold;
+  }
+}
+
+/**
+ * Heading display large
+ */
+.al-c-heading--display-lg {
+  @include al-theme-typography-display-lg;
+
+  /**
+   * Heading display large with bold
+   */
+  &.al-is-bold {
+    @include al-theme-typography-display-lg-bold;
+  }
+}

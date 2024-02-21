@@ -1,0 +1,17 @@
+import { createComponent } from '@lit/react';
+import { ALIcon{{pascalCase name}} as ALWebIcon{{pascalCase name}} } from 'al-web-components/dist/components/icon/icons/{{dashCase name}}';
+import register from 'al-web-components/dist/directives/register';
+import React from 'react';
+import PackageJson from '../../../../package.json';
+
+const elementMap = register({
+  elements: [ALWebIcon{{pascalCase name}}.el, ALWebIcon{{pascalCase name}}],
+  suffix: PackageJson.version
+});
+
+export const ALIcon{{pascalCase name}} = createComponent({
+  react: React,
+  tagName: elementMap.get(ALWebIcon{{pascalCase name}}.el),
+  elementClass: ALWebIcon{{pascalCase name}},
+  events: {}
+});

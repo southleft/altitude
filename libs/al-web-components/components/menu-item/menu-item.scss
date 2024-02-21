@@ -1,0 +1,60 @@
+@import '../../styles/component';
+/*------------------------------------*\
+ #MENU-ITEM
+\*------------------------------------*/
+
+/**
+ * Set the menu item height for the link & button
+ */
+:host {
+  display: contents;
+  --al-menu-item-height: #{size(5)};
+}
+
+/**
+ * Menu Item
+ */
+.al-c-menu-item {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  opacity: 1;
+  height: var(--al-menu-item-height);
+  max-height: var(--al-menu-item-height);
+  padding: 0;
+  margin: 0;
+  transition: opacity var(--al-theme-animation-duration) var(--al-theme-animation-timing), visibility var(--al-theme-animation-duration) var(--al-theme-animation-timing), max-height var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  white-space: nowrap;
+
+  /**
+   * Hidden Menu Item
+   */
+  &.al-is-hidden {
+    opacity: 0;
+    max-height: 0;
+  }
+}
+
+/**
+ * Menu Item Header
+ */
+.al-c-menu-item--header {
+  margin-block-start: var(--al-menu-item-header-margin-block-start, 0);
+}
+
+/**
+  * Menu Item link
+  * - Link fills up remaining space of the flexbox
+  */
+.al-c-menu-item__link {
+  flex: 1;
+  --al-link-text-decoration: none;
+}
+
+/**
+  * Menu item prefix - content in the "before" slot
+  */
+.al-c-menu-item__prefix {
+  --al-icon-width: #{var(--al-theme-icon-lg)};
+  --al-icon-height: #{var(--al-theme-icon-lg)};
+}

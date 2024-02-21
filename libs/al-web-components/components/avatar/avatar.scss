@@ -1,0 +1,59 @@
+@import '../../styles/component';
+
+/* ------------------------------------*\
+  #AVATAR
+\*------------------------------------ */
+
+/**
+ * Avatars are circles with a label, image, or icon
+ */
+.al-c-avatar {
+  @include al-theme-typography-body-md-bold;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: #{var(--al-theme-icon-xxxl)};
+  height: #{var(--al-theme-icon-xxxl)};
+  line-height: #{var(--al-theme-icon-xxxl)};
+  border-radius: var(--al-theme-border-radius-round);
+  background: var(--al-theme-color-background-default-weak);
+  color: var(--al-theme-color-content-default);
+
+  --al-icon-width: #{var(--al-theme-icon-lg)};
+  --al-icon-height: #{var(--al-theme-icon-lg)};
+}
+
+/**
+ * Avatar small
+ */
+.al-c-avatar--sm {
+  @include al-theme-typography-body-xs-bold;
+
+  width: #{var(--al-theme-icon-xl)};
+  height: #{var(--al-theme-icon-xl)};
+  line-height: #{var(--al-theme-icon-xl)};
+
+  --al-icon-width: #{var(--al-theme-icon-md)};
+  --al-icon-height: #{var(--al-theme-icon-md)};
+}
+
+/**
+ * Avatar badge
+ */
+.al-c-avatar__badge {
+  --al-badge-transform: none;
+  --al-badge-border-width: var(--al-theme-border-width-md);
+}
+
+/**
+ * Avatar image
+ */
+::slotted(img) {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  border-radius: var(--al-theme-border-radius-round);
+}
+

@@ -1,0 +1,170 @@
+/* ------------------------------------ *\
+  $GRID
+\* ------------------------------------ */
+@use 'sass:math';
+
+/**
+ * Grid variables
+ */
+$grid-cols: 12 !default;
+
+/**
+ * Grid column generator mixin
+ */
+@mixin column-generator($suffix) {
+  @for $i from 1 through $grid-cols {
+    /**
+     * Grid implicit column
+     */
+    .al-u-grid.cols\:#{$i}\@#{$suffix} {
+      grid-template-columns: repeat(math.div($grid-cols, $i), 1fr);
+    }
+
+    /**
+     * Grid explicit column
+     */
+    .al-u-grid__item.col\:#{$i},
+    .al-u-grid .al-u-grid__item.col\:#{$i}\@#{$suffix} {
+      grid-column: span $i / span $i;
+    }
+
+    /**
+     * Grid explicit row
+     */
+    .al-u-grid__item.row\:#{$i},
+    .al-u-grid .al-u-grid__item.row\:#{$i}\@#{$suffix} {
+      grid-row: span $i / span $i;
+    }
+
+    /**
+     * Grid offset
+     */
+    .offset\:#{$i}\@#{$suffix} {
+      grid-column-start: $i !important;
+    }
+  }
+}
+
+/**
+ * Grid column generator default
+ */
+@include column-generator(null);
+
+/**
+ * Grid column generator for xs breakpoint
+ */
+@media (min-width: $al-breakpoint-xs) {
+  @include column-generator('xs');
+}
+
+/**
+ * Grid column generator for sm breakpoint
+ */
+@media (min-width: $al-breakpoint-sm) {
+  @include column-generator('sm');
+}
+
+/**
+ * Grid column generator for md breakpoint
+ */
+@media (min-width: $al-breakpoint-md) {
+  @include column-generator('md');
+}
+
+/**
+ * Grid column generator for lg breakpoint
+ */
+@media (min-width: $al-breakpoint-lg) {
+  @include column-generator('lg');
+}
+
+/**
+ * Grid column generator for xl breakpoint
+ */
+@media (min-width: $al-breakpoint-xl) {
+  @include column-generator('xl');
+}
+
+/**
+ * Grid column generator for xxl breakpoint
+ */
+@media (min-width: $al-breakpoint-xxl) {
+  @include column-generator('xxl');
+}
+
+/**
+ * Grid
+ */
+.al-u-grid {
+  display: grid !important;
+  grid-gap: var(--al-theme-space);
+  grid-template-columns: repeat(1fr, 1fr);
+
+  /**
+   * If grid has grid item classes, then set the grid-template-columns
+   */
+  &:has(.al-u-grid__item) {
+    grid-template-columns: repeat($grid-cols, 1fr);
+  }
+}
+
+/**
+ * Grid implicit columns
+ */
+.al-u-grid.cols\:\@xs,
+.al-u-grid.cols\:\@sm,
+.al-u-grid.cols\:\@md,
+.al-u-grid.cols\:\@lg,
+.al-u-grid.cols\:\@xl,
+.al-u-grid.cols\:\@xxl {
+  grid-template-columns: #{$grid-cols}fr;
+}
+
+/**
+ * Grid item
+ */
+.al-u-grid__item {
+  display: flex;
+}
+
+/**
+ * Grid item explicit columns
+ * - Extend full-width columns placeholder
+ */
+@for $i from 1 through $grid-cols {
+  .al-u-grid__item.col\:\@xs,
+  .al-u-grid__item.col\:\@sm,
+  .al-u-grid__item.col\:\@md,
+  .al-u-grid__item.col\:\@lg,
+  .al-u-grid__item.col\:\@xl,
+  .al-u-grid__item.col\:\@xxl {
+    grid-column: span $grid-cols;
+  }
+}
+
+/**
+ * Grid alignment utility classes
+ */
+.al-u-grid--align-center {
+  align-items: center;
+}
+
+.al-u-grid--align-end {
+  align-items: flex-end;
+}
+
+.al-u-grid--align-stretch {
+  align-items: stretch;
+}
+
+.al-u-grid--justify-center {
+  justify-content: center;
+}
+
+.al-u-grid--justify-end {
+  justify-content: flex-end;
+}
+
+.al-u-grid--justify-space-between {
+  justify-content: space-between;
+}

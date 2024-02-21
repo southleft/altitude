@@ -1,0 +1,219 @@
+/* ------------------------------------*\
+  #TYPOGRAPHY TIER-1
+\*------------------------------------ */
+
+/**
+ * Typography Preset 12x: Normal and Bold
+ */
+@mixin al-typography-preset-12($responsive: true) {
+  font: var(--al-typography-preset-12);
+}
+.al-typography-preset-12 {
+  @include al-typography-preset-12();
+}
+
+@mixin al-typography-preset-12-bold {
+  @include al-typography-preset-12();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+.al-typography-preset-12-bold {
+  @include al-typography-preset-12-bold;
+}
+
+/**
+ * Typography Preset 14: Normal and Bold
+ */
+@mixin al-typography-preset-14($responsive: true) {
+  font: var(--al-typography-preset-14);
+}
+.al-typography-preset-14 {
+  @include al-typography-preset-14();
+}
+
+@mixin al-typography-preset-14-bold {
+  @include al-typography-preset-14();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+.al-typography-preset-14-bold {
+  @include al-typography-preset-14-bold;
+}
+
+/**
+ * Typography Preset 16: Normal and Bold
+ */
+@mixin al-typography-preset-16($responsive: true) {
+  font: var(--al-typography-preset-16);
+}
+.al-typography-preset-16 {
+  @include al-typography-preset-16();
+}
+
+@mixin al-typography-preset-16-bold {
+  @include al-typography-preset-16();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+.al-typography-preset-16-bold {
+  @include al-typography-preset-16-bold;
+}
+
+/**
+ * Typography Preset 18: Normal and Bold
+ */
+@mixin al-typography-preset-18($responsive: true) {
+  font: var(--al-typography-preset-18);
+}
+.al-typography-preset-18 {
+  @include al-typography-preset-18();
+}
+
+@mixin al-typography-preset-18-bold {
+  @include al-typography-preset-18();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+.al-typography-preset-18-bold {
+  @include al-typography-preset-18-bold;
+}
+
+/**
+ * Typography Preset 20: Normal and Bold
+ */
+@mixin al-typography-preset-20($responsive: true) {
+  font: var(--al-typography-preset-20);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-typography-preset-18);
+    }
+  }
+}
+.al-typography-preset-20 {
+  @include al-typography-preset-20();
+}
+
+@mixin al-typography-preset-20-bold {
+  @include al-typography-preset-20();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+.al-typography-preset-20-bold {
+  @include al-typography-preset-20-bold;
+}
+
+/**
+ * Typography Preset 24: Normal and Bold
+ */
+@mixin al-typography-preset-24($responsive: true) {
+  font: var(--al-typography-preset-24);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-typography-preset-20);
+    }
+  }
+}
+.al-typography-preset-24 {
+  @include al-typography-preset-24();
+}
+
+@mixin al-typography-preset-24-bold {
+  @include al-typography-preset-24();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+.al-typography-preset-24-bold {
+  @include al-typography-preset-24-bold;
+}
+
+/**
+ * Typography Preset 36: Normal and Bold
+ */
+@mixin al-typography-preset-36($responsive: true) {
+  font: var(--al-typography-preset-36);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-typography-preset-24);
+    }
+  }
+}
+.al-typography-preset-36 {
+  @include al-typography-preset-36;
+}
+
+@mixin al-typography-preset-36-bold {
+  @include al-typography-preset-36();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+.al-typography-preset-36-bold {
+  @include al-typography-preset-36-bold;
+}
+
+/**
+ * Typography Preset 40: Normal and Bold
+ */
+@mixin al-typography-preset-40($responsive: true) {
+  font: var(--al-typography-preset-40);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-typography-preset-36);
+    }
+  }
+}
+.al-typography-preset-40 {
+  @include al-typography-preset-40();
+}
+
+@mixin al-typography-preset-40-bold {
+  @include al-typography-preset-40();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+.al-typography-preset-40-bold {
+  @include al-typography-preset-40-bold;
+}
+
+/**
+ * Typography Preset 44: Normal and Bold
+ */
+@mixin al-typography-preset-44($responsive: true) {
+  font: var(--al-typography-preset-44);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-typography-preset-40);
+    }
+  }
+}
+.al-typography-preset-44 {
+  @include al-typography-preset-44();
+}
+
+@mixin al-typography-preset-44-bold {
+  @include al-typography-preset-44();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+.al-typography-preset-44-bold {
+  @include al-typography-preset-44-bold;
+}
+
+/**
+ * Typography Preset 48: Normal and Bold
+ */
+@mixin al-typography-preset-48($responsive: true) {
+  font: var(--al-typography-preset-48);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-typography-preset-44);
+    }
+  }
+}
+.al-typography-preset-48 {
+  @include al-typography-preset-48();
+}
+
+@mixin al-typography-preset-48-bold {
+  @include al-typography-preset-48();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+.al-typography-preset-48-bold {
+  @include al-typography-preset-48-bold;
+}

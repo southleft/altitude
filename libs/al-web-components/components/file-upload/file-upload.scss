@@ -1,0 +1,158 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #FILE-UPLOAD
+\*------------------------------------*/
+
+/**
+ * File upload
+ */
+.al-c-file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-xs);
+
+  /**
+   * File upload disabled state
+   */
+  &.al-is-disabled {
+    opacity: var(--al-theme-opacity-disabled);
+    pointer-events: none;
+  }
+}
+
+/**
+ * File upload label
+ */
+.al-c-file-upload__label {
+  @include label-styles;
+}
+
+/**
+ * Content inside of file upload area
+ */
+.al-c-file-upload__body {
+  @include al-theme-typography-body-md;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--al-theme-space-xs);
+  padding: var(--al-theme-space-md) var(--al-theme-space-lg) var(--al-theme-space-sm) var(--al-theme-space-lg);
+  text-align: center;
+  border-radius: var(--al-theme-border-radius);
+  color: var(--al-theme-color-content-default);
+  background-color: var(--al-theme-color-background-transparent);
+  border: var(--al-theme-border-width) dashed var(--al-theme-color-border-default);
+  transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing), border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+
+  /**
+   * Dragging state
+   */
+  &:hover:not(:active, .al-is-disabled),
+  .al-is-dragging & {
+    border-color: var(--al-theme-color-border-accent-default);
+    background-color: var(--al-theme-color-background-default);
+  }
+}
+
+/**
+ * File upload input
+ */
+.al-c-file-upload__input {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  border: none;
+  z-index: 2;
+  opacity: 0;
+}
+
+/**
+ * File upload list
+ */
+.al-c-file-upload__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space);
+}
+
+/**
+ * Uploaded list item
+ */
+.al-c-file-upload__item {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--al-theme-border-radius);
+  overflow: hidden;
+  --al-icon-width: #{var(--al-theme-icon-lg)};
+  --al-icon-height: #{var(--al-theme-icon-lg)};
+}
+
+/**
+ * Uploaded list item body
+ */
+.al-c-file-upload__item-body {
+  @include al-theme-typography-body-md;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--al-theme-space-xs);
+  padding: 0 var(--al-theme-space-xxs) 0 var(--al-theme-space-sm);
+  color: var(--al-theme-color-content-default);
+  background-color: var(--al-theme-color-background-default);
+}
+
+/**
+ * Uploaded list item first and second
+ */
+.al-c-file-upload__item-first,
+.al-c-file-upload__item-second {
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-xs);
+}
+
+/**
+ * Uploaded list item first
+ */
+.al-c-file-upload__item-first {
+  flex: 1;
+}
+
+/**
+ * Uploaded list item second
+ */
+.al-c-file-upload__item-second {
+  justify-content: flex-end;
+  color: var(--al-theme-color-content-default-weak);
+}
+
+/**
+ * File upload field note slotted
+ * 1. Targets field notes that are added via a slot
+ */
+slot[name="field-note"]::slotted(*),
+slot[name="error"]::slotted(*) {
+  /**
+   * Field note with error state
+   * 1. Ensures the error styles are still applied even if a slotted field note does not have ?isError applied
+   */
+  .al-is-error & {
+    --al-field-note-color: var(--al-theme-color-border-danger-default);
+  }
+
+  /**
+   * Field note with disabled state
+   * 1. Ensures the disabled styles are still applied even if a slotted field note does not have ?isDisabled applied
+   */
+  .al-is-disabled & {
+    opacity: var(--al-theme-opacity-disabled);
+  }
+}

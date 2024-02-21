@@ -1,0 +1,230 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #CHECKBOX
+\*------------------------------------*/
+
+/**
+ * Checkbox
+ */
+.al-c-checkbox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-xs);
+}
+
+/**
+ * Checkbox container
+ * 1. The container that holds the checkbox and label
+ */
+.al-c-checkbox__container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-xxs);
+}
+
+/**
+ * Checkbox label
+ * 1. The label that displays next to the checkbox
+ */
+.al-c-checkbox__label {
+  @include label-styles;
+  color: var(--al-theme-color-content-default);
+  cursor: pointer;
+}
+
+/**
+ * Checkbox
+ * 1. The div that holds the input, custom check, and ripple
+ */
+.al-c-checkbox__checkbox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: size(5);
+  height: size(5);
+  background-color: var(--al-theme-color-background-transparent-default);
+}
+
+/**
+ * Checkbox input
+ * 1. The native input that's hidden
+ */
+.al-c-checkbox__input {
+  appearance: none;
+  display: block;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  z-index: var(--al-z-index-100);
+  border-radius: var(--al-theme-border-radius-lg);
+
+  /**
+   * Disabled state
+   */
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  /**
+   * Focused state
+   */
+  &:focus-visible {
+    @include focus-inset;
+  }
+}
+
+/**
+ * Checkbox ripple
+ * 1. The circle that appears behind the custom check on hover and active
+ */
+.al-c-checkbox__ripple {
+  z-index: 0;
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  transform: scale(0);
+  border-radius: var(--al-theme-border-radius-round);
+  transition: all var(--al-theme-animation-duration-long) var(--al-theme-animation-timing);
+  background-color: var(--al-theme-color-background-transparent-default);
+
+  /**
+   * Ripple on native input hover
+   */
+  .al-c-checkbox__input:hover:not(:active, :disabled) + * + & {
+    transform: scale(1);
+    background-color: var(--al-theme-color-background-default-strong);
+  }
+}
+
+/**
+ * Custom checkbox
+ * 1. Displays a custom styled checkbox
+ */
+.al-c-checkbox__custom-check {
+  z-index: 1;
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: size(2.25);
+  height: size(2.25);
+  overflow: hidden;
+  background-color: var(--al-theme-color-background-transparent-default);
+  border-radius: var(--al-theme-border-radius-xs);
+  border: var(--al-theme-border-width-md) solid var(--al-theme-color-content-default);
+  transition: all var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+
+  /**
+   * Custom checkbox on native input checked and indeterminate
+   */
+  .al-c-checkbox__input:checked + &,
+  .al-is-indeterminate & {
+    background-color: var(--al-theme-color-content-accent-stronger);
+    border-color: var(--al-theme-color-border-accent-default);
+  }
+
+  /**
+   * Custom checkbox with error
+   */
+  .al-is-error & {
+    border-color: var(--al-theme-color-border-danger-default);
+  }
+
+  /**
+   * Custom checkbox with disabled
+   */
+  .al-c-checkbox__input:disabled + & {
+    opacity: var(--al-theme-opacity-disabled);
+  }
+
+  /**
+   * Custom checkbox with disabled and checked
+   */
+  .al-c-checkbox__input:checked:disabled + &,
+  .al-is-indeterminate .al-c-checkbox__input:disabled + & {
+    border: none;
+  }
+
+  /**
+   * Custom check
+   */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    display: block;
+    width: 100%;
+    height: 100%;
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    mask-size: size(2.25) size(2.25);
+    mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"%3E%3Cpath d="m0,0v18h18V0H0Zm14.88,6.38l-7,7c-.49.49-1.28.49-1.77,0l-3-3c-.49-.49-.49-1.28,0-1.77.49-.49,1.28-.49,1.77,0l2.12,2.12,6.12-6.12c.49-.49,1.28-.49,1.77,0,.49.49.49,1.28,0,1.77Z" fill="white" stroke-width="0"/%3E%3C/svg%3E');
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center center;
+    -webkit-mask-size: size(2.25) size(2.25);
+    -webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"%3E%3Cpath d="m0,0v18h18V0H0Zm14.88,6.38l-7,7c-.49.49-1.28.49-1.77,0l-3-3c-.49-.49-.49-1.28,0-1.77.49-.49,1.28-.49,1.77,0l2.12,2.12,6.12-6.12c.49-.49,1.28-.49,1.77,0,.49.49.49,1.28,0,1.77Z" fill="white" stroke-width="0"/%3E%3C/svg%3E');
+    background-color: var(--al-theme-color-border-accent-default);
+    opacity: 0;
+
+    /**
+     * Custom check when native input is checked
+     */
+    .al-c-checkbox__input:checked + & {
+      opacity: inherit;
+    }
+
+    /**
+     * Custom check when indeterminate
+     */
+    .al-is-indeterminate & {
+      opacity: inherit;
+      mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"%3E%3Cpath d="m0,0v18h18V0H0Zm12.91,10.25H4.91c-.69,0-1.25-.56-1.25-1.25s.56-1.25,1.25-1.25h8c.69,0,1.25.56,1.25,1.25s-.56,1.25-1.25,1.25Z" fill="white" stroke-width="0"/%3E%3C/svg%3E');
+      -webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"%3E%3Cpath d="m0,0v18h18V0H0Zm12.91,10.25H4.91c-.69,0-1.25-.56-1.25-1.25s.56-1.25,1.25-1.25h8c.69,0,1.25.56,1.25,1.25s-.56,1.25-1.25,1.25Z" fill="white" stroke-width="0"/%3E%3C/svg%3E');
+    }
+
+    /**
+     * Custom check when native input is checked and disabled
+     */
+    .al-c-checkbox__input:checked:disabled + &,
+    .al-is-indeterminate .al-c-checkbox__input:disabled + & {
+      background-color: var(--al-theme-color-content-default);
+    }
+  }
+}
+
+/**
+ * Checkbox field note
+ * 1. Targets field notes that are added via a slot or property
+ */
+slot[name="field-note"],
+slot[name="error"] {
+  --al-field-note-margin-inline-start: #{var(--al-theme-space-xs)};
+}
+
+/**
+ * Checkbox field note slotted
+ * 1. Targets field notes that are added via a slot
+ */
+slot[name="field-note"]::slotted(*),
+slot[name="error"]::slotted(*) {
+  /**
+   * Field note with error state
+   * 1. Ensures the error styles are still applied even if a slotted field note does not have ?isError applied
+   */
+  .al-is-error & {
+    --al-field-note-color: var(--al-theme-color-border-danger-default);
+  }
+
+  /**
+   * Field note with disabled state
+   * 1. Ensures the disabled styles are still applied even if a slotted field note does not have ?isDisabled applied
+   */
+  .al-is-disabled & {
+    opacity: var(--al-theme-opacity-disabled);
+  }
+}

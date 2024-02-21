@@ -1,0 +1,31 @@
+/* ------------------------------------ *\
+  $SPACING
+\* ------------------------------------ */
+
+$sizes: (
+  "": var(--al-theme-space),
+  -xxxs: var(--al-theme-space-xxxs),
+  -xxs: var(--al-theme-space-xxs),
+  -xs: var(--al-theme-space-xs),
+  -sm: var(--al-theme-space-sm),
+  -md: var(--al-theme-space-md),
+  -lg: var(--al-theme-space-lg),
+  -xl: var(--al-theme-space-xl),
+  -xxl: var(--al-theme-space-xxl),
+  -xxxl: var(--al-theme-space-xxl),
+  -super: var(--al-theme-space-super),
+  -none: 0
+);
+
+@each $size_key, $size_value in $sizes {
+  .al-u-gap#{$size_key} {
+    display: flex;
+    flex-direction: column;
+    gap: #{$size_value};
+  }
+}
+
+.al-u-gap--row {
+  align-items: center;
+  flex-direction: row;
+}

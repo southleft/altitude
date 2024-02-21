@@ -1,0 +1,217 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #TEXTAREA
+\*------------------------------------*/
+
+:host {
+  display: contents;
+}
+
+/**
+ * Textarea
+ */
+.al-c-textarea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-xxs);
+  width: 100%;
+  min-width: max-content;
+}
+
+/**
+ * Textarea container
+ * - Holds the textarea element and label
+ */
+.al-c-textarea__container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/**
+ * Textarea element
+ * - The actual textarea element of the input
+ */
+.al-c-textarea__input {
+  @include input-styles;
+  padding-inline-start: var(--al-textarea-padding-start, var(--al-theme-space));
+  padding-inline-end: var(--al-textarea-padding-end, var(--al-theme-space));
+
+  /**
+   * Show the placeholder if the label is hidden
+   */
+  .al-has-hidden-label & {
+    &::placeholder {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  /**
+   * Hide the placeholder by default because the label appears in it's place
+   */
+  &::placeholder {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/**
+ * Textarea label
+ * - The floating label that appears inside of the textarea
+ */
+.al-c-textarea__label {
+  @include label-styles;
+  position: absolute;
+  inset-block-start: var(--al-theme-space-sm);
+  inset-inline-start: var(--al-textarea-padding-start, var(--al-theme-space));
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-xxs);
+  pointer-events: none; /* Allows hover to work properly */
+
+  /**
+   * If the textarea is focused or active, position the label above the textarea
+   */
+  .al-c-textarea__input:focus:not(:read-only) + &,
+  .al-is-active & {
+    @include al-theme-typography-body-xs;
+    padding: 0 var(--al-theme-space-xxs);
+    background-color: var(--al-input-label-background, var(--al-theme-color-background-default-weak));
+    inset-block-start: calc(#{var(--al-theme-space-sm)} * -1);
+    inset-block-end: auto;
+    inset-inline-start: var(--al-theme-space-sm);
+  }
+
+  /**
+   * A fix for the textarea border being visible through the label when filled and disabled
+   */
+  .al-c-textarea__input:disabled + & {
+    opacity: 1;
+
+    /**
+     * Applied the opacity to the text only in the label
+     */
+    span {
+      opacity: var(--al-theme-opacity-disabled);
+    }
+
+    /**
+     * Prevents the textarea border from showing through the label
+     */
+    &::before {
+      background-color: var(--al-input-label-background, var(--al-theme-color-background-default-weak));
+      content: "";
+      display: block;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+      z-index: -1;
+      width: 100%;
+      height: 80%;
+    }
+  }
+}
+
+/**
+ * Textarea optional
+ * - The `(Optional)` text that appears in the label if isOptional is true
+ */
+.al-c-textarea__optional {
+  @include al-theme-typography-body-xs;
+}
+
+/**
+ * Textarea footer
+ * - The container that holds the field notes and max length
+ */
+.al-c-textarea__footer {
+  display: flex;
+  gap: var(--al-theme-space);
+}
+
+/**
+ * Textarea notes
+ * - The container that holds the field notes
+ */
+.al-c-textarea__field-notes {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-xxs);
+}
+
+/**
+ * Textarea slot before and after
+ * - The slots for icons or prefix/suffix text inside the Textarea
+ */
+.al-c-textarea__before,
+.al-c-textarea__after {
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-xxs);
+  position: absolute;
+  inset-block-start: var(--al-theme-space-sm);
+  --al-icon-height: var(--al-theme-icon-md);
+  --al-icon-width: var(--al-theme-icon-md);
+  pointer-events: none; /* Allows hover to work properly */
+}
+
+/**
+ * Textarea slot before
+ * - The slot for elements positioned absolutely to the left of the textarea
+ */
+.al-c-textarea__before {
+  inset-inline-start: var(--al-theme-space);
+}
+
+/**
+ * Textarea slot after
+ * - The slot for elements positioned absolutely to the right of the textarea
+ */
+.al-c-textarea__after {
+  inset-inline-end: var(--al-theme-space);
+}
+
+/**
+ * Textarea asterick
+ * - The asterick that displays if the field is required
+ */
+.al-c-textarea__asterisk {
+  color: var(--al-theme-color-border-danger-default);
+}
+
+/**
+ * Textarea slots
+ * - Adds spacing between multiple items slotted
+ */
+slot[name="before"],
+slot[name="after"] {
+  display: flex;
+  gap: var(--al-theme-space-xxs);
+}
+
+/**
+ * Textarea note slotted
+ * 1. Targets field notes that are added via a slot
+ */
+slot[name="field-note"]::slotted(*),
+slot[name="error"]::slotted(*) {
+  /**
+   * Field note with error state
+   * 1. Ensures the error styles are still applied even if a slotted field note does not have ?isError applied
+   */
+  .al-is-error & {
+    --al-field-note-color: var(--al-theme-color-border-danger-default);
+  }
+
+  /**
+   * Field note with disabled state
+   * 1. Ensures the disabled styles are still applied even if a slotted field note does not have ?isDisabled applied
+   */
+  .al-is-disabled & {
+    opacity: var(--al-theme-opacity-disabled);
+  }
+}

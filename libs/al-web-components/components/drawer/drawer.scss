@@ -1,0 +1,150 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #DRAWER
+\*------------------------------------*/
+
+:host {
+  display: contents;
+}
+
+/**
+ * Drawer -the main content wrapper of the header, body, and footer
+ */
+.al-c-drawer {
+  position: relative;
+  display: flex;
+  width: max-content;
+  overflow: hidden;
+}
+
+/**
+ * Drawer with a dimmed backdrop, similar to a modal background
+ */
+.al-c-drawer--backdrop {
+  &::after {
+    content: "";
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    position: fixed;
+    inset-inline-start: 0;
+    inset-block-start: 0;
+    background-color: transparent;
+    transition: background-color var(--al-theme-animation-duration-long) var(--al-theme-animation-timing);
+    pointer-events: none;
+  }
+
+  /**
+   * Active drawer with backdrop
+   */
+  &.al-is-active::after {
+    background-color: var(--al-theme-color-background-transparent-strong);
+    z-index: var(--al-z-index-500);
+  }
+}
+
+/**
+ * The actual content creator
+ */
+.al-c-drawer__container {
+  position: fixed;
+  inset-inline-start: 0;
+  inset-block-start: 0;
+  display: flex;
+  flex-direction: column;
+  width: var(--al-drawer-container-width, #{size(40)});
+  height: 100vh;
+  background-color: var(--al-theme-color-background-default);
+  box-shadow: var(--al-theme-box-shadow-md);
+  transition: transform var(--al-theme-animation-duration-long) var(--al-theme-animation-timing);
+  transform: translateX(-100%);
+  z-index: var(--al-z-index-top);
+  opacity: 0;
+  visibility: hidden;
+
+  /**
+   * Adjust the drawer container to be full screen
+   */
+  @media all and (max-width: $al-breakpoint-sm) {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100vh;
+    box-shadow: none;
+  }
+
+  /**
+   * Right-postioned drawer
+   * - This is the default position
+   */
+  .al-c-drawer--right & {
+    inset-inline-end: 0;
+    inset-inline-start: auto;
+    transform: translateX(100%);
+  }
+
+  /**
+   * Active left-positioned drawer
+   */
+  .al-is-active & {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/**
+ * Drawer header container
+ */
+.al-c-drawer__header {
+  padding: var(--al-theme-space);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+  position: relative;
+  gap: var(--al-theme-space);
+}
+
+/**
+ * Drawer header content
+ */
+.al-c-drawer__header-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+  gap: var(--al-theme-space);
+}
+
+/**
+ * Drawer body container
+ * - Flex contents to span the available space
+ */
+.al-c-drawer__body {
+  padding: var(--al-theme-space);
+  flex: 1;
+  overflow: auto;
+}
+
+/**
+ * Drawer footer container
+ */
+.al-c-drawer__footer {
+  padding: var(--al-theme-space);
+  border-block-start: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+}
+
+/**
+ * Drawer trigger
+ * - The trigger slot in the drawer
+ */
+.al-c-drawer__trigger {
+  z-index: var(--al-drawer-trigger-z-index, 0);
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-xs);
+  cursor: pointer;
+  width: var(--al-drawer-trigger-width, max-content);
+}

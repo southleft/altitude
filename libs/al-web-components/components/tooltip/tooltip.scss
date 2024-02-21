@@ -1,0 +1,212 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #TOOLTIP
+\*------------------------------------ */
+
+:host {
+  display: contents;
+  --tooltip-arrow-size: #{size(1.0625)};
+  --tooltip-offset: #{var(--al-theme-space-xxs)};
+}
+
+/**
+ * Tooltip
+ */
+.al-c-tooltip {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+}
+
+/**
+ * Tooltip with arrow
+ */
+.al-has-arrow {
+  --tooltip-offset: #{size(1.25)};
+}
+
+/**
+ * Tooltip container
+ */
+.al-c-tooltip__container {
+  transition: opacity var(--al-theme-animation-duration) var(--al-theme-animation-timing), visibility var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  display: flex;
+  flex-flow: row wrap;
+  opacity: 0;
+  visibility: hidden;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  inset-inline-end: 0;
+  inset-block-start: calc(100% + var(--tooltip-offset));
+  column-gap: var(--al-theme-space-xs);
+  row-gap: var(--al-theme-space-xxs);
+  padding: var(--al-theme-space-xxs) var(--al-theme-space-xs);
+  width: max-content;
+  max-width: var(--al-tooltip-container-width, #{size(32)});
+  background-color: var(--al-theme-color-background-default-strong);
+  color: var(--al-theme-color-content-default);
+  border-radius: var(--al-theme-border-radius);
+  box-shadow: var(--al-theme-box-shadow);
+  z-index: var(--al-z-index-top);
+  margin: auto;
+  cursor: default;
+  word-break: break-word;
+  @include al-theme-typography-body-xs;
+
+  /**
+   * Tooltip content after pseudo element
+   * - Triangle used to point towards the tooltip trigger
+   */
+  &:after {
+    content: '';
+    display: none;
+    position: absolute;
+    background-color: var(--al-theme-color-background-default-strong);
+    transform: rotate(45deg);
+    width: var(--tooltip-arrow-size);
+    height: var(--tooltip-arrow-size);
+    z-index: 0;
+  }
+
+  /**
+   * Active state for tooltip tooltip
+   */
+  .al-is-active & {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /**
+   * Tooltip prefix
+   * - Adjust the left padding if there is a prefix
+   */
+  .al-has-prefix & {
+    padding-inline-start: var(--al-theme-space-xxs);
+  }
+
+  /**
+   * Tooltip arrow
+   * - Show the arrow if hasArrow is true, hide if false
+   */
+  .al-has-arrow & {
+    &:after {
+      display: flex;
+    }
+  }
+
+  /**
+   * Tooltip container positioned to the top of the trigger
+   */
+  .al-c-tooltip--top & {
+    inset-block-start: auto;
+    inset-block-end: calc(100% + var(--tooltip-offset));
+    inset-inline-start: 50%;
+    inset-inline-end: auto;
+    transform: translateX(var(--rtlTranslateX, -50%));
+
+    /**
+     * Tooltip arrow positioning
+     */
+    &:after {
+      inset-block-end: calc(-1 * (var(--tooltip-arrow-size) / 2));
+      inset-inline-start: calc(50% - (var(--tooltip-arrow-size) / 2));
+    }
+  }
+
+  /**
+   * Tooltip container positioned to the bottom of the trigger
+   */
+  .al-c-tooltip--bottom & {
+    inset-block-start: calc(100% + var(--tooltip-offset));
+    inset-block-end: auto;
+    inset-inline-start: 50%;
+    inset-inline-end: auto;
+    transform: translateX(var(--rtlTranslateX, -50%));
+
+    /**
+     * Tooltip arrow positioning
+     */
+    &:after {
+      inset-block-start: calc(-1 * (var(--tooltip-arrow-size) / 2));
+      inset-inline-start: calc(50% - (var(--tooltip-arrow-size) / 2));
+    }
+  }
+
+  /**
+   * Tooltip container positioned to the left of the trigger
+   */
+  .al-c-tooltip--left & {
+    inset-block-start: 50%;
+    inset-block-end: auto;
+    inset-inline-start: auto;
+    inset-inline-end: calc(100% + var(--tooltip-offset));
+    transform: translateY(-50%);
+
+    /**
+     * Tooltip arrow positioning
+     */
+    &:after {
+      inset-block-end: calc(50% - (var(--tooltip-arrow-size) / 2));
+      inset-inline-end: calc(-1 * (var(--tooltip-arrow-size) / 2));
+      inset-inline-start: auto;
+    }
+  }
+
+  /**
+   * Tooltip container positioned to the right of the trigger
+   */
+  .al-c-tooltip--right & {
+    inset-block-start: 50%;
+    inset-block-end: auto;
+    inset-inline-start: calc(100% + var(--tooltip-offset));
+    inset-inline-end: auto;
+    transform: translateY(-50%);
+
+    /**
+     * Tooltip arrow positioning
+     */
+    &:after {
+      inset-block-end: calc(50% - (var(--tooltip-arrow-size) / 2));
+      inset-inline-start: calc(-1 * (var(--tooltip-arrow-size) / 2));
+    }
+  }
+}
+
+/**
+ * Tooltip prefix
+ */
+.al-c-tooltip__prefix {
+  border-radius: var(--al-theme-border-radius);
+  background-color: var(--al-theme-color-background-default);
+  color: var(--al-theme-color-content-default);
+  padding: 0 var(--al-theme-space-xs);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-xxs);
+}
+
+/**
+ * Tooltip trigger
+ */
+.al-c-tooltip__trigger {
+  &:focus-visible {
+    --al-theme-color-focus-ring: transparent;
+  }
+
+  /**
+   * Allows for click events to only be on the trigger element and not slotted items
+   */
+  .al-is-interactive & {
+    slot {
+      pointer-events: none;
+    }
+  }
+}
+
+
+
+
+

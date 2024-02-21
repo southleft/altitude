@@ -1,0 +1,99 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #PAGINATION
+\*------------------------------------*/
+
+/**
+ * Pagination wrapper
+ */
+.al-c-pagination {
+  @include al-theme-typography-body-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/**
+ * Pagination has before or after
+ * Add modifier classes to parent nav element if before and after slots are defined
+ */
+.al-c-pagination--has-before,
+.al-c-pagination--has-after {
+  justify-content: space-between;
+  gap: var(--al-theme-space);
+}
+
+/**
+ * Slot for content to be inserted after pagination
+ */
+.al-c-pagination__after ::slotted(*) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.al-pagination-footer,
+.al-pagination-inpage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.al-pagination-footer-mobile {
+  display: none;
+}
+
+@media screen and (width <= 786px) {
+  .al-pagination-footer-mobile {
+    display: block;
+    width: 100%;
+
+    .al-c-pagination__list {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      width: 100%;
+    }
+  }
+
+  .al-pagination-footer {
+    display: none;
+  }
+}
+
+/**
+ * 1) Ordered list of links that allows for navigation to next/previous content
+ */
+.al-c-pagination__list {
+  display: flex; /* 1 */
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+}
+
+/**
+ * pagination text with calculation
+ */
+.al-c-pagination-label {
+  flex-basis: 180px;
+}
+
+/**
+ * pagination dropdown
+ */
+.al-c-pagination-dropdwon {
+  display: flex;
+  flex-basis: 180px;
+  justify-content: end;
+}
+
+.al-c-contextual-pagination-list-item {
+  display: block;
+
+  .al-c-contextual-pagination-item-text {
+    padding-inline: 8px;
+  }
+}
