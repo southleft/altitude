@@ -8,7 +8,7 @@
   "scripts": {
     "start": "storybook dev -p 6006",
     "build": "npm run build:tokens && npm run build:icons && npm run build:custom-elements.json && del-cli dist && webpack && tsc",
-    "build-storybook": "storybook build",
+    "build:storybook": "storybook build",
     "build:tokens": "node ./styles/tokens-config.js",
     "build:icons": "node ./icons/icons-config.js",
     "build:custom-elements.json": "wca analyze \"components/*/*.ts\" --outFile custom-elements.json",
