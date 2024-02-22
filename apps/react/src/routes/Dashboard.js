@@ -1,3 +1,4 @@
+import { Link, Outlet } from 'react-router-dom';
 import { ALAvatar, ALBadge, ALButtonGroup, ALButton, ALCard, ALDivider, ALDrawer, ALHeader, ALHeading, ALIconBell, ALIconCalendar, ALIconChevronUp, ALIconHelp, ALIconHome, ALIconList, ALIconSettings, ALIconSignOut, ALIconSupport, ALIconUser, ALLayoutContainer, ALLayout, ALListItem, ALList, ALMenuItem, ALMenu, ALPopover, ALSearch, ALToggleButton } from 'al-react/dist/src';
 import './Dashboard.scss';
 
@@ -26,10 +27,14 @@ export default function Dashboard({ children }) {
               <ALDivider></ALDivider>
             </div>
             <ALMenu className="al-l-dashboard__sidebar-menu">
-              <ALMenuItem href="/?path=/story/pages-home--default" isHeader="true">
-                <ALIconHome></ALIconHome>Dashboard<ALBadge variant="danger">12</ALBadge>
-              </ALMenuItem>
-                <ALMenuItem href="/?path=/story/pages-job-board--default" isHeader="true"><ALIconList></ALIconList>Job Board</ALMenuItem>
+              <Link to={'/'}>
+                <ALMenuItem isHeader="true">
+                  <ALIconHome></ALIconHome>Dashboard<ALBadge variant="danger">12</ALBadge>
+                </ALMenuItem>
+              </Link>
+              <Link to={'/job-board'}>
+                <ALMenuItem isHeader="true"><ALIconList></ALIconList>Job Board</ALMenuItem>
+              </Link>
                 <ALMenuItem isHeader="true"><ALIconCalendar></ALIconCalendar>Schedule</ALMenuItem>
                 <ALMenuItem isHeader="true" isExpandableHeader="true"><ALIconSupport></ALIconSupport>Resources</ALMenuItem>
                 <ALMenuItem>Contact Us</ALMenuItem>
@@ -107,7 +112,7 @@ export default function Dashboard({ children }) {
               </div>
             </ALHeader>
             <ALLayoutContainer className="al-l-dashboard__body">
-              {children}
+              <Outlet />
             </ALLayoutContainer>
           </div>
         </ALLayout>
