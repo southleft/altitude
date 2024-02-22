@@ -38,10 +38,6 @@ export class TokenSpecimen extends LitElement {
   @property({ type: Boolean })
   accessor disableCopy: boolean;
 
-  async importTokenCode() {
-    await import('../token-code/token-code.ts'); // Import TokenCode component dynamically
-  }
-
   render() {
     const componentClassNames = classMap({
       'token-specimen': true,
@@ -55,9 +51,6 @@ export class TokenSpecimen extends LitElement {
       'token-specimen--space': this.variant === 'space',
       'token-specimen--typography': this.variant === 'typography'
     });
-
-    // Lazy load TokenCode component
-    this.importTokenCode();
 
     return html`
       <tr class=${componentClassNames}>
