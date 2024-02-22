@@ -1,0 +1,122 @@
+/*------------------------------------*\
+  #DASHBOARD
+\*------------------------------------*/
+
+/**
+ * Dashboard
+ */
+ .al-l-dashboard {
+  max-height: 100vh;
+}
+
+/**
+ * Dashboard content
+ */
+.al-l-dashboard__content {
+  overflow: auto;
+  max-height: 100vh;
+}
+
+/**
+ * Dashboard body
+ */
+.al-l-dashboard__body {
+  display: flex;
+  padding: var(--al-theme-space-lg) 0 var(--al-theme-space-super) 0;
+}
+
+/**
+ * Dashboard sidebar
+ */
+.al-l-dashboard__sidebar {
+  position: sticky;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  height: 100vh;
+  z-index: var(--al-z-index-500);
+  background-color: var(--al-theme-color-background-default);
+  box-shadow: var(--al-theme-box-shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  @media all and (max-width: var(--al-breakpoint-md)) {
+    display: none;
+  }
+}
+
+/**
+ * Dashboard sidebar logo
+ */
+.al-l-dashboard__sidebar-logo {
+  a {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    padding: var(--al-theme-space);
+    min-height: var(--al-theme-layout-height-header);
+  }
+
+  img {
+    max-width: 200px;
+  }
+}
+
+/**
+ * Dashboard sidebar menu
+ */
+.al-l-dashboard__sidebar-menu {
+  flex: 1;
+  display: flex;
+  padding: var(--al-theme-space-super) 0;
+}
+
+/**
+ * Dashboard sidebar user
+ */
+.al-l-dashboard__sidebar-user {
+  --al-popover-width: 100%;
+  --al-popover-trigger-width: 100%;
+  --al-popover-offset: 0;
+  --al-popover-shift: 0;
+  --al-popover-container-width: calc(#{var(--al-theme-layout-width-sidebar)} - #{var(--al-theme-space-xs)});
+  --al-popover-container-padding: 0;
+}
+
+/**
+ * Dashboard user
+ */
+.al-l-dashboard__user {
+  cursor: pointer;
+  width: 100%;
+  padding: var(--al-theme-space);
+  display: flex;
+  gap: var(--al-theme-space);
+  align-items: center;
+  justify-content: space-between;
+
+  p {
+    display: flex;
+    flex: 1;
+  }
+}
+
+/**
+ * Dashboard notifications badge
+ */
+.al-l-dashboard__notifications-badge {
+  position: absolute;
+  inset-block-start: -2px;
+  inset-inline-end: 10px;
+  display: block;
+}
+
+/**
+ * Dashboard help popover
+ */
+.al-l-dashboard__help-popover {
+  position: fixed;
+  inset-block-end: var(--al-theme-space);
+  inset-inline-end: var(--al-theme-space);
+  z-index: var(--al-z-index-400);
+}

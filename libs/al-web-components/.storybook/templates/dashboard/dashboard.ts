@@ -28,7 +28,6 @@ import '../../../components/menu/menu';
 import '../../../components/popover/popover';
 import '../../../components/search/search';
 import '../../../components/toggle-button/toggle-button';
-import '../../../components/toggle/toggle';
 
 /**
  * Page: al-l-dashboard
