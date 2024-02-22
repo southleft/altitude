@@ -27,7 +27,7 @@ export default function Dashboard({ children }) {
               <ALDivider></ALDivider>
             </div>
             <ALMenu className="al-l-dashboard__sidebar-menu">
-              <NavLink to={'/dashboard'}>
+              <NavLink to={'/home'}>
               {({ isActive }) => (
                 <ALMenuItem isHeader="true" isSelected={isActive}>
                   <ALIconHome></ALIconHome>Dashboard<ALBadge variant="danger">12</ALBadge>
