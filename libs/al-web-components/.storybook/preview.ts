@@ -78,7 +78,7 @@ const preview: Preview = {
     // Configuring story sort order
     options: {
       storySort: {
-        order: ['Documentation', 'Foundations', 'Atoms', 'Molecules', 'Organisms', 'Templates', 'Pages', 'Recipes']
+        order: ['Resources', 'Foundations', 'Atoms', 'Molecules', 'Organisms', 'Templates', 'Pages', 'Recipes']
       }
     },
     backgrounds: { disable: true },
