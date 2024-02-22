@@ -62,7 +62,7 @@ function closePopover() {
 const Template = (args) => html`
   <al-popover ${spread(args)} data-testid="popover">
     <al-button data-testid="popover-trigger" slot="trigger">Open Popover</al-button>
-    <f-po style="width: 432px" width=>Popover content</f-po>
+    <f-po>Popover content</f-po>
   </al-popover>
 `;
 
