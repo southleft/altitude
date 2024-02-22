@@ -1,8 +1,9 @@
 # Altitude
 
-Design system created by Southleft.com
+Design system created by Southleft.com. Find all documentation on [ZeroHeight](https://zeroheight.com/809ab055e).
 
-## Run Storybook
+## Local setup
 
-1. Run `yarn` to install the dependencies
-2. Run `yarn workspace al-web-components start` or `yarn workspace al-react start` to start each storybook environment
+1. Run `yarn`
+2. Run `yarn workspace WORKSPACE_NAME start`
+
