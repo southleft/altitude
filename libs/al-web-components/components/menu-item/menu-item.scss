@@ -49,6 +49,10 @@
 .al-c-menu-item__link {
   flex: 1;
   --al-link-text-decoration: none;
+
+  .al-is-hidden & {
+    pointer-events: none;
+  }
 }
 
 /**
