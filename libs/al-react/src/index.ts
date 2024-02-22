@@ -58,6 +58,7 @@ export * from './components/Icons/Settings';
 export * from './components/Icons/SignIn';
 export * from './components/Icons/SignOut';
 export * from './components/Icons/Star';
+export * from './components/Icons/Success';
 export * from './components/Icons/Support';
 export * from './components/Icons/User';
 export * from './components/Icons/WarningCircle';

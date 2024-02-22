@@ -3,6 +3,7 @@ const path = require('path');
 
 module.exports = {
   output: {
+    path: path.resolve(__dirname, 'demo'),
     publicPath: '/'
   },
   module: {
@@ -15,6 +16,7 @@ module.exports = {
         },
       },
       { test: [/\.css$/, /\.scss$/],
+        exclude: /node_modules/,
         use: ['style-loader', 'css-loader', 'sass-loader'] 
       },
     ],

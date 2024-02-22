@@ -10,9 +10,10 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "yarn workspace al-web-components build",
+    "build": "yarn workspace al-web-components build && yarn workspace al-react build",
+    "build:app-react": "yarn workspace al-react-app build",
     "build:storybook-web-components": "yarn workspace al-web-components build:storybook --output-dir ../../storybook/web-components",
     "build:storybook-react": "yarn workspace al-react build:storybook --output-dir ../../storybook/react",
-    "build:all": "yarn build && yarn build:storybook-web-components && yarn build:storybook-react"
+    "build:all": "yarn build && yarn build:storybook-web-components && yarn build:storybook-react && yarn build:app-react"
   }
 }
