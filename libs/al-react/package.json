@@ -8,10 +8,8 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "storybook dev -p 9009",
-    "build": "npm run dist",
-    "dist": "npm run dist.clear && tsc",
-    "dist.clear": "del-cli dist",
-    "build-storybook": "storybook build",
+    "build": "yarn del-cli dist && tsc",
+    "build:storybook": "storybook build",
     "plop": "plop --plopfile plop/plop-config.js"
   },
   "entry": "dist/index.js",
@@ -47,6 +45,7 @@
     "raw-loader": "^4.0.2",
     "sass": "^1.70.0",
     "sass-loader": "^14.1.0",
-    "style-loader": "^3.3.4"
+    "style-loader": "^3.3.4",
+    "typescript": "^5.3.3"
   }
 }
