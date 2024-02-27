@@ -5,9 +5,10 @@
   "license": "UNLICENSED",
   "packageManager": "yarn@1.22.21",
   "scripts": {
-    "start": "npx enhance dev",
+    "start": "npm run copy:css && npx enhance dev",
     "lint": "eslint ./app/**/*.mjs --fix",
-    "enhance": "enhance"
+    "enhance": "enhance",
+    "copy:css": "cp -r ../../libs/al-web-components/dist/css/head.css ./public/browser"
   },
   "devDependencies": {
     "@enhance/cli": "latest",
