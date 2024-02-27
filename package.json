@@ -11,8 +11,8 @@
   ],
   "scripts": {
     "build": "yarn workspace al-web-components build",
-    "build:storybook-web-components": "yarn workspace al-web-components build:storybook --output-dir ../../storybook/web-components",
-    "build:storybook-react": "yarn workspace al-react build:storybook --output-dir ../../storybook/react",
+    "build:storybook-web-components": "yarn workspace al-web-components build:storybook",
+    "build:storybook-react": "yarn workspace al-react build:storybook",
     "build:app-angular": "yarn workspace al-app-angular build",
     "build:all": "yarn build && yarn build:storybook-web-components && yarn build:storybook-react && yarn build:app-angular"
   }
