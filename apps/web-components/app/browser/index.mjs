@@ -6,7 +6,6 @@ import 'al-web-components/dist/components/button-group/button-group';
 import 'al-web-components/dist/components/button/button';
 import 'al-web-components/dist/components/card/card';
 import 'al-web-components/dist/components/chip/chip';
-import 'al-web-components/dist/components/contextual-menu/contextual-menu';
 import 'al-web-components/dist/components/drawer/drawer';
 import 'al-web-components/dist/components/header/header';
 import 'al-web-components/dist/components/heading/heading';
