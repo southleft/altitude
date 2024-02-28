@@ -196,8 +196,6 @@ export class ALToast extends ALElement {
       'al-has-description': this.description?.length > 0
     });
 
-    console.log("SHOW?", this.showProgress)
-
     let toastIcon;
     if (this.variant === 'info') {
       toastIcon = html`<${this.iconInfoEl}></${this.iconInfoEl}>`;

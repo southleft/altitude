@@ -4,6 +4,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import styles from './home.scss';
 import '../../templates/dashboard/dashboard';
 import '../../../components/calendar/calendar';
+import '../../components/f-po/f-po';
 
 /**
  * Page: al-l-home

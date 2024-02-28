@@ -159,6 +159,7 @@ export class ALMenu extends ALElement {
     let groupHeader: ALMenuItem;
     let groupId: string;
     this.validItemCount = 0; /* 1 */
+
     /* 2 */
     this.menuItems.forEach((item: ALMenuItem, i: number) => {
       item.idx = null; /* 3 */

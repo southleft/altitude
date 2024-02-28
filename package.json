@@ -10,11 +10,12 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "yarn workspace al-web-components build",
+    "build": "yarn workspace al-web-components build && yarn workspace al-react build",
     "build:storybook-web-components": "yarn workspace al-web-components build:storybook --output-dir ../../dist/storybook/web-components",
     "build:storybook-react": "yarn workspace al-react build:storybook --output-dir ../../dist/storybook/react",
     "build:app-angular": "yarn workspace al-app-angular build --output-path ../../dist/angular --base-href /angular/browser/",
-    "build:all": "yarn build && yarn build:storybook-web-components && yarn build:storybook-react && yarn build:app-angular && yarn copy:index",
+    "build:app-react": "yarn workspace al-app-react build --base=/react --outDir ../../dist/react",
+    "build:all": "yarn build && yarn build:storybook-web-components && yarn build:storybook-react && yarn build:app-angular && yarn build:app-react && yarn copy:index",
     "copy:index": "cp ./index.html ./dist/index.html"
   }
 }
