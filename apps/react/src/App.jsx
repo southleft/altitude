@@ -11,7 +11,6 @@ const App = () => {
       <Route path="/" element={<Layout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route index element={<JobBoard />} />
-        <Route path="/job-board" element={<JobBoard />} />
         <Route path="*" element={<NotMatch />} />
       </Route>
     </Routes>

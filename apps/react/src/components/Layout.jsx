@@ -23,7 +23,7 @@ export default function Dashboard({ children }) {
         <div className="al-l-dashboard__sidebar">
           <slot name="sidebar">
             <div className="al-l-dashboard__sidebar-logo">
-              <NavLink to={"/dashboard"}><img src="images/logo.svg" alt="logo" /></NavLink>
+              <NavLink to={"/"}><img src="images/logo.svg" alt="logo" /></NavLink>
               <ALDivider></ALDivider>
             </div>
             <ALMenu className="al-l-dashboard__sidebar-menu">
@@ -34,7 +34,7 @@ export default function Dashboard({ children }) {
                 </ALMenuItem>
               )}
               </NavLink>
-              <NavLink to={'/job-board'} className="al-l-dashboard__menu-link--header">
+              <NavLink to={'/'} className="al-l-dashboard__menu-link--header">
                 {({ isActive }) => (
                   <ALMenuItem isHeader="true" isSelected={isActive}><ALIconList></ALIconList>Job Board</ALMenuItem>
                 )}
