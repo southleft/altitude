@@ -360,7 +360,6 @@ export class ALDatePicker extends ALElement {
    * 5. Dispatches a 'dateChanged' event with the updated value
    */
   handleOnChangeDate(e: CustomEvent) {
-    console.log(e.detail.value);
     this.selectedDate = e.detail.value; /* 1 */
     this.rawDateValue = e.detail.rawDate; /* 2 */
     this.value = this.selectedDate; /* 3 */

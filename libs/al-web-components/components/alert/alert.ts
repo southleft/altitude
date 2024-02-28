@@ -141,7 +141,6 @@ export class ALAlert extends ALElement {
   public close() {
     /* 1 */
     this.isActive = false;
-    console.log("active? ", this.isActive)
 
     /* 2 */
     this.dispatch({
