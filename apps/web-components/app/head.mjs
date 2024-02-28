@@ -16,7 +16,7 @@ export default function Head(state) {
       <link rel="icon" href="/_public/favicon.svg">
       <meta name="description" content="The HTML first full stack web framework.">
       <script>window.alAutoRegistry = true;</script>
-      <link rel="stylesheet" href="/_public/head.css">
+      <link rel="stylesheet" href="/_public/browser/head.css">
     </head>
 `
 }

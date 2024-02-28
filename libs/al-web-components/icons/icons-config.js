@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const { scale } = require('scale-that-svg');
-const webfontsGenerator = require('webfonts-generator');
+const webfontsGenerator = require('@vusion/webfonts-generator');
 const DatauriParser = require('datauri/parser');
 
 // Directory names
