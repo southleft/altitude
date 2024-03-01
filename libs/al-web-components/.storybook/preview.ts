@@ -22,6 +22,8 @@ globalThis.alAutoRegistry = true;
 import headStyles from '../styles/head.scss';
 const headStyleElement = document.createElement('style');
 headStyleElement.innerHTML = headStyles;
+headStyleElement.setAttribute('type', 'text/css');
+headStyleElement.setAttribute('id', 'al-theme-sheet');
 document.head.appendChild(headStyleElement);
 
 /*

@@ -28,23 +28,6 @@ export interface ALEvent extends Event {
  * A base element.
  */
 export class ALElement extends LitElement {
-
-  connectedCallback(): void {
-    super.connectedCallback();
-    // If the theme sheet is not available globally, create it
-    if (!globalThis.hasOwnProperty('_AL_THEME_SHEET')) {
-      const themeSheet = document.documentElement.querySelector('style#AL-THEME-SHEET');
-      // Make the theme sheet available globally
-      (globalThis as any)._AL_THEME_SHEET = new CSSStyleSheet();
-      if (themeSheet) {
-        (globalThis as any)._AL_THEME_SHEET.replaceSync(themeSheet.textContent);
-      } else {
-        console.warn('style#AL-THEME-SHEET not found');
-      }
-    }
-    // Adopt the theme sheet
-    this.shadowRoot.adoptedStyleSheets = [...this.shadowRoot.adoptedStyleSheets, (globalThis as any)._AL_THEME_SHEET];
-  }
   /**
    * Append to the class name. Used for passing in utility classes
    */
@@ -103,6 +86,42 @@ export class ALElement extends LitElement {
     const event = new CustomEvent(eventName, options);
     this.dispatchEvent(event);
     return event;
+  }
+
+  /**
+   * Get the global styles
+   */
+  getGlobalStyles() {
+    const themeGlobal = `__AL__THEME_SHEET`;
+    const themeSheetId = 'al-theme-sheet';
+    // If the theme sheet is not available globally, create it from the themeSheetId
+    if (!globalThis.hasOwnProperty(themeGlobal)) {
+      const themeSheet = document.documentElement.querySelector(`style#${themeSheetId}`);
+      // Make the theme sheet available globally
+      (globalThis as any)[themeGlobal] = new CSSStyleSheet();
+      if (themeSheet) {
+        // Remove any custom properties or imports from the theme sheet
+        // This is to prevent the theme sheet from overriding the custom properties
+        // that are set in the mounted component
+        const regex = /(@import\surl\(.+\);|(--[\w-]+:[^;]+;))/g;
+        const themeSheetContent = themeSheet.textContent;
+        const cleanedThemeSheetContent = themeSheetContent.replace(regex, '');
+        (globalThis as any)[themeGlobal].replaceSync(cleanedThemeSheetContent);
+        console.log('themeGlobal', (globalThis as any)[themeGlobal]);
+      } else {
+        console.error(`Altitude style#${themeSheetId} not found`);
+      }
+    }
+    return (globalThis as any)[themeGlobal]
+  }
+
+  /**
+   * Lifecycle connected callback
+   */
+  connectedCallback(): void {
+    super.connectedCallback();
+    // Adopt the theme sheet
+    this.shadowRoot.adoptedStyleSheets = [...this.shadowRoot.adoptedStyleSheets, this.getGlobalStyles()];
   }
 
   /**
