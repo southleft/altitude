@@ -28,6 +28,23 @@ export interface ALEvent extends Event {
  * A base element.
  */
 export class ALElement extends LitElement {
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    // If the theme sheet is not available globally, create it
+    if (!globalThis.hasOwnProperty('_AL_THEME_SHEET')) {
+      const themeSheet = document.documentElement.querySelector('style#AL-THEME-SHEET');
+      // Make the theme sheet available globally
+      (globalThis as any)._AL_THEME_SHEET = new CSSStyleSheet();
+      if (themeSheet) {
+        (globalThis as any)._AL_THEME_SHEET.replaceSync(themeSheet.textContent);
+      } else {
+        console.warn('style#AL-THEME-SHEET not found');
+      }
+    }
+    // Adopt the theme sheet
+    this.shadowRoot.adoptedStyleSheets = [...this.shadowRoot.adoptedStyleSheets, (globalThis as any)._AL_THEME_SHEET];
+  }
   /**
    * Append to the class name. Used for passing in utility classes
    */
