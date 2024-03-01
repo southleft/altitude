@@ -54,6 +54,14 @@ export class ALMenu extends ALElement {
   accessor label: string = 'Menu';
 
   /**
+   * Indent group items attribute
+   * **true** - Applies padding to left align the text on group Menu Items with the text of the group Header
+   * **false** - Does not apply extra padding
+   */
+  @property({ type: Boolean })
+  accessor indentGroupItems: boolean;
+
+  /**
    * Is set to true when the total height of items in the menu is greater than the menu's height attribute
    * - **true** Displays a scrollbar to handle vertical overflow
    */
@@ -151,9 +159,10 @@ export class ALMenu extends ALElement {
    * - Assign the item the current group id
    * - Apply the item a unique id
    * - Add this unique id to the aria-controls attribute for the group's expand control
-   * 8. If the item's Group Header is expanded: assign its index and increment the valid item count
-   * 9. When the next item is not a header, remove the stored Group Header
-   * 10. If the item is not a Header or part of a group, assign its index and increment the valid item count
+   * 8. If required, apply padding to align the items's text with its Header
+   * 9. If the item's Group Header is expanded: assign its index and increment the valid item count
+   * 10. When the next item is not a header, remove the stored Group Header
+   * 11. If the item is not a Header or part of a group, assign its index and increment the valid item count
    */
   syncHeadersWithItems() {
     let groupHeader: ALMenuItem;
@@ -187,8 +196,12 @@ export class ALMenu extends ALElement {
           item.groupId = groupId;
           item.id = `group-${groupId}-item-${i}`;
           groupHeader.ariaControls += ` ${item.id}`;
+          /* 8 */
+          if (this.indentGroupItems) {
+            this.setIndentation(groupHeader, item);
+          }
         }
-        /* 8 */
+        /* 9 */
         if (groupHeader.isExpanded) {
           item.idx = this.validItemCount;
           this.validItemCount++;
@@ -196,16 +209,31 @@ export class ALMenu extends ALElement {
         } else {
           item.isHidden = true;
         }
-        /* 9 */
+        /* 10 */
         if (nextItem?.isHeader) {
           groupHeader = null;
         }
       } else {
-        /* 10 */
+        /* 11 */
         item.idx = this.validItemCount;
         this.validItemCount++;
       }
     });
+  }
+
+  /**
+   * Dynamically set inline start padding on child menu items
+   * 1. Reset the padding to 0
+   * 2. If the Group Header has prefix content, add padding to account for prefix content width
+   * 3. If there is no prefix content, set the padding to the default width
+   */
+   async setIndentation(currentHeader: ALMenuItem, item: ALMenuItem) {
+    item.indentation = 0; /* 1 */
+    if (currentHeader.slotNotEmpty('before')) { 
+      item.indentation = 48; /* 2 */
+    } else {
+      item.indentation = 24; /* 3 */
+    }
   }
 
   /**

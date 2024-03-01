@@ -16,8 +16,9 @@
     "build:app-angular": "yarn workspace al-app-angular build --output-path ../../dist/angular --base-href /angular/browser/",
     "build:app-react": "yarn workspace al-app-react build --base=/react --outDir ../../dist/react",
     "build:app-svelte": "yarn workspace al-app-svelte build --base=/svelte --outDir ../../dist/svelte",
-    "build:all": "yarn build && yarn build:storybook-web-components && yarn build:storybook-react && yarn build:app-angular && yarn build:app-react && yarn build:app-svelte && yarn copy:index",
+    "build:all": "yarn build && yarn build:storybook-web-components && yarn build:storybook-react && yarn build:app-angular && yarn build:app-react && yarn build:app-svelte && yarn copy:index && yarn copy:components",
     "copy:index": "cp ./index.html ./dist/index.html",
-    "dev:index": "yarn build:all && npx serve ./dist"
+    "copy:components": "cp -r ./libs/al-web-components/dist/ ./dist/al-web-components/",
+    "dev:index": "npx serve ./dist"
   }
 }

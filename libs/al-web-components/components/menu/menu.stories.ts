@@ -87,6 +87,18 @@ const TemplateWithGroups = (args) => html`
   </al-menu>
 `;
 
+const TemplateWithGroupIndentation = (args) => html`
+  <al-menu ${spread(args)} ?indentGroupItems=${true} data-testid="menu">
+    <al-menu-item ?isHeader=${true} ?isExpanded=${true} ?isExpandableHeader=${true} data-testid="menu-item-01">
+      <al-icon-document slot="before"></al-icon-document>
+      Menu Item
+    </al-menu-item>
+    <al-menu-item data-testid="menu-item-02">Menu Item</al-menu-item>
+    <al-menu-item data-testid="menu-item-03">Menu Item</al-menu-item>
+    <al-menu-item data-testid="menu-item-04">Menu Item</al-menu-item>
+  </al-menu>
+`;
+
 const TemplateWithHrefs = (args) => html`
   <al-menu ${spread(args)} data-testid="menu">
     <al-menu-item href="#" target="_blank" ?isHeader=${true} data-testid="menu-item-01">
@@ -122,6 +134,9 @@ export const WithGroupsWithScroll = TemplateWithGroups.bind({});
 WithGroupsWithScroll.args = {
   height: '160'
 };
+
+export const WithGroupIndentation = TemplateWithGroupIndentation.bind({});
+WithGroupIndentation.args = {};
 
 export const WithHrefs = TemplateWithHrefs.bind({});
 WithHrefs.args = {};

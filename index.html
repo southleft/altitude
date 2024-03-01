@@ -2,21 +2,111 @@
 <html>
 <head>
     <title>Altitude</title>
+    <link rel="icon" href="favicon.ico">
+    <script>
+      globalThis.alAutoRegistry = true;
+    </script>
+    <script type="module">
+      import setGlobalStyles from '/al-web-components/directives/setGlobalStyles.js';
+      setGlobalStyles();
+    </script>
+    <script type="module" src="al-web-components/components/layout/layout.js"></script>
+    <script type="module" src="al-web-components/components/layout-container/layout-container.js"></script>
+    <script type="module" src="al-web-components/components/divider/divider.js"></script>
+    <script type="module" src="al-web-components/components/header/header.js"></script>
+    <script type="module" src="al-web-components/components/heading/heading.js"></script>
+    <script type="module" src="al-web-components/components/menu/menu.js"></script>
+    <script type="module" src="al-web-components/components/menu-item/menu-item.js"></script>
+    <script type="module" src="al-web-components/components/list/list.js"></script>
+    <script type="module" src="al-web-components/components/menu-item/menu-item.js"></script>
+    <script type="module" src="al-web-components/components/icon/icons/document.js"></script>
+    <script type="module" src="al-web-components/components/icon/icons/star.js"></script>
+    <script type="module" src="al-web-components/components/icon/icons/layout-masonry.js"></script>
+    <style type="text/css">
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      img {
+        width: 200px;
+      }
+      .al-l-index__logo {
+        display: flex;
+        align-items: center;
+        padding: var(--al-theme-space);
+        min-height: var(--al-theme-layout-height-header);
+      }
+      .al-l-index__sidebar {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        z-index: var(--al-z-index-500);
+        background-color: var(--al-theme-color-background-default);
+        box-shadow: var(--al-theme-box-shadow);
+      }
+      .al-l-index__body {
+        padding-block-start: var(--al-theme-space);
+      }
+      @media all and (max-width: 768px) {
+        .al-l-index__sidebar {
+          display: none;
+        }
+      }
+      @media all and (min-width: 769px) {
+        .al-l-index__header {
+          visibility: hidden;
+          height: 80px;
+        }
+      }
+    </style>
 </head>
 <body>
-    <h1>Altitude URLs</h1>
-    <ul>
-      <li><a href="https://zeroheight.com/809ab055e">ZeroHeight</a></li>
-      <li>Storybook</li>
-      <ul>
-        <li><a href="/storybook/web-components">Web Components</a></li>
-        <li><a href="/storybook/react">React Wrappers</a></li>
-      </ul>
-      <li>Apps</li>
-      <ul>
-        <li><a href="/angular/browser">Angular</a></li>
-        <li><a href="/react">React</a></li>
-      </ul>
-    </ul>
+  <main>
+    <al-layout variant="sidebar-left" gap="none">
+    <div class="al-l-index__sidebar">
+      <div class="al-l-index__logo">
+        <img src="storybook/web-components/images/logo.svg" alt="Altitude Logo" />
+      </div>
+      <al-divider></al-divider>
+    </div>
+    <div class="al-l-index__content">
+      <div class="al-l-index__header">
+        <al-header>
+          <img src="storybook/web-components/images/logo.svg" alt="Altitude Logo" />
+        </al-header>
+      </div>
+      <div class="al-l-index__body">
+        <al-layout-container>
+          <div class="al-u-gap">
+            <al-heading variant="md" tagName="h1">Contents</al-heading>
+            <al-menu variant="simple" indentGroupItems="true">
+              <al-menu-item isHeader="true" isExpandableHeader="true" isExpanded="true">
+                <al-icon-document slot="before"></al-icon-document>
+                Documentation
+              </al-menu-item>
+              <al-menu-item href="https://zeroheight.com/809ab055e">ZeroHeight</al-menu-item>
+              <al-menu-item isHeader="true" isExpandableHeader="true" isExpanded="true">
+                <al-icon-star slot="before"></al-icon-star>
+                Storybook
+              </al-menu-item>
+              <al-menu-item href="/storybook/web-components">Web Components</al-menu-item>
+              <al-menu-item href="/storybook/react">React Wrappers</al-menu-item>
+              <al-menu-item isHeader="true" isExpandableHeader="true" isExpanded="true">
+                <al-icon-layout-masonry slot="before"></al-icon-layout-masonry>
+                Demos
+              </al-menu-item>
+              <al-menu-item href="/angular/browser">Angular</al-menu-item>
+              <al-menu-item href="/react">React</al-menu-item>
+            </al-menu>
+          </div>  
+        </al-layout-container>
+      </div>
+    </div>
+  </al-layout>
+  </main>
 </body>
 </html>

@@ -96,7 +96,7 @@ export class ALElement extends LitElement {
     const themeSheetId = 'al-theme-sheet';
     // If the theme sheet is not available globally, create it from the themeSheetId
     if (!globalThis.hasOwnProperty(themeGlobal)) {
-      const themeSheet = document.documentElement.querySelector(`style#${themeSheetId}`);
+      const themeSheet = document.documentElement.querySelector(`style#${themeSheetId}`) || document.querySelector(`#${themeSheetId}`);
       // Make the theme sheet available globally
       (globalThis as any)[themeGlobal] = new CSSStyleSheet();
       if (themeSheet) {
