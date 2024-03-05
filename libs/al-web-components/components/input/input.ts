@@ -32,7 +32,7 @@ export class ALInput extends ALElement {
 
   /**
    * Type variants
-   * - Specifies the type <input> element to display
+   * - Specifies the type input element to display
    * - **text** renders a standar text input
    * - **email** renders a text input specifically for an email format
    * - **number** renders an input for number values only
@@ -101,28 +101,28 @@ export class ALInput extends ALElement {
 
   /**
    * Label attribute
-   * - Specifies what content to enter within the <input> element
+   * - Specifies what content to enter within the input element
    */
   @property()
   accessor label: string = 'Label';
 
   /**
    * Placeholder attribute
-   * - Specifies a short hint that describes the expected value of an <input> element
+   * - Specifies a short hint that describes the expected value of an input element
    */
   @property()
   accessor placeholder: string;
 
   /**
    * Name attribute
-   * - Specifies the name of an <input> element
+   * - Specifies the name of an input element
    */
   @property()
   accessor name: string;
 
   /**
    * Value attribute
-   * - Specifies the value of an <input> element
+   * - Specifies the value of an input element
    */
   @property()
   accessor value: string;
@@ -157,14 +157,14 @@ export class ALInput extends ALElement {
 
   /**
    * Min length
-   * - Specifies the minimum number of characters required in an <input> element
+   * - Specifies the minimum number of characters required in an input element
    */
   @property({ type: Number })
   accessor minLength: number;
 
   /**
    * Max length
-   * - Specifies the maximum number of characters required in an <input> element
+   * - Specifies the maximum number of characters required in an input element
    */
   @property({ type: Number })
   accessor maxLength: number;
@@ -178,21 +178,21 @@ export class ALInput extends ALElement {
 
   /**
    * Minimum value
-   * - Specifies a minimum value for an <input> element
+   * - Specifies a minimum value for an input element
    */
   @property({ type: Number })
   accessor min: number;
 
   /**
    * Maximum value
-   * - Specifies a maximum value for an <input> element
+   * - Specifies a maximum value for an input element
    */
   @property({ type: Number })
   accessor max: number;
 
   /**
    * Autocomplete property
-   * - Specifies whether an <input> element should have autocomplete enabled
+   * - Specifies whether an input element should have autocomplete enabled
    */
   @property()
   accessor autoComplete: 'on' | 'off';

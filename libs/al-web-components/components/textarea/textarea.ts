@@ -102,28 +102,28 @@ export class ALTextarea extends ALElement {
 
   /**
    * Label attribute
-   * - Specifies what content to enter within the <input> element
+   * - Specifies what content to enter within the input element
    */
   @property()
   accessor label: string = 'Label';
 
   /**
    * Placeholder attribute
-   * - Specifies a short hint that describes the expected value of an <input> element
+   * - Specifies a short hint that describes the expected value of an input element
    */
   @property()
   accessor placeholder: string;
 
   /**
    * Name attribute
-   * - Specifies the name of an <input> element
+   * - Specifies the name of an input element
    */
   @property()
   accessor name: string;
 
   /**
    * Value attribute
-   * - Specifies the value of an <input> element
+   * - Specifies the value of an input element
    */
   @property()
   accessor value: string;
@@ -158,14 +158,14 @@ export class ALTextarea extends ALElement {
 
   /**
    * Min length
-   * - Specifies the minimum number of characters required in an <input> element
+   * - Specifies the minimum number of characters required in an input element
    */
   @property({ type: Number })
   accessor minLength: number;
 
   /**
    * Max length
-   * - Specifies the maximum number of characters required in an <input> element
+   * - Specifies the maximum number of characters required in an input element
    */
   @property({ type: Number })
   accessor maxLength: number;

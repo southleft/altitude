@@ -84,7 +84,7 @@ export class ALDateTimePicker extends ALElement {
 
   /**
    * Placeholder attribute
-   * - Specifies a short hint that describes the expected value of an <input> element
+   * - Specifies a short hint that describes the expected value of an input element
    */
   @property()
   accessor placeholder: string;

@@ -34,7 +34,7 @@ module.exports = (env) => {
     let entryObj = {
       ...components,
       theme: {
-        import: path.resolve(__dirname, `./styles/head.scss`),
+        import: path.resolve(__dirname, `./styles/main.scss`),
         // filename: 'theme.js'
       },
       _register: './directives/register.ts',
@@ -83,16 +83,16 @@ module.exports = (env) => {
     module: {
       rules: [
         {
-          test: /head\.scss$/,
+          test: /main\.scss$/,
           use: ['sass-loader'],
           type: 'asset/resource',
           generator: {
-            filename: `css/head.css`
+            filename: `css/main.css`
           }
         },
         {
           test: /\.scss$/,
-          exclude: [/head\.scss$/],
+          exclude: [/main\.scss$/],
           use: [
             'css-loader',
             {

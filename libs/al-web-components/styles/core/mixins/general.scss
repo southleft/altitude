@@ -1,0 +1,210 @@
+/* ------------------------------------*\
+  #GENERAL MIXINS
+\*------------------------------------ */
+
+/**
+ * Size function
+ * 1. The size function multiplies a provided value ($number) by the base sizing unit (--size-base-unit)
+ * 2. $number should be limited to integers (e.g. 3) or half integers (e.g. 1.5)
+ */
+@function size($number) {
+  @return calc(var(--al-base-space) * #{$number});
+}
+
+/* ------------------------------------*\
+  #VISIBILITY
+\*------------------------------------ */
+
+/**
+ * Visually hidden from display
+ */
+@mixin al-visually-hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+/* ------------------------------------*\
+  #FORMS
+\*------------------------------------ */
+
+/**
+ * Label
+ */
+@mixin al-label() {
+  @include al-theme-typography-body-md;
+  color: var(--al-theme-color-content-default);
+  display: block;
+  transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+
+  /**
+   * Disabled state
+   */
+  .al-is-disabled & {
+    color: var(--al-theme-color-content-default);
+    opacity: var(--al-theme-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  /**
+   * Visually hide the label
+   */
+  .al-has-hidden-label & {
+    @include al-visually-hidden;
+  }
+}
+
+/**
+ * Input
+ */
+@mixin al-input() {
+  @include al-theme-typography-body-md;
+  width: 100%;
+  min-height: size(6);
+  appearance: none;
+  outline: none;
+  padding: size(1.375) var(--al-theme-space);
+  border-width: var(--al-theme-border-width);
+  border-style: solid;
+  border-color: var(--al-theme-color-border-default);
+  border-radius: var(--al-theme-border-radius);
+  color: var(--al-theme-color-content-default);
+  background-color: var(--al-theme-color-background-transparent-default);
+  transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing), color var(--al-theme-animation-duration) var(--al-theme-animation-timing), border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing), box-shadow var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+
+  ~ *  {
+    transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+    color: var(--al-theme-color-content-default);
+  }
+
+  &:read-only {
+    cursor: pointer;
+  }
+
+  /**
+   * Hover state
+   * - Prevents hover while others states are present
+   */
+  &:hover:not(:active, :focus, :focus-visible, :disabled) {
+    border-color: var(--al-theme-color-border-default-strong);
+  }
+
+  /**
+   * Active, focus, and focus-visible states
+   * - Uses box-shadow to make the border thicker to prevent shifting of content
+   * - Prevents any of the state styles while read-only is applied
+   */
+  &:active,
+  &:focus,
+  &:focus-visible {
+    border-color: var(--al-theme-color-border-accent-default);
+    box-shadow: 0px 0px 0px 1px var(--al-theme-color-border-accent-default);
+  }
+
+  /**
+   * Disabled state
+   */
+  &:disabled {
+    cursor: not-allowed;
+    opacity: var(--al-theme-opacity-disabled);
+    color: var(--al-theme-color-content-default);
+    border-color: var(--al-theme-color-content-default);
+
+    ~ * {
+      color: var(--al-theme-color-content-default);
+      opacity: var(--al-theme-opacity-disabled);
+    }
+  }
+
+  /**
+   * Placeholder text
+   */
+  &::placeholder {
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  /**
+   * Error state
+   */
+  .al-is-error &,
+  .al-is-error &:hover:not(:active, :focus, :focus-visible, :disabled, :read-only) {
+    border-color: var(--al-theme-color-border-danger-default);
+    box-shadow: 0px 0px 0px 1px var(--al-theme-color-border-danger-default);
+  }
+}
+
+/* ------------------------------------*\
+  #LINK
+\*------------------------------------ */
+
+/**
+ * Styles to override button styling
+ */
+@mixin al-reset-button() {
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  text-transform: none;
+}
+
+/**
+ * Link styles
+ */
+@mixin al-link() {
+  @include al-reset-button;
+  @include al-theme-typography-body-md;
+  transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing), background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  color: var(--al-theme-color-content-accent-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--al-theme-space-xs);
+  border-radius: var(--al-theme-border-radius-xs);
+  text-decoration: var(--al-link-text-decoration, underline);
+  cursor: pointer;
+
+  /**
+   * Hover state
+   */
+  &:hover:not(:active, .al-is-disabled) {
+    color: var(--al-theme-color-content-accent-stronger);
+  }
+
+  /**
+   * Focus visible state
+   */
+  &:focus-visible {
+    @include al-focus;
+  }
+
+  /**
+   * Disabled state
+   */
+  &.al-is-disabled {
+    cursor: not-allowed;
+    opacity: var(--al-theme-opacity-disabled);
+  }
+}
+
+/* ------------------------------------*\
+  #FOCUS
+\*------------------------------------ */
+
+/**
+ * Visible focus outline for elements
+ */
+@mixin al-focus() {
+  outline: var(--al-theme-border-width-md) solid var(--al-theme-color-focus-ring, var(--al-theme-color-border-accent-default));
+  outline-offset: var(--al-focus-outline-offset, var(--al-theme-border-width-md));
+}
+
+@mixin al-focus-inset() {
+  outline: var(--al-theme-border-width-md) solid var(--al-theme-color-focus-ring, var(--al-theme-color-border-accent-default));
+  outline-offset: calc(#{var(--al-theme-border-width-md)} * -1);
+}

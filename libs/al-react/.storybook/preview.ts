@@ -3,12 +3,14 @@ import type { Preview } from '@storybook/react-webpack5';
 /*
  * Head styles
  * - Allows for custom styles of the story iframe window
- * - Creating a style element for headStyles and appending it to the document head
+ * - Creating a style element for mainStyles and appending it to the document head
  */
-import headStyles from '../../al-web-components/styles/head.scss';
-const headStyleElement = document.createElement('style');
-headStyleElement.innerHTML = headStyles;
-document.head.appendChild(headStyleElement);
+import mainStyles from '../../al-web-components/styles/main.scss';
+const mainStyleElement = document.createElement('style');
+mainStyleElement.innerHTML = mainStyles;
+mainStyleElement.setAttribute('type', 'text/css');
+mainStyleElement.setAttribute('id', 'al-theme-sheet');
+document.head.appendChild(mainStyleElement);
 
 /*
  * Icon font styles
