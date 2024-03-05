@@ -16,6 +16,7 @@
     "build:app-angular": "yarn workspace al-app-angular build --output-path ../../dist/angular --base-href /angular/browser/",
     "build:app-react": "yarn workspace al-app-react build --base=/react --outDir ../../dist/react",
     "build:all": "yarn build && yarn build:storybook-web-components && yarn build:storybook-react && yarn build:app-angular && yarn build:app-react && yarn copy:index",
-    "copy:index": "cp ./index.html ./dist/index.html"
+    "copy:index": "cp ./index.html ./dist/index.html",
+    "dev:index": "yarn build:all && npx serve ./dist"
   }
 }
