@@ -1,6 +1,7 @@
 const path = require('path');
 const glob = require('glob');
 const fs = require('fs');
+const purgecss = require('@fullhuman/postcss-purgecss')
 const CopyPlugin = require('copy-webpack-plugin');
 
 const components = glob.sync('./components/**/*.ts').reduce((acc, file) => {
@@ -92,7 +93,27 @@ module.exports = (env) => {
         {
           test: /\.scss$/,
           exclude: [/main\.scss$/],
-          use: ['css-loader', 'sass-loader'],
+          use: [
+            'css-loader',
+            {
+              loader: "postcss-loader",
+              options: {
+                postcssOptions: {
+                  plugins: [
+                    purgecss({
+                      contentFunction: (sourceInputFileName) => {
+                        if (/component\.scss$/.test(sourceInputFileName))
+                          return [sourceInputFileName.replace(/scss$/, 'ts')]
+                        else
+                          return ['./components/**/*.ts']
+                      },
+                    }),
+                  ],
+                },
+              },
+            },
+            'sass-loader'
+          ],
         },
         {
           test: /\.css$/,
