@@ -11,7 +11,7 @@
  * Link
  */
 .al-c-link {
-  @include link-styles;
+  @include al-link;
   --al-icon-height: #{var(--al-theme-icon-md)};
   --al-icon-width: #{var(--al-theme-icon-md)};
 }
@@ -68,7 +68,7 @@
    * Menu item link focus outline with rounded borders
    */
   &::before {
-    @include focus;
+    @include al-focus;
     display: block;
     position: absolute;
     content: '';

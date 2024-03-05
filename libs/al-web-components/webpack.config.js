@@ -1,6 +1,7 @@
 const path = require('path');
 const glob = require('glob');
 const fs = require('fs');
+const purgecss = require('@fullhuman/postcss-purgecss')
 const CopyPlugin = require('copy-webpack-plugin');
 
 const components = glob.sync('./components/**/*.ts').reduce((acc, file) => {
@@ -33,7 +34,7 @@ module.exports = (env) => {
     let entryObj = {
       ...components,
       theme: {
-        import: path.resolve(__dirname, `./styles/head.scss`),
+        import: path.resolve(__dirname, `./styles/main.scss`),
         // filename: 'theme.js'
       },
       _register: './directives/register.ts',
@@ -82,17 +83,37 @@ module.exports = (env) => {
     module: {
       rules: [
         {
-          test: /head\.scss$/,
+          test: /main\.scss$/,
           use: ['sass-loader'],
           type: 'asset/resource',
           generator: {
-            filename: `css/head.css`
+            filename: `css/main.css`
           }
         },
         {
           test: /\.scss$/,
-          exclude: [/head\.scss$/],
-          use: ['css-loader', 'sass-loader'],
+          exclude: [/main\.scss$/],
+          use: [
+            'css-loader',
+            {
+              loader: "postcss-loader",
+              options: {
+                postcssOptions: {
+                  plugins: [
+                    purgecss({
+                      contentFunction: (sourceInputFileName) => {
+                        if (/component\.scss$/.test(sourceInputFileName))
+                          return [sourceInputFileName.replace(/scss$/, 'ts')]
+                        else
+                          return ['./components/**/*.ts']
+                      },
+                    }),
+                  ],
+                },
+              },
+            },
+            'sass-loader'
+          ],
         },
         {
           test: /\.css$/,

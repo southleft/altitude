@@ -34,10 +34,10 @@ const config: StorybookConfig = {
   staticDirs: ['./static'],
 
   // Other Storybook options
-  webpackFinal: async (config, { configType }) => {
+  webpackFinal: async (config) => {
     // Add SCSS support
     config.module.rules.push({
-      test: /\.scss/,
+      test: /\.scss$/,
       use: [
         'css-loader',
         { loader: 'sass-loader' }

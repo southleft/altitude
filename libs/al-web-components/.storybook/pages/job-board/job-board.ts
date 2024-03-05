@@ -47,6 +47,11 @@ export class ALJobBoard extends LitElement {
     'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
   ];
 
+  firstUpdated() {
+    const body = document.querySelector('body') as HTMLBodyElement;
+    body.classList.add('al-u-is-overflow-hidden');
+  }
+
   render() {
     const componentClassNames = classMap({
       'al-l-job-board': true,

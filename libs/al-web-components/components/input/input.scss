@@ -31,7 +31,7 @@
  * - The actual input element of the input
  */
 .al-c-input__input {
-  @include input-styles;
+  @include al-input;
   padding-inline-start: var(--al-input-padding-start, var(--al-theme-space));
   padding-inline-end: var(--al-input-padding-end, var(--al-theme-space));
 
@@ -59,7 +59,7 @@
  * - The floating label that appears inside of the input field
  */
 .al-c-input__label {
-  @include label-styles;
+  @include al-label;
   position: absolute;
   margin: auto;
   inset-block-start: 0;

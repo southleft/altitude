@@ -89,6 +89,42 @@ export class ALElement extends LitElement {
   }
 
   /**
+   * Get the global styles
+   */
+  getGlobalStyles() {
+    const themeGlobal = `__AL__THEME_SHEET`;
+    const themeSheetId = 'al-theme-sheet';
+    // If the theme sheet is not available globally, create it from the themeSheetId
+    if (!globalThis.hasOwnProperty(themeGlobal)) {
+      const themeSheet = document.documentElement.querySelector(`style#${themeSheetId}`);
+      // Make the theme sheet available globally
+      (globalThis as any)[themeGlobal] = new CSSStyleSheet();
+      if (themeSheet) {
+        // Remove any custom properties or imports from the theme sheet
+        // This is to prevent the theme sheet from overriding the custom properties
+        // that are set in the mounted component
+        const regex = /(@import\surl\(.+\);|(--[\w-]+:[^;]+;))/g;
+        const themeSheetContent = themeSheet.textContent;
+        const cleanedThemeSheetContent = themeSheetContent.replace(regex, '');
+        (globalThis as any)[themeGlobal].replaceSync(cleanedThemeSheetContent);
+        console.log('themeGlobal', (globalThis as any)[themeGlobal]);
+      } else {
+        console.error(`Altitude style#${themeSheetId} not found`);
+      }
+    }
+    return (globalThis as any)[themeGlobal]
+  }
+
+  /**
+   * Lifecycle connected callback
+   */
+  connectedCallback(): void {
+    super.connectedCallback();
+    // Adopt the theme sheet
+    this.shadowRoot.adoptedStyleSheets = [...this.shadowRoot.adoptedStyleSheets, this.getGlobalStyles()];
+  }
+
+  /**
    * Example render, should not be used
    */
   render() {
