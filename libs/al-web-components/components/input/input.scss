@@ -1,0 +1,226 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #INPUT
+\*------------------------------------*/
+
+:host {
+  display: contents;
+}
+
+/**
+ * Input
+ */
+.al-c-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-xxs);
+  width: 100%;
+  min-width: max-content;
+}
+
+/**
+ * Input container
+ * - Holds the input element and label
+ */
+.al-c-input__container {
+  position: relative;
+}
+
+/**
+ * Input input
+ * - The actual input element of the input
+ */
+.al-c-input__input {
+  @include al-input;
+  padding-inline-start: var(--al-input-padding-start, var(--al-theme-space));
+  padding-inline-end: var(--al-input-padding-end, var(--al-theme-space));
+
+  /**
+   * Show the placeholder if the label is hidden
+   */
+  .al-has-hidden-label & {
+    &::placeholder {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  /**
+   * Hide the placeholder by default because the label appears in it's place
+   */
+  &::placeholder {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/**
+ * Input label
+ * - The floating label that appears inside of the input field
+ */
+.al-c-input__label {
+  @include al-label;
+  position: absolute;
+  margin: auto;
+  inset-block-start: 0;
+  inset-block-end: 0;
+  inset-inline-start: var(--al-input-padding-start, var(--al-theme-space));
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-xxs);
+  pointer-events:  var(--al-input-label-pointer-events, none); /* Allows hover to work properly */
+
+  /**
+   * If the input is focused or active, position the label above the input
+   */
+  .al-c-input__input:focus:not(:read-only) + &,
+  .al-is-active & {
+    @include al-theme-typography-body-xs;
+    padding: 0 var(--al-theme-space-xxs);
+    background-color: var(--al-input-label-background, var(--al-theme-color-background-default-weak));
+    inset-block-start: calc(#{var(--al-theme-space-sm)} * -1);
+    inset-block-end: auto;
+    inset-inline-start: var(--al-theme-space-sm);
+  }
+
+  /**
+   * A fix for the input border being visible through the label when filled and disabled
+   */
+  .al-c-input__input:disabled + & {
+    opacity: 1;
+
+    /**
+     * Applied the opacity to the text only in the label
+     */
+    span {
+      opacity: var(--al-theme-opacity-disabled);
+    }
+
+    /**
+     * Prevents the input border from showing through the label
+     */
+    &::before {
+      background-color: var(--al-input-label-background, var(--al-theme-color-background-default-weak));
+      content: "";
+      display: block;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+      z-index: -1;
+      width: 100%;
+      height: 80%;
+    }
+  }
+}
+
+/**
+ * Input optional
+ * - The `(Optional)` text that appears in the label if isOptional is true
+ */
+.al-c-input__optional {
+  @include al-theme-typography-body-xs;
+}
+
+/**
+ * Input footer
+ * - The container that holds the field notes and max length
+ */
+.al-c-input__footer {
+  display: flex;
+  gap: var(--al-theme-space);
+}
+
+/**
+ * Input field notes
+ * - The container that holds the field notes
+ */
+.al-c-input__field-notes {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-xxs);
+}
+
+/**
+ * Input slot before and after
+ * - The slots for icons or prefix/suffix text inside the input field
+ */
+.al-c-input__before,
+.al-c-input__after {
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-xxs);
+  position: absolute;
+  inset-block-start: 0;
+  inset-block-end: 0;
+  margin: auto;
+  --al-icon-height: var(--al-theme-icon-md);
+  --al-icon-width: var(--al-theme-icon-md);
+}
+
+.al-c-input__before {
+  pointer-events: var(--al-input-slot-before-pointer-events, none); /* Allows hover to work properly */
+}
+
+.al-c-input__after {
+  pointer-events: var(--al-input-slot-after-pointer-events, none); /* Allows hover to work properly */
+}
+
+/**
+ * Input slot before
+ * - The slot for elements positioned absolutely to the left of the input
+ */
+.al-c-input__before {
+  inset-inline-start: var(--al-theme-space);
+}
+
+/**
+ * Input slot after
+ * - The slot for elements positioned absolutely to the right of the input
+ */
+.al-c-input__after {
+  inset-inline-end: var(--al-theme-space);
+}
+
+/**
+ * Input asterick
+ * - The asterick that displays if the field is required
+ */
+.al-c-input__asterisk {
+  color: var(--al-theme-color-border-danger-default);
+}
+
+/**
+ * Input slots
+ * - Adds spacing between multiple items slotted
+ */
+slot[name="before"],
+slot[name="after"] {
+  display: flex;
+  gap: var(--al-theme-space-xxs);
+}
+
+/**
+ * Input note slotted
+ * 1. Targets field notes that are added via a slot
+ */
+slot[name="field-note"]::slotted(*),
+slot[name="error"]::slotted(*) {
+  /**
+   * Field note with error state
+   * 1. Ensures the error styles are still applied even if a slotted field note does not have ?isError applied
+   */
+  .al-is-error & {
+    --al-field-note-color: var(--al-theme-color-border-danger-default);
+  }
+
+  /**
+   * Field note with disabled state
+   * 1. Ensures the disabled styles are still applied even if a slotted field note does not have ?isDisabled applied
+   */
+  .al-is-disabled & {
+    opacity: var(--al-theme-opacity-disabled);
+  }
+}

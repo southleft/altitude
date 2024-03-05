@@ -1,0 +1,30 @@
+import * as React from 'react';
+import classnames from 'classnames';
+import '!style-loader!css-loader!sass-loader!./{{pascalCase name}}.scss';
+
+/**
+ * Page: AL{{dashCase name}}
+ */
+export interface AL{{pascalCase name}}Props extends React.HTMLAttributes<HTMLDivElement>{
+  /**
+   * CSS class names that can be appended to the component.
+   */
+  styleModifier?: string;
+}
+
+export const AL{{pascalCase name}} = ({
+  styleModifier,
+  ...other
+}: AL{{pascalCase name}}Props) => {
+  const componentClassNames = classnames(
+    'al-l-{{dashCase name}}',
+    styleModifier,
+    {}
+  );
+
+  return (
+    <div className={componentClassNames} {...other}>
+      {children}
+    </div>
+  );
+};

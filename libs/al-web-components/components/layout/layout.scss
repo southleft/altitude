@@ -1,0 +1,71 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #LAYOUT
+\*------------------------------------ */
+
+.al-c-layout {
+  display: grid;
+  gap: var(--al-theme-space);
+  grid-template-columns: repeat(1, 1fr);
+  min-height: 100vh;
+}
+
+/**
+ * Layout gap none
+ * 1. Remove the gap between items
+ */
+.al-c-layout--gap-none {
+  gap: 0;
+}
+
+/**
+ * Layout gap none
+ * 1. Shrink the gap to 8px between items
+ */
+.al-c-layout--gap-sm {
+  gap: var(--al-theme-space-xs);
+}
+
+/**
+ * Layout gap none
+ * 1. Shrink the gap to 24px between items
+ */
+.al-c-layout--gap-lg {
+  gap: var(--al-theme-space-lg);
+}
+
+/**
+ * Layout gap xl
+ * 1. Widen the gap to 32px between items
+ */
+.al-c-layout--gap-xl {
+  gap: var(--al-theme-space-xxl);
+}
+
+/**
+ * Left sidebar layout
+ * 1. Layout that is stacked on small screens and turns into a left sidebar with main
+ * content to the right
+ * 2. The main column stretches the full width minus the sidebar width and gap.
+ *    The sidebar column has a minimum width value (enough to accommodate navigation
+ *    and other sidebar content) but stretches to fit the content placed inside it.
+ */
+.al-c-layout--sidebar-left {
+  @media all and (min-width: $al-breakpoint-md) {
+    grid-template-columns: calc(var(--al-theme-layout-width-sidebar, 40%) - (var(--al-theme-space-xs))) minmax(0, 1fr); /* 2 */
+  }
+}
+
+/**
+ * Right sidebar layout
+ * 1. Layout that is stacked on small screens and turns into a right sidebar with main
+ * content to the left
+ * 2. The main column stretches the full width minus the sidebar width and gap.
+ *    The sidebar column has a minimum width value (enough to accommodate navigation
+ *    and other sidebar content) but stretches to fit the content placed inside it.
+ */
+.al-c-layout--sidebar-right {
+  @media all and (min-width: $al-breakpoint-md) {
+    grid-template-columns: minmax(0, 1fr) calc(var(--al-theme-layout-width-sidebar, 40%) - (var(--al-theme-space-xs))); /* 2 */
+  }
+}

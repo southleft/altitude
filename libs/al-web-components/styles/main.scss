@@ -1,0 +1,19 @@
+@import './tokens';
+@import './core/reset';
+@import './core/variables';
+@import './core/mixins';
+@import './core/base';
+@import './core/utilities';
+
+/* Storybook specific styles */
+.docs-story {
+  color: var(--al-theme-color-content-default);
+  background: var(--al-theme-color-background-default-weak);
+}
+
+.docblock-argstable {
+  ol, ul {
+    list-style-type: inherit;
+    margin-inline-start: var(--al-theme-space-lg);
+  }
+}

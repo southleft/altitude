@@ -1,0 +1,55 @@
+@import '../../../styles/docs';
+/* ------------------------------------*\
+  #TOKEN-CODE
+\*------------------------------------ */
+
+:host {
+  display: contents;
+}
+
+.token-code {
+  white-space: nowrap;
+
+  &:not(.has-disable-copy) {
+    padding: var(--al-theme-space-xxs) var(--al-theme-space-xxs) var(--al-theme-space-xxs) var(--al-theme-space-sm);
+  }
+
+  &.has-disable-copy {
+    user-select: none;
+    cursor: not-allowed;
+  }
+}
+
+.token-code__button {
+  cursor: pointer;
+  border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+  background-color: var(--al-theme-color-background-default-strong);
+  color: var(--al-theme-color-content-default);
+  padding: var(--al-theme-space-xs);
+  margin: 0;
+  border-radius: var(--al-theme-border-radius);
+
+  &:hover {
+    background-color: var(--al-theme-color-background-default-stronger);
+  }
+
+  > * {
+    pointer-events: none;
+  }
+}
+
+.token-code__icon-copy {
+  display: block;
+
+  .is-copied & {
+    display: none;
+  }
+}
+
+.token-code__icon-check {
+  display: none;
+
+  .is-copied & {
+    display: block;
+  }
+}

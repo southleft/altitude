@@ -1,0 +1,225 @@
+/* ------------------------------------*\
+  #TYPOGRAPHY TIER-1 MIXINS
+\*------------------------------------ */
+
+@mixin al-typography-preset-12($responsive: true) {
+  font: var(--al-typography-preset-12);
+}
+
+@mixin al-typography-preset-12-bold {
+  @include al-typography-preset-12();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+
+@mixin al-typography-preset-14($responsive: true) {
+  font: var(--al-typography-preset-14);
+}
+
+@mixin al-typography-preset-14-bold {
+  @include al-typography-preset-14();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+
+@mixin al-typography-preset-16($responsive: true) {
+  font: var(--al-typography-preset-16);
+}
+
+@mixin al-typography-preset-16-bold {
+  @include al-typography-preset-16();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+
+@mixin al-typography-preset-18($responsive: true) {
+  font: var(--al-typography-preset-18);
+}
+
+@mixin al-typography-preset-18-bold {
+  @include al-typography-preset-18();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+
+@mixin al-typography-preset-20($responsive: true) {
+  font: var(--al-typography-preset-20);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-typography-preset-18);
+    }
+  }
+}
+
+@mixin al-typography-preset-20-bold {
+  @include al-typography-preset-20();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+
+@mixin al-typography-preset-24($responsive: true) {
+  font: var(--al-typography-preset-24);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-typography-preset-20);
+    }
+  }
+}
+
+@mixin al-typography-preset-24-bold {
+  @include al-typography-preset-24();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+
+@mixin al-typography-preset-36($responsive: true) {
+  font: var(--al-typography-preset-36);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-typography-preset-24);
+    }
+  }
+}
+
+@mixin al-typography-preset-36-bold {
+  @include al-typography-preset-36();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+
+@mixin al-typography-preset-40($responsive: true) {
+  font: var(--al-typography-preset-40);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-typography-preset-36);
+    }
+  }
+}
+
+@mixin al-typography-preset-40-bold {
+  @include al-typography-preset-40();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+
+@mixin al-typography-preset-44($responsive: true) {
+  font: var(--al-typography-preset-44);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-typography-preset-40);
+    }
+  }
+}
+
+@mixin al-typography-preset-44-bold {
+  @include al-typography-preset-44();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+
+@mixin al-typography-preset-48($responsive: true) {
+  font: var(--al-typography-preset-48);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-typography-preset-44);
+    }
+  }
+}
+
+@mixin al-typography-preset-48-bold {
+  @include al-typography-preset-48();
+  font-weight: var(--al-font-weight-bold) !important;
+}
+
+/* ------------------------------------*\
+  #TYPOGRAPHY TIER-2 MIXINS
+\*------------------------------------ */
+
+/**
+ * Body
+ */
+
+@mixin al-theme-typography-body-xs {
+  @include al-typography-preset-12;
+}
+
+@mixin al-theme-typography-body-xs-bold {
+  @include al-typography-preset-12-bold;
+}
+
+@mixin al-theme-typography-body-sm {
+  @include al-typography-preset-14;
+}
+
+@mixin al-theme-typography-body-sm-bold {
+  @include al-typography-preset-14-bold;
+}
+
+@mixin al-theme-typography-body-md {
+  @include al-typography-preset-16;
+}
+
+@mixin al-theme-typography-body-md-bold {
+  @include al-typography-preset-16-bold;
+}
+
+@mixin al-theme-typography-body-lg {
+  @include al-typography-preset-18;
+}
+
+@mixin al-theme-typography-body-lg-bold {
+  @include al-typography-preset-18-bold;
+}
+
+/**
+ * Heading
+ */
+
+@mixin al-theme-typography-heading-sm {
+  @include al-typography-preset-20;
+}
+
+@mixin al-theme-typography-heading-sm-bold {
+  @include al-typography-preset-20-bold;
+}
+
+@mixin al-theme-typography-heading-md {
+  @include al-typography-preset-24;
+}
+
+@mixin al-theme-typography-heading-md-bold {
+  @include al-typography-preset-24-bold;
+}
+
+@mixin al-theme-typography-heading-lg {
+  @include al-typography-preset-36;
+}
+
+@mixin al-theme-typography-heading-lg-bold {
+  @include al-typography-preset-36-bold;
+}
+
+/**
+ * Display
+ */
+
+@mixin al-theme-typography-display-sm {
+  @include al-typography-preset-40;
+}
+
+@mixin al-theme-typography-display-sm-bold {
+  @include al-typography-preset-40-bold;
+}
+
+@mixin al-theme-typography-display-md {
+  @include al-typography-preset-44;
+}
+
+@mixin al-theme-typography-display-md-bold {
+  @include al-typography-preset-44-bold;
+}
+
+@mixin al-theme-typography-display-lg {
+  @include al-typography-preset-48;
+}
+
+@mixin al-theme-typography-display-lg-bold {
+  @include al-typography-preset-48-bold;
+}

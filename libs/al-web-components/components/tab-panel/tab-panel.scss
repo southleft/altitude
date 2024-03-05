@@ -1,0 +1,34 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #TAB-PANEL
+\*------------------------------------*/
+
+:host {
+  display: contents;
+}
+
+/**
+ * Tab Panel
+ */
+.al-c-tab-panel {
+  @include al-theme-typography-body-md;
+  margin: 0;
+  padding-block-start: var(--al-theme-space);
+  flex-direction: column;
+  gap: var(--al-theme-space);
+  display: none;
+
+  /**
+   * Tab panel with focus visible state
+   */
+   &:focus-visible {
+    @include al-focus-inset;
+  }
+
+  /**
+   * Tab panel active state to show the panel
+   */
+  &.al-is-active {
+    display: flex;
+  }
+}

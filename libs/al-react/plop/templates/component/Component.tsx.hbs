@@ -1,0 +1,17 @@
+import React from 'react';
+import { createComponent } from '@lit/react';
+import { AL{{pascalCase name}} as ALWeb{{pascalCase name}} } from 'al-web-components/dist/components/{{dashCase name}}/{{dashCase name}}';
+import register from 'al-web-components/dist/directives/register';
+import PackageJson from '../../../package.json';
+
+const elementMap = register({
+  elements: [ALWeb{{pascalCase name}}.el, ALWeb{{pascalCase name}}],
+  suffix: PackageJson.version
+});
+
+export const AL{{pascalCase name}} = createComponent({
+  react: React,
+  tagName: elementMap.get(ALWeb{{pascalCase name}}.el),
+  elementClass: ALWeb{{pascalCase name}},
+  events: {}
+});

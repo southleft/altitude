@@ -1,7 +1,17 @@
 # Altitude
-Design System starter kit created by Southleft
 
-## Quickstart
+Design system created by Southleft.com. Find all documentation on [ZeroHeight](https://zeroheight.com/809ab055e).
 
-1. Run `yarn` to install the dependencies
-2. Run `yarn workspace sl-web-components start` or `yarn workspace sl-react start` to start each storybook environment
+## Local setup
+
+1. Run `yarn`
+2. Run `yarn workspace WORKSPACE_NAME start`
+
+## Deployments
+
+### Cloudflare Pages
+
+1. Deployments are automatically triggered when a PR is merged into `main` or when a PR is created from a feature branch.
+2. The deployment is available at `https://altitude.pages.dev`.
+3. Each workspace is built to the root `/dist` folder when running `yarn build:all`.
+

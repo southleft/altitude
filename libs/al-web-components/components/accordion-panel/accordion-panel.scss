@@ -1,0 +1,100 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #ACCORDION-PANEL
+\*------------------------------------ */
+
+/**
+* Accordion panel
+*/
+.al-c-accordion-panel {
+  width: 100%;
+  border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+
+  &.al-is-last {
+    border-color: transparent;
+  }
+}
+
+/**
+* Accordion panel button
+* - Icon rotating on open was causing scrollbars to continuously appear/disapear
+*    during the animation, overflow-inline: hidden; prevents this from happening
+*/
+.al-c-accordion-panel__button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  appearance: none;
+  border: none;
+  padding: var(--al-theme-space);
+  gap: var(--al-theme-space);
+  width: 100%;
+  cursor: pointer;
+  overflow-x: hidden; /* 1 */
+  color: inherit;
+  background: var(--al-theme-color-background-transparent);
+  transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+
+  &:hover:not(:active, :disabled) {
+    background-color: var(--al-theme-color-background-default);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: var(--al-theme-opacity-disabled);
+  }
+}
+
+/**
+ * Accordion panel title
+ */
+.al-c-accordion__title {
+  @include al-theme-typography-body-md;
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space);
+}
+
+/**
+ * Accordion icon
+ */
+.al-c-accordion-panel__icon {
+  transition: transform var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+
+  /**
+   * Accordion icon animation
+   */
+  .al-is-active & {
+    transform: rotate(-180deg);
+  }
+}
+
+/**
+ * Accordion panel body
+ * - Visibility set to hidden so user can't tab inside panel content while closed
+ */
+.al-c-accordion-panel__body {
+  margin: 0;
+  overflow: auto;
+  visibility: hidden; /* 1 */
+  max-height: 0;
+  transition: max-height var(--al-theme-animation-duration) var(--al-theme-animation-timing), visibility var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+
+  /**
+   * Accordion panel body within active accordion panel
+   * - Visibility set to visible so user can tab within panel content when panel is open
+   */
+  .al-is-active & {
+    max-height: 100vh;
+    visibility: visible;
+    overflow: visible;
+  }
+}
+
+/**
+ * Accordion panel body inner
+ */
+.al-c-accordion-panel__body-inner {
+  padding: var(--al-theme-space);
+}

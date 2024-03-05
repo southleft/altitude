@@ -1,0 +1,125 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #DATE-PICKER
+\*------------------------------------ */
+
+:host {
+  display: contents;
+  --al-date-picker-popup-offset-top: #{var(--al-theme-space-xs)};
+  --al-date-picker-popup-offset-bottom: #{var(--al-theme-space-xxxs)};
+}
+
+/**
+ * Date picker
+ */
+.al-c-date-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-xxs);
+  width: 100%;
+  min-width: max-content;
+}
+
+/**
+ * Date picker body
+ */
+.al-c-date-picker__body {
+  position: relative;
+}
+
+/**
+ * Date picker popup
+ */
+.al-c-date-picker__popup {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: calc(100% + var(--al-date-picker-popup-offset-bottom));
+
+  /**
+   * Small screens position the popup to be fullscreen
+   */
+  @media all and (max-width: $al-breakpoint-sm) {
+    &:not([hidden]) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      z-index: var(--al-z-index-400);
+      background-color: var(--al-theme-color-background-transparent-strong);
+      pointer-events: none;
+    }
+  }
+}
+
+/**
+ * Date picker popup - placement top
+ * - If there's no room at the bottom of the browser to open the calendar, open it on top
+ */
+.al-c-date-picker__popup--top {
+  @media all and (min-width: $al-breakpoint-sm) {
+    inset-block-start: auto;
+    inset-block-end: calc(100% + var(--al-date-picker-popup-offset-top));
+  }
+}
+
+/**
+ * Date picker popup - placement left
+ * - If there's no room to the right, open on the left
+ */
+.al-c-date-picker__popup--left {
+  @media all and (min-width: $al-breakpoint-sm) {
+    inset-inline-start: auto;
+    inset-inline-end: 0;
+  }
+}
+
+/**
+ * Date picker popup body
+ * - Popup body, containing the calendar w/ optional time selector list
+ */
+.al-c-date-picker__popup-body {
+  box-shadow: var(--al-theme-box-shadow-md);
+  border-radius: var(--al-theme-border-radius-lg);
+  background: var(--al-theme-color-background-default-strong);
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+/**
+ * Date picker arrow icon
+ */
+.al-c-date-picker__icon-arrow {
+  /**
+   * Active state
+   */
+  .al-is-active-calendar & {
+    transform: rotate(180deg);
+  }
+}
+
+/**
+ * Date picker note slotted
+ * 1. Targets field notes that are added via a slot
+ */
+slot[name="field-note"]::slotted(*),
+slot[name="error"]::slotted(*) {
+  /**
+   * Field note with error state
+   * 1. Ensures the error styles are still applied even if a slotted field note does not have ?isError applied
+   */
+  .al-is-error & {
+    --al-field-note-color: var(--al-theme-color-border-danger-default);
+  }
+
+  /**
+   * Field note with disabled state
+   * 1. Ensures the disabled styles are still applied even if a slotted field note does not have ?isDisabled applied
+   */
+  .al-is-disabled & {
+    opacity: var(--al-theme-opacity-disabled);
+  }
+}

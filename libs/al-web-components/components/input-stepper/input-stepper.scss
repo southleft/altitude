@@ -1,0 +1,123 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #STEPPER
+\*------------------------------------ */
+
+/**
+ * Stepper - Form field that consists of a label, text input, and field note
+ */
+.al-c-input-stepper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--al-theme-space-xxs);
+}
+
+/**
+ * Stepper label
+ */
+.al-c-input-stepper__label {
+  @include al-label;
+}
+
+/**
+ * Stepper body
+ */
+.al-c-input-stepper__body {
+  display: inline-grid;
+  position: relative;
+
+  /**
+   * Pseudo class to resize the input field based on the value
+   */
+  &:after {
+    content: attr(data-value) ' ';
+    visibility: hidden;
+    white-space: pre-wrap;
+    width: auto;
+    padding: var(--al-theme-space-xs) var(--al-theme-space-xxxl);
+    min-width: 1em;
+    grid-area: 1/2;
+  }
+}
+
+/**
+ * Stepper spinner buttons
+ * - Hide the default style
+ */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+/**
+ * Stepper input
+ */
+.al-c-input-stepper__input {
+  @include al-input;
+  min-width: size(14);
+  width: auto;
+  padding-inline-start: var(--al-theme-space-xxxl);
+  padding-inline-end: var(--al-theme-space-xxxl);
+  text-align: center;
+  grid-area: 1/2;
+}
+
+/**
+ * Stepper increase/decrease buttons
+ */
+.al-c-input-stepper__button {
+  position: absolute;
+  height: 100%;
+  width: 40px;
+  inset-block-start: 0;
+  inset-block-end: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/**
+ * Left button
+ */
+.al-c-input-stepper__button--left {
+  inset-inline-start: 0;
+}
+
+/**
+ * Right button
+ */
+.al-c-input-stepper__button--right {
+  inset-inline-end: 0;
+  --al-button-padding: #{var(--al-theme-space-sm)} #{var(--al-theme-space-sm)};
+}
+
+.al-c-input-stepper__icon-add,
+.al-c-input-stepper__icon-minus {
+  --al-icon-width: #{var(--al-theme-icon)};
+  --al-icon-height: #{var(--al-theme-icon)};
+}
+
+/**
+ * Stepper field note slotted
+ * 1. Targets field notes that are added via a slot
+ */
+slot[name="field-note"]::slotted(*),
+slot[name="error"]::slotted(*) {
+  /**
+   * Field note with error state
+   * 1. Ensures the error styles are still applied even if a slotted field note does not have ?isError applied
+   */
+  .al-is-error & {
+    --al-field-note-color: var(--al-theme-color-border-danger-default);
+  }
+
+  /**
+   * Field note with disabled state
+   * 1. Ensures the disabled styles are still applied even if a slotted field note does not have ?isDisabled applied
+   */
+  .al-is-disabled & {
+    opacity: var(--al-theme-opacity-disabled);
+  }
+}

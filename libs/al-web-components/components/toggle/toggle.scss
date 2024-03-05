@@ -1,0 +1,110 @@
+@import '../../styles/component';
+
+/* ------------------------------------*\
+  #TOGGLE
+\*------------------------------------ */
+
+/**
+ * Toggle variables which allow an application to change the width and height of the toggle if needed
+ */
+:host {
+  --al-toggle-width: 40px;
+  --al-toggle-height: 22px;
+}
+
+/**
+ * Toggle
+ * 1. On/Off toggle
+ */
+.al-c-toggle {
+  position: relative;
+}
+
+/**
+ * Toggle label
+ * 1. The label element that is styled in a pill shape
+ */
+.al-c-toggle__label {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: var(--al-toggle-width);
+  height: var(--al-toggle-height);
+  border-radius: var(--al-toggle-height);
+  background-color: var(--al-theme-color-background-default-strong);
+  cursor: pointer;
+  transition: all var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+
+  /**
+   * If the toggle state is checked, changes the background color of the label
+   */
+  .al-is-checked & {
+    background-color: var(--al-theme-color-background-accent-default);
+  }
+
+  /**
+   * If the toggle state is disabled, prevent it from being clickable
+   */
+  .al-is-disabled & {
+    cursor: not-allowed;
+  }
+}
+
+/**
+ * Toggle label after
+ * 1. The inner pill that slides based on the checked state
+ */
+.al-c-toggle__label:after {
+  content: '';
+  position: absolute;
+  width: calc(var(--al-toggle-height) - var(--al-theme-space-xxs));
+  height: calc(var(--al-toggle-height) - var(--al-theme-space-xxs));
+  border-radius: var(--al-toggle-height);
+  background-color: var(--al-theme-color-content-default);
+  inset-block-start: var(--al-theme-space-xxxs);
+  inset-inline-start: var(--al-theme-space-xxxs);
+  box-shadow: var(--al-theme-box-shadow-xs);
+  transition: all var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+
+  /**
+   * If the toggle state is checked, moves the pill to the right
+   */
+  .al-is-checked & {
+    background: var(--al-theme-color-content-default);
+    inset-inline-start: calc(100% - var(--al-toggle-height) + var(--al-theme-space-xxxs));
+  }
+}
+
+/**
+ * Toggle checkbox
+ * 1. The checkbox element that is visually hidden, but styled for focus-visible
+ */
+.al-c-toggle__checkbox {
+  display: block;
+  width: var(--al-toggle-width);
+  height: var(--al-toggle-height);
+  border-radius: var(--al-toggle-height);
+  border: 0;
+  margin: 0;
+  padding: 0;
+  appearance: none;
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+
+  /**
+   * The focus visible state when a user tabs to the toggle
+   */
+  &:focus-visible {
+    @include al-focus;
+  }
+}
+
+/**
+ * Toggle disabled state
+ * 1. Changes the opacity of the toggle
+ */
+.al-is-disabled {
+  opacity: var(--al-theme-opacity-disabled);
+}

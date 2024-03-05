@@ -1,0 +1,109 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #CHIP
+\*------------------------------------*/
+
+:host {
+  display: contents;
+}
+
+/**
+ * Chip
+ */
+.al-c-chip {
+  @include al-theme-typography-body-sm;
+  display: inline-flex;
+  cursor: pointer;
+  gap: var(--al-theme-space-xs);
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  margin: 0;
+  padding: var(--al-theme-space-xxs) var(--al-theme-space-sm);
+  border: none;
+  border-radius: size(4);
+  background-color: var(--al-theme-color-background-default-strong);
+  color: var(--al-theme-color-content-default-weak);
+
+  /**
+   * Focus state
+   */
+  &:focus-visible {
+    @include al-focus;
+    outline-offset: 2px;
+  }
+
+  /**
+   * Hides the chips
+   */
+  &.al-is-dismissed {
+    display: none;
+  }
+}
+
+/**
+ * Hide the chip from the DOM
+ */
+.al-u-is-vishidden {
+  display: none;
+}
+
+/**
+ * Chip with squared type
+ */
+.al-c-chip--squared {
+  border-radius: var(--al-theme-border-radius);
+}
+
+/**
+ * Chip with secondary variant
+ */
+.al-c-chip--secondary {
+  border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+  background-color: var(--al-theme-color-background-transparent-default);
+  color: var(--al-theme-color-content-default-weak);
+}
+
+/**
+ * Chip with success variant
+ */
+.al-c-chip--success {
+  background-color: var(--al-theme-color-background-success-default);
+  color: var(--al-theme-color-content-success-weak);
+}
+
+/**
+ * Chip with danger variant
+ */
+.al-c-chip--danger {
+  background-color: var(--al-theme-color-background-danger-default);
+  color: var(--al-theme-color-content-danger-weak);
+}
+
+/**
+ * Chip with info variant
+ */
+.al-c-chip--info {
+  background-color: var(--al-theme-color-background-info-default);
+  color: var(--al-theme-color-content-info-weak);
+}
+
+/**
+ * Chip with warning variant
+ */
+.al-c-chip--warning {
+  background-color: var(--al-theme-color-background-warning-default);
+  color: var(--al-theme-color-content-warning-weak);
+}
+
+/**
+ * Chip close icon
+ */
+.al-c-chip__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline-end: calc(#{var(--al-theme-space-xs)} * -1);
+  width: var(--al-theme-icon-lg);
+  height: var(--al-theme-icon-lg);
+}

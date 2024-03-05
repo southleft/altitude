@@ -1,0 +1,120 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #TEXT-PASSAGE
+\*------------------------------------ */
+
+.al-c-text-passage {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--al-theme-space);
+  @include al-theme-typography-body-md;
+
+  /**
+   * Reset paragraph margins
+   */
+  ::slotted(*) {
+    margin: 0;
+    padding: 0;
+  }
+
+  /**
+   * Add extra spacing to the top of headings
+   */
+  ::slotted(h1),
+  ::slotted(h2),
+  ::slotted(h3),
+  ::slotted(h4),
+  ::slotted(h5),
+  ::slotted(h6) {
+     padding-block-start: var(--al-theme-space);
+  }
+
+  /**
+   * Generic ::slotted(h1) within text passage
+   */
+  ::slotted(h1) {
+    @include al-theme-typography-display-lg-bold;
+  }
+
+  /**
+   * Generic ::slotted(h2) within text passage
+   */
+  ::slotted(h2) {
+    @include al-theme-typography-display-md-bold;
+  }
+
+  /**
+   * Generic ::slotted(h3) within text passage
+   */
+  ::slotted(h3) {
+    @include al-theme-typography-display-sm-bold;
+  }
+
+  /**
+   * Generic ::slotted(h4) within text passage
+   */
+  ::slotted(h4) {
+    @include al-theme-typography-heading-lg-bold;
+  }
+
+  /**
+   * Generic ::slotted(h5) within text passage
+   */
+  ::slotted(h5) {
+    @include al-theme-typography-heading-md-bold;
+  }
+
+  /**
+   * Generic ::slotted(h6) within text passage
+   */
+  ::slotted(h6) {
+    @include al-theme-typography-heading-sm-bold;
+  }
+
+  /**
+   * Generic unordered and ordered lists within text passage
+   */
+  ::slotted(ul),
+  ::slotted(ol) {
+    margin-inline-start: size(4);
+  }
+
+  /**
+   * Generic link tag within text passage
+   */
+  ::slotted(a) {
+    @include al-link;
+  }
+
+  /**
+   * Generic link tag hover
+   */
+  ::slotted(a:hover) {
+    color: var(--al-theme-color-content-accent-strong);
+    text-decoration: underline;
+  }
+
+  /**
+   * Blockquote within text passage
+   */
+  ::slotted(blockquote) {
+    border-inline-start: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+    color: var(--al-theme-color-content-default);
+    padding-inline-start: var(--al-theme-space);
+    margin-inline-start: 0;
+    margin-block-end: var(--al-theme-space);
+  }
+
+  /**
+   * Remove margin and padding from first slotted element
+   */
+  ::slotted(*:first-child) {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.al-c-text-passage--max-width-sm {
+  max-width: var(--al-theme-layout-max-width-sm);
+}

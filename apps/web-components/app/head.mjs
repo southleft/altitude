@@ -15,8 +15,8 @@ export default function Head(state) {
       ${linkTag()}
       <link rel="icon" href="/_public/favicon.svg">
       <meta name="description" content="The HTML first full stack web framework.">
-      <script>window.slAutoRegistry = true;</script>
-      <link rel="stylesheet" href="/_public/head.css">
+      <script>window.alAutoRegistry = true;</script>
+      <link rel="stylesheet" href="/_public/browser/main.css">
     </head>
 `
 }

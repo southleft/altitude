@@ -1,0 +1,142 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #PROGRESS
+\*------------------------------------*/
+
+/**
+ * Progress
+ */
+.al-c-progress {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: var(--al-theme-space-xs);
+}
+
+/**
+ * Progress track
+ * - The background of the progress bar or circle
+ */
+.al-c-progress__track {
+  height: var(--al-theme-space-xxs);
+  width: 100%;
+  background: var(--al-theme-color-background-default-strong);
+  position: relative;
+}
+
+/**
+ * Progress fill
+ * - The fill that animates as progress changes
+ */
+.al-c-progress__fill {
+  height: 100%;
+  width: 100%;
+  background: var(--al-theme-color-content-accent-default);
+}
+
+/**
+ * Progress track - circle
+ * - The background for the circular progress indicator
+ */
+.al-c-progress__track--circle {
+  height: size(2);
+  width: size(2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border-radius: var(--al-theme-border-radius-round);
+  border: var(--al-theme-space-xxxs) solid var(--al-theme-color-content-default);
+
+  /**
+   * Medium circular progress track
+   */
+  .al-is-circle-md & {
+    height: size(3);
+    width: size(3);
+    border-width: var(--al-theme-space-xxs);
+  }
+
+  /**
+   * Large circular progress track
+   */
+  .al-is-circle-lg & {
+    height: size(4);
+    width: size(4);
+    border-width: var(--al-theme-border-width-lg);
+  }
+
+  /**
+   * Extra-large circular progress track
+   */
+  .al-is-circle-xl & {
+    height: size(5);
+    width: size(5);
+    border-width: size(0.6);
+  }
+}
+
+/**
+ * Progress fill - circle
+ * - The fill for the circular progress indicator, which is an svg
+ */
+.al-c-progress__fill--circle {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  height: size(2);
+  width: size(2);
+  background: none;
+  border-radius: var(--al-theme-border-radius-round);
+  transform-origin: top left;
+
+  /**
+   * Medium circular progress fill
+   */
+  .al-is-circle-md & {
+    transform: scale(1.5);
+  }
+
+  /**
+   * Large circular progress fill
+   */
+  .al-is-circle-lg & {
+    transform: scale(2);
+  }
+
+  /**
+   * Extra-large circular progress fill
+   */
+  .al-is-circle-xl & {
+    transform: scale(2.5);
+  }
+
+  /**
+   * Adjustment for small circular indicator when there is a visible label
+   */
+  .al-has-label:not(.al-is-circle-md):not(.al-is-circle-lg):not(.al-is-circle-xl) & {
+    inset-block-start: var(--al-theme-space-xxs);
+  }
+}
+
+/**
+ * The circle path of the circular progress fill svg
+ - This element's stroke-dasharray and stroke-dashoffset values are set dynamically by the component
+ */
+.al-c-progress__fill--circle > circle {
+  fill: none;
+  stroke: var(--al-theme-color-content-accent-default);
+  transform: rotate(270deg) translate(-100%);
+  position: absolute;
+}
+
+/**
+ * Progress label
+ * - Label that displays the percentage or ratio of progress
+ */
+.al-c-progress__label {
+  white-space: nowrap;
+  color: var(--al-theme-color-content-default);
+}
+

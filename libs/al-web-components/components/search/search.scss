@@ -1,0 +1,67 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #SEARCH
+\*------------------------------------ */
+
+:host {
+  display: contents;
+}
+
+/**
+ * Search
+ * 1. Inline form consisting of an form input and button used for search functionality
+ */
+.al-c-search {
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-xxs);
+  width: 100%;
+  min-width: max-content;
+  --al-input-slot-after-pointer-events: all;
+}
+
+/**
+ * Search container
+ */
+.al-c-search__container {
+  position: relative;
+}
+
+/**
+ * Search dropdown panel
+ */
+.al-c-search__dropdown-panel {
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  position: absolute;
+  inset-block-start: calc(100% + #{var(--al-theme-space-xxxs)});
+  inset-inline-start: 0;
+  width: 100%;
+  z-index: var(--al-z-index-400);
+
+  /**
+   * When the search is active, show the dropdown panel
+   */
+  .al-is-active-dropdown & {
+    visibility: visible;
+    opacity: 1;
+    overflow: visible;
+    height: auto;
+  }
+
+  /**
+   * Dropdown panel positioned to the top of the input
+   */
+  .al-c-search--top & {
+    inset-block-start: unset;
+    inset-block-end:  calc(100% + #{var(--al-theme-space-xs)});
+  }
+}
+
+.al-c-search__clear-button {
+  position: relative;
+  inset-inline-end: calc(#{var(--al-theme-space-xs)} * -1);;
+}

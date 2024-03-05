@@ -1,0 +1,235 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #LIST-ITEM
+\*------------------------------------ */
+
+:host {
+  display: contents;
+}
+
+:host([aria-selected='true']) {
+  background-color: var(--al-list-item-link-hover-background, var(--al-theme-color-background-default));
+}
+
+/**
+ * List item within the list component
+ */
+.al-c-list-item {
+  list-style: none;
+  margin-block-end: 1px;
+
+  :host(:last-child) & {
+    margin-block-end: 0;
+  }
+}
+
+.al-c-list-item--flyout {
+  position: relative;
+}
+
+/**
+ * Link styling for list items
+ */
+.al-c-list-item__link {
+  @include al-theme-typography-body-sm;
+  width: var(--al-list-item-link-width, calc(100% - #{var(--al-theme-space-xxs)}));
+  margin-inline-start: var(--al-list-item-link-marign-inline-start, var(--al-theme-space-xxxs));
+  margin-inline-end: var(--al-list-item-link-marign-inline-start, var(--al-theme-space-xxxs));
+  display: flex;
+  justify-content: space-between;
+  text-decoration: none;
+  border: none;
+  padding-block-start: var(--al-list-item-link-padding-block-start, var(--al-theme-space-xs));
+  padding-inline-start: var(--al-list-item-link-padding-inline-start, var(--al-theme-space-xs));
+  padding-block-end: var(--al-list-item-link-padding-block-end, var(--al-theme-space-xs));
+  padding-inline-end: var(--al-list-item-link-padding-inline-end, var(--al-theme-space-xs));
+  color: inherit;
+  transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  background-color: transparent;
+  cursor: pointer;
+  text-align: start;
+  white-space: nowrap;
+
+  /**
+   * Hover & focus state of the list item link
+   */
+  &:hover,
+  &:focus,
+  .al-c-list-item[aria-selected='true'] & {
+    background-color: var(--al-list-item-link-hover-background, var(--al-theme-color-background-default-strong));
+  }
+
+  /**
+   * Focus visible state of the list item link
+   */
+  &:focus-visible {
+    @include al-focus;
+  }
+
+  /**
+   * Error styling for list item link
+   */
+  .al-is-error & {
+    color: var(--al-theme-color-background-danger-default);
+  }
+
+  /**
+   * Disabled styling of the list item link
+   */
+  .al-is-disabled & {
+    cursor: not-allowed;
+    opacity: var(--al-theme-opacity-disabled);
+  }
+
+  /**
+   * Current styling of the list item link
+   */
+  .al-is-current & {
+    background-color: var(--al-list-item-link-hover-background, var(--al-theme-color-background-accent-default));
+  }
+
+  /**
+   * Active styling of the list item link
+   */
+  .al-is-active & {
+    background-color: var(--al-list-item-link-hover-background, var(--al-theme-color-background-default-strong));
+  }
+}
+
+/**
+  * AL list within a cat list item
+  * 1) Add thin line between nested list in selected item to not bleed together
+  */
+.al-c-list-item:not(.al-c-list-item--flyout) {
+  ::slotted(al-list) {
+    display: block; /* 1 */
+    margin-block-start: 1px; /* 1 */
+  }
+}
+
+/**
+ * List item body
+ * 1) Allows the outer container to be flexed to make room for item footer content,
+ * or content that is aligned at the end of the item container
+ */
+.al-c-list-item__body {
+  display: flex;
+  max-width: 100%;
+  gap: var(--al-theme-space-xs);
+  align-items: center;
+  flex: 1;
+}
+
+/**
+ * List item text inside the link
+ */
+.al-c-list-item__text {
+  max-width: 100%;
+}
+
+/**
+ * List item icon & after
+ * The slots before and after the list item text
+ */
+.al-c-list-item__icon,
+.al-c-list-item__after {
+  display: flex;
+  gap: var(--al-theme-space-xs);
+  align-items: center;
+
+  --al-icon-height: #{var(--al-theme-icon)};
+  --al-icon-width: #{var(--al-theme-icon)};
+}
+
+/**
+ * Styling for subitems container
+ */
+.al-c-list-item__items {
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+
+  /**
+   * Subitems container within active list item
+   */
+  .al-c-list-item.al-is-active & {
+    visibility: visible;
+    height: auto;
+    overflow: visible;
+  }
+
+  .al-c-list-item--flyout & {
+    display: none;
+  }
+
+  .al-c-list-item--flyout.al-is-active & {
+    display: block;
+  }
+}
+
+/**
+ * Icon that shows that the item has children
+ */
+.al-c-list-item__items-icon {
+  --al-icon-height: #{var(--al-theme-icon)};
+  --al-icon-width: #{var(--al-theme-icon)};
+
+  margin-inline-start: auto;
+  transition: transform var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+
+  /**
+   * Items icon within active list item
+   * 1) Rotate accordion icon -180deg
+   */
+  .al-c-list-item.al-is-active & {
+    transform: rotate(-180deg);
+  }
+
+  /**
+   * Items icon within active list item
+   * 1) Rotate accordion icon -180deg
+   */
+  .al-c-list-item--flyout.al-is-active & {
+    transform: none;
+  }
+}
+
+/**
+ * Dropdown panel for flyout menus
+ * 1) Calculate menu to sit directly next to panel to account for padding of dropdown panel
+ * 2) Used to align baselines of item with first subitem
+ */
+.al-c-list-item__dropdown-panel {
+  position: absolute;
+  inset-block-start: -5px;
+  inset-inline-start: 100%; /* 1 */
+  min-width: size(22.5);
+
+  /**
+   * List item dropdown panel within flyout position left
+   * 1) Position dropdown to the left of the list item
+   */
+  .al-c-list-item--flyout-position-left & {
+    inset-inline-start: unset;
+    inset-inline-end: 100%;
+  }
+
+  /**
+   * List item dropdown panel within flyout position bottom
+   * 1) Position dropdown below list item
+   */
+  .al-c-list-item--flyout-position-bottom & {
+    inset-inline-start: 0;
+    inset-block-start: 100%;
+  }
+
+  /**
+   * List item dropdown panel within flyout position top
+   * 1) Position dropdown above list item
+   */
+  .al-c-list-item--flyout-position-top & {
+    inset-inline-start: 0;
+    inset-block-start: unset;
+    inset-block-end: 100%;
+  }
+}

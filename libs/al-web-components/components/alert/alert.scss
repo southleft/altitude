@@ -1,0 +1,87 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #ALERT
+\*------------------------------------ */
+
+/**
+ * Alert
+ */
+.al-c-alert {
+  display: none;
+  border-radius: var(--al-theme-border-radius-md);
+  background-color: var(--al-theme-color-background-default);
+  box-shadow: var(--al-theme-box-shadow-lg);
+  padding: var(--al-theme-space);
+
+  &.al-is-active {
+    display: flex;
+  }
+}
+
+.al-c-alert__body {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+
+  .al-has-title & {
+    align-items: flex-end;
+  }
+}
+
+.al-c-alert__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.al-c-alert__actions {
+  display: flex;
+  gap: var(--al-theme-space-sm);
+}
+
+/**
+ * Alert title
+ */
+.al-c-alert__title {
+  @include al-theme-typography-body-md-bold;
+  margin-block-end: var(--al-theme-space-xs);
+}
+
+/**
+ * Icon that depicts the toast variant:
+ * - Default, success, or danger
+ */
+.al-c-alert__icon {
+  --al-icon-width: #{var(--al-theme-icon-lg)};
+  --al-icon-height: #{var(--al-theme-icon-lg)};
+  --al-icon-fill: var(--al-theme-color-content-info-default);
+
+  display: flex;
+  align-items: center;
+  margin-inline-end: var(--al-theme-space);
+
+  .al-has-title & {
+    align-items: flex-start;
+  }
+
+  /**
+   * Icon within success alert
+   */
+   .al-c-alert--success & {
+    --al-icon-fill: var(--al-theme-color-content-success-default);
+  }
+
+  /**
+   * Icon within warning alert
+   */
+   .al-c-alert--warning & {
+    --al-icon-fill: var(--al-theme-color-content-warning-default);
+  }
+
+  /**
+   * Icon within danger alert
+   */
+  .al-c-alert--danger & {
+    --al-icon-fill: var(--al-theme-color-content-danger-default);
+  }
+}

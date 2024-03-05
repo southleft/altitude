@@ -1,0 +1,76 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #TAB
+\*------------------------------------*/
+
+:host {
+  display: contents;
+}
+
+/**
+ * Tab
+ */
+.al-c-tab {
+  @include al-theme-typography-body-sm;
+  margin: 0;
+  padding: var(--al-theme-space-xs) var(--al-theme-space);
+  background-color: var(--al-theme-color-background-transparent-default);
+  color: var(--al-theme-color-content-default);
+  display: flex;
+  gap: var(--al-theme-space-xs);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: none;
+  border-bottom: var(--al-theme-border-width-md) solid transparent;
+  transition: all var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  cursor: pointer;
+  white-space: nowrap;
+  width: var(--al-tab-width, 'fit-content');
+  --al-icon-width: #{var(--al-theme-icon-lg)};
+  --al-icon-height: #{var(--al-theme-icon-lg)};
+
+  /**
+   * Tab with hover that is not active or disabled
+   */
+  &:hover:not(:active, :disabled) {
+    background-color: var(--al-theme-color-background-default);
+  }
+
+  /**
+   * Tab with active state (when pressed)
+   */
+   &:active:not(:disabled) {
+    background-color: var(--al-theme-color-background-transparent-default);
+  }
+  /**
+   * Tab with focus visible state
+   */
+  &:focus-visible {
+    @include al-focus-inset;
+  }
+
+  /**
+   * Tab with disabled state
+   */
+   &:disabled {
+    cursor: not-allowed;
+    opacity: var(--al-theme-opacity-disabled);
+  }
+
+  /**
+   * Tab with active state
+   */
+  &.al-is-active {
+    @include al-theme-typography-body-sm-bold;
+    color: var(--al-theme-color-content-default-weak);
+    border-bottom-color: var(--al-theme-color-content-default-weak);
+  }
+}
+
+/**
+ * Allows for click events to only be on the button element and not slotted items
+ */
+::slotted(*) {
+  pointer-events: none;
+}

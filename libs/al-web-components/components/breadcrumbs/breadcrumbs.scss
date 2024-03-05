@@ -1,0 +1,33 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #BREADCRUMBS
+\*------------------------------------ */
+
+:host {
+  display: contents;
+}
+
+.al-c-breadcrumbs {
+  position: relative;
+  z-index: var(--al-z-index-200);
+}
+
+/**
+ * An ordered list of navigational hierarchy showing the user where they are on the site
+ */
+.al-c-breadcrumbs__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--al-theme-space-xxs);
+}
+
+.al-c-breadcrumbs__panel {
+  --al-panel-container-width: max-content;
+  --al-panel-container-padding: #{var(--al-theme-space-xs)} 0 #{var(--al-theme-space-xs)} 0;
+  --al-panel-offset: #{var(--al-theme-space-xs)};
+}

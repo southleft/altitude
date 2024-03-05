@@ -1,0 +1,47 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #SKELETON
+\*------------------------------------*/
+
+/**
+ * Skeleton
+ * - Bar used to represent loading content when the data isn't pulled in yet
+ */
+.al-c-skeleton {
+  position: relative;
+  padding: var(--al-theme-space-xs) var(--al-theme-space);
+  width: var(--al-skeleton-width, 100%);
+  height: var(--al-skeleton-height, auto);
+  background: linear-gradient(-90deg, var(--al-theme-color-background-default) 0%, var(--al-theme-color-background-default-strong) 50%, var(--al-theme-color-background-default) 100%);
+  background-size: 400% 400%;
+  border-radius: var(--al-theme-border-radius);
+  animation: pulse 1.25s linear infinite;
+}
+
+/**
+ * Circle skeleton
+ */
+.al-c-skeleton--circle {
+  aspect-ratio: 1 / 1;
+  border-radius: var(--al-theme-border-radius-round);
+}
+
+/**
+ * Square skeleton
+ */
+.al-c-skeleton--square {
+  aspect-ratio: 1 / 1;
+}
+
+/**
+ * Pulsing animation for loading look
+ */
+@keyframes pulse {
+  0% {
+    background-position: var(--rtlBackgroundPositionFrom, 0%) 0%;
+  }
+
+  100% {
+    background-position: var(--rtlBackgroundPositionTo, -135%) 0%;
+  }
+}
