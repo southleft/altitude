@@ -170,7 +170,7 @@ export class ALButton extends ALElement {
           target=${ifDefined(this.target)}
         >
           ${this.slotNotEmpty('before') && html`<span class="al-c-button__icon"><slot name="before"></slot></span>`}
-          <span class="${this.hideText && 'al-u-is-vishidden'} al-c-button__text override">
+          <span class="${this.hideText && 'al-u-is-vishidden'} al-c-button__text">
             <slot></slot>
           </span>
           ${this.slotNotEmpty('after') && html`<span class="al-c-button__icon"><slot name="after"></slot></span>`}
@@ -191,7 +191,7 @@ export class ALButton extends ALElement {
           part="button"
         >
           ${this.slotNotEmpty('before') && html`<span class="al-c-button__icon"><slot name="before"></slot></span>`}
-          <span class="${this.hideText && 'al-u-is-vishidden'} al-c-button__text override">
+          <span class="${this.hideText && 'al-u-is-vishidden'} al-c-button__text">
             <slot></slot>
           </span>
 

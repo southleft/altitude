@@ -15,16 +15,16 @@ setCustomElementsManifest(customElements);
 globalThis.alAutoRegistry = true;
 
 /*
- * Head styles
+ * Main styles
  * - Allows for custom styles of the story iframe window
- * - Creating a style element for headStyles and appending it to the document head
+ * - Creating a style element for mainStyles and appending it to the document head
  */
-import headStyles from '../styles/head.scss';
-const headStyleElement = document.createElement('style');
-headStyleElement.innerHTML = headStyles;
-headStyleElement.setAttribute('type', 'text/css');
-headStyleElement.setAttribute('id', 'al-theme-sheet');
-document.head.appendChild(headStyleElement);
+import mainStyles from '../styles/main.scss';
+const mainStyleElement = document.createElement('style');
+mainStyleElement.innerHTML = mainStyles;
+mainStyleElement.setAttribute('type', 'text/css');
+mainStyleElement.setAttribute('id', 'al-theme-sheet');
+document.head.appendChild(mainStyleElement);
 
 /*
  * Icon font styles

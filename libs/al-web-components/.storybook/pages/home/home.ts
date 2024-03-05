@@ -17,6 +17,11 @@ export class ALHome extends LitElement {
   @property()
   accessor styleModifier: string;
 
+  firstUpdated() {
+    const body = document.querySelector('body') as HTMLBodyElement;
+    body.classList.add('al-u-is-overflow-hidden');
+  }
+
   render() {
     const componentClassNames = classMap({
       'al-l-home': true,
@@ -26,10 +31,10 @@ export class ALHome extends LitElement {
     return html`
       <al-dashboard class=${componentClassNames}>
         <div class="al-u-grid al-u-gap--lg" style="height: 100%">
-          <f-po class="al-u-grid__item col:7@md">Coming soon</f-po>
-          <al-calendar class="al-u-grid__item col:5@md row:2@md"></al-calendar>
-          <f-po class="al-u-grid__item col:7@md">Coming soon</f-po>
-          <f-po class="al-u-grid__item col:12@md">Coming soon</f-po>
+          <f-po class="al-u-grid__item col:12 col:7@xl">Coming soon</f-po>
+          <al-calendar class="al-u-grid__item col:12 col:5@xl row:2@md"></al-calendar>
+          <f-po class="al-u-grid__item col:12 col:7@xl">Coming soon</f-po>
+          <f-po class="al-u-grid__item col:12">Coming soon</f-po>
         </div>
       </al-dashboard>
     `;
