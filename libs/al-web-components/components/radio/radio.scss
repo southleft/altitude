@@ -28,7 +28,7 @@
  * 1. The label that display next to the radio
  */
 .al-c-radio__label {
-  @include label-styles;
+  @include al-label;
   color: var(--al-theme-color-content-default);
   cursor: pointer;
 }
@@ -72,7 +72,7 @@
    * Focused state
    */
   &:focus-visible {
-    @include focus-inset;
+    @include al-focus-inset;
   }
 }
 

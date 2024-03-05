@@ -18,7 +18,7 @@
 /**
  * Visually hidden from display
  */
-@mixin visuallyHidden {
+@mixin al-visually-hidden {
   border: 0;
   clip: rect(0 0 0 0);
   height: 1px;
@@ -30,13 +30,13 @@
 }
 
 /* ------------------------------------*\
-  #FORMs
+  #FORMS
 \*------------------------------------ */
 
 /**
- * Label styles
+ * Label
  */
-@mixin label-styles() {
+@mixin al-label() {
   @include al-theme-typography-body-md;
   color: var(--al-theme-color-content-default);
   display: block;
@@ -55,14 +55,14 @@
    * Visually hide the label
    */
   .al-has-hidden-label & {
-    @include visuallyHidden;
+    @include al-visually-hidden;
   }
 }
 
 /**
- * Input styles
+ * Input
  */
-@mixin input-styles() {
+@mixin al-input() {
   @include al-theme-typography-body-md;
   width: 100%;
   min-height: size(6);
@@ -145,7 +145,7 @@
 /**
  * Styles to override button styling
  */
-@mixin button-reset() {
+@mixin al-reset-button() {
   background: none;
   border: 0;
   margin: 0;
@@ -156,8 +156,8 @@
 /**
  * Link styles
  */
-@mixin link-styles() {
-  @include button-reset;
+@mixin al-link() {
+  @include al-reset-button;
   @include al-theme-typography-body-md;
   transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing), background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
   color: var(--al-theme-color-content-accent-strong);
@@ -180,7 +180,7 @@
    * Focus visible state
    */
   &:focus-visible {
-    @include focus;
+    @include al-focus;
   }
 
   /**
@@ -199,16 +199,12 @@
 /**
  * Visible focus outline for elements
  */
-@mixin focus() {
+@mixin al-focus() {
   outline: var(--al-theme-border-width-md) solid var(--al-theme-color-focus-ring, var(--al-theme-color-border-accent-default));
   outline-offset: var(--al-focus-outline-offset, var(--al-theme-border-width-md));
 }
 
-@mixin focus-inset() {
+@mixin al-focus-inset() {
   outline: var(--al-theme-border-width-md) solid var(--al-theme-color-focus-ring, var(--al-theme-color-border-accent-default));
   outline-offset: calc(#{var(--al-theme-border-width-md)} * -1);
-}
-
-:focus-visible {
-  @include focus;
 }

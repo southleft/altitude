@@ -109,14 +109,14 @@
    * Active state on handle
    */
   &:active::-webkit-slider-thumb {
-    @include focus;
+    @include al-focus;
   }
 
   /**
    * Focus state on handle
    */
   &:enabled:focus-visible::-webkit-slider-thumb {
-    @include focus;
+    @include al-focus;
   }
 
   /**
@@ -186,14 +186,14 @@
    * Active state to the handle
    */
   &:active::-moz-range-thumb {
-    @include focus;
+    @include al-focus;
   }
 
   /**
    * Applies focus state to the handle on the input range
    */
   &:enabled:focus-visible::-moz-range-thumb {
-    @include focus;
+    @include al-focus;
   }
 
   /**
@@ -216,7 +216,7 @@
 
 .al-c-range__output-range-one,
 .al-c-range__output-range-two {
-  @include input-styles;
+  @include al-input;
   min-width: size(7);
   width: max-content;
 }
@@ -349,14 +349,14 @@
      */
     &:active::-webkit-slider-thumb {
       z-index: var(--al-z-index-200);
-      @include focus;
+      @include al-focus;
     }
 
     /**
      * Thumb styling on focus state
      */
     &:enabled:focus-visible::-webkit-slider-thumb {
-      @include focus;
+      @include al-focus;
 
       background-color: var(--al-theme-color-background-inverse-default);
     }
@@ -394,14 +394,14 @@
      * Active state for thumb on firefox
      */
     &:active::-moz-range-thumb {
-      @include focus;
+      @include al-focus;
     }
 
     /**
      * Thumb styling on focus state for firefox
      */
     &:enabled:focus-visible::-moz-range-thumb {
-      @include focus;
+      @include al-focus;
     }
 
     /**
@@ -462,7 +462,7 @@
  * Apply input styles to output variant input
  */
 .al-c-range__output {
-  @include input-styles;
+  @include al-input;
   min-width: size(7);
   width: max-content;
 }
@@ -471,7 +471,7 @@
  * Apply styles to label / heading part
  */
 .al-c-range__label {
-  @include label-styles;
+  @include al-label;
   display: inline-block;
 
   .al-c-range--range &,

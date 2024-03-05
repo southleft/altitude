@@ -33,7 +33,7 @@
  * - The actual textarea element of the input
  */
 .al-c-textarea__input {
-  @include input-styles;
+  @include al-input;
   padding-inline-start: var(--al-textarea-padding-start, var(--al-theme-space));
   padding-inline-end: var(--al-textarea-padding-end, var(--al-theme-space));
 
@@ -61,7 +61,7 @@
  * - The floating label that appears inside of the textarea
  */
 .al-c-textarea__label {
-  @include label-styles;
+  @include al-label;
   position: absolute;
   inset-block-start: var(--al-theme-space-sm);
   inset-inline-start: var(--al-textarea-padding-start, var(--al-theme-space));
