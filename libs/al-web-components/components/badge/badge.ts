@@ -24,12 +24,13 @@ export class ALBadge extends ALElement {
   /**
    * State variant
    * - **default** Displays a badge with the default state
+   * - **info** renders a badge with info state treatment
    * - **success** renders a badge with success state treatment
    * - **warning** renders a badge with warning state treatment
    * - **danger** renders a badge with danger state treatment
    */
   @property()
-  accessor variant: 'success' | 'warning' | 'danger';
+  accessor variant: 'info' | 'success' | 'warning' | 'danger';
 
   /**
    * Positions the badge absolutely to its parent container.
@@ -61,6 +62,7 @@ export class ALBadge extends ALElement {
 
   render() {
     const componentClassNames = this.componentClassNames('al-c-badge', {
+      'al-c-badge--info': this.variant === 'info',
       'al-c-badge--success': this.variant === 'success',
       'al-c-badge--warning': this.variant === 'warning',
       'al-c-badge--danger': this.variant === 'danger',
