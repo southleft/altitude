@@ -54,32 +54,6 @@ export class Tier1Colors extends LitElement {
         </table>
         <table>
           <caption>
-            <h2>Utility Colors</h2>
-            <p>Utility colors apply to interactive parts of the UI and parts of the UI that convey meaning and messaging to the user. The use of  these saturated colors can invoke meaning in the  UI and  create associations with similar colored UI.</p>
-          </caption>
-          <thead>
-            <tr>
-              <th>Token</th>
-              <th>Value</th>
-              <th>Example</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${this.filterTokens('al-color-utility').map((item) => {
-              return html`
-                <token-specimen
-                  variant="color"
-                  name="var(${item.name})"
-                  value="${item.value}"
-                  inlineStyles="background-color: var(${item.name});"
-                  ?disableCopy=${true}
-                ></token-specimen>
-              `;
-            })}
-          </tbody>
-        </table>
-        <table>
-          <caption>
             <h2>Neutral Colors</h2>
             <p>Neutral colors apply to most backgrounds, text, and shapes in our experiences. While they don’t typically have a meaning associated with them, they can imply things like disabled states. There are dedicated neutral tonal palettes for both light mode and dark mode.</p>
           </caption>
@@ -118,6 +92,32 @@ export class Tier1Colors extends LitElement {
           </thead>
           <tbody></tbody>
             ${this.filterTokens('al-color-transparent').map((item) => {
+              return html`
+                <token-specimen
+                  variant="color"
+                  name="var(${item.name})"
+                  value="${item.value}"
+                  inlineStyles="background-color: var(${item.name});"
+                  ?disableCopy=${true}
+                ></token-specimen>
+              `;
+            })}
+          </tbody>
+        </table>
+        <table>
+          <caption>
+            <h2>Shadow Colors</h2>
+            <p>Shadow colors are instrumental in creating depth and dimension within the user interface. They are primarily utilized for drop shadows and text shadows, enhancing the visual hierarchy and providing a sense of elevation to elements.</p>
+          </caption>
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Value</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+            ${this.filterTokens('al-color-shadow').map((item) => {
               return html`
                 <token-specimen
                   variant="color"

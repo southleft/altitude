@@ -74,6 +74,31 @@ export class Tier2Colors extends LitElement {
             })}
           </tbody>
         </table>
+        <table>
+          <caption>
+            <h2>Shadow Colors</h2>
+            <p>Shadow colors are instrumental in creating depth and dimension within the user interface. They are primarily utilized for drop shadows and text shadows, enhancing the visual hierarchy and providing a sense of elevation to elements.</p>
+          </caption>
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Value</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+            ${this.filterTokens('al-theme-color-shadow').map((item) => {
+              return html`
+                <token-specimen
+                  variant="color"
+                  name="var(${item.name})"
+                  value="${item.value}"
+                  inlineStyles="background-color: var(${item.name});"
+                ></token-specimen>
+              `;
+            })}
+          </tbody>
+        </table>
       </section>
     `;
   }

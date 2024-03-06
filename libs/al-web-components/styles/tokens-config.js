@@ -313,6 +313,7 @@ const generateThemeStyleDictionaryConfig = (themeName) => {
     `./styles/tokens/tier-2/layout.json`,
     `./styles/tokens/tier-2/opacity.json`,
     `./styles/tokens/tier-2/shadows.json`,
+    `./styles/tokens/tier-2/spacing.json`,
     `./styles/tokens/tier-2/typography.json`,
     `./styles/tokens/tier-2/${themeName}/*.json`,
     `./styles/tokens/tier-3/${themeName}/*.json`,
