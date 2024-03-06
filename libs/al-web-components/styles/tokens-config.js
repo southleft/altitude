@@ -109,13 +109,13 @@ StyleDictionary.registerFormat({
           if (dictionary.usesReference(token.original.value)) {
             const refs = dictionary.getReferences(token.original.value);
             refs.forEach(ref => {
-              let refName = ref.name.endsWith('-regular') ? ref.name.replace('-regular', '') : ref.name;
+              const refName = ref.name.endsWith('-regular') ? ref.name.replace('-regular', '') : ref.name;
               value = `var(--${themePrefix}-${refName})`;
             });
           }
         }
         /* 9 */
-        const tokenOutput = `  --${themePrefix}-${token.name}: ${value};`;
+        const tokenOutput = `  --${themePrefix}-${name}: ${value};`;
         return tokenOutput;
       }).filter(Boolean).join('\n'); /* 10 */
 
@@ -313,7 +313,7 @@ const generateThemeStyleDictionaryConfig = (themeName) => {
     `./styles/tokens/tier-2/layout.json`,
     `./styles/tokens/tier-2/opacity.json`,
     `./styles/tokens/tier-2/shadows.json`,
-    `./styles/tokens/tier-2/typopgraphy.json`,
+    `./styles/tokens/tier-2/typography.json`,
     `./styles/tokens/tier-2/${themeName}/*.json`,
     `./styles/tokens/tier-3/${themeName}/*.json`,
   ];
