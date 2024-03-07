@@ -2,7 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx'
-import 'al-web-components/dist/css/main.css';
+import setGlobalStyles from 'al-web-components/dist/directives/setGlobalStyles';
+
+setGlobalStyles();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
