@@ -3,11 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "yarn copy:css && ng serve",
-    "build": "yarn copy:css && ng build",
-    "watch": "yarn copy:css && ng build --watch --configuration development",
-    "test": "yarn copy:css && ng test",
-    "copy:css": "cp ../../libs/al-web-components/dist/css/main.css ./src"
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {
