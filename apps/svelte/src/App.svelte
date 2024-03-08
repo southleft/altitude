@@ -2,6 +2,7 @@
   import svelteLogo from './assets/svelte.svg'
   import viteLogo from '/vite.svg'
   import Counter from './lib/Counter.svelte'
+  import "al-web-components/dist/components/header/header.js";
 </script>
 
 <main>
@@ -17,6 +18,7 @@
 
   <div class="card">
     <Counter />
+    <al-header>Header</al-header>
   </div>
 
   <p>
