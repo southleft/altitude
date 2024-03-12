@@ -18,6 +18,6 @@
     "build:app-svelte": "yarn workspace al-app-svelte build --base=/svelte --outDir ../../dist/svelte",
     "build:all": "yarn build && yarn build:storybook-web-components && yarn build:storybook-react && yarn build:app-angular && yarn build:app-react && yarn build:app-svelte && yarn copy:index",
     "copy:index": "cp ./index.html ./dist/index.html",
-    "dev:index": "yarn build:all && npx serve ./dist"
+    "dev:index": "npx serve ./dist"
   }
 }
