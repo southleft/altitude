@@ -31,17 +31,17 @@ export default function Dashboard() {
               <NavLink to={'/dashboard'}>
               {({ isActive }) => (
                 <ALMenuItem isHeader="true" isSelected={isActive}>
-                  <ALIconHome></ALIconHome>Dashboard<ALBadge variant="danger">12</ALBadge>
+                  <ALIconHome slot="before"></ALIconHome>Dashboard<ALBadge variant="danger">12</ALBadge>
                 </ALMenuItem>
               )}
               </NavLink>
               <NavLink to={'/'} className="al-l-dashboard__menu-link--header">
                 {({ isActive }) => (
-                  <ALMenuItem isHeader="true" isSelected={isActive}><ALIconList></ALIconList>Job Board</ALMenuItem>
+                  <ALMenuItem isHeader="true" isSelected={isActive}><ALIconList slot="before"></ALIconList>Job Board</ALMenuItem>
                 )}
               </NavLink>
-                <ALMenuItem isHeader="true"><ALIconCalendar></ALIconCalendar>Schedule</ALMenuItem>
-                <ALMenuItem isHeader="true" isExpandableHeader="true"><ALIconSupport></ALIconSupport>Resources</ALMenuItem>
+                <ALMenuItem isHeader="true"><ALIconCalendar slot="before"></ALIconCalendar>Schedule</ALMenuItem>
+                <ALMenuItem isHeader="true" isExpandableHeader="true"><ALIconSupport slot="before"></ALIconSupport>Resources</ALMenuItem>
                 <ALMenuItem>Contact Us</ALMenuItem>
                 <ALMenuItem>Customer Support</ALMenuItem>
               </ALMenu>

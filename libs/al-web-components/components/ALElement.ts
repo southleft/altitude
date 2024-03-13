@@ -107,7 +107,6 @@ export class ALElement extends LitElement {
         const themeSheetContent = themeSheet.textContent;
         const cleanedThemeSheetContent = themeSheetContent.replace(regex, '');
         (globalThis as any)[themeGlobal].replaceSync(cleanedThemeSheetContent);
-        console.log('themeGlobal', (globalThis as any)[themeGlobal]);
       } else {
         console.error(`Altitude style#${themeSheetId} not found`);
       }
