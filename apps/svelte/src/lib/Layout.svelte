@@ -1,3 +1,38 @@
+<script>
+// @ts-nocheck
+
+  import 'al-web-components/dist/components/avatar/avatar';
+  import 'al-web-components/dist/components/badge/badge';
+  import 'al-web-components/dist/components/breadcrumbs-item/breadcrumbs-item';
+  import 'al-web-components/dist/components/breadcrumbs/breadcrumbs';
+  import 'al-web-components/dist/components/button-group/button-group';
+  import 'al-web-components/dist/components/button/button';
+  import 'al-web-components/dist/components/card/card';
+  import 'al-web-components/dist/components/chip/chip';
+  import 'al-web-components/dist/components/drawer/drawer';
+  import 'al-web-components/dist/components/header/header';
+  import 'al-web-components/dist/components/heading/heading';
+  import 'al-web-components/dist/components/icon/icons/bell';
+  import 'al-web-components/dist/components/icon/icons/document';
+  import 'al-web-components/dist/components/icon/icons/dots-vertical';
+  import 'al-web-components/dist/components/icon/icons/help';
+  import 'al-web-components/dist/components/icon/icons/menu';
+  import 'al-web-components/dist/components/layout-container/layout-container';
+  import 'al-web-components/dist/components/layout-section/layout-section';
+  import 'al-web-components/dist/components/layout/layout';
+  import 'al-web-components/dist/components/list-item/list-item';
+  import 'al-web-components/dist/components/list/list';
+  import 'al-web-components/dist/components/menu-item/menu-item';
+  import 'al-web-components/dist/components/menu/menu';
+  import 'al-web-components/dist/components/popover/popover';
+  import 'al-web-components/dist/components/search/search';
+  import 'al-web-components/dist/components/text-passage/text-passage';
+  import 'al-web-components/dist/components/toggle-button/toggle-button';
+  import './Layout.css';
+  import logo from '../assets/logo.svg'
+  import { Link } from 'svelte-routing'
+</script>
+
 <main style="position: relative; display: block;">
   <div class="al-l-dashboard__help-popover">
     <al-popover position="top-left" isDismissible="true">
@@ -14,16 +49,16 @@
   <al-layout variant="sidebar-left" gap="none">
     <div class="al-l-dashboard__sidebar">
       <div class="al-l-dashboard__sidebar-logo">
-        <a routerLink='/'><app-logo></app-logo></a>
+        <Link to="/"><img src={logo} alt="logo" /></Link>
         <al-divider></al-divider>
       </div>
       <al-menu class="al-l-dashboard__sidebar-menu">
-        <a [routerLink]="['/dashboard']">
-          <al-menu-item isHeader="true" [isSelected]="activePath === '/dashboard'"><al-icon-home></al-icon-home>Dashboard<al-badge variant="danger">12</al-badge></al-menu-item>
-        </a>
-        <a [routerLink]="['/']" class="al-l-dashboard__menu-link--header">
-          <al-menu-item isHeader="true" [isSelected]="activePath === '/'"><al-icon-list></al-icon-list>Job Board</al-menu-item>
-        </a>
+        <Link to="/dashboard" let:active>
+          <al-menu-item isHeader="true" isSelected={active}><al-icon-home></al-icon-home>Dashboard<al-badge variant="danger">12</al-badge></al-menu-item>
+        </Link>
+        <Link to="/" let:active class="al-l-dashboard__menu-link--header">
+          <al-menu-item isHeader="true" isSelected={active}><al-icon-list></al-icon-list>Job Board</al-menu-item>
+        </Link>
         <al-menu-item isHeader="true"><al-icon-calendar></al-icon-calendar>Schedule</al-menu-item>
         <al-menu-item isHeader="true" isExpandableHeader="true"><al-icon-support></al-icon-support>Resources</al-menu-item>
         <al-menu-item>Contact Us</al-menu-item>
@@ -100,7 +135,7 @@
         </div>
       </al-header>
       <al-layout-container class="al-l-dashboard__body">
-        <router-outlet></router-outlet>
+        <slot></slot>
       </al-layout-container>
     </div>
   </al-layout>

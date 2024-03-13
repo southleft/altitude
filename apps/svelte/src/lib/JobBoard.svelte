@@ -1,5 +1,42 @@
+<script>
+  import 'al-web-components/dist/components/badge/badge';
+  import 'al-web-components/dist/components/button-group/button-group';
+  import 'al-web-components/dist/components/button/button';
+  import 'al-web-components/dist/components/card/card';
+  import 'al-web-components/dist/components/checkbox-group/checkbox-group';
+  import 'al-web-components/dist/components/checkbox/checkbox';
+  import 'al-web-components/dist/components/chip-group/chip-group';
+  import 'al-web-components/dist/components/chip/chip';
+  import 'al-web-components/dist/components/dialog/dialog';
+  import 'al-web-components/dist/components/divider/divider';
+  import 'al-web-components/dist/components/header/header';
+  import 'al-web-components/dist/components/heading/heading';
+  import 'al-web-components/dist/components/icon/icons/filter';
+  import 'al-web-components/dist/components/icon/icons/pin';
+  import 'al-web-components/dist/components/icon/icons/star';
+  import 'al-web-components/dist/components/input/input';
+  import 'al-web-components/dist/components/list-item/list-item';
+  import 'al-web-components/dist/components/list/list';
+  import 'al-web-components/dist/components/radio-group/radio-group';
+  import 'al-web-components/dist/components/radio/radio';
+  import 'al-web-components/dist/components/range/range';
+  import 'al-web-components/dist/components/search/search';
+  import 'al-web-components/dist/components/select/select';
+  import 'al-web-components/dist/components/text-passage/text-passage';
+  import 'al-web-components/dist/components/pagination/pagination';
+  import './JobBoard.css';
+
+  export const filterStates  = [
+    'All locations', 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia',
+    'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland',
+    'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey',
+    'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina',
+    'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+  ];
+</script>
+
 <div class="al-u-gap-xl">
-  <al-heading [isBold]="true" variant="lg" tagName="h2">Job Board</al-heading>
+  <al-heading isBold="true" variant="lg" tagName="h2">Job Board</al-heading>
   <div class="al-u-gap">
     <div class="al-u-grid">
       <al-search class="al-u-grid__item col:12 col:12@lg col:6@xxl" label="Search by job title, company, keywords">
@@ -12,16 +49,20 @@
       </al-search>
       <al-select class="al-u-grid__item col:12 col:6@lg col:3@xxl" label="Location">
         <al-icon-pin slot="before"></al-icon-pin>
-        <al-list>
-          <al-list-item *ngFor="let item of filterStates">{{ item }}</al-list-item>
-        </al-list>
+        {#each filterStates as item}
+          <al-list>
+            <al-list-item>{item}</al-list-item>
+          </al-list>
+        {/each}
       </al-select>
       <al-dialog class="al-u-grid__item col:12 col:6@lg col:3@xxl" hasBackdrop="true">
         <al-input label="Filters" isReadonly="true" slot="trigger">
           <al-icon-filter slot="before"></al-icon-filter>
           <al-badge slot="after">3</al-badge>
         </al-input>
-        <al-heading slot="header" [isBold]="true" variant="md" tagName="h2">Filter</al-heading>
+        <al-heading slot="header" isBold="true" variant="md" tagName="h2">
+          Filter
+        </al-heading>
         <div class="al-l-job-board__filter-dialog al-u-gap">
           <al-select label="Job Type" value="Full-time">
             <al-list>
@@ -40,8 +81,8 @@
               <al-checkbox>Back-end Development</al-checkbox>
             </al-checkbox-group>
             <al-checkbox-group label=" ">
-              <al-checkbox [isChecked]="true">Front-end Development</al-checkbox>
-              <al-checkbox [isChecked]="true">Design Systems</al-checkbox>
+              <al-checkbox isChecked="true">Front-end Development</al-checkbox>
+              <al-checkbox isChecked="true">Design Systems</al-checkbox>
               <al-checkbox>Software Development</al-checkbox>
             </al-checkbox-group>
           </div>
@@ -57,9 +98,11 @@
           <al-divider></al-divider>
           <al-select label="Location">
             <al-icon-pin slot="before"></al-icon-pin>
-            <al-list>
-              <al-list-item *ngFor="let item of filterStates">{{ item }}</al-list-item>
-            </al-list>
+            {#each filterStates as item}
+              <al-list>
+                <al-list-item>{item}</al-list-item>
+              </al-list>
+            {/each}
           </al-select>
           <al-range label="Radius" behavior="range" max="1000" step="10"></al-range>
           <al-divider></al-divider>

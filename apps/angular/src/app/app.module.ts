@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { JobBoardComponent } from './job-board/job-board.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FpoComponent } from './f-po/f-po.component';
+import { LogoComponent } from './logo/logo.component';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { FpoComponent } from './f-po/f-po.component';
     AppComponent,
     JobBoardComponent,
     DashboardComponent,
-    FpoComponent
+    FpoComponent,
+    LogoComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent],

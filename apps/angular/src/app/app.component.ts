@@ -30,7 +30,6 @@ import "al-web-components/dist/components/popover/popover.js";
 import "al-web-components/dist/components/search/search.js";
 import "al-web-components/dist/components/toggle-button/toggle-button.js";
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

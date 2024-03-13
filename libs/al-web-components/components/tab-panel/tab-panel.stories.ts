@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './tab-panel';
+import '../button/button';
 
 export default {
   title: 'Atoms/Tab Panel',
