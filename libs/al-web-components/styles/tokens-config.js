@@ -46,7 +46,7 @@ StyleDictionary.registerFormat({
     const themeDeclaration = themeVariables(themePrefix);
     /* 6 */
     return comment + themeDeclaration + breakpointVariables;
-  }
+  },
 });
 
 /**
@@ -75,6 +75,7 @@ StyleDictionary.registerFormat({
         !token.name.includes('breakpoint')
       )
       .map(token => {
+        //console.log(token);
         let name;
         /* 2 */
         let value = JSON.stringify(token.value);
@@ -121,7 +122,7 @@ StyleDictionary.registerFormat({
 
     /* 11 */
     return comment + `:root {\n${otherVariables}\n}\n`;
-  }
+  },
 });
 
 /**
@@ -180,7 +181,7 @@ StyleDictionary.registerFormat({
     }).join('\n');
     /* 8 */
     return `{\n${variables}\n}`;
-  }
+  },
 });
 
 /**
@@ -197,7 +198,7 @@ function formatBoxShadowValue(value) {
 }
 
 /**
- * Format font-weight tokens
+ * Format font-weight tokens into a value
  * 1. Convert text string values to number values for font-weights
  * 2. Return the string value
  */
@@ -226,7 +227,7 @@ function formatTypographyValue(value) {
 }
 
 /**
- * Format space tokens
+ * Format space tokens into rems
  * 1. Convert pixel values to rems
  * 2. Return the string value
  */
@@ -237,25 +238,27 @@ function formatSpaceValue(value) {
 }
 
 /**
- * Generate a Global Config
+ * Style dictionary theme specific config
+ * This accepts a theme parameter, which is used to control which set of tokens to compile, and to define theme-specific compiled output.
+ * @param {string} themeName
  */
-const generateStyleDictionaryConfig = () => {
-  const source = [
+const styleDictionaryThemeConfig = (themeName) => {
+  const include = [
     `./styles/tokens/tier-1/*.json`,
     `./styles/tokens/tier-2/*.json`,
-    `./styles/tokens/tier-3/*.json`,
+    `./styles/tokens/tier-2/theme/${themeName}/*.json`,
+    `./styles/tokens/tier-3/theme/${themeName}/*.json`,
   ];
 
   return {
-    log: 'warn',
-    source: source,
+    include: include,
     platforms: {
       scss: {
         transformGroup: 'scss',
         buildPath: './',
         files: [
           {
-            destination: `/styles/tokens.scss`,
+            destination: `/styles/theme/tokens-${themeName}.scss`,
             format: 'scss/tokens',
             options: {
               outputReferences: true,
@@ -287,67 +290,73 @@ const generateStyleDictionaryConfig = () => {
   };
 };
 
-const generateAndBuildStyleDictionary = () => {
-  const styleDictionaryConfig = generateStyleDictionaryConfig();
+const styleDictionaryBuildTheme = (themeName) => {
+  const styleDictionaryConfig = styleDictionaryThemeConfig(themeName);
   const StyleDictionaryExtended = StyleDictionary.extend(styleDictionaryConfig);
   StyleDictionaryExtended.buildAllPlatforms();
 };
 
 /**
- * Generate and build
+ * Build each style dictionary theme
  */
-generateAndBuildStyleDictionary();
+styleDictionaryBuildTheme('light');
+styleDictionaryBuildTheme('dark');
 
-/**
- * Generate a Theme-Specific Config
- * This accepts a theme parameter, which is used to control which set of
- * tokens to compile, and to define theme-specific compiled output.
- * @param {string} theme
- */
-const generateThemeStyleDictionaryConfig = (themeName) => {
-  const source = [
-    `./styles/tokens/tier-1/*.json`,
-    `./styles/tokens/tier-2/animations.json`,
-    `./styles/tokens/tier-2/borders.json`,
-    `./styles/tokens/tier-2/icons.json`,
-    `./styles/tokens/tier-2/layout.json`,
-    `./styles/tokens/tier-2/opacity.json`,
-    `./styles/tokens/tier-2/shadows.json`,
-    `./styles/tokens/tier-2/spacing.json`,
-    `./styles/tokens/tier-2/typography.json`,
-    `./styles/tokens/tier-2/${themeName}/*.json`,
-    `./styles/tokens/tier-3/${themeName}/*.json`,
-  ];
+// /**
+//  * Style dictionary brand specific config
+//  * This accepts a theme and brand parameter, which is used to control which set of tokens to compile, and to define brand-specific compiled output.
+//  * @param {string} themeName
+//  * @param {string} brandName
+//  */
+// const styleDictionaryBrandConfig = (themeName, brandName) => {
+//   const include = [
+//     `./styles/tokens/tier-1/*.json`,
+//     `./styles/tokens/tier-2/animations.json`,
+//     `./styles/tokens/tier-2/borders.json`,
+//     `./styles/tokens/tier-2/icons.json`,
+//     `./styles/tokens/tier-2/layout.json`,
+//     `./styles/tokens/tier-2/opacity.json`,
+//     `./styles/tokens/tier-2/shadows.json`,
+//     `./styles/tokens/tier-2/spacing.json`,
+//     `./styles/tokens/tier-2/typography.json`,
+//     `./styles/tokens/tier-2/theme/${themeName}/*.json`,
+//     `./styles/tokens/tier-3/theme/${themeName}/*.json`,
+//   ];
 
-  return {
-    log: 'warn',
-    source: source,
-    platforms: {
-      scss: {
-        transformGroup: 'scss',
-        buildPath: './',
-        files: [
-          {
-            destination: `/styles/tokens-${themeName}.scss`,
-            format: 'scss/tokens',
-            options: {
-              outputReferences: true,
-              themeName: themeName,
-            },
-          },
-        ],
-      },
-    },
-  };
-};
+//   const source = [
+//     `./styles/tokens/tier-2/brand/${brandName}/*.json`,
+//     `./styles/tokens/tier-3/brand/${brandName}/*.json`,
+//   ];
 
-const generateAndBuildThemeStyleDictionary = (themeName) => {
-  const styleDictionaryConfig = generateThemeStyleDictionaryConfig(themeName);
-  const StyleDictionaryExtended = StyleDictionary.extend(styleDictionaryConfig);
-  StyleDictionaryExtended.buildAllPlatforms();
-};
+//   return {
+//     include: include,
+//     source: source,
+//     platforms: {
+//       scss: {
+//         transformGroup: 'scss',
+//         buildPath: './',
+//         files: [
+//           {
+//             destination: `/styles/brand/tokens-${brandName}.scss`,
+//             format: 'scss/tokens',
+//             options: {
+//               outputReferences: true,
+//             },
+//           },
+//         ],
+//       },
+//     },
+//   };
+// };
 
-/**
- * Generate and build
- */
-generateAndBuildThemeStyleDictionary('light');
+// const styleDictionaryBuildBrand = (themeName, brandName) => {
+//   const styleDictionaryConfig = styleDictionaryBrandConfig(themeName, brandName);
+//   const StyleDictionaryExtended = StyleDictionary.extend(styleDictionaryConfig);
+//   StyleDictionaryExtended.buildAllPlatforms();
+// };
+
+// /**
+//  * Build each style dictionary brand
+//  */
+// styleDictionaryBuildBrand('light', 'brandName');
+// styleDictionaryBuildBrand('dark', 'brandName');
