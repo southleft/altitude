@@ -1,6 +1,7 @@
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
+import 'construct-style-sheets-polyfill';
 
 export interface ALElementProps {
   styleModifier?: string;
@@ -107,7 +108,6 @@ export class ALElement extends LitElement {
         const themeSheetContent = themeSheet.textContent;
         const cleanedThemeSheetContent = themeSheetContent.replace(regex, '');
         (globalThis as any)[themeGlobal].replaceSync(cleanedThemeSheetContent);
-        console.log('themeGlobal', (globalThis as any)[themeGlobal]);
       } else {
         console.error(`Altitude style#${themeSheetId} not found`);
       }
@@ -120,8 +120,12 @@ export class ALElement extends LitElement {
    */
   connectedCallback(): void {
     super.connectedCallback();
+
+    // Supply an empty CSSStyleSheet if adoptedStyleSheets is undefined
+    const adoptedStyleSheets = this.shadowRoot.adoptedStyleSheets || [] as CSSStyleSheet[];
+
     // Adopt the theme sheet
-    this.shadowRoot.adoptedStyleSheets = [...this.shadowRoot.adoptedStyleSheets, this.getGlobalStyles()];
+    this.shadowRoot.adoptedStyleSheets = [...adoptedStyleSheets, this.getGlobalStyles()];
   }
 
   /**
