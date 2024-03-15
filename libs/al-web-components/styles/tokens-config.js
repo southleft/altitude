@@ -302,61 +302,62 @@ const styleDictionaryBuildTheme = (themeName) => {
 styleDictionaryBuildTheme('light');
 styleDictionaryBuildTheme('dark');
 
-// /**
-//  * Style dictionary brand specific config
-//  * This accepts a theme and brand parameter, which is used to control which set of tokens to compile, and to define brand-specific compiled output.
-//  * @param {string} themeName
-//  * @param {string} brandName
-//  */
-// const styleDictionaryBrandConfig = (themeName, brandName) => {
-//   const include = [
-//     `./styles/tokens/tier-1/*.json`,
-//     `./styles/tokens/tier-2/animations.json`,
-//     `./styles/tokens/tier-2/borders.json`,
-//     `./styles/tokens/tier-2/icons.json`,
-//     `./styles/tokens/tier-2/layout.json`,
-//     `./styles/tokens/tier-2/opacity.json`,
-//     `./styles/tokens/tier-2/shadows.json`,
-//     `./styles/tokens/tier-2/spacing.json`,
-//     `./styles/tokens/tier-2/typography.json`,
-//     `./styles/tokens/tier-2/theme/${themeName}/*.json`,
-//     `./styles/tokens/tier-3/theme/${themeName}/*.json`,
-//   ];
+/**
+ * Style dictionary brand specific config
+ * This accepts a theme and brand parameter, which is used to control which set of tokens to compile, and to define brand-specific compiled output.
+ * @param {string} themeName
+ * @param {string} brandName
+ */
+const styleDictionaryBrandConfig = (themeName, brandName) => {
+  const include = [
+    `./styles/tokens/tier-1/*.json`,
+    `./styles/tokens/tier-2/animations.json`,
+    `./styles/tokens/tier-2/borders.json`,
+    `./styles/tokens/tier-2/icons.json`,
+    `./styles/tokens/tier-2/layout.json`,
+    `./styles/tokens/tier-2/opacity.json`,
+    `./styles/tokens/tier-2/shadows.json`,
+    `./styles/tokens/tier-2/spacing.json`,
+    `./styles/tokens/tier-2/typography.json`,
+    `./styles/tokens/tier-2/theme/${themeName}/*.json`,
+    `./styles/tokens/tier-3/theme/${themeName}/*.json`,
+  ];
 
-//   const source = [
-//     `./styles/tokens/tier-2/brand/${brandName}/*.json`,
-//     `./styles/tokens/tier-3/brand/${brandName}/*.json`,
-//   ];
+  const source = [
+    `./styles/tokens/tier-2/brand/${brandName}/*.json`,
+    `./styles/tokens/tier-3/brand/${brandName}/*.json`,
+  ];
 
-//   return {
-//     include: include,
-//     source: source,
-//     platforms: {
-//       scss: {
-//         transformGroup: 'scss',
-//         buildPath: './',
-//         files: [
-//           {
-//             destination: `/styles/brand/tokens-${brandName}.scss`,
-//             format: 'scss/tokens',
-//             options: {
-//               outputReferences: true,
-//             },
-//           },
-//         ],
-//       },
-//     },
-//   };
-// };
+  return {
+    include: include,
+    source: source,
+    platforms: {
+      scss: {
+        transformGroup: 'scss',
+        buildPath: './',
+        files: [
+          {
+            destination: `/styles/brand/tokens-${brandName}.scss`,
+            format: 'scss/tokens',
+            options: {
+              outputReferences: true,
+            },
+          },
+        ],
+      },
+    },
+  };
+};
 
-// const styleDictionaryBuildBrand = (themeName, brandName) => {
-//   const styleDictionaryConfig = styleDictionaryBrandConfig(themeName, brandName);
-//   const StyleDictionaryExtended = StyleDictionary.extend(styleDictionaryConfig);
-//   StyleDictionaryExtended.buildAllPlatforms();
-// };
+const styleDictionaryBuildBrand = (themeName, brandName) => {
+  const styleDictionaryConfig = styleDictionaryBrandConfig(themeName, brandName);
+  const StyleDictionaryExtended = StyleDictionary.extend(styleDictionaryConfig);
+  StyleDictionaryExtended.buildAllPlatforms();
+};
 
-// /**
-//  * Build each style dictionary brand
-//  */
-// styleDictionaryBuildBrand('light', 'brandName');
-// styleDictionaryBuildBrand('dark', 'brandName');
+/**
+ * Build each style dictionary brand
+ */
+styleDictionaryBuildBrand('dark', 'altitude');
+styleDictionaryBuildBrand('dark', 'southleft');
+styleDictionaryBuildBrand('light', 'northright');
