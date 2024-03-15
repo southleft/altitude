@@ -1,8 +1,9 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { ALAvatar, ALBadge, ALButtonGroup, ALButton, ALCard, ALDivider, ALDrawer, ALHeader, ALHeading, ALIconBell, ALIconCalendar, ALIconChevronUp, ALIconHelp, ALIconHome, ALIconList, ALIconSettings, ALIconSignOut, ALIconSupport, ALIconUser, ALLayoutContainer, ALLayout, ALListItem, ALList, ALMenuItem, ALMenu, ALPopover, ALSearch, ALToggleButton } from 'al-react/dist/src';
+import logo from '../images/logo.svg'
 import './Layout.scss';
 
-export default function Dashboard({ children }) {
+export default function Dashboard() {
   return (
     <div className="al-li-dashboard">
       <div className="al-l-dashboard__help-popover">
@@ -23,7 +24,7 @@ export default function Dashboard({ children }) {
         <div className="al-l-dashboard__sidebar">
           <slot name="sidebar">
             <div className="al-l-dashboard__sidebar-logo">
-              <NavLink to={"/"}><img src="images/logo.svg" alt="logo" /></NavLink>
+              <NavLink to={"/"}><img src={logo} alt="logo" /></NavLink>
               <ALDivider></ALDivider>
             </div>
             <ALMenu className="al-l-dashboard__sidebar-menu">

@@ -38,6 +38,7 @@ module.exports = (env) => {
         // filename: 'theme.js'
       },
       _register: './directives/register.ts',
+      _setGlobalStyles: './directives/setGlobalStyles.ts',
       icon: './components/icon/icon.ts',
       bundle: Object.entries(components)
         // filter out icons.
@@ -58,6 +59,8 @@ module.exports = (env) => {
         switch (pathData.chunk.name) {
           case '_register':
             return 'directives/register.js';
+          case '_setGlobalStyles':
+            return 'directives/setGlobalStyles.js';
           default:
             return 'components/[name]/[name].js';
         }
