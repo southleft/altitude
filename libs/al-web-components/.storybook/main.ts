@@ -1,25 +1,20 @@
+import { dirname, join } from "path";
 import type { StorybookConfig } from '@storybook/web-components-webpack5';
 
 const config: StorybookConfig = {
   framework: {
-    name: '@storybook/web-components-webpack5',
+    name: getAbsolutePath("@storybook/web-components-webpack5"),
     options: {},
   },
-  stories: [
-    './docs/*.@(js|jsx|ts|tsx|mdx)',
-    '../components/**/**/*.stories.@(js|jsx|ts|tsx|mdx)',
-    './components/**/**/*.mdx',
-    './components/**/*.stories.@(js|jsx|ts|tsx|mdx)',
-    './recipes/**/*.stories.@(js|jsx|ts|tsx|mdx)',
-    './templates/**/*.stories.@(js|jsx|ts|tsx|mdx)',
-    './pages/**/*.stories.@(js|jsx|ts|tsx|mdx)'
-  ],
+
+  stories: ['./docs/*.@(js|jsx|ts|tsx|mdx)', '../components/**/**/*.@(mdx|stories.@(js|jsx|ts|tsx))', './components/**/**/*.mdx', './components/**/*.@(mdx|stories.@(js|jsx|ts|tsx))', './recipes/**/*.@(mdx|stories.@(js|jsx|ts|tsx))', './templates/**/*.@(mdx|stories.@(js|jsx|ts|tsx))', './pages/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'],
+
   addons: [
-    '@storybook/addon-essentials',
-    '@storybook/addon-a11y',
-    '@etchteam/storybook-addon-status',
-    '@storybook/addon-interactions',
-    '@storybook/blocks',
+    getAbsolutePath("@storybook/addon-essentials"),
+    getAbsolutePath("@storybook/addon-a11y"),
+    getAbsolutePath("@etchteam/storybook-addon-status"),
+    getAbsolutePath("@storybook/addon-interactions"),
+    getAbsolutePath("@storybook/blocks"),
     {
       name: '@storybook/addon-coverage',
       options: {
@@ -29,8 +24,10 @@ const config: StorybookConfig = {
           excludeNodeModules: true
         }
       }
-    }
+    },
+    '@storybook/addon-webpack5-compiler-babel'
   ],
+
   staticDirs: ['./static'],
 
   // Other Storybook options
@@ -52,7 +49,15 @@ const config: StorybookConfig = {
 
     // Return the modified Webpack Config
     return config;
+  },
+
+  docs: {
+    autodocs: true
   }
 };
 
 export default config;
+
+function getAbsolutePath(value: string): any {
+  return dirname(require.resolve(join(value, "package.json")));
+}
