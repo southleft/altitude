@@ -19,13 +19,21 @@
       </div>
       <al-menu class="al-l-dashboard__sidebar-menu">
         <a [routerLink]="['/dashboard']">
-          <al-menu-item isHeader="true" [isSelected]="activePath === '/dashboard'"><al-icon-home></al-icon-home>Dashboard<al-badge variant="danger">12</al-badge></al-menu-item>
+          <al-menu-item isHeader="true" [isSelected]="activePath === '/dashboard'">
+            <al-icon-home slot="before"></al-icon-home>Dashboard<al-badge variant="danger">12</al-badge>
+          </al-menu-item>
         </a>
         <a [routerLink]="['/']" class="al-l-dashboard__menu-link--header">
-          <al-menu-item isHeader="true" [isSelected]="activePath === '/'"><al-icon-list></al-icon-list>Job Board</al-menu-item>
+          <al-menu-item isHeader="true" [isSelected]="activePath === '/'">
+            <al-icon-list slot="before"></al-icon-list>Job Board
+          </al-menu-item>
         </a>
-        <al-menu-item isHeader="true"><al-icon-calendar></al-icon-calendar>Schedule</al-menu-item>
-        <al-menu-item isHeader="true" isExpandableHeader="true"><al-icon-support></al-icon-support>Resources</al-menu-item>
+        <al-menu-item isHeader="true">
+          <al-icon-calendar slot="before"></al-icon-calendar>Schedule
+        </al-menu-item>
+        <al-menu-item isHeader="true" isExpandableHeader="true">
+          <al-icon-support slot="before"></al-icon-support>Resources
+        </al-menu-item>
         <al-menu-item>Contact Us</al-menu-item>
         <al-menu-item>Customer Support</al-menu-item>
       </al-menu>

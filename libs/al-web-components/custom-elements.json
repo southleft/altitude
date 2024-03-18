@@ -4082,6 +4082,12 @@
           "type": "number"
         },
         {
+          "name": "indentation",
+          "description": "Indentation\n- Dynamically set by the menu parent component\n- Adds padding to a menu item to left-align its text with that of its Header",
+          "type": "number",
+          "default": "0"
+        },
+        {
           "name": "label",
           "description": "Label attribute\n- Sets the ariaLabel for A11y",
           "type": "string"
@@ -4177,6 +4183,13 @@
           "type": "number"
         },
         {
+          "name": "indentation",
+          "attribute": "indentation",
+          "description": "Indentation\n- Dynamically set by the menu parent component\n- Adds padding to a menu item to left-align its text with that of its Header",
+          "type": "number",
+          "default": "0"
+        },
+        {
           "name": "label",
           "attribute": "label",
           "description": "Label attribute\n- Sets the ariaLabel for A11y",
@@ -4248,6 +4261,11 @@
           "default": "\"Menu\""
         },
         {
+          "name": "indentGroupItems",
+          "description": "Indent group items attribute\n**true** - Applies padding to left align the text on group Menu Items with the text of the group Header\n**false** - Does not apply extra padding",
+          "type": "boolean"
+        },
+        {
           "name": "styleModifier",
           "description": "Append to the class name. Used for passing in utility classes",
           "type": "string"
@@ -4289,6 +4307,12 @@
           "description": "Label attribute\n- Sets ariaLabel for A11y",
           "type": "string",
           "default": "\"Menu\""
+        },
+        {
+          "name": "indentGroupItems",
+          "attribute": "indentGroupItems",
+          "description": "Indent group items attribute\n**true** - Applies padding to left align the text on group Menu Items with the text of the group Header\n**false** - Does not apply extra padding",
+          "type": "boolean"
         },
         {
           "name": "hasOverflow",

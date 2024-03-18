@@ -19,7 +19,7 @@ globalThis.alAutoRegistry = true;
  * - Allows for custom styles of the story iframe window
  * - Creating a style element for mainStyles and appending it to the document head
  */
-import mainStyles from '../styles/main.scss';
+import mainStyles from '!!raw-loader!sass-loader!../styles/main.scss';
 const mainStyleElement = document.createElement('style');
 mainStyleElement.innerHTML = mainStyles;
 mainStyleElement.setAttribute('type', 'text/css');

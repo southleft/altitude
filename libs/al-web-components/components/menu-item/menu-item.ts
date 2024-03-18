@@ -123,6 +123,14 @@ export class ALMenuItem extends ALElement {
   accessor idx: number;
 
   /**
+   * Indentation
+   * - Dynamically set by the menu parent component
+   * - Adds padding to a menu item to left-align its text with that of its Header
+   */
+  @property({ type: Number })
+  accessor indentation: number = 0;
+
+  /**
    * Label attribute
    * - Sets the ariaLabel for A11y
    */
@@ -154,7 +162,7 @@ export class ALMenuItem extends ALElement {
    */
   get menuItemLinkEl(): HTMLAnchorElement | HTMLButtonElement {
     if (this.menuItemLink) {
-      return this.menuItemLink.shadowRoot.querySelector('.al-c-link');
+      return this.menuItemLink.shadowRoot?.querySelector('.al-c-link');
     }
   }
 
@@ -173,6 +181,7 @@ export class ALMenuItem extends ALElement {
    */
   async firstUpdated() {
     await this.updateComplete;
+    this.setIndentation();
     this.setLinkClasses();
     this.setControlClasses();
   }
@@ -182,6 +191,7 @@ export class ALMenuItem extends ALElement {
    * 1. Wait for slotted elements to be loaded
    */
   updated() {
+    this.setIndentation();
     this.setLinkClasses();
     this.setControlClasses();
   }
@@ -224,6 +234,16 @@ export class ALMenuItem extends ALElement {
       } else {
         this.menuItemControlEl.classList.remove('al-is-selected');
       }
+    }
+  }
+
+  /**
+   * Set indentation
+   * 1. Set the indentation on the menu item link to align with header items
+   */
+  setIndentation() {
+    if (this.indentation) {
+      this.style.setProperty('--al-link-padding-inline-start', this.indentation.toString() + 'px'); /* 1 */
     }
   }
 
@@ -296,7 +316,21 @@ export class ALMenuItem extends ALElement {
         aria-label=${ifDefined(this.label)}
         aria-current=${ifDefined(this.isSelected)}
       >
-        <${this.linkEl}
+      ${this.isHeader && !this.href ?
+        html`<div 
+          class="al-c-menu-item__link al-c-menu-item--no-href" 
+          @click=${this.handleOnLinkClick}>
+            ${
+              this.slotNotEmpty('before') &&
+              html`
+                <div class="al-c-menu-item__prefix">
+                  <slot name="before"></slot>
+                </div>
+              `
+            }
+            <slot></slot>
+        </div>` :
+        html`<${this.linkEl}
           class="al-c-menu-item__link"
           @click=${this.handleOnLinkClick}
           href=${ifDefined(this.href)}
@@ -313,7 +347,7 @@ export class ALMenuItem extends ALElement {
             `
           }
           <slot></slot>
-        </${this.linkEl}>
+        </${this.linkEl}>`}
         ${
           this.isHeader && this.groupId
             ? html`
