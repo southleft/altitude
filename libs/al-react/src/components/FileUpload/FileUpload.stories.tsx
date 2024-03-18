@@ -1,4 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
+import React from 'react';
 import { ALFileUpload, ALIconDocument, ALButton } from '../..';
 
 export default {

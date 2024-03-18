@@ -1,4 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
+import React from 'react';
 import { ALDivider } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
@@ -21,10 +22,12 @@ export const Default: StoryObj<typeof ALDivider> = {
   args: {},
   decorators: [
     (Story) => (
-      <div className="al-u-spacing">
+      <div style={{ display: 'flex'}}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <Fpo>Layout Section</Fpo>
         {Story()}
         <Fpo>Layout Section</Fpo>
+      </div>
       </div>
     )
   ],
@@ -36,7 +39,7 @@ export const Vertical: StoryObj<typeof ALDivider> = {
   },
   decorators: [
     (Story) => (
-      <div className="al-u-spacing--left" style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', gap: "1rem" }}>
         <Fpo>Layout Section</Fpo>
         {Story()}
         <Fpo>Layout Section</Fpo>

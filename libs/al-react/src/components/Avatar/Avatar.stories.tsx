@@ -1,4 +1,5 @@
 import type { StoryObj } from '@storybook/react-webpack5';
+import React from 'react';
 import { ALAvatar, ALIconUser } from '../..';
 
 export default {

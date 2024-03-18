@@ -1,5 +1,6 @@
 import classnames from 'classnames';
 import '!style-loader!css-loader!sass-loader!./Fpo.scss';
+import React from 'react';
 
 export interface FpoProps {
   /**
