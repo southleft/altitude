@@ -7,7 +7,7 @@ export default function Dashboard() {
   return (
     <div className="al-li-dashboard">
       <div className="al-l-dashboard__help-popover">
-      <ALPopover position="top-left" isDismissible="true">
+      <ALPopover position="top-left" isDismissible={true}>
           <ALToggleButton slot="trigger" variant="background">
             <ALIconHelp size="lg" />
           </ALToggleButton>
@@ -30,18 +30,18 @@ export default function Dashboard() {
             <ALMenu className="al-l-dashboard__sidebar-menu">
               <NavLink to={'/dashboard'}>
               {({ isActive }) => (
-                <ALMenuItem isHeader="true" isSelected={isActive}>
+                <ALMenuItem isHeader={true} isSelected={isActive}>
                   <ALIconHome slot="before"></ALIconHome>Dashboard<ALBadge variant="danger">12</ALBadge>
                 </ALMenuItem>
               )}
               </NavLink>
               <NavLink to={'/'} className="al-l-dashboard__menu-link--header">
                 {({ isActive }) => (
-                  <ALMenuItem isHeader="true" isSelected={isActive}><ALIconList slot="before"></ALIconList>Job Board</ALMenuItem>
+                  <ALMenuItem isHeader={true} isSelected={isActive}><ALIconList slot="before"></ALIconList>Job Board</ALMenuItem>
                 )}
               </NavLink>
-                <ALMenuItem isHeader="true"><ALIconCalendar slot="before"></ALIconCalendar>Schedule</ALMenuItem>
-                <ALMenuItem isHeader="true" isExpandableHeader="true"><ALIconSupport slot="before"></ALIconSupport>Resources</ALMenuItem>
+                <ALMenuItem isHeader={true}><ALIconCalendar slot="before"></ALIconCalendar>Schedule</ALMenuItem>
+                <ALMenuItem isHeader={true} isExpandableHeader={true}><ALIconSupport slot="before"></ALIconSupport>Resources</ALMenuItem>
                 <ALMenuItem>Contact Us</ALMenuItem>
                 <ALMenuItem>Customer Support</ALMenuItem>
               </ALMenu>
@@ -51,7 +51,7 @@ export default function Dashboard() {
                   <div slot="trigger" className="al-l-dashboard__user">
                     <ALAvatar>TP</ALAvatar>
                     <p>TJ Pitre</p>
-                    <ALButton variant="tertiary" hideText="true"><ALIconChevronUp slot="before"></ALIconChevronUp></ALButton>
+                    <ALButton variant="tertiary" hideText={true}><ALIconChevronUp slot="before"></ALIconChevronUp></ALButton>
                   </div>
                   <ALMenu>
                     <ALMenuItem><ALIconUser></ALIconUser>Profile</ALMenuItem>
@@ -74,15 +74,15 @@ export default function Dashboard() {
                 </ALList>
               </ALSearch>
               <div slot="after">
-                <ALDrawer alignment="right" hasBackdrop="true" width="400">
-                  <ALButton slot="trigger" hideText="true" variant="tertiary"><ALBadge variant="danger" slot="after" isDot="true" className="al-l-dashboard__notifications-badge"></ALBadge><ALIconBell slot="after"></ALIconBell></ALButton>
-                  <ALHeading slot="header" tagName="h3" variant="sm" isBold="true">Notifications</ALHeading>
+                <ALDrawer alignment="right" hasBackdrop={true} width="400">
+                  <ALButton slot="trigger" hideText={true} variant="tertiary"><ALBadge variant="danger" slot="after" isDot={true} className="al-l-dashboard__notifications-badge"></ALBadge><ALIconBell slot="after"></ALIconBell></ALButton>
+                  <ALHeading slot="header" tagName="h3" variant="sm" isBold={true}>Notifications</ALHeading>
                   <div className="al-u-gap-xs">
                     <ALCard variant="bare" layout="inline" href="#">
-                      <ALAvatar slot="image" hasBadge="true" badgeVariant="success">KP</ALAvatar>
+                      <ALAvatar slot="image" hasBadge={true} badgeVariant="success">KP</ALAvatar>
                       <p className="al-u-theme-typography-body-sm"><strong>@kploransky</strong> sent you a message</p>
                       <p className="al-u-theme-typography-body-xs">Thursday 4:20pm</p>
-                      <ALBadge slot="actions-start" variant="warning" isDot="true"></ALBadge>
+                      <ALBadge slot="actions-start" variant="warning" isDot={true}></ALBadge>
                       <p slot="actions-end" className="al-u-theme-typography-body-xs">2 hours ago</p>
                     </ALCard>
                     <ALDivider></ALDivider>
@@ -90,7 +90,7 @@ export default function Dashboard() {
                       <ALAvatar slot="image">EB</ALAvatar>
                       <p className="al-u-theme-typography-body-sm"><strong>@ebrown</strong> sent you a message</p>
                       <p className="al-u-theme-typography-body-xs">Thursday 5:14pm</p>
-                      <ALBadge slot="actions-start" variant="warning" isDot="true"></ALBadge>
+                      <ALBadge slot="actions-start" variant="warning" isDot={true}></ALBadge>
                       <p slot="actions-end" className="al-u-theme-typography-body-xs">3 hours ago</p>
                     </ALCard>
                     <ALDivider></ALDivider>

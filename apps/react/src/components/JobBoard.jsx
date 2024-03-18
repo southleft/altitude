@@ -13,7 +13,7 @@ export default function JobBoard({ children }) {
 
   return (
     <div className="al-u-gap-xl">
-        <ALHeading isBold="true" variant="lg" tagName="h2">Job Board</ALHeading>
+        <ALHeading isBold={true} variant="lg" tagName="h2">Job Board</ALHeading>
         <div className="al-u-gap">
           <div className="al-u-grid">
             <ALSearch className="al-u-grid__item col:12 col:12@lg col:6@xxl" label="Search by job title, company, keywords">
@@ -32,12 +32,12 @@ export default function JobBoard({ children }) {
                 ))}
               </ALList>
             </ALSelect>
-            <ALDialog className="al-u-grid__item col:12 col:6@lg col:3@xxl" hasBackdrop="true">
-              <ALInput label="Filters" isReadonly="true" slot="trigger">
+            <ALDialog className="al-u-grid__item col:12 col:6@lg col:3@xxl" hasBackdrop={true}>
+              <ALInput label="Filters" isReadonly={true} slot="trigger">
                 <ALIconFilter slot="before"></ALIconFilter>
                 <ALBadge slot="after">3</ALBadge>
               </ALInput>
-              <ALHeading slot="header" isBold="true" variant="md" tagName="h2">Filter</ALHeading>
+              <ALHeading slot="header" isBold={true} variant="md" tagName="h2">Filter</ALHeading>
               <div className="al-l-job-board__filter-dialog al-u-gap">
                 <ALSelect label="Job Type" value="Full-time">
                   <ALList>
@@ -56,8 +56,8 @@ export default function JobBoard({ children }) {
                     <ALCheckbox>Back-end Development</ALCheckbox>
                   </ALCheckboxGroup>
                   <ALCheckboxGroup label=" ">
-                    <ALCheckbox isChecked="true">Front-end Development</ALCheckbox>
-                    <ALCheckbox isChecked="true">Design Systems</ALCheckbox>
+                    <ALCheckbox isChecked={true}>Front-end Development</ALCheckbox>
+                    <ALCheckbox isChecked={true}>Design Systems</ALCheckbox>
                     <ALCheckbox>Software Development</ALCheckbox>
                   </ALCheckboxGroup>
                 </div>
@@ -90,9 +90,9 @@ export default function JobBoard({ children }) {
             </ALDialog>
           </div>
           <ALChipGroup className="al-u-gap">
-            <ALChip isDismissible="true">Front-end Development</ALChip>
-            <ALChip isDismissible="true">Design Systems</ALChip>
-            <ALChip isDismissible="true">Full-time</ALChip>
+            <ALChip isDismissible={true}>Front-end Development</ALChip>
+            <ALChip isDismissible={true}>Design Systems</ALChip>
+            <ALChip isDismissible={true}>Full-time</ALChip>
           </ALChipGroup>
         </div>
         <ALDivider></ALDivider>
