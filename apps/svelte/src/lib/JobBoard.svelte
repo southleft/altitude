@@ -25,6 +25,7 @@
   import 'al-web-components/dist/components/text-passage/text-passage';
   import 'al-web-components/dist/components/pagination/pagination';
   import './JobBoard.css';
+  import { Link } from 'svelte-routing'
 
   export const filterStates  = [
     'All locations', 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia',
@@ -135,7 +136,7 @@
       <div slot="image" class="al-l-job-board__card-image">
         <al-icon-star size="xl"></al-icon-star>
       </div>
-      <al-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></al-heading>
+      <al-heading variant="sm" tagName="h3"><Link to="#">UX Designer</Link></al-heading>
       <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
       <div class="al-u-gap-xs al-u-gap--row">
         <al-chip variant="secondary">Design</al-chip>
@@ -148,7 +149,7 @@
       <div slot="image" class="al-l-job-board__card-image">
         <al-icon-star size="xl"></al-icon-star>
       </div>
-      <al-heading variant="sm" tagName="h3"><a href="#">Senior Front-end Developer</a></al-heading>
+      <al-heading variant="sm" tagName="h3"><Link to="#">Senior Front-end Developer</Link></al-heading>
       <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
       <div class="al-u-gap-xs al-u-gap--row">
         <al-chip variant="secondary">Front-end Developer</al-chip>
@@ -161,7 +162,7 @@
       <div slot="image" class="al-l-job-board__card-image">
         <al-icon-star size="xl"></al-icon-star>
       </div>
-      <al-heading variant="sm" tagName="h3"><a href="#">Junior Front-end Developer</a></al-heading>
+      <al-heading variant="sm" tagName="h3"><Link to="#">Junior Front-end Developer</Link></al-heading>
       <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
       <div class="al-u-gap-xs al-u-gap--row">
         <al-chip variant="secondary">Front-end Developer</al-chip>
@@ -175,7 +176,7 @@
       <div slot="image" class="al-l-job-board__card-image">
         <al-icon-star size="xl"></al-icon-star>
       </div>
-      <al-heading variant="sm" tagName="h3"><a href="#">Back-end Developer</a></al-heading>
+      <al-heading variant="sm" tagName="h3"><Link to="#">Back-end Developer</Link></al-heading>
       <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
       <div class="al-u-gap-xs al-u-gap--row">
         <al-chip variant="secondary">Software</al-chip>
@@ -188,7 +189,7 @@
       <div slot="image" class="al-l-job-board__card-image">
         <al-icon-star size="xl"></al-icon-star>
       </div>
-      <al-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></al-heading>
+      <al-heading variant="sm" tagName="h3"><Link to="#">UX Designer</Link></al-heading>
       <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
       <div class="al-u-gap-xs al-u-gap--row">
         <al-chip variant="secondary">Design</al-chip>
@@ -201,7 +202,7 @@
       <div slot="image" class="al-l-job-board__card-image">
         <al-icon-star size="xl"></al-icon-star>
       </div>
-      <al-heading variant="sm" tagName="h3"><a href="#">Senior Front-end Developer</a></al-heading>
+      <al-heading variant="sm" tagName="h3"><Link to="#">Senior Front-end Developer</Link></al-heading>
       <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
       <div class="al-u-gap-xs al-u-gap--row">
         <al-chip variant="secondary">Front-end Developer</al-chip>
@@ -214,7 +215,7 @@
       <div slot="image" class="al-l-job-board__card-image">
         <al-icon-star size="xl"></al-icon-star>
       </div>
-      <al-heading variant="sm" tagName="h3"><a href="#">Junior Front-end Developer</a></al-heading>
+      <al-heading variant="sm" tagName="h3"><Link to="#">Junior Front-end Developer</Link></al-heading>
       <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
       <div class="al-u-gap-xs al-u-gap--row">
         <al-chip variant="secondary">Front-end Developer</al-chip>
@@ -228,7 +229,7 @@
       <div slot="image" class="al-l-job-board__card-image">
         <al-icon-star size="xl"></al-icon-star>
       </div>
-      <al-heading variant="sm" tagName="h3"><a href="#">Back-end Developer</a></al-heading>
+      <al-heading variant="sm" tagName="h3"><Link to="#">Back-end Developer</Link></al-heading>
       <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
       <div class="al-u-gap-xs al-u-gap--row">
         <al-chip variant="secondary">Software</al-chip>
@@ -241,7 +242,7 @@
       <div slot="image" class="al-l-job-board__card-image">
         <al-icon-star size="xl"></al-icon-star>
       </div>
-      <al-heading variant="sm" tagName="h3"><a href="#">UX Designer</a></al-heading>
+      <al-heading variant="sm" tagName="h3"><Link to="#">UX Designer</Link></al-heading>
       <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
       <div class="al-u-gap-xs al-u-gap--row">
         <al-chip variant="secondary">Design</al-chip>
@@ -254,7 +255,7 @@
       <div slot="image" class="al-l-job-board__card-image">
         <al-icon-star size="xl"></al-icon-star>
       </div>
-      <al-heading variant="sm" tagName="h3"><a href="#">Senior Front-end Developer</a></al-heading>
+      <al-heading variant="sm" tagName="h3"><Link to="#">Senior Front-end Developer</Link></al-heading>
       <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
       <div class="al-u-gap-xs al-u-gap--row">
         <al-chip variant="secondary">Front-end Developer</al-chip>
