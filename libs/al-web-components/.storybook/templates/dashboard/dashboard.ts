@@ -79,10 +79,10 @@ export class ALDashboard extends LitElement {
                 <al-divider></al-divider>
               </div>
               <al-menu class="al-l-dashboard__sidebar-menu">
-                <al-menu-item href="/?path=/story/pages-home--default" ?isHeader=${true}><al-icon-home></al-icon-home>Dashboard<al-badge variant="danger">12</al-badge></al-badge></al-menu-item>
-                <al-menu-item href="/?path=/story/pages-job-board--default" ?isHeader=${true}><al-icon-list></al-icon-list>Job Board</al-menu-item>
-                <al-menu-item ?isHeader=${true}><al-icon-calendar></al-icon-calendar>Schedule</al-menu-item>
-                <al-menu-item ?isHeader=${true} ?isExpandableHeader=${true}><al-icon-support></al-icon-support>Resources</al-menu-item>
+                <al-menu-item href="/?path=/story/pages-home--default" ?isHeader=${true}><al-icon-home slot="before"></al-icon-home>Dashboard<al-badge variant="danger">12</al-badge></al-badge></al-menu-item>
+                <al-menu-item href="/?path=/story/pages-job-board--default" ?isHeader=${true}><al-icon-list slot="before"></al-icon-list>Job Board</al-menu-item>
+                <al-menu-item ?isHeader=${true}><al-icon-calendar></al-icon-calendar slot="before">Schedule</al-menu-item>
+                <al-menu-item ?isHeader=${true} ?isExpandableHeader=${true}><al-icon-support slot="before"></al-icon-support>Resources</al-menu-item>
                 <al-menu-item>Contact Us</al-menu-item>
                 <al-menu-item>Customer Support</al-menu-item>
               </al-menu>

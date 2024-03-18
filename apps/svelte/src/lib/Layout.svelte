@@ -13,10 +13,18 @@
   import 'al-web-components/dist/components/header/header';
   import 'al-web-components/dist/components/heading/heading';
   import 'al-web-components/dist/components/icon/icons/bell';
+  import 'al-web-components/dist/components/icon/icons/calendar';
+  import 'al-web-components/dist/components/icon/icons/list';
   import 'al-web-components/dist/components/icon/icons/document';
   import 'al-web-components/dist/components/icon/icons/dots-vertical';
   import 'al-web-components/dist/components/icon/icons/help';
   import 'al-web-components/dist/components/icon/icons/menu';
+  import 'al-web-components/dist/components/icon/icons/settings';
+  import 'al-web-components/dist/components/icon/icons/support';
+  import 'al-web-components/dist/components/icon/icons/sign-out';
+  import 'al-web-components/dist/components/icon/icons/chevron-up';
+  import 'al-web-components/dist/components/icon/icons/home';
+  import 'al-web-components/dist/components/icon/icons/user';
   import 'al-web-components/dist/components/layout-container/layout-container';
   import 'al-web-components/dist/components/layout-section/layout-section';
   import 'al-web-components/dist/components/layout/layout';
@@ -35,7 +43,7 @@
 
 <main style="position: relative; display: block;">
   <div class="al-l-dashboard__help-popover">
-    <al-popover position="top-left" isDismissible="true">
+    <al-popover position="top-left" isDismissible={true}>
       <al-toggle-button slot="trigger" variant="background" data-testid="popover-trigger"><al-icon-help size="lg"></al-icon-help></al-toggle-button>
       <al-heading slot="header" tagName="h3" variant="sm">Help Center</al-heading>
       <p>Welcome to our Job Board Help Center! Whether you're a first-time user or seeking a refresher, this guide will walk you through the steps to navigate our platform with ease. Let's get started!</p>
@@ -54,19 +62,19 @@
       </div>
       <al-menu class="al-l-dashboard__sidebar-menu">
         <Link to="/dashboard" let:active>
-          <al-menu-item isHeader="true" isSelected={active}>
+          <al-menu-item isHeader={true} isSelected={active}>
             <al-icon-home slot="before"></al-icon-home>Dashboard<al-badge variant="danger">12</al-badge>
           </al-menu-item>
         </Link>
         <Link to="/" let:active class="al-l-dashboard__menu-link--header">
-          <al-menu-item isHeader="true" isSelected={active}>
+          <al-menu-item isHeader={true} isSelected={active}>
             <al-icon-list slot="before"></al-icon-list>Job Board
           </al-menu-item>
         </Link>
-        <al-menu-item isHeader="true">
+        <al-menu-item isHeader={true}>
           <al-icon-calendar slot="before"></al-icon-calendar>Schedule
         </al-menu-item>
-        <al-menu-item isHeader="true" isExpandableHeader="true">
+        <al-menu-item isHeader={true} isExpandableHeader={true}>
           <al-icon-support slot="before"></al-icon-support>Resources
         </al-menu-item>
         <al-menu-item>Contact Us</al-menu-item>
@@ -78,13 +86,13 @@
           <div slot="trigger" class="al-l-dashboard__user">
             <al-avatar>TP</al-avatar>
             <p>TJ Pitre</p>
-            <al-button variant="tertiary" hideText="true"><al-icon-chevron-up slot="before"></al-icon-chevron-up></al-button>
+            <al-button variant="tertiary" hideText={true}><al-icon-chevron-up slot="before"></al-icon-chevron-up></al-button>
           </div>
           <al-menu>
-            <al-menu-item><al-icon-user></al-icon-user>Profile</al-menu-item>
-            <al-menu-item><al-icon-settings></al-icon-settings>Settings</al-menu-item>
-            <al-menu-item><al-icon-support></al-icon-support>Support</al-menu-item>
-            <al-menu-item><al-icon-sign-out></al-icon-sign-out>Sign Out</al-menu-item>
+            <al-menu-item><al-icon-user slot="before"></al-icon-user>Profile</al-menu-item>
+            <al-menu-item><al-icon-settings slot="before"></al-icon-settings>Settings</al-menu-item>
+            <al-menu-item><al-icon-support slot="before"></al-icon-support>Support</al-menu-item>
+            <al-menu-item><al-icon-sign-out slot="before"></al-icon-sign-out>Sign Out</al-menu-item>
           </al-menu>
         </al-popover>
       </div>
@@ -100,15 +108,15 @@
           </al-list>
         </al-search>
         <div slot="after">
-          <al-drawer alignment="right" hasBackdrop="true" width="400">
-            <al-button slot="trigger" hideText="true" variant="tertiary"><al-badge variant="danger" slot="after" isDot="true" class="al-l-dashboard__notifications-badge"></al-badge><al-icon-bell slot="after"></al-icon-bell></al-button>
-            <al-heading slot="header" tagName="h3" variant="sm" isBold="true">Notifications</al-heading>
+          <al-drawer alignment="right" hasBackdrop={true} width="400">
+            <al-button slot="trigger" hideText={true} variant="tertiary"><al-badge variant="danger" slot="after" isDot={true} class="al-l-dashboard__notifications-badge"></al-badge><al-icon-bell slot="after"></al-icon-bell></al-button>
+            <al-heading slot="header" tagName="h3" variant="sm" isBold={true}>Notifications</al-heading>
             <div class="al-u-gap-xs">
               <al-card variant="bare" layout="inline" href="#">
-                <al-avatar slot="image" hasBadge="true" badgeVariant="success">KP</al-avatar>
+                <al-avatar slot="image" hasBadge={true} badgeVariant="success">KP</al-avatar>
                 <p class="al-u-theme-typography-body-sm"><strong>&#64;kploransky</strong> sent you a message</p>
                 <p class="al-u-theme-typography-body-xs">Thursday 4:20pm</p>
-                <al-badge slot="actions-start" variant="warning" isDot="true"></al-badge>
+                <al-badge slot="actions-start" variant="warning" isDot={true}></al-badge>
                 <p slot="actions-end" class="al-u-theme-typography-body-xs">2 hours ago</p>
               </al-card>
               <al-divider></al-divider>
@@ -116,7 +124,7 @@
                 <al-avatar slot="image">EB</al-avatar>
                 <p class="al-u-theme-typography-body-sm"><strong>&#64;ebrown</strong> sent you a message</p>
                 <p class="al-u-theme-typography-body-xs">Thursday 5:14pm</p>
-                <al-badge slot="actions-start" variant="warning" isDot="true"></al-badge>
+                <al-badge slot="actions-start" variant="warning" isDot={true}></al-badge>
                 <p slot="actions-end" class="al-u-theme-typography-body-xs">3 hours ago</p>
               </al-card>
               <al-divider></al-divider>

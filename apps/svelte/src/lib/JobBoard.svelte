@@ -36,7 +36,7 @@
 </script>
 
 <div class="al-u-gap-xl">
-  <al-heading isBold="true" variant="lg" tagName="h2">Job Board</al-heading>
+  <al-heading isBold={true} variant="lg" tagName="h2">Job Board</al-heading>
   <div class="al-u-gap">
     <div class="al-u-grid">
       <al-search class="al-u-grid__item col:12 col:12@lg col:6@xxl" label="Search by job title, company, keywords">
@@ -55,12 +55,12 @@
           </al-list>
         {/each}
       </al-select>
-      <al-dialog class="al-u-grid__item col:12 col:6@lg col:3@xxl" hasBackdrop="true">
-        <al-input label="Filters" isReadonly="true" slot="trigger">
+      <al-dialog class="al-u-grid__item col:12 col:6@lg col:3@xxl" hasBackdrop={true}>
+        <al-input label="Filters" isReadonly={true} slot="trigger">
           <al-icon-filter slot="before"></al-icon-filter>
           <al-badge slot="after">3</al-badge>
         </al-input>
-        <al-heading slot="header" isBold="true" variant="md" tagName="h2">
+        <al-heading slot="header" isBold={true} variant="md" tagName="h2">
           Filter
         </al-heading>
         <div class="al-l-job-board__filter-dialog al-u-gap">
@@ -81,8 +81,8 @@
               <al-checkbox>Back-end Development</al-checkbox>
             </al-checkbox-group>
             <al-checkbox-group label=" ">
-              <al-checkbox isChecked="true">Front-end Development</al-checkbox>
-              <al-checkbox isChecked="true">Design Systems</al-checkbox>
+              <al-checkbox isChecked={true}>Front-end Development</al-checkbox>
+              <al-checkbox isChecked={true}>Design Systems</al-checkbox>
               <al-checkbox>Software Development</al-checkbox>
             </al-checkbox-group>
           </div>
@@ -115,9 +115,9 @@
       </al-dialog>
     </div>
     <al-chip-group class="al-u-gap">
-      <al-chip isDismissible="true">Front-end Development</al-chip>
-      <al-chip isDismissible="true">Design Systems</al-chip>
-      <al-chip isDismissible="true">Full-time</al-chip>
+      <al-chip isDismissible={true}>Front-end Development</al-chip>
+      <al-chip isDismissible={true}>Design Systems</al-chip>
+      <al-chip isDismissible={true}>Full-time</al-chip>
     </al-chip-group>
   </div>
   <al-divider></al-divider>
