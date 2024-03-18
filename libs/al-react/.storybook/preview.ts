@@ -5,7 +5,7 @@ import type { Preview } from '@storybook/react-webpack5';
  * - Allows for custom styles of the story iframe window
  * - Creating a style element for mainStyles and appending it to the document head
  */
-import mainStyles from '../../al-web-components/styles/main.scss';
+import mainStyles from '../../al-web-components/dist/css/main.css';
 const mainStyleElement = document.createElement('style');
 mainStyleElement.innerHTML = mainStyles;
 mainStyleElement.setAttribute('type', 'text/css');
