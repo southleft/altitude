@@ -55,6 +55,18 @@
   }
 }
 
+.al-c-menu-item--no-href {
+  @include al-theme-typography-body-md-bold;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: size(1);
+  height: var(--al-menu-item-height);
+  padding-block: var(--al-theme-space-xs);
+  padding-inline-end: var(--al-theme-space);
+  padding-inline-start: var(--al-link-padding-inline-start, #{var(--al-theme-space)});
+}
+
 /**
   * Menu item prefix - content in the "before" slot
   */

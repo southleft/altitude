@@ -54,13 +54,21 @@
       </div>
       <al-menu class="al-l-dashboard__sidebar-menu">
         <Link to="/dashboard" let:active>
-          <al-menu-item isHeader="true" isSelected={active}><al-icon-home></al-icon-home>Dashboard<al-badge variant="danger">12</al-badge></al-menu-item>
+          <al-menu-item isHeader="true" isSelected={active}>
+            <al-icon-home slot="before"></al-icon-home>Dashboard<al-badge variant="danger">12</al-badge>
+          </al-menu-item>
         </Link>
         <Link to="/" let:active class="al-l-dashboard__menu-link--header">
-          <al-menu-item isHeader="true" isSelected={active}><al-icon-list></al-icon-list>Job Board</al-menu-item>
+          <al-menu-item isHeader="true" isSelected={active}>
+            <al-icon-list slot="before"></al-icon-list>Job Board
+          </al-menu-item>
         </Link>
-        <al-menu-item isHeader="true"><al-icon-calendar></al-icon-calendar>Schedule</al-menu-item>
-        <al-menu-item isHeader="true" isExpandableHeader="true"><al-icon-support></al-icon-support>Resources</al-menu-item>
+        <al-menu-item isHeader="true">
+          <al-icon-calendar slot="before"></al-icon-calendar>Schedule
+        </al-menu-item>
+        <al-menu-item isHeader="true" isExpandableHeader="true">
+          <al-icon-support slot="before"></al-icon-support>Resources
+        </al-menu-item>
         <al-menu-item>Contact Us</al-menu-item>
         <al-menu-item>Customer Support</al-menu-item>
       </al-menu>
