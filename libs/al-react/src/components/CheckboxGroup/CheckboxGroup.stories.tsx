@@ -4,7 +4,7 @@ import { ALCheckboxGroup, ALCheckbox, ALFieldNote, ALIconWarningCircle, ALIconHe
 
 export default {
   title: 'Molecules/Checkbox Group',
-  component: ALCheckbox,
+  component: ALCheckboxGroup,
   subcomponents: { ALCheckbox },
   parameters: {
     status: { type: 'beta' },
