@@ -78,7 +78,8 @@ module.exports = (env) => {
         ? new CopyPlugin({
             patterns: [
               { from: `icons/svgs/*`, to: 'icons/[name][ext]' },
-              { from: `styles/theme/tokens-dark.scss`, to: 'scss' }
+              { from: `styles/theme/*`, to: 'scss/tokens/theme/[name][ext]' },
+              { from: `styles/brand/*`, to: 'scss/tokens/brand/[name][ext]' }
             ]
           })
         : null
