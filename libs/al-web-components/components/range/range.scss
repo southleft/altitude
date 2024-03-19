@@ -6,12 +6,9 @@
 /**
  * Range is an input range that can have 1. range value, 2 range values (range)
  */
- :host {
-  --al-range-thumb-size: #{var(--al-theme-space-lg)};
-  --al-range-track-height: 0.25rem;
-}
-
 .al-c-range {
+  --al-range-thumb-size: #{var(--al-theme-space-lg)};
+  --al-range-track-height: #{size(0.5)};
   display: flex;
   flex-direction: column;
   gap: var(--al-theme-space-xxs);

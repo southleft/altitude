@@ -5,18 +5,12 @@
 \*------------------------------------ */
 
 /**
- * Toggle variables which allow an application to change the width and height of the toggle if needed
- */
-:host {
-  --al-toggle-width: 40px;
-  --al-toggle-height: 22px;
-}
-
-/**
  * Toggle
  * 1. On/Off toggle
  */
 .al-c-toggle {
+  --al-toggle-width: #{size(5)};
+  --al-toggle-height: #{size(2.75)};
   position: relative;
 }
 
