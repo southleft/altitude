@@ -50,7 +50,7 @@ StyleDictionary.registerFormat({
 });
 
 /**
- * SCSS Token Formatting
+ * CSS Token Formatting
  * 1. Filter other specific tokens, format them, and create variables
  * 2. Convert JSON string to its original value
  * 3. Format font-weight tokens
@@ -65,7 +65,7 @@ StyleDictionary.registerFormat({
  * 11. Wrap the variables inside :root{}
  */
 StyleDictionary.registerFormat({
-  name: 'scss/tokens',
+  name: 'css/tokens',
   formatter: function ({ dictionary, options }) {
     /* 1 */
     const otherVariables = dictionary.allTokens
@@ -253,17 +253,23 @@ const styleDictionaryThemeConfig = (themeName) => {
   return {
     include: include,
     platforms: {
-      scss: {
-        transformGroup: 'scss',
+      css: {
+        transformGroup: 'css',
         buildPath: './',
         files: [
           {
-            destination: `/styles/theme/tokens-${themeName}.scss`,
-            format: 'scss/tokens',
+            destination: `/styles/dist/css/theme/tokens-${themeName}.css`,
+            format: 'css/tokens',
             options: {
               outputReferences: true,
             },
           },
+        ],
+      },
+      scss: {
+        transformGroup: 'scss',
+        buildPath: './',
+        files: [
           {
             destination: `/styles/core/variables.scss`,
             format: 'scss/variables',
@@ -278,7 +284,7 @@ const styleDictionaryThemeConfig = (themeName) => {
         buildPath: './',
         files: [
           {
-            destination: `/styles/tokens.json`,
+            destination: `/styles/dist/tokens.json`,
             format: 'json/flat',
             options: {
               outputReferences: true,
@@ -332,13 +338,13 @@ const styleDictionaryBrandConfig = (themeName, brandName) => {
     include: include,
     source: source,
     platforms: {
-      scss: {
-        transformGroup: 'scss',
+      css: {
+        transformGroup: 'css',
         buildPath: './',
         files: [
           {
-            destination: `/styles/brand/tokens-${brandName}.scss`,
-            format: 'scss/tokens',
+            destination: `/styles/dist/css/brand/tokens-${brandName}.css`,
+            format: 'css/tokens',
             options: {
               outputReferences: true,
             },

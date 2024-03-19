@@ -84,7 +84,38 @@ const preview: Preview = {
       }
     },
     backgrounds: { disable: true },
-  }
+  },
+  globalTypes: {
+    stylesheets: {
+      themes: [
+        {
+          id: "theme-dark",
+          title: "Theme: Dark",
+          url: "./css/tokens-dark.css",
+        },
+        {
+          id: "theme-light",
+          title: "Theme: Light",
+          url: "./css/tokens-light.css",
+        },
+        {
+          id: "brand-altitude",
+          title: "Brand: Altitude",
+          url: "./css/tokens-altitude.css",
+        },
+        {
+          id: "brand-northright",
+          title: "Brand: Northright",
+          url: "./css/tokens-northright.css",
+        },
+        {
+          id: "brand-southleft",
+          title: "Brand: Southleft",
+          url: "./css/tokens-southleft.css",
+        },
+      ],
+    },
+  },
 };
 
 export default preview;
