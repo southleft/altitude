@@ -21,6 +21,18 @@
             </al-list>
           </al-search>
           <div slot="after">
+            <al-popover variant="menu">
+              <al-button slot="trigger" hideText="true" variant="tertiary"><al-icon-settings slot="before"></al-icon-settings>Settings</al-button>
+              <al-menu>
+                <al-menu-item>Theme: Dark</al-menu-item>
+                <al-menu-item>Theme: Light</al-menu-item>
+                <al-menu-item>Brand: Altitude</al-menu-item>
+                <al-menu-item>Brand: Northright</al-menu-item>
+                <al-menu-item>Brand: Southleft</al-menu-item>
+              </al-menu>
+            </al-popover>
+          </div>
+          <div slot="after">
             <al-toggle-button>
               <al-popover position="bottom-left">
                 <al-avatar slot="trigger" hasBadge="true" badgeVariant="success">WW</al-avatar>

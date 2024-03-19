@@ -112,10 +112,10 @@ const preview: Preview = {
           id: "brand-southleft",
           title: "Brand: Southleft",
           url: "./css/tokens-southleft.css",
-        },
-      ],
-    },
-  },
+        }
+      ]
+    }
+  }
 };
 
 export default preview;

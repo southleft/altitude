@@ -117,6 +117,18 @@ export class ALDashboard extends LitElement {
                 </al-list>
               </al-search>
               <div slot="after">
+                <al-popover variant="menu">
+                  <al-button slot="trigger" ?hideText=${true} variant="tertiary"><al-icon-settings slot="before"></al-icon-settings>Settings</al-button>
+                  <al-menu>
+                    <al-menu-item>Theme: Dark</al-menu-item>
+                    <al-menu-item>Theme: Light</al-menu-item>
+                    <al-menu-item>Brand: Altitude</al-menu-item>
+                    <al-menu-item>Brand: Northright</al-menu-item>
+                    <al-menu-item>Brand: Southleft</al-menu-item>
+                  </al-menu>
+                </al-popover>
+              </div>
+              <div slot="after">
                 <al-drawer alignment="right" ?hasBackdrop=${true} width="400">
                   <al-button slot="trigger" ?hideText=${true} variant="tertiary"><al-badge variant="danger" slot="after" ?isDot=${true} class="al-l-dashboard__notifications-badge"></al-badge><al-icon-bell slot="after"></al-icon-bell></al-button>
                   <al-heading slot="header" tagName="h3" variant="sm" ?isBold=${true}>Notifications</al-heading>

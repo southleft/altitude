@@ -50,7 +50,7 @@ StyleDictionary.registerFormat({
 });
 
 /**
- * CSS Token Formatting
+ * Token Formatting
  * 1. Filter other specific tokens, format them, and create variables
  * 2. Convert JSON string to its original value
  * 3. Format font-weight tokens
@@ -65,7 +65,7 @@ StyleDictionary.registerFormat({
  * 11. Wrap the variables inside :root{}
  */
 StyleDictionary.registerFormat({
-  name: 'css/tokens',
+  name: 'tokens',
   formatter: function ({ dictionary, options }) {
     /* 1 */
     const otherVariables = dictionary.allTokens
@@ -259,7 +259,7 @@ const styleDictionaryThemeConfig = (themeName) => {
         files: [
           {
             destination: `/styles/dist/css/theme/tokens-${themeName}.css`,
-            format: 'css/tokens',
+            format: 'tokens',
             options: {
               outputReferences: true,
             },
@@ -270,6 +270,13 @@ const styleDictionaryThemeConfig = (themeName) => {
         transformGroup: 'scss',
         buildPath: './',
         files: [
+          {
+            destination: `/styles/dist/scss/theme/tokens-${themeName}.scss`,
+            format: 'tokens',
+            options: {
+              outputReferences: true,
+            },
+          },
           {
             destination: `/styles/core/variables.scss`,
             format: 'scss/variables',
@@ -344,7 +351,20 @@ const styleDictionaryBrandConfig = (themeName, brandName) => {
         files: [
           {
             destination: `/styles/dist/css/brand/tokens-${brandName}.css`,
-            format: 'css/tokens',
+            format: 'tokens',
+            options: {
+              outputReferences: true,
+            },
+          },
+        ],
+      },
+      scss: {
+        transformGroup: 'scss',
+        buildPath: './',
+        files: [
+          {
+            destination: `/styles/dist/scss/brand/tokens-${brandName}.scss`,
+            format: 'tokens',
             options: {
               outputReferences: true,
             },

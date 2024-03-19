@@ -28,7 +28,7 @@ export default function JobBoard({ children }) {
               <ALIconPin slot="before"></ALIconPin>
               <ALList>
                 {filterStates.map((item, index) => (
-                <ALListItem>{item}</ALListItem>
+                <ALListItem key={index}>{item}</ALListItem>
                 ))}
               </ALList>
             </ALSelect>
