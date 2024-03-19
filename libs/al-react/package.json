@@ -8,7 +8,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "storybook dev -p 9009",
-    "build": "yarn del-cli dist && tsc",
+    "build": "yarn del-cli dist && tsc && cp -r ./.storybook/static/images ./dist/images && cp -r ../al-web-components/dist/css ./dist",
     "build:storybook": "storybook build",
     "plop": "plop --plopfile plop/plop-config.js"
   },

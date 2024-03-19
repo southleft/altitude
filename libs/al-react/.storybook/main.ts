@@ -12,7 +12,8 @@ const config: StorybookConfig = {
   addons: [
     '@storybook/addon-essentials',
     '@storybook/addon-a11y',
-    '@etchteam/storybook-addon-status'
+    '@etchteam/storybook-addon-status',
+    'storybook-theme-switch-addon'
   ],
   staticDirs: ['../dist'],
   docs: {
