@@ -208,7 +208,7 @@ export class ALAlert extends ALElement {
                 <slot name="action"></slot>
               </div>` : ''}
             ${this.isDismissible ?
-              html`<${this.buttonEl} class="al-c-alert__close" variant="tertiary" hideText="true" label="Close" @click=${this.close}><${this.iconCloseEl} slot="before"></${this.iconCloseEl}></${this.buttonEl}>` : ''}
+              html`<${this.buttonEl} class="al-c-alert__close" variant="tertiary" hideText="true" label="Close" @click=${this.close}><${this.iconCloseEl} class="al-c-alert__icon-close" slot="before"></${this.iconCloseEl}></${this.buttonEl}>` : ''}
             </div>
         </div>
       </div>
