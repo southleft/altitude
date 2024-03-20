@@ -46,17 +46,8 @@
   }
 
   const appendStyleSheet = async (theme) => {
-    if (theme === 'dark') {
-      await import('al-web-components/dist/css/tokens-dark.css');
-    } else if (theme === 'light') {
-      await import('al-web-components/dist/css/tokens-light.css');
-    } else if (theme === 'altitude') {
-      await import('al-web-components/dist/css/tokens-altitude.css');
-    } else if (theme === 'northright') {
-      await import('al-web-components/dist/css/tokens-northright.css');
-    } else if (theme === 'southleft') {
-      await import('al-web-components/dist/css/tokens-southleft.css');
-    }
+    const cssString = `./al-web-components/dist/css/tokens-${theme}.css?v=${Number((new Date()))}`;
+    await import(/* @vite-ignore */cssString);
 
     // Remove previous theme stylesheet
     const existingStyles = document.querySelectorAll('style[type="text/css"]');
