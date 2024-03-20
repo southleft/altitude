@@ -30,6 +30,7 @@
   import 'al-web-components/dist/components/layout/layout';
   import 'al-web-components/dist/components/list-item/list-item';
   import 'al-web-components/dist/components/list/list';
+  import 'al-web-components/dist/components/logo/logo';
   import 'al-web-components/dist/components/menu-item/menu-item';
   import 'al-web-components/dist/components/menu/menu';
   import 'al-web-components/dist/components/popover/popover';
@@ -37,11 +38,41 @@
   import 'al-web-components/dist/components/text-passage/text-passage';
   import 'al-web-components/dist/components/toggle-button/toggle-button';
   import './Layout.css';
-  import logo from '../assets/logo.svg'
   import { Link } from 'svelte-routing'
+
+  let currentTheme;
+  const setCurrentTheme = (theme) => {
+    currentTheme = theme;
+  }
+
+  const appendStyleSheet = async (theme) => {
+    if (theme === 'dark') {
+      await import('al-web-components/dist/css/tokens-dark.css');
+    } else if (theme === 'light') {
+      await import('al-web-components/dist/css/tokens-light.css');
+    } else if (theme === 'altitude') {
+      await import('al-web-components/dist/css/tokens-altitude.css');
+    } else if (theme === 'northright') {
+      await import('al-web-components/dist/css/tokens-northright.css');
+    } else if (theme === 'southleft') {
+      await import('al-web-components/dist/css/tokens-southleft.css');
+    }
+
+    // Remove previous theme stylesheet
+    const existingStyles = document.querySelectorAll('style[type="text/css"]');
+    existingStyles.forEach((style) => {
+      const viteDevId = style.getAttribute('data-vite-dev-id');
+      if (viteDevId && viteDevId.includes('tokens') && !viteDevId.includes(theme)) {
+        style.remove();
+      }
+    });
+
+    // Set the current theme
+    setCurrentTheme(theme);
+  };
 </script>
 
-<main style="position: relative; display: block;">
+<main class="al-l-dashboard" style="position: relative; display: block;">
   <div class="al-l-dashboard__help-popover">
     <al-popover position="top-left" isDismissible={true}>
       <al-toggle-button slot="trigger" variant="background" data-testid="popover-trigger"><al-icon-help size="lg"></al-icon-help></al-toggle-button>
@@ -57,8 +88,10 @@
   <al-layout variant="sidebar-left" gap="none">
     <div class="al-l-dashboard__sidebar">
       <div class="al-l-dashboard__sidebar-logo">
-        <Link to="/"><img src={logo} alt="logo" /></Link>
-        <al-divider></al-divider>
+        <al-logo variant={currentTheme === 'northright' ? 'northright' : currentTheme === 'southleft' ? 'southleft' : ''}>
+          {currentTheme !== 'southleft' ? 'By Southleft • ' : ''}
+          {'Svelte Web Application'}
+        </al-logo>
       </div>
       <al-menu class="al-l-dashboard__sidebar-menu">
         <Link to="/dashboard" let:active>
@@ -111,11 +144,11 @@
           <al-popover variant="menu">
             <al-button slot="trigger" hideText={true} variant="tertiary"><al-icon-settings slot="before"></al-icon-settings>Settings</al-button>
             <al-menu>
-              <al-menu-item>Theme: Dark</al-menu-item>
-              <al-menu-item>Theme: Light</al-menu-item>
-              <al-menu-item>Brand: Altitude</al-menu-item>
-              <al-menu-item>Brand: Northright</al-menu-item>
-              <al-menu-item>Brand: Southleft</al-menu-item>
+              <al-menu-item onClick={() => appendStyleSheet('dark')}>Theme: Dark</al-menu-item>
+              <al-menu-item onClick={() => appendStyleSheet('light')}>Theme: Light</al-menu-item>
+              <al-menu-item onClick={() => appendStyleSheet('altitude')}>Brand: Altitude</al-menu-item>
+              <al-menu-item onClick={() => appendStyleSheet('northright')}>Brand: Northright</al-menu-item>
+              <al-menu-item onClick={() => appendStyleSheet('southleft')}>Brand: Southleft</al-menu-item>
             </al-menu>
           </al-popover>
         </div>

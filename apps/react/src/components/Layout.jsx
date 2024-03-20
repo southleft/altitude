@@ -1,31 +1,34 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { ALAvatar, ALBadge, ALButtonGroup, ALButton, ALCard, ALDivider, ALDrawer, ALHeader, ALHeading, ALIconBell, ALIconCalendar, ALIconChevronUp, ALIconHelp, ALIconHome, ALIconList, ALIconSettings, ALIconSignOut, ALIconSupport, ALIconUser, ALLayoutContainer, ALLayout, ALListItem, ALList, ALMenuItem, ALMenu, ALPopover, ALSearch, ALToggleButton } from 'al-react/dist/src';
-import logo from '../images/logo.svg'
+import { ALAvatar, ALBadge, ALButtonGroup, ALButton, ALCard, ALDivider, ALDrawer, ALHeader, ALHeading, ALIconBell, ALIconCalendar, ALIconChevronUp, ALIconHelp, ALIconHome, ALIconList, ALLogo, ALIconSettings, ALIconSignOut, ALIconSupport, ALIconUser, ALLayoutContainer, ALLayout, ALListItem, ALList, ALMenuItem, ALMenu, ALPopover, ALSearch, ALToggleButton } from 'al-react/dist/src';
 import './Layout.scss';
 import { useState, useEffect } from 'react';
 
 export default function Dashboard() {
-  const [currentTheme, setCurrentTheme] = useState('');
+  const [currentTheme, setCurrentTheme] = useState('dark');
 
-  const appendStyleSheet = (theme) => {
-    let themeStyles;
-    if (theme === 'theme-dark') {
-      themeStyles = 'al-web-components/dist/css/tokens-dark.css';
-    } else if (theme === 'theme-light') {
-      themeStyles = 'al-web-components/dist/css/tokens-light.css';
-    } else if (theme === 'brand-altitude') {
-      themeStyles = 'al-web-components/dist/css/tokens-altitude.css';
-    } else if (theme === 'brand-northright') {
-      themeStyles = 'al-web-components/dist/css/tokens-northright.css';
-    } else if (theme === 'brand-southleft') {
-      themeStyles = 'al-web-components/dist/css/tokens-southleft.css';
+  const appendStyleSheet = async (theme) => {
+    if (theme === 'dark') {
+      await import('al-web-components/dist/css/tokens-dark.css');
+    } else if (theme === 'light') {
+      await import('al-web-components/dist/css/tokens-light.css');
+    } else if (theme === 'altitude') {
+      await import('al-web-components/dist/css/tokens-altitude.css');
+    } else if (theme === 'northright') {
+      await import('al-web-components/dist/css/tokens-northright.css');
+    } else if (theme === 'southleft') {
+      await import('al-web-components/dist/css/tokens-southleft.css');
     }
 
-    const themeStyleElement = document.createElement('style');
-    themeStyleElement.innerHTML = themeStyles;
-    themeStyleElement.setAttribute('type', 'text/css');
-    // themeStyleElement.setAttribute('id', 'al-theme-sheet');
-    document.head.appendChild(themeStyleElement);
+    // Remove previous theme stylesheet
+    const existingStyles = document.querySelectorAll('style[type="text/css"]');
+    existingStyles.forEach((style) => {
+      const viteDevId = style.getAttribute('data-vite-dev-id');
+      if (viteDevId && viteDevId.includes('tokens') && !viteDevId.includes(theme)) {
+        style.remove();
+      }
+    });
+
+    // Set the current theme
     setCurrentTheme(theme);
   };
 
@@ -35,7 +38,7 @@ export default function Dashboard() {
   }, []); // Empty dependency array to run the effect only once on mount
 
   return (
-    <div className="al-li-dashboard">
+    <div className="al-l-dashboard">
       <div className="al-l-dashboard__help-popover">
         <ALPopover position="top-left" isDismissible={true}>
           <ALToggleButton slot="trigger" variant="background">
@@ -54,8 +57,10 @@ export default function Dashboard() {
         <div className="al-l-dashboard__sidebar">
           <slot name="sidebar">
             <div className="al-l-dashboard__sidebar-logo">
-              <NavLink to={"/"}><img src={logo} alt="logo" /></NavLink>
-              <ALDivider></ALDivider>
+              <ALLogo variant={currentTheme === 'northright' ? 'northright' : currentTheme === 'southleft' ? 'southleft' : ''}>
+                {currentTheme !== 'southleft' ? 'By Southleft • ' : ''}
+                {'React Web Application'}
+              </ALLogo>
             </div>
             <ALMenu className="al-l-dashboard__sidebar-menu">
               <NavLink to={'/dashboard'}>
@@ -107,11 +112,11 @@ export default function Dashboard() {
                 <ALPopover variant="menu">
                   <ALButton slot="trigger" hideText={true} variant="tertiary"><ALIconSettings slot="before"></ALIconSettings>Settings</ALButton>
                   <ALMenu>
-                    <ALMenuItem onClick={() => appendStyleSheet('theme-dark')}>Theme: Dark</ALMenuItem>
-                    <ALMenuItem onClick={() => appendStyleSheet('theme-light')}>Theme: Light</ALMenuItem>
-                    <ALMenuItem onClick={() => appendStyleSheet('brand-altitude')}>Brand: Altitude</ALMenuItem>
-                    <ALMenuItem onClick={() => appendStyleSheet('brand-northright')}>Brand: Northright</ALMenuItem>
-                    <ALMenuItem onClick={() => appendStyleSheet('brand-southleft')}>Brand: Southleft</ALMenuItem>
+                    <ALMenuItem onClick={() => appendStyleSheet('dark')}>Theme: Dark</ALMenuItem>
+                    <ALMenuItem onClick={() => appendStyleSheet('light')}>Theme: Light</ALMenuItem>
+                    <ALMenuItem onClick={() => appendStyleSheet('altitude')}>Brand: Altitude</ALMenuItem>
+                    <ALMenuItem onClick={() => appendStyleSheet('northright')}>Brand: Northright</ALMenuItem>
+                    <ALMenuItem onClick={() => appendStyleSheet('southleft')}>Brand: Southleft</ALMenuItem>
                   </ALMenu>
                 </ALPopover>
               </div>

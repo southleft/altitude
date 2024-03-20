@@ -24,6 +24,7 @@ import "al-web-components/dist/components/layout-container/layout-container.js";
 import "al-web-components/dist/components/layout/layout.js";
 import "al-web-components/dist/components/list-item/list-item.js";
 import "al-web-components/dist/components/list/list.js";
+import "al-web-components/dist/components/logo/logo.js";
 import "al-web-components/dist/components/menu-item/menu-item.js";
 import "al-web-components/dist/components/menu/menu.js";
 import "al-web-components/dist/components/popover/popover.js";

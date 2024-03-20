@@ -1,4 +1,4 @@
-<main style="position: relative; display: block;">
+<main class="al-l-dashboard" style="position: relative; display: block;">
   <div class="al-l-dashboard__help-popover">
     <al-popover position="top-left" isDismissible="true">
       <al-toggle-button slot="trigger" variant="background" data-testid="popover-trigger"><al-icon-help size="lg"></al-icon-help></al-toggle-button>
@@ -14,8 +14,7 @@
   <al-layout variant="sidebar-left" gap="none">
     <div class="al-l-dashboard__sidebar">
       <div class="al-l-dashboard__sidebar-logo">
-        <a routerLink='/'><app-logo></app-logo></a>
-        <al-divider></al-divider>
+        <al-logo>By Southleft • Angular Web Application</al-logo>
       </div>
       <al-menu class="al-l-dashboard__sidebar-menu">
         <a [routerLink]="['/dashboard']">
