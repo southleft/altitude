@@ -17,7 +17,9 @@ export class ALAccordionPanel extends ALElement {
   static el = 'al-accordion-panel';
 
   private elementMap = register({
-    elements: [[ALIconChevronDown.el, ALIconChevronDown]],
+    elements: [
+      [ALIconChevronDown.el, ALIconChevronDown]
+    ],
     suffix: (globalThis as any).alAutoRegistry === true ? '' : PackageJson.version
   });
 
@@ -151,7 +153,7 @@ export class ALAccordionPanel extends ALElement {
               <slot name="header"></slot>
             </div>
             <div class="al-c-accordion-panel__icon">
-              <${this.iconChevronDownEl}></${this.iconChevronDownEl}>
+              <${this.iconChevronDownEl} class="al-c-accordion-panel__icon" size="lg"></${this.iconChevronDownEl}>
             </div>
           </button>
         </dt>
