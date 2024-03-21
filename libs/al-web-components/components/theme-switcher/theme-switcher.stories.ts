@@ -4,7 +4,7 @@ import { withActions } from '@storybook/addon-actions/decorator';
 import './theme-switcher';
 
 export default {
-  title: 'Components/Theme-Switcher',
+  title: 'Molecules/Theme Switcher',
   component: 'al-theme-switcher',
   tags: [ 'autodocs' ],
   parameters: {
