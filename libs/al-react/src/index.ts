@@ -93,6 +93,7 @@ export * from './components/TabPanel';
 export * from './components/Tabs';
 export * from './components/Textarea';
 export * from './components/TextPassage';
+export * from './components/ThemeSwitcher';
 export * from './components/TimeSelectorList';
 export * from './components/Toast';
 export * from './components/ToastGroup';

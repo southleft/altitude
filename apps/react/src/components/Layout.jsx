@@ -1,41 +1,12 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { ALAvatar, ALBadge, ALButtonGroup, ALButton, ALCard, ALDivider, ALDrawer, ALHeader, ALHeading, ALIconBell, ALIconCalendar, ALIconChevronUp, ALIconHelp, ALIconHome, ALIconList, ALLogo, ALIconSettings, ALIconSignOut, ALIconSupport, ALIconUser, ALLayoutContainer, ALLayout, ALListItem, ALList, ALMenuItem, ALMenu, ALPopover, ALSearch, ALToggleButton } from 'al-react/dist/src';
+import { ALAvatar, ALBadge, ALButtonGroup, ALButton, ALCard, ALDivider, ALDrawer, ALHeader, ALHeading, ALIconBell, ALIconCalendar, ALIconChevronUp, ALIconHelp, ALIconHome, ALIconList, ALLogo, ALIconSettings, ALIconSignOut, ALIconSupport, ALIconUser, ALLayoutContainer, ALLayout, ALListItem, ALList, ALMenuItem, ALMenu, ALPopover, ALSearch, ALToggleButton, ALThemeSwitcher } from 'al-react/dist/src';
 import './Layout.scss';
-import { useState, useEffect } from 'react';
 
 export default function Dashboard() {
-  const [currentTheme, setCurrentTheme] = useState('dark');
-
-  const appendStyleSheet = async (theme) => {
-    if (theme === 'dark') {
-      await import('al-web-components/dist/css/tokens-dark.css');
-    } else if (theme === 'light') {
-      await import('al-web-components/dist/css/tokens-light.css');
-    } else if (theme === 'altitude') {
-      await import('al-web-components/dist/css/tokens-altitude.css');
-    } else if (theme === 'northright') {
-      await import('al-web-components/dist/css/tokens-northright.css');
-    } else if (theme === 'southleft') {
-      await import('al-web-components/dist/css/tokens-southleft.css');
-    }
-
-    // Remove previous theme stylesheet
-    const existingStyles = document.querySelectorAll('style[type="text/css"]');
-    existingStyles.forEach((style) => {
-      const viteDevId = style.getAttribute('data-vite-dev-id');
-      if (viteDevId && viteDevId.includes('tokens') && !viteDevId.includes(theme)) {
-        style.remove();
-      }
-    });
-
-    // Set the current theme
-    setCurrentTheme(theme);
-  };
-
-  useEffect(() => {
-    // Append the default stylesheet on component mount
-    appendStyleSheet('dark');
-  }, []); // Empty dependency array to run the effect only once on mount
+  let currentTheme;
+  document.addEventListener('onThemeSwitcherChange', (event) => {
+    currentTheme = event.detail.currentTheme;
+  });
 
   return (
     <div className="al-l-dashboard">
@@ -109,16 +80,7 @@ export default function Dashboard() {
                 </ALList>
               </ALSearch>
               <div slot="after">
-                <ALPopover variant="menu">
-                  <ALButton slot="trigger" hideText={true} variant="tertiary"><ALIconSettings slot="before"></ALIconSettings>Settings</ALButton>
-                  <ALMenu>
-                    <ALMenuItem onClick={() => appendStyleSheet('dark')}>Theme: Dark</ALMenuItem>
-                    <ALMenuItem onClick={() => appendStyleSheet('light')}>Theme: Light</ALMenuItem>
-                    <ALMenuItem onClick={() => appendStyleSheet('altitude')}>Brand: Altitude</ALMenuItem>
-                    <ALMenuItem onClick={() => appendStyleSheet('northright')}>Brand: Northright</ALMenuItem>
-                    <ALMenuItem onClick={() => appendStyleSheet('southleft')}>Brand: Southleft</ALMenuItem>
-                  </ALMenu>
-                </ALPopover>
+                <ALThemeSwitcher></ALThemeSwitcher>
               </div>
               <div slot="after">
                 <ALDrawer alignment="right" hasBackdrop={true} width="400">

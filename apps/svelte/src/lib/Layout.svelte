@@ -37,30 +37,14 @@
   import 'al-web-components/dist/components/search/search';
   import 'al-web-components/dist/components/text-passage/text-passage';
   import 'al-web-components/dist/components/toggle-button/toggle-button';
+  import 'al-web-components/dist/components/theme-switcher/theme-switcher';
   import './Layout.css';
   import { Link } from 'svelte-routing'
 
   let currentTheme;
-  const setCurrentTheme = (theme) => {
-    currentTheme = theme;
-  }
-
-  const appendStyleSheet = async (theme) => {
-    const cssString = `./al-web-components/dist/css/tokens-${theme}.css?v=${Number((new Date()))}`;
-    await import(/* @vite-ignore */cssString);
-
-    // Remove previous theme stylesheet
-    const existingStyles = document.querySelectorAll('style[type="text/css"]');
-    existingStyles.forEach((style) => {
-      const viteDevId = style.getAttribute('data-vite-dev-id');
-      if (viteDevId && viteDevId.includes('tokens') && !viteDevId.includes(theme)) {
-        style.remove();
-      }
-    });
-
-    // Set the current theme
-    setCurrentTheme(theme);
-  };
+  document.addEventListener('onThemeSwitcherChange', (event) => {
+    currentTheme = event.detail.currentTheme;
+  });
 </script>
 
 <main class="al-l-dashboard" style="position: relative; display: block;">
@@ -132,16 +116,7 @@
           </al-list>
         </al-search>
         <div slot="after">
-          <al-popover variant="menu">
-            <al-button slot="trigger" hideText={true} variant="tertiary"><al-icon-settings slot="before"></al-icon-settings>Settings</al-button>
-            <al-menu>
-              <al-menu-item onClick={() => appendStyleSheet('dark')}>Theme: Dark</al-menu-item>
-              <al-menu-item onClick={() => appendStyleSheet('light')}>Theme: Light</al-menu-item>
-              <al-menu-item onClick={() => appendStyleSheet('altitude')}>Brand: Altitude</al-menu-item>
-              <al-menu-item onClick={() => appendStyleSheet('northright')}>Brand: Northright</al-menu-item>
-              <al-menu-item onClick={() => appendStyleSheet('southleft')}>Brand: Southleft</al-menu-item>
-            </al-menu>
-          </al-popover>
+          <al-theme-switcher></al-theme-switcher>
         </div>
         <div slot="after">
           <al-drawer alignment="right" hasBackdrop={true} width="400">
