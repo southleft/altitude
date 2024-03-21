@@ -30,18 +30,24 @@
   import 'al-web-components/dist/components/layout/layout';
   import 'al-web-components/dist/components/list-item/list-item';
   import 'al-web-components/dist/components/list/list';
+  import 'al-web-components/dist/components/logo/logo';
   import 'al-web-components/dist/components/menu-item/menu-item';
   import 'al-web-components/dist/components/menu/menu';
   import 'al-web-components/dist/components/popover/popover';
   import 'al-web-components/dist/components/search/search';
   import 'al-web-components/dist/components/text-passage/text-passage';
   import 'al-web-components/dist/components/toggle-button/toggle-button';
+  import 'al-web-components/dist/components/theme-switcher/theme-switcher';
   import './Layout.css';
-  import logo from '../assets/logo.svg'
   import { Link } from 'svelte-routing'
+
+  let currentTheme;
+  document.addEventListener('onThemeSwitcherChange', (event) => {
+    currentTheme = event.detail.currentTheme;
+  });
 </script>
 
-<main style="position: relative; display: block;">
+<main class="al-l-dashboard" style="position: relative; display: block;">
   <div class="al-l-dashboard__help-popover">
     <al-popover position="top-left" isDismissible={true}>
       <al-toggle-button slot="trigger" variant="background" data-testid="popover-trigger"><al-icon-help size="lg"></al-icon-help></al-toggle-button>
@@ -57,8 +63,10 @@
   <al-layout variant="sidebar-left" gap="none">
     <div class="al-l-dashboard__sidebar">
       <div class="al-l-dashboard__sidebar-logo">
-        <Link to="/"><img src={logo} alt="logo" /></Link>
-        <al-divider></al-divider>
+        <al-logo variant={currentTheme === 'northright' ? 'northright' : currentTheme === 'southleft' ? 'southleft' : ''}>
+          {currentTheme !== 'southleft' ? 'By Southleft • ' : ''}
+          {'Svelte Web Application'}
+        </al-logo>
       </div>
       <al-menu class="al-l-dashboard__sidebar-menu">
         <Link to="/dashboard" let:active>
@@ -108,16 +116,7 @@
           </al-list>
         </al-search>
         <div slot="after">
-          <al-popover variant="menu">
-            <al-button slot="trigger" hideText={true} variant="tertiary"><al-icon-settings slot="before"></al-icon-settings>Settings</al-button>
-            <al-menu>
-              <al-menu-item>Theme: Dark</al-menu-item>
-              <al-menu-item>Theme: Light</al-menu-item>
-              <al-menu-item>Brand: Altitude</al-menu-item>
-              <al-menu-item>Brand: Northright</al-menu-item>
-              <al-menu-item>Brand: Southleft</al-menu-item>
-            </al-menu>
-          </al-popover>
+          <al-theme-switcher></al-theme-switcher>
         </div>
         <div slot="after">
           <al-drawer alignment="right" hasBackdrop={true} width="400">

@@ -3706,7 +3706,7 @@
         },
         {
           "name": "variant",
-          "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset\n</cat-text-passage>",
+          "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset",
           "type": "\"sm\" | \"lg\" | \"xs\""
         },
         {
@@ -3755,7 +3755,7 @@
         {
           "name": "variant",
           "attribute": "variant",
-          "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset\n</cat-text-passage>",
+          "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset",
           "type": "\"sm\" | \"lg\" | \"xs\""
         },
         {
@@ -4006,6 +4006,55 @@
         },
         {
           "name": "setShadows"
+        },
+        {
+          "name": "styleModifier",
+          "attribute": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "al-logo",
+      "path": "./components/logo/logo.ts",
+      "description": "Component: al-logo\n- **slot**: The component content",
+      "attributes": [
+        {
+          "name": "variant",
+          "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **southleft** displays the Southleft logo",
+          "type": "\"northright\" | \"southleft\""
+        },
+        {
+          "name": "href",
+          "description": "The logo link URL",
+          "type": "string",
+          "default": "\"/\""
+        },
+        {
+          "name": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "el",
+          "type": "string",
+          "default": "\"al-logo\""
+        },
+        {
+          "name": "variant",
+          "attribute": "variant",
+          "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **southleft** displays the Southleft logo",
+          "type": "\"northright\" | \"southleft\""
+        },
+        {
+          "name": "href",
+          "attribute": "href",
+          "description": "The logo link URL",
+          "type": "string",
+          "default": "\"/\""
         },
         {
           "name": "styleModifier",
@@ -6769,6 +6818,31 @@
           "attribute": "maxLengthValue",
           "description": "Maxlength value\n- Dynamically outputs the number of characters inside the input field",
           "type": "number"
+        },
+        {
+          "name": "styleModifier",
+          "attribute": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "al-theme-switcher",
+      "path": "./components/theme-switcher/theme-switcher.ts",
+      "description": "Component: al-theme-switcher\n- **slot**: The component content",
+      "attributes": [
+        {
+          "name": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "el",
+          "type": "string",
+          "default": "\"al-theme-switcher\""
         },
         {
           "name": "styleModifier",

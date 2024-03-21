@@ -1,41 +1,15 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { ALAvatar, ALBadge, ALButtonGroup, ALButton, ALCard, ALDivider, ALDrawer, ALHeader, ALHeading, ALIconBell, ALIconCalendar, ALIconChevronUp, ALIconHelp, ALIconHome, ALIconList, ALIconSettings, ALIconSignOut, ALIconSupport, ALIconUser, ALLayoutContainer, ALLayout, ALListItem, ALList, ALMenuItem, ALMenu, ALPopover, ALSearch, ALToggleButton } from 'al-react/dist/src';
-import logo from '../images/logo.svg'
+import { ALAvatar, ALBadge, ALButtonGroup, ALButton, ALCard, ALDivider, ALDrawer, ALHeader, ALHeading, ALIconBell, ALIconCalendar, ALIconChevronUp, ALIconHelp, ALIconHome, ALIconList, ALLogo, ALIconSettings, ALIconSignOut, ALIconSupport, ALIconUser, ALLayoutContainer, ALLayout, ALListItem, ALList, ALMenuItem, ALMenu, ALPopover, ALSearch, ALToggleButton, ALThemeSwitcher } from 'al-react/dist/src';
 import './Layout.scss';
-import { useState, useEffect } from 'react';
 
 export default function Dashboard() {
-  const [currentTheme, setCurrentTheme] = useState('');
-
-  const appendStyleSheet = (theme) => {
-    let themeStyles;
-    if (theme === 'theme-dark') {
-      themeStyles = 'al-web-components/dist/css/tokens-dark.css';
-    } else if (theme === 'theme-light') {
-      themeStyles = 'al-web-components/dist/css/tokens-light.css';
-    } else if (theme === 'brand-altitude') {
-      themeStyles = 'al-web-components/dist/css/tokens-altitude.css';
-    } else if (theme === 'brand-northright') {
-      themeStyles = 'al-web-components/dist/css/tokens-northright.css';
-    } else if (theme === 'brand-southleft') {
-      themeStyles = 'al-web-components/dist/css/tokens-southleft.css';
-    }
-
-    const themeStyleElement = document.createElement('style');
-    themeStyleElement.innerHTML = themeStyles;
-    themeStyleElement.setAttribute('type', 'text/css');
-    // themeStyleElement.setAttribute('id', 'al-theme-sheet');
-    document.head.appendChild(themeStyleElement);
-    setCurrentTheme(theme);
-  };
-
-  useEffect(() => {
-    // Append the default stylesheet on component mount
-    appendStyleSheet('dark');
-  }, []); // Empty dependency array to run the effect only once on mount
+  let currentTheme;
+  document.addEventListener('onThemeSwitcherChange', (event) => {
+    currentTheme = event.detail.currentTheme;
+  });
 
   return (
-    <div className="al-li-dashboard">
+    <div className="al-l-dashboard">
       <div className="al-l-dashboard__help-popover">
         <ALPopover position="top-left" isDismissible={true}>
           <ALToggleButton slot="trigger" variant="background">
@@ -54,8 +28,10 @@ export default function Dashboard() {
         <div className="al-l-dashboard__sidebar">
           <slot name="sidebar">
             <div className="al-l-dashboard__sidebar-logo">
-              <NavLink to={"/"}><img src={logo} alt="logo" /></NavLink>
-              <ALDivider></ALDivider>
+              <ALLogo variant={currentTheme === 'northright' ? 'northright' : currentTheme === 'southleft' ? 'southleft' : ''}>
+                {currentTheme !== 'southleft' ? 'By Southleft • ' : ''}
+                {'React Web Application'}
+              </ALLogo>
             </div>
             <ALMenu className="al-l-dashboard__sidebar-menu">
               <NavLink to={'/dashboard'}>
@@ -104,16 +80,7 @@ export default function Dashboard() {
                 </ALList>
               </ALSearch>
               <div slot="after">
-                <ALPopover variant="menu">
-                  <ALButton slot="trigger" hideText={true} variant="tertiary"><ALIconSettings slot="before"></ALIconSettings>Settings</ALButton>
-                  <ALMenu>
-                    <ALMenuItem onClick={() => appendStyleSheet('theme-dark')}>Theme: Dark</ALMenuItem>
-                    <ALMenuItem onClick={() => appendStyleSheet('theme-light')}>Theme: Light</ALMenuItem>
-                    <ALMenuItem onClick={() => appendStyleSheet('brand-altitude')}>Brand: Altitude</ALMenuItem>
-                    <ALMenuItem onClick={() => appendStyleSheet('brand-northright')}>Brand: Northright</ALMenuItem>
-                    <ALMenuItem onClick={() => appendStyleSheet('brand-southleft')}>Brand: Southleft</ALMenuItem>
-                  </ALMenu>
-                </ALPopover>
+                <ALThemeSwitcher></ALThemeSwitcher>
               </div>
               <div slot="after">
                 <ALDrawer alignment="right" hasBackdrop={true} width="400">

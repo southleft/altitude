@@ -27,7 +27,6 @@ export class ALLink extends ALElement {
    * - **xs** renders a link with the al-theme-typography-body-xs preset
    * - **sm** renders a link with the al-theme-typography-body-sm preset
    * - **lg** renders a link with the al-theme-typography-body-lg preset
-   * </cat-text-passage>
    */
   @property()
   accessor variant: 'xs' | 'sm' | 'lg';

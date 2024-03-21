@@ -36,7 +36,7 @@
   ];
 </script>
 
-<div class="al-u-gap-xl">
+<div class="al-l-job-board al-u-gap-xl">
   <al-heading isBold={true} variant="lg" tagName="h2">Job Board</al-heading>
   <div class="al-u-gap">
     <div class="al-u-grid">

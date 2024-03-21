@@ -1,4 +1,4 @@
-<main style="position: relative; display: block;">
+<main class="al-l-dashboard" style="position: relative; display: block;">
   <div class="al-l-dashboard__help-popover">
     <al-popover position="top-left" isDismissible="true">
       <al-toggle-button slot="trigger" variant="background" data-testid="popover-trigger"><al-icon-help size="lg"></al-icon-help></al-toggle-button>
@@ -14,8 +14,12 @@
   <al-layout variant="sidebar-left" gap="none">
     <div class="al-l-dashboard__sidebar">
       <div class="al-l-dashboard__sidebar-logo">
-        <a routerLink='/'><app-logo></app-logo></a>
-        <al-divider></al-divider>
+        <al-logo [variant]="currentTheme === 'northright' ? 'northright' : currentTheme === 'southleft' ? 'southleft' : ''">
+          <ng-container *ngIf="currentTheme !== 'southleft'">
+            By Southleft •
+          </ng-container>
+          Angular Web Application
+        </al-logo>
       </div>
       <al-menu class="al-l-dashboard__sidebar-menu">
         <a [routerLink]="['/dashboard']">
@@ -65,16 +69,7 @@
           </al-list>
         </al-search>
         <div slot="after">
-          <al-popover variant="menu">
-            <al-button slot="trigger" hideText="true" variant="tertiary"><al-icon-settings slot="before"></al-icon-settings>Settings</al-button>
-            <al-menu>
-              <al-menu-item>Theme: Dark</al-menu-item>
-              <al-menu-item>Theme: Light</al-menu-item>
-              <al-menu-item>Brand: Altitude</al-menu-item>
-              <al-menu-item>Brand: Northright</al-menu-item>
-              <al-menu-item>Brand: Southleft</al-menu-item>
-            </al-menu>
-          </al-popover>
+          <al-theme-switcher></al-theme-switcher>
         </div>
         <div slot="after">
           <al-drawer alignment="right" hasBackdrop="true" width="400">
