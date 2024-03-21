@@ -1,6 +1,5 @@
-import { TemplateResult, unsafeCSS } from 'lit';
+import { TemplateResult, unsafeCSS, html } from 'lit';
 import { property, queryAssignedElements } from 'lit/decorators.js';
-import { html } from 'lit/static-html.js';
 import { ALElement } from '../ALElement';
 import { ALToast } from '../toast/toast';
 import styles from './toast-group.scss';
@@ -30,7 +29,7 @@ export class ALToastGroup extends ALElement {
    * - **true** Displays the toast group on the screen
    * - **false** Hides the toast group on the screen
    */
-  @property()
+  @property({ type: Boolean })
   accessor isActive: boolean;
 
   /**

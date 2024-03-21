@@ -1,5 +1,4 @@
-import { TemplateResult, unsafeCSS } from 'lit';
-import { html } from 'lit/static-html.js';
+import { TemplateResult, unsafeCSS, html } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ALElement } from '../ALElement';
 import styles from './text-passage.scss';

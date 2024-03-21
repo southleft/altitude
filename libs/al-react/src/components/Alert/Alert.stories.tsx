@@ -57,7 +57,6 @@ function openAlert() {
 
 export const Default: StoryObj<typeof ALAlert> = {};
 
-
 export const Success: StoryObj<typeof ALAlert> = {
   args: {
     variant: 'success'

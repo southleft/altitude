@@ -5,7 +5,7 @@ import type { Preview } from '@storybook/react-webpack5';
  * - Allows for custom styles of the story iframe window
  * - Creating a style element for mainStyles and appending it to the document head
  */
-import mainStyles from '../../al-web-components/dist/css/main.css';
+import mainStyles from '!!raw-loader!sass-loader!../../al-web-components/dist/css/main.css';
 const mainStyleElement = document.createElement('style');
 mainStyleElement.innerHTML = mainStyles;
 mainStyleElement.setAttribute('type', 'text/css');
@@ -17,7 +17,7 @@ document.head.appendChild(mainStyleElement);
  * - Allows for the icon font to be avaiable in the story iframe window
  * - Creating a style element for iconFontCSS and appending it to the document head
  */
-import iconFontCSS from '../../al-web-components/components/icon/fonts/iconfont.css';
+import iconFontCSS from '!!raw-loader!sass-loader!../../al-web-components/components/icon/fonts/iconfont.css';
 const iconFontStyleElement = document.createElement('style');
 iconFontStyleElement.setAttribute('type', 'text/css');
 iconFontStyleElement.setAttribute('id', 'iconfont-style');

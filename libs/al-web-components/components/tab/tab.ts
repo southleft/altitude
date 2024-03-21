@@ -1,5 +1,4 @@
-import { TemplateResult, unsafeCSS } from 'lit';
-import { html } from 'lit/static-html.js';
+import { TemplateResult, unsafeCSS, html } from 'lit';
 import { property, query } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { ALElement } from '../ALElement';
@@ -21,7 +20,7 @@ export class ALTab extends ALElement {
    * - **true** Renders a tab with selected/active state
    * - **false** Renders a tab without selected/active state
    */
-  @property()
+  @property({ type: Boolean })
   accessor isActive: boolean;
 
   /**

@@ -31,7 +31,7 @@ document.head.appendChild(mainStyleElement);
  * - Allows for the icon font to be avaiable in the story iframe window
  * - Creating a style element for iconFontCSS and appending it to the document head
  */
-import iconFontCSS from '../components/icon/fonts/iconfont.css';
+import iconFontCSS from '!!raw-loader!sass-loader!../components/icon/fonts/iconfont.css';
 const iconFontStyleElement = document.createElement('style');
 iconFontStyleElement.setAttribute('type', 'text/css');
 iconFontStyleElement.setAttribute('id', 'iconfont-style');
