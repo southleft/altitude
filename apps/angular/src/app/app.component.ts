@@ -30,6 +30,7 @@ import "al-web-components/dist/components/menu/menu.js";
 import "al-web-components/dist/components/popover/popover.js";
 import "al-web-components/dist/components/search/search.js";
 import "al-web-components/dist/components/toggle-button/toggle-button.js";
+import "al-web-components/dist/components/theme-switcher/theme-switcher.js";
 
 @Component({
   selector: 'app-root',
@@ -41,12 +42,17 @@ export class AppComponent {
 
   activePaths: string[] = ['/', '/dashboard', '/job-board'];
   activePath: string = '';
+  currentTheme: string = '';
 
   constructor(private router: Router) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.activePath = this.getActivePath(event.url);
       }
+    });
+    document.addEventListener('onThemeSwitcherChange', (event) => {
+      const target = event as CustomEvent;
+      this.currentTheme = target.detail.currentTheme;
     });
   }
 

@@ -14,7 +14,12 @@
   <al-layout variant="sidebar-left" gap="none">
     <div class="al-l-dashboard__sidebar">
       <div class="al-l-dashboard__sidebar-logo">
-        <al-logo>By Southleft • Angular Web Application</al-logo>
+        <al-logo [variant]="currentTheme === 'northright' ? 'northright' : currentTheme === 'southleft' ? 'southleft' : ''">
+          <ng-container *ngIf="currentTheme !== 'southleft'">
+            By Southleft •
+          </ng-container>
+          Angular Web Application
+        </al-logo>
       </div>
       <al-menu class="al-l-dashboard__sidebar-menu">
         <a [routerLink]="['/dashboard']">
@@ -64,16 +69,7 @@
           </al-list>
         </al-search>
         <div slot="after">
-          <al-popover variant="menu">
-            <al-button slot="trigger" hideText="true" variant="tertiary"><al-icon-settings slot="before"></al-icon-settings>Settings</al-button>
-            <al-menu>
-              <al-menu-item>Theme: Dark</al-menu-item>
-              <al-menu-item>Theme: Light</al-menu-item>
-              <al-menu-item>Brand: Altitude</al-menu-item>
-              <al-menu-item>Brand: Northright</al-menu-item>
-              <al-menu-item>Brand: Southleft</al-menu-item>
-            </al-menu>
-          </al-popover>
+          <al-theme-switcher></al-theme-switcher>
         </div>
         <div slot="after">
           <al-drawer alignment="right" hasBackdrop="true" width="400">
