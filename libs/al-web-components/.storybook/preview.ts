@@ -109,6 +109,11 @@ const preview: Preview = {
           url: "./css/tokens-northright.css",
         },
         {
+          id: "brand-odyessy",
+          title: "Brand: Odyessy",
+          url: "./css/tokens-odyessy.css",
+        },
+        {
           id: "brand-southleft",
           title: "Brand: Southleft",
           url: "./css/tokens-southleft.css",

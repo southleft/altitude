@@ -63,7 +63,7 @@
   <al-layout variant="sidebar-left" gap="none">
     <div class="al-l-dashboard__sidebar">
       <div class="al-l-dashboard__sidebar-logo">
-        <al-logo variant={currentTheme === 'northright' ? 'northright' : currentTheme === 'southleft' ? 'southleft' : ''}>
+        <al-logo variant={currentTheme !== 'altitude' ? currentTheme : null}>
           {currentTheme !== 'southleft' ? 'By Southleft • ' : ''}
           {'Svelte Web Application'}
         </al-logo>

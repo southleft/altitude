@@ -387,3 +387,4 @@ const styleDictionaryBuildBrand = (themeName, brandName) => {
 styleDictionaryBuildBrand('dark', 'altitude');
 styleDictionaryBuildBrand('dark', 'southleft');
 styleDictionaryBuildBrand('light', 'northright');
+styleDictionaryBuildBrand('dark', 'odyessy');

@@ -19,6 +19,11 @@ Northright.args = {
   variant: 'northright'
 };
 
+export const Odyessy = Template.bind({});
+Odyessy.args = {
+  variant: 'odyessy'
+};
+
 const TemplateSouthleft = (args) => html`<al-logo ${spread(args)}></al-logo>`;
 export const Southleft = TemplateSouthleft.bind({});
 Southleft.args = {

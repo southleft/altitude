@@ -28,7 +28,7 @@ export default function Dashboard() {
         <div className="al-l-dashboard__sidebar">
           <slot name="sidebar">
             <div className="al-l-dashboard__sidebar-logo">
-              <ALLogo variant={currentTheme === 'northright' ? 'northright' : currentTheme === 'southleft' ? 'southleft' : ''}>
+              <ALLogo variant={currentTheme !== 'altitude' ? currentTheme : null}>
                 {currentTheme !== 'southleft' ? 'By Southleft • ' : ''}
                 {'React Web Application'}
               </ALLogo>

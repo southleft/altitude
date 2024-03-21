@@ -12,8 +12,9 @@ import styles from './theme-switcher.scss';
 import tokensDark from '../../styles/dist/scss/theme/tokens-dark.scss';
 import tokensLight from '../../styles/dist/scss/theme/tokens-light.scss';
 import tokensAltitude from '../../styles/dist/scss/brand/tokens-altitude.scss';
-import tokensSouthleft from '../../styles/dist/scss/brand/tokens-southleft.scss';
 import tokensNorthright from '../../styles/dist/scss/brand/tokens-northright.scss';
+import tokensOdyessy from '../../styles/dist/scss/brand/tokens-odyessy.scss';
+import tokensSouthleft from '../../styles/dist/scss/brand/tokens-southleft.scss';
 
 /**
  * Component: al-theme-switcher
@@ -69,6 +70,8 @@ export class ALThemeSwitcher extends ALElement {
       themeStyles = tokensAltitude;
     } else if (theme == 'northright') {
       themeStyles = tokensNorthright;
+    } else if (theme == 'odyessy') {
+      themeStyles = tokensOdyessy;
     } else if (theme == 'southleft') {
       themeStyles = tokensSouthleft;
     }
@@ -101,6 +104,7 @@ export class ALThemeSwitcher extends ALElement {
           <${this.menuItemEl} @click=${() => this.setStyles('light')}>Theme: Light</${this.menuItemEl}>
           <${this.menuItemEl} @click=${() => this.setStyles('altitude')}>Brand: Altitude</${this.menuItemEl}>
           <${this.menuItemEl} @click=${() => this.setStyles('northright')}>Brand: Northright</${this.menuItemEl}>
+          <${this.menuItemEl} @click=${() => this.setStyles('odyessy')}>Brand: Odyessy</${this.menuItemEl}>
           <${this.menuItemEl} @click=${() => this.setStyles('southleft')}>Brand: Southleft</${this.menuItemEl}>
         </${this.menuEl}>
       </${this.popoverEl}>

@@ -14,6 +14,10 @@ export const Northright: StoryObj<typeof ALLogo> = { args: {
   variant: 'northright'
 } };
 
+export const Odyessy: StoryObj<typeof ALLogo> = { args: {
+  variant: 'odyessy'
+} };
+
 export const Southleft: StoryObj<typeof ALLogo> = { args: {
   variant: 'southleft',
   children: ''

@@ -22,7 +22,7 @@
   transition: all var(--al-theme-animation-duration) var(--al-theme-animation-timing);
   position: relative;
   background-color: var(--al-theme-color-background-accent-default);
-  color: var(--al-theme-color-content-accent-stronger);
+  color: var(--al-theme-color-content-accent-weak);
   width: var(--al-button-width, auto);
   --al-icon-height: #{var(--al-theme-icon-lg)};
   --al-icon-width: #{var(--al-theme-icon-lg)};
@@ -209,7 +209,7 @@
      * Menu item button hover state on a selected menu item
      */
     &:hover:not(:active, .al-is-disabled) {
-      color: var(--al-theme-color-content-accent-stronger);
+      color: var(--al-theme-color-content-accent-weak);
       background: var(--al-theme-color-background-accent-weak);
     }
   }

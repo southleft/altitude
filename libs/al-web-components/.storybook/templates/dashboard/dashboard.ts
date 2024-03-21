@@ -88,7 +88,7 @@ export class ALDashboard extends LitElement {
           <div class="al-l-dashboard__sidebar">
             <slot name="sidebar">
               <div class="al-l-dashboard__sidebar-logo">
-                <al-logo href="/?path=/story/pages-home--default" variant="${this.currentTheme === 'northright' ? 'northright' : this.currentTheme === 'southleft' ? 'southleft' : null}">
+                <al-logo href="/?path=/story/pages-home--default" variant="${this.currentTheme !== 'altitude' ? this.currentTheme : null}">
                   ${this.currentTheme !== 'southleft' ? html`By Southleft` : html``}
                 </al-logo>
               </div>
