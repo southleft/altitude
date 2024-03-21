@@ -30,6 +30,7 @@ import '../../../components/popover/popover';
 import '../../../components/search/search';
 import '../../../components/toggle-button/toggle-button';
 import '../../../components/toggle/toggle';
+import '../../../components/theme-switcher/theme-switcher';
 
 /**
  * Page: al-l-dashboard
@@ -41,6 +42,17 @@ export class ALDashboard extends LitElement {
 
   @property()
   accessor styleModifier: string;
+
+  @property()
+  accessor currentTheme: string;
+
+  connectedCallback() {
+    super.connectedCallback();
+    document.addEventListener('onThemeSwitcherChange', (event) => {
+      const target = event as CustomEvent;
+      this.currentTheme = target.detail.currentTheme;
+    });
+  }
 
   firstUpdated() {
     const storyId = new URLSearchParams(window.location.search).get('id');
@@ -76,7 +88,9 @@ export class ALDashboard extends LitElement {
           <div class="al-l-dashboard__sidebar">
             <slot name="sidebar">
               <div class="al-l-dashboard__sidebar-logo">
-                <al-logo href="/?path=/story/pages-home--default">By Southleft</al-logo>
+                <al-logo href="/?path=/story/pages-home--default" variant="${this.currentTheme === 'northright' ? 'northright' : this.currentTheme === 'southleft' ? 'southleft' : null}">
+                  ${this.currentTheme !== 'southleft' ? html`By Southleft` : html``}
+                </al-logo>
               </div>
               <al-menu class="al-l-dashboard__sidebar-menu">
                 <al-menu-item href="/?path=/story/pages-home--default" ?isHeader=${true}><al-icon-home slot="before"></al-icon-home>Dashboard<al-badge variant="danger">12</al-badge></al-badge></al-menu-item>
@@ -115,16 +129,7 @@ export class ALDashboard extends LitElement {
                 </al-list>
               </al-search>
               <div slot="after">
-                <al-popover variant="menu">
-                  <al-button slot="trigger" ?hideText=${true} variant="tertiary"><al-icon-settings slot="before"></al-icon-settings>Settings</al-button>
-                  <al-menu>
-                    <al-menu-item>Theme: Dark</al-menu-item>
-                    <al-menu-item>Theme: Light</al-menu-item>
-                    <al-menu-item>Brand: Altitude</al-menu-item>
-                    <al-menu-item>Brand: Northright</al-menu-item>
-                    <al-menu-item>Brand: Southleft</al-menu-item>
-                  </al-menu>
-                </al-popover>
+                <al-theme-switcher></al-theme-switcher>
               </div>
               <div slot="after">
                 <al-drawer alignment="right" ?hasBackdrop=${true} width="400">
