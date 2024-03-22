@@ -161,7 +161,7 @@
   @include al-reset-button;
   @include al-theme-typography-body-md;
   transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing), background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
-  color: var(--al-theme-color-content-primary-strong);
+  color: var(--al-theme-color-content-primary-default);
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
@@ -174,7 +174,7 @@
    * Hover state
    */
   &:hover:not(:active, .al-is-disabled) {
-    color: var(--al-theme-color-content-primary-stronger);
+    color: var(--al-theme-color-content-primary-strong);
   }
 
   /**
