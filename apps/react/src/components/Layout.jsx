@@ -57,7 +57,7 @@ export default function Dashboard() {
                   <div slot="trigger" className="al-l-dashboard__user">
                     <ALAvatar>TP</ALAvatar>
                     <p>TJ Pitre</p>
-                    <ALButton variant="tertiary" hideText={true}><ALIconChevronUp slot="before"></ALIconChevronUp></ALButton>
+                    <ALButton variant="bare" hideText={true}><ALIconChevronUp slot="before"></ALIconChevronUp></ALButton>
                   </div>
                   <ALMenu>
                     <ALMenuItem><ALIconUser></ALIconUser>Profile</ALMenuItem>
@@ -84,7 +84,7 @@ export default function Dashboard() {
               </div>
               <div slot="after">
                 <ALDrawer alignment="right" hasBackdrop={true} width="400">
-                  <ALButton slot="trigger" hideText={true} variant="tertiary"><ALBadge variant="danger" slot="after" isDot={true} className="al-l-dashboard__notifications-badge"></ALBadge><ALIconBell slot="after"></ALIconBell></ALButton>
+                  <ALButton slot="trigger" hideText={true} variant="bare"><ALBadge variant="danger" slot="after" isDot={true} className="al-l-dashboard__notifications-badge"></ALBadge><ALIconBell slot="after"></ALIconBell></ALButton>
                   <ALHeading slot="header" tagName="h3" variant="sm" isBold={true}>Notifications</ALHeading>
                   <div className="al-u-gap-xs">
                     <ALCard variant="bare" layout="inline" href="#">
