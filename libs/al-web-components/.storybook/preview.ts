@@ -99,11 +99,6 @@ const preview: Preview = {
           url: "./css/tokens-light.css",
         },
         {
-          id: "brand-altitude",
-          title: "Brand: Altitude",
-          url: "./css/tokens-altitude.css",
-        },
-        {
           id: "brand-northright",
           title: "Brand: Northright",
           url: "./css/tokens-northright.css",

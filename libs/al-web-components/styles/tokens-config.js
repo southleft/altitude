@@ -384,7 +384,6 @@ const styleDictionaryBuildBrand = (themeName, brandName) => {
 /**
  * Build each style dictionary brand
  */
-styleDictionaryBuildBrand('dark', 'altitude');
 styleDictionaryBuildBrand('dark', 'southleft');
 styleDictionaryBuildBrand('light', 'northright');
 styleDictionaryBuildBrand('dark', 'odyssey');
