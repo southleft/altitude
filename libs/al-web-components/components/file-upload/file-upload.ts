@@ -458,7 +458,7 @@ export class ALFileUpload extends ALElement {
                   }
                   <${this.buttonEl}
                     class="al-c-file-upload__close-button"
-                    variant="tertiary"
+                    variant="bare"
                     ?hideText=${true}
                     type="button"
                     @click=${() => this.handleOnFileRemove(file.fieldId)}

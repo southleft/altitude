@@ -21,7 +21,7 @@ export default {
 
 const Template = (args) => html`
   <al-button-group ${spread(args)} data-testid="button-group">
-    <al-button variant="secondary">Button</al-button>
+    <al-button variant="tertiary">Button</al-button>
     <al-button>Button</al-button>
   </al-button-group>
 `;

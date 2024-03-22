@@ -551,7 +551,7 @@ export class ALCalendar extends ALElement {
         <nav class="al-c-calendar__header">
           <${this.buttonEl}
             type="button"
-            variant="tertiary"
+            variant="bare"
             class="al-c-calendar__nav-btn"
             @click=${() => this.setPrevMonth()}
             ?hideText=${true}
@@ -569,7 +569,7 @@ export class ALCalendar extends ALElement {
           </button>
           <${this.buttonEl}
             type="button"
-            variant="tertiary"
+            variant="bare"
             class="al-c-calendar__nav-btn"
             @click=${() => this.setNextMonth()}
             ?hideText=${true}

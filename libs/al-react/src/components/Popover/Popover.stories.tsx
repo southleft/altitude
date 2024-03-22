@@ -99,7 +99,7 @@ export const WithMenu: StoryObj<typeof ALPopover> = {
     position: 'bottom-right',
     children: (
       <>
-        <ALButton slot="trigger" variant="tertiary" hideText={true}>
+        <ALButton slot="trigger" variant="bare" hideText={true}>
           <ALIconMenu slot="before"></ALIconMenu>
           Menu
         </ALButton>
@@ -127,7 +127,7 @@ export const WithMenWithGroups: StoryObj<typeof ALPopover> = {
     position: 'bottom-right',
     children: (
       <>
-        <ALButton slot="trigger" variant="tertiary" hideText={true}>
+        <ALButton slot="trigger" variant="bare" hideText={true}>
           <ALIconMenu slot="before"></ALIconMenu>
           Menu
         </ALButton>
@@ -183,9 +183,9 @@ export const WithContent: StoryObj<typeof ALPopover> = {
             <Fpo>Tab panel 3 - Instance slot 2</Fpo>
           </ALTabPanel>
         </ALTabs>
-        <ALButton slot="footer" variant="tertiary" onClick={closePopover}>Close</ALButton>
+        <ALButton slot="footer" variant="bare" onClick={closePopover}>Close</ALButton>
         <ALButtonGroup slot="footer" alignment="right">
-          <ALButton variant="secondary">Label</ALButton>
+          <ALButton variant="tertiary">Label</ALButton>
           <ALButton>Label</ALButton>
         </ALButtonGroup>
       </>

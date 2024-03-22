@@ -49,7 +49,7 @@ export const WithContent: StoryObj<typeof ALCard> = {
       <>
         <ALChip slot="actions-start">Label</ALChip>
         <ALPopover slot="actions-end" menuId="card-menu">
-          <ALButton slot="trigger" hideText={true} variant="tertiary">
+          <ALButton slot="trigger" hideText={true} variant="bare">
             <ALIconDotsVertical slot="before"></ALIconDotsVertical>
           </ALButton>
           <ALMenu id="card-menu">

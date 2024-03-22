@@ -79,7 +79,7 @@ export class ALDashboard extends LitElement {
             <p>Welcome to our Job Board Help Center! Whether you're a first-time user or seeking a refresher, this guide will walk you through the steps to navigate our platform with ease. Let's get started!</p>
             <p class="al-u-theme-typography-body-xs" slot="footer">1 of 4</p>
             <al-button-group slot="footer" alignment="right">
-              <al-button variant="secondary">Learn more</al-button>
+              <al-button variant="tertiary">Learn more</al-button>
               <al-button>Next</al-button>
             </al-button-group>
           </al-popover>
@@ -106,7 +106,7 @@ export class ALDashboard extends LitElement {
                   <div slot="trigger" class="al-l-dashboard__user">
                     <al-avatar>TP</al-avatar>
                     <p>TJ Pitre</p>
-                    <al-button variant="tertiary" ?hideText=${true}><al-icon-chevron-up slot="before"></al-icon-chevron-down></al-button>
+                    <al-button variant="bare" ?hideText=${true}><al-icon-chevron-up slot="before"></al-icon-chevron-down></al-button>
                   </div>
                   <al-menu>
                     <al-menu-item><al-icon-user></al-icon-user>Profile</al-menu-item>
@@ -133,7 +133,7 @@ export class ALDashboard extends LitElement {
               </div>
               <div slot="after">
                 <al-drawer alignment="right" ?hasBackdrop=${true} width="400">
-                  <al-button slot="trigger" ?hideText=${true} variant="tertiary"><al-badge variant="danger" slot="after" ?isDot=${true} class="al-l-dashboard__notifications-badge"></al-badge><al-icon-bell slot="after"></al-icon-bell></al-button>
+                  <al-button slot="trigger" ?hideText=${true} variant="bare"><al-badge variant="danger" slot="after" ?isDot=${true} class="al-l-dashboard__notifications-badge"></al-badge><al-icon-bell slot="after"></al-icon-bell></al-button>
                   <al-heading slot="header" tagName="h3" variant="sm" ?isBold=${true}>Notifications</al-heading>
                   <div class="al-u-gap-xs">
                     <al-card variant="bare" layout="inline" href="#">

@@ -21,8 +21,8 @@
   cursor: pointer;
   transition: all var(--al-theme-animation-duration) var(--al-theme-animation-timing);
   position: relative;
-  background-color: var(--al-theme-color-background-accent-default);
-  color: var(--al-theme-color-content-accent-weak);
+  background-color: var(--al-theme-color-background-primary-default);
+  color: var(--al-theme-color-content-primary-weak);
   width: var(--al-button-width, auto);
   --al-icon-height: #{var(--al-theme-icon-lg)};
   --al-icon-width: #{var(--al-theme-icon-lg)};
@@ -31,7 +31,7 @@
    * Hover state
    */
   &:hover:not(:active, :disabled) {
-    background-color: var(--al-theme-color-background-accent-weak);
+    background-color: var(--al-theme-color-background-primary-weak);
   }
 
   /**
@@ -54,6 +54,21 @@
  * Secondary button
  */
 .al-c-button--secondary {
+  background-color: var(--al-theme-color-background-secondary-default);
+  color: var(--al-theme-color-content-secondary-weak);
+
+  /**
+   * Hover state
+   */
+  &:hover:not(:active, :disabled) {
+    background-color: var(--al-theme-color-background-secondary-weak);
+  }
+}
+
+/**
+ * Tertiary button
+ */
+.al-c-button--tertiary {
   background-color: var(--al-theme-color-background-transparent-default);
   border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
   color: var(--al-theme-color-content-default);
@@ -69,9 +84,9 @@
 }
 
 /**
- * Tertiary button
+ * Bare button
  */
-.al-c-button--tertiary {
+.al-c-button--bare {
   background-color: var(--al-theme-color-background-transparent-default);
   color: var(--al-theme-color-content-default);
 
@@ -202,15 +217,15 @@
    * Menu item button selected state
    */
   &.al-is-selected {
-    color: var(--al-theme-color-content-default-accent-stronger);
-    background: var(--al-theme-color-background-accent-default);
+    color: var(--al-theme-color-content-default-primary-stronger);
+    background: var(--al-theme-color-background-primary-default);
 
     /**
      * Menu item button hover state on a selected menu item
      */
     &:hover:not(:active, .al-is-disabled) {
-      color: var(--al-theme-color-content-accent-weak);
-      background: var(--al-theme-color-background-accent-weak);
+      color: var(--al-theme-color-content-primary-weak);
+      background: var(--al-theme-color-background-primary-weak);
     }
   }
 

@@ -444,7 +444,7 @@ export class ALPagination extends ALElement {
                         isNaN(item as any) // if item is in "..." pattern
                           ? html`
                             <${this.popoverEl} position="top-center">
-                              <${this.buttonEl} variant="tertiary" hideText=${true} slot="trigger">
+                              <${this.buttonEl} variant="bare" hideText=${true} slot="trigger">
                                 <${this.iconDotsHorizontalEl} slot="before"></${this.iconDotsHorizontalEl}>
                                 More Items
                               </${this.buttonEl}>

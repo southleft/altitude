@@ -344,7 +344,7 @@ export class ALPopover extends ALElement {
                 `}
                 ${this.isDismissible
                   ? html`
-                  <${this.buttonEl} class="al-c-popover__close-button" variant="tertiary" ?hideText=${true} @click=${this.handleOnCloseButton}>
+                  <${this.buttonEl} class="al-c-popover__close-button" variant="bare" ?hideText=${true} @click=${this.handleOnCloseButton}>
                     Close<${this.iconCloseEl} class="al-c-popover__icon-close" slot="after"></${this.iconCloseEl}>
                   </${this.buttonEl}>
                 `

@@ -18,7 +18,7 @@ export default {
       control: { type: 'radio' }
     },
     variant: {
-      options: ['default', 'secondary', 'tertiary', 'danger'],
+      options: ['default', 'secondary', 'tertiary', 'bare', 'danger'],
       control: { type: 'radio' }
     },
     target: {
@@ -170,6 +170,40 @@ export const TertiaryIconAfter: StoryObj<typeof ALButton> = {
 export const TertiaryDisabled: StoryObj<typeof ALButton> = {
   args: {
     variant: 'tertiary',
+    isDisabled: true,
+  },
+};
+
+export const Bare: StoryObj<typeof ALButton> = {
+  args: {
+    variant: 'bare',
+  },
+};
+
+export const BareIcon: StoryObj<typeof ALButton> = {
+  args: {
+    ...DefaultIcon.args,
+    variant: 'bare',
+  },
+};
+
+export const BareIconBefore: StoryObj<typeof ALButton> = {
+  args: {
+    ...DefaultIconBefore.args,
+    variant: 'bare',
+  },
+};
+
+export const BareIconAfter: StoryObj<typeof ALButton> = {
+  args: {
+    ...DefaultIconAfter.args,
+    variant: 'bare',
+  },
+}
+
+export const BareDisabled: StoryObj<typeof ALButton> = {
+  args: {
+    variant: 'bare',
     isDisabled: true,
   },
 };

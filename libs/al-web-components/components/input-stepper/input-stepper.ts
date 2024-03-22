@@ -233,7 +233,7 @@ export class ALInputStepper extends ALElement {
         <div class="al-c-input-stepper__body">
           <${this.buttonEl}
             class="al-c-input-stepper__button al-c-input-stepper__button--left"
-            variant="tertiary"
+            variant="bare"
             ?hideText=${true}
             @click=${(e: MouseEvent) => this.onDecrease(e)}
             role="spinbutton"
@@ -261,7 +261,7 @@ export class ALInputStepper extends ALElement {
           />
           <${this.buttonEl}
             class="al-c-input-stepper__button al-c-input-stepper__button--right"
-            variant="tertiary"
+            variant="bare"
             ?hideText=${true}
             @click=${(e: MouseEvent) => this.onIncrease(e)}
             role="spinbutton"

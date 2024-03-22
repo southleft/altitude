@@ -29,9 +29,9 @@ export default {
             <Fpo>Tab panel 3 - Instance slot 2</Fpo>
           </ALTabPanel>
         </ALTabs>
-        <ALButton slot="footer" variant="tertiary">Close</ALButton>
+        <ALButton slot="footer" variant="bare">Close</ALButton>
         <ALButtonGroup slot="footer">
-          <ALButton variant="secondary">Label</ALButton>
+          <ALButton variant="tertiary">Label</ALButton>
           <ALButton>Label</ALButton>
         </ALButtonGroup>
       </>

@@ -35,9 +35,9 @@ const Template = (args) => html`
           <f-po>Tab panel 3 - Instance slot 2</f-po>
         </al-tab-panel>
       </al-tabs>
-      <al-button slot="footer" variant="tertiary">Close</al-button>
+      <al-button slot="footer" variant="bare">Close</al-button>
       <al-button-group slot="footer" alignment="right">
-      <al-button variant="secondary">Label</al-button>
+      <al-button variant="tertiary">Label</al-button>
       <al-button>Label</al-button>
     </al-button-group>
   </al-dialog>

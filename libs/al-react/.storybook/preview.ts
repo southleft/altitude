@@ -95,9 +95,9 @@ const preview: Preview = {
           url: "./css/tokens-northright.css",
         },
         {
-          id: "brand-odyessy",
-          title: "Brand: Odyessy",
-          url: "./css/tokens-odyessy.css",
+          id: "brand-odyssey",
+          title: "Brand: Odyssey",
+          url: "./css/tokens-odyssey.css",
         },
         {
           id: "brand-southleft",

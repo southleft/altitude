@@ -67,7 +67,7 @@ export const WithActions: StoryObj<typeof ALToast> = { args: {
   children: (
     <>
       Toast title
-      <ALButton slot="actions" variant="secondary"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
+      <ALButton slot="actions" variant="tertiary"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
       <ALButton slot="actions"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
     </>
   )
@@ -88,7 +88,7 @@ export const WithAutoCloseWithProgress: StoryObj<typeof ALToast> = { args: {
   children: (
     <>
       Toast title
-      <ALButton slot="actions" variant="secondary"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
+      <ALButton slot="actions" variant="tertiary"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
       <ALButton slot="actions"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
     </>
   )

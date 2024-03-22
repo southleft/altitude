@@ -258,7 +258,7 @@ export class ALRange extends ALElement {
    * function to sets the background style of default ranges when it is dragged
    */
   generateLinearGradient(value1: number, value2: number) {
-    return `linear-gradient(var(--rtlGradientToRight, to right), var(--al-theme-color-background-accent-default) 0%, var(--al-theme-color-background-accent-default)
+    return `linear-gradient(var(--rtlGradientToRight, to right), var(--al-theme-color-background-primary-default) 0%, var(--al-theme-color-background-primary-default)
     ${value1}%, var(--al-theme-color-background-default-strong)
     ${value2}%, var(--al-theme-color-background-default-strong) 100%)`;
   }

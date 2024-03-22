@@ -154,7 +154,7 @@ export class ALBreadcrumbs extends ALElement {
       html`
         <${this.breadcrumbsItemEl} ?hasSeparator=${true} ?isTruncated=${true}>
         <${this.popoverEl} position="bottom-right" .menuId=${this.menuId}>
-            <${this.buttonEl} slot="trigger" variant="tertiary" ?hideText=${true}>
+            <${this.buttonEl} slot="trigger" variant="bare" ?hideText=${true}>
               <${this.iconDotsHorizontalEl} slot="before"></${this.iconDotsHorizontalEl}>More Items
             </${this.buttonEl}>
             <${this.menuEl} id=${this.menuId}>

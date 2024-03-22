@@ -23,11 +23,11 @@ export default {
 
 const Template = (args) => html`
   <al-drawer ${spread(args)}>
-    <al-button slot="trigger" ?hideText=${true} variant="tertiary">Toggle Drawer<al-icon-menu slot="before"></al-icon-menu></al-button>
+    <al-button slot="trigger" ?hideText=${true} variant="bare">Toggle Drawer<al-icon-menu slot="before"></al-icon-menu></al-button>
     <f-po slot="header">Drawer Title</f-po>
     <f-po>Drawer content</f-po>
     <al-button-group slot="footer">
-      <al-button variant="secondary">Submit</al-button>
+      <al-button variant="tertiary">Submit</al-button>
       <al-button>Cancel</al-button>
     </al-button-group>
   </al-drawer>

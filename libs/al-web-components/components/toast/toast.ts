@@ -229,7 +229,7 @@ export class ALToast extends ALElement {
             : html``}
           ${this.isDismissible
             ? html`
-                <${this.buttonEl} variant="tertiary" class="al-c-toast__close-button" @click=${this.close} ?hideText=${true}>
+                <${this.buttonEl} variant="bare" class="al-c-toast__close-button" @click=${this.close} ?hideText=${true}>
                   Close
                   <${this.iconCloseEl} class="al-c-toast__icon-close" slot="before"></${this.iconCloseEl}>
                 </${this.buttonEl}>

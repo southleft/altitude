@@ -350,7 +350,7 @@ export class ALDialog extends ALElement {
                   </div>
                 `
               }
-              <${this.buttonEl} class="al-c-dialog__close-button" variant="tertiary" ?hideText=${true} @click=${this.handleOnCloseButton}>
+              <${this.buttonEl} class="al-c-dialog__close-button" variant="bare" ?hideText=${true} @click=${this.handleOnCloseButton}>
                 Close
                 <${this.iconCloseEl} class="al-c-dialog__icon-close" slot="after"></${this.iconCloseEl}>
               </${this.buttonEl}>

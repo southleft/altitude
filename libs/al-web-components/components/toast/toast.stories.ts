@@ -81,7 +81,7 @@ WithoutDescription.args = {
 const TemplateWithActions = (args) => html`
   <al-toast ${spread(args)} data-testid="toast">
     Toast title
-    <al-button slot="actions" variant="secondary"><al-icon-success slot="before"></al-icon-success>Label</al-button>
+    <al-button slot="actions" variant="tertiary"><al-icon-success slot="before"></al-icon-success>Label</al-button>
     <al-button slot="actions"><al-icon-success slot="before"></al-icon-success>Label</al-button>
   </al-toast>
 `;

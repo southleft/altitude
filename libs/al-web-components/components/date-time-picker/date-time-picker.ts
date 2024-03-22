@@ -675,7 +675,7 @@ export class ALDateTimePicker extends ALElement {
                 <${this.buttonGroupEl} alignment="right">
                   <${this.buttonEl}
                     class="al-c-date-time-picker__footer-cancel"
-                    variant="secondary"
+                    variant="tertiary"
                     @click=${this.handleOnClickCancel}
                     >${this.cancelLabel}</${this.buttonEl}>
                   <${this.buttonEl}

@@ -657,7 +657,7 @@ export class ALSearch extends ALElement {
             ${
               this.value?.length
                 ? html`
-                  <${this.buttonEl} slot="after" @click=${this.clearSearch} class="al-c-search__clear-button" ?hideText=${true} variant="tertiary">
+                  <${this.buttonEl} slot="after" @click=${this.clearSearch} class="al-c-search__clear-button" ?hideText=${true} variant="bare">
                     ${this.clearButtonText}
                     <${this.iconCloseEl} slot="after"></${this.iconCloseEl}>
                   </${this.buttonEl}>

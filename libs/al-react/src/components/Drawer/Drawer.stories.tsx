@@ -17,13 +17,13 @@ export default {
   args: {
     children: (
       <>
-        <ALButton slot="trigger" hideText={true} variant="tertiary">Toggle Drawer<ALIconMenu slot="before"></ALIconMenu></ALButton>
+        <ALButton slot="trigger" hideText={true} variant="bare">Toggle Drawer<ALIconMenu slot="before"></ALIconMenu></ALButton>
         <div  slot="header">
           <Fpo>Drawer Title</Fpo>
         </div>
         <Fpo>Drawer content</Fpo>
         <ALButtonGroup slot="footer">
-          <ALButton variant="secondary">Submit</ALButton>
+          <ALButton variant="tertiary">Submit</ALButton>
           <ALButton>Cancel</ALButton>
         </ALButtonGroup>
       </>

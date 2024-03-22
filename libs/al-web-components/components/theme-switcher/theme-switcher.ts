@@ -13,7 +13,7 @@ import tokensDark from '../../styles/dist/scss/theme/tokens-dark.scss';
 import tokensLight from '../../styles/dist/scss/theme/tokens-light.scss';
 import tokensAltitude from '../../styles/dist/scss/brand/tokens-altitude.scss';
 import tokensNorthright from '../../styles/dist/scss/brand/tokens-northright.scss';
-import tokensOdyessy from '../../styles/dist/scss/brand/tokens-odyessy.scss';
+import tokensOdyssey from '../../styles/dist/scss/brand/tokens-odyssey.scss';
 import tokensSouthleft from '../../styles/dist/scss/brand/tokens-southleft.scss';
 
 /**
@@ -70,8 +70,8 @@ export class ALThemeSwitcher extends ALElement {
       themeStyles = tokensAltitude;
     } else if (theme == 'northright') {
       themeStyles = tokensNorthright;
-    } else if (theme == 'odyessy') {
-      themeStyles = tokensOdyessy;
+    } else if (theme == 'odyssey') {
+      themeStyles = tokensOdyssey;
     } else if (theme == 'southleft') {
       themeStyles = tokensSouthleft;
     }
@@ -98,13 +98,13 @@ export class ALThemeSwitcher extends ALElement {
 
     return html`
       <${this.popoverEl} class="${componentClassNames}" variant="menu">
-        <${this.buttonEl} slot="trigger" hideText={true} variant="tertiary"><${this.iconSettingsEl} slot="before"></${this.iconSettingsEl}>Settings</${this.buttonEl}>
+        <${this.buttonEl} slot="trigger" hideText={true} variant="bare"><${this.iconSettingsEl} slot="before"></${this.iconSettingsEl}>Settings</${this.buttonEl}>
         <${this.menuEl}>
           <${this.menuItemEl} @click=${() => this.setStyles('dark')}>Theme: Dark</${this.menuItemEl}>
           <${this.menuItemEl} @click=${() => this.setStyles('light')}>Theme: Light</${this.menuItemEl}>
           <${this.menuItemEl} @click=${() => this.setStyles('altitude')}>Brand: Altitude</${this.menuItemEl}>
           <${this.menuItemEl} @click=${() => this.setStyles('northright')}>Brand: Northright</${this.menuItemEl}>
-          <${this.menuItemEl} @click=${() => this.setStyles('odyessy')}>Brand: Odyessy</${this.menuItemEl}>
+          <${this.menuItemEl} @click=${() => this.setStyles('odyssey')}>Brand: Odyssey</${this.menuItemEl}>
           <${this.menuItemEl} @click=${() => this.setStyles('southleft')}>Brand: Southleft</${this.menuItemEl}>
         </${this.menuEl}>
       </${this.popoverEl}>

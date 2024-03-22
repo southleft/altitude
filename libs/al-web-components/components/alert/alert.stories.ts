@@ -70,7 +70,7 @@ html`<al-alert ${spread(args)} data-testid="alert">
   <al-text-passage>
     This is an alert. It is used to notify the user of something important.
   </al-text-passage>
-  <al-button slot="action" data-testid="action" variant="secondary">Action</al-button>
+  <al-button slot="action" data-testid="action" variant="tertiary">Action</al-button>
 </al-alert>`;
 
 export const Default = Template.bind({});
@@ -125,7 +125,7 @@ const TemplateOpenAlert = (args) => html`
       <al-text-passage>
         This is an alert. It is used to notify the user of something important.
       </al-text-passage>
-      <al-button slot="action" data-testid="action" variant="secondary" @click=${closeAlert}>Action</al-button>
+      <al-button slot="action" data-testid="action" variant="tertiary" @click=${closeAlert}>Action</al-button>
     </al-alert>
   </div>
 `;
