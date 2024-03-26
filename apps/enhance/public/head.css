@@ -2,6 +2,10 @@
   #DASHBOARD
 \*------------------------------------*/
 
+* {
+  box-sizing: border-box;
+}
+
 /**
  * Dashboard
  */
@@ -40,7 +44,7 @@
   flex-direction: column;
   justify-content: space-between;
 
-  @media all and (max-width: 768px) {
+  @media all and (max-width: $al-breakpoint-md) {
     display: none;
   }
 }
@@ -115,10 +119,31 @@
   z-index: var(--al-z-index-400);
 }
 
+/*------------------------------------*\
+  #JOB-BOARD
+\*------------------------------------*/
+
 /**
- * Dashboard menu link item - applied to the NavLink
+ * Job-Board
  */
-.al-l-dashboard__menu-link--header {
-  display: block;
-  margin-block-start: 12px;
+ .al-l-job-board {
+  --al-dialog-width: 100%;
+  --al-dialog-trigger-width: 100%;
+}
+
+/**
+ * Job board filter dialog
+ */
+.al-l-job-board__filter-dialog {
+  --al-input-label-background: var(--al-theme-color-background-default);
+}
+
+/**
+ * Job board card image
+ */
+.al-l-job-board__card-image {
+  border-radius: var(--al-theme-border-radius-lg);
+  padding: var(--al-theme-space);
+  background-color: var(--al-theme-color-background-secondary-default);
+  color: var(--al-theme-color-content-secondary-weak);
 }

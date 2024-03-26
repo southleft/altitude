@@ -109,7 +109,7 @@ export class ALToggle extends ALElement {
           @keydown=${this.handleKeydown}
         />
         <label class="al-c-toggle__label" for=${this.fieldId}>
-          <span class="al-u-is-vishidden">${this.label}</span>
+          <span class="al-c-toggle__label-text">${this.label}</span>
         </label>
       </div>
     `;

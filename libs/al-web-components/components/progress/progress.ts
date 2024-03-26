@@ -320,7 +320,7 @@ export class ALProgress extends ALElement {
                 <div class="al-c-progress__fill" style="width: ${this.currentPercentage}%"></div>
               </div>
             `}
-        <div class="al-c-progress__label${this.showLabel ? ' ' : ' al-u-is-vishidden'}">${this._label}</div>
+        <div class="al-c-progress__label${this.showLabel ? '' : ' al-is-u-vishidden'}">${this._label}</div>
       </div>
     `;
   }

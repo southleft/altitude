@@ -156,7 +156,7 @@ export class ALButton extends ALElement {
       'al-c-button--danger': this.variant === 'danger',
       'al-c-button--full-width': this.fullWidth === true,
       'al-c-button--icon-only': this.hideText === true,
-      'al-is-expanded': this.isExpanded === true
+      'al-is-expanded': this.isExpanded === true,
     });
 
     if (this.href) {

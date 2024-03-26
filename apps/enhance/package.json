@@ -1,5 +1,5 @@
 {
-  "name": "al-app-web-components",
+  "name": "al-app-enhance",
   "version": "1.0.0",
   "private": true,
   "license": "UNLICENSED",
@@ -9,7 +9,7 @@
     "lint": "eslint ./app/**/*.mjs --fix",
     "enhance": "enhance",
     "build": "npm run copy:css && npx enhance generate",
-    "copy:css": "cp -r ../../libs/al-web-components/dist/css/main.css ./public/browser"
+    "copy:css": "cp -r ../../libs/al-web-components/dist/css/main.css ./public/"
   },
   "devDependencies": {
     "@enhance/cli": "latest",
