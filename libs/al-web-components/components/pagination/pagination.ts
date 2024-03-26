@@ -69,13 +69,13 @@ export class ALPagination extends ALElement {
    * Text displayed on the previous button
    */
   @property()
-  accessor prevButtonText: string;
+  accessor prevButtonText: string = 'Previous';
 
   /**
    * Text displayed on the next button
    */
   @property()
-  accessor nextButtonText: string;
+  accessor nextButtonText: string = 'Next';
 
   /**
    * Aria label attribute for accessibility
@@ -422,10 +422,9 @@ export class ALPagination extends ALElement {
             <ol role="list" class="al-c-pagination__list">
               <${this.paginationItemEl}
                 @click=${(e: MouseEvent) => this.handleOnClickPrev(this.currentItem, e)}
-                ariaLabel=${this.currentItem - 1}
+                ariaLabel=${this.prevButtonText}
                 ?isDisabled=${this.currentItem == 1}
               >
-                <span class="al-u-is-vishidden"> ${this.prevButtonText ? this.prevButtonText : html` Previous `} </span>
                 <slot name="prev" class="al-c-pagination__arrow">
                   <${this.iconChevronLeftEl}></${this.iconChevronLeftEl}>
                 </slot>
@@ -443,7 +442,7 @@ export class ALPagination extends ALElement {
                       ${
                         isNaN(item as any) // if item is in "..." pattern
                           ? html`
-                            <${this.popoverEl} position="top-center">
+                            <${this.popoverEl} position="top-center" variant="menu">
                               <${this.buttonEl} variant="bare" hideText=${true} slot="trigger">
                                 <${this.iconDotsHorizontalEl} slot="before"></${this.iconDotsHorizontalEl}>
                                 More Items
@@ -481,10 +480,9 @@ export class ALPagination extends ALElement {
               )}
               <${this.paginationItemEl}
                 @click=${(e: MouseEvent) => this.handleOnClickNext(this.currentItem, e)}
-                ariaLabel=${this.currentItem + 1}
+                ariaLabel=${this.nextButtonText}
                 ?isDisabled=${this.currentItem == this.pages.length}
               >
-                <span class="al-u-is-vishidden"> ${this.nextButtonText ? this.nextButtonText : html` Next `} </span>
                 <slot name="next" class="al-c-pagination__arrow">
                   <${this.iconChevronRightEl}></${this.iconChevronRightEl}>
                 </slot>

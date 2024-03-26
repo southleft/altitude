@@ -1,15 +1,3 @@
-import mainStyles from 'al-web-components/dist/css/main.css';
-const mainStyleElement = this.createElement('style');
-mainStyleElement.innerHTML = mainStyles;
-mainStyleElement.setAttribute('type', 'text/css');
-mainStyleElement.setAttribute('id', 'al-theme-sheet');
-this.head.appendChild(mainStyleElement);
-
-import setGlobalStyles from 'al-web-components/dist/directives/setGlobalStyles';
-setTimeout(() => {
-  setGlobalStyles();
-}, "1000");
-
 import 'al-web-components/dist/components/avatar/avatar';
 import 'al-web-components/dist/components/badge/badge';
 import 'al-web-components/dist/components/breadcrumbs-item/breadcrumbs-item';
@@ -61,5 +49,3 @@ import 'al-web-components/dist/components/select/select';
 import 'al-web-components/dist/components/text-passage/text-passage';
 import 'al-web-components/dist/components/theme-switcher/theme-switcher';
 import 'al-web-components/dist/components/toggle-button/toggle-button';
-
-
