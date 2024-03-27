@@ -11,9 +11,10 @@ import { ALIconSettings } from '../icon/icons/settings';
 import styles from './theme-switcher.scss';
 import tokensDark from '../../styles/dist/scss/theme/tokens-dark.scss';
 import tokensLight from '../../styles/dist/scss/theme/tokens-light.scss';
-import tokensNorthright from '../../styles/dist/scss/brand/tokens-northright.scss';
-import tokensOdyssey from '../../styles/dist/scss/brand/tokens-odyssey.scss';
-import tokensSouthleft from '../../styles/dist/scss/brand/tokens-southleft.scss';
+import tokensNorthrightLight from '../../styles/dist/scss/brand/tokens-northright-light.scss';
+import tokensNorthrightDark from '../../styles/dist/scss/brand/tokens-northright-dark.scss';
+import tokensOdyssey from '../../styles/dist/scss/brand/tokens-odyssey-dark.scss';
+import tokensSouthleft from '../../styles/dist/scss/brand/tokens-southleft-dark.scss';
 
 /**
  * Component: al-theme-switcher
@@ -61,16 +62,23 @@ export class ALThemeSwitcher extends ALElement {
 
     /* 2 */
     let themeStyles;
+    let logo;
     if (theme == 'dark') {
       themeStyles = tokensDark;
     } else if (theme == 'light') {
       themeStyles = tokensLight;
-    } else if (theme == 'northright') {
-      themeStyles = tokensNorthright;
+    } else if (theme == 'northright-light') {
+      themeStyles = tokensNorthrightLight;
+      logo = 'northright';
+    } else if (theme == 'northright-dark') {
+      themeStyles = tokensNorthrightDark;
+      logo = 'northright';
     } else if (theme == 'odyssey') {
       themeStyles = tokensOdyssey;
+      logo = 'odyssey';
     } else if (theme == 'southleft') {
       themeStyles = tokensSouthleft;
+      logo = 'southleft';
     }
 
     /* 3 */
@@ -84,7 +92,8 @@ export class ALThemeSwitcher extends ALElement {
     this.dispatch({
       eventName: 'onThemeSwitcherChange',
       detailObj: {
-        currentTheme: theme
+        currentTheme: theme,
+        currentLogo: logo
       }
     });
   };
@@ -99,7 +108,8 @@ export class ALThemeSwitcher extends ALElement {
         <${this.menuEl}>
           <${this.menuItemEl} @click=${() => this.setStyles('dark')}>Theme: Dark</${this.menuItemEl}>
           <${this.menuItemEl} @click=${() => this.setStyles('light')}>Theme: Light</${this.menuItemEl}>
-          <${this.menuItemEl} @click=${() => this.setStyles('northright')}>Brand: Northright</${this.menuItemEl}>
+          <${this.menuItemEl} @click=${() => this.setStyles('northright-light')}>Brand: Northright (Light)</${this.menuItemEl}>
+          <${this.menuItemEl} @click=${() => this.setStyles('northright-dark')}>Brand: Northright (Dark)</${this.menuItemEl}>
           <${this.menuItemEl} @click=${() => this.setStyles('odyssey')}>Brand: Odyssey</${this.menuItemEl}>
           <${this.menuItemEl} @click=${() => this.setStyles('southleft')}>Brand: Southleft</${this.menuItemEl}>
         </${this.menuEl}>

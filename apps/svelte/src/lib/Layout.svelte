@@ -41,9 +41,9 @@
   import './Layout.css';
   import { Link } from 'svelte-routing'
 
-  let currentTheme;
+  let currentLogo;
   document.addEventListener('onThemeSwitcherChange', (event) => {
-    currentTheme = event.detail.currentTheme;
+    currentLogo = event.detail.currentLogo;
   });
 </script>
 
@@ -63,8 +63,8 @@
   <al-layout variant="sidebar-left" gap="none">
     <div class="al-l-dashboard__sidebar">
       <div class="al-l-dashboard__sidebar-logo">
-        <al-logo variant={currentTheme !== 'altitude' ? currentTheme : null}>
-          {currentTheme !== 'southleft' ? 'By Southleft • ' : ''}
+        <al-logo variant={currentLogo !== 'altitude' ? currentLogo : null}>
+          {currentLogo !== 'southleft' ? 'By Southleft • ' : ''}
           {'Svelte Web Application'}
         </al-logo>
       </div>

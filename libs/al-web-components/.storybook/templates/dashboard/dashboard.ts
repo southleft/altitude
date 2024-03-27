@@ -46,11 +46,15 @@ export class ALDashboard extends LitElement {
   @property()
   accessor currentTheme: string;
 
+  @property()
+  accessor currentLogo: string;
+
   connectedCallback() {
     super.connectedCallback();
     document.addEventListener('onThemeSwitcherChange', (event) => {
       const target = event as CustomEvent;
       this.currentTheme = target.detail.currentTheme;
+      this.currentLogo = target.detail.currentLogo;
     });
   }
 
@@ -88,8 +92,8 @@ export class ALDashboard extends LitElement {
           <div class="al-l-dashboard__sidebar">
             <slot name="sidebar">
               <div class="al-l-dashboard__sidebar-logo">
-                <al-logo href="/?path=/story/pages-home--default" variant="${this.currentTheme !== 'altitude' ? this.currentTheme : null}">
-                  ${this.currentTheme !== 'southleft' ? html`By Southleft` : html``}
+                <al-logo href="/?path=/story/pages-home--default" variant="${this.currentLogo !== 'altitude' ? this.currentLogo : null}">
+                  ${this.currentLogo !== 'southleft' ? html`By Southleft` : html``}
                 </al-logo>
               </div>
               <al-menu class="al-l-dashboard__sidebar-menu">

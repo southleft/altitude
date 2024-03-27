@@ -350,7 +350,7 @@ const styleDictionaryBrandConfig = (themeName, brandName) => {
         buildPath: './',
         files: [
           {
-            destination: `/styles/dist/css/brand/tokens-${brandName}.css`,
+            destination: `/styles/dist/css/brand/tokens-${brandName}-${themeName}.css`,
             format: 'tokens',
             options: {
               outputReferences: true,
@@ -363,7 +363,7 @@ const styleDictionaryBrandConfig = (themeName, brandName) => {
         buildPath: './',
         files: [
           {
-            destination: `/styles/dist/scss/brand/tokens-${brandName}.scss`,
+            destination: `/styles/dist/scss/brand/tokens-${brandName}-${themeName}.scss`,
             format: 'tokens',
             options: {
               outputReferences: true,
@@ -386,4 +386,5 @@ const styleDictionaryBuildBrand = (themeName, brandName) => {
  */
 styleDictionaryBuildBrand('dark', 'southleft');
 styleDictionaryBuildBrand('light', 'northright');
+styleDictionaryBuildBrand('dark', 'northright');
 styleDictionaryBuildBrand('dark', 'odyssey');

@@ -100,18 +100,23 @@ const preview: Preview = {
         },
         {
           id: "brand-northright",
-          title: "Brand: Northright",
-          url: "./css/tokens-northright.css",
+          title: "Brand: Northright (Dark)",
+          url: "./css/tokens-northright-light.css",
+        },
+        {
+          id: "brand-northright",
+          title: "Brand: Northright (Light)",
+          url: "./css/tokens-northright-dark.css",
         },
         {
           id: "brand-odyssey",
           title: "Brand: Odyssey",
-          url: "./css/tokens-odyssey.css",
+          url: "./css/tokens-odyssey-dark.css",
         },
         {
           id: "brand-southleft",
           title: "Brand: Southleft",
-          url: "./css/tokens-southleft.css",
+          url: "./css/tokens-southleft-dark.css",
         }
       ]
     }

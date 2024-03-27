@@ -3,9 +3,9 @@ import { ALAvatar, ALBadge, ALButtonGroup, ALButton, ALCard, ALDivider, ALDrawer
 import './Layout.scss';
 
 export default function Dashboard() {
-  let currentTheme;
+  let currentLogo;
   document.addEventListener('onThemeSwitcherChange', (event) => {
-    currentTheme = event.detail.currentTheme;
+    currentLogo = event.detail.currentLogo;
   });
 
   return (
@@ -28,8 +28,8 @@ export default function Dashboard() {
         <div className="al-l-dashboard__sidebar">
           <slot name="sidebar">
             <div className="al-l-dashboard__sidebar-logo">
-              <ALLogo variant={currentTheme !== 'altitude' ? currentTheme : null}>
-                {currentTheme !== 'southleft' ? 'By Southleft • ' : ''}
+              <ALLogo variant={currentLogo !== 'altitude' ? currentLogo : null}>
+                {currentLogo !== 'southleft' ? 'By Southleft • ' : ''}
                 {'React Web Application'}
               </ALLogo>
             </div>

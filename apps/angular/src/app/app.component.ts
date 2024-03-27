@@ -42,7 +42,7 @@ export class AppComponent {
 
   activePaths: string[] = ['/', '/dashboard', '/job-board'];
   activePath: string = '';
-  currentTheme: string = '';
+  currentLogo: string = '';
 
   constructor(private router: Router) {
     this.router.events.subscribe(event => {
@@ -52,7 +52,7 @@ export class AppComponent {
     });
     document.addEventListener('onThemeSwitcherChange', (event) => {
       const target = event as CustomEvent;
-      this.currentTheme = target.detail.currentTheme;
+      this.currentLogo = target.detail.currentLogo;
     });
   }
 
