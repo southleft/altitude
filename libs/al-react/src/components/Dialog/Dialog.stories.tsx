@@ -28,9 +28,9 @@ export default {
       <>
         <ALButton slot="trigger">Open Dialog</ALButton>
         <Fpo>Dialog content</Fpo>
-        <ALButton slot="footer" variant="tertiary" onClick={closeDialog}>Close</ALButton>
+        <ALButton slot="footer" variant="bare" onClick={closeDialog}>Close</ALButton>
         <ALButtonGroup slot="footer" alignment="right">
-          <ALButton variant="secondary">Label</ALButton>
+          <ALButton variant="tertiary">Label</ALButton>
           <ALButton>Label</ALButton>
         </ALButtonGroup>
       </>
@@ -84,9 +84,9 @@ export const WithTriggerOutside: StoryObj<typeof ALDialog> = {
     children: (
       <>
         <Fpo>Dialog content</Fpo>
-        <ALButton slot="footer" variant="tertiary" onClick={(e: MouseEvent) => closeDialog(e, 'dialog-1')}>Close</ALButton>
+        <ALButton slot="footer" variant="bare" onClick={(e: MouseEvent) => closeDialog(e, 'dialog-1')}>Close</ALButton>
         <ALButtonGroup slot="footer" alignment="right">
-          <ALButton variant="secondary">Label</ALButton>
+          <ALButton variant="tertiary">Label</ALButton>
           <ALButton>Label</ALButton>
         </ALButtonGroup>
       </>

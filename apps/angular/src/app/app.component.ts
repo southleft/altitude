@@ -24,11 +24,13 @@ import "al-web-components/dist/components/layout-container/layout-container.js";
 import "al-web-components/dist/components/layout/layout.js";
 import "al-web-components/dist/components/list-item/list-item.js";
 import "al-web-components/dist/components/list/list.js";
+import "al-web-components/dist/components/logo/logo.js";
 import "al-web-components/dist/components/menu-item/menu-item.js";
 import "al-web-components/dist/components/menu/menu.js";
 import "al-web-components/dist/components/popover/popover.js";
 import "al-web-components/dist/components/search/search.js";
 import "al-web-components/dist/components/toggle-button/toggle-button.js";
+import "al-web-components/dist/components/theme-switcher/theme-switcher.js";
 
 @Component({
   selector: 'app-root',
@@ -40,12 +42,17 @@ export class AppComponent {
 
   activePaths: string[] = ['/', '/dashboard', '/job-board'];
   activePath: string = '';
+  currentLogo: string = '';
 
   constructor(private router: Router) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.activePath = this.getActivePath(event.url);
       }
+    });
+    document.addEventListener('onThemeSwitcherChange', (event) => {
+      const target = event as CustomEvent;
+      this.currentLogo = target.detail.currentLogo;
     });
   }
 

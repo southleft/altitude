@@ -24,7 +24,8 @@
         {
           "name": "idx",
           "description": "Index of the panel\n- Dynamically set by the ALAccordion",
-          "type": "number"
+          "type": "number",
+          "default": "0"
         },
         {
           "name": "ariaControls",
@@ -70,7 +71,8 @@
           "name": "idx",
           "attribute": "idx",
           "description": "Index of the panel\n- Dynamically set by the ALAccordion",
-          "type": "number"
+          "type": "number",
+          "default": "0"
         },
         {
           "name": "ariaControls",
@@ -585,8 +587,8 @@
         },
         {
           "name": "variant",
-          "description": "Style variant\n- **default** renders the button used for primary actions\n- **secondary** renders the button with an outlined style\n- **tertiary** renders the button with a bare style\n- **danger** renders the button used for caution actions",
-          "type": "\"danger\" | \"secondary\" | \"tertiary\""
+          "description": "Style variant\n- **default** renders the button used for primary actions\n- **secondary** renders the button used for secondary actions\n- **tertiary** renders the button with an outlined style\n- **bare** renders the button with a bare style\n- **danger** renders the button used for caution actions",
+          "type": "\"danger\" | \"secondary\" | \"tertiary\" | \"bare\""
         },
         {
           "name": "target",
@@ -668,8 +670,8 @@
         {
           "name": "variant",
           "attribute": "variant",
-          "description": "Style variant\n- **default** renders the button used for primary actions\n- **secondary** renders the button with an outlined style\n- **tertiary** renders the button with a bare style\n- **danger** renders the button used for caution actions",
-          "type": "\"danger\" | \"secondary\" | \"tertiary\""
+          "description": "Style variant\n- **default** renders the button used for primary actions\n- **secondary** renders the button used for secondary actions\n- **tertiary** renders the button with an outlined style\n- **bare** renders the button with a bare style\n- **danger** renders the button used for caution actions",
+          "type": "\"danger\" | \"secondary\" | \"tertiary\" | \"bare\""
         },
         {
           "name": "target",
@@ -3706,7 +3708,7 @@
         },
         {
           "name": "variant",
-          "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset\n</cat-text-passage>",
+          "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset",
           "type": "\"sm\" | \"lg\" | \"xs\""
         },
         {
@@ -3755,7 +3757,7 @@
         {
           "name": "variant",
           "attribute": "variant",
-          "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset\n</cat-text-passage>",
+          "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset",
           "type": "\"sm\" | \"lg\" | \"xs\""
         },
         {
@@ -4006,6 +4008,55 @@
         },
         {
           "name": "setShadows"
+        },
+        {
+          "name": "styleModifier",
+          "attribute": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "al-logo",
+      "path": "./components/logo/logo.ts",
+      "description": "Component: al-logo\n- **slot**: The component content",
+      "attributes": [
+        {
+          "name": "variant",
+          "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **odyssey** displays the Odyssey logo\n- **southleft** displays the Southleft logo",
+          "type": "\"northright\" | \"odyssey\" | \"southleft\""
+        },
+        {
+          "name": "href",
+          "description": "The logo link URL",
+          "type": "string",
+          "default": "\"/\""
+        },
+        {
+          "name": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "el",
+          "type": "string",
+          "default": "\"al-logo\""
+        },
+        {
+          "name": "variant",
+          "attribute": "variant",
+          "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **odyssey** displays the Odyssey logo\n- **southleft** displays the Southleft logo",
+          "type": "\"northright\" | \"odyssey\" | \"southleft\""
+        },
+        {
+          "name": "href",
+          "attribute": "href",
+          "description": "The logo link URL",
+          "type": "string",
+          "default": "\"/\""
         },
         {
           "name": "styleModifier",
@@ -4442,12 +4493,14 @@
         {
           "name": "prevButtonText",
           "description": "Text displayed on the previous button",
-          "type": "string"
+          "type": "string",
+          "default": "\"Previous\""
         },
         {
           "name": "nextButtonText",
           "description": "Text displayed on the next button",
-          "type": "string"
+          "type": "string",
+          "default": "\"Next\""
         },
         {
           "name": "ariaLabel",
@@ -4504,13 +4557,15 @@
           "name": "prevButtonText",
           "attribute": "prevButtonText",
           "description": "Text displayed on the previous button",
-          "type": "string"
+          "type": "string",
+          "default": "\"Previous\""
         },
         {
           "name": "nextButtonText",
           "attribute": "nextButtonText",
           "description": "Text displayed on the next button",
-          "type": "string"
+          "type": "string",
+          "default": "\"Next\""
         },
         {
           "name": "ariaLabel",
@@ -6769,6 +6824,31 @@
           "attribute": "maxLengthValue",
           "description": "Maxlength value\n- Dynamically outputs the number of characters inside the input field",
           "type": "number"
+        },
+        {
+          "name": "styleModifier",
+          "attribute": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "al-theme-switcher",
+      "path": "./components/theme-switcher/theme-switcher.ts",
+      "description": "Component: al-theme-switcher\n- **slot**: The component content",
+      "attributes": [
+        {
+          "name": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "el",
+          "type": "string",
+          "default": "\"al-theme-switcher\""
         },
         {
           "name": "styleModifier",

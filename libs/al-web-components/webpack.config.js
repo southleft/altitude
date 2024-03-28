@@ -78,8 +78,8 @@ module.exports = (env) => {
         ? new CopyPlugin({
             patterns: [
               { from: `icons/svgs/*`, to: 'icons/[name][ext]' },
-              { from: `styles/theme/*`, to: 'scss/tokens/theme/[name][ext]' },
-              { from: `styles/brand/*`, to: 'scss/tokens/brand/[name][ext]' }
+              { from: `styles/dist/css/**/*`, to: 'css/[name][ext]' },
+              { from: `.storybook/static/images/*`, to: 'images/[name][ext]' }
             ]
           })
         : null

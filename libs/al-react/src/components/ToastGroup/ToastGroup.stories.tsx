@@ -29,22 +29,22 @@ export default {
       <>
         <ALToast description="This is a toast" isActive="true">
           Toast title A
-          <ALButton slot="actions" variant="secondary"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
+          <ALButton slot="actions" variant="tertiary"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
           <ALButton slot="actions"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
         </ALToast>
         <ALToast description="This is a toast" isActive="true">
           Toast title B
-          <ALButton slot="actions" variant="secondary"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
+          <ALButton slot="actions" variant="tertiary"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
           <ALButton slot="actions"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
         </ALToast>
         <ALToast description="This is a toast" isActive="true">
           Toast title C
-          <ALButton slot="actions" variant="secondary"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
+          <ALButton slot="actions" variant="tertiary"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
           <ALButton slot="actions"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
         </ALToast>
         <ALToast description="This is a toast" isActive="true">
           Toast title D
-          <ALButton slot="actions" variant="secondary"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
+          <ALButton slot="actions" variant="tertiary"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
           <ALButton slot="actions"><ALIconSuccess slot="before"></ALIconSuccess>Label</ALButton>
         </ALToast>
       </>

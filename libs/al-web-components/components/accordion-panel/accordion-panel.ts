@@ -1,13 +1,13 @@
 import { TemplateResult, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
-import { nanoid } from 'nanoid';
 import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { ALElement } from '../ALElement';
 import { ALIconChevronDown } from '../icon/icons/chevron-down';
 import styles from './accordion-panel.scss';
+import { nanoid } from 'nanoid';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 /**
  * Component: al-accordion-panel
@@ -17,7 +17,9 @@ export class ALAccordionPanel extends ALElement {
   static el = 'al-accordion-panel';
 
   private elementMap = register({
-    elements: [[ALIconChevronDown.el, ALIconChevronDown]],
+    elements: [
+      [ALIconChevronDown.el, ALIconChevronDown]
+    ],
     suffix: (globalThis as any).alAutoRegistry === true ? '' : PackageJson.version
   });
 
@@ -53,7 +55,7 @@ export class ALAccordionPanel extends ALElement {
    * - Dynamically set by the ALAccordion
    */
   @property({ type: Number })
-  accessor idx: number;
+  accessor idx: number = 0;
 
   /**
    * Aria Controls attribute
@@ -151,7 +153,7 @@ export class ALAccordionPanel extends ALElement {
               <slot name="header"></slot>
             </div>
             <div class="al-c-accordion-panel__icon">
-              <${this.iconChevronDownEl} size="lg"></${this.iconChevronDownEl}>
+              <${this.iconChevronDownEl} class="al-c-accordion-panel__icon" size="lg"></${this.iconChevronDownEl}>
             </div>
           </button>
         </dt>

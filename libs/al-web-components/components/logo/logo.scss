@@ -1,0 +1,40 @@
+@import '../../styles/component';
+/*------------------------------------*\
+  #LOGO
+\*------------------------------------*/
+
+:host {
+  display: contents;
+}
+
+/**
+ * Logo
+ */
+.al-c-logo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-xxs);
+  justify-content: center;
+  align-items: flex-start;
+  text-decoration: none;
+  color: var(--al-theme-color-content-default-weak);
+}
+
+.al-c-logo__tagline {
+  @include al-theme-typography-body-xs-bold;
+  color: var(--al-theme-color-content-default-weak);
+  margin-inline-start: var(--al-logo-tagline-margin-inline-start, 28px);
+
+  .al-c-logo--northright &,
+  .al-c-logo--southleft & ,
+  .al-c-logo--odyssey &{
+    margin-inline-start: 0;
+  }
+}
+
+svg {
+  width: 100%;
+  height: auto;
+  max-width: var(--al-logo-max-width, fit-content);
+  max-height: var(--al-logo-max-height, 24px);
+}

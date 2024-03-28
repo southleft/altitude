@@ -18,7 +18,7 @@ export default {
   args: {
     children: (
       <>
-        <ALButton variant="secondary">Button</ALButton>
+        <ALButton variant="tertiary">Button</ALButton>
         <ALButton>Button</ALButton>
       </>
     )

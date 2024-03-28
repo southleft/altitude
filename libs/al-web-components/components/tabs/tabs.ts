@@ -377,7 +377,7 @@ export class ALTabs extends ALElement {
             ? html`
                 <${this.buttonEl}
                   class="al-c-tabs__arrow al-c-tabs__arrow--prev"
-                  variant="tertiary"
+                  variant="bare"
                   ?hideText=${true}
                   @click=${(e: Event) => this.setActiveAdjacentTab(this.activeTab, true, false, e)}
                 >
@@ -399,7 +399,7 @@ export class ALTabs extends ALElement {
             ? html`
                 <${this.buttonEl}
                   class="al-c-tabs__arrow al-c-tabs__arrow--next"
-                  variant="tertiary"
+                  variant="bare"
                   ?hideText=${true}
                   @click=${(e: Event) => this.setActiveAdjacentTab(this.activeTab, false, false, e)}
                 >

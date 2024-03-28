@@ -1,13 +1,17 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { ALAvatar, ALBadge, ALButtonGroup, ALButton, ALCard, ALDivider, ALDrawer, ALHeader, ALHeading, ALIconBell, ALIconCalendar, ALIconChevronUp, ALIconHelp, ALIconHome, ALIconList, ALIconSettings, ALIconSignOut, ALIconSupport, ALIconUser, ALLayoutContainer, ALLayout, ALListItem, ALList, ALMenuItem, ALMenu, ALPopover, ALSearch, ALToggleButton } from 'al-react/dist/src';
-import logo from '../images/logo.svg'
+import { ALAvatar, ALBadge, ALButtonGroup, ALButton, ALCard, ALDivider, ALDrawer, ALHeader, ALHeading, ALIconBell, ALIconCalendar, ALIconChevronUp, ALIconHelp, ALIconHome, ALIconList, ALLogo, ALIconSettings, ALIconSignOut, ALIconSupport, ALIconUser, ALLayoutContainer, ALLayout, ALListItem, ALList, ALMenuItem, ALMenu, ALPopover, ALSearch, ALToggleButton, ALThemeSwitcher } from 'al-react/dist/src';
 import './Layout.scss';
 
 export default function Dashboard() {
+  let currentLogo;
+  document.addEventListener('onThemeSwitcherChange', (event) => {
+    currentLogo = event.detail.currentLogo;
+  });
+
   return (
-    <div className="al-li-dashboard">
+    <div className="al-l-dashboard">
       <div className="al-l-dashboard__help-popover">
-      <ALPopover position="top-left" isDismissible={true}>
+        <ALPopover position="top-left" isDismissible={true}>
           <ALToggleButton slot="trigger" variant="background">
             <ALIconHelp size="lg" />
           </ALToggleButton>
@@ -24,8 +28,10 @@ export default function Dashboard() {
         <div className="al-l-dashboard__sidebar">
           <slot name="sidebar">
             <div className="al-l-dashboard__sidebar-logo">
-              <NavLink to={"/"}><img src={logo} alt="logo" /></NavLink>
-              <ALDivider></ALDivider>
+              <ALLogo variant={currentLogo !== 'altitude' ? currentLogo : null}>
+                {currentLogo !== 'southleft' ? 'By Southleft • ' : ''}
+                {'React Web Application'}
+              </ALLogo>
             </div>
             <ALMenu className="al-l-dashboard__sidebar-menu">
               <NavLink to={'/dashboard'}>
@@ -51,7 +57,7 @@ export default function Dashboard() {
                   <div slot="trigger" className="al-l-dashboard__user">
                     <ALAvatar>TP</ALAvatar>
                     <p>TJ Pitre</p>
-                    <ALButton variant="tertiary" hideText={true}><ALIconChevronUp slot="before"></ALIconChevronUp></ALButton>
+                    <ALButton variant="bare" hideText={true}><ALIconChevronUp slot="before"></ALIconChevronUp></ALButton>
                   </div>
                   <ALMenu>
                     <ALMenuItem><ALIconUser></ALIconUser>Profile</ALMenuItem>
@@ -74,8 +80,11 @@ export default function Dashboard() {
                 </ALList>
               </ALSearch>
               <div slot="after">
+                <ALThemeSwitcher></ALThemeSwitcher>
+              </div>
+              <div slot="after">
                 <ALDrawer alignment="right" hasBackdrop={true} width="400">
-                  <ALButton slot="trigger" hideText={true} variant="tertiary"><ALBadge variant="danger" slot="after" isDot={true} className="al-l-dashboard__notifications-badge"></ALBadge><ALIconBell slot="after"></ALIconBell></ALButton>
+                  <ALButton slot="trigger" hideText={true} variant="bare"><ALBadge variant="danger" slot="after" isDot={true} className="al-l-dashboard__notifications-badge"></ALBadge><ALIconBell slot="after"></ALIconBell></ALButton>
                   <ALHeading slot="header" tagName="h3" variant="sm" isBold={true}>Notifications</ALHeading>
                   <div className="al-u-gap-xs">
                     <ALCard variant="bare" layout="inline" href="#">

@@ -29,12 +29,13 @@ export class ALButton extends ALElement {
   /**
    * Style variant
    * - **default** renders the button used for primary actions
-   * - **secondary** renders the button with an outlined style
-   * - **tertiary** renders the button with a bare style
+   * - **secondary** renders the button used for secondary actions
+   * - **tertiary** renders the button with an outlined style
+   * - **bare** renders the button with a bare style
    * - **danger** renders the button used for caution actions
    */
   @property()
-  accessor variant: 'secondary' | 'tertiary' | 'danger';
+  accessor variant: 'secondary' | 'tertiary' | 'bare' | 'danger';
 
   /**
    * Target attribute for a link (i.e. set to _blank to open in new tab)
@@ -151,10 +152,11 @@ export class ALButton extends ALElement {
     const componentClassNames = this.componentClassNames('al-c-button', {
       'al-c-button--secondary': this.variant === 'secondary',
       'al-c-button--tertiary': this.variant === 'tertiary',
+      'al-c-button--bare': this.variant === 'bare',
       'al-c-button--danger': this.variant === 'danger',
       'al-c-button--full-width': this.fullWidth === true,
       'al-c-button--icon-only': this.hideText === true,
-      'al-is-expanded': this.isExpanded === true
+      'al-is-expanded': this.isExpanded === true,
     });
 
     if (this.href) {

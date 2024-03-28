@@ -102,8 +102,8 @@
   &:active,
   &:focus,
   &:focus-visible {
-    border-color: var(--al-theme-color-border-accent-default);
-    box-shadow: 0px 0px 0px 1px var(--al-theme-color-border-accent-default);
+    border-color: var(--al-theme-color-border-primary-default);
+    box-shadow: 0px 0px 0px 1px var(--al-theme-color-border-primary-default);
     outline: none;
   }
 
@@ -161,7 +161,7 @@
   @include al-reset-button;
   @include al-theme-typography-body-md;
   transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing), background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
-  color: var(--al-theme-color-content-accent-strong);
+  color: var(--al-theme-color-content-primary-default);
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
@@ -174,7 +174,7 @@
    * Hover state
    */
   &:hover:not(:active, .al-is-disabled) {
-    color: var(--al-theme-color-content-accent-stronger);
+    color: var(--al-theme-color-content-primary-strong);
   }
 
   /**
@@ -201,11 +201,11 @@
  * Visible focus outline for elements
  */
 @mixin al-focus() {
-  outline: var(--al-theme-border-width-md) solid var(--al-theme-color-focus-ring, var(--al-theme-color-border-accent-default));
+  outline: var(--al-theme-border-width-md) solid var(--al-theme-color-focus-ring, var(--al-theme-color-border-primary-default));
   outline-offset: var(--al-focus-outline-offset, var(--al-theme-border-width-md));
 }
 
 @mixin al-focus-inset() {
-  outline: var(--al-theme-border-width-md) solid var(--al-theme-color-focus-ring, var(--al-theme-color-border-accent-default));
+  outline: var(--al-theme-border-width-md) solid var(--al-theme-color-focus-ring, var(--al-theme-color-border-primary-default));
   outline-offset: calc(#{var(--al-theme-border-width-md)} * -1);
 }

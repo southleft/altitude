@@ -23,13 +23,13 @@ export class ALIconChevronDown extends ALElement {
   /**
    * Icon size
    * - Default size is 16px
-   * - **xs** renders a smaller size than default (8px)
-   * - **sm** renders a smaller size than default (12px)
-   * - **md** renders a larger size than default (20px)
-   * - **lg** renders a larger size than the md variant (24px)
-   * - **xl** renders a larger size than the lg variant (32px)
-   * - **xxl** renders a larger size than the lg variant (36px)
-   * - **xxxl** renders a larger size than the lg variant (40px)
+   * - **xs** renders a 8px icon
+   * - **sm** renders a 12px icon
+   * - **md** renders a 20px icon
+   * - **lg** renders a 24px icon
+   * - **xl** renders a 32px icon
+   * - **xxl** renders a 36px icon
+   * - **xxxl** renders a 40px icon
    */
   @property()
   accessor size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl';

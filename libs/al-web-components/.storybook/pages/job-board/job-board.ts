@@ -129,7 +129,7 @@ export class ALJobBoard extends LitElement {
                 </div>
                 <al-button-group slot="footer">
                   <al-button>Show Results</al-button>
-                  <al-button variant="secondary">Reset</al-button>
+                  <al-button variant="tertiary">Reset</al-button>
                 </al-button-group>
               </al-dialog>
             </div>

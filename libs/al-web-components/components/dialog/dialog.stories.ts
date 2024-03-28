@@ -60,9 +60,9 @@ const Template = (args) => html`
   <al-dialog ${spread(args)} data-testid="dialog">
     <al-button slot="trigger">Open Dialog</al-button>
     <f-po >Dialog content</f-po>
-    <al-button slot="footer" variant="tertiary" @click=${closeDialog}>Close</al-button>
+    <al-button slot="footer" variant="bare" @click=${closeDialog}>Close</al-button>
     <al-button-group slot="footer" alignment="right">
-      <al-button variant="secondary">Label</al-button>
+      <al-button variant="tertiary">Label</al-button>
       <al-button>Label</al-button>
     </al-button-group>
   </al-dialog>
@@ -86,17 +86,17 @@ const TemplateWithTriggerOutside = () => html`
   <al-button aria-controls="dialog-2" @click=${openDialog}>Open Dialog 2</al-button>
   <al-dialog id="dialog-1" heading="Dialog 1">
     <f-po>Dialog content</f-po>
-    <al-button aria-controls="dialog-1" slot="footer" variant="tertiary" @click=${(e) => closeDialog(e, 'dialog-1')}>Close</al-button>
+    <al-button aria-controls="dialog-1" slot="footer" variant="bare" @click=${(e) => closeDialog(e, 'dialog-1')}>Close</al-button>
     <al-button-group slot="footer" alignment="right">
-      <al-button variant="secondary">Label</al-button>
+      <al-button variant="tertiary">Label</al-button>
       <al-button>Label</al-button>
     </al-button-group>
   </al-dialog>
   <al-dialog id="dialog-2" heading="Dialog 2">
     <f-po>Dialog content</f-po>
-    <al-button slot="footer" variant="tertiary" @click=${(e) => closeDialog(e, 'dialog-2')}>Close</al-button>
+    <al-button slot="footer" variant="bare" @click=${(e) => closeDialog(e, 'dialog-2')}>Close</al-button>
     <al-button-group slot="footer" alignment="right">
-      <al-button variant="secondary">Label</al-button>
+      <al-button variant="tertiary">Label</al-button>
       <al-button>Label</al-button>
     </al-button-group>
   </al-dialog>

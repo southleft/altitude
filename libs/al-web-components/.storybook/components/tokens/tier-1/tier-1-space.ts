@@ -1,5 +1,5 @@
 import { html, LitElement, unsafeCSS } from 'lit';
-import tokens from '../../../../styles/tokens.json';
+import tokens from '../../../../styles/dist/tokens.json';
 import styles from '../tokens.scss';
 import '../../token-specimen/token-specimen';
 import '../../../../components/alert/alert';

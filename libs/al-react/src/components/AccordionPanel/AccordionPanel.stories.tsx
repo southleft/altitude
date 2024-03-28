@@ -12,6 +12,7 @@ export default {
     },
   },
   args: {
+    idx: 0,
     children: (
       <>
         <div slot="header">Label</div>
@@ -21,7 +22,7 @@ export default {
   },
 };
 
-export const Default: StoryObj<typeof ALAccordionPanel> = { args: {} };
+export const Default: StoryObj<typeof ALAccordionPanel> = {};
 
 export const Disabled: StoryObj<typeof ALAccordionPanel> = { args: {
   isDisabled: true,

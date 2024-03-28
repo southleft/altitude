@@ -30,18 +30,24 @@
   import 'al-web-components/dist/components/layout/layout';
   import 'al-web-components/dist/components/list-item/list-item';
   import 'al-web-components/dist/components/list/list';
+  import 'al-web-components/dist/components/logo/logo';
   import 'al-web-components/dist/components/menu-item/menu-item';
   import 'al-web-components/dist/components/menu/menu';
   import 'al-web-components/dist/components/popover/popover';
   import 'al-web-components/dist/components/search/search';
   import 'al-web-components/dist/components/text-passage/text-passage';
   import 'al-web-components/dist/components/toggle-button/toggle-button';
+  import 'al-web-components/dist/components/theme-switcher/theme-switcher';
   import './Layout.css';
-  import logo from '../assets/logo.svg'
   import { Link } from 'svelte-routing'
+
+  let currentLogo;
+  document.addEventListener('onThemeSwitcherChange', (event) => {
+    currentLogo = event.detail.currentLogo;
+  });
 </script>
 
-<main style="position: relative; display: block;">
+<main class="al-l-dashboard" style="position: relative; display: block;">
   <div class="al-l-dashboard__help-popover">
     <al-popover position="top-left" isDismissible={true}>
       <al-toggle-button slot="trigger" variant="background" data-testid="popover-trigger"><al-icon-help size="lg"></al-icon-help></al-toggle-button>
@@ -57,8 +63,10 @@
   <al-layout variant="sidebar-left" gap="none">
     <div class="al-l-dashboard__sidebar">
       <div class="al-l-dashboard__sidebar-logo">
-        <Link to="/"><img src={logo} alt="logo" /></Link>
-        <al-divider></al-divider>
+        <al-logo variant={currentLogo !== 'altitude' ? currentLogo : null}>
+          {currentLogo !== 'southleft' ? 'By Southleft • ' : ''}
+          {'Svelte Web Application'}
+        </al-logo>
       </div>
       <al-menu class="al-l-dashboard__sidebar-menu">
         <Link to="/dashboard" let:active>
@@ -86,7 +94,7 @@
           <div slot="trigger" class="al-l-dashboard__user">
             <al-avatar>TP</al-avatar>
             <p>TJ Pitre</p>
-            <al-button variant="tertiary" hideText={true}><al-icon-chevron-up slot="before"></al-icon-chevron-up></al-button>
+            <al-button variant="bare" hideText={true}><al-icon-chevron-up slot="before"></al-icon-chevron-up></al-button>
           </div>
           <al-menu>
             <al-menu-item><al-icon-user slot="before"></al-icon-user>Profile</al-menu-item>
@@ -108,8 +116,11 @@
           </al-list>
         </al-search>
         <div slot="after">
+          <al-theme-switcher></al-theme-switcher>
+        </div>
+        <div slot="after">
           <al-drawer alignment="right" hasBackdrop={true} width="400">
-            <al-button slot="trigger" hideText={true} variant="tertiary"><al-badge variant="danger" slot="after" isDot={true} class="al-l-dashboard__notifications-badge"></al-badge><al-icon-bell slot="after"></al-icon-bell></al-button>
+            <al-button slot="trigger" hideText={true} variant="bare"><al-badge variant="danger" slot="after" isDot={true} class="al-l-dashboard__notifications-badge"></al-badge><al-icon-bell slot="after"></al-icon-bell></al-button>
             <al-heading slot="header" tagName="h3" variant="sm" isBold={true}>Notifications</al-heading>
             <div class="al-u-gap-xs">
               <al-card variant="bare" layout="inline" href="#">

@@ -57,7 +57,6 @@ function openAlert() {
 
 export const Default: StoryObj<typeof ALAlert> = {};
 
-
 export const Success: StoryObj<typeof ALAlert> = {
   args: {
     variant: 'success'
@@ -87,7 +86,7 @@ export const WithAction: StoryObj<typeof ALAlert> = {
     children: (
       <>
         <ALTextPassage>This is an alert. It is used to notify the user of something important.</ALTextPassage>
-        <ALButton slot="action" variant="secondary">Action</ALButton>
+        <ALButton slot="action" variant="tertiary">Action</ALButton>
       </>
     )
   }

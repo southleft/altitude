@@ -11,18 +11,20 @@
       setGlobalStyles();
     </script>
     <script type="module" defer>
-      import '/al-web-components/components/layout/layout.js';
-      import '/al-web-components/components/layout-container/layout-container.js';
+      import '/al-web-components/components/button/button.js';
+      import '/al-web-components/components/card/card.js';
       import '/al-web-components/components/divider/divider.js';
       import '/al-web-components/components/header/header.js';
       import '/al-web-components/components/heading/heading.js';
-      import '/al-web-components/components/menu/menu.js';
-      import '/al-web-components/components/menu-item/menu-item.js';
-      import '/al-web-components/components/list/list.js';
-      import '/al-web-components/components/menu-item/menu-item.js';
       import '/al-web-components/components/icon/icons/document.js';
-      import '/al-web-components/components/icon/icons/star.js';
-      import '/al-web-components/components/icon/icons/layout-masonry.js';
+      import '/al-web-components/components/layout-container/layout-container.js';
+      import '/al-web-components/components/layout/layout.js';
+      import '/al-web-components/components/layout-section/layout-section.js';
+      import '/al-web-components/components/logo/logo.js';
+      import '/al-web-components/components/tab-panel/tab-panel.js';
+      import '/al-web-components/components/tab/tab.js';
+      import '/al-web-components/components/tabs/tabs.js';
+      import '/al-web-components/components/text-passage/text-passage.js';
     </script>
     <style type="text/css">
       * {
@@ -32,84 +34,99 @@
         margin: 0;
         overflow: hidden;
       }
-      img {
-        width: 200px;
-      }
-      .al-l-index__logo {
-        display: flex;
-        align-items: center;
-        padding: var(--al-theme-space);
-        min-height: var(--al-theme-layout-height-header);
-      }
-      .al-l-index__sidebar {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        z-index: var(--al-z-index-500);
-        background-color: var(--al-theme-color-background-default);
-        box-shadow: var(--al-theme-box-shadow);
-      }
-      .al-l-index__body {
-        padding-block-start: var(--al-theme-space);
-      }
-      @media all and (max-width: 768px) {
-        .al-l-index__sidebar {
-          display: none;
-        }
-      }
-      @media all and (min-width: 769px) {
-        .al-l-index__header {
-          visibility: hidden;
-          height: 80px;
-        }
-      }
     </style>
 </head>
 <body>
   <main>
-    <al-layout variant="sidebar-left" gap="none">
-    <div class="al-l-index__sidebar">
-      <div class="al-l-index__logo">
-        <img src="storybook/web-components/images/logo.svg" alt="Altitude Logo" />
-      </div>
-      <al-divider></al-divider>
-    </div>
-    <div class="al-l-index__content">
-      <div class="al-l-index__header">
-        <al-header>
-          <img src="storybook/web-components/images/logo.svg" alt="Altitude Logo" />
-        </al-header>
-      </div>
-      <div class="al-l-index__body">
-        <al-layout-container>
-          <div class="al-u-gap">
-            <al-heading variant="md" tagName="h1">Contents</al-heading>
-            <al-menu variant="simple" indentGroupItems="true">
-              <al-menu-item isHeader="true" isExpandableHeader="true" isExpanded="true">
-                <al-icon-document slot="before"></al-icon-document>
-                Documentation
-              </al-menu-item>
-              <al-menu-item href="https://zeroheight.com/809ab055e">ZeroHeight</al-menu-item>
-              <al-menu-item isHeader="true" isExpandableHeader="true" isExpanded="true">
-                <al-icon-star slot="before"></al-icon-star>
-                Storybook
-              </al-menu-item>
-              <al-menu-item href="/storybook/web-components">Web Components</al-menu-item>
-              <al-menu-item href="/storybook/react">React Wrappers</al-menu-item>
-              <al-menu-item isHeader="true" isExpandableHeader="true" isExpanded="true">
-                <al-icon-layout-masonry slot="before"></al-icon-layout-masonry>
-                Demos
-              </al-menu-item>
-              <al-menu-item href="/angular/browser">Angular</al-menu-item>
-              <al-menu-item href="/react">React</al-menu-item>
-              <al-menu-item href="/svelte">Svelte</al-menu-item>
-            </al-menu>
-          </div>  
+    <al-layout style="--al-layout-min-height: auto;" gap="lg">
+      <al-header>
+        <al-layout-container styleModifier="al-u-gap-lg">
+          <al-logo>By Southleft</al-logo>
         </al-layout-container>
-      </div>
-    </div>
-  </al-layout>
+      </al-header>
+      <al-layout-container styleModifier="al-u-gap-lg">
+        <div class="al-u-gap-xs al-u-flex-direction-row">
+          <al-icon-document size="xxl"></al-icon-document>
+          <al-heading variant="lg" tagName="h1" isBold="true">Resource Hub</al-heading>
+        </div>
+        <al-divider></al-divider>
+        <al-layout-section styleModifier="al-u-gap">
+          <div class="al-u-grid cols:12@sm cols:6@md cols:4@lg">
+            <al-card>
+              <al-heading variant="sm" tagName="h3" isBold="true">
+                <a href="https://zeroheight.com/809ab055e" target="_blank">ZeroHeight</a>
+              </al-heading>
+              <al-text-passage>All the documenation for best practices, implementation, usage guidelines and more.</al-text-passage>
+              <al-button href="https://zeroheight.com/809ab055e" target="_blank">View</al-button>
+            </al-card>
+            <al-card>
+              <al-heading variant="sm" tagName="h3" isBold="true">
+                <a href="https://www.figma.com/file/y83n4o9LOGs74oAoguFcGS/Altitude-Design-System?type=design&node-id=11684%3A83797&mode=design&t=dKiaHNT3K97X2KBv-1" target="_blank">Figma</a>
+              </al-heading>
+              <al-text-passage>The design file for the Altitude design system and source for all tokens.</al-text-passage>
+              <al-button href="https://www.figma.com/file/y83n4o9LOGs74oAoguFcGS/Altitude-Design-System?type=design&node-id=11684%3A83797&mode=design&t=dKiaHNT3K97X2KBv-1" target="_blank">View</al-button>
+            </al-card>
+            <al-card>
+              <al-heading variant="sm" tagName="h3" isBold="true">
+                <a href="https://github.com/southleft/altitude/" target="_blank">Git Repository</a>
+              </al-heading>
+              <al-text-passage>The repository that contains the entire codebase for the design system, Storybook, and web applications.</al-text-passage>
+              <al-button href="https://github.com/southleft/altitude/" target="_blank">View</al-button>
+            </al-card>
+          </div>
+        </al-layout-section>
+        <al-layout-section styleModifier="al-u-gap">
+          <al-heading variant="md" tagName="h2" isBold="true">Demos</al-heading>
+          <al-tabs>
+            <al-tab>Storybook</al-tab>
+            <al-tab>Web Applications</al-tab>
+            <al-tab-panel slot="panel">
+              <div class="al-u-grid cols:12@sm cols:6@md cols:4@lg">
+                <al-card>
+                  <al-heading variant="sm" tagName="h3" isBold="true">
+                    <a href="/storybook/web-components" target="_blank">Web Components</a>
+                  </al-heading>
+                  <al-text-passage>Storybook component library using native web components.</al-text-passage>
+                  <al-button href="/storybook/web-components" target="_blank">View</al-button>
+                </al-card>
+                <al-card>
+                  <al-heading variant="sm" tagName="h3" isBold="true">
+                    <a href="/storybook/react" target="_blank">React</a>
+                  </al-heading>
+                  <al-text-passage>Storybook component library using react wrappers of the native web components.</al-text-passage>
+                  <al-button href="/storybook/react" target="_blank">View</al-button>
+                </al-card>
+              </div>
+            </al-tab-panel>
+            <al-tab-panel slot="panel">
+              <div class="al-u-grid cols:12@sm cols:6@md cols:4@lg">
+                <al-card>
+                  <al-heading variant="sm" tagName="h3" isBold="true">
+                    <a href="/angular/browser" target="_blank">Angular</a>
+                  </al-heading>
+                  <al-text-passage>Web application leveraging Angular framework with seamless integration of Web Components.</al-text-passage>
+                  <al-button href="/angular/browser" target="_blank">View</al-button>
+                </al-card>
+                <al-card>
+                  <al-heading variant="sm" tagName="h3" isBold="true">
+                    <a href="/react" target="_blank">React</a>
+                  </al-heading>
+                  <al-text-passage>Web application leveraging React framework with seamless integration of Web Components.</al-text-passage>
+                  <al-button href="/react" target="_blank">View</al-button>
+                </al-card>
+                <al-card>
+                  <al-heading variant="sm" tagName="h3" isBold="true">
+                    <a href="/svelte" target="_blank">Svelte</a>
+                  </al-heading>
+                  <al-text-passage>Web application leveraging Svelte framework with seamless integration of Web Components.</al-text-passage>
+                  <al-button href="/svelte" target="_blank">View</al-button>
+                </al-card>
+              </div>
+            </al-tab-panel>
+          </al-tabs>
+        </al-layout-section>
+      </al-layout-container>
+    </al-layout>
   </main>
 </body>
 </html>

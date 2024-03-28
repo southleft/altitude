@@ -57,7 +57,7 @@ const TemplateWithContent = (args) => html`
 <al-card ${spread(args)}>
   <al-chip slot="actions-start">Label</al-chip>
     <al-popover slot="actions-end" menuId="card-menu" variant="menu">
-      <al-button slot="trigger" variant="tertiary" ?hideText=${true}>
+      <al-button slot="trigger" variant="bare" ?hideText=${true}>
         <al-icon-dots-vertical slot="before"></al-icon-dots-vertical>
       </al-button>
       <al-menu id="card-menu">

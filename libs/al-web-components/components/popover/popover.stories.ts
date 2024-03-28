@@ -122,7 +122,7 @@ WithDismissible.args = {
 
 const TemplateWithMenu = (args) => html`
   <al-popover ${spread(args)} data-testid="popover" variant="menu">
-    <al-button data-testid="popover-trigger" slot="trigger" variant="tertiary" ?hideText=${true}>
+    <al-button data-testid="popover-trigger" slot="trigger" variant="bare" ?hideText=${true}>
       <al-icon-menu slot="before"></al-icon-menu>
       Menu
     </al-button>
@@ -151,7 +151,7 @@ WithMenu.parameters = {
 
 const TemplateMenuWithGroups = (args) => html`
   <al-popover ${spread(args)} data-testid="popover">
-    <al-button slot="trigger" variant="tertiary" ?hideText=${true}>
+    <al-button slot="trigger" variant="bare" ?hideText=${true}>
       <al-icon-menu slot="before"></al-icon-menu>
       Menu
     </al-button>
@@ -206,9 +206,9 @@ const TemplateWithContent = (args) => html`
           <f-po>Tab panel 3 - Instance slot 2</f-po>
         </al-tab-panel>
       </al-tabs>
-      <al-button slot="footer" variant="tertiary" @click=${closePopover}>Close</al-button>
+      <al-button slot="footer" variant="bare" @click=${closePopover}>Close</al-button>
       <al-button-group slot="footer" alignment="right">
-        <al-button variant="secondary">Label</al-button>
+        <al-button variant="tertiary">Label</al-button>
         <al-button>Label</al-button>
       </al-button-group>
     </al-popover>

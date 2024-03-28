@@ -1,4 +1,4 @@
-<main style="position: relative; display: block;">
+<main class="al-l-dashboard" style="position: relative; display: block;">
   <div class="al-l-dashboard__help-popover">
     <al-popover position="top-left" isDismissible="true">
       <al-toggle-button slot="trigger" variant="background" data-testid="popover-trigger"><al-icon-help size="lg"></al-icon-help></al-toggle-button>
@@ -14,8 +14,12 @@
   <al-layout variant="sidebar-left" gap="none">
     <div class="al-l-dashboard__sidebar">
       <div class="al-l-dashboard__sidebar-logo">
-        <a routerLink='/'><app-logo></app-logo></a>
-        <al-divider></al-divider>
+        <al-logo [variant]="currentLogo !== 'altitude' ? currentLogo : null">
+          <ng-container *ngIf="currentLogo !== 'southleft'">
+            By Southleft •
+          </ng-container>
+          Angular Web Application
+        </al-logo>
       </div>
       <al-menu class="al-l-dashboard__sidebar-menu">
         <a [routerLink]="['/dashboard']">
@@ -43,7 +47,7 @@
           <div slot="trigger" class="al-l-dashboard__user">
             <al-avatar>TP</al-avatar>
             <p>TJ Pitre</p>
-            <al-button variant="tertiary" hideText="true"><al-icon-chevron-up slot="before"></al-icon-chevron-up></al-button>
+            <al-button variant="bare" hideText="true"><al-icon-chevron-up slot="before"></al-icon-chevron-up></al-button>
           </div>
           <al-menu>
             <al-menu-item><al-icon-user></al-icon-user>Profile</al-menu-item>
@@ -65,8 +69,11 @@
           </al-list>
         </al-search>
         <div slot="after">
+          <al-theme-switcher></al-theme-switcher>
+        </div>
+        <div slot="after">
           <al-drawer alignment="right" hasBackdrop="true" width="400">
-            <al-button slot="trigger" hideText="true" variant="tertiary"><al-badge variant="danger" slot="after" isDot="true" class="al-l-dashboard__notifications-badge"></al-badge><al-icon-bell slot="after"></al-icon-bell></al-button>
+            <al-button slot="trigger" hideText="true" variant="bare"><al-badge variant="danger" slot="after" isDot="true" class="al-l-dashboard__notifications-badge"></al-badge><al-icon-bell slot="after"></al-icon-bell></al-button>
             <al-heading slot="header" tagName="h3" variant="sm" isBold="true">Notifications</al-heading>
             <div class="al-u-gap-xs">
               <al-card variant="bare" layout="inline" href="#">

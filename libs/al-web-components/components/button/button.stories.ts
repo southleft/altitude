@@ -25,7 +25,7 @@ export default {
       control: { type: 'radio' }
     },
     variant: {
-      options: ['default', 'secondary', 'tertiary', 'danger'],
+      options: ['default', 'secondary', 'tertiary', 'bare', 'danger'],
       control: { type: 'radio' }
     },
     target: {
@@ -163,6 +163,33 @@ TertiaryDisabled.args = {
   isDisabled: true
 };
 
+export const Bare = Template.bind({});
+Bare.args = {
+  variant: 'bare'
+};
+
+export const BareIcon = TemplateIconBefore.bind({});
+BareIcon.args = {
+  hideText: true,
+  variant: 'bare'
+};
+
+export const BareIconBefore = TemplateIconBefore.bind({});
+BareIconBefore.args = {
+  variant: 'bare'
+};
+
+export const BareIconAfter = TemplateIconAfter.bind({});
+BareIconAfter.args = {
+  variant: 'bare'
+};
+
+export const BareDisabled = Template.bind({});
+BareDisabled.args = {
+  variant: 'bare',
+  isDisabled: true
+};
+
 export const Danger = Template.bind({});
 Danger.args = {
   variant: 'danger'
@@ -213,7 +240,7 @@ export const WithSubmit = () =>
     <input type="hidden" name="test" value="test" />
     <div style="display: flex; gap: 16px;">
       <al-button data-testid="submit" type="submit">Submit</al-button>
-      <al-button data-testid="reset" type="reset" variant="secondary">Reset</al-button>
+      <al-button data-testid="reset" type="reset" variant="tertiary">Reset</al-button>
     </div>
   </form>`;
 

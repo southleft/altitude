@@ -29,9 +29,10 @@ const config: StorybookConfig = {
           excludeNodeModules: true
         }
       }
-    }
+    },
+    'storybook-theme-switch-addon'
   ],
-  staticDirs: ['./static'],
+  staticDirs: ['../dist'],
 
   // Other Storybook options
   webpackFinal: async (config) => {

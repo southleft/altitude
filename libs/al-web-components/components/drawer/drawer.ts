@@ -312,7 +312,7 @@ export class ALDrawer extends ALElement {
               <div class="al-c-drawer__header-content" id=${this.ariaLabelledBy}>
                 <slot name="header"></slot>
               </div>
-              <${this.buttonEl} variant="tertiary" ?hideText=${true} class="al-c-drawer__close-button" @click=${this.handleOnCloseButton}>
+              <${this.buttonEl} variant="bare" ?hideText=${true} class="al-c-drawer__close-button" @click=${this.handleOnCloseButton}>
                 Close
                 <${this.iconCloseEl} slot="after"></${this.iconCloseEl}>
               </${this.buttonEl}>
