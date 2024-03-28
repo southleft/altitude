@@ -1,7 +1,6 @@
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import 'construct-style-sheets-polyfill';
 
 export interface ALElementProps {
   styleModifier?: string;
