@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALIconChevronDown as ALWebIconChevronDown } from 'al-web-components/dist/components/icon/icons/chevron-down';
-import register from 'al-web-components/dist/directives/register';
+import { ALIconChevronDown as ALWebIconChevronDown } from '@southleft/al-web-components/dist/components/icon/icons/chevron-down';
+import register from '@southleft/al-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../../package.json';
 

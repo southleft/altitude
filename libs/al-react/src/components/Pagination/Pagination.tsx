@@ -1,7 +1,7 @@
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { ALPagination as ALWebPagination } from 'al-web-components/dist/components/pagination/pagination';
-import register from 'al-web-components/dist/directives/register';
+import { ALPagination as ALWebPagination } from '@southleft/al-web-components/dist/components/pagination/pagination';
+import register from '@southleft/al-web-components/dist/directives/register';
 import PackageJson from '../../../package.json';
 
 const elementMap = register({

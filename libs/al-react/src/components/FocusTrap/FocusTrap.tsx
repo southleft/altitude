@@ -1,7 +1,7 @@
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { ALFocusTrap as ALWebFocusTrap } from 'al-web-components/dist/components/focus-trap/focus-trap';
-import register from 'al-web-components/dist/directives/register';
+import { ALFocusTrap as ALWebFocusTrap } from '@southleft/al-web-components/dist/components/focus-trap/focus-trap';
+import register from '@southleft/al-web-components/dist/directives/register';
 import PackageJson from '../../../package.json';
 
 const elementMap = register({

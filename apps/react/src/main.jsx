@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx'
-import setGlobalStyles from 'al-web-components/dist/directives/setGlobalStyles';
+import setGlobalStyles from '@southleft/al-web-components/dist/directives/setGlobalStyles';
 
 setGlobalStyles();
 

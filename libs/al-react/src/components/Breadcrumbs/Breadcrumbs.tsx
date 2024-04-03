@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALBreadcrumbs as ALWebBreadcrumbs } from 'al-web-components/dist/components/breadcrumbs/breadcrumbs';
-import register from 'al-web-components/dist/directives/register';
+import { ALBreadcrumbs as ALWebBreadcrumbs } from '@southleft/al-web-components/dist/components/breadcrumbs/breadcrumbs';
+import register from '@southleft/al-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

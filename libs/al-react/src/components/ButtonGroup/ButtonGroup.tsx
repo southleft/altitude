@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALButtonGroup as ALWebButtonGroup } from 'al-web-components/dist/components/button-group/button-group';
-import register from 'al-web-components/dist/directives/register';
+import { ALButtonGroup as ALWebButtonGroup } from '@southleft/al-web-components/dist/components/button-group/button-group';
+import register from '@southleft/al-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALToastGroup as ALWebToastGroup } from 'al-web-components/dist/components/toast-group/toast-group';
-import register from 'al-web-components/dist/directives/register';
+import { ALToastGroup as ALWebToastGroup } from '@southleft/al-web-components/dist/components/toast-group/toast-group';
+import register from '@southleft/al-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 
