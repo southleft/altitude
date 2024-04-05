@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { ALAvatar, ALBadge, ALButtonGroup, ALButton, ALCard, ALDivider, ALDrawer, ALHeader, ALHeading, ALIconBell, ALIconCalendar, ALIconChevronUp, ALIconHelp, ALIconHome, ALIconList, ALLogo, ALIconSettings, ALIconSignOut, ALIconSupport, ALIconUser, ALLayoutContainer, ALLayout, ALListItem, ALList, ALMenuItem, ALMenu, ALPopover, ALSearch, ALToggleButton, ALThemeSwitcher } from 'al-react/dist/src';
+import { ALAvatar, ALBadge, ALButtonGroup, ALButton, ALCard, ALDivider, ALDrawer, ALHeader, ALHeading, ALIconBell, ALIconCalendar, ALIconChevronUp, ALIconHelp, ALIconHome, ALIconList, ALLogo, ALIconSettings, ALIconSignOut, ALIconSupport, ALIconUser, ALLayoutContainer, ALLayout, ALListItem, ALList, ALMenuItem, ALMenu, ALPopover, ALSearch, ALToggleButton, ALThemeSwitcher } from '@southleft/al-react/dist/src';
 import './Layout.scss';
 
 export default function Dashboard() {
