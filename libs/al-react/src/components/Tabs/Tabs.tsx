@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALTabs as ALWebTabs } from 'al-web-components/dist/components/tabs/tabs';
-import register from 'al-web-components/dist/directives/register';
+import { ALTabs as ALWebTabs } from '@southleft/al-web-components/dist/components/tabs/tabs';
+import register from '@southleft/al-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

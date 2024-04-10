@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALTooltip as ALWebTooltip } from 'al-web-components/dist/components/tooltip/tooltip';
-import register from 'al-web-components/dist/directives/register';
+import { ALTooltip as ALWebTooltip } from '@southleft/al-web-components/dist/components/tooltip/tooltip';
+import register from '@southleft/al-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

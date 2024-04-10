@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALFieldNote as ALWebFieldNote } from 'al-web-components/dist/components/field-note/field-note';
-import register from 'al-web-components/dist/directives/register';
+import { ALFieldNote as ALWebFieldNote } from '@southleft/al-web-components/dist/components/field-note/field-note';
+import register from '@southleft/al-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

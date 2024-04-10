@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALIconEmoji as ALWebIconEmoji } from 'al-web-components/dist/components/icon/icons/emoji';
-import register from 'al-web-components/dist/directives/register';
+import { ALIconEmoji as ALWebIconEmoji } from '@southleft/al-web-components/dist/components/icon/icons/emoji';
+import register from '@southleft/al-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../../package.json';
 

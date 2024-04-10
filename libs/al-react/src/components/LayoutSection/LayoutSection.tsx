@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALLayoutSection as ALWebLayoutSection } from 'al-web-components/dist/components/layout-section/layout-section';
-import register from 'al-web-components/dist/directives/register';
+import { ALLayoutSection as ALWebLayoutSection } from '@southleft/al-web-components/dist/components/layout-section/layout-section';
+import register from '@southleft/al-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 
