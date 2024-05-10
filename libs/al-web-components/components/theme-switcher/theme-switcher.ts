@@ -11,8 +11,7 @@ import { ALIconSettings } from '../icon/icons/settings';
 import styles from './theme-switcher.scss';
 import tokensDark from '../../styles/dist/scss/theme/tokens-dark.scss';
 import tokensLight from '../../styles/dist/scss/theme/tokens-light.scss';
-import tokensNorthrightLight from '../../styles/dist/scss/brand/tokens-northright-light.scss';
-import tokensNorthrightDark from '../../styles/dist/scss/brand/tokens-northright-dark.scss';
+import tokensNorthright from '../../styles/dist/scss/brand/tokens-northright-light.scss';
 import tokensOdyssey from '../../styles/dist/scss/brand/tokens-odyssey-dark.scss';
 import tokensSouthleft from '../../styles/dist/scss/brand/tokens-southleft-dark.scss';
 
@@ -67,11 +66,8 @@ export class ALThemeSwitcher extends ALElement {
       themeStyles = tokensDark;
     } else if (theme == 'light') {
       themeStyles = tokensLight;
-    } else if (theme == 'northright-light') {
-      themeStyles = tokensNorthrightLight;
-      logo = 'northright';
-    } else if (theme == 'northright-dark') {
-      themeStyles = tokensNorthrightDark;
+    } else if (theme == 'northright') {
+      themeStyles = tokensNorthright;
       logo = 'northright';
     } else if (theme == 'odyssey') {
       themeStyles = tokensOdyssey;
