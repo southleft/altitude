@@ -1,6 +1,6 @@
 import './app.css'
 import App from './App.svelte'
-import setGlobalStyles from 'al-web-components/dist/directives/setGlobalStyles';
+import setGlobalStyles from '@southleft/al-web-components/dist/directives/setGlobalStyles';
 
 setGlobalStyles();
 

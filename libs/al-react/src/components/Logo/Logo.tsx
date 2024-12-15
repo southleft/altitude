@@ -1,7 +1,7 @@
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { ALLogo as ALWebLogo } from 'al-web-components/dist/components/logo/logo';
-import register from 'al-web-components/dist/directives/register';
+import { ALLogo as ALWebLogo } from '@southleft/al-web-components/dist/components/logo/logo';
+import register from '@southleft/al-web-components/dist/directives/register';
 import PackageJson from '../../../package.json';
 
 const elementMap = register({

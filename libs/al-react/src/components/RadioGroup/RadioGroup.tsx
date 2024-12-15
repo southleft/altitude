@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALRadioGroup as ALWebRadioGroup } from 'al-web-components/dist/components/radio-group/radio-group';
-import register from 'al-web-components/dist/directives/register';
+import { ALRadioGroup as ALWebRadioGroup } from '@southleft/al-web-components/dist/components/radio-group/radio-group';
+import register from '@southleft/al-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

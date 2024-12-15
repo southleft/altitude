@@ -1,7 +1,7 @@
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { ALFileUpload as ALWebFileUpload } from 'al-web-components/dist/components/file-upload/file-upload';
-import register from 'al-web-components/dist/directives/register';
+import { ALFileUpload as ALWebFileUpload } from '@southleft/al-web-components/dist/components/file-upload/file-upload';
+import register from '@southleft/al-web-components/dist/directives/register';
 import PackageJson from '../../../package.json';
 
 const elementMap = register({

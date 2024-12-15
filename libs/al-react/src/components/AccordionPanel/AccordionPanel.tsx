@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALAccordionPanel as ALWebAccordionPanel } from 'al-web-components/dist/components/accordion-panel/accordion-panel';
-import register from 'al-web-components/dist/directives/register';
+import { ALAccordionPanel as ALWebAccordionPanel } from '@southleft/al-web-components/dist/components/accordion-panel/accordion-panel';
+import register from '@southleft/al-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

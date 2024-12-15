@@ -1,6 +1,6 @@
 <script lang="ts">
   import Fpo from './Fpo.svelte'
-  import 'al-web-components/dist/components/calendar/calendar';
+  import '@southleft/al-web-components/dist/components/calendar/calendar';
 </script>
 
 <div class="al-u-grid al-u-gap--lg" style="height: 100%;">

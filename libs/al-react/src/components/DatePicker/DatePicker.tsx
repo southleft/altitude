@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALDatePicker as ALWebDatePicker } from 'al-web-components/dist/components/date-picker/date-picker';
-import register from 'al-web-components/dist/directives/register';
+import { ALDatePicker as ALWebDatePicker } from '@southleft/al-web-components/dist/components/date-picker/date-picker';
+import register from '@southleft/al-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

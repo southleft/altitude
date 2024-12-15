@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALIconList as ALWebIconList } from 'al-web-components/dist/components/icon/icons/list';
-import register from 'al-web-components/dist/directives/register';
+import { ALIconList as ALWebIconList } from '@southleft/al-web-components/dist/components/icon/icons/list';
+import register from '@southleft/al-web-components/dist/directives/register';
 import React from 'react';
 import PackageJson from '../../../../package.json';
 
