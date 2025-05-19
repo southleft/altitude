@@ -94,6 +94,38 @@ async function callClaude(prompt: string): Promise<string> {
   return data?.content?.[0]?.text || data?.completion || '';
 }
 
+function cleanPromptForTitle(prompt: string): string {
+  // Remove common leading phrases (case-insensitive)
+  const leadingPhrases = [
+    /^generate (a|an|the)? /i,
+    /^build (a|an|the)? /i,
+    /^create (a|an|the)? /i,
+    /^make (a|an|the)? /i,
+    /^design (a|an|the)? /i,
+    /^show (me )?(a|an|the)? /i,
+    /^write (a|an|the)? /i,
+    /^produce (a|an|the)? /i,
+    /^construct (a|an|the)? /i,
+    /^draft (a|an|the)? /i,
+    /^compose (a|an|the)? /i,
+    /^implement (a|an|the)? /i,
+    /^build out (a|an|the)? /i,
+    /^add (a|an|the)? /i,
+    /^render (a|an|the)? /i,
+    /^display (a|an|the)? /i,
+  ];
+  let cleaned = prompt.trim();
+  for (const regex of leadingPhrases) {
+    cleaned = cleaned.replace(regex, '');
+  }
+  // Remove punctuation, extra spaces, and capitalize each word
+  return cleaned
+    .replace(/[^a-zA-Z0-9 ]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/\b\w/g, c => c.toUpperCase());
+}
+
 export async function generateStoryFromPrompt(req: Request, res: Response) {
   const { prompt } = req.body;
   if (!prompt) return res.status(400).json({ error: 'Missing prompt' });
@@ -114,21 +146,19 @@ export async function generateStoryFromPrompt(req: Request, res: Response) {
       console.error('No valid code block or import found in Claude response. Skipping file write.');
       return res.status(500).json({ error: 'Claude did not return a valid code block.' });
     }
-    // Ensure the export default title is always prefixed with 'Chronicle Pages/'
+    // Use a cleaned, capitalized version of the prompt for the title
+    const prettyPrompt = cleanPromptForTitle(prompt);
     const fixedFileContents = fileContents.replace(
       /(export default \{\s*\n\s*title:\s*['"])([^'"]+)(['"])/,
-      (match, p1, p2, p3) => {
-        let title = p2;
-        if (!title.startsWith('Chronicle Pages/')) {
-          title = 'Chronicle Pages/' + title.replace(/^Chronicle\/?/, '');
-        }
+      (match, p1, _p2, p3) => {
+        const title = 'Chronicle Pages/' + prettyPrompt;
         return p1 + title + p3;
       }
     );
-    // Use a hash of the prompt for uniqueness
+    // Use a hash of the prompt for uniqueness, and a slugified prompt for the filename
     const hash = crypto.createHash('sha1').update(prompt).digest('hex').slice(0, 8);
-    const baseTitle = prompt.split(' ').slice(0, 6).join(' ');
-    const fileName = `${slugify(baseTitle)}-${hash}.stories.tsx`;
+    const slugPrompt = prompt.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const fileName = `${slugPrompt}-${hash}.stories.tsx`;
     const outPath = generateStory({ fileContents: fixedFileContents, fileName });
     console.log('Story written to:', outPath);
     res.json({ success: true, fileName, outPath });
