@@ -2,7 +2,7 @@ import React from 'react';
 import ChroniclePanel from './ChroniclePanel';
 
 export default {
-  title: 'Pages/Chronicle',
+  title: 'Chronicle/UI Generator',
   component: ChroniclePanel,
 };
 

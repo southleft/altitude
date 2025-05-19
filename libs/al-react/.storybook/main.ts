@@ -8,6 +8,7 @@ const config: StorybookConfig = {
   stories: [
     'components/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/**/*.stories.@(js|jsx|ts|tsx)',
+    './generated/**/*.stories.@(js|jsx|ts|tsx)',
   ],
   addons: [
     '@storybook/addon-essentials',
@@ -23,20 +24,21 @@ const config: StorybookConfig = {
   // Other Storybook options
   webpackFinal: async (config, { configType }) => {
     // Add SCSS support
-    config.module.rules.push({
-      test: /\.scss/,
-      use: [
-        'css-loader',
-        { loader: 'sass-loader' }
-      ]
-    });
+    if (config.module && config.module.rules) {
+      config.module.rules.push({
+        test: /\.scss/,
+        use: [
+          'css-loader',
+          { loader: 'sass-loader' }
+        ]
+      });
 
-    // Add svg support
-    config.module.rules.push({
-      test: /\.svg$/,
-      type: 'asset/source'
-    });
-
+      // Add svg support
+      config.module.rules.push({
+        test: /\.svg$/,
+        type: 'asset/source'
+      });
+    }
     // Return the modified Webpack Config
     return config;
   }
