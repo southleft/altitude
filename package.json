@@ -10,7 +10,7 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "yarn workspace al-web-components build && yarn workspace al-react build",
+    "build": "tsc",
     "build:storybook-web-components": "yarn workspace al-web-components build:storybook --output-dir ../../dist/storybook/web-components",
     "build:storybook-react": "yarn workspace al-react build:storybook --output-dir ../../dist/storybook/react",
     "build:app-angular": "yarn workspace al-app-angular build --output-path ../../dist/angular --base-href /angular/browser/",
@@ -19,6 +19,7 @@
     "build:all": "yarn build && yarn build:storybook-web-components && yarn build:storybook-react && yarn build:app-angular && yarn build:app-react && yarn build:app-svelte && yarn copy:components && yarn copy:index",
     "copy:components": "cp -r ./libs/al-web-components/dist ./dist/al-web-components",
     "copy:index": "cp ./index.html ./dist/index.html",
-    "dev:index": "npx serve ./dist"
+    "dev:index": "npx serve ./dist",
+    "mcp": "yarn build && node dist/mcp-server/index.js"
   }
 }

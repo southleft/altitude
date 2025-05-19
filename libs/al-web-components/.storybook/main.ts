@@ -12,7 +12,8 @@ const config: StorybookConfig = {
     './components/**/*.stories.@(js|jsx|ts|tsx|mdx)',
     './recipes/**/*.stories.@(js|jsx|ts|tsx|mdx)',
     './templates/**/*.stories.@(js|jsx|ts|tsx|mdx)',
-    './pages/**/*.stories.@(js|jsx|ts|tsx|mdx)'
+    './pages/**/*.stories.@(js|jsx|ts|tsx|mdx)',
+    './*.stories.@(js|jsx|ts|tsx|mdx)',
   ],
   addons: [
     '@storybook/addon-essentials',
