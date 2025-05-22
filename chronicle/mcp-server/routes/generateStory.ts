@@ -144,8 +144,24 @@ async function getClaudeTitle(userPrompt: string): Promise<string> {
   return '';
 }
 
+function escapeTitleForTS(title: string): string {
+  // Escape double quotes and backslashes for TypeScript string
+  return title.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+}
+
+function fileNameFromTitle(title: string, hash: string): string {
+  // Lowercase, replace spaces/special chars with dashes, remove quotes, truncate
+  let base = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/"|'/g, '')
+    .slice(0, 60);
+  return `${base}-${hash}.stories.tsx`;
+}
+
 export async function generateStoryFromPrompt(req: Request, res: Response) {
-  const { prompt } = req.body;
+  const { prompt, fileName } = req.body;
   if (!prompt) return res.status(400).json({ error: 'Missing prompt' });
   try {
     const fullPrompt = buildClaudePrompt(prompt);
@@ -170,21 +186,21 @@ export async function generateStoryFromPrompt(req: Request, res: Response) {
       // Fallback to cleaned prompt if Claude fails
       aiTitle = cleanPromptForTitle(prompt);
     }
-    const prettyPrompt = aiTitle;
+    // Escape the title for TypeScript
+    const prettyPrompt = escapeTitleForTS(aiTitle);
     const fixedFileContents = fileContents.replace(
-      /(export default \{\s*\n\s*title:\s*['"])([^'"]+)(['"])/,
+      /(export default \{\s*\n\s*title:\s*["'])([^"']+)(["'])/,
       (match, p1, _p2, p3) => {
         const title = 'Chronicle Pages/' + prettyPrompt;
         return p1 + title + p3;
       }
     );
-    // Use a hash of the prompt for uniqueness, and a slugified prompt for the filename
+    // Use provided fileName to overwrite, or generate a new one if not present
     const hash = crypto.createHash('sha1').update(prompt).digest('hex').slice(0, 8);
-    const slugPrompt = prompt.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-    const fileName = `${slugPrompt}-${hash}.stories.tsx`;
-    const outPath = generateStory({ fileContents: fixedFileContents, fileName });
+    const finalFileName = fileName || fileNameFromTitle(aiTitle, hash);
+    const outPath = generateStory({ fileContents: fixedFileContents, fileName: finalFileName });
     console.log('Story written to:', outPath);
-    res.json({ success: true, fileName, outPath });
+    res.json({ success: true, fileName: finalFileName, outPath, title: aiTitle, story: fileContents });
   } catch (err: any) {
     res.status(500).json({ error: err.message || 'Story generation failed' });
   }
