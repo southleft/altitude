@@ -126,6 +126,24 @@ function cleanPromptForTitle(prompt: string): string {
     .replace(/\b\w/g, c => c.toUpperCase());
 }
 
+async function getClaudeTitle(userPrompt: string): Promise<string> {
+  const titlePrompt = [
+    "Given the following UI description, generate a short, clear, human-friendly title suitable for a Storybook navigation item. Do not include words like 'Generate', 'Build', or 'Create'.",
+    '',
+    'UI description:',
+    userPrompt,
+    '',
+    'Title:'
+  ].join('\n');
+  const aiText = await callClaude(titlePrompt);
+  // Take the first non-empty line, trim, and remove quotes if present
+  const lines = aiText.split('\n').map(l => l.trim()).filter(Boolean);
+  if (lines.length > 0) {
+    return lines[0].replace(/^['\"]|['\"]$/g, '').trim();
+  }
+  return '';
+}
+
 export async function generateStoryFromPrompt(req: Request, res: Response) {
   const { prompt } = req.body;
   if (!prompt) return res.status(400).json({ error: 'Missing prompt' });
@@ -146,8 +164,13 @@ export async function generateStoryFromPrompt(req: Request, res: Response) {
       console.error('No valid code block or import found in Claude response. Skipping file write.');
       return res.status(500).json({ error: 'Claude did not return a valid code block.' });
     }
-    // Use a cleaned, capitalized version of the prompt for the title
-    const prettyPrompt = cleanPromptForTitle(prompt);
+    // Use Claude to generate a concise, human-friendly title
+    let aiTitle = await getClaudeTitle(prompt);
+    if (!aiTitle || aiTitle.length < 2) {
+      // Fallback to cleaned prompt if Claude fails
+      aiTitle = cleanPromptForTitle(prompt);
+    }
+    const prettyPrompt = aiTitle;
     const fixedFileContents = fileContents.replace(
       /(export default \{\s*\n\s*title:\s*['"])([^'"]+)(['"])/,
       (match, p1, _p2, p3) => {
