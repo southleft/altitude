@@ -7,7 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
-const CLAUDE_MODEL = 'claude-3-opus-20240229';
+const CLAUDE_MODEL = process.env.CLAUDE_MODEL || 'claude-3-opus-20240229';
 
 const COMPONENT_LIST = [
   'ALInput', 'ALButton', 'ALToast', 'ALToastGroup', 'ALIconSuccess',

@@ -6,9 +6,15 @@ Chronicle is an AI-powered UI generation tool for Altitude's design system. It e
 
 1. Create a `.env` file in the `chronicle/` directory:
 
-   ```
+   ```bash
+   # Copy the sample file and edit it
+   cp .env.sample .env
+
+   # Then edit .env and add your API key:
    CLAUDE_API_KEY=your-claude-api-key-here
    ```
+
+   Get your Claude API key from [Anthropic Console](https://console.anthropic.com/).
 
    (The `.env` file is gitignored by default.)
 

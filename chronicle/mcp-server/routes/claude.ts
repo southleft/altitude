@@ -17,7 +17,7 @@ export async function claudeProxy(req: Request, res: Response) {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-3-opus-20240229',
+        model: process.env.CLAUDE_MODEL || 'claude-3-opus-20240229',
         max_tokens: 1024,
         messages: [{ role: 'user', content: prompt }],
       }),

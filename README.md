@@ -5,7 +5,8 @@ Design system created by Southleft.com. Find all documentation on [ZeroHeight](h
 ## Local setup
 
 1. Run `yarn`
-2. Run `yarn workspace WORKSPACE_NAME start`
+2. **For Chronicle MCP server setup:** See `chronicle/README.md`
+3. Run `yarn workspace WORKSPACE_NAME start`
 
 ## Deployments
 
