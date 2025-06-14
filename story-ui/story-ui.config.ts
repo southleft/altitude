@@ -157,46 +157,46 @@ export const STORY_UI_CONFIG: StoryUIConfig = {
   componentPrefix: 'AL',
   components: [], // Will be populated dynamically
   layoutRules: {
-    multiColumnWrapper: 'ALLayout',
-    columnComponent: 'ALLayoutSection',
+    multiColumnWrapper: 'div',
+    columnComponent: 'div',
     containerComponent: 'ALLayoutContainer',
     layoutExamples: {
-      twoColumn: `<ALLayout>
-  <ALLayoutSection>
+      twoColumn: `<div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+  <div>
     <ALCard>
       <ALHeading slot="header" variant="md">Left Card</ALHeading>
       <ALTextPassage>Left content</ALTextPassage>
     </ALCard>
-  </ALLayoutSection>
-  <ALLayoutSection>
+  </div>
+  <div>
     <ALCard>
       <ALHeading slot="header" variant="md">Right Card</ALHeading>
       <ALTextPassage>Right content</ALTextPassage>
     </ALCard>
-  </ALLayoutSection>
-</ALLayout>`,
-      threeColumn: `<ALLayout>
-  <ALLayoutSection>
+  </div>
+</div>`,
+      threeColumn: `<div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem'}}>
+  <div>
     <ALCard>
       <ALHeading slot="header" variant="md">Column 1</ALHeading>
       <ALTextPassage>First column content</ALTextPassage>
     </ALCard>
-  </ALLayoutSection>
-  <ALLayoutSection>
+  </div>
+  <div>
     <ALCard>
       <ALHeading slot="header" variant="md">Column 2</ALHeading>
       <ALTextPassage>Second column content</ALTextPassage>
     </ALCard>
-  </ALLayoutSection>
-  <ALLayoutSection>
+  </div>
+  <div>
     <ALCard>
       <ALHeading slot="header" variant="md">Column 3</ALHeading>
       <ALTextPassage>Third column content</ALTextPassage>
     </ALCard>
-  </ALLayoutSection>
-</ALLayout>`
+  </div>
+</div>`
     },
-    prohibitedElements: ['div', 'span', 'section']
+    prohibitedElements: ['span', 'section'] // Allow div for CSS Grid layouts
   },
   sampleStory: `import type { Meta, StoryObj } from '@storybook/react';
 import { ALLayout, ALLayoutSection, ALCard, ALHeading, ALTextPassage } from 'al-react/src';

@@ -162,6 +162,7 @@ export async function generateStoryFromPrompt(req: Request, res: Response) {
     const isProduction = gitignoreManager.isProductionMode();
 
     const fullPrompt = buildClaudePrompt(prompt);
+    console.log('Layout configuration:', JSON.stringify(STORY_UI_CONFIG.layoutRules, null, 2));
     console.log('Claude prompt:', fullPrompt);
     const aiText = await callClaude(fullPrompt);
     console.log('Claude raw response:', aiText);

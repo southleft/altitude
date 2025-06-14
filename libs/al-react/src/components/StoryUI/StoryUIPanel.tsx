@@ -177,10 +177,13 @@ const StoryUIPanel: React.FC = () => {
       saveChats(chats);
       setRecentChats(chats);
 
-      // Sync with server to ensure consistency
+      // Sync with server to ensure consistency (but don't duplicate the current chat)
       setTimeout(async () => {
         const syncedChats = await syncWithActualStories();
-        setRecentChats(syncedChats.sort((a, b) => b.lastUpdated - a.lastUpdated).slice(0, MAX_RECENT_CHATS));
+        const uniqueChats = syncedChats.filter((chat, index, arr) =>
+          arr.findIndex(c => c.id === chat.id) === index
+        );
+        setRecentChats(uniqueChats.sort((a, b) => b.lastUpdated - a.lastUpdated).slice(0, MAX_RECENT_CHATS));
       }, 1000);
     } catch (err: any) {
       setError(err.message || 'Unknown error');

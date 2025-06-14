@@ -122,10 +122,11 @@ function generateLayoutInstructions(config: StoryUIConfig): string[] {
 
   if (layoutRules.multiColumnWrapper && layoutRules.columnComponent) {
     instructions.push('CRITICAL LAYOUT RULES:');
-    instructions.push(`- For ANY multi-column layout (2, 3, or more columns), you MUST wrap ALL content in a single ${layoutRules.multiColumnWrapper} component`);
-    instructions.push(`- Each column must be wrapped in its own ${layoutRules.columnComponent} component`);
-    instructions.push(`- Structure: <${layoutRules.multiColumnWrapper}><${layoutRules.columnComponent}>column 1</${layoutRules.columnComponent}><${layoutRules.columnComponent}>column 2</${layoutRules.columnComponent}></${layoutRules.multiColumnWrapper}>`);
-    instructions.push(`- The ${layoutRules.multiColumnWrapper} component should be the main component in your story, not individual cards`);
+    instructions.push(`- For ANY multi-column layout (2, 3, or more columns), use CSS Grid with ${layoutRules.multiColumnWrapper} elements`);
+    instructions.push(`- Each column must be wrapped in its own ${layoutRules.columnComponent} element`);
+    instructions.push(`- Structure: <${layoutRules.multiColumnWrapper} style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}><${layoutRules.columnComponent}>column 1</${layoutRules.columnComponent}><${layoutRules.columnComponent}>column 2</${layoutRules.columnComponent}></${layoutRules.multiColumnWrapper}>`);
+    instructions.push(`- Use inline styles for CSS Grid layouts since the design system lacks proper multi-column layout components`);
+    instructions.push(`- The grid container ${layoutRules.multiColumnWrapper} should be the main component in your story, not individual cards`);
   }
 
   if (layoutRules.prohibitedElements && layoutRules.prohibitedElements.length > 0) {
@@ -238,9 +239,9 @@ export function buildClaudePrompt(
   // Add critical structure instructions for multi-column layouts
   if (config.layoutRules.multiColumnWrapper && config.layoutRules.columnComponent) {
     promptParts.push(
-      `CRITICAL: For multi-column layouts, the children prop must contain a SINGLE ${config.layoutRules.multiColumnWrapper} component wrapping all ${config.layoutRules.columnComponent} components.`,
+      `CRITICAL: For multi-column layouts, the children prop must contain a SINGLE ${config.layoutRules.multiColumnWrapper} with CSS Grid styling wrapping all ${config.layoutRules.columnComponent} components.`,
       `WRONG: children: (<><${config.layoutRules.columnComponent}>...</${config.layoutRules.columnComponent}><${config.layoutRules.columnComponent}>...</${config.layoutRules.columnComponent}></>)`,
-      `CORRECT: children: (<${config.layoutRules.multiColumnWrapper}><${config.layoutRules.columnComponent}>...</${config.layoutRules.columnComponent}><${config.layoutRules.columnComponent}>...</${config.layoutRules.columnComponent}></${config.layoutRules.multiColumnWrapper}>)`,
+      `CORRECT: children: (<${config.layoutRules.multiColumnWrapper} style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}><${config.layoutRules.columnComponent}>...</${config.layoutRules.columnComponent}><${config.layoutRules.columnComponent}>...</${config.layoutRules.columnComponent}></${config.layoutRules.multiColumnWrapper}>)`,
       ''
     );
   }
