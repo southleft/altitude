@@ -5,60 +5,25 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { STORY_UI_CONFIG } from '../../story-ui.config.js';
+import { discoverComponents } from '../../story-generator/componentDiscovery.js';
+import { buildClaudePrompt as buildFlexiblePrompt } from '../../story-generator/promptGenerator.js';
 
 const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
 const CLAUDE_MODEL = process.env.CLAUDE_MODEL || 'claude-3-opus-20240229';
 
-const COMPONENT_LIST = [
-  'ALInput', 'ALButton', 'ALToast', 'ALToastGroup', 'ALIconSuccess',
-  // ... (add more as needed, or generate from index.ts)
-];
+// Legacy constants - now using dynamic discovery
+const COMPONENT_LIST: string[] = [];
 
-const SAMPLE_STORY = `import type { StoryObj } from '@storybook/react-webpack5';\nimport { ALToastGroup, ALToast, ALButton, ALIconSuccess } from 'al-react/src';\n\nexport default {\n  title: 'Molecules/Toast Group',\n  component: ALToastGroup,\n  subcomponents: { ALToast },\n};\n\nexport const Default: StoryObj<typeof ALToastGroup> = {\n  args: {\n    isActive: true,\n    children: (\n      <>\n        <ALToast description=\"This is a toast\" isActive=\"true\">\n          Toast title A\n          <ALButton slot=\"actions\" variant=\"tertiary\"><ALIconSuccess slot=\"before\"></ALIconSuccess>Label</ALButton>\n        </ALToast>\n      </>\n    )\n  }\n};`;
+const SAMPLE_STORY = '';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const COMPONENTS_DIR = path.resolve(__dirname, '../../../../libs/al-react/src/components');
-console.log('Resolved COMPONENTS_DIR:', COMPONENTS_DIR);
+// Legacy component reference - now using dynamic discovery
+const COMPONENT_REFERENCE = '';
 
-function getComponentReference() {
-  const dirs = fs.readdirSync(COMPONENTS_DIR, { withFileTypes: true })
-    .filter(d => d.isDirectory())
-    .map(d => d.name);
-  let reference = '';
-  for (const dir of dirs) {
-    const storyFile = path.join(COMPONENTS_DIR, dir, `${dir}.stories.tsx`);
-    let props: string[] = [];
-    if (fs.existsSync(storyFile)) {
-      const content = fs.readFileSync(storyFile, 'utf-8');
-      const argTypesMatch = content.match(/argTypes:\s*{([\s\S]*?)}[,\n]/);
-      if (argTypesMatch) {
-        const argTypesBlock = argTypesMatch[1];
-        props = Array.from(argTypesBlock.matchAll(/([a-zA-Z0-9_]+):/g)).map(m => m[1]);
-      }
-    }
-    reference += `- ${'AL' + dir}: Props: ${props.join(', ') || 'none'}\n`;
-  }
-  return reference;
-}
-
-const COMPONENT_REFERENCE = getComponentReference();
-
+// Legacy function - now uses flexible system
 function buildClaudePrompt(userPrompt: string) {
-  return [
-    `You are an expert UI developer. Use only the following React components from the Altitude design system to build the UI. Do not use plain HTML elements except for layout (e.g., <div>).`,
-    '',
-    'Available components:',
-    COMPONENT_REFERENCE,
-    '',
-    'Output a complete Storybook story file in TypeScript, using the format below. Import components from "al-react/src". Use the following sample as a template. Respond ONLY with a single code block containing the full file, and nothing else.',
-    '',
-    'Sample story:',
-    SAMPLE_STORY,
-    '',
-    'User request:',
-    userPrompt
-  ].join('\n');
+  const components = discoverComponents(STORY_UI_CONFIG);
+  return buildFlexiblePrompt(userPrompt, STORY_UI_CONFIG, components);
 }
 
 function slugify(str: string) {
@@ -191,7 +156,7 @@ export async function generateStoryFromPrompt(req: Request, res: Response) {
     const fixedFileContents = fileContents.replace(
       /(export default \{\s*\n\s*title:\s*["'])([^"']+)(["'])/,
       (match, p1, _p2, p3) => {
-        const title = 'Story UI Pages/' + prettyPrompt;
+        const title = STORY_UI_CONFIG.storyPrefix + prettyPrompt;
         return p1 + title + p3;
       }
     );
