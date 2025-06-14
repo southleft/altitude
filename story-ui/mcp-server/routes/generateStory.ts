@@ -8,6 +8,8 @@ import { fileURLToPath } from 'url';
 import { STORY_UI_CONFIG } from '../../story-ui.config.js';
 import { discoverComponents } from '../../story-generator/componentDiscovery.js';
 import { buildClaudePrompt as buildFlexiblePrompt } from '../../story-generator/promptGenerator.js';
+import { setupProductionGitignore } from '../../story-generator/productionGitignoreManager.js';
+import { getInMemoryStoryService, GeneratedStory } from '../../story-generator/inMemoryStoryService.js';
 
 const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
 const CLAUDE_MODEL = process.env.CLAUDE_MODEL || 'claude-3-opus-20240229';
@@ -128,11 +130,18 @@ function fileNameFromTitle(title: string, hash: string): string {
 export async function generateStoryFromPrompt(req: Request, res: Response) {
   const { prompt, fileName } = req.body;
   if (!prompt) return res.status(400).json({ error: 'Missing prompt' });
+
   try {
+    // Set up production-ready environment
+    const gitignoreManager = setupProductionGitignore(STORY_UI_CONFIG);
+    const storyService = getInMemoryStoryService(STORY_UI_CONFIG);
+    const isProduction = gitignoreManager.isProductionMode();
+
     const fullPrompt = buildClaudePrompt(prompt);
     console.log('Claude prompt:', fullPrompt);
     const aiText = await callClaude(fullPrompt);
     console.log('Claude raw response:', aiText);
+
     let fileContents = extractCodeBlock(aiText);
     if (!fileContents) {
       // Fallback: try to extract from first import statement onward
@@ -141,16 +150,19 @@ export async function generateStoryFromPrompt(req: Request, res: Response) {
         fileContents = aiText.slice(importIdx).trim();
       }
     }
+
     if (!fileContents || !fileContents.startsWith('import')) {
       console.error('No valid code block or import found in Claude response. Skipping file write.');
       return res.status(500).json({ error: 'Claude did not return a valid code block.' });
     }
+
     // Use Claude to generate a concise, human-friendly title
     let aiTitle = await getClaudeTitle(prompt);
     if (!aiTitle || aiTitle.length < 2) {
       // Fallback to cleaned prompt if Claude fails
       aiTitle = cleanPromptForTitle(prompt);
     }
+
     // Escape the title for TypeScript
     const prettyPrompt = escapeTitleForTS(aiTitle);
     const fixedFileContents = fileContents.replace(
@@ -160,13 +172,64 @@ export async function generateStoryFromPrompt(req: Request, res: Response) {
         return p1 + title + p3;
       }
     );
-    // Use provided fileName to overwrite, or generate a new one if not present
+
+    // Generate unique ID and filename
     const hash = crypto.createHash('sha1').update(prompt).digest('hex').slice(0, 8);
     const finalFileName = fileName || fileNameFromTitle(aiTitle, hash);
-    const outPath = generateStory({ fileContents: fixedFileContents, fileName: finalFileName });
-    console.log('Story written to:', outPath);
-    res.json({ success: true, fileName: finalFileName, outPath, title: aiTitle, story: fileContents });
+    const storyId = `story-${hash}`;
+
+    if (isProduction) {
+      // Production: Store in memory
+      const generatedStory: GeneratedStory = {
+        id: storyId,
+        title: aiTitle,
+        description: prompt,
+        content: fixedFileContents,
+        createdAt: new Date(),
+        lastAccessed: new Date(),
+        prompt,
+        components: extractComponentsFromContent(fixedFileContents)
+      };
+
+      storyService.storeStory(generatedStory);
+
+      console.log(`Story stored in memory: ${storyId}`);
+      res.json({
+        success: true,
+        fileName: finalFileName,
+        storyId,
+        title: aiTitle,
+        story: fileContents,
+        environment: 'production',
+        storage: 'in-memory'
+      });
+    } else {
+      // Development: Write to file system
+      const outPath = generateStory({ fileContents: fixedFileContents, fileName: finalFileName });
+      console.log('Story written to:', outPath);
+      res.json({
+        success: true,
+        fileName: finalFileName,
+        outPath,
+        title: aiTitle,
+        story: fileContents,
+        environment: 'development',
+        storage: 'file-system'
+      });
+    }
   } catch (err: any) {
     res.status(500).json({ error: err.message || 'Story generation failed' });
   }
+}
+
+/**
+ * Extracts component names from story content
+ */
+function extractComponentsFromContent(content: string): string[] {
+  const componentMatches = content.match(/<[A-Z][A-Za-z0-9]*\s/g);
+  if (!componentMatches) return [];
+
+  return Array.from(new Set(
+    componentMatches.map(match => match.replace(/[<\s]/g, ''))
+  ));
 }

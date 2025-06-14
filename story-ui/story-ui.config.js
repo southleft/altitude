@@ -1,15 +1,16 @@
 export default {
   "generatedStoriesPath": "./src/stories/generated",
-  "componentsPath": "./src/components",
   "storyPrefix": "Generated/",
   "defaultAuthor": "Story UI AI",
-  "importPath": "@chakra-ui/react",
   "componentPrefix": "",
   "layoutRules": {
-    "multiColumnWrapper": "SimpleGrid",
-    "columnComponent": "Box",
+    "multiColumnWrapper": "div",
+    "columnComponent": "div",
     "layoutExamples": {
-      "twoColumn": "<SimpleGrid columns={2} spacing={4}>\n  <Box><Card>Left content</Card></Box>\n  <Box><Card>Right content</Card></Box>\n</SimpleGrid>"
-    }
-  }
+      "twoColumn": "<div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>\n  <div>Column 1 content</div>\n  <div>Column 2 content</div>\n</div>"
+    },
+    "prohibitedElements": []
+  },
+  "importPath": "story-ui",
+  "componentsPath": "./src"
 };

@@ -33,3 +33,16 @@ export {
   generatePrompt,
   buildClaudePrompt
 } from './story-generator/promptGenerator.js';
+
+export {
+  ProductionGitignoreManager,
+  setupProductionGitignore
+} from './story-generator/productionGitignoreManager.js';
+
+export {
+  InMemoryStoryService,
+  getInMemoryStoryService,
+  GeneratedStory,
+  StoryMetadata,
+  MemoryStats
+} from './story-generator/inMemoryStoryService.js';

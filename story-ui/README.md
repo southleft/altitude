@@ -10,6 +10,8 @@ Story UI is a flexible, AI-powered tool that generates Storybook stories for any
 - 🔍 **Component Discovery**: Automatically discovers and analyzes your components
 - ⚙️ **Flexible Configuration**: Highly customizable for different design systems
 - 🚀 **MCP Server**: Integrates with Claude Desktop and other MCP clients
+- 🗂️ **Git Integration**: Automatically manages .gitignore for ephemeral stories
+- 🧹 **Cleanup Utilities**: Built-in cleanup for old generated stories
 
 ## Quick Start
 
@@ -309,6 +311,100 @@ npx story-ui config --generate --type=json
 CLAUDE_API_KEY=your_claude_api_key_here
 CLAUDE_MODEL=claude-3-opus-20240229  # Optional, defaults to opus
 PORT=4001                            # Optional, defaults to 4001
+```
+
+## Production-Ready Deployment
+
+Story UI is designed for **seamless deployment** across development and production environments, with automatic environment detection and appropriate story generation strategies.
+
+### 🌐 **Environment Detection**
+
+Story UI automatically detects your environment:
+
+**Development Environment:**
+- ✅ **File-system storage** - Stories written to configured directory
+- ✅ **Automatic .gitignore** - Generated directory added to git ignore
+- ✅ **Directory structure** - Creates necessary folders and README
+
+**Production Environment (Vercel, Netlify, etc.):**
+- ✅ **In-memory storage** - Stories stored in server memory
+- ✅ **Read-only compatibility** - Works without file system write permissions
+- ✅ **Memory management** - Automatic cleanup to prevent memory leaks
+- ✅ **API endpoints** - RESTful API for story management
+
+### 🔧 **Automatic Setup**
+
+```bash
+# Development setup
+npx story-ui init --auto-detect
+npx story-ui setup-gitignore
+
+# Production deployment
+# No additional setup needed - automatically detected!
+```
+
+### 🗂️ **Git Integration**
+
+**Development:**
+```bash
+# Automatically adds to .gitignore:
+./libs/your-components/src/components/generated/
+./libs/your-components/src/components/generated/**
+```
+
+**Production:**
+- Stories stored in memory only
+- No file system writes required
+- Perfect for read-only deployments
+
+### 🎯 **Use Cases**
+
+**Perfect for:**
+- 🎨 **Layout Testing** - Test component arrangements without committing
+- 👥 **Stakeholder Review** - Share layouts with product owners and designers
+- 🔄 **Rapid Iteration** - Generate, test, and regenerate layouts quickly
+- 📱 **Design Validation** - Validate designs before implementation
+- 🌐 **Public Demos** - Deploy to Vercel/Netlify for team collaboration
+
+**Example Production Workflow:**
+1. Deploy Storybook + Story UI to Vercel/Netlify
+2. Product owners generate layouts using natural language
+3. Stories stored in server memory (ephemeral)
+4. Share generated stories with team for feedback
+5. Iterate and refine layouts
+6. Implement approved layouts in actual codebase
+
+### 📊 **Production Monitoring**
+
+```bash
+# Check server status and memory usage
+curl http://your-server.vercel.app/mcp/stats
+
+# Get all generated stories
+curl http://your-server.vercel.app/mcp/stories
+
+# Get specific story content
+curl http://your-server.vercel.app/mcp/stories/story-abc123/content
+```
+
+### 🧹 **Memory Management**
+
+Production environments automatically:
+- 🔄 **Cleanup old stories** - Removes stories older than 24 hours
+- 📊 **Memory limits** - Keeps maximum 50 stories in memory
+- 📈 **Usage tracking** - Monitors memory usage and story access patterns
+
+```javascript
+import { ProductionGitignoreManager, getInMemoryStoryService } from 'story-ui';
+
+// Manual cleanup if needed
+const manager = new ProductionGitignoreManager(config);
+manager.cleanupOldStories();
+
+// Memory statistics
+const storyService = getInMemoryStoryService(config);
+const stats = storyService.getMemoryStats();
+console.log(`${stats.storyCount} stories using ${stats.totalSizeMB}MB`);
 ```
 
 ## Contributing
