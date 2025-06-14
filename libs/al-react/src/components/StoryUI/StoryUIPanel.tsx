@@ -302,7 +302,7 @@ const StoryUIPanel: React.FC = () => {
                   style={{
                     width: '100%',
                     textAlign: 'left',
-                    padding: '8px 30px 8px 10px', // Extra padding for delete button
+                    padding: '8px 32px 8px 10px', // Extra padding for delete button
                     borderRadius: 4,
                     border: chat.id === activeChatId ? '2px solid #007bff' : '1px solid #222',
                     background: chat.id === activeChatId ? '#e6f0ff' : '#23232a',
@@ -322,26 +322,36 @@ const StoryUIPanel: React.FC = () => {
                   onClick={(e) => handleDeleteChat(chat.id, e)}
                   style={{
                     position: 'absolute',
-                    right: 4,
+                    right: 6,
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    width: 20,
-                    height: 20,
-                    borderRadius: 2,
+                    width: 18,
+                    height: 18,
+                    borderRadius: 3,
                     border: 'none',
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    color: '#fff',
-                    fontSize: 12,
+                    background: chat.id === activeChatId ? 'rgba(0, 123, 255, 0.2)' : 'rgba(255, 255, 255, 0.15)',
+                    color: chat.id === activeChatId ? '#007bff' : '#fff',
+                    fontSize: 14,
+                    fontWeight: 'bold',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    opacity: 0.7,
-                    transition: 'opacity 0.2s',
+                    opacity: 1,
+                    transition: 'all 0.2s',
+                    zIndex: 10,
                   }}
                   title="Delete story and chat"
-                  onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                  onMouseLeave={(e) => e.currentTarget.style.opacity = '0.7'}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#ff4444';
+                    e.currentTarget.style.color = '#fff';
+                    e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = chat.id === activeChatId ? 'rgba(0, 123, 255, 0.2)' : 'rgba(255, 255, 255, 0.15)';
+                    e.currentTarget.style.color = chat.id === activeChatId ? '#007bff' : '#fff';
+                    e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+                  }}
                 >
                   ×
                 </button>
