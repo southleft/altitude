@@ -36,7 +36,8 @@ function slugify(str: string) {
 }
 
 function extractCodeBlock(text: string): string | null {
-  const codeBlock = text.match(/```(?:tsx|jsx|typescript)?([\s\S]*?)```/i);
+  // More flexible code block extraction - accept various language identifiers
+  const codeBlock = text.match(/```(?:tsx|jsx|typescript|ts|js|javascript)?([\s\S]*?)```/i);
   return codeBlock ? codeBlock[1].trim() : null;
 }
 
@@ -85,17 +86,24 @@ function cleanPromptForTitle(prompt: string): string {
   for (const regex of leadingPhrases) {
     cleaned = cleaned.replace(regex, '');
   }
-  // Remove punctuation, extra spaces, and capitalize each word
+
+  // More careful punctuation handling - preserve meaningful punctuation in quotes
   return cleaned
-    .replace(/[^a-zA-Z0-9 ]/g, ' ')
-    .replace(/\s+/g, ' ')
+    // Replace problematic characters but preserve quoted content structure
+    .replace(/[^\w\s'"?!-]/g, ' ')  // Keep letters, numbers, spaces, quotes, and basic punctuation
+    .replace(/\s+/g, ' ')           // Normalize whitespace
     .trim()
-    .replace(/\b\w/g, c => c.toUpperCase());
+    .replace(/\b\w/g, c => c.toUpperCase()); // Capitalize words
 }
 
 async function getClaudeTitle(userPrompt: string): Promise<string> {
   const titlePrompt = [
-    "Given the following UI description, generate a short, clear, human-friendly title suitable for a Storybook navigation item. Do not include words like 'Generate', 'Build', or 'Create'.",
+    "Given the following UI description, generate a short, clear, human-friendly title suitable for a Storybook navigation item.",
+    "Requirements:",
+    "- Do not include words like 'Generate', 'Build', or 'Create'",
+    "- Keep it under 50 characters",
+    "- Use simple, clear language",
+    "- Avoid special characters that could break code (use letters, numbers, spaces, hyphens, and basic punctuation only)",
     '',
     'UI description:',
     userPrompt,
@@ -106,14 +114,30 @@ async function getClaudeTitle(userPrompt: string): Promise<string> {
   // Take the first non-empty line, trim, and remove quotes if present
   const lines = aiText.split('\n').map(l => l.trim()).filter(Boolean);
   if (lines.length > 0) {
-    return lines[0].replace(/^['\"]|['\"]$/g, '').trim();
+    let title = lines[0].replace(/^['\"]|['\"]$/g, '').trim();
+
+    // Additional sanitization for safety
+    title = title
+      .replace(/[^\w\s'"?!-]/g, ' ')  // Remove problematic characters
+      .replace(/\s+/g, ' ')           // Normalize whitespace
+      .trim()
+      .slice(0, 50);                  // Limit length
+
+    return title;
   }
   return '';
 }
 
 function escapeTitleForTS(title: string): string {
-  // Escape double quotes and backslashes for TypeScript string
-  return title.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+  // Escape all characters that could break TypeScript string literals
+  return title
+    .replace(/\\/g, '\\\\')  // Escape backslashes
+    .replace(/"/g, '\\"')    // Escape double quotes
+    .replace(/'/g, "\\'")    // Escape single quotes
+    .replace(/`/g, '\\`')    // Escape backticks
+    .replace(/\n/g, '\\n')   // Escape newlines
+    .replace(/\r/g, '\\r')   // Escape carriage returns
+    .replace(/\t/g, '\\t');  // Escape tabs
 }
 
 function fileNameFromTitle(title: string, hash: string): string {

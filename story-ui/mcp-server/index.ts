@@ -21,6 +21,14 @@ import {
   clearAllStories,
   getMemoryStats
 } from './routes/memoryStories.js';
+import {
+  getSyncedStories,
+  deleteSyncedStory,
+  clearAllSyncedStories,
+  syncChatHistory,
+  validateChatSession,
+  getSyncedStoryById
+} from './routes/storySync.js';
 import { setupProductionGitignore, ProductionGitignoreManager } from '../story-generator/productionGitignoreManager.js';
 import { getInMemoryStoryService } from '../story-generator/inMemoryStoryService.js';
 import { STORY_UI_CONFIG } from '../story-ui.config.js';
@@ -44,6 +52,14 @@ app.get('/mcp/stories/:id/content', getStoryContent);
 app.delete('/mcp/stories/:id', deleteStory);
 app.delete('/mcp/stories', clearAllStories);
 app.get('/mcp/memory-stats', getMemoryStats);
+
+// Synchronized story management routes (works in both dev and production)
+app.get('/mcp/sync/stories', getSyncedStories);
+app.get('/mcp/sync/stories/:id', getSyncedStoryById);
+app.delete('/mcp/sync/stories/:id', deleteSyncedStory);
+app.delete('/mcp/sync/stories', clearAllSyncedStories);
+app.get('/mcp/sync/chat-history', syncChatHistory);
+app.get('/mcp/sync/validate/:id', validateChatSession);
 
 const PORT = process.env.PORT || 4001;
 

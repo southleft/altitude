@@ -46,3 +46,10 @@ export {
   StoryMetadata,
   MemoryStats
 } from './story-generator/inMemoryStoryService.js';
+
+export {
+  StorySyncService,
+  getStorySyncService,
+  SyncedStory,
+  ChatSyncResult
+} from './story-generator/storySync.js';
