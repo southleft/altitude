@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const MCP_API = 'http://localhost:4001/mcp/generate-story';
 
-const ChroniclePanel: React.FC = () => {
+const StoryUIPanel: React.FC = () => {
   const [prompt, setPrompt] = useState('');
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -35,7 +35,7 @@ const ChroniclePanel: React.FC = () => {
 
   return (
     <div style={{ padding: 24, maxWidth: 600 }}>
-      <h2>Chronicle: AI Story Generator</h2>
+      <h2>Story UI: AI Story Generator</h2>
       <form onSubmit={handleSubmit} style={{ marginBottom: 16 }}>
         <input
           type="text"
@@ -57,7 +57,7 @@ const ChroniclePanel: React.FC = () => {
                     <strong>Story generated:</strong> {storyInfo.title}<br/>
                     <code>{storyInfo.outPath}</code>
                   </div>
-                  <em>Check the "Chronicle" section in Storybook for your new story.</em>
+                  <em>Check the "Story UI" section in Storybook for your new story.</em>
                 </div>
               )
             : 'No story generated yet.'}
@@ -67,4 +67,4 @@ const ChroniclePanel: React.FC = () => {
   );
 };
 
-export default ChroniclePanel;
+export default StoryUIPanel;

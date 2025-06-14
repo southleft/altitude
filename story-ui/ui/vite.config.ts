@@ -6,9 +6,9 @@ export default defineConfig({
   plugins: [react()],
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'ChroniclePanel.tsx'),
-      name: 'ChroniclePanel',
-      fileName: () => 'chronicle-ui.js',
+      entry: path.resolve(__dirname, 'StoryUIPanel.tsx'),
+      name: 'StoryUIPanel',
+      fileName: () => 'story-ui-panel.js',
       formats: ['umd'],
     },
     outDir: '../../libs/al-web-components/.storybook/static',

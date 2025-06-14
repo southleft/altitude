@@ -1,10 +1,10 @@
-# Chronicle
+# Story UI
 
-Chronicle is an AI-powered UI generation tool for Altitude's design system. It enables product owners and project managers to generate working Storybook stories from natural language prompts, using Altitude Web Components.
+Story UI is an AI-powered UI generation tool for Altitude's design system. It enables product owners and project managers to generate working Storybook stories from natural language prompts, using Altitude Web Components.
 
 ## Setup
 
-1. Create a `.env` file in the `chronicle/` directory:
+1. Create a `.env` file in the `story-ui/` directory:
 
    ```bash
    # Copy the sample file and edit it
@@ -23,31 +23,31 @@ Chronicle is an AI-powered UI generation tool for Altitude's design system. It e
 1. Install dependencies:
 
    ```
-   cd chronicle
+   cd story-ui
    yarn install
    ```
 
 2. Start the MCP server:
 
    ```
-   yarn mcp
+   yarn start
    ```
 
-3. The React UI is embedded in Storybook and does not require a separate dev server. Open Storybook and navigate to the Chronicle page.
+3. The React UI is embedded in Storybook and does not require a separate dev server. Open Storybook and navigate to the Story UI page.
 
 ## Architecture
 
 - **React-based UI**: Embedded in Storybook as a custom page, provides a prompt input and preview.
 - **MCP Server**: Node.js Express server that exposes metadata about Web Components via `/mcp/components` and `/mcp/props`.
 - **Story Generator**: Converts AI output into `.stories.ts` files using Web Components syntax.
-- **Config**: `chronicle.config.ts` for base paths and conventions.
+- **Config**: `story-ui.config.ts` for base paths and conventions.
 
 ## Usage
 
 1. **Build and start the MCP server:**
    ```
-   cd chronicle
-   yarn mcp
+   cd story-ui
+   yarn start
    ```
    (This will build the server and start it. Make sure your `.env` file is set up with your Claude API key.)
 
@@ -58,10 +58,10 @@ Chronicle is an AI-powered UI generation tool for Altitude's design system. It e
    ```
    (This runs Storybook locally, typically at http://localhost:9009)
 
-3. **Open Storybook in your browser and go to the Chronicle panel.**
+3. **Open Storybook in your browser and go to the Story UI panel.**
 
 4. **Enter a prompt** (e.g., "Sign up form with name, email, and a submit button").
 
-5. Chronicle will generate a new Storybook story using your React components, with a clean, AI-generated title. The story will appear instantly under the "Chronicle Pages/" section in Storybook navigation.
+5. Story UI will generate a new Storybook story using your React components, with a clean, AI-generated title. The story will appear instantly under the "Story UI Pages/" section in Storybook navigation.
 
 Generated stories are saved in `libs/al-react/src/components/generated/` and picked up by Storybook automatically for hot-reload.

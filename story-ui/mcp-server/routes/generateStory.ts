@@ -191,7 +191,7 @@ export async function generateStoryFromPrompt(req: Request, res: Response) {
     const fixedFileContents = fileContents.replace(
       /(export default \{\s*\n\s*title:\s*["'])([^"']+)(["'])/,
       (match, p1, _p2, p3) => {
-        const title = 'Chronicle Pages/' + prettyPrompt;
+        const title = 'Story UI Pages/' + prettyPrompt;
         return p1 + title + p3;
       }
     );

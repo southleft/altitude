@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 const MCP_API = 'http://localhost:4001/mcp/generate-story';
-const LOCAL_STORAGE_KEY = 'chronicle_chat_history_v1';
+const LOCAL_STORAGE_KEY = 'story_ui_chat_history_v1';
 const MAX_RECENT_CHATS = 20;
 
 interface Message {
@@ -31,7 +31,7 @@ function saveChats(chats: ChatSession[]) {
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(chats));
 }
 
-const ChroniclePanel: React.FC = () => {
+const StoryUIPanel: React.FC = () => {
   const [conversation, setConversation] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -208,7 +208,7 @@ const ChroniclePanel: React.FC = () => {
       </div>
       {/* Main chat area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: 0, maxWidth: 600 }}>
-        <h2 style={{ color: '#fff', margin: '16px 0 8px 24px' }}>Chronicle: AI Story Generator</h2>
+        <h2 style={{ color: '#fff', margin: '16px 0 8px 24px' }}>Story UI: AI Story Generator</h2>
         <div style={{ flex: 1, overflowY: 'auto', background: '#222', borderRadius: 6, padding: 16, margin: '0 24px 12px 24px' }}>
           {conversation.length === 0 && (
             <div style={{ color: '#aaa', textAlign: 'center', marginTop: 40 }}>
@@ -289,4 +289,4 @@ const ChroniclePanel: React.FC = () => {
   );
 };
 
-export default ChroniclePanel;
+export default StoryUIPanel;

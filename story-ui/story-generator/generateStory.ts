@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { CHRONICLE_CONFIG } from '../chronicle.config.js';
+import { STORY_UI_CONFIG } from '../story-ui.config.js';
 
 function slugify(str: string) {
   return str
@@ -10,7 +10,7 @@ function slugify(str: string) {
 }
 
 export function generateStory({ fileContents, fileName }: { fileContents: string; fileName: string }) {
-  const outPath = path.join(CHRONICLE_CONFIG.generatedStoriesPath, fileName);
+  const outPath = path.join(STORY_UI_CONFIG.generatedStoriesPath, fileName);
   fs.writeFileSync(outPath, fileContents, 'utf-8');
   return outPath;
 }

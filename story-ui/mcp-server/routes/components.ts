@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
-import { CHRONICLE_CONFIG } from '../../chronicle.config.js';
+import { STORY_UI_CONFIG } from '../../story-ui.config.js';
 
-const metadataPath = path.resolve(process.cwd(), CHRONICLE_CONFIG.componentsMetadataPath);
+const metadataPath = path.resolve(process.cwd(), STORY_UI_CONFIG.componentsMetadataPath);
 
 export function getComponents(req: Request, res: Response) {
   const data = JSON.parse(fs.readFileSync(metadataPath, 'utf-8'));

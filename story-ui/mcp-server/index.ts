@@ -1,7 +1,12 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-// Load .env from chronicle directory
+// Get __dirname equivalent for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load .env from story-ui directory
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 import express from 'express';
 import cors from 'cors';
