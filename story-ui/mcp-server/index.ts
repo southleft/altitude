@@ -6,8 +6,9 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load .env from story-ui directory
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+// Load .env from current working directory (where the MCP server is run from)
+// This allows each environment to have its own API key configuration
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 import express from 'express';
 import cors from 'cors';
 import { getComponents, getProps } from './routes/components.js';
@@ -31,7 +32,7 @@ import {
 } from './routes/storySync.js';
 import { setupProductionGitignore, ProductionGitignoreManager } from '../story-generator/productionGitignoreManager.js';
 import { getInMemoryStoryService } from '../story-generator/inMemoryStoryService.js';
-import { STORY_UI_CONFIG } from '../story-ui.config.js';
+import { loadUserConfig } from '../story-generator/configLoader.js';
 
 const app = express();
 app.use(cors());
@@ -64,8 +65,9 @@ app.get('/mcp/sync/validate/:id', validateChatSession);
 const PORT = process.env.PORT || 4001;
 
 // Set up production-ready gitignore and directory structure on startup
-const gitignoreManager = setupProductionGitignore(STORY_UI_CONFIG);
-const storyService = getInMemoryStoryService(STORY_UI_CONFIG);
+const config = loadUserConfig();
+const gitignoreManager = setupProductionGitignore(config);
+const storyService = getInMemoryStoryService(config);
 
 // Add memory stats endpoint for production monitoring
 app.get('/mcp/stats', (req, res) => {

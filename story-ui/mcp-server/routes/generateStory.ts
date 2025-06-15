@@ -5,9 +5,9 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { STORY_UI_CONFIG } from '../../story-ui.config.js';
 import { discoverComponents } from '../../story-generator/componentDiscovery.js';
 import { buildClaudePrompt as buildFlexiblePrompt } from '../../story-generator/promptGenerator.js';
+import { loadUserConfig, validateConfig } from '../../story-generator/configLoader.js';
 import { setupProductionGitignore } from '../../story-generator/productionGitignoreManager.js';
 import { getInMemoryStoryService, GeneratedStory } from '../../story-generator/inMemoryStoryService.js';
 
@@ -24,8 +24,9 @@ const COMPONENT_REFERENCE = '';
 
 // Legacy function - now uses flexible system
 function buildClaudePrompt(userPrompt: string) {
-  const components = discoverComponents(STORY_UI_CONFIG);
-  return buildFlexiblePrompt(userPrompt, STORY_UI_CONFIG, components);
+  const config = loadUserConfig();
+  const components = discoverComponents(config);
+  return buildFlexiblePrompt(userPrompt, config, components);
 }
 
 function slugify(str: string) {
@@ -156,13 +157,24 @@ export async function generateStoryFromPrompt(req: Request, res: Response) {
   if (!prompt) return res.status(400).json({ error: 'Missing prompt' });
 
   try {
+    // Load and validate configuration
+    const config = loadUserConfig();
+    const validation = validateConfig(config);
+
+    if (!validation.isValid) {
+      return res.status(400).json({
+        error: 'Configuration validation failed',
+        details: validation.errors
+      });
+    }
+
     // Set up production-ready environment
-    const gitignoreManager = setupProductionGitignore(STORY_UI_CONFIG);
-    const storyService = getInMemoryStoryService(STORY_UI_CONFIG);
+    const gitignoreManager = setupProductionGitignore(config);
+    const storyService = getInMemoryStoryService(config);
     const isProduction = gitignoreManager.isProductionMode();
 
     const fullPrompt = buildClaudePrompt(prompt);
-    console.log('Layout configuration:', JSON.stringify(STORY_UI_CONFIG.layoutRules, null, 2));
+    console.log('Layout configuration:', JSON.stringify(config.layoutRules, null, 2));
     console.log('Claude prompt:', fullPrompt);
     const aiText = await callClaude(fullPrompt);
     console.log('Claude raw response:', aiText);
@@ -193,7 +205,7 @@ export async function generateStoryFromPrompt(req: Request, res: Response) {
     const fixedFileContents = fileContents.replace(
       /(export default \{\s*\n\s*title:\s*["'])([^"']+)(["'])/,
       (match, p1, _p2, p3) => {
-        const title = STORY_UI_CONFIG.storyPrefix + prettyPrompt;
+        const title = config.storyPrefix + prettyPrompt;
         return p1 + title + p3;
       }
     );

@@ -7,6 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { setupProductionGitignore } from '../story-generator/productionGitignoreManager.js';
 import { createStoryUIConfig } from '../story-ui.config.js';
+import { setupCommand } from './setup.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,37 +21,9 @@ program
 
 program
   .command('init')
-  .description('Initialize Story UI configuration')
-  .option('--auto-detect', 'Auto-detect project structure')
-  .option('--template <template>', 'Use a predefined template (material-ui, chakra-ui, ant-design)')
-  .action(async (options) => {
-    console.log('🚀 Initializing Story UI...');
-
-    if (options.autoDetect) {
-      console.log('🔍 Auto-detecting project structure...');
-      await autoDetectAndCreateConfig();
-    } else if (options.template) {
-      console.log(`📋 Using ${options.template} template...`);
-      await createTemplateConfig(options.template);
-    } else {
-      console.log('📝 Creating basic configuration...');
-      await createBasicConfig();
-    }
-
-    console.log('✅ Story UI configuration created!');
-
-    // Set up gitignore automatically
-    try {
-      const configModule = await import(path.resolve(process.cwd(), 'story-ui.config.js'));
-      const userConfig = configModule.default;
-      const fullConfig = createStoryUIConfig(userConfig);
-      setupProductionGitignore(fullConfig);
-    } catch (error) {
-      console.warn('⚠️  Could not set up .gitignore automatically. Please add the generated directory manually.');
-    }
-
-    console.log('📖 Edit story-ui.config.js to customize for your component library');
-    console.log('🚀 Run "npx story-ui start" to begin generating stories');
+  .description('Initialize Story UI configuration with interactive setup')
+  .action(async () => {
+    await setupCommand();
   });
 
 program

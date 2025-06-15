@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
 import { getStorySyncService } from '../../story-generator/storySync.js';
-import { STORY_UI_CONFIG } from '../../story-ui.config.js';
+import { loadUserConfig } from '../../story-generator/configLoader.js';
 
 /**
  * Get all synchronized stories (from both file system and memory)
  */
 export async function getSyncedStories(req: Request, res: Response) {
   try {
-    const syncService = getStorySyncService(STORY_UI_CONFIG);
+    const config = loadUserConfig();
+    const syncService = getStorySyncService(config);
     const stories = await syncService.getAllStories();
 
     res.json({
@@ -37,7 +38,8 @@ export async function getSyncedStories(req: Request, res: Response) {
 export async function deleteSyncedStory(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    const syncService = getStorySyncService(STORY_UI_CONFIG);
+    const config = loadUserConfig();
+    const syncService = getStorySyncService(config);
     const deleted = await syncService.deleteStory(id);
 
     if (!deleted) {
@@ -64,7 +66,8 @@ export async function deleteSyncedStory(req: Request, res: Response) {
  */
 export async function clearAllSyncedStories(req: Request, res: Response) {
   try {
-    const syncService = getStorySyncService(STORY_UI_CONFIG);
+    const config = loadUserConfig();
+    const syncService = getStorySyncService(config);
     await syncService.clearAllStories();
 
     res.json({
@@ -84,7 +87,8 @@ export async function clearAllSyncedStories(req: Request, res: Response) {
  */
 export async function syncChatHistory(req: Request, res: Response) {
   try {
-    const syncService = getStorySyncService(STORY_UI_CONFIG);
+    const config = loadUserConfig();
+    const syncService = getStorySyncService(config);
     const syncResult = await syncService.syncChatHistory();
 
     res.json({
@@ -105,7 +109,8 @@ export async function syncChatHistory(req: Request, res: Response) {
 export async function validateChatSession(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    const syncService = getStorySyncService(STORY_UI_CONFIG);
+    const config = loadUserConfig();
+    const syncService = getStorySyncService(config);
     const isValid = await syncService.validateChatSession(id);
 
     res.json({
@@ -127,7 +132,8 @@ export async function validateChatSession(req: Request, res: Response) {
 export async function getSyncedStoryById(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    const syncService = getStorySyncService(STORY_UI_CONFIG);
+    const config = loadUserConfig();
+    const syncService = getStorySyncService(config);
     const story = await syncService.getStory(id);
 
     if (!story) {

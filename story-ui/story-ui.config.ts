@@ -146,82 +146,8 @@ export const GENERIC_CONFIG_TEMPLATE: Partial<StoryUIConfig> = {
   }
 };
 
-// Load configuration (can be overridden by user)
-export const STORY_UI_CONFIG: StoryUIConfig = {
-  generatedStoriesPath: path.resolve(__dirname, '../../libs/al-react/src/components/generated/'),
-  componentsPath: path.resolve(__dirname, '../../libs/al-react/src/components'),
-  componentsMetadataPath: path.resolve(__dirname, '../../libs/al-web-components/custom-elements.json'),
-  storyPrefix: 'Story UI Pages/',
-  defaultAuthor: 'Story UI AI',
-  importPath: 'al-react/src',
-  componentPrefix: 'AL',
-  components: [], // Will be populated dynamically
-  layoutRules: {
-    multiColumnWrapper: 'div',
-    columnComponent: 'div',
-    containerComponent: 'ALLayoutContainer',
-    layoutExamples: {
-      twoColumn: `<div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-  <div>
-    <ALCard>
-      <ALHeading slot="header" variant="md">Left Card</ALHeading>
-      <ALTextPassage>Left content</ALTextPassage>
-    </ALCard>
-  </div>
-  <div>
-    <ALCard>
-      <ALHeading slot="header" variant="md">Right Card</ALHeading>
-      <ALTextPassage>Right content</ALTextPassage>
-    </ALCard>
-  </div>
-</div>`,
-      threeColumn: `<div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem'}}>
-  <div>
-    <ALCard>
-      <ALHeading slot="header" variant="md">Column 1</ALHeading>
-      <ALTextPassage>First column content</ALTextPassage>
-    </ALCard>
-  </div>
-  <div>
-    <ALCard>
-      <ALHeading slot="header" variant="md">Column 2</ALHeading>
-      <ALTextPassage>Second column content</ALTextPassage>
-    </ALCard>
-  </div>
-  <div>
-    <ALCard>
-      <ALHeading slot="header" variant="md">Column 3</ALHeading>
-      <ALTextPassage>Third column content</ALTextPassage>
-    </ALCard>
-  </div>
-</div>`
-    },
-    prohibitedElements: ['span', 'section'] // Allow div for CSS Grid layouts
-  },
-  sampleStory: `import type { Meta, StoryObj } from '@storybook/react';
-import { ALLayout, ALLayoutSection, ALCard, ALHeading, ALTextPassage } from 'al-react/src';
-
-export default {
-  title: 'Story UI Pages/Sample Layout',
-  component: ALLayout,
-  subcomponents: { ALLayoutSection, ALCard },
-} as Meta<typeof ALLayout>;
-
-export const Default: StoryObj<typeof ALLayout> = {
-  args: {
-    children: (
-      <ALLayout>
-        <ALLayoutSection>
-          <ALCard>
-            <ALHeading slot="header" variant="md">Sample Card</ALHeading>
-            <ALTextPassage>Sample content</ALTextPassage>
-          </ALCard>
-        </ALLayoutSection>
-      </ALLayout>
-    )
-  }
-};`
-};
+// Default configuration - should be overridden by user's story-ui.config.js
+export const STORY_UI_CONFIG: StoryUIConfig = DEFAULT_CONFIG;
 
 // Function to merge user config with defaults
 export function createStoryUIConfig(userConfig: Partial<StoryUIConfig>): StoryUIConfig {

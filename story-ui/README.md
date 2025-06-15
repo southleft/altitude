@@ -23,7 +23,25 @@ npm install story-ui
 yarn add story-ui
 ```
 
-### 2. Basic Configuration
+### 2. API Key Setup
+
+Create a `.env` file in your project root:
+
+```bash
+# Copy the sample environment file
+cp node_modules/story-ui/.env.sample .env
+```
+
+Add your Claude API key:
+
+```bash
+# Get your API key from: https://console.anthropic.com/
+CLAUDE_API_KEY=your-claude-api-key-here
+```
+
+**Important:** Keep your API key secure and never commit `.env` files to version control!
+
+### 3. Basic Configuration
 
 Create a `story-ui.config.js` file in your project root:
 
@@ -51,13 +69,13 @@ export default {
 };
 ```
 
-### 3. Start the Server
+### 4. Start the Server
 
 ```bash
 npx story-ui start
 ```
 
-### 4. Generate Stories
+### 5. Generate Stories
 
 Send HTTP requests to generate stories:
 
