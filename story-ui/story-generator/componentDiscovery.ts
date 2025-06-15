@@ -151,20 +151,38 @@ export function discoverComponentsFromPackage(
       for (const match of exportMatches) {
         const exports = match.match(/export\s+{\s*([^}]+)\s*}/)?.[1];
         if (exports) {
-          const componentNames = exports
+          const exportItems = exports
             .split(',')
-            .map(name => name.trim())
-            .filter(name => name.startsWith(componentPrefix) || !componentPrefix);
+            .map(item => item.trim())
+            .filter(Boolean);
 
-          for (const name of componentNames) {
-            components.push({
-              name: name,
-              filePath: indexPath,
-              props: [],
-              description: `${name} component`,
-              category: categorizeComponent(name, ''),
-              examples: []
-            });
+          for (const item of exportItems) {
+            // Handle export aliases like "Input as TextInput"
+            if (item.includes(' as ')) {
+              const [, alias] = item.split(' as ').map(part => part.trim());
+              if (alias && (!componentPrefix || alias.startsWith(componentPrefix))) {
+                components.push({
+                  name: alias,
+                  filePath: indexPath,
+                  props: [],
+                  description: `${alias} component`,
+                  category: categorizeComponent(alias, ''),
+                  examples: []
+                });
+              }
+            } else {
+              // Regular export
+              if (!componentPrefix || item.startsWith(componentPrefix)) {
+                components.push({
+                  name: item,
+                  filePath: indexPath,
+                  props: [],
+                  description: `${item} component`,
+                  category: categorizeComponent(item, ''),
+                  examples: []
+                });
+              }
+            }
           }
         }
       }

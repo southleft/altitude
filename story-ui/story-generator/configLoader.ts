@@ -2,11 +2,24 @@ import fs from 'fs';
 import path from 'path';
 import { StoryUIConfig, DEFAULT_CONFIG, createStoryUIConfig } from '../story-ui.config.js';
 
+// Config cache to prevent excessive loading
+let cachedConfig: StoryUIConfig | null = null;
+let configLoadTime: number = 0;
+const CONFIG_CACHE_TTL = 30000; // 30 seconds
+
 /**
  * Loads Story UI configuration from the user's project
  * Looks for story-ui.config.js in the current working directory
+ * Uses caching to prevent excessive loading
  */
 export function loadUserConfig(): StoryUIConfig {
+  const now = Date.now();
+
+  // Return cached config if still valid
+  if (cachedConfig && (now - configLoadTime) < CONFIG_CACHE_TTL) {
+    return cachedConfig;
+  }
+
   const configPaths = [
     path.join(process.cwd(), 'story-ui.config.js'),
     path.join(process.cwd(), 'story-ui.config.ts'),
@@ -31,7 +44,13 @@ export function loadUserConfig(): StoryUIConfig {
           eval(configContent);
 
           const userConfig = module.exports as any;
-          return createStoryUIConfig(userConfig.default || userConfig);
+          const config = createStoryUIConfig(userConfig.default || userConfig);
+
+          // Cache the loaded config
+          cachedConfig = config;
+          configLoadTime = now;
+
+          return config;
         }
       } catch (error) {
         console.warn(`Failed to load config from ${configPath}:`, error);
@@ -39,8 +58,15 @@ export function loadUserConfig(): StoryUIConfig {
     }
   }
 
-  console.warn('No story-ui.config.js found. Using default configuration.');
-  console.warn('Please create a story-ui.config.js file in your project root to configure Story UI for your design system.');
+  // Only log warnings once per cache period
+  if (!cachedConfig || (now - configLoadTime) >= CONFIG_CACHE_TTL) {
+    console.warn('No story-ui.config.js found. Using default configuration.');
+    console.warn('Please create a story-ui.config.js file in your project root to configure Story UI for your design system.');
+  }
+
+  // Cache the default config
+  cachedConfig = DEFAULT_CONFIG;
+  configLoadTime = now;
 
   return DEFAULT_CONFIG;
 }

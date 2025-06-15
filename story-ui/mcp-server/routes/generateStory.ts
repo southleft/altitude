@@ -29,6 +29,41 @@ function buildClaudePrompt(userPrompt: string) {
   return buildFlexiblePrompt(userPrompt, config, components);
 }
 
+// Enhanced function that includes conversation context
+function buildClaudePromptWithContext(userPrompt: string, config: any, conversation?: any[]) {
+  const components = discoverComponents(config);
+
+  // If no conversation context, use the standard prompt
+  if (!conversation || conversation.length <= 1) {
+    return buildFlexiblePrompt(userPrompt, config, components);
+  }
+
+  // Extract conversation context for modifications
+  const conversationContext = conversation
+    .slice(0, -1) // Remove the current message (last one)
+    .map((msg: any) => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
+    .join('\n\n');
+
+  // Get the base prompt
+  const basePrompt = buildFlexiblePrompt(userPrompt, config, components);
+
+  // Add conversation context to the prompt
+  const contextualPrompt = basePrompt.replace(
+    'User request:',
+    `CONVERSATION CONTEXT (for modifications/updates):
+${conversationContext}
+
+IMPORTANT: The user is asking to modify/update the story based on the above conversation.
+- Keep the SAME layout structure (number of columns, grid setup) unless explicitly asked to change it
+- Only modify the specific aspects mentioned in the latest request
+- Maintain the overall story concept from the original request
+
+Current modification request:`
+  );
+
+  return contextualPrompt;
+}
+
 function slugify(str: string) {
   return str
     .toLowerCase()
@@ -153,7 +188,7 @@ function fileNameFromTitle(title: string, hash: string): string {
 }
 
 export async function generateStoryFromPrompt(req: Request, res: Response) {
-  const { prompt, fileName } = req.body;
+  const { prompt, fileName, conversation } = req.body;
   if (!prompt) return res.status(400).json({ error: 'Missing prompt' });
 
   try {
@@ -173,7 +208,11 @@ export async function generateStoryFromPrompt(req: Request, res: Response) {
     const storyService = getInMemoryStoryService(config);
     const isProduction = gitignoreManager.isProductionMode();
 
-    const fullPrompt = buildClaudePrompt(prompt);
+    // Check if this is an update to an existing story
+    const isUpdate = fileName && conversation && conversation.length > 2;
+
+    // Build prompt with conversation context if available
+    const fullPrompt = buildClaudePromptWithContext(prompt, config, conversation);
     console.log('Layout configuration:', JSON.stringify(config.layoutRules, null, 2));
     console.log('Claude prompt:', fullPrompt);
     const aiText = await callClaude(fullPrompt);
@@ -193,8 +232,16 @@ export async function generateStoryFromPrompt(req: Request, res: Response) {
       return res.status(500).json({ error: 'Claude did not return a valid code block.' });
     }
 
-    // Use Claude to generate a concise, human-friendly title
-    let aiTitle = await getClaudeTitle(prompt);
+    // Generate title based on conversation context
+    let aiTitle;
+    if (isUpdate) {
+      // For updates, try to keep the original title or modify it slightly
+      const originalPrompt = conversation.find((msg: any) => msg.role === 'user')?.content || prompt;
+      aiTitle = await getClaudeTitle(originalPrompt);
+    } else {
+      aiTitle = await getClaudeTitle(prompt);
+    }
+
     if (!aiTitle || aiTitle.length < 2) {
       // Fallback to cleaned prompt if Claude fails
       aiTitle = cleanPromptForTitle(prompt);
@@ -211,26 +258,38 @@ export async function generateStoryFromPrompt(req: Request, res: Response) {
     );
 
     // Generate unique ID and filename
-    const hash = crypto.createHash('sha1').update(prompt).digest('hex').slice(0, 8);
-    const finalFileName = fileName || fileNameFromTitle(aiTitle, hash);
-    const storyId = `story-${hash}`;
+    let hash, finalFileName, storyId;
+
+    if (isUpdate && fileName) {
+      // For updates, use existing fileName and ID
+      finalFileName = fileName;
+      // Extract hash from existing fileName if possible
+      const hashMatch = fileName.match(/-([a-f0-9]{8})(?:\.stories\.tsx)?$/);
+      hash = hashMatch ? hashMatch[1] : crypto.createHash('sha1').update(prompt).digest('hex').slice(0, 8);
+      storyId = `story-${hash}`;
+    } else {
+      // For new stories, generate new IDs
+      hash = crypto.createHash('sha1').update(prompt).digest('hex').slice(0, 8);
+      finalFileName = fileName || fileNameFromTitle(aiTitle, hash);
+      storyId = `story-${hash}`;
+    }
 
     if (isProduction) {
       // Production: Store in memory
       const generatedStory: GeneratedStory = {
         id: storyId,
         title: aiTitle,
-        description: prompt,
+        description: isUpdate ? `Updated: ${prompt}` : prompt,
         content: fixedFileContents,
-        createdAt: new Date(),
+        createdAt: isUpdate ? (new Date()) : new Date(),
         lastAccessed: new Date(),
-        prompt,
+        prompt: isUpdate ? conversation.map((msg: any) => `${msg.role}: ${msg.content}`).join('\n\n') : prompt,
         components: extractComponentsFromContent(fixedFileContents)
       };
 
       storyService.storeStory(generatedStory);
 
-      console.log(`Story stored in memory: ${storyId}`);
+      console.log(`Story ${isUpdate ? 'updated' : 'stored'} in memory: ${storyId}`);
       res.json({
         success: true,
         fileName: finalFileName,
@@ -238,12 +297,13 @@ export async function generateStoryFromPrompt(req: Request, res: Response) {
         title: aiTitle,
         story: fileContents,
         environment: 'production',
-        storage: 'in-memory'
+        storage: 'in-memory',
+        isUpdate
       });
     } else {
       // Development: Write to file system
       const outPath = generateStory({ fileContents: fixedFileContents, fileName: finalFileName });
-      console.log('Story written to:', outPath);
+      console.log(`Story ${isUpdate ? 'updated' : 'written'} to:`, outPath);
       res.json({
         success: true,
         fileName: finalFileName,
@@ -251,7 +311,8 @@ export async function generateStoryFromPrompt(req: Request, res: Response) {
         title: aiTitle,
         story: fileContents,
         environment: 'development',
-        storage: 'file-system'
+        storage: 'file-system',
+        isUpdate
       });
     }
   } catch (err: any) {
