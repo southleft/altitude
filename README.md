@@ -1,6 +1,6 @@
 # Altitude
 
-Design system created by Southleft.com. Find all documentation on [ZeroHeight](https://zeroheight.com/809ab055e).
+Design system created by [Southleft](https://southleft.com). Find all documentation on [ZeroHeight](https://zeroheight.com/809ab055e).
 
 ## Local setup
 

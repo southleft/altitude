@@ -85,6 +85,54 @@ npm run story-ui
 4. **Live Preview**: See your generated UI instantly in Storybook
 5. **Iteration**: Refine your designs with follow-up prompts in the same session
 
+## What Gets Installed
+
+After running `npx story-ui init`, your project structure will include:
+
+```
+your-project/
+├── .env                          # Created from template
+├── story-ui.config.js           # Generated configuration
+├── src/stories/
+│   ├── StoryUI/                 # UI component
+│   │   ├── StoryUIPanel.tsx
+│   │   ├── StoryUIPanel.stories.tsx
+│   │   └── index.tsx
+│   └── generated/               # Where AI stories go
+└── package.json                 # Updated with scripts
+```
+
+## Installation Flow
+
+```mermaid
+graph TD
+    A[Developer runs:<br/>'npm install story-ui'] --> B[Story UI package installed]
+    B --> C[Developer runs:<br/>'npx story-ui init']
+    C --> D{Interactive Setup}
+    D --> E[Detects design system<br/>MUI, Chakra, Ant Design, etc.]
+    D --> F[Creates story-ui.config.js]
+    D --> G[Copies StoryUI component<br/>to project stories directory]
+    D --> H[Creates .env file<br/>from template]
+    D --> I[Updates .gitignore]
+    D --> J[Adds npm scripts<br/>to package.json]
+
+    E --> K[Configuration complete]
+    F --> K
+    G --> K
+    H --> K
+    I --> K
+    J --> K
+
+    K --> L[Developer adds<br/>Claude API key to .env]
+    L --> M[Developer runs:<br/>'npm run storybook-with-ui']
+    M --> N[Storybook opens with<br/>Story UI panel available]
+    N --> O[Non-developer can<br/>generate UI with prompts]
+
+    style A fill:#e1f5e1
+    style N fill:#e1f5e1
+    style O fill:#ffd4e5
+```
+
 ## Configuration Options
 
 ### Complete Configuration Interface
