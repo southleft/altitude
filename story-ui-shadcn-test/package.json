@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "story-ui": "story-ui start",
+    "storybook-with-ui": "concurrently \"npm run storybook\" \"npm run story-ui\""
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.10",

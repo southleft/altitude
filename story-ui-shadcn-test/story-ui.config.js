@@ -1,5 +1,5 @@
 module.exports = {
-  "importPath": "@/components/ui",
+  "importPath": "story-ui-shadcn-test",
   "componentPrefix": "",
   "layoutRules": {
     "multiColumnWrapper": "div",
@@ -11,7 +11,7 @@ module.exports = {
     "prohibitedElements": []
   },
   "generatedStoriesPath": "/Users/tjbackup/Sites/altitude/story-ui-shadcn-test/src/stories/generated",
-  "componentsPath": "/Users/tjbackup/Sites/altitude/story-ui-shadcn-test/src/components/ui",
+  "componentsPath": "/Users/tjbackup/Sites/altitude/story-ui-shadcn-test/src",
   "storyPrefix": "Generated/",
   "defaultAuthor": "Story UI AI"
 };

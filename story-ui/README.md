@@ -12,27 +12,35 @@ Story UI is a flexible, AI-powered tool that generates Storybook stories for any
 - 🚀 **MCP Server**: Integrates with Claude Desktop and other MCP clients
 - 🗂️ **Git Integration**: Automatically manages .gitignore for ephemeral stories
 - 🧹 **Cleanup Utilities**: Built-in cleanup for old generated stories
+- 🎨 **Built-in UI**: Includes a Storybook panel for easy interaction
 
 ## Quick Start
 
 ### 1. Installation
 
 ```bash
-npm install story-ui
+npm install story-ui --save-dev
 # or
-yarn add story-ui
+yarn add -D story-ui
 ```
 
-### 2. API Key Setup
-
-Create a `.env` file in your project root:
+### 2. Run Setup
 
 ```bash
-# Copy the sample environment file
-cp node_modules/story-ui/.env.sample .env
+npx story-ui init
 ```
 
-Add your Claude API key:
+This interactive setup will:
+- ✅ Detect your design system (Material-UI, Chakra UI, Ant Design, etc.)
+- ✅ Create configuration file (`story-ui.config.js`)
+- ✅ Install the Story UI panel component in your stories
+- ✅ Create `.env` file for API configuration
+- ✅ Add convenience scripts to your `package.json`
+- ✅ Update `.gitignore` with appropriate patterns
+
+### 3. Add Your Claude API Key
+
+If you didn't add it during setup, edit the `.env` file:
 
 ```bash
 # Get your API key from: https://console.anthropic.com/
@@ -41,49 +49,41 @@ CLAUDE_API_KEY=your-claude-api-key-here
 
 **Important:** Keep your API key secure and never commit `.env` files to version control!
 
-### 3. Basic Configuration
+### 4. Start Using Story UI
 
-Create a `story-ui.config.js` file in your project root:
-
-```javascript
-export default {
-  generatedStoriesPath: './src/stories/generated',
-  componentsPath: './src/components',
-  importPath: 'your-component-library',
-  componentPrefix: 'UI', // e.g., UIButton, UICard
-  storyPrefix: 'Generated/',
-  layoutRules: {
-    multiColumnWrapper: 'UILayout',
-    columnComponent: 'UIColumn',
-    layoutExamples: {
-      twoColumn: `<UILayout>
-  <UIColumn>
-    <UICard>Left content</UICard>
-  </UIColumn>
-  <UIColumn>
-    <UICard>Right content</UICard>
-  </UIColumn>
-</UILayout>`
-    }
-  }
-};
-```
-
-### 4. Start the Server
+Run both Storybook and Story UI together:
 
 ```bash
-npx story-ui start
+npm run storybook-with-ui
 ```
 
-### 5. Generate Stories
-
-Send HTTP requests to generate stories:
+Or run them separately:
 
 ```bash
-curl -X POST http://localhost:4001/mcp/generate-story \
-  -H "Content-Type: application/json" \
-  -d '{"prompt":"Create a three-column layout with different card types"}'
+# Terminal 1
+npm run storybook
+
+# Terminal 2
+npm run story-ui
 ```
+
+### 5. Generate Your First Story
+
+1. Open Storybook in your browser
+2. Navigate to **"Story UI > Story Generator"** in the sidebar
+3. Enter a natural language prompt like:
+   - "Create a login form with email and password fields"
+   - "Build a three-column dashboard with cards"
+   - "Design a hero section with navigation"
+4. Click "Generate" and watch your UI come to life!
+
+## How It Works
+
+1. **Component Discovery**: Story UI automatically discovers all components in your project
+2. **AI Understanding**: Your prompt is processed by Claude AI with knowledge of your components
+3. **Code Generation**: Clean, production-ready story code is generated
+4. **Live Preview**: See your generated UI instantly in Storybook
+5. **Iteration**: Refine your designs with follow-up prompts in the same session
 
 ## Configuration Options
 
