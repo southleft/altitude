@@ -56,15 +56,14 @@ jobs:
       - name: Install Deps
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          yarn cache clean
-          yarn install --cache-folder ~/.cache/yarn --prefer-offline --frozen-lockfile --force-node-version=16
+          cd libs/al-web-components/packages/knapsack
+          npm run cache clean
+          npm install --cache-folder ~/.cache/yarn --prefer-offline --frozen-lockfile --force-node-version=16
         env:
           CYPRESS_INSTALL_BINARY: 0
       - name: Run Full Build
-        run: yarn build
+        run: npm run build
       - name: Run Knapsack Test
-        run: yarn test
-      - name: Release
-        run: yarn auto shipit
+        run: npm run test
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
