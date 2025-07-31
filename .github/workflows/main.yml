@@ -43,7 +43,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 18
+          node-version: 20.18.0
       - name: Handle Cache
         uses: actions/cache@v4
         id: cache
@@ -58,7 +58,7 @@ jobs:
         run: |
           cd libs/al-web-components/packages/knapsack
           yarn cache clean
-          yarn install --cache-folder ~/.cache/yarn --prefer-offline --frozen-lockfile --force-node-version=18
+          yarn install --cache-folder ~/.cache/yarn --prefer-offline --frozen-lockfile --force-node-version=20.18.0
         env:
           CYPRESS_INSTALL_BINARY: 0
       - name: Run Full Build
