@@ -81,11 +81,3 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           KNAPSACK_DIR: ${{ secrets.KNAPSACK_DIR }}
-
-      - name: Release Knapsack
-        run: |
-          cd "$KNAPSACK_DIR"
-          yarn auto shipit
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          KNAPSACK_DIR: ${{ secrets.KNAPSACK_DIR }}
