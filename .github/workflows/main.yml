@@ -57,13 +57,13 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           cd libs/al-web-components/packages/knapsack
-          npm run cache clean
-          npm install --cache-folder ~/.cache/yarn --prefer-offline --frozen-lockfile --force-node-version=16
+          yarn cache clean
+          yarn install --cache-folder ~/.cache/yarn --prefer-offline --frozen-lockfile --force-node-version=18
         env:
           CYPRESS_INSTALL_BINARY: 0
       - name: Run Full Build
-        run: npm run build
+        run: yarn build
       - name: Run Knapsack Test
-        run: npm run test
+        run: yarn test
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
