@@ -6,64 +6,52 @@ on:
       - main
 
 jobs:
-  deploy:
-    name: Deploy
-    if: github.ref == 'refs/heads/main'
-    needs: [build]
+  build:
+    name: Build & Release Knapsack
     runs-on: ubuntu-latest
     env:
-      HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
-      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      HEROKU_GIT_URL: ${{ secrets.HEROKU_GIT_URL }}
+      KNAPSACK_DIR: ${{ secrets.KNAPSACK_DIR }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: main
-      - name: write auth
-        run: |
-          cat > ~/.netrc <<EOF
-            machine git.heroku.com
-              login $HEROKU_EMAIL
-              password $HEROKU_API_KEY
-          EOF
-      - name: git push to heroku for deploy
-        run: |
-          git remote add heroku $HEROKU_GIT_URL
-          git push heroku main
-
-  build:
-    name: Build & Release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Use actions/checkout@v4
+      - name: Checkout Repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 20.18.1
+
       - name: Handle Cache
         uses: actions/cache@v4
         id: cache
         with:
           path: |
-            node_modules
-            **/node_modules
+            ${{ env.KNAPSACK_DIR }}/node_modules
             ~/.cache/yarn
-          key: node-deps-${{ hashFiles('yarn.lock') }}
+          key: node-deps-${{ hashFiles(format('{0}/yarn.lock', env.KNAPSACK_DIR)) }}
+
       - name: Install Deps
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          cd libs/al-web-components/packages/knapsack
+          cd "$KNAPSACK_DIR"
           yarn cache clean
-          yarn install --cache-folder ~/.cache/yarn --prefer-offline --frozen-lockfile --force-node-version=20.18.1
+          yarn install --cache-folder ~/.cache/yarn --prefer-offline --frozen-lockfile
         env:
           CYPRESS_INSTALL_BINARY: 0
+          KNAPSACK_DIR: ${{ secrets.KNAPSACK_DIR }}
+
       - name: Run Full Build
-        run: yarn build
+        run: |
+          cd "$KNAPSACK_DIR"
+          yarn build
+        env:
+          KNAPSACK_DIR: ${{ secrets.KNAPSACK_DIR }}
+
       - name: Run Knapsack Test
-        run: yarn test
+        run: |
+          cd "$KNAPSACK_DIR"
+          yarn test
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          KNAPSACK_DIR: ${{ secrets.KNAPSACK_DIR }}
