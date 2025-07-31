@@ -6,6 +6,32 @@ on:
       - main
 
 jobs:
+  deploy:
+    name: Deploy
+    if: github.ref == 'refs/heads/main'
+    needs: [build]
+    runs-on: ubuntu-latest
+    env:
+      HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      HEROKU_GIT_URL: ${{ secrets.HEROKU_GIT_URL }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: main
+      - name: write auth
+        run: |
+          cat > ~/.netrc <<EOF
+            machine git.heroku.com
+              login $HEROKU_EMAIL
+              password $HEROKU_API_KEY
+          EOF
+      - name: git push to heroku for deploy
+        run: |
+          git remote add heroku $HEROKU_GIT_URL
+          git push heroku main
+
   build:
     name: Build & Release Knapsack
     runs-on: ubuntu-latest
