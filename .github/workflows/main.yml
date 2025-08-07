@@ -35,8 +35,6 @@ jobs:
   build:
     name: Build & Release Knapsack
     runs-on: ubuntu-latest
-    env:
-      KNAPSACK_DIR: ${{ secrets.KNAPSACK_DIR }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -46,38 +44,18 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20.18.1
+          node-version: lts/*
 
-      - name: Handle Cache
-        uses: actions/cache@v4
-        id: cache
-        with:
-          path: |
-            ${{ env.KNAPSACK_DIR }}/node_modules
-            ~/.cache/yarn
-          key: node-deps-${{ hashFiles(format('{0}/yarn.lock', env.KNAPSACK_DIR)) }}
+      - name: Build Web Components
+        run: npm run build --workspace=al-web-components
 
-      - name: Install Deps
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          cd "$KNAPSACK_DIR"
-          yarn cache clean
-          yarn install --cache-folder ~/.cache/yarn --prefer-offline --frozen-lockfile
-        env:
-          CYPRESS_INSTALL_BINARY: 0
-          KNAPSACK_DIR: ${{ secrets.KNAPSACK_DIR }}
+      - name: Knapsack Install
+        run: npm run install --workspace=knapsack
 
-      - name: Run Full Build
-        run: |
-          cd "$KNAPSACK_DIR"
-          yarn build
-        env:
-          KNAPSACK_DIR: ${{ secrets.KNAPSACK_DIR }}
+      - name: Knapsack Build
+        run: npm run build --workspace=knapsack
 
-      - name: Run Knapsack Test
-        run: |
-          cd "$KNAPSACK_DIR"
-          yarn test
+      - name: Knapsack Test
+        run: npm run test --workspace=knapsack
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          KNAPSACK_DIR: ${{ secrets.KNAPSACK_DIR }}

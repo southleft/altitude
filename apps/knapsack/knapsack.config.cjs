@@ -13,7 +13,7 @@ module.exports = configureKnapsack({
   plugins: [],
   cloud: {
     siteId: 'southleft',
-    repoRoot: join(__dirname, '../../../..'),
+    repoRoot: join(__dirname, '../..'),
   },
 });
 
