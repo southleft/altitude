@@ -46,16 +46,19 @@ jobs:
         with:
           node-version: lts/*
 
-      - name: Build Web Components
-        run: npm run build --workspace=al-web-components
+      - name: Web Component Install Dependencies
+        run: yarn install --workspace=al-web-components
 
-      - name: Knapsack Install
-        run: npm run install --workspace=knapsack
+      - name: Web Components Build
+        run: yarn build --workspace=al-web-components
+
+      - name: Knapsack Install Dependencies
+        run: yarn install --workspace=knapsack
 
       - name: Knapsack Build
-        run: npm run build --workspace=knapsack
+        run: yarn build --workspace=knapsack
 
       - name: Knapsack Test
-        run: npm run test --workspace=knapsack
+        run: yarn test --workspace=knapsack
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
