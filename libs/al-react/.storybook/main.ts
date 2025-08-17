@@ -17,11 +17,18 @@ const config: StorybookConfig = {
   ],
   staticDirs: ['../dist'],
   docs: {
-    autodocs: true
+    autodocs: false
   },
 
   // Other Storybook options
   webpackFinal: async (config, { configType }) => {
+    // Add alias for al-react to resolve to local components
+    config.resolve = config.resolve || {};
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'al-react': require('path').resolve(__dirname, '../src'),
+    };
+
     // Add SCSS support
     config.module.rules.push({
       test: /\.scss/,

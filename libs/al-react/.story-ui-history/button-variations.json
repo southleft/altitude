@@ -1,0 +1,14 @@
+{
+  "storyId": "button-variations",
+  "title": "Button Variations",
+  "versions": [
+    {
+      "id": "1950fed4499ff791",
+      "timestamp": 1755456247859,
+      "prompt": "Generate a few variations of some buttons. ",
+      "code": "import React from 'react';\nimport type { Meta, StoryObj } from '@storybook/react';\nimport { ALButton } from 'al-react';\n\nconst meta = {\n  title: 'Generated/Button Variations',\n  component: ALButton,\n  parameters: {\n    layout: 'centered',\n  },\n} satisfies Meta<typeof ALButton>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Primary: Story = {\n  args: {\n    children: 'Primary Button',\n    variant: 'primary',\n  },\n};\n\nexport const Secondary: Story = {\n  args: {\n    children: 'Secondary Button',\n    variant: 'secondary',\n  },\n};\n\nexport const Small: Story = {\n  args: {\n    children: 'Small Button',\n    size: 'small',\n  },\n};\n\nexport const Large: Story = {\n  args: {\n    children: 'Large Button',\n    size: 'large',\n  },\n};\n\nexport const Disabled: Story = {\n  args: {\n    children: 'Disabled Button',\n    disabled: true,\n  },\n};\n\nexport const WithIcon: Story = {\n  render: () => (\n    <ALButton>\n      <span>Button with Icon</span>\n    </ALButton>\n  ),\n};\n\nexport const AllVariations: Story = {\n  render: () => (\n    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>\n      <ALButton variant=\"primary\">Primary</ALButton>\n      <ALButton variant=\"secondary\">Secondary</ALButton>\n      <ALButton size=\"small\">Small</ALButton>\n      <ALButton size=\"large\">Large</ALButton>\n      <ALButton disabled>Disabled</ALButton>\n    </div>\n  ),\n};",
+      "fileName": "button-variations-9bfa905f.stories.tsx"
+    }
+  ],
+  "currentVersionId": "1950fed4499ff791"
+}
