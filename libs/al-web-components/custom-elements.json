@@ -358,6 +358,107 @@
       ]
     },
     {
+      "name": "al-banner",
+      "path": "./components/banner/banner.ts",
+      "description": "Component: al-banner\n- **slot**: The banner's description content\n- **slot** \"icon\": Slot in an icon to override the default one\n- **slot** \"actions\": Slot for action buttons or links",
+      "attributes": [
+        {
+          "name": "variant",
+          "description": "Variants\n- **info** renders a banner that represents an informative state (default)\n- **success** renders a banner that represents a success state\n- **warning** renders a banner that represents a warning state\n- **danger** renders a banner that represents a danger state",
+          "type": "\"success\" | \"warning\" | \"danger\" | \"info\"",
+          "default": "\"info\""
+        },
+        {
+          "name": "title",
+          "description": "Title of the banner",
+          "type": "string",
+          "default": "\"Banner Title\""
+        },
+        {
+          "name": "description",
+          "description": "Description text of the banner",
+          "type": "string"
+        },
+        {
+          "name": "isExpanded",
+          "description": "Expanded state\n- If true, the banner shows description and actions\n- If false, the banner only shows the title",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "isCollapsible",
+          "description": "Collapsible state\n- If true, the banner can be expanded/collapsed\n- If false, the expand/collapse button is hidden",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "name": "showDescription",
+          "description": "Show description\n- If true, the description is shown when expanded\n- If false, the description is hidden even when expanded",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "name": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ],
+      "properties": [
+        {
+          "name": "el",
+          "type": "string",
+          "default": "\"al-banner\""
+        },
+        {
+          "name": "variant",
+          "attribute": "variant",
+          "description": "Variants\n- **info** renders a banner that represents an informative state (default)\n- **success** renders a banner that represents a success state\n- **warning** renders a banner that represents a warning state\n- **danger** renders a banner that represents a danger state",
+          "type": "\"success\" | \"warning\" | \"danger\" | \"info\"",
+          "default": "\"info\""
+        },
+        {
+          "name": "title",
+          "attribute": "title",
+          "description": "Title of the banner",
+          "type": "string",
+          "default": "\"Banner Title\""
+        },
+        {
+          "name": "description",
+          "attribute": "description",
+          "description": "Description text of the banner",
+          "type": "string"
+        },
+        {
+          "name": "isExpanded",
+          "attribute": "isExpanded",
+          "description": "Expanded state\n- If true, the banner shows description and actions\n- If false, the banner only shows the title",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "isCollapsible",
+          "attribute": "isCollapsible",
+          "description": "Collapsible state\n- If true, the banner can be expanded/collapsed\n- If false, the expand/collapse button is hidden",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "name": "showDescription",
+          "attribute": "showDescription",
+          "description": "Show description\n- If true, the description is shown when expanded\n- If false, the description is hidden even when expanded",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "name": "styleModifier",
+          "attribute": "styleModifier",
+          "description": "Append to the class name. Used for passing in utility classes",
+          "type": "string"
+        }
+      ]
+    },
+    {
       "name": "al-breadcrumbs-item",
       "path": "./components/breadcrumbs-item/breadcrumbs-item.ts",
       "description": "Component: al-breadcrumbs-item\n- **slot**: The breadcrumb item's content, typically text",

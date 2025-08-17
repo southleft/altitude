@@ -4,6 +4,7 @@ export * from './components/AccordionPanel';
 export * from './components/Alert';
 export * from './components/Avatar';
 export * from './components/Badge';
+export * from './components/Banner';
 export * from './components/Breadcrumbs';
 export * from './components/BreadcrumbsItem';
 export * from './components/Button';

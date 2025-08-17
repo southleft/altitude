@@ -1,0 +1,14 @@
+{
+  "storyId": "banner-bonanza-collection",
+  "title": "Banner Bonanza Collection",
+  "versions": [
+    {
+      "id": "509d370e6e3e449c",
+      "timestamp": 1755458634688,
+      "prompt": "Generator just bonanza of banners. ",
+      "code": "import React from 'react';\nimport type { Meta, StoryObj } from '@storybook/react';\nimport { ALBanner, ALIcon, ALIconInfo, ALIconWarningTriangle, ALIconSuccess, ALIconClose } from 'al-react';\n\nconst meta = {\n  title: 'Generated/Banner Bonanza Collection',\n  parameters: {\n    layout: 'padded',\n  },\n} satisfies Meta;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const BannerBonanza: Story = {\n  render: () => (\n    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '800px' }}>\n      <ALBanner \n        title=\"Welcome to the Banner Bonanza!\" \n        variant=\"success\"\n        message=\"Discover all the amazing banner variations available in our design system.\"\n      />\n      \n      <ALBanner \n        title=\"Information Banner\" \n        variant=\"info\"\n        message=\"This is an informational message to keep users informed about system updates.\"\n      />\n      \n      <ALBanner \n        title=\"Warning Alert\" \n        variant=\"warning\"\n        message=\"Please review your account settings before proceeding with this action.\"\n      />\n      \n      <ALBanner \n        title=\"Error Notification\" \n        variant=\"error\"\n        message=\"Unable to process your request. Please try again later or contact support.\"\n      />\n      \n      <ALBanner \n        title=\"Success Confirmation\" \n        variant=\"success\"\n        message=\"Your changes have been saved successfully!\"\n      />\n      \n      <ALBanner \n        title=\"Promotional Banner\" \n        variant=\"info\"\n        message=\"Limited time offer: Get 50% off your next purchase with code BANNER50\"\n      />\n      \n      <ALBanner \n        title=\"System Maintenance\" \n        variant=\"warning\"\n        message=\"Scheduled maintenance will occur tonight from 11 PM to 2 AM EST.\"\n      />\n      \n      <ALBanner \n        title=\"Critical Update\" \n        variant=\"error\"\n        message=\"Security update required. Please update your password immediately.\"\n      />\n      \n      <ALBanner \n        title=\"Feature Announcement\" \n        variant=\"success\"\n        message=\"New dashboard features are now available! Check out the enhanced analytics.\"\n      />\n      \n      <ALBanner \n        title=\"Tips & Tricks\" \n        variant=\"info\"\n        message=\"Did you know? You can customize your workspace layout in the settings panel.\"\n      />\n    </div>\n  ),\n};",
+      "fileName": "banner-bonanza-collection-3c4faa1b.stories.tsx"
+    }
+  ],
+  "currentVersionId": "509d370e6e3e449c"
+}

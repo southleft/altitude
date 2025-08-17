@@ -1,0 +1,144 @@
+@import '../../styles/component';
+/* ------------------------------------*\
+  #BANNER
+\*------------------------------------ */
+
+/**
+ * Banner
+ */
+.al-c-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-radius: var(--al-theme-border-radius-md);
+  background-color: var(--al-theme-color-background-default);
+  box-shadow: var(--al-theme-box-shadow-lg);
+  padding-inline-start: var(--al-theme-space);
+  padding-block: 0;
+  padding-block-end: var(--al-theme-space-xs);
+  padding-inline-end: 0;
+  overflow: hidden;
+}
+
+/**
+ * Banner main content area
+ */
+.al-c-banner__main {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--al-theme-space-sm);
+  flex: 1;
+  padding-block-start: var(--al-theme-space);
+  padding-block-end: var(--al-theme-space-xs);
+  min-width: 0; // Allow text to truncate
+}
+
+/**
+ * Banner content wrapper
+ */
+.al-c-banner__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-xs);
+  flex: 1;
+  min-width: 0; // Allow text to truncate
+}
+
+/**
+ * Banner title
+ */
+.al-c-banner__title {
+  @include al-theme-typography-body-md-bold;
+  color: var(--al-theme-color-content-default);
+}
+
+/**
+ * Banner body (contains description and actions)
+ */
+.al-c-banner__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space);
+  //padding-block-end: var(--al-theme-space-xs);
+}
+
+/**
+ * Banner description
+ */
+.al-c-banner__description {
+  @include al-theme-typography-body-sm;
+  color: var(--al-theme-color-content-default-weak);
+}
+
+/**
+ * Banner actions container
+ */
+.al-c-banner__actions {
+  display: flex;
+  gap: var(--al-theme-space-xs);
+  flex-wrap: wrap;
+}
+
+/**
+ * Icon that depicts the banner variant
+ */
+.al-c-banner__icon {
+  --al-icon-width: #{var(--al-theme-icon-lg)};
+  --al-icon-height: #{var(--al-theme-icon-lg)};
+  --al-icon-fill: var(--al-theme-color-content-info-default);
+
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  /**
+   * Icon within info banner (default)
+   */
+  .al-c-banner--info & {
+    --al-icon-fill: var(--al-theme-color-content-info-default);
+  }
+
+  /**
+   * Icon within success banner
+   */
+  .al-c-banner--success & {
+    --al-icon-fill: var(--al-theme-color-content-success-default);
+  }
+
+  /**
+   * Icon within warning banner
+   */
+  .al-c-banner--warning & {
+    --al-icon-fill: var(--al-theme-color-content-warning-default);
+  }
+
+  /**
+   * Icon within danger banner
+   */
+  .al-c-banner--danger & {
+    --al-icon-fill: var(--al-theme-color-content-danger-default);
+  }
+}
+
+/**
+ * Toggle button wrapper
+ */
+.al-c-banner__toggle {
+  display: flex;
+  align-items: flex-start;
+  padding-block-start: var(--al-theme-space-xs);
+  padding-inline-end: var(--al-theme-space-xxs);
+}
+
+/**
+ * Toggle button
+ */
+.al-c-banner__toggle-button {
+  --al-icon-width: #{var(--al-theme-icon-lg)};
+  --al-icon-height: #{var(--al-theme-icon-lg)};
+  --al-icon-fill: var(--al-theme-color-content-default);
+
+  &:hover {
+    --al-icon-fill: var(--al-theme-color-content-default-weak);
+  }
+}
