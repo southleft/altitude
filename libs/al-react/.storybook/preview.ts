@@ -1,5 +1,43 @@
 import type { Preview } from '@storybook/react-webpack5';
 
+// Suppress Sass deprecation warnings in the browser console
+if (typeof window !== 'undefined') {
+  const originalWarn = console.warn;
+  console.warn = function(...args) {
+    const message = args.join(' ');
+    // Filter out Sass-related warnings
+    if (
+      message.includes('Deprecation') ||
+      message.includes('legacy') ||
+      message.includes('@import') ||
+      message.includes('mixed-decls') ||
+      message.includes('sass-loader') ||
+      message.includes("Sass's behavior") ||
+      message.includes('Module Warning') ||
+      message.includes('Dart Sass')
+    ) {
+      return; // Suppress the warning
+    }
+    // Call the original console.warn for other warnings
+    originalWarn.apply(console, args);
+  };
+
+  // Also filter console.log messages that contain warnings
+  const originalLog = console.log;
+  console.log = function(...args) {
+    const message = args.join(' ');
+    if (
+      message.includes('[HMR] bundle') && message.includes('warnings')
+    ) {
+      // Log without the warning count
+      const cleanMessage = message.replace(/has \d+ warnings?/, 'updated');
+      originalLog.call(console, cleanMessage);
+      return;
+    }
+    originalLog.apply(console, args);
+  };
+}
+
 /*
  * Head styles
  * - Allows for custom styles of the story iframe window
