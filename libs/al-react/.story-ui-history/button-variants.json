@@ -1,0 +1,14 @@
+{
+  "storyId": "button-variants",
+  "title": "Button Variants",
+  "versions": [
+    {
+      "id": "8cc4569137d1f628",
+      "timestamp": 1755450627797,
+      "prompt": "Generate all the button variants. ",
+      "code": "import React from 'react';\nimport type { Meta, StoryObj } from '@storybook/react';\nimport { ALButton } from '../../components/Button';\n\nconst meta = {\n  title: 'Generated/Button Variants',\n  component: ALButton,\n  parameters: {\n    layout: 'centered',\n  },\n  argTypes: {\n    variant: {\n      control: { type: 'select' },\n      options: ['primary', 'secondary', 'tertiary', 'danger']\n    },\n    size: {\n      control: { type: 'select' },\n      options: ['small', 'medium', 'large']\n    },\n    disabled: {\n      control: { type: 'boolean' }\n    }\n  }\n} satisfies Meta<typeof ALButton>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Primary: Story = {\n  args: {\n    children: 'Primary Button',\n    variant: 'primary'\n  }\n};\n\nexport const Secondary: Story = {\n  args: {\n    children: 'Secondary Button',\n    variant: 'secondary'\n  }\n};\n\nexport const Tertiary: Story = {\n  args: {\n    children: 'Tertiary Button',\n    variant: 'tertiary'\n  }\n};\n\nexport const Danger: Story = {\n  args: {\n    children: 'Danger Button',\n    variant: 'danger'\n  }\n};\n\nexport const SmallSize: Story = {\n  args: {\n    children: 'Small Button',\n    size: 'small'\n  }\n};\n\nexport const MediumSize: Story = {\n  args: {\n    children: 'Medium Button',\n    size: 'medium'\n  }\n};\n\nexport const LargeSize: Story = {\n  args: {\n    children: 'Large Button',\n    size: 'large'\n  }\n};\n\nexport const Disabled: Story = {\n  args: {\n    children: 'Disabled Button',\n    disabled: true\n  }\n};\n\nexport const AllVariants: Story = {\n  render: () => (\n    <div style={{ display: 'flex', gap: '1rem', flexDirection: 'column', alignItems: 'center' }}>\n      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>\n        <ALButton variant=\"primary\">Primary</ALButton>\n        <ALButton variant=\"secondary\">Secondary</ALButton>\n        <ALButton variant=\"tertiary\">Tertiary</ALButton>\n        <ALButton variant=\"danger\">Danger</ALButton>\n      </div>\n      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>\n        <ALButton size=\"small\">Small</ALButton>\n        <ALButton size=\"medium\">Medium</ALButton>\n        <ALButton size=\"large\">Large</ALButton>\n      </div>\n      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>\n        <ALButton disabled>Disabled Primary</ALButton>\n        <ALButton variant=\"secondary\" disabled>Disabled Secondary</ALButton>\n      </div>\n    </div>\n  )\n};",
+      "fileName": "button-variants-76ba05f3.stories.tsx"
+    }
+  ],
+  "currentVersionId": "8cc4569137d1f628"
+}

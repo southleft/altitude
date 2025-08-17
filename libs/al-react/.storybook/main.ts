@@ -31,7 +31,7 @@ const config: StorybookConfig = {
   ],
   staticDirs: ['../dist'],
   docs: {
-    autodocs: true
+    autodocs: false
   },
 
   // Other Storybook options

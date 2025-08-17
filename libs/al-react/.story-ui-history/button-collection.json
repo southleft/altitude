@@ -1,0 +1,14 @@
+{
+  "storyId": "button-collection",
+  "title": "Button Collection",
+  "versions": [
+    {
+      "id": "a48849d37af5ebbf",
+      "timestamp": 1755449727075,
+      "prompt": "Generate a bunch of buttons. ",
+      "code": "import React from 'react';\nimport type { Meta, StoryObj } from '@storybook/react';\nimport { ALButton } from 'al-react';\n\nconst meta = {\n  title: 'Generated/Button Collection',\n  parameters: {\n    layout: 'centered',\n  },\n} satisfies Meta;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const ButtonCollection: Story = {\n  render: () => (\n    <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', padding: '2rem'}}>\n      <div>\n        <ALButton>Primary Button</ALButton>\n      </div>\n      <div>\n        <ALButton variant=\"secondary\">Secondary Button</ALButton>\n      </div>\n      <div>\n        <ALButton variant=\"outline\">Outline Button</ALButton>\n      </div>\n      <div>\n        <ALButton size=\"small\">Small Button</ALButton>\n      </div>\n      <div>\n        <ALButton size=\"large\">Large Button</ALButton>\n      </div>\n      <div>\n        <ALButton disabled>Disabled Button</ALButton>\n      </div>\n      <div>\n        <ALButton variant=\"destructive\">Delete</ALButton>\n      </div>\n      <div>\n        <ALButton variant=\"ghost\">Ghost Button</ALButton>\n      </div>\n      <div>\n        <ALButton loading>Loading...</ALButton>\n      </div>\n      <div>\n        <ALButton fullWidth>Full Width</ALButton>\n      </div>\n      <div>\n        <ALButton variant=\"link\">Link Button</ALButton>\n      </div>\n      <div>\n        <ALButton rounded>Rounded</ALButton>\n      </div>\n    </div>\n  )\n};\n\nexport const ButtonSizes: Story = {\n  render: () => (\n    <div style={{display: 'flex', alignItems: 'center', gap: '1rem', padding: '2rem'}}>\n      <ALButton size=\"small\">Small</ALButton>\n      <ALButton size=\"medium\">Medium</ALButton>\n      <ALButton size=\"large\">Large</ALButton>\n    </div>\n  )\n};\n\nexport const ButtonVariants: Story = {\n  render: () => (\n    <div style={{display: 'flex', flexWrap: 'wrap', gap: '1rem', padding: '2rem'}}>\n      <ALButton variant=\"primary\">Primary</ALButton>\n      <ALButton variant=\"secondary\">Secondary</ALButton>\n      <ALButton variant=\"outline\">Outline</ALButton>\n      <ALButton variant=\"ghost\">Ghost</ALButton>\n      <ALButton variant=\"link\">Link</ALButton>\n      <ALButton variant=\"destructive\">Destructive</ALButton>\n    </div>\n  )\n};",
+      "fileName": "button-collection-6b5c466e.stories.tsx"
+    }
+  ],
+  "currentVersionId": "a48849d37af5ebbf"
+}
