@@ -9,6 +9,10 @@
     "libs/*",
     "apps/*"
   ],
+  "resolutions": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
   "scripts": {
     "build": "yarn workspace al-web-components build && yarn workspace al-react build",
     "build:storybook-web-components": "yarn workspace al-web-components build:storybook --output-dir ../../dist/storybook/web-components",
