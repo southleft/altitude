@@ -1,5 +1,10 @@
 import type { StorybookConfig } from '@storybook/web-components-webpack5';
 
+// Fix for HTMLElement is not defined error with tocbot
+if (typeof globalThis !== 'undefined' && !globalThis.HTMLElement) {
+  globalThis.HTMLElement = class HTMLElement {};
+}
+
 const config: StorybookConfig = {
   framework: {
     name: '@storybook/web-components-webpack5',
