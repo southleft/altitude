@@ -3,6 +3,8 @@
 // across components/, emits `custom-elements.json` — the source of truth
 // for T3.2 schemas, T3.3 AGENTS.md/llms.txt, and T3.4 contract validator.
 
+import altitudeConventions from './cem-plugins/al-conventions.mjs';
+
 export default {
   globs: ['components/**/*.ts'],
   exclude: [
@@ -14,7 +16,8 @@ export default {
   ],
   outdir: '.',
   litelement: true,
-  // Plain dev console output only on demand (silent by default).
   dev: false,
-  // Decorator semantics — same as the rest of the build (G7).
+  // Altitude conventions: surfaces `static el` as tagName and parses the
+  // legacy prose JSDoc for slots/events/csspart/cssproperty.
+  plugins: [altitudeConventions()],
 };
