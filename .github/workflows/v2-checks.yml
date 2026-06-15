@@ -67,3 +67,33 @@ jobs:
           fetch-depth: 0
       - name: Run baseline gate
         run: node scripts/check-baselines-gate.js --base=origin/${{ github.base_ref }}
+
+  fixtures:
+    name: T0.3 fixtures build green
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: yarn install --ignore-scripts
+      - name: Build libraries
+        run: yarn build
+      - name: Build fixtures (web-components / react / mfe / ssr)
+        run: yarn build:fixtures
+
+  gate-self-test:
+    name: G2/G8 gate self-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run gate self-test
+        run: yarn gate:self-test

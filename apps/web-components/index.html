@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Altitude — Web Components Fixture</title>
+    <link rel="stylesheet" href="al-web-components/dist/css/main.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Altitude pilot fixture (web components)</h1>
+      <p>
+        T0.3 — minimal Lit consumer that imports the 5 pilot components. Used
+        by CI to verify each phase ships green for native consumers.
+      </p>
+    </header>
+
+    <main>
+      <section>
+        <h2>button</h2>
+        <al-button>Default</al-button>
+        <al-button variant="secondary">Secondary</al-button>
+        <al-button variant="danger">Danger</al-button>
+      </section>
+
+      <section>
+        <h2>input</h2>
+        <al-input label="Name" placeholder="Type something" required></al-input>
+      </section>
+
+      <section>
+        <h2>select</h2>
+        <al-select label="Choose"></al-select>
+      </section>
+
+      <section>
+        <h2>dialog</h2>
+        <al-button id="open">Open dialog</al-button>
+        <al-dialog id="dlg" heading="Hello"></al-dialog>
+      </section>
+
+      <section>
+        <h2>theme-switcher</h2>
+        <al-theme-switcher></al-theme-switcher>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

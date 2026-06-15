@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Altitude — MFE coexistence fixture</title>
+    <link rel="stylesheet" href="al-web-components/dist/css/main.css" />
+    <style>
+      body { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+      section { padding: 1rem; border: 1px solid currentColor; }
+      h2 { margin-top: 0; }
+    </style>
+  </head>
+  <body>
+    <header style="grid-column: 1 / -1;">
+      <h1>Micro-frontend coexistence fixture (T0.3)</h1>
+      <p>
+        Renders two simulated Altitude consumers side-by-side. Today, both
+        sides register the same tag because the legacy registry isn't
+        versioned. T4.6 will turn this fixture green by registering the
+        right side as <code>al-button-NEXT</code> (or similar) under the
+        <code>versioned</code> mode, proving subtree isolation.
+      </p>
+    </header>
+
+    <section data-app="left">
+      <h2>App A</h2>
+      <al-button>Left button</al-button>
+      <al-theme-switcher></al-theme-switcher>
+    </section>
+
+    <section data-app="right">
+      <h2>App B (would be a different Altitude version)</h2>
+      <al-button>Right button</al-button>
+      <al-theme-switcher></al-theme-switcher>
+    </section>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
