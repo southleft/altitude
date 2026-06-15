@@ -2,6 +2,7 @@ import { html, unsafeCSS } from 'lit';
 import { property, query } from 'lit/decorators.js';
 import { nanoid } from 'nanoid';
 import { ALElement } from '../ALElement';
+import { TooltipController } from '../../controllers/tooltip';
 import styles from './tooltip.scss';
 
 /**
@@ -12,6 +13,12 @@ import styles from './tooltip.scss';
  */
 export class ALTooltip extends ALElement {
   static el = 'al-tooltip';
+
+  /**
+   * T5.1 — headless TooltipController owns the show/hide debounce + the
+   * mouseenter/mouseleave/focusin/focusout listeners.
+   */
+  protected tooltipCtrl = new TooltipController(this);
 
   static get styles() {
     return unsafeCSS(styles.toString());

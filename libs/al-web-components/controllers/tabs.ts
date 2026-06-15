@@ -22,11 +22,11 @@ export class TabsController implements ReactiveController {
   constructor(host: TabsControllerHost, opts: TabsControllerOptions = {}) {
     this.host = host;
     this.opts = { activation: opts.activation ?? 'automatic' };
+    this._onKeyDown = this._onKeyDown.bind(this);
     host.addController(this);
   }
 
   hostConnected() {
-    this._onKeyDown = this._onKeyDown.bind(this);
     this.host.addEventListener('keydown', this._onKeyDown);
   }
   hostDisconnected() {

@@ -22,6 +22,10 @@ export interface DialogControllerOptions {
   closeOnEscape?: boolean;
   /** When true, clicks outside the dialog root close it. Default true. */
   closeOnClickOutside?: boolean;
+  /** Host-delegated close handler. When provided, the controller calls
+   * this instead of its built-in `close()` so the host owns dispatching
+   * the public `onDialogClose` event with the right detail shape. */
+  onRequestClose?: (cause: 'escape' | 'click-outside') => void;
 }
 
 export interface DialogControllerHost extends ReactiveControllerHost, HTMLElement {
@@ -39,19 +43,18 @@ export class DialogController implements ReactiveController {
       prefix: opts.prefix ?? 'Dialog',
       closeOnEscape: opts.closeOnEscape ?? true,
       closeOnClickOutside: opts.closeOnClickOutside ?? true,
+      onRequestClose: opts.onRequestClose ?? null as any,
     };
+    // Bind once in the constructor so add/removeEventListener see the same
+    // function reference (avoid the "listener never detaches" leak).
+    this._onKeyDown = this._onKeyDown.bind(this);
+    this._onClickOutside = this._onClickOutside.bind(this);
     host.addController(this);
   }
 
   hostConnected() {
-    if (this.opts.closeOnEscape) {
-      this._onKeyDown = this._onKeyDown.bind(this);
-      document.addEventListener('keydown', this._onKeyDown);
-    }
-    if (this.opts.closeOnClickOutside) {
-      this._onClickOutside = this._onClickOutside.bind(this);
-      document.addEventListener('click', this._onClickOutside);
-    }
+    if (this.opts.closeOnEscape) document.addEventListener('keydown', this._onKeyDown);
+    if (this.opts.closeOnClickOutside) document.addEventListener('click', this._onClickOutside);
   }
 
   hostDisconnected() {
@@ -85,14 +88,18 @@ export class DialogController implements ReactiveController {
   private _onKeyDown(e: KeyboardEvent) {
     if (e.key === 'Escape' && this.host.isActive) {
       e.preventDefault();
-      this.close(true);
+      if (this.opts.onRequestClose) this.opts.onRequestClose('escape');
+      else this.close(true);
     }
   }
 
   private _onClickOutside(e: MouseEvent) {
     if (!this.host.isActive) return;
     const path = e.composedPath();
-    if (!path.includes(this.host)) this.close(true);
+    if (!path.includes(this.host)) {
+      if (this.opts.onRequestClose) this.opts.onRequestClose('click-outside');
+      else this.close(true);
+    }
   }
 
   private _dispatch(type: DialogEvent) {

@@ -35,13 +35,15 @@
     "baselines:bundle": "node scripts/capture-bundle-baseline.js",
     "baselines:vrt": "playwright test --update-snapshots",
     "baselines:capture": "yarn build && yarn workspace al-app-web-components build && yarn baselines:tokens && yarn baselines:bundle && yarn baselines:vrt",
-    "test:vrt": "playwright test"
+    "test:vrt": "playwright test",
+    "release": "yarn build && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
     "@playwright/test": "^1.42.0",
     "@storybook/react-webpack5": "7.6.20",
     "ajv": "^8",
+    "axe-core": "^4.10",
     "storybook": "7.6.20"
   }
 }

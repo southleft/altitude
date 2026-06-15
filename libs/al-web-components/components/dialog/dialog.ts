@@ -9,6 +9,7 @@ import { ALButton } from '../button/button';
 import { ALHeading } from '../heading/heading';
 import { ALIconClose } from '../icon/icons/close';
 import { ALFocusTrap } from '../focus-trap/focus-trap';
+import { DialogController } from '../../controllers/dialog';
 import styles from './dialog.scss';
 
 /**
@@ -20,6 +21,17 @@ import styles from './dialog.scss';
  */
 export class ALDialog extends ALElement {
   static el = 'al-dialog';
+
+  /**
+   * T5.1 — headless DialogController consumed for ESC + click-outside.
+   * The host still owns open()/close() so the public event detail
+   * (`item: this`) is preserved.
+   */
+  protected dialogCtrl = new DialogController(this, {
+    closeOnEscape: true,
+    closeOnClickOutside: false, // host owns this via handleOnClickOutside
+    onRequestClose: () => this.close(),
+  });
 
   private elementMap = register({
     elements: [

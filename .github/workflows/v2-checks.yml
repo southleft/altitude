@@ -275,6 +275,32 @@ jobs:
       - name: Wrapper contract
         run: node scripts/check-react-wrapper-contract.js
 
+  a11y:
+    name: T6.3 a11y CI gate (axe-core)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: yarn install --ignore-scripts --ignore-engines
+      - name: Install Playwright browsers
+        run: yarn playwright install --with-deps chromium
+      - name: Build libs + fixture
+        run: yarn build && yarn workspace al-app-web-components build
+      - name: Start fixture preview
+        run: nohup yarn workspace al-app-web-components preview &
+      - name: Wait for preview
+        run: |
+          for i in {1..30}; do
+            curl -sf http://localhost:5174/ > /dev/null && break
+            sleep 1
+          done
+      - name: Run a11y check
+        run: node scripts/check-a11y.js
+
   register-altitude:
     name: T4.6 registry modes
     runs-on: ubuntu-latest

@@ -22,12 +22,12 @@ export class TooltipController implements ReactiveController {
   constructor(host: TooltipControllerHost, opts: TooltipControllerOptions = {}) {
     this.host = host;
     this.opts = { showDelayMs: opts.showDelayMs ?? 200, hideDelayMs: opts.hideDelayMs ?? 150 };
+    this._enter = this._enter.bind(this);
+    this._leave = this._leave.bind(this);
     host.addController(this);
   }
 
   hostConnected() {
-    this._enter = this._enter.bind(this);
-    this._leave = this._leave.bind(this);
     this.host.addEventListener('mouseenter', this._enter);
     this.host.addEventListener('mouseleave', this._leave);
     this.host.addEventListener('focusin', this._enter);

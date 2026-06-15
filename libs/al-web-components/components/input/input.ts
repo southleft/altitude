@@ -7,6 +7,7 @@ import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { ALElement } from '../ALElement';
 import { ALFieldNote } from '../field-note/field-note';
+import { FormAssociatedController } from '../../controllers/form-associated';
 import styles from './input.scss';
 
 /**
@@ -18,6 +19,15 @@ import styles from './input.scss';
  */
 export class ALInput extends ALElement {
   static el = 'al-input';
+
+  /**
+   * T5.3 — form-associated participation.
+   * Makes `<al-input name="…">` carry its `value` into the owning form's
+   * FormData and surface `setValidity` through the constraint validation API.
+   */
+  static formAssociated = true;
+
+  protected formInternals = new FormAssociatedController(this);
 
   private elementMap = register({
     elements: [[ALFieldNote.el, ALFieldNote]],
@@ -254,6 +264,9 @@ export class ALInput extends ALElement {
     } else {
       this.isActive = false; /* 3 */
     }
+
+    // T5.3 — mirror the value into the form-internals so it lands in FormData.
+    this.formInternals?.setValue(value);
 
     /* 4 */
     this.dispatch({

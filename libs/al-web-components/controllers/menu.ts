@@ -32,11 +32,11 @@ export class MenuController implements ReactiveController {
       wrap: opts.wrap ?? true,
       itemSelector: opts.itemSelector ?? '[role="menuitem"]',
     };
+    this._onKeyDown = this._onKeyDown.bind(this);
     host.addController(this);
   }
 
   hostConnected() {
-    this._onKeyDown = this._onKeyDown.bind(this);
     this.host.addEventListener('keydown', this._onKeyDown);
   }
   hostDisconnected() {

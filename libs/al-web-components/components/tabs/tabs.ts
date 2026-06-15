@@ -10,6 +10,7 @@ import { ALIconChevronLeft } from '../icon/icons/chevron-left';
 import { ALIconChevronRight } from '../icon/icons/chevron-right';
 import { ALTabPanel } from '../tab-panel/tab-panel';
 import { ALTab } from '../tab/tab';
+import { TabsController } from '../../controllers/tabs';
 import styles from './tabs.scss';
 
 /**
@@ -19,6 +20,14 @@ import styles from './tabs.scss';
  */
 export class ALTabs extends ALElement {
   static el = 'al-tabs';
+
+  /**
+   * T5.1 — headless TabsController hosts the focus/selectedIndex state.
+   * The host's existing keyboard handler (handleOnTabKeydown) keeps
+   * pre-existing detail-payload behavior; the controller is the
+   * authoritative state owner for tests + downstream framework adapters.
+   */
+  protected tabsCtrl = new TabsController(this, { activation: 'manual' });
 
   private elementMap = register({
     elements: [

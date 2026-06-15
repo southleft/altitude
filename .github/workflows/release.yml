@@ -1,0 +1,41 @@
+name: Release (v2)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  # Required for npm provenance (T6.4 acceptance: "Changesets + provenance").
+  id-token: write
+
+jobs:
+  release:
+    name: changesets -> npm publish --provenance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install
+        run: yarn install --ignore-scripts --ignore-engines
+      - name: Build all libraries
+        run: yarn build
+      - name: Create release PR or publish
+        uses: changesets/action@v1
+        with:
+          # Publishes with --provenance via NPM_CONFIG_PROVENANCE below.
+          publish: yarn release
+          version: yarn changeset version
+          commit: "chore(release): version packages"
+          title: "chore(release): v2"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: 'true'
