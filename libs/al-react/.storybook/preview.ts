@@ -1,33 +1,21 @@
-import type { Preview } from '@storybook/react-webpack5';
+// T2.4 — Storybook 10 preview for al-react.
 
-/*
- * Head styles
- * - Allows for custom styles of the story iframe window
- * - Creating a style element for mainStyles and appending it to the document head
- */
-import mainStyles from '!!raw-loader!sass-loader!../../al-web-components/dist/css/main.css';
+import type { Preview } from '@storybook/react-vite';
+import mainStyles from '../../al-web-components/dist/css/main.css?inline';
+import iconFontCSS from '../../al-web-components/components/icon/fonts/iconfont.css?inline';
+
 const mainStyleElement = document.createElement('style');
-mainStyleElement.innerHTML = mainStyles;
+mainStyleElement.innerHTML = mainStyles as unknown as string;
 mainStyleElement.setAttribute('type', 'text/css');
 mainStyleElement.setAttribute('id', 'al-theme-sheet');
 document.head.appendChild(mainStyleElement);
 
-/*
- * Icon font styles
- * - Allows for the icon font to be avaiable in the story iframe window
- * - Creating a style element for iconFontCSS and appending it to the document head
- */
-import iconFontCSS from '!!raw-loader!sass-loader!../../al-web-components/components/icon/fonts/iconfont.css';
 const iconFontStyleElement = document.createElement('style');
 iconFontStyleElement.setAttribute('type', 'text/css');
 iconFontStyleElement.setAttribute('id', 'iconfont-style');
-iconFontStyleElement.innerHTML = iconFontCSS;
+iconFontStyleElement.innerHTML = iconFontCSS as unknown as string;
 document.head.appendChild(iconFontStyleElement);
 
-/*
- * Exclude's
- * - Properties and methods to be excluded from the storybook controls
- */
 export const excludeRegexArray = [
   '^children$',
   '^render$',
@@ -50,7 +38,7 @@ export const excludeRegexArray = [
   '^updateComplete$',
   '^on[A-Z].*',
   '^handle[A-Z].*',
-  '^_.*'
+  '^_.*',
 ];
 
 const preview: Preview = {
@@ -60,48 +48,16 @@ const preview: Preview = {
       exclude: new RegExp(excludeRegexArray.join('|')),
       matchers: {
         color: /(background|color)$/i,
-        date: /Date$/i
-      }
+        date: /Date$/i,
+      },
     },
-    // Configuring story sort order
     options: {
       storySort: {
-        order: ['Resources', 'Foundations', 'Atoms', 'Molecules', 'Organisms', 'Templates', 'Pages', 'Recipes']
-      }
+        order: ['Resources', 'Foundations', 'Atoms', 'Molecules', 'Organisms', 'Templates', 'Pages', 'Recipes'],
+      },
     },
     backgrounds: { disable: true },
   },
-  globalTypes: {
-    stylesheets: {
-      themes: [
-        {
-          id: "theme-dark",
-          title: "Theme: Dark",
-          url: "./css/tokens-dark.css",
-        },
-        {
-          id: "theme-light",
-          title: "Theme: Light",
-          url: "./css/tokens-light.css",
-        },
-        {
-          id: "brand-northright",
-          title: "Brand: Northright",
-          url: "./css/tokens-northright.css",
-        },
-        {
-          id: "brand-odyssey",
-          title: "Brand: Odyssey",
-          url: "./css/tokens-odyssey.css",
-        },
-        {
-          id: "brand-southleft",
-          title: "Brand: Southleft",
-          url: "./css/tokens-southleft.css",
-        }
-      ]
-    }
-  }
 };
 
 export default preview;

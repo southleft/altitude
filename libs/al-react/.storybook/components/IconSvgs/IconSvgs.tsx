@@ -1,4 +1,4 @@
-import '!style-loader!css-loader!sass-loader!./IconSvgs.scss';
+import './IconSvgs.scss?inline';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

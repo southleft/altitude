@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
+import { withActions } from 'storybook/actions/decorator';
 import './range';
 
 export default {

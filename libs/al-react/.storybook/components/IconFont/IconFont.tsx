@@ -1,4 +1,4 @@
-import '!style-loader!css-loader!sass-loader!./IconFont.scss';
+import './IconFont.scss?inline';
 import React from 'react';
 
 class IconFont extends React.Component {

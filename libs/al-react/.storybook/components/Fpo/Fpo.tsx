@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import '!style-loader!css-loader!sass-loader!./Fpo.scss';
+import './Fpo.scss?inline';
 
 export interface FpoProps {
   /**

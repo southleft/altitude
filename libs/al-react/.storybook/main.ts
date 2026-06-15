@@ -1,8 +1,10 @@
-import type { StorybookConfig } from '@storybook/react-webpack5';
+// T2.4 — Storybook 10 + Vite builder for al-react.
+
+import type { StorybookConfig } from '@storybook/react-vite';
 
 const config: StorybookConfig = {
   framework: {
-    name: '@storybook/react-webpack5',
+    name: '@storybook/react-vite',
     options: {},
   },
   stories: [
@@ -10,36 +12,10 @@ const config: StorybookConfig = {
     '../src/**/*.stories.@(js|jsx|ts|tsx)',
   ],
   addons: [
-    '@storybook/addon-essentials',
     '@storybook/addon-a11y',
-    '@etchteam/storybook-addon-status',
-    'storybook-theme-switch-addon'
   ],
   staticDirs: ['../dist'],
-  docs: {
-    autodocs: true
-  },
-
-  // Other Storybook options
-  webpackFinal: async (config, { configType }) => {
-    // Add SCSS support
-    config.module.rules.push({
-      test: /\.scss/,
-      use: [
-        'css-loader',
-        { loader: 'sass-loader' }
-      ]
-    });
-
-    // Add svg support
-    config.module.rules.push({
-      test: /\.svg$/,
-      type: 'asset/source'
-    });
-
-    // Return the modified Webpack Config
-    return config;
-  }
+  docs: { autodocs: true } as any,
 };
 
 export default config;

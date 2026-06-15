@@ -1,7 +1,7 @@
-import { expect, userEvent, waitFor, within } from '@storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
+import { withActions } from 'storybook/actions/decorator';
 import './popover';
 import '../../.storybook/components/f-po/f-po';
 import '../button-group/button-group';
