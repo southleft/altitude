@@ -120,6 +120,448 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/accordion-panel/accordion-panel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-accordion-panel\n- **slot**: The accordion panel content",
+          "name": "ALAccordionPanel",
+          "slots": [
+            {
+              "name": "",
+              "description": "The accordion panel content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-accordion-panel'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconChevronDownEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Active property\n1. Panel is open when set to true. Close when set to false",
+              "attribute": "isActive"
+            },
+            {
+              "kind": "field",
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled property",
+              "attribute": "isDisabled"
+            },
+            {
+              "kind": "field",
+              "name": "isLast",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Is last?\n- Dynamically set by the ALAccordion\n- Removes the bottom border if it is the last item",
+              "attribute": "isLast"
+            },
+            {
+              "kind": "field",
+              "name": "idx",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Index of the panel\n- Dynamically set by the ALAccordion",
+              "attribute": "idx"
+            },
+            {
+              "kind": "field",
+              "name": "ariaControls",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Controls attribute\n- Dynamically set for A11y",
+              "attribute": "ariaControls"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+              "attribute": "ariaLabelledBy"
+            },
+            {
+              "kind": "method",
+              "name": "toggleActive",
+              "privacy": "public",
+              "description": "Set accordion panel active state\n1. Toggle the active state between true and false\n2. Open/close the panel based on isActive"
+            },
+            {
+              "kind": "method",
+              "name": "open",
+              "privacy": "public",
+              "description": "Open accordion panel\n1. Set isActive to true to show the panel\n2. Dispatch a custom event on close"
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "privacy": "public",
+              "description": "Close accordion panel\n1. Set isActive to false to hide the panel\n2. Dispatch a custom event on close"
+            }
+          ],
+          "events": [
+            {
+              "name": "onAccordionPanelOpen",
+              "description": ""
+            },
+            {
+              "name": "onAccordionPanelClose",
+              "description": ""
+            }
+          ],
+          "attributes": [
+            {
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Active property\n1. Panel is open when set to true. Close when set to false",
+              "fieldName": "isActive"
+            },
+            {
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled property",
+              "fieldName": "isDisabled"
+            },
+            {
+              "name": "isLast",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Is last?\n- Dynamically set by the ALAccordion\n- Removes the bottom border if it is the last item",
+              "fieldName": "isLast"
+            },
+            {
+              "name": "idx",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Index of the panel\n- Dynamically set by the ALAccordion",
+              "fieldName": "idx"
+            },
+            {
+              "name": "ariaControls",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Controls attribute\n- Dynamically set for A11y",
+              "fieldName": "ariaControls"
+            },
+            {
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+              "fieldName": "ariaLabelledBy"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-accordion-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALAccordionPanel",
+          "declaration": {
+            "name": "ALAccordionPanel",
+            "module": "components/accordion-panel/accordion-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-accordion-panel",
+          "declaration": {
+            "name": "ALAccordionPanel",
+            "module": "components/accordion-panel/accordion-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALAccordionPanel",
+            "module": "components/accordion-panel/accordion-panel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/avatar/avatar.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-avatar\n- **slot**: The avatar content",
+          "name": "ALAvatar",
+          "slots": [
+            {
+              "name": "",
+              "description": "The avatar content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-avatar'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "badgeEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'sm'"
+              },
+              "description": "Avatar varaint\n- **default** Renders an avatar with an height & width of 40px\n- **sm** Renders an avatar with an height & width of 28px",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "hasBadge",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Has Badge?\n- If true, shows the badge on the outside of the avatar circle\n- If false, hides the badge",
+              "attribute": "hasBadge"
+            },
+            {
+              "kind": "field",
+              "name": "badgeVariant",
+              "type": {
+                "text": "'success' | 'warning' | 'danger'"
+              },
+              "description": "Badge state variant\n- **default** Displays a badge with the default state\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+              "attribute": "badgeVariant"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'sm'"
+              },
+              "description": "Avatar varaint\n- **default** Renders an avatar with an height & width of 40px\n- **sm** Renders an avatar with an height & width of 28px",
+              "fieldName": "variant"
+            },
+            {
+              "name": "hasBadge",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Has Badge?\n- If true, shows the badge on the outside of the avatar circle\n- If false, hides the badge",
+              "fieldName": "hasBadge"
+            },
+            {
+              "name": "badgeVariant",
+              "type": {
+                "text": "'success' | 'warning' | 'danger'"
+              },
+              "description": "Badge state variant\n- **default** Displays a badge with the default state\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+              "fieldName": "badgeVariant"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-avatar",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALAvatar",
+          "declaration": {
+            "name": "ALAvatar",
+            "module": "components/avatar/avatar.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-avatar",
+          "declaration": {
+            "name": "ALAvatar",
+            "module": "components/avatar/avatar.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALAvatar",
+            "module": "components/avatar/avatar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/badge/badge.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-badge\n- **slot**: The badge content",
+          "name": "ALBadge",
+          "slots": [
+            {
+              "name": "",
+              "description": "The badge content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-badge'"
+            },
+            {
+              "kind": "field",
+              "name": "isDot",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "isDot boolean\n- Makes the badge a small dot only",
+              "attribute": "isDot"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'info' | 'success' | 'warning' | 'danger'"
+              },
+              "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "position",
+              "type": {
+                "text": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'"
+              },
+              "description": "Positions the badge absolutely to its parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right",
+              "attribute": "position"
+            },
+            {
+              "kind": "method",
+              "name": "handlePosition",
+              "description": "Handle position\n1. If a position is defined, then apply position: relative to the direct parent element"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "isDot",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "isDot boolean\n- Makes the badge a small dot only",
+              "fieldName": "isDot"
+            },
+            {
+              "name": "variant",
+              "type": {
+                "text": "'info' | 'success' | 'warning' | 'danger'"
+              },
+              "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+              "fieldName": "variant"
+            },
+            {
+              "name": "position",
+              "type": {
+                "text": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'"
+              },
+              "description": "Positions the badge absolutely to its parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right",
+              "fieldName": "position"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-badge",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALBadge",
+          "declaration": {
+            "name": "ALBadge",
+            "module": "components/badge/badge.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-badge",
+          "declaration": {
+            "name": "ALBadge",
+            "module": "components/badge/badge.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALBadge",
+            "module": "components/badge/badge.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.ts",
       "declarations": [
         {
@@ -372,16 +814,16 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/accordion-panel/accordion-panel.ts",
+      "path": "components/breadcrumbs-item/breadcrumbs-item.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-accordion-panel\n- **slot**: The accordion panel content",
-          "name": "ALAccordionPanel",
+          "description": "Component: al-breadcrumbs-item\n- **slot**: The breadcrumb item's content, typically text",
+          "name": "ALBreadcrumbsItem",
           "slots": [
             {
               "name": "",
-              "description": "The accordion panel content"
+              "description": "The breadcrumb item's content, typically text"
             }
           ],
           "members": [
@@ -392,183 +834,126 @@
                 "text": "string"
               },
               "static": true,
-              "default": "'al-accordion-panel'"
+              "default": "'al-breadcrumbs-item'"
             },
             {
               "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "iconChevronDownEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Active property\n1. Panel is open when set to true. Close when set to false",
-              "attribute": "isActive"
-            },
-            {
-              "kind": "field",
-              "name": "isDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Disabled property",
-              "attribute": "isDisabled"
-            },
-            {
-              "kind": "field",
-              "name": "isLast",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Is last?\n- Dynamically set by the ALAccordion\n- Removes the bottom border if it is the last item",
-              "attribute": "isLast"
-            },
-            {
-              "kind": "field",
-              "name": "idx",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "Index of the panel\n- Dynamically set by the ALAccordion",
-              "attribute": "idx"
-            },
-            {
-              "kind": "field",
-              "name": "ariaControls",
+              "name": "href",
               "type": {
                 "text": "string"
               },
-              "description": "Aria Controls attribute\n- Dynamically set for A11y",
-              "attribute": "ariaControls"
+              "description": "Link URL",
+              "attribute": "href"
             },
             {
               "kind": "field",
-              "name": "ariaLabelledBy",
+              "name": "target",
               "type": {
-                "text": "string"
+                "text": "'_blank' | '_self' | '_parent' | '_top'"
               },
-              "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
-              "attribute": "ariaLabelledBy"
+              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)",
+              "attribute": "target"
             },
             {
-              "kind": "method",
-              "name": "toggleActive",
-              "privacy": "public",
-              "description": "Set accordion panel active state\n1. Toggle the active state between true and false\n2. Open/close the panel based on isActive"
+              "kind": "field",
+              "name": "isCurrent",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Indicates if this the is the currently active breadcrumb item\n- **true** This is the current breadcrumb\n- **false** This is not the current breadcrumb",
+              "attribute": "isCurrent"
             },
             {
-              "kind": "method",
-              "name": "open",
-              "privacy": "public",
-              "description": "Open accordion panel\n1. Set isActive to true to show the panel\n2. Dispatch a custom event on close"
+              "kind": "field",
+              "name": "isTruncated",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Truncated attribute\n- Dynamically set by the ALBreadcrumbs\n- **true** The slotted content does not display in an <a></a> or <button></button>\n- **false** The slotted content does displays in an <a></a> or <button></button>",
+              "attribute": "isTruncated"
             },
             {
-              "kind": "method",
-              "name": "close",
-              "privacy": "public",
-              "description": "Close accordion panel\n1. Set isActive to false to hide the panel\n2. Dispatch a custom event on close"
-            }
-          ],
-          "events": [
-            {
-              "name": "onAccordionPanelOpen",
-              "description": ""
-            },
-            {
-              "name": "onAccordionPanelClose",
-              "description": ""
+              "kind": "field",
+              "name": "hasSeparator",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Indicates whether or not to add a separator icon after the breadcrumb item",
+              "attribute": "hasSeparator"
             }
           ],
           "attributes": [
             {
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Active property\n1. Panel is open when set to true. Close when set to false",
-              "fieldName": "isActive"
-            },
-            {
-              "name": "isDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Disabled property",
-              "fieldName": "isDisabled"
-            },
-            {
-              "name": "isLast",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Is last?\n- Dynamically set by the ALAccordion\n- Removes the bottom border if it is the last item",
-              "fieldName": "isLast"
-            },
-            {
-              "name": "idx",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "Index of the panel\n- Dynamically set by the ALAccordion",
-              "fieldName": "idx"
-            },
-            {
-              "name": "ariaControls",
+              "name": "href",
               "type": {
                 "text": "string"
               },
-              "description": "Aria Controls attribute\n- Dynamically set for A11y",
-              "fieldName": "ariaControls"
+              "description": "Link URL",
+              "fieldName": "href"
             },
             {
-              "name": "ariaLabelledBy",
+              "name": "target",
               "type": {
-                "text": "string"
+                "text": "'_blank' | '_self' | '_parent' | '_top'"
               },
-              "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
-              "fieldName": "ariaLabelledBy"
+              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)",
+              "fieldName": "target"
+            },
+            {
+              "name": "isCurrent",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Indicates if this the is the currently active breadcrumb item\n- **true** This is the current breadcrumb\n- **false** This is not the current breadcrumb",
+              "fieldName": "isCurrent"
+            },
+            {
+              "name": "isTruncated",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Truncated attribute\n- Dynamically set by the ALBreadcrumbs\n- **true** The slotted content does not display in an <a></a> or <button></button>\n- **false** The slotted content does displays in an <a></a> or <button></button>",
+              "fieldName": "isTruncated"
+            },
+            {
+              "name": "hasSeparator",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Indicates whether or not to add a separator icon after the breadcrumb item",
+              "fieldName": "hasSeparator"
             }
           ],
           "superclass": {
             "name": "ALElement",
             "module": "/components/ALElement"
           },
-          "tagName": "al-accordion-panel",
+          "tagName": "al-breadcrumbs-item",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "ALAccordionPanel",
+          "name": "ALBreadcrumbsItem",
           "declaration": {
-            "name": "ALAccordionPanel",
-            "module": "components/accordion-panel/accordion-panel.ts"
+            "name": "ALBreadcrumbsItem",
+            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "al-accordion-panel",
+          "name": "al-breadcrumbs-item",
           "declaration": {
-            "name": "ALAccordionPanel",
-            "module": "components/accordion-panel/accordion-panel.ts"
+            "name": "ALBreadcrumbsItem",
+            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
           }
         },
         {
           "kind": "custom-element-definition",
           "declaration": {
-            "name": "ALAccordionPanel",
-            "module": "components/accordion-panel/accordion-panel.ts"
+            "name": "ALBreadcrumbsItem",
+            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
           }
         }
       ]
@@ -775,391 +1160,6 @@
           "declaration": {
             "name": "ALBreadcrumbs",
             "module": "components/breadcrumbs/breadcrumbs.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/breadcrumbs-item/breadcrumbs-item.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-breadcrumbs-item\n- **slot**: The breadcrumb item's content, typically text",
-          "name": "ALBreadcrumbsItem",
-          "slots": [
-            {
-              "name": "",
-              "description": "The breadcrumb item's content, typically text"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-breadcrumbs-item'"
-            },
-            {
-              "kind": "field",
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "description": "Link URL",
-              "attribute": "href"
-            },
-            {
-              "kind": "field",
-              "name": "target",
-              "type": {
-                "text": "'_blank' | '_self' | '_parent' | '_top'"
-              },
-              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)",
-              "attribute": "target"
-            },
-            {
-              "kind": "field",
-              "name": "isCurrent",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Indicates if this the is the currently active breadcrumb item\n- **true** This is the current breadcrumb\n- **false** This is not the current breadcrumb",
-              "attribute": "isCurrent"
-            },
-            {
-              "kind": "field",
-              "name": "isTruncated",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Truncated attribute\n- Dynamically set by the ALBreadcrumbs\n- **true** The slotted content does not display in an <a></a> or <button></button>\n- **false** The slotted content does displays in an <a></a> or <button></button>",
-              "attribute": "isTruncated"
-            },
-            {
-              "kind": "field",
-              "name": "hasSeparator",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Indicates whether or not to add a separator icon after the breadcrumb item",
-              "attribute": "hasSeparator"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "description": "Link URL",
-              "fieldName": "href"
-            },
-            {
-              "name": "target",
-              "type": {
-                "text": "'_blank' | '_self' | '_parent' | '_top'"
-              },
-              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)",
-              "fieldName": "target"
-            },
-            {
-              "name": "isCurrent",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Indicates if this the is the currently active breadcrumb item\n- **true** This is the current breadcrumb\n- **false** This is not the current breadcrumb",
-              "fieldName": "isCurrent"
-            },
-            {
-              "name": "isTruncated",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Truncated attribute\n- Dynamically set by the ALBreadcrumbs\n- **true** The slotted content does not display in an <a></a> or <button></button>\n- **false** The slotted content does displays in an <a></a> or <button></button>",
-              "fieldName": "isTruncated"
-            },
-            {
-              "name": "hasSeparator",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Indicates whether or not to add a separator icon after the breadcrumb item",
-              "fieldName": "hasSeparator"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-breadcrumbs-item",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALBreadcrumbsItem",
-          "declaration": {
-            "name": "ALBreadcrumbsItem",
-            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-breadcrumbs-item",
-          "declaration": {
-            "name": "ALBreadcrumbsItem",
-            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALBreadcrumbsItem",
-            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/badge/badge.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-badge\n- **slot**: The badge content",
-          "name": "ALBadge",
-          "slots": [
-            {
-              "name": "",
-              "description": "The badge content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-badge'"
-            },
-            {
-              "kind": "field",
-              "name": "isDot",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "isDot boolean\n- Makes the badge a small dot only",
-              "attribute": "isDot"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'info' | 'success' | 'warning' | 'danger'"
-              },
-              "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "position",
-              "type": {
-                "text": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'"
-              },
-              "description": "Positions the badge absolutely to its parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right",
-              "attribute": "position"
-            },
-            {
-              "kind": "method",
-              "name": "handlePosition",
-              "description": "Handle position\n1. If a position is defined, then apply position: relative to the direct parent element"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "isDot",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "isDot boolean\n- Makes the badge a small dot only",
-              "fieldName": "isDot"
-            },
-            {
-              "name": "variant",
-              "type": {
-                "text": "'info' | 'success' | 'warning' | 'danger'"
-              },
-              "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
-              "fieldName": "variant"
-            },
-            {
-              "name": "position",
-              "type": {
-                "text": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'"
-              },
-              "description": "Positions the badge absolutely to its parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right",
-              "fieldName": "position"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-badge",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALBadge",
-          "declaration": {
-            "name": "ALBadge",
-            "module": "components/badge/badge.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-badge",
-          "declaration": {
-            "name": "ALBadge",
-            "module": "components/badge/badge.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALBadge",
-            "module": "components/badge/badge.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/avatar/avatar.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-avatar\n- **slot**: The avatar content",
-          "name": "ALAvatar",
-          "slots": [
-            {
-              "name": "",
-              "description": "The avatar content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-avatar'"
-            },
-            {
-              "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "badgeEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Avatar varaint\n- **default** Renders an avatar with an height & width of 40px\n- **sm** Renders an avatar with an height & width of 28px",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "hasBadge",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Has Badge?\n- If true, shows the badge on the outside of the avatar circle\n- If false, hides the badge",
-              "attribute": "hasBadge"
-            },
-            {
-              "kind": "field",
-              "name": "badgeVariant",
-              "type": {
-                "text": "'success' | 'warning' | 'danger'"
-              },
-              "description": "Badge state variant\n- **default** Displays a badge with the default state\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
-              "attribute": "badgeVariant"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Avatar varaint\n- **default** Renders an avatar with an height & width of 40px\n- **sm** Renders an avatar with an height & width of 28px",
-              "fieldName": "variant"
-            },
-            {
-              "name": "hasBadge",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Has Badge?\n- If true, shows the badge on the outside of the avatar circle\n- If false, hides the badge",
-              "fieldName": "hasBadge"
-            },
-            {
-              "name": "badgeVariant",
-              "type": {
-                "text": "'success' | 'warning' | 'danger'"
-              },
-              "description": "Badge state variant\n- **default** Displays a badge with the default state\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
-              "fieldName": "badgeVariant"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-avatar",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALAvatar",
-          "declaration": {
-            "name": "ALAvatar",
-            "module": "components/avatar/avatar.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-avatar",
-          "declaration": {
-            "name": "ALAvatar",
-            "module": "components/avatar/avatar.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALAvatar",
-            "module": "components/avatar/avatar.ts"
           }
         }
       ]
@@ -2869,134 +2869,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/chip-group/chip-group.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-chip-group\n- **slot**: The chip group content, a set of chips",
-          "name": "ALChipGroup",
-          "slots": [
-            {
-              "name": "",
-              "description": "The chip group content, a set of chips"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-chip-group'"
-            },
-            {
-              "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "chipEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "chipsVisible",
-              "type": {
-                "text": "number"
-              },
-              "description": "Set the number of visible chips",
-              "attribute": "chipsVisible"
-            },
-            {
-              "kind": "field",
-              "name": "chips",
-              "type": {
-                "text": "Array<ALChip>"
-              },
-              "description": "Query all the chips"
-            },
-            {
-              "kind": "field",
-              "name": "chipGroupCounter",
-              "type": {
-                "text": "ALChip"
-              },
-              "description": "Query the chip group counter"
-            },
-            {
-              "kind": "method",
-              "name": "setChipsVisible",
-              "description": "Set visible chips\n1. If a value for visible is greater than 1 but less than the total number of chips, then loop through all the chips.\n2. If the chip index is greater or equal to the visible value, then hide those chips.\n3. Set the text inside the counter chip to how many chips are hidden."
-            },
-            {
-              "kind": "method",
-              "name": "handleOnClick",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ],
-              "description": "Handle on click events\n1. Hide the counter chip when clicked\n2. Set all the chips to be active except any that have been dismissed, when the counter chip is clicked\n3. Dispatch a custom event"
-            }
-          ],
-          "events": [
-            {
-              "name": "onChipGroupExpand",
-              "description": ""
-            }
-          ],
-          "attributes": [
-            {
-              "name": "chipsVisible",
-              "type": {
-                "text": "number"
-              },
-              "description": "Set the number of visible chips",
-              "fieldName": "chipsVisible"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-chip-group",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALChipGroup",
-          "declaration": {
-            "name": "ALChipGroup",
-            "module": "components/chip-group/chip-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-chip-group",
-          "declaration": {
-            "name": "ALChipGroup",
-            "module": "components/chip-group/chip-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALChipGroup",
-            "module": "components/chip-group/chip-group.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/chip/chip.ts",
       "declarations": [
         {
@@ -3155,6 +3027,134 @@
           "declaration": {
             "name": "ALChip",
             "module": "components/chip/chip.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/chip-group/chip-group.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-chip-group\n- **slot**: The chip group content, a set of chips",
+          "name": "ALChipGroup",
+          "slots": [
+            {
+              "name": "",
+              "description": "The chip group content, a set of chips"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-chip-group'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "chipEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "chipsVisible",
+              "type": {
+                "text": "number"
+              },
+              "description": "Set the number of visible chips",
+              "attribute": "chipsVisible"
+            },
+            {
+              "kind": "field",
+              "name": "chips",
+              "type": {
+                "text": "Array<ALChip>"
+              },
+              "description": "Query all the chips"
+            },
+            {
+              "kind": "field",
+              "name": "chipGroupCounter",
+              "type": {
+                "text": "ALChip"
+              },
+              "description": "Query the chip group counter"
+            },
+            {
+              "kind": "method",
+              "name": "setChipsVisible",
+              "description": "Set visible chips\n1. If a value for visible is greater than 1 but less than the total number of chips, then loop through all the chips.\n2. If the chip index is greater or equal to the visible value, then hide those chips.\n3. Set the text inside the counter chip to how many chips are hidden."
+            },
+            {
+              "kind": "method",
+              "name": "handleOnClick",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ],
+              "description": "Handle on click events\n1. Hide the counter chip when clicked\n2. Set all the chips to be active except any that have been dismissed, when the counter chip is clicked\n3. Dispatch a custom event"
+            }
+          ],
+          "events": [
+            {
+              "name": "onChipGroupExpand",
+              "description": ""
+            }
+          ],
+          "attributes": [
+            {
+              "name": "chipsVisible",
+              "type": {
+                "text": "number"
+              },
+              "description": "Set the number of visible chips",
+              "fieldName": "chipsVisible"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-chip-group",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALChipGroup",
+          "declaration": {
+            "name": "ALChipGroup",
+            "module": "components/chip-group/chip-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-chip-group",
+          "declaration": {
+            "name": "ALChipGroup",
+            "module": "components/chip-group/chip-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALChipGroup",
+            "module": "components/chip-group/chip-group.ts"
           }
         }
       ]
@@ -6476,6 +6476,95 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/icon/icon.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-icon-[ICON_NAME]",
+          "name": "ALIcon",
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-icon'"
+            },
+            {
+              "kind": "field",
+              "name": "iconTitle",
+              "type": {
+                "text": "string"
+              },
+              "description": "Icon title",
+              "attribute": "iconTitle"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'"
+              },
+              "description": "Icon size\n- Default size is 16px\n- **xs** renders a smaller size than default (8px)\n- **sm** renders a smaller size than default (12px)\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)\n- **xxl** renders a larger size than the lg variant (36px)\n- **xxxl** renders a larger size than the lg variant (40px)",
+              "attribute": "size"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "iconTitle",
+              "type": {
+                "text": "string"
+              },
+              "description": "Icon title",
+              "fieldName": "iconTitle"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'"
+              },
+              "description": "Icon size\n- Default size is 16px\n- **xs** renders a smaller size than default (8px)\n- **sm** renders a smaller size than default (12px)\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)\n- **xxl** renders a larger size than the lg variant (36px)\n- **xxxl** renders a larger size than the lg variant (40px)",
+              "fieldName": "size"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-icon",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALIcon",
+          "declaration": {
+            "name": "ALIcon",
+            "module": "components/icon/icon.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-icon",
+          "declaration": {
+            "name": "ALIcon",
+            "module": "components/icon/icon.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALIcon",
+            "module": "components/icon/icon.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/input/input.ts",
       "declarations": [
         {
@@ -7015,95 +7104,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/icon/icon.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-icon-[ICON_NAME]",
-          "name": "ALIcon",
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-icon'"
-            },
-            {
-              "kind": "field",
-              "name": "iconTitle",
-              "type": {
-                "text": "string"
-              },
-              "description": "Icon title",
-              "attribute": "iconTitle"
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'"
-              },
-              "description": "Icon size\n- Default size is 16px\n- **xs** renders a smaller size than default (8px)\n- **sm** renders a smaller size than default (12px)\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)\n- **xxl** renders a larger size than the lg variant (36px)\n- **xxxl** renders a larger size than the lg variant (40px)",
-              "attribute": "size"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "iconTitle",
-              "type": {
-                "text": "string"
-              },
-              "description": "Icon title",
-              "fieldName": "iconTitle"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'"
-              },
-              "description": "Icon size\n- Default size is 16px\n- **xs** renders a smaller size than default (8px)\n- **sm** renders a smaller size than default (12px)\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)\n- **xxl** renders a larger size than the lg variant (36px)\n- **xxxl** renders a larger size than the lg variant (40px)",
-              "fieldName": "size"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-icon",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALIcon",
-          "declaration": {
-            "name": "ALIcon",
-            "module": "components/icon/icon.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-icon",
-          "declaration": {
-            "name": "ALIcon",
-            "module": "components/icon/icon.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALIcon",
-            "module": "components/icon/icon.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/input-stepper/input-stepper.ts",
       "declarations": [
         {
@@ -7549,6 +7549,59 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/layout-container/layout-container.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-layout-container",
+          "name": "ALLayoutContainer",
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-layout-container'"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-layout-container",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALLayoutContainer",
+          "declaration": {
+            "name": "ALLayoutContainer",
+            "module": "components/layout-container/layout-container.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-layout-container",
+          "declaration": {
+            "name": "ALLayoutContainer",
+            "module": "components/layout-container/layout-container.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALLayoutContainer",
+            "module": "components/layout-container/layout-container.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/layout/layout.ts",
       "declarations": [
         {
@@ -7638,197 +7691,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/list/list.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-list\n- **slot**: The list items",
-          "name": "ALList",
-          "slots": [
-            {
-              "name": "",
-              "description": "The list items"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-list'"
-            },
-            {
-              "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "behavior",
-              "type": {
-                "text": "'overflow'"
-              },
-              "description": "Behavior\n- **overflow** turns the list into an overflow list",
-              "attribute": "behavior"
-            },
-            {
-              "kind": "field",
-              "name": "orientation",
-              "type": {
-                "text": "'horizontal'"
-              },
-              "description": "Orientation\n- default renders a stacked list\n- **horizontal** renders the list side-by-side and wraps unless overflow is turned on",
-              "attribute": "orientation"
-            },
-            {
-              "kind": "field",
-              "name": "isStart",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "isStart state\n1) Controls the beginning gradient on the overflow list"
-            },
-            {
-              "kind": "field",
-              "name": "isEnd",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "isEnd state\n1) Controls the ending gradient on the overflow list"
-            },
-            {
-              "kind": "field",
-              "name": "listItems",
-              "type": {
-                "text": "Array<ALListItem>"
-              },
-              "description": "Query all the ALListItems's"
-            },
-            {
-              "kind": "method",
-              "name": "onScroll",
-              "description": "On overflow list inner scroll\n1) On scroll, if position from left is greater than 0, set isStart to false. Otherwise set isStart to true.\n2) On scroll, If last child is fully in the viewport, set isEnd to true. Otherwise, set isEnd to false."
-            },
-            {
-              "kind": "method",
-              "name": "setShadows",
-              "description": "Set right and left gradients on overflow list\n1) Target the overflow list items and calculate the width of the children + margin\n2) Get the total width of the children offscreen when items overflow\n3) If table width is less than or equal to overflow list width, remove all shadows\n4) If overflow list  inner scroll isn't all the way to the left or to the right, turn all shadows on\n5) If overflow list inner scroll left 2px is >= to width of table offscreen, turn off right shadow and turn left shadow on\n6) Else, set the right shadow to true and the left shadow to false\n7) Overflow list inner scrollLeft is off by 2px and needs that additional 2 pixels to remove the end shadow\nonce scrolled all the way to the right."
-            },
-            {
-              "kind": "method",
-              "name": "setIndentation"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "behavior",
-              "type": {
-                "text": "'overflow'"
-              },
-              "description": "Behavior\n- **overflow** turns the list into an overflow list",
-              "fieldName": "behavior"
-            },
-            {
-              "name": "orientation",
-              "type": {
-                "text": "'horizontal'"
-              },
-              "description": "Orientation\n- default renders a stacked list\n- **horizontal** renders the list side-by-side and wraps unless overflow is turned on",
-              "fieldName": "orientation"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-list",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALList",
-          "declaration": {
-            "name": "ALList",
-            "module": "components/list/list.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-list",
-          "declaration": {
-            "name": "ALList",
-            "module": "components/list/list.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALList",
-            "module": "components/list/list.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/layout-container/layout-container.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-layout-container",
-          "name": "ALLayoutContainer",
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-layout-container'"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-layout-container",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALLayoutContainer",
-          "declaration": {
-            "name": "ALLayoutContainer",
-            "module": "components/layout-container/layout-container.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-layout-container",
-          "declaration": {
-            "name": "ALLayoutContainer",
-            "module": "components/layout-container/layout-container.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALLayoutContainer",
-            "module": "components/layout-container/layout-container.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/layout-section/layout-section.ts",
       "declarations": [
         {
@@ -7876,186 +7738,6 @@
           "declaration": {
             "name": "ALLayoutSection",
             "module": "components/layout-section/layout-section.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/link/link.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-link\n- **slot**: The link text",
-          "name": "ALLink",
-          "slots": [
-            {
-              "name": "",
-              "description": "The link text"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-link'"
-            },
-            {
-              "kind": "field",
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "description": "The link URL",
-              "attribute": "href"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'xs' | 'sm' | 'lg'"
-              },
-              "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "target",
-              "type": {
-                "text": "'_blank' | '_self' | '_parent' | '_top'"
-              },
-              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
-              "attribute": "target"
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria label attribute\n- Optional aria-label for a11y\n- Most screen readers will read out loud the aria-label attribute in place of the link text. This is used for links that have text such as 'Learn more' or 'Read more'.",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "ariaLabelledBy",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria Labelled By attribute\n- Optional aria-labelledby for a11y\n- There may be instances where a nearby headline can act is the perfect label for a general link.",
-              "attribute": "ariaLabelledBy"
-            },
-            {
-              "kind": "field",
-              "name": "linkTitle",
-              "type": {
-                "text": "string"
-              },
-              "description": "Title attribute\n- Optional title for a11y\n- If a link opens a new window or performs an action, use the title attribute to provide a tooltip with additional information.",
-              "attribute": "linkTitle"
-            },
-            {
-              "kind": "field",
-              "name": "isDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Disabled attribute",
-              "attribute": "isDisabled"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "description": "The link URL",
-              "fieldName": "href"
-            },
-            {
-              "name": "variant",
-              "type": {
-                "text": "'xs' | 'sm' | 'lg'"
-              },
-              "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset",
-              "fieldName": "variant"
-            },
-            {
-              "name": "target",
-              "type": {
-                "text": "'_blank' | '_self' | '_parent' | '_top'"
-              },
-              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
-              "fieldName": "target"
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria label attribute\n- Optional aria-label for a11y\n- Most screen readers will read out loud the aria-label attribute in place of the link text. This is used for links that have text such as 'Learn more' or 'Read more'.",
-              "fieldName": "label"
-            },
-            {
-              "name": "ariaLabelledBy",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria Labelled By attribute\n- Optional aria-labelledby for a11y\n- There may be instances where a nearby headline can act is the perfect label for a general link.",
-              "fieldName": "ariaLabelledBy"
-            },
-            {
-              "name": "linkTitle",
-              "type": {
-                "text": "string"
-              },
-              "description": "Title attribute\n- Optional title for a11y\n- If a link opens a new window or performs an action, use the title attribute to provide a tooltip with additional information.",
-              "fieldName": "linkTitle"
-            },
-            {
-              "name": "isDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Disabled attribute",
-              "fieldName": "isDisabled"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-link",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALLink",
-          "declaration": {
-            "name": "ALLink",
-            "module": "components/link/link.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-link",
-          "declaration": {
-            "name": "ALLink",
-            "module": "components/link/link.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALLink",
-            "module": "components/link/link.ts"
           }
         }
       ]
@@ -8439,16 +8121,16 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/logo/logo.ts",
+      "path": "components/list/list.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-logo\n- **slot**: The component content",
-          "name": "ALLogo",
+          "description": "Component: al-list\n- **slot**: The list items",
+          "name": "ALList",
           "slots": [
             {
               "name": "",
-              "description": "The component content"
+              "description": "The list items"
             }
           ],
           "members": [
@@ -8459,77 +8141,298 @@
                 "text": "string"
               },
               "static": true,
-              "default": "'al-logo'"
+              "default": "'al-list'"
             },
             {
               "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'northright' | 'odyssey' | 'southleft'"
-              },
-              "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **odyssey** displays the Odyssey logo\n- **southleft** displays the Southleft logo",
-              "attribute": "variant"
+              "name": "elementMap",
+              "privacy": "private"
             },
             {
               "kind": "field",
-              "name": "href",
+              "name": "behavior",
               "type": {
-                "text": "string"
+                "text": "'overflow'"
               },
-              "default": "'/'",
-              "description": "The logo link URL",
-              "attribute": "href"
+              "description": "Behavior\n- **overflow** turns the list into an overflow list",
+              "attribute": "behavior"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal'"
+              },
+              "description": "Orientation\n- default renders a stacked list\n- **horizontal** renders the list side-by-side and wraps unless overflow is turned on",
+              "attribute": "orientation"
+            },
+            {
+              "kind": "field",
+              "name": "isStart",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "isStart state\n1) Controls the beginning gradient on the overflow list"
+            },
+            {
+              "kind": "field",
+              "name": "isEnd",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "isEnd state\n1) Controls the ending gradient on the overflow list"
+            },
+            {
+              "kind": "field",
+              "name": "listItems",
+              "type": {
+                "text": "Array<ALListItem>"
+              },
+              "description": "Query all the ALListItems's"
+            },
+            {
+              "kind": "method",
+              "name": "onScroll",
+              "description": "On overflow list inner scroll\n1) On scroll, if position from left is greater than 0, set isStart to false. Otherwise set isStart to true.\n2) On scroll, If last child is fully in the viewport, set isEnd to true. Otherwise, set isEnd to false."
+            },
+            {
+              "kind": "method",
+              "name": "setShadows",
+              "description": "Set right and left gradients on overflow list\n1) Target the overflow list items and calculate the width of the children + margin\n2) Get the total width of the children offscreen when items overflow\n3) If table width is less than or equal to overflow list width, remove all shadows\n4) If overflow list  inner scroll isn't all the way to the left or to the right, turn all shadows on\n5) If overflow list inner scroll left 2px is >= to width of table offscreen, turn off right shadow and turn left shadow on\n6) Else, set the right shadow to true and the left shadow to false\n7) Overflow list inner scrollLeft is off by 2px and needs that additional 2 pixels to remove the end shadow\nonce scrolled all the way to the right."
+            },
+            {
+              "kind": "method",
+              "name": "setIndentation"
             }
           ],
           "attributes": [
             {
-              "name": "variant",
+              "name": "behavior",
               "type": {
-                "text": "'northright' | 'odyssey' | 'southleft'"
+                "text": "'overflow'"
               },
-              "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **odyssey** displays the Odyssey logo\n- **southleft** displays the Southleft logo",
-              "fieldName": "variant"
+              "description": "Behavior\n- **overflow** turns the list into an overflow list",
+              "fieldName": "behavior"
             },
             {
-              "name": "href",
+              "name": "orientation",
               "type": {
-                "text": "string"
+                "text": "'horizontal'"
               },
-              "default": "'/'",
-              "description": "The logo link URL",
-              "fieldName": "href"
+              "description": "Orientation\n- default renders a stacked list\n- **horizontal** renders the list side-by-side and wraps unless overflow is turned on",
+              "fieldName": "orientation"
             }
           ],
           "superclass": {
             "name": "ALElement",
             "module": "/components/ALElement"
           },
-          "tagName": "al-logo",
+          "tagName": "al-list",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "ALLogo",
+          "name": "ALList",
           "declaration": {
-            "name": "ALLogo",
-            "module": "components/logo/logo.ts"
+            "name": "ALList",
+            "module": "components/list/list.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "al-logo",
+          "name": "al-list",
           "declaration": {
-            "name": "ALLogo",
-            "module": "components/logo/logo.ts"
+            "name": "ALList",
+            "module": "components/list/list.ts"
           }
         },
         {
           "kind": "custom-element-definition",
           "declaration": {
-            "name": "ALLogo",
-            "module": "components/logo/logo.ts"
+            "name": "ALList",
+            "module": "components/list/list.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/link/link.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-link\n- **slot**: The link text",
+          "name": "ALLink",
+          "slots": [
+            {
+              "name": "",
+              "description": "The link text"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-link'"
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "The link URL",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'xs' | 'sm' | 'lg'"
+              },
+              "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "'_blank' | '_self' | '_parent' | '_top'"
+              },
+              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria label attribute\n- Optional aria-label for a11y\n- Most screen readers will read out loud the aria-label attribute in place of the link text. This is used for links that have text such as 'Learn more' or 'Read more'.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Labelled By attribute\n- Optional aria-labelledby for a11y\n- There may be instances where a nearby headline can act is the perfect label for a general link.",
+              "attribute": "ariaLabelledBy"
+            },
+            {
+              "kind": "field",
+              "name": "linkTitle",
+              "type": {
+                "text": "string"
+              },
+              "description": "Title attribute\n- Optional title for a11y\n- If a link opens a new window or performs an action, use the title attribute to provide a tooltip with additional information.",
+              "attribute": "linkTitle"
+            },
+            {
+              "kind": "field",
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled attribute",
+              "attribute": "isDisabled"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "The link URL",
+              "fieldName": "href"
+            },
+            {
+              "name": "variant",
+              "type": {
+                "text": "'xs' | 'sm' | 'lg'"
+              },
+              "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset",
+              "fieldName": "variant"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "'_blank' | '_self' | '_parent' | '_top'"
+              },
+              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
+              "fieldName": "target"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria label attribute\n- Optional aria-label for a11y\n- Most screen readers will read out loud the aria-label attribute in place of the link text. This is used for links that have text such as 'Learn more' or 'Read more'.",
+              "fieldName": "label"
+            },
+            {
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Labelled By attribute\n- Optional aria-labelledby for a11y\n- There may be instances where a nearby headline can act is the perfect label for a general link.",
+              "fieldName": "ariaLabelledBy"
+            },
+            {
+              "name": "linkTitle",
+              "type": {
+                "text": "string"
+              },
+              "description": "Title attribute\n- Optional title for a11y\n- If a link opens a new window or performs an action, use the title attribute to provide a tooltip with additional information.",
+              "fieldName": "linkTitle"
+            },
+            {
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled attribute",
+              "fieldName": "isDisabled"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-link",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALLink",
+          "declaration": {
+            "name": "ALLink",
+            "module": "components/link/link.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-link",
+          "declaration": {
+            "name": "ALLink",
+            "module": "components/link/link.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALLink",
+            "module": "components/link/link.ts"
           }
         }
       ]
@@ -8879,6 +8782,103 @@
           "declaration": {
             "name": "ALMenu",
             "module": "components/menu/menu.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/logo/logo.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-logo\n- **slot**: The component content",
+          "name": "ALLogo",
+          "slots": [
+            {
+              "name": "",
+              "description": "The component content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-logo'"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'northright' | 'odyssey' | 'southleft'"
+              },
+              "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **odyssey** displays the Odyssey logo\n- **southleft** displays the Southleft logo",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "default": "'/'",
+              "description": "The logo link URL",
+              "attribute": "href"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'northright' | 'odyssey' | 'southleft'"
+              },
+              "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **odyssey** displays the Odyssey logo\n- **southleft** displays the Southleft logo",
+              "fieldName": "variant"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "default": "'/'",
+              "description": "The logo link URL",
+              "fieldName": "href"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-logo",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALLogo",
+          "declaration": {
+            "name": "ALLogo",
+            "module": "components/logo/logo.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-logo",
+          "declaration": {
+            "name": "ALLogo",
+            "module": "components/logo/logo.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALLogo",
+            "module": "components/logo/logo.ts"
           }
         }
       ]
@@ -13110,117 +13110,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/skeleton/skeleton.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-skeleton",
-          "name": "ALSkeleton",
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-skeleton'"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'circle' | 'square'"
-              },
-              "description": "Variant\n- **default** renders a rectangular skeleton\n- **circle** renders a round skeleton\n- **square** renders a sqaure skeleton",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "width",
-              "type": {
-                "text": "number"
-              },
-              "description": "The width of the skeleton\n- If no value is entered, it defaults to 100%",
-              "attribute": "width"
-            },
-            {
-              "kind": "field",
-              "name": "height",
-              "type": {
-                "text": "number"
-              },
-              "description": "The height of the skeleton\n- If no value is entered, it defaults to auto",
-              "attribute": "height"
-            },
-            {
-              "kind": "method",
-              "name": "setWidthHeight",
-              "description": "Set the width and height\n1. Add a custom property to adjust the width of the skeleton\n2. Add a custom property to adjust the height of the skeleton"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'circle' | 'square'"
-              },
-              "description": "Variant\n- **default** renders a rectangular skeleton\n- **circle** renders a round skeleton\n- **square** renders a sqaure skeleton",
-              "fieldName": "variant"
-            },
-            {
-              "name": "width",
-              "type": {
-                "text": "number"
-              },
-              "description": "The width of the skeleton\n- If no value is entered, it defaults to 100%",
-              "fieldName": "width"
-            },
-            {
-              "name": "height",
-              "type": {
-                "text": "number"
-              },
-              "description": "The height of the skeleton\n- If no value is entered, it defaults to auto",
-              "fieldName": "height"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-skeleton",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALSkeleton",
-          "declaration": {
-            "name": "ALSkeleton",
-            "module": "components/skeleton/skeleton.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-skeleton",
-          "declaration": {
-            "name": "ALSkeleton",
-            "module": "components/skeleton/skeleton.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALSkeleton",
-            "module": "components/skeleton/skeleton.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/spinner/spinner.ts",
       "declarations": [
         {
@@ -13568,6 +13457,117 @@
           "declaration": {
             "name": "ALStepperItem",
             "module": "components/stepper-item/stepper-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/skeleton/skeleton.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-skeleton",
+          "name": "ALSkeleton",
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-skeleton'"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'circle' | 'square'"
+              },
+              "description": "Variant\n- **default** renders a rectangular skeleton\n- **circle** renders a round skeleton\n- **square** renders a sqaure skeleton",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "The width of the skeleton\n- If no value is entered, it defaults to 100%",
+              "attribute": "width"
+            },
+            {
+              "kind": "field",
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "The height of the skeleton\n- If no value is entered, it defaults to auto",
+              "attribute": "height"
+            },
+            {
+              "kind": "method",
+              "name": "setWidthHeight",
+              "description": "Set the width and height\n1. Add a custom property to adjust the width of the skeleton\n2. Add a custom property to adjust the height of the skeleton"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'circle' | 'square'"
+              },
+              "description": "Variant\n- **default** renders a rectangular skeleton\n- **circle** renders a round skeleton\n- **square** renders a sqaure skeleton",
+              "fieldName": "variant"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "The width of the skeleton\n- If no value is entered, it defaults to 100%",
+              "fieldName": "width"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "The height of the skeleton\n- If no value is entered, it defaults to auto",
+              "fieldName": "height"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-skeleton",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALSkeleton",
+          "declaration": {
+            "name": "ALSkeleton",
+            "module": "components/skeleton/skeleton.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-skeleton",
+          "declaration": {
+            "name": "ALSkeleton",
+            "module": "components/skeleton/skeleton.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALSkeleton",
+            "module": "components/skeleton/skeleton.ts"
           }
         }
       ]
@@ -14147,84 +14147,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/text-passage/text-passage.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-text-passage\n- **slot**: The text passage content",
-          "name": "ALTextPassage",
-          "slots": [
-            {
-              "name": "",
-              "description": "The text passage content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-text-passage'"
-            },
-            {
-              "kind": "field",
-              "name": "maxWidth",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
-              "attribute": "maxWidth"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "maxWidth",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
-              "fieldName": "maxWidth"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-text-passage",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALTextPassage",
-          "declaration": {
-            "name": "ALTextPassage",
-            "module": "components/text-passage/text-passage.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-text-passage",
-          "declaration": {
-            "name": "ALTextPassage",
-            "module": "components/text-passage/text-passage.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALTextPassage",
-            "module": "components/text-passage/text-passage.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/textarea/textarea.ts",
       "declarations": [
         {
@@ -14687,6 +14609,84 @@
           "declaration": {
             "name": "ALTextarea",
             "module": "components/textarea/textarea.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/text-passage/text-passage.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-text-passage\n- **slot**: The text passage content",
+          "name": "ALTextPassage",
+          "slots": [
+            {
+              "name": "",
+              "description": "The text passage content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-text-passage'"
+            },
+            {
+              "kind": "field",
+              "name": "maxWidth",
+              "type": {
+                "text": "'sm'"
+              },
+              "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
+              "attribute": "maxWidth"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "maxWidth",
+              "type": {
+                "text": "'sm'"
+              },
+              "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
+              "fieldName": "maxWidth"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-text-passage",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALTextPassage",
+          "declaration": {
+            "name": "ALTextPassage",
+            "module": "components/text-passage/text-passage.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-text-passage",
+          "declaration": {
+            "name": "ALTextPassage",
+            "module": "components/text-passage/text-passage.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALTextPassage",
+            "module": "components/text-passage/text-passage.ts"
           }
         }
       ]
