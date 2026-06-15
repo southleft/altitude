@@ -10,7 +10,7 @@ set -euo pipefail
 cd "$(dirname "$0")/../.."
 
 WORKTREE="$(mktemp -d)/altitude-gate-test"
-BASE_REF="HEAD"
+BASE_REF="$(git rev-parse HEAD)"
 TRAP_TARGETS=()
 
 trap 'for d in "${TRAP_TARGETS[@]:-}"; do git worktree remove --force "$d" >/dev/null 2>&1 || true; rm -rf "$d"; done' EXIT
