@@ -330,7 +330,7 @@ export class ALPagination extends ALElement {
     /* 1 */
     let quotient = this.totalRecords;
     if (this.totalRecords > 6) {
-      let remainder = this.totalRecords % this.pageSize;
+      const remainder = this.totalRecords % this.pageSize;
       quotient = this.totalRecords / this.pageSize;
       /* 2 */
       if (remainder !== 0) {

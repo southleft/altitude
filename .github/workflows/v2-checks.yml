@@ -275,6 +275,19 @@ jobs:
       - name: Wrapper contract
         run: node scripts/check-react-wrapper-contract.js
 
+  lint:
+    name: T2.3.c ESLint 9 flat
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: yarn install --ignore-scripts --ignore-engines
+      - name: Lint repo
+        run: yarn lint
+
   storybook-test:
     name: T2.4 Storybook Test (interactions + a11y)
     runs-on: ubuntu-latest

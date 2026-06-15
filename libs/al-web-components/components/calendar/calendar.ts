@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import {
   addDays,
   addMonths,
@@ -395,7 +395,7 @@ export class ALCalendar extends ALElement {
       const selectedMonth = getMonth(this.navDate);
       let currentDate = startOfMonth(this.navDate);
       let firstDayOfMonth = (getDay(currentDate) + 7 - weekStart) % 7;
-      let weekDays = [];
+      const weekDays = [];
       /* 1 */
       while (firstDayOfMonth > 0) {
         weekDays.push({ value: null, available: false });

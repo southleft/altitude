@@ -215,7 +215,7 @@ export class ALProgress extends ALElement {
     const elapsed = now - this.startTimestamp;
     /* 2 */
     const durationMs = this.duration * 1000;
-    let newProgress = this.isReversed
+    const newProgress = this.isReversed
       ? this.initialProgress - (elapsed / durationMs) * this.initialProgress
       : (elapsed / durationMs) * this.endProgress;
     /* 3 */

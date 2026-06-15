@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import { TemplateResult, unsafeCSS } from 'lit';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { property, query, queryAssignedElements } from 'lit/decorators.js';
