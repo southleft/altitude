@@ -120,6 +120,209 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/accordion-panel/accordion-panel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-accordion-panel\n- **slot**: The accordion panel content",
+          "name": "ALAccordionPanel",
+          "slots": [
+            {
+              "name": "",
+              "description": "The accordion panel content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-accordion-panel'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconChevronDownEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Active property\n1. Panel is open when set to true. Close when set to false",
+              "attribute": "isActive"
+            },
+            {
+              "kind": "field",
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled property",
+              "attribute": "isDisabled"
+            },
+            {
+              "kind": "field",
+              "name": "isLast",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Is last?\n- Dynamically set by the ALAccordion\n- Removes the bottom border if it is the last item",
+              "attribute": "isLast"
+            },
+            {
+              "kind": "field",
+              "name": "idx",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Index of the panel\n- Dynamically set by the ALAccordion",
+              "attribute": "idx"
+            },
+            {
+              "kind": "field",
+              "name": "ariaControls",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Controls attribute\n- Dynamically set for A11y",
+              "attribute": "ariaControls"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+              "attribute": "ariaLabelledBy"
+            },
+            {
+              "kind": "method",
+              "name": "toggleActive",
+              "privacy": "public",
+              "description": "Set accordion panel active state\n1. Toggle the active state between true and false\n2. Open/close the panel based on isActive"
+            },
+            {
+              "kind": "method",
+              "name": "open",
+              "privacy": "public",
+              "description": "Open accordion panel\n1. Set isActive to true to show the panel\n2. Dispatch a custom event on close"
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "privacy": "public",
+              "description": "Close accordion panel\n1. Set isActive to false to hide the panel\n2. Dispatch a custom event on close"
+            }
+          ],
+          "events": [
+            {
+              "name": "onAccordionPanelOpen",
+              "description": ""
+            },
+            {
+              "name": "onAccordionPanelClose",
+              "description": ""
+            }
+          ],
+          "attributes": [
+            {
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Active property\n1. Panel is open when set to true. Close when set to false",
+              "fieldName": "isActive"
+            },
+            {
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled property",
+              "fieldName": "isDisabled"
+            },
+            {
+              "name": "isLast",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Is last?\n- Dynamically set by the ALAccordion\n- Removes the bottom border if it is the last item",
+              "fieldName": "isLast"
+            },
+            {
+              "name": "idx",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Index of the panel\n- Dynamically set by the ALAccordion",
+              "fieldName": "idx"
+            },
+            {
+              "name": "ariaControls",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Controls attribute\n- Dynamically set for A11y",
+              "fieldName": "ariaControls"
+            },
+            {
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+              "fieldName": "ariaLabelledBy"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-accordion-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALAccordionPanel",
+          "declaration": {
+            "name": "ALAccordionPanel",
+            "module": "components/accordion-panel/accordion-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-accordion-panel",
+          "declaration": {
+            "name": "ALAccordionPanel",
+            "module": "components/accordion-panel/accordion-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALAccordionPanel",
+            "module": "components/accordion-panel/accordion-panel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.ts",
       "declarations": [
         {
@@ -372,209 +575,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/accordion-panel/accordion-panel.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-accordion-panel\n- **slot**: The accordion panel content",
-          "name": "ALAccordionPanel",
-          "slots": [
-            {
-              "name": "",
-              "description": "The accordion panel content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-accordion-panel'"
-            },
-            {
-              "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "iconChevronDownEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Active property\n1. Panel is open when set to true. Close when set to false",
-              "attribute": "isActive"
-            },
-            {
-              "kind": "field",
-              "name": "isDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Disabled property",
-              "attribute": "isDisabled"
-            },
-            {
-              "kind": "field",
-              "name": "isLast",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Is last?\n- Dynamically set by the ALAccordion\n- Removes the bottom border if it is the last item",
-              "attribute": "isLast"
-            },
-            {
-              "kind": "field",
-              "name": "idx",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "Index of the panel\n- Dynamically set by the ALAccordion",
-              "attribute": "idx"
-            },
-            {
-              "kind": "field",
-              "name": "ariaControls",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria Controls attribute\n- Dynamically set for A11y",
-              "attribute": "ariaControls"
-            },
-            {
-              "kind": "field",
-              "name": "ariaLabelledBy",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
-              "attribute": "ariaLabelledBy"
-            },
-            {
-              "kind": "method",
-              "name": "toggleActive",
-              "privacy": "public",
-              "description": "Set accordion panel active state\n1. Toggle the active state between true and false\n2. Open/close the panel based on isActive"
-            },
-            {
-              "kind": "method",
-              "name": "open",
-              "privacy": "public",
-              "description": "Open accordion panel\n1. Set isActive to true to show the panel\n2. Dispatch a custom event on close"
-            },
-            {
-              "kind": "method",
-              "name": "close",
-              "privacy": "public",
-              "description": "Close accordion panel\n1. Set isActive to false to hide the panel\n2. Dispatch a custom event on close"
-            }
-          ],
-          "events": [
-            {
-              "name": "onAccordionPanelOpen",
-              "description": ""
-            },
-            {
-              "name": "onAccordionPanelClose",
-              "description": ""
-            }
-          ],
-          "attributes": [
-            {
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Active property\n1. Panel is open when set to true. Close when set to false",
-              "fieldName": "isActive"
-            },
-            {
-              "name": "isDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Disabled property",
-              "fieldName": "isDisabled"
-            },
-            {
-              "name": "isLast",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Is last?\n- Dynamically set by the ALAccordion\n- Removes the bottom border if it is the last item",
-              "fieldName": "isLast"
-            },
-            {
-              "name": "idx",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "Index of the panel\n- Dynamically set by the ALAccordion",
-              "fieldName": "idx"
-            },
-            {
-              "name": "ariaControls",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria Controls attribute\n- Dynamically set for A11y",
-              "fieldName": "ariaControls"
-            },
-            {
-              "name": "ariaLabelledBy",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
-              "fieldName": "ariaLabelledBy"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-accordion-panel",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALAccordionPanel",
-          "declaration": {
-            "name": "ALAccordionPanel",
-            "module": "components/accordion-panel/accordion-panel.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-accordion-panel",
-          "declaration": {
-            "name": "ALAccordionPanel",
-            "module": "components/accordion-panel/accordion-panel.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALAccordionPanel",
-            "module": "components/accordion-panel/accordion-panel.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/avatar/avatar.ts",
       "declarations": [
         {
@@ -697,16 +697,16 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/badge/badge.ts",
+      "path": "components/breadcrumbs-item/breadcrumbs-item.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-badge\n- **slot**: The badge content",
-          "name": "ALBadge",
+          "description": "Component: al-breadcrumbs-item\n- **slot**: The breadcrumb item's content, typically text",
+          "name": "ALBreadcrumbsItem",
           "slots": [
             {
               "name": "",
-              "description": "The badge content"
+              "description": "The breadcrumb item's content, typically text"
             }
           ],
           "members": [
@@ -717,97 +717,126 @@
                 "text": "string"
               },
               "static": true,
-              "default": "'al-badge'"
+              "default": "'al-breadcrumbs-item'"
             },
             {
               "kind": "field",
-              "name": "isDot",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Link URL",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "'_blank' | '_self' | '_parent' | '_top'"
+              },
+              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)",
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "isCurrent",
               "type": {
                 "text": "boolean"
               },
-              "description": "isDot boolean\n- Makes the badge a small dot only",
-              "attribute": "isDot"
+              "description": "Indicates if this the is the currently active breadcrumb item\n- **true** This is the current breadcrumb\n- **false** This is not the current breadcrumb",
+              "attribute": "isCurrent"
             },
             {
               "kind": "field",
-              "name": "variant",
+              "name": "isTruncated",
               "type": {
-                "text": "'info' | 'success' | 'warning' | 'danger'"
+                "text": "boolean"
               },
-              "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
-              "attribute": "variant"
+              "description": "Truncated attribute\n- Dynamically set by the ALBreadcrumbs\n- **true** The slotted content does not display in an <a></a> or <button></button>\n- **false** The slotted content does displays in an <a></a> or <button></button>",
+              "attribute": "isTruncated"
             },
             {
               "kind": "field",
-              "name": "position",
+              "name": "hasSeparator",
               "type": {
-                "text": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'"
+                "text": "boolean"
               },
-              "description": "Positions the badge absolutely to its parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right",
-              "attribute": "position"
-            },
-            {
-              "kind": "method",
-              "name": "handlePosition",
-              "description": "Handle position\n1. If a position is defined, then apply position: relative to the direct parent element"
+              "description": "Indicates whether or not to add a separator icon after the breadcrumb item",
+              "attribute": "hasSeparator"
             }
           ],
           "attributes": [
             {
-              "name": "isDot",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Link URL",
+              "fieldName": "href"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "'_blank' | '_self' | '_parent' | '_top'"
+              },
+              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)",
+              "fieldName": "target"
+            },
+            {
+              "name": "isCurrent",
               "type": {
                 "text": "boolean"
               },
-              "description": "isDot boolean\n- Makes the badge a small dot only",
-              "fieldName": "isDot"
+              "description": "Indicates if this the is the currently active breadcrumb item\n- **true** This is the current breadcrumb\n- **false** This is not the current breadcrumb",
+              "fieldName": "isCurrent"
             },
             {
-              "name": "variant",
+              "name": "isTruncated",
               "type": {
-                "text": "'info' | 'success' | 'warning' | 'danger'"
+                "text": "boolean"
               },
-              "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
-              "fieldName": "variant"
+              "description": "Truncated attribute\n- Dynamically set by the ALBreadcrumbs\n- **true** The slotted content does not display in an <a></a> or <button></button>\n- **false** The slotted content does displays in an <a></a> or <button></button>",
+              "fieldName": "isTruncated"
             },
             {
-              "name": "position",
+              "name": "hasSeparator",
               "type": {
-                "text": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'"
+                "text": "boolean"
               },
-              "description": "Positions the badge absolutely to its parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right",
-              "fieldName": "position"
+              "description": "Indicates whether or not to add a separator icon after the breadcrumb item",
+              "fieldName": "hasSeparator"
             }
           ],
           "superclass": {
             "name": "ALElement",
             "module": "/components/ALElement"
           },
-          "tagName": "al-badge",
+          "tagName": "al-breadcrumbs-item",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "ALBadge",
+          "name": "ALBreadcrumbsItem",
           "declaration": {
-            "name": "ALBadge",
-            "module": "components/badge/badge.ts"
+            "name": "ALBreadcrumbsItem",
+            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "al-badge",
+          "name": "al-breadcrumbs-item",
           "declaration": {
-            "name": "ALBadge",
-            "module": "components/badge/badge.ts"
+            "name": "ALBreadcrumbsItem",
+            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
           }
         },
         {
           "kind": "custom-element-definition",
           "declaration": {
-            "name": "ALBadge",
-            "module": "components/badge/badge.ts"
+            "name": "ALBreadcrumbsItem",
+            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
           }
         }
       ]
@@ -1020,16 +1049,16 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/breadcrumbs-item/breadcrumbs-item.ts",
+      "path": "components/badge/badge.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-breadcrumbs-item\n- **slot**: The breadcrumb item's content, typically text",
-          "name": "ALBreadcrumbsItem",
+          "description": "Component: al-badge\n- **slot**: The badge content",
+          "name": "ALBadge",
           "slots": [
             {
               "name": "",
-              "description": "The breadcrumb item's content, typically text"
+              "description": "The badge content"
             }
           ],
           "members": [
@@ -1040,126 +1069,97 @@
                 "text": "string"
               },
               "static": true,
-              "default": "'al-breadcrumbs-item'"
+              "default": "'al-badge'"
             },
             {
               "kind": "field",
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "description": "Link URL",
-              "attribute": "href"
-            },
-            {
-              "kind": "field",
-              "name": "target",
-              "type": {
-                "text": "'_blank' | '_self' | '_parent' | '_top'"
-              },
-              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)",
-              "attribute": "target"
-            },
-            {
-              "kind": "field",
-              "name": "isCurrent",
+              "name": "isDot",
               "type": {
                 "text": "boolean"
               },
-              "description": "Indicates if this the is the currently active breadcrumb item\n- **true** This is the current breadcrumb\n- **false** This is not the current breadcrumb",
-              "attribute": "isCurrent"
+              "description": "isDot boolean\n- Makes the badge a small dot only",
+              "attribute": "isDot"
             },
             {
               "kind": "field",
-              "name": "isTruncated",
+              "name": "variant",
               "type": {
-                "text": "boolean"
+                "text": "'info' | 'success' | 'warning' | 'danger'"
               },
-              "description": "Truncated attribute\n- Dynamically set by the ALBreadcrumbs\n- **true** The slotted content does not display in an <a></a> or <button></button>\n- **false** The slotted content does displays in an <a></a> or <button></button>",
-              "attribute": "isTruncated"
+              "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+              "attribute": "variant"
             },
             {
               "kind": "field",
-              "name": "hasSeparator",
+              "name": "position",
               "type": {
-                "text": "boolean"
+                "text": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'"
               },
-              "description": "Indicates whether or not to add a separator icon after the breadcrumb item",
-              "attribute": "hasSeparator"
+              "description": "Positions the badge absolutely to its parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right",
+              "attribute": "position"
+            },
+            {
+              "kind": "method",
+              "name": "handlePosition",
+              "description": "Handle position\n1. If a position is defined, then apply position: relative to the direct parent element"
             }
           ],
           "attributes": [
             {
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "description": "Link URL",
-              "fieldName": "href"
-            },
-            {
-              "name": "target",
-              "type": {
-                "text": "'_blank' | '_self' | '_parent' | '_top'"
-              },
-              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)",
-              "fieldName": "target"
-            },
-            {
-              "name": "isCurrent",
+              "name": "isDot",
               "type": {
                 "text": "boolean"
               },
-              "description": "Indicates if this the is the currently active breadcrumb item\n- **true** This is the current breadcrumb\n- **false** This is not the current breadcrumb",
-              "fieldName": "isCurrent"
+              "description": "isDot boolean\n- Makes the badge a small dot only",
+              "fieldName": "isDot"
             },
             {
-              "name": "isTruncated",
+              "name": "variant",
               "type": {
-                "text": "boolean"
+                "text": "'info' | 'success' | 'warning' | 'danger'"
               },
-              "description": "Truncated attribute\n- Dynamically set by the ALBreadcrumbs\n- **true** The slotted content does not display in an <a></a> or <button></button>\n- **false** The slotted content does displays in an <a></a> or <button></button>",
-              "fieldName": "isTruncated"
+              "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+              "fieldName": "variant"
             },
             {
-              "name": "hasSeparator",
+              "name": "position",
               "type": {
-                "text": "boolean"
+                "text": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'"
               },
-              "description": "Indicates whether or not to add a separator icon after the breadcrumb item",
-              "fieldName": "hasSeparator"
+              "description": "Positions the badge absolutely to its parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right",
+              "fieldName": "position"
             }
           ],
           "superclass": {
             "name": "ALElement",
             "module": "/components/ALElement"
           },
-          "tagName": "al-breadcrumbs-item",
+          "tagName": "al-badge",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "ALBreadcrumbsItem",
+          "name": "ALBadge",
           "declaration": {
-            "name": "ALBreadcrumbsItem",
-            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
+            "name": "ALBadge",
+            "module": "components/badge/badge.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "al-breadcrumbs-item",
+          "name": "al-badge",
           "declaration": {
-            "name": "ALBreadcrumbsItem",
-            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
+            "name": "ALBadge",
+            "module": "components/badge/badge.ts"
           }
         },
         {
           "kind": "custom-element-definition",
           "declaration": {
-            "name": "ALBreadcrumbsItem",
-            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
+            "name": "ALBadge",
+            "module": "components/badge/badge.ts"
           }
         }
       ]
@@ -5129,122 +5129,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/dropdown-panel/dropdown-panel.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-dropdown-panel\n- **slot**: The dropdown panel content",
-          "name": "ALDropdownPanel",
-          "slots": [
-            {
-              "name": "",
-              "description": "The dropdown panel content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-dropdown-panel'"
-            },
-            {
-              "kind": "field",
-              "name": "hasScroll",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Adds a max height and scrolling of the panel",
-              "attribute": "hasScroll"
-            },
-            {
-              "kind": "field",
-              "name": "hasHeader",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Changes styling on panel for variant with header",
-              "attribute": "hasHeader"
-            },
-            {
-              "kind": "field",
-              "name": "hasFooter",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Changes styling on panel for variant with footer",
-              "attribute": "hasFooter"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "hasScroll",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Adds a max height and scrolling of the panel",
-              "fieldName": "hasScroll"
-            },
-            {
-              "name": "hasHeader",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Changes styling on panel for variant with header",
-              "fieldName": "hasHeader"
-            },
-            {
-              "name": "hasFooter",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Changes styling on panel for variant with footer",
-              "fieldName": "hasFooter"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-dropdown-panel",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALDropdownPanel",
-          "declaration": {
-            "name": "ALDropdownPanel",
-            "module": "components/dropdown-panel/dropdown-panel.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-dropdown-panel",
-          "declaration": {
-            "name": "ALDropdownPanel",
-            "module": "components/dropdown-panel/dropdown-panel.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALDropdownPanel",
-            "module": "components/dropdown-panel/dropdown-panel.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/drawer/drawer.ts",
       "declarations": [
         {
@@ -5520,6 +5404,122 @@
           "declaration": {
             "name": "ALDrawer",
             "module": "components/drawer/drawer.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/dropdown-panel/dropdown-panel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-dropdown-panel\n- **slot**: The dropdown panel content",
+          "name": "ALDropdownPanel",
+          "slots": [
+            {
+              "name": "",
+              "description": "The dropdown panel content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-dropdown-panel'"
+            },
+            {
+              "kind": "field",
+              "name": "hasScroll",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Adds a max height and scrolling of the panel",
+              "attribute": "hasScroll"
+            },
+            {
+              "kind": "field",
+              "name": "hasHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Changes styling on panel for variant with header",
+              "attribute": "hasHeader"
+            },
+            {
+              "kind": "field",
+              "name": "hasFooter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Changes styling on panel for variant with footer",
+              "attribute": "hasFooter"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "hasScroll",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Adds a max height and scrolling of the panel",
+              "fieldName": "hasScroll"
+            },
+            {
+              "name": "hasHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Changes styling on panel for variant with header",
+              "fieldName": "hasHeader"
+            },
+            {
+              "name": "hasFooter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Changes styling on panel for variant with footer",
+              "fieldName": "hasFooter"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-dropdown-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALDropdownPanel",
+          "declaration": {
+            "name": "ALDropdownPanel",
+            "module": "components/dropdown-panel/dropdown-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-dropdown-panel",
+          "declaration": {
+            "name": "ALDropdownPanel",
+            "module": "components/dropdown-panel/dropdown-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALDropdownPanel",
+            "module": "components/dropdown-panel/dropdown-panel.ts"
           }
         }
       ]
@@ -13312,102 +13312,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/stepper/stepper.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-stepper\n- **slot**: The stepper content, a set of stepper items",
-          "name": "ALStepper",
-          "slots": [
-            {
-              "name": "",
-              "description": "The stepper content, a set of stepper items"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-stepper'"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'vertical'"
-              },
-              "description": "Variant\n- **default** renders a Stepper with a horizontal layout\n- **vertical** renders a Stepper with a vertical layout",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "stepperItems",
-              "type": {
-                "text": "Array<ALStepperItem>"
-              },
-              "description": "Query the Stepper item components within the Stepper"
-            },
-            {
-              "kind": "method",
-              "name": "setStepNumber",
-              "description": "Set step number\n1. Loop through all the ALStepperItem's and set the step number based on the index\n2. Check if it's the last item in the array and set the isLast property"
-            },
-            {
-              "kind": "method",
-              "name": "setVerticalItems",
-              "description": "Set vertical items\n1. If the varient is equal to vertical, set the ALStepperItem's to vertical as well"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'vertical'"
-              },
-              "description": "Variant\n- **default** renders a Stepper with a horizontal layout\n- **vertical** renders a Stepper with a vertical layout",
-              "fieldName": "variant"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-stepper",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALStepper",
-          "declaration": {
-            "name": "ALStepper",
-            "module": "components/stepper/stepper.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-stepper",
-          "declaration": {
-            "name": "ALStepper",
-            "module": "components/stepper/stepper.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALStepper",
-            "module": "components/stepper/stepper.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/stepper-item/stepper-item.ts",
       "declarations": [
         {
@@ -13568,6 +13472,102 @@
           "declaration": {
             "name": "ALStepperItem",
             "module": "components/stepper-item/stepper-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/stepper/stepper.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-stepper\n- **slot**: The stepper content, a set of stepper items",
+          "name": "ALStepper",
+          "slots": [
+            {
+              "name": "",
+              "description": "The stepper content, a set of stepper items"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-stepper'"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'vertical'"
+              },
+              "description": "Variant\n- **default** renders a Stepper with a horizontal layout\n- **vertical** renders a Stepper with a vertical layout",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "stepperItems",
+              "type": {
+                "text": "Array<ALStepperItem>"
+              },
+              "description": "Query the Stepper item components within the Stepper"
+            },
+            {
+              "kind": "method",
+              "name": "setStepNumber",
+              "description": "Set step number\n1. Loop through all the ALStepperItem's and set the step number based on the index\n2. Check if it's the last item in the array and set the isLast property"
+            },
+            {
+              "kind": "method",
+              "name": "setVerticalItems",
+              "description": "Set vertical items\n1. If the varient is equal to vertical, set the ALStepperItem's to vertical as well"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'vertical'"
+              },
+              "description": "Variant\n- **default** renders a Stepper with a horizontal layout\n- **vertical** renders a Stepper with a vertical layout",
+              "fieldName": "variant"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-stepper",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALStepper",
+          "declaration": {
+            "name": "ALStepper",
+            "module": "components/stepper/stepper.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-stepper",
+          "declaration": {
+            "name": "ALStepper",
+            "module": "components/stepper/stepper.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALStepper",
+            "module": "components/stepper/stepper.ts"
           }
         }
       ]
@@ -15905,6 +15905,152 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/toggle-button-group/toggle-button-group.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-toggle-button-group\n- **slot**: A set of toggle buttons",
+          "name": "ALToggleButtonGroup",
+          "slots": [
+            {
+              "name": "",
+              "description": "A set of toggle buttons"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-toggle-button-group'"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'background'"
+              },
+              "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'vertical'"
+              },
+              "description": "Orientation\n- **default** renders the toggle button's in a horizontal row\n- **vertical** renders the toggle button's in a vertical row",
+              "attribute": "orientation"
+            },
+            {
+              "kind": "field",
+              "name": "gap",
+              "type": {
+                "text": "'sm'"
+              },
+              "description": "Gap\n- **default** adds no gap between the toggle buttons\n- **sm** adds a 16px gap between the toggle buttons",
+              "attribute": "gap"
+            },
+            {
+              "kind": "field",
+              "name": "selectedItem",
+              "type": {
+                "text": "ALToggleButton"
+              },
+              "description": "Selected item\n- The currently selected Toggle Button in the group"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnToggleButtonSelect",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "ALToggleButton"
+                  }
+                }
+              ],
+              "description": "Handle when a Toggle Button in the group is selected\n1. Set the previously selected item's isSelected state to false\n2. Store the newly selected item on the toggle button's state"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnClickOutside",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ],
+              "description": "Handles the click event outside the component:\n1. Check if the toggle button is selected\n2. Determine if the click occurred inside the selected toggle button\n3. Check if the click occurred outside the selected toggle button\n4. Close the toggle button if the click occurred outside it"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'background'"
+              },
+              "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles",
+              "fieldName": "variant"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'vertical'"
+              },
+              "description": "Orientation\n- **default** renders the toggle button's in a horizontal row\n- **vertical** renders the toggle button's in a vertical row",
+              "fieldName": "orientation"
+            },
+            {
+              "name": "gap",
+              "type": {
+                "text": "'sm'"
+              },
+              "description": "Gap\n- **default** adds no gap between the toggle buttons\n- **sm** adds a 16px gap between the toggle buttons",
+              "fieldName": "gap"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-toggle-button-group",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALToggleButtonGroup",
+          "declaration": {
+            "name": "ALToggleButtonGroup",
+            "module": "components/toggle-button-group/toggle-button-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-toggle-button-group",
+          "declaration": {
+            "name": "ALToggleButtonGroup",
+            "module": "components/toggle-button-group/toggle-button-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALToggleButtonGroup",
+            "module": "components/toggle-button-group/toggle-button-group.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/toggle-button/toggle-button.ts",
       "declarations": [
         {
@@ -16139,152 +16285,6 @@
           "declaration": {
             "name": "ALToggleButton",
             "module": "components/toggle-button/toggle-button.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/toggle-button-group/toggle-button-group.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-toggle-button-group\n- **slot**: A set of toggle buttons",
-          "name": "ALToggleButtonGroup",
-          "slots": [
-            {
-              "name": "",
-              "description": "A set of toggle buttons"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-toggle-button-group'"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'background'"
-              },
-              "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "orientation",
-              "type": {
-                "text": "'vertical'"
-              },
-              "description": "Orientation\n- **default** renders the toggle button's in a horizontal row\n- **vertical** renders the toggle button's in a vertical row",
-              "attribute": "orientation"
-            },
-            {
-              "kind": "field",
-              "name": "gap",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Gap\n- **default** adds no gap between the toggle buttons\n- **sm** adds a 16px gap between the toggle buttons",
-              "attribute": "gap"
-            },
-            {
-              "kind": "field",
-              "name": "selectedItem",
-              "type": {
-                "text": "ALToggleButton"
-              },
-              "description": "Selected item\n- The currently selected Toggle Button in the group"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnToggleButtonSelect",
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "ALToggleButton"
-                  }
-                }
-              ],
-              "description": "Handle when a Toggle Button in the group is selected\n1. Set the previously selected item's isSelected state to false\n2. Store the newly selected item on the toggle button's state"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnClickOutside",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ],
-              "description": "Handles the click event outside the component:\n1. Check if the toggle button is selected\n2. Determine if the click occurred inside the selected toggle button\n3. Check if the click occurred outside the selected toggle button\n4. Close the toggle button if the click occurred outside it"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'background'"
-              },
-              "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles",
-              "fieldName": "variant"
-            },
-            {
-              "name": "orientation",
-              "type": {
-                "text": "'vertical'"
-              },
-              "description": "Orientation\n- **default** renders the toggle button's in a horizontal row\n- **vertical** renders the toggle button's in a vertical row",
-              "fieldName": "orientation"
-            },
-            {
-              "name": "gap",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Gap\n- **default** adds no gap between the toggle buttons\n- **sm** adds a 16px gap between the toggle buttons",
-              "fieldName": "gap"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-toggle-button-group",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALToggleButtonGroup",
-          "declaration": {
-            "name": "ALToggleButtonGroup",
-            "module": "components/toggle-button-group/toggle-button-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-toggle-button-group",
-          "declaration": {
-            "name": "ALToggleButtonGroup",
-            "module": "components/toggle-button-group/toggle-button-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALToggleButtonGroup",
-            "module": "components/toggle-button-group/toggle-button-group.ts"
           }
         }
       ]
@@ -16560,6 +16560,524 @@
           "declaration": {
             "name": "ALTooltip",
             "module": "components/tooltip/tooltip.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/add.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/add.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/attachment.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/attachment.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/bell.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/bell.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/bookmark.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/bookmark.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/calendar.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/calendar.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/check.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/check.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/chevron-down.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/chevron-down.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/chevron-left.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/chevron-left.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/chevron-right.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/chevron-right.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/chevron-up.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/chevron-up.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/clock.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/clock.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/close.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/close.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/copy.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/copy.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/document.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/document.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/dots-horizontal.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/dots-horizontal.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/dots-vertical.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/dots-vertical.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/emoji.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/emoji.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/filter.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/filter.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/help.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/help.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/home.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/home.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/info.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/info.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/layout-masonry.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/layout-masonry.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/list.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/list.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/menu.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/menu.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/minus.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/minus.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/pin.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/pin.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/search.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/search.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/send.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/send.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/settings.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/settings.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/sign-in.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/sign-in.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/sign-out.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/sign-out.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/star.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/star.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/success.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/success.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/support.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/support.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/user.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/user.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/warning-circle.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/warning-circle.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/warning-triangle.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/warning-triangle.svg.ts"
           }
         }
       ]
@@ -19853,524 +20371,6 @@
           "declaration": {
             "name": "ALIconWarningTriangle",
             "module": "components/icon/icons/warning-triangle.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/add.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/add.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/attachment.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/attachment.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/bell.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/bell.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/bookmark.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/bookmark.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/calendar.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/calendar.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/check.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/check.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/chevron-down.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/chevron-down.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/chevron-left.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/chevron-left.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/chevron-right.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/chevron-right.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/chevron-up.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/chevron-up.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/clock.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/clock.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/close.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/close.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/copy.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/copy.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/document.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/document.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/dots-horizontal.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/dots-horizontal.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/dots-vertical.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/dots-vertical.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/emoji.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/emoji.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/filter.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/filter.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/help.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/help.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/home.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/home.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/info.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/info.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/layout-masonry.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/layout-masonry.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/list.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/list.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/menu.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/menu.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/minus.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/minus.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/pin.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/pin.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/search.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/search.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/send.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/send.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/settings.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/settings.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/sign-in.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/sign-in.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/sign-out.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/sign-out.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/star.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/star.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/success.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/success.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/support.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/support.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/user.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/user.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/warning-circle.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/warning-circle.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/warning-triangle.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/warning-triangle.svg.ts"
           }
         }
       ]

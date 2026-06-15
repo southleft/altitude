@@ -48,13 +48,27 @@ assert_exit "baselines-gate (clean)" 0 $?
 set -e
 
 step "2. Deliberately-bad PR — modify a legacy component, no manifest flip"
+# After T6.1 every real component is scoped-complete. To exercise the gate
+# we synthesize a 'legacy' state in BOTH the base ref and HEAD by amending
+# the worktree's base commit first.
+( cd "$WORKTREE"
+  node -e "
+    const fs = require('fs');
+    const m = JSON.parse(fs.readFileSync('.altitude/migration.json','utf8'));
+    m.components.button = { state: 'legacy', react19: false, headless: false, ssr: false };
+    fs.writeFileSync('.altitude/migration.json', JSON.stringify(m, null, 2) + '\n');
+  "
+  git add -A
+  git -c user.email=test@test -c user.name=test commit --amend --no-edit >/dev/null
+)
+SYNTHETIC_BASE="$(git -C "$WORKTREE" rev-parse HEAD)"
 ( cd "$WORKTREE"
   echo "// touch" >> libs/al-web-components/components/button/button.ts
   git add -A
   git -c user.email=test@test -c user.name=test commit -m "bad: touch legacy button" >/dev/null
 )
 set +e
-run_in_worktree node scripts/check-migration-gate.js --base="$BASE_REF" >/dev/null 2>&1
+run_in_worktree node scripts/check-migration-gate.js --base="$SYNTHETIC_BASE" >/dev/null 2>&1
 assert_exit "migration-gate (bad PR — touches legacy)" 1 $?
 set -e
 
