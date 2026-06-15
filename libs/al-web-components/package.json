@@ -11,6 +11,8 @@
     "build:storybook": "storybook build",
     "build:tokens": "node ./styles/tokens-config.js",
     "build:tokens:v5": "node ../../scripts/convert-tokens-to-dtcg.js && node ./styles/tokens-config.v5.mjs && node ../../scripts/emit-token-types.js",
+    "build:vite": "vite build -c vite.config.mjs --outDir dist-vite",
+    "build:vite-spike": "vite build -c vite.spike.config.mjs",
     "build:tokens:parallel": "yarn build:tokens && yarn build:tokens:v5 && node ../../scripts/check-tokens-parity.js",
     "test:tokens": "node ../../scripts/test-tokens-contract.js",
     "build:icons": "node ./icons/icons-config.js",
