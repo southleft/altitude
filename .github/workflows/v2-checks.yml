@@ -221,6 +221,60 @@ jobs:
       - name: T3.4 — contract validator
         run: node scripts/validate-contracts.js
 
+  bundle-budget:
+    name: T6.3 bundle-size budget
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: yarn install --ignore-scripts --ignore-engines
+      - name: Build libs
+        run: yarn build
+      - name: Bundle budget
+        run: node scripts/check-bundle-budget.js
+
+  controllers:
+    name: T5.1 headless controllers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: yarn install --ignore-scripts --ignore-engines
+      - name: Run controller unit tests
+        run: node scripts/test-controllers.js
+
+  css-layers:
+    name: T4.1/T6.1 css layers strict
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Strict layer compliance (post-scale-out)
+        run: node scripts/check-css-layers.js --strict
+
+  react-wrapper-contract:
+    name: T4.7 React 19 wrapper contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Wrapper contract
+        run: node scripts/check-react-wrapper-contract.js
+
   register-altitude:
     name: T4.6 registry modes
     runs-on: ubuntu-latest

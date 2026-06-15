@@ -35,13 +35,38 @@ function wrapInLayer(scss) {
   // Idempotent: if any `@layer al.*` declaration already exists, no-op
   // (the theme host, for example, uses `al.theme`, not `al.component`).
   if (/@layer\s+al\.(component|theme|reset|base|override)\b/.test(scss)) return scss;
-  // Strip the leading SCSS imports (must stay outside the layer).
+  // Walk lines, tracking multi-line-comment state, and find the index of
+  // the first line that is actual CSS — not blank, not an `@import`, not
+  // inside or at the start of a block comment.
   const lines = scss.split('\n');
-  const headerEnd = lines.findIndex(
-    (l, i) => i > 0 && !l.trim().startsWith('@import') && !l.trim().startsWith('//') && !l.trim().startsWith('/*') && l.trim() !== ''
-  );
-  const header = lines.slice(0, headerEnd).join('\n');
+  let inBlockComment = false;
+  let headerEnd = lines.length;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const stripped = line.trim();
+    if (inBlockComment) {
+      if (line.includes('*/')) inBlockComment = false;
+      continue;
+    }
+    // Block comment opens on this line (may also close).
+    if (stripped.startsWith('/*')) {
+      if (!stripped.includes('*/') || stripped.lastIndexOf('/*') > stripped.lastIndexOf('*/')) {
+        inBlockComment = true;
+      }
+      continue;
+    }
+    if (stripped === '') continue;
+    if (stripped.startsWith('//')) continue;
+    if (stripped.startsWith('@import')) continue;
+    if (stripped.startsWith('@use')) continue;
+    if (stripped.startsWith('@forward')) continue;
+    // First actual CSS line.
+    headerEnd = i;
+    break;
+  }
+  const header = lines.slice(0, headerEnd).join('\n').replace(/\s+$/, '');
   const body = lines.slice(headerEnd).join('\n').trimEnd();
+  if (!body) return scss;
   return `${header}\n\n@layer al.component {\n${indent(body)}\n}\n`;
 }
 

@@ -9,15 +9,14 @@
     "start": "storybook dev -p 6006",
     "build": "npm run build:tokens && npm run build:icons && npm run build:custom-elements.json && del-cli dist && webpack && tsc",
     "build:storybook": "storybook build",
-    "build:tokens": "node ./styles/tokens-config.js",
-    "build:tokens:v5": "node ../../scripts/convert-tokens-to-dtcg.js && node ./styles/tokens-config.v5.mjs && node ../../scripts/emit-token-types.js",
+    "build:tokens": "node ../../scripts/convert-tokens-to-dtcg.js && node ./styles/tokens-config.v5.mjs && node ../../scripts/emit-token-types.js && node ../../scripts/copy-tokens-to-legacy-dist.js",
+    "build:tokens:v5": "yarn build:tokens",
     "build:vite": "vite build -c vite.config.mjs --outDir dist-vite",
     "build:vite-spike": "vite build -c vite.spike.config.mjs",
     "build:tokens:parallel": "yarn build:tokens && yarn build:tokens:v5 && node ../../scripts/check-tokens-parity.js",
     "test:tokens": "node ../../scripts/test-tokens-contract.js",
     "build:icons": "node ./icons/icons-config.js",
     "build:custom-elements.json": "cem analyze --config custom-elements-manifest.config.mjs --outdir . && node ../../scripts/generate-component-schemas.js && node ../../scripts/generate-schema-index.js",
-    "build:custom-elements.json:legacy": "wca analyze \"components/*/*.ts\" --outFile custom-elements.json",
     "test": "test-storybook --coverage || true && npx nyc report --reporter=lcov -t coverage/storybook --report-dir coverage/storybook && open coverage/storybook/lcov-report/index.html",
     "plop": "plop --plopfile plop/plop-config.js"
   },
@@ -74,7 +73,6 @@
     "style-dictionary": "^5.0.0",
     "typescript": "^5.7",
     "vite": "^5",
-    "web-component-analyzer": "^2.0.0",
     "webpack-cli": "^5.1.4"
   },
   "resolutions": {
