@@ -32,6 +32,9 @@ function walk(dir, rootStrip) {
   if (!fs.existsSync(dir)) return [];
   const out = [];
   for (const name of fs.readdirSync(dir)) {
+    // Skip dotfiles — macOS `.DS_Store` would otherwise flap the snapshot on
+    // every developer rebuild and break the byte-comparability of T1.1/T2.2.
+    if (name.startsWith('.')) continue;
     const p = path.join(dir, name);
     const st = fs.statSync(p);
     if (st.isDirectory()) out.push(...walk(p, rootStrip));

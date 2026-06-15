@@ -35,6 +35,7 @@ function walk(dir, exts) {
   if (!fs.existsSync(dir)) return [];
   const out = [];
   for (const name of fs.readdirSync(dir)) {
+    if (name.startsWith('.')) continue; // skip .DS_Store etc.
     const p = path.join(dir, name);
     const st = fs.statSync(p);
     if (st.isDirectory()) out.push(...walk(p, exts));
@@ -46,6 +47,23 @@ function walk(dir, exts) {
 function extractVars(file) {
   const text = fs.readFileSync(file, 'utf8');
   const out = [];
+  if (file.endsWith('.json')) {
+    // Walk every leaf path in the JSON tree; flatten to "tier1.color.brand.primary"
+    // style names so the SD v5 byte-comparison (T1.1) can target the JSON emit too.
+    let tree;
+    try { tree = JSON.parse(text); } catch { return out; }
+    const visit = (node, prefix) => {
+      if (node === null || typeof node !== 'object') {
+        out.push({ name: prefix, value: String(node), file: path.relative(REPO, file) });
+        return;
+      }
+      for (const [k, v] of Object.entries(node)) {
+        visit(v, prefix ? `${prefix}.${k}` : k);
+      }
+    };
+    visit(tree, '');
+    return out;
+  }
   // Match both CSS custom props (`--al-foo: value;`) and SCSS variables (`$al-foo: value;`).
   const re = /(?:^|[\s{;])(?:--|\$)(al-[a-z0-9-]+)\s*:\s*([^;]+);/gi;
   let m;
@@ -61,7 +79,7 @@ function main() {
     process.exit(1);
   }
 
-  const files = walk(TOKEN_DIST, ['.css', '.scss']);
+  const files = walk(TOKEN_DIST, ['.css', '.scss', '.json']);
   const all = files.flatMap(extractVars);
   // Deterministic order: by file, then by name.
   all.sort((a, b) => (a.file === b.file ? a.name.localeCompare(b.name) : a.file.localeCompare(b.file)));

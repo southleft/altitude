@@ -97,3 +97,111 @@ jobs:
           node-version: 20
       - name: Run gate self-test
         run: yarn gate:self-test
+
+  baselines-vrt:
+    name: T0.1 - VRT vs committed baselines
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: yarn install --ignore-scripts
+      - name: Install Playwright browsers
+        run: yarn playwright install --with-deps chromium
+      - name: Build libraries + fixture
+        run: yarn build && yarn workspace al-app-web-components build
+      - name: Run VRT against baselines
+        run: yarn test:vrt
+      - name: Upload diffs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+
+  baselines-tokens:
+    name: T0.1 - tokens snapshot equal
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: yarn install --ignore-scripts
+      - name: Build tokens
+        run: yarn workspace al-web-components build:tokens
+      - name: Re-snapshot tokens (to a temp file) and compare hash to committed
+        run: |
+          cp .altitude/baselines/tokens/snapshot.json /tmp/committed.json
+          yarn baselines:tokens
+          NEW_HASH=$(node -e "console.log(require('./.altitude/baselines/tokens/snapshot.json').hash)")
+          OLD_HASH=$(node -e "console.log(require('/tmp/committed.json').hash)")
+          echo "committed: $OLD_HASH"
+          echo "regen:     $NEW_HASH"
+          if [ "$OLD_HASH" != "$NEW_HASH" ]; then
+            echo "::error::Token snapshot drifted from committed baseline."
+            diff <(node -e "console.log(JSON.stringify(require('/tmp/committed.json').variables, null, 2))") \
+                 <(node -e "console.log(JSON.stringify(require('./.altitude/baselines/tokens/snapshot.json').variables, null, 2))") | head -200 || true
+            exit 1
+          fi
+
+  baselines-bundle:
+    name: T0.1 - bundle snapshot equal
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: yarn install --ignore-scripts
+      - name: Build libraries
+        run: yarn build
+      - name: Re-snapshot bundle and compare totalBytes
+        run: |
+          cp .altitude/baselines/bundle/snapshot.json /tmp/committed.json
+          yarn baselines:bundle
+          NEW=$(node -e "console.log(require('./.altitude/baselines/bundle/snapshot.json').totalBytes)")
+          OLD=$(node -e "console.log(require('/tmp/committed.json').totalBytes)")
+          echo "committed totalBytes: $OLD"
+          echo "regen     totalBytes: $NEW"
+          # Allow 1% drift to absorb gzip/minifier non-determinism; tighten in P2.
+          DIFF=$(node -e "const o=$OLD,n=$NEW; console.log(Math.abs(n-o)/o)")
+          OVER=$(node -e "console.log($DIFF > 0.01 ? 1 : 0)")
+          if [ "$OVER" = "1" ]; then
+            echo "::error::Bundle baseline drifted >1% from committed snapshot."
+            exit 1
+          fi
+
+  schema-validate-migration:
+    name: G2 - migration.json schema validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install ajv
+        run: npm install --no-save ajv@^8.12.0
+      - name: Validate manifest against schema
+        run: |
+          node -e "
+            const Ajv = require('ajv');
+            const ajv = new Ajv({ strict: false });
+            const schema = require('./.altitude/migration.schema.json');
+            const data = require('./.altitude/migration.json');
+            const validate = ajv.compile(schema);
+            if (!validate(data)) {
+              console.error('migration.json failed schema validation:');
+              console.error(JSON.stringify(validate.errors, null, 2));
+              process.exit(1);
+            }
+            console.log('migration.json validates against schema. components:', Object.keys(data.components).length);
+          "
