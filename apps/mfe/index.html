@@ -5,38 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Altitude — MFE coexistence fixture</title>
     <link rel="stylesheet" href="al-web-components/dist/css/main.css" />
-    <script>
-      // Must run before any ES module import: legacy auto-register flag.
-      window.alAutoRegistry = true;
-    </script>
     <style>
-      body { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-      section { padding: 1rem; border: 1px solid currentColor; }
+      body { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1rem; font-family: system-ui, sans-serif; }
+      section { padding: 1rem; border: 1px solid #888; }
       h2 { margin-top: 0; }
+      code { background: rgba(127, 127, 127, 0.2); padding: 0.1em 0.4em; border-radius: 3px; }
     </style>
   </head>
   <body>
     <header style="grid-column: 1 / -1;">
-      <h1>Micro-frontend coexistence fixture (T0.3)</h1>
+      <h1>Micro-frontend coexistence fixture (T0.3 + T4.6)</h1>
       <p>
-        Renders two simulated Altitude consumers side-by-side. Today, both
-        sides register the same tag because the legacy registry isn't
-        versioned. T4.6 will turn this fixture green by registering the
-        right side as <code>al-button-NEXT</code> (or similar) under the
-        <code>versioned</code> mode, proving subtree isolation.
+        Two simulated Altitude consumers registered with distinct
+        <code>versioned</code> suffixes via
+        <code>registerAltitude({mode: 'versioned', suffix})</code>.
+        The buttons on the left and right are <em>different custom-element
+        tags</em> backed by the same class — proving subtree isolation works
+        for multi-version MFE deployments.
       </p>
     </header>
 
     <section data-app="left">
-      <h2>App A</h2>
-      <al-button>Left button</al-button>
-      <al-theme-switcher></al-theme-switcher>
+      <h2>App A (suffix <code>1-0-0</code>)</h2>
+      <div id="left-mount"></div>
     </section>
 
     <section data-app="right">
-      <h2>App B (would be a different Altitude version)</h2>
-      <al-button>Right button</al-button>
-      <al-theme-switcher></al-theme-switcher>
+      <h2>App B (suffix <code>2-0-0</code>)</h2>
+      <div id="right-mount"></div>
     </section>
 
     <script type="module" src="/src/main.js"></script>

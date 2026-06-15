@@ -179,6 +179,62 @@ jobs:
             exit 1
           fi
 
+  vite-build-and-parity:
+    name: T2.1/T2.2 Vite parity gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: yarn install --ignore-scripts --ignore-engines
+      - name: Build webpack lib (baseline)
+        run: yarn build
+      - name: Build Vite spike
+        run: yarn workspace al-web-components build:vite-spike
+      - name: T2.1 — Vite spike bundle assertions
+        run: node scripts/check-vite-spike.js
+      - name: Build Vite lib
+        run: yarn workspace al-web-components build:vite
+      - name: T2.2 — Vite vs webpack export parity (zero removals)
+        run: node scripts/check-vite-export-parity.js
+      - name: T2.2 — bundle.ts completeness (no component drift)
+        run: node scripts/check-bundle-completeness.js
+
+  cem-and-contracts:
+    name: T3.1/T3.2/T3.4 CEM + schemas + contract validator
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: yarn install --ignore-scripts --ignore-engines
+      - name: Build CEM + schemas
+        run: yarn workspace al-web-components build:custom-elements.json
+      - name: T3.1 — CEM coverage
+        run: node scripts/check-cem-coverage.js
+      - name: T3.4 — contract validator
+        run: node scripts/validate-contracts.js
+
+  register-altitude:
+    name: T4.6 registry modes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: yarn install --ignore-scripts --ignore-engines
+      - name: T4.6 — registry-modes smoke test
+        run: node scripts/check-register-altitude.js
+
   schema-validate-migration:
     name: G2 - migration.json schema validation
     runs-on: ubuntu-latest

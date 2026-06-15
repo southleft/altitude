@@ -30,20 +30,36 @@ const OUT_DIR = path.join(REPO, 'libs/al-web-components/schemas');
 
 function attrTypeToJsonSchema(typeText) {
   if (!typeText) return { type: 'string' };
-  const lower = typeText.toLowerCase();
+  const trimmed = typeText.trim();
+  const lower = trimmed.toLowerCase();
   if (lower === 'boolean') return { type: 'boolean' };
   if (lower === 'number') return { type: 'number' };
   if (lower === 'string') return { type: 'string' };
-  if (typeText.includes('|')) {
-    // Union of string literals like "'a' | 'b' | 'c'"
-    const literals = typeText
-      .split('|')
-      .map((s) => s.trim().replace(/^['"]|['"]$/g, ''))
-      .filter((s) => s && !/^[A-Za-z]+\[\]$/.test(s));
-    if (literals.length && literals.every((l) => !/[<>(){}]/.test(l))) {
-      return { type: 'string', enum: literals };
+
+  if (trimmed.includes('|')) {
+    // Walk the union: partition into primitive types (`boolean`, `number`,
+    // `string`) and string-literal members ('foo', "bar"). Mix yields anyOf.
+    const parts = trimmed.split('|').map((s) => s.trim()).filter(Boolean);
+    const primitives = new Set();
+    const literals = [];
+    let dropped = false;
+    for (const p of parts) {
+      const plower = p.toLowerCase();
+      if (plower === 'boolean') primitives.add('boolean');
+      else if (plower === 'number') primitives.add('number');
+      else if (plower === 'string') primitives.add('string');
+      else if (/^(['"]).*\1$/.test(p)) literals.push(p.replace(/^['"]|['"]$/g, ''));
+      else dropped = true;
+    }
+    if (!dropped) {
+      const anyOf = [];
+      for (const t of primitives) anyOf.push({ type: t });
+      if (literals.length) anyOf.push({ type: 'string', enum: literals });
+      if (anyOf.length === 1) return anyOf[0];
+      if (anyOf.length > 1) return { anyOf };
     }
   }
+
   return { type: 'string', description: `typescript: ${typeText}` };
 }
 
@@ -102,10 +118,17 @@ function main() {
   fs.rmSync(OUT_DIR, { recursive: true, force: true });
   fs.mkdirSync(OUT_DIR, { recursive: true });
 
+  const knownComponents = new Set(Object.keys(migration.components || {}));
   const classes = (cem.modules || []).flatMap((m) =>
     (m.declarations || [])
       .filter((d) => d.kind === 'class' && d.tagName)
       .map((d) => ({ ...d, path: m.path }))
+      // Bound the schema set to declared (migration-tracked) components.
+      // Filters out spike artifacts like `al-button-vite-spike`.
+      .filter((d) => {
+        const componentName = (d.path || '').match(/components\/([^/]+)\//)?.[1];
+        return knownComponents.has(componentName);
+      })
   );
 
   let written = 0;

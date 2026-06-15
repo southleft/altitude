@@ -134,9 +134,37 @@ export default function altitudeConventions() {
         ...ast_events.filter((e) => !events.some((x) => x.name === e.name)),
       ];
 
+      // 4. AST-walk template-literal `part="…"` attributes inside lit-html
+      // templates. These are the only css-parts in the codebase (the
+      // `* @csspart` JSDoc tags weren't authored). Multiple parts in a
+      // single string (e.g. `part="track thumb"`) are split on whitespace.
+      const partsFound = new Set();
+      const PART_RE = /\bpart\s*=\s*"([^"]+)"/g;
+      const visitForParts = (n) => {
+        if (
+          (tsApi.isNoSubstitutionTemplateLiteral(n) || tsApi.isTemplateExpression(n))
+        ) {
+          const text = tsApi.isNoSubstitutionTemplateLiteral(n)
+            ? n.text
+            : [n.head.text, ...n.templateSpans.map((s) => s.literal.text)].join(' ');
+          for (const m of text.matchAll(PART_RE)) {
+            for (const piece of m[1].split(/\s+/)) {
+              if (piece) partsFound.add(piece);
+            }
+          }
+        }
+        tsApi.forEachChild(n, visitForParts);
+      };
+      visitForParts(node);
+      const ast_parts = [...partsFound].map((name) => ({ name, description: '' }));
+      const mergedParts = [
+        ...cssParts,
+        ...ast_parts.filter((p) => !cssParts.some((x) => x.name === p.name)),
+      ];
+
       if (slots.length) classDecl.slots = [...(classDecl.slots || []), ...slots];
       if (mergedEvents.length) classDecl.events = [...(classDecl.events || []), ...mergedEvents];
-      if (cssParts.length) classDecl.cssParts = [...(classDecl.cssParts || []), ...cssParts];
+      if (mergedParts.length) classDecl.cssParts = [...(classDecl.cssParts || []), ...mergedParts];
       if (cssProps.length) classDecl.cssProperties = [...(classDecl.cssProperties || []), ...cssProps];
     },
   };

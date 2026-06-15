@@ -1,9 +1,15 @@
-# `apps/mfe/` — Micro-frontend coexistence fixture (T0.3)
+# `apps/mfe/` — Micro-frontend coexistence fixture (T0.3 + T4.6)
 
 Acceptance fixture for **T4.6 — Registry modes**. Two `<section>` elements
-simulate two Altitude consumers on the same page. Today, both register the
-same tag; T4.6 turns this fixture into a green acceptance test by exposing
-the `versioned` registry mode and isolating each subtree.
+register the same component class under distinct suffixed custom-element
+tags using `registerAltitude({mode: 'versioned', suffix})`. Each side
+renders the suffixed tag; the Playwright test (`tests/mfe.spec.ts`)
+asserts the two tags resolve to distinct `customElements` entries — proving
+subtree isolation works for multi-version MFE deployments.
+
+When a real second copy of `al-web-components` is published, swap the
+shared import with two version-pinned packages; the rest of this wiring
+stays identical.
 
 ## Run locally
 
@@ -11,17 +17,33 @@ the `versioned` registry mode and isolating each subtree.
 yarn workspace al-web-components build
 yarn workspace al-app-mfe start    # Vite dev server on :5175
 yarn workspace al-app-mfe build
+yarn test:vrt --grep mfe           # Playwright versioned-registration test
 ```
 
-## What changes at T4.6
-
-The fixture's `src/main.js` will switch from the static module imports to:
+## How the API is used
 
 ```js
-import { registerAltitude } from 'al-web-components';
-registerAltitude({ mode: 'versioned', suffix: '1-0-0' }, document.querySelector('[data-app="left"]'));
-registerAltitude({ mode: 'versioned', suffix: '2-0-0' }, document.querySelector('[data-app="right"]'));
+import { registerAltitude } from 'al-web-components/dist/directives/register.js';
+import { ALButton } from 'al-web-components/dist/components/button/button.js';
+
+const map = registerAltitude({ mode: 'versioned', suffix: '1-0-0' }, [
+  [ALButton.el, ALButton],
+]);
+const tag = map.get(ALButton.el); // 'al-button-1-0-0'
 ```
 
-And a Playwright test will assert the two sides resolve to **distinct**
-`customElements` entries.
+The element list is `[tagName, ClassReference]` tuples (same shape as the
+legacy `register()`). The factory returns a `Map<originalName, registeredName>`
+so the consumer can rebind templated tag names. Use the returned alias
+inside templates (`<${tag}>…</${tag}>`).
+
+## What changed at T4.6
+
+Before: the fixture statically imported `button.js` and relied on
+`window.alAutoRegistry = true` for the side-effect registration. That's
+single-version-only.
+
+After: the fixture imports the class explicitly and calls
+`registerAltitude({mode: 'versioned'})` for each subtree. Each side
+gets its own tag namespace, and a Playwright assertion confirms the
+two registrations don't collide.

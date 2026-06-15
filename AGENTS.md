@@ -41,6 +41,7 @@ in the PR description. Eight non-negotiable guardrails (G1–G8) are CI-enforced
 | Pinned target versions | [`.altitude/targets.json`](./.altitude/targets.json) |
 | Migration manifest | [`.altitude/migration.json`](./.altitude/migration.json) |
 | Custom Elements Manifest (CEM) | [`libs/al-web-components/custom-elements.json`](./libs/al-web-components/custom-elements.json) |
+| Per-component schemas (T3.2) | [`libs/al-web-components/schemas/`](./libs/al-web-components/schemas/) — see [Component schema index](./libs/al-web-components/schemas/INDEX.md) |
 | Pilot web components | `libs/al-web-components/components/{button,input,select,dialog,theme-switcher}/` |
 | Pilot React wrappers | `libs/al-react/src/components/{Button,Input,Select,Dialog,ThemeSwitcher}/` |
 | Tokens (legacy + DTCG) | `libs/al-web-components/styles/tokens/` (legacy) and `tokens-dtcg/` (generated) |

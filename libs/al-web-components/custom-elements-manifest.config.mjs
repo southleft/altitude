@@ -11,6 +11,7 @@ export default {
     'components/**/*.stories.ts',
     'components/**/*.spec.ts',
     'components/**/test/**',
+    'components/**/*.vite.ts',
     'components/ALElement.ts',
     'components/bundle.ts',
   ],

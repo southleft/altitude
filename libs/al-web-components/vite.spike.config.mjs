@@ -38,11 +38,10 @@ export default defineConfig({
     outDir: 'dist-vite-spike',
     emptyOutDir: true,
     rollupOptions: {
-      // T2.1 spike: bundle lit IN so the test can load the file standalone
-      // without an importmap dance. The T2.2 production build will externalize
-      // lit per normal library conventions.
-      external: [],
-      output: { preserveModules: false },
+      // Externalize lit (production library shape). The spike acceptance is
+      // about the SCSS-into-shadow-root pipeline, not about runtime loading.
+      external: [/^lit(\/.*)?$/],
+      output: { preserveModules: false, minifyInternalExports: false },
     },
     sourcemap: true,
     minify: false,

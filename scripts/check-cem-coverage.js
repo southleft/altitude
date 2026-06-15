@@ -51,7 +51,8 @@ function main() {
   }
 
   if (missing.length === 0) {
-    console.log(`[cem-coverage] PASS — ${Object.keys(migration.components).length} components covered (out of ${classes.size} total CEM classes).`);
+    const total = Object.keys(migration.components).length;
+    console.log(`[cem-coverage] PASS — ${total}/${total} migration-tracked components have a class declaration (CEM also includes ${classes.size - total} non-migration entries: spike artifacts, helpers).`);
     process.exit(0);
   }
   console.error(`[cem-coverage] FAIL — ${missing.length} component(s) missing from custom-elements.json:`);

@@ -10,6 +10,10 @@ const components = glob.sync('./components/**/*.ts').reduce((acc, file) => {
   if (file.match(/icon\.ts$/)) {
     return acc;
   }
+  // Exclude T2.1 Vite-spike copies — they are not part of the published surface.
+  if (file.match(/\.vite\.ts$/)) {
+    return acc;
+  }
 
   const contents = fs.readFileSync(file);
   const isIcon = file.match(/icon\/icons\/.*\.ts$/);

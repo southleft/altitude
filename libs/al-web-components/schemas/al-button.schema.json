@@ -29,7 +29,12 @@
       }
     ],
     "events": [],
-    "cssParts": [],
+    "cssParts": [
+      {
+        "name": "button",
+        "description": ""
+      }
+    ],
     "cssProperties": []
   },
   "properties": {
@@ -87,10 +92,16 @@
         },
         "isPressed": {
           "description": "Indicates this button is a toggle button and whether it is pressed or not.",
-          "type": "string",
-          "enum": [
-            "boolean",
-            "mixed"
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "mixed"
+              ]
+            }
           ]
         },
         "isDisabled": {
