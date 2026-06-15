@@ -106,9 +106,14 @@ export default defineConfig({
   build: {
     target: 'es2022',
     outDir: 'dist',
-    emptyOutDir: false, // tsc still emits .d.ts here
+    // T2.2 finalization: emptyOutDir false so tsc can co-write .d.ts.
+    // The build script wipes dist before each Vite run.
+    emptyOutDir: false,
     sourcemap: true,
     minify: false,
+    // T2.2 finalization: copy public assets (icons + theme css) that
+    // webpack's CopyPlugin used to handle.
+    copyPublicDir: false,
     rollupOptions: {
       input: entries,
       external: [/^lit(\/.*)?$/, /^date-fns(\/.*)?$/],
@@ -124,6 +129,13 @@ export default defineConfig({
         // chunks; consumers (al-react wrappers, the apps fixtures) import by
         // the original name.
         minifyInternalExports: false,
+        // Emit CSS at stable, webpack-equivalent paths. The `theme` entry
+        // bundles main.scss → css/main.css; other entries don't emit CSS
+        // because their styles ship inline via unsafeCSS.
+        assetFileNames: (info) => {
+          if (info.name === 'theme.css') return 'css/main.css';
+          return 'assets/[name][extname]';
+        },
         entryFileNames: (chunk) => {
           // Icons emit under components/icon/icons/<name>.js to mirror webpack's
           // output paths so consumer imports keep working.

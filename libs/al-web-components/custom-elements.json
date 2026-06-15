@@ -120,209 +120,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/accordion-panel/accordion-panel.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-accordion-panel\n- **slot**: The accordion panel content",
-          "name": "ALAccordionPanel",
-          "slots": [
-            {
-              "name": "",
-              "description": "The accordion panel content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-accordion-panel'"
-            },
-            {
-              "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "iconChevronDownEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Active property\n1. Panel is open when set to true. Close when set to false",
-              "attribute": "isActive"
-            },
-            {
-              "kind": "field",
-              "name": "isDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Disabled property",
-              "attribute": "isDisabled"
-            },
-            {
-              "kind": "field",
-              "name": "isLast",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Is last?\n- Dynamically set by the ALAccordion\n- Removes the bottom border if it is the last item",
-              "attribute": "isLast"
-            },
-            {
-              "kind": "field",
-              "name": "idx",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "Index of the panel\n- Dynamically set by the ALAccordion",
-              "attribute": "idx"
-            },
-            {
-              "kind": "field",
-              "name": "ariaControls",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria Controls attribute\n- Dynamically set for A11y",
-              "attribute": "ariaControls"
-            },
-            {
-              "kind": "field",
-              "name": "ariaLabelledBy",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
-              "attribute": "ariaLabelledBy"
-            },
-            {
-              "kind": "method",
-              "name": "toggleActive",
-              "privacy": "public",
-              "description": "Set accordion panel active state\n1. Toggle the active state between true and false\n2. Open/close the panel based on isActive"
-            },
-            {
-              "kind": "method",
-              "name": "open",
-              "privacy": "public",
-              "description": "Open accordion panel\n1. Set isActive to true to show the panel\n2. Dispatch a custom event on close"
-            },
-            {
-              "kind": "method",
-              "name": "close",
-              "privacy": "public",
-              "description": "Close accordion panel\n1. Set isActive to false to hide the panel\n2. Dispatch a custom event on close"
-            }
-          ],
-          "events": [
-            {
-              "name": "onAccordionPanelOpen",
-              "description": ""
-            },
-            {
-              "name": "onAccordionPanelClose",
-              "description": ""
-            }
-          ],
-          "attributes": [
-            {
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Active property\n1. Panel is open when set to true. Close when set to false",
-              "fieldName": "isActive"
-            },
-            {
-              "name": "isDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Disabled property",
-              "fieldName": "isDisabled"
-            },
-            {
-              "name": "isLast",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Is last?\n- Dynamically set by the ALAccordion\n- Removes the bottom border if it is the last item",
-              "fieldName": "isLast"
-            },
-            {
-              "name": "idx",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "Index of the panel\n- Dynamically set by the ALAccordion",
-              "fieldName": "idx"
-            },
-            {
-              "name": "ariaControls",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria Controls attribute\n- Dynamically set for A11y",
-              "fieldName": "ariaControls"
-            },
-            {
-              "name": "ariaLabelledBy",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
-              "fieldName": "ariaLabelledBy"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-accordion-panel",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALAccordionPanel",
-          "declaration": {
-            "name": "ALAccordionPanel",
-            "module": "components/accordion-panel/accordion-panel.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-accordion-panel",
-          "declaration": {
-            "name": "ALAccordionPanel",
-            "module": "components/accordion-panel/accordion-panel.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALAccordionPanel",
-            "module": "components/accordion-panel/accordion-panel.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.ts",
       "declarations": [
         {
@@ -575,6 +372,209 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/accordion-panel/accordion-panel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-accordion-panel\n- **slot**: The accordion panel content",
+          "name": "ALAccordionPanel",
+          "slots": [
+            {
+              "name": "",
+              "description": "The accordion panel content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-accordion-panel'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconChevronDownEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Active property\n1. Panel is open when set to true. Close when set to false",
+              "attribute": "isActive"
+            },
+            {
+              "kind": "field",
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled property",
+              "attribute": "isDisabled"
+            },
+            {
+              "kind": "field",
+              "name": "isLast",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Is last?\n- Dynamically set by the ALAccordion\n- Removes the bottom border if it is the last item",
+              "attribute": "isLast"
+            },
+            {
+              "kind": "field",
+              "name": "idx",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Index of the panel\n- Dynamically set by the ALAccordion",
+              "attribute": "idx"
+            },
+            {
+              "kind": "field",
+              "name": "ariaControls",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Controls attribute\n- Dynamically set for A11y",
+              "attribute": "ariaControls"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+              "attribute": "ariaLabelledBy"
+            },
+            {
+              "kind": "method",
+              "name": "toggleActive",
+              "privacy": "public",
+              "description": "Set accordion panel active state\n1. Toggle the active state between true and false\n2. Open/close the panel based on isActive"
+            },
+            {
+              "kind": "method",
+              "name": "open",
+              "privacy": "public",
+              "description": "Open accordion panel\n1. Set isActive to true to show the panel\n2. Dispatch a custom event on close"
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "privacy": "public",
+              "description": "Close accordion panel\n1. Set isActive to false to hide the panel\n2. Dispatch a custom event on close"
+            }
+          ],
+          "events": [
+            {
+              "name": "onAccordionPanelOpen",
+              "description": ""
+            },
+            {
+              "name": "onAccordionPanelClose",
+              "description": ""
+            }
+          ],
+          "attributes": [
+            {
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Active property\n1. Panel is open when set to true. Close when set to false",
+              "fieldName": "isActive"
+            },
+            {
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled property",
+              "fieldName": "isDisabled"
+            },
+            {
+              "name": "isLast",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Is last?\n- Dynamically set by the ALAccordion\n- Removes the bottom border if it is the last item",
+              "fieldName": "isLast"
+            },
+            {
+              "name": "idx",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Index of the panel\n- Dynamically set by the ALAccordion",
+              "fieldName": "idx"
+            },
+            {
+              "name": "ariaControls",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Controls attribute\n- Dynamically set for A11y",
+              "fieldName": "ariaControls"
+            },
+            {
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+              "fieldName": "ariaLabelledBy"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-accordion-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALAccordionPanel",
+          "declaration": {
+            "name": "ALAccordionPanel",
+            "module": "components/accordion-panel/accordion-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-accordion-panel",
+          "declaration": {
+            "name": "ALAccordionPanel",
+            "module": "components/accordion-panel/accordion-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALAccordionPanel",
+            "module": "components/accordion-panel/accordion-panel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/badge/badge.ts",
       "declarations": [
         {
@@ -686,6 +686,212 @@
           "declaration": {
             "name": "ALBadge",
             "module": "components/badge/badge.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/breadcrumbs/breadcrumbs.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-breadcrumbs\n- **slot**: The breadcrumbs content, a set of breadcrumb items",
+          "name": "ALBreadcrumbs",
+          "slots": [
+            {
+              "name": "",
+              "description": "The breadcrumbs content, a set of breadcrumb items"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-breadcrumbs'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "breadcrumbsItemEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "menuEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "menuItemEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "buttonEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconDotsHorizontalEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "popoverEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Breadcrumb'",
+              "description": "Label attribute\n- Provides an accessible name for the breadcrumbs element",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "isTruncated",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Truncated attribute\n- **true** Collapse items under a ALPanel based on the itemsBefore/AfterCollpase properties\n- **false** Do not collapse any breacrumb items",
+              "attribute": "isTruncated"
+            },
+            {
+              "kind": "field",
+              "name": "itemsAfterCollapse",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of items to display after the Panel in the Truncated treatment\n- Default is 1",
+              "attribute": "itemsAfterCollapse"
+            },
+            {
+              "kind": "field",
+              "name": "itemsBeforeCollapse",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of items to display before the Panel in the Truncated treatment\n- Default is 1",
+              "attribute": "itemsBeforeCollapse"
+            },
+            {
+              "kind": "field",
+              "name": "menuId",
+              "type": {
+                "text": "string"
+              },
+              "description": "Menu id\n- Unique id that associates the menu and popover components used in truncated breadcrumbs, so that the popover closes when a menu item is selected",
+              "attribute": "menuId"
+            },
+            {
+              "kind": "field",
+              "name": "breadcrumbsItems",
+              "type": {
+                "text": "Array<ALBreadcrumbsItem>"
+              },
+              "description": "Query all the ALBreadcrumbsItem's\n- Use get as truncated items do not pull from the slot",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "setHasSeparators",
+              "description": "Set separators to slotted breadcrumb items\n1. Loop through the items in the breadcrumbsItems array\n2. If the item is the last in the array, mark it as the current item and do not apply a separator\n3. Otherwise, apply a separator to the item indicating it's not the last item in the sequence"
+            },
+            {
+              "kind": "method",
+              "name": "renderTruncatedItems",
+              "description": "Render truncated breadcrumbs if isTruncated is true\n1. Create a copy of the breadcrumbsItems array\n2. Generate breadcrumb items dynamically with necessary properties and inner HTML\n3. Identify the items to be collapsed based on the itemsBefore/AfterCollapsed properties\n4. Replace the collapsed items with a Panel and add the items as list-items to the menu\n5. Return the HTML string for the generated components"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Breadcrumb'",
+              "description": "Label attribute\n- Provides an accessible name for the breadcrumbs element",
+              "fieldName": "label"
+            },
+            {
+              "name": "isTruncated",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Truncated attribute\n- **true** Collapse items under a ALPanel based on the itemsBefore/AfterCollpase properties\n- **false** Do not collapse any breacrumb items",
+              "fieldName": "isTruncated"
+            },
+            {
+              "name": "itemsAfterCollapse",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of items to display after the Panel in the Truncated treatment\n- Default is 1",
+              "fieldName": "itemsAfterCollapse"
+            },
+            {
+              "name": "itemsBeforeCollapse",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of items to display before the Panel in the Truncated treatment\n- Default is 1",
+              "fieldName": "itemsBeforeCollapse"
+            },
+            {
+              "name": "menuId",
+              "type": {
+                "text": "string"
+              },
+              "description": "Menu id\n- Unique id that associates the menu and popover components used in truncated breadcrumbs, so that the popover closes when a menu item is selected",
+              "fieldName": "menuId"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-breadcrumbs",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALBreadcrumbs",
+          "declaration": {
+            "name": "ALBreadcrumbs",
+            "module": "components/breadcrumbs/breadcrumbs.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-breadcrumbs",
+          "declaration": {
+            "name": "ALBreadcrumbs",
+            "module": "components/breadcrumbs/breadcrumbs.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALBreadcrumbs",
+            "module": "components/breadcrumbs/breadcrumbs.ts"
           }
         }
       ]
@@ -954,212 +1160,6 @@
           "declaration": {
             "name": "ALAvatar",
             "module": "components/avatar/avatar.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/breadcrumbs/breadcrumbs.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-breadcrumbs\n- **slot**: The breadcrumbs content, a set of breadcrumb items",
-          "name": "ALBreadcrumbs",
-          "slots": [
-            {
-              "name": "",
-              "description": "The breadcrumbs content, a set of breadcrumb items"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-breadcrumbs'"
-            },
-            {
-              "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "breadcrumbsItemEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "menuEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "menuItemEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "buttonEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "iconDotsHorizontalEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "popoverEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Breadcrumb'",
-              "description": "Label attribute\n- Provides an accessible name for the breadcrumbs element",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "isTruncated",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Truncated attribute\n- **true** Collapse items under a ALPanel based on the itemsBefore/AfterCollpase properties\n- **false** Do not collapse any breacrumb items",
-              "attribute": "isTruncated"
-            },
-            {
-              "kind": "field",
-              "name": "itemsAfterCollapse",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Number of items to display after the Panel in the Truncated treatment\n- Default is 1",
-              "attribute": "itemsAfterCollapse"
-            },
-            {
-              "kind": "field",
-              "name": "itemsBeforeCollapse",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Number of items to display before the Panel in the Truncated treatment\n- Default is 1",
-              "attribute": "itemsBeforeCollapse"
-            },
-            {
-              "kind": "field",
-              "name": "menuId",
-              "type": {
-                "text": "string"
-              },
-              "description": "Menu id\n- Unique id that associates the menu and popover components used in truncated breadcrumbs, so that the popover closes when a menu item is selected",
-              "attribute": "menuId"
-            },
-            {
-              "kind": "field",
-              "name": "breadcrumbsItems",
-              "type": {
-                "text": "Array<ALBreadcrumbsItem>"
-              },
-              "description": "Query all the ALBreadcrumbsItem's\n- Use get as truncated items do not pull from the slot",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "setHasSeparators",
-              "description": "Set separators to slotted breadcrumb items\n1. Loop through the items in the breadcrumbsItems array\n2. If the item is the last in the array, mark it as the current item and do not apply a separator\n3. Otherwise, apply a separator to the item indicating it's not the last item in the sequence"
-            },
-            {
-              "kind": "method",
-              "name": "renderTruncatedItems",
-              "description": "Render truncated breadcrumbs if isTruncated is true\n1. Create a copy of the breadcrumbsItems array\n2. Generate breadcrumb items dynamically with necessary properties and inner HTML\n3. Identify the items to be collapsed based on the itemsBefore/AfterCollapsed properties\n4. Replace the collapsed items with a Panel and add the items as list-items to the menu\n5. Return the HTML string for the generated components"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Breadcrumb'",
-              "description": "Label attribute\n- Provides an accessible name for the breadcrumbs element",
-              "fieldName": "label"
-            },
-            {
-              "name": "isTruncated",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Truncated attribute\n- **true** Collapse items under a ALPanel based on the itemsBefore/AfterCollpase properties\n- **false** Do not collapse any breacrumb items",
-              "fieldName": "isTruncated"
-            },
-            {
-              "name": "itemsAfterCollapse",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Number of items to display after the Panel in the Truncated treatment\n- Default is 1",
-              "fieldName": "itemsAfterCollapse"
-            },
-            {
-              "name": "itemsBeforeCollapse",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Number of items to display before the Panel in the Truncated treatment\n- Default is 1",
-              "fieldName": "itemsBeforeCollapse"
-            },
-            {
-              "name": "menuId",
-              "type": {
-                "text": "string"
-              },
-              "description": "Menu id\n- Unique id that associates the menu and popover components used in truncated breadcrumbs, so that the popover closes when a menu item is selected",
-              "fieldName": "menuId"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-breadcrumbs",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALBreadcrumbs",
-          "declaration": {
-            "name": "ALBreadcrumbs",
-            "module": "components/breadcrumbs/breadcrumbs.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-breadcrumbs",
-          "declaration": {
-            "name": "ALBreadcrumbs",
-            "module": "components/breadcrumbs/breadcrumbs.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALBreadcrumbs",
-            "module": "components/breadcrumbs/breadcrumbs.ts"
           }
         }
       ]
@@ -5129,6 +5129,122 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/dropdown-panel/dropdown-panel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-dropdown-panel\n- **slot**: The dropdown panel content",
+          "name": "ALDropdownPanel",
+          "slots": [
+            {
+              "name": "",
+              "description": "The dropdown panel content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-dropdown-panel'"
+            },
+            {
+              "kind": "field",
+              "name": "hasScroll",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Adds a max height and scrolling of the panel",
+              "attribute": "hasScroll"
+            },
+            {
+              "kind": "field",
+              "name": "hasHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Changes styling on panel for variant with header",
+              "attribute": "hasHeader"
+            },
+            {
+              "kind": "field",
+              "name": "hasFooter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Changes styling on panel for variant with footer",
+              "attribute": "hasFooter"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "hasScroll",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Adds a max height and scrolling of the panel",
+              "fieldName": "hasScroll"
+            },
+            {
+              "name": "hasHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Changes styling on panel for variant with header",
+              "fieldName": "hasHeader"
+            },
+            {
+              "name": "hasFooter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Changes styling on panel for variant with footer",
+              "fieldName": "hasFooter"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-dropdown-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALDropdownPanel",
+          "declaration": {
+            "name": "ALDropdownPanel",
+            "module": "components/dropdown-panel/dropdown-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-dropdown-panel",
+          "declaration": {
+            "name": "ALDropdownPanel",
+            "module": "components/dropdown-panel/dropdown-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALDropdownPanel",
+            "module": "components/dropdown-panel/dropdown-panel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/drawer/drawer.ts",
       "declarations": [
         {
@@ -5404,122 +5520,6 @@
           "declaration": {
             "name": "ALDrawer",
             "module": "components/drawer/drawer.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/dropdown-panel/dropdown-panel.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-dropdown-panel\n- **slot**: The dropdown panel content",
-          "name": "ALDropdownPanel",
-          "slots": [
-            {
-              "name": "",
-              "description": "The dropdown panel content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-dropdown-panel'"
-            },
-            {
-              "kind": "field",
-              "name": "hasScroll",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Adds a max height and scrolling of the panel",
-              "attribute": "hasScroll"
-            },
-            {
-              "kind": "field",
-              "name": "hasHeader",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Changes styling on panel for variant with header",
-              "attribute": "hasHeader"
-            },
-            {
-              "kind": "field",
-              "name": "hasFooter",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Changes styling on panel for variant with footer",
-              "attribute": "hasFooter"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "hasScroll",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Adds a max height and scrolling of the panel",
-              "fieldName": "hasScroll"
-            },
-            {
-              "name": "hasHeader",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Changes styling on panel for variant with header",
-              "fieldName": "hasHeader"
-            },
-            {
-              "name": "hasFooter",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Changes styling on panel for variant with footer",
-              "fieldName": "hasFooter"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-dropdown-panel",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALDropdownPanel",
-          "declaration": {
-            "name": "ALDropdownPanel",
-            "module": "components/dropdown-panel/dropdown-panel.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-dropdown-panel",
-          "declaration": {
-            "name": "ALDropdownPanel",
-            "module": "components/dropdown-panel/dropdown-panel.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALDropdownPanel",
-            "module": "components/dropdown-panel/dropdown-panel.ts"
           }
         }
       ]
@@ -6476,95 +6476,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/icon/icon.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-icon-[ICON_NAME]",
-          "name": "ALIcon",
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-icon'"
-            },
-            {
-              "kind": "field",
-              "name": "iconTitle",
-              "type": {
-                "text": "string"
-              },
-              "description": "Icon title",
-              "attribute": "iconTitle"
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'"
-              },
-              "description": "Icon size\n- Default size is 16px\n- **xs** renders a smaller size than default (8px)\n- **sm** renders a smaller size than default (12px)\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)\n- **xxl** renders a larger size than the lg variant (36px)\n- **xxxl** renders a larger size than the lg variant (40px)",
-              "attribute": "size"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "iconTitle",
-              "type": {
-                "text": "string"
-              },
-              "description": "Icon title",
-              "fieldName": "iconTitle"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'"
-              },
-              "description": "Icon size\n- Default size is 16px\n- **xs** renders a smaller size than default (8px)\n- **sm** renders a smaller size than default (12px)\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)\n- **xxl** renders a larger size than the lg variant (36px)\n- **xxxl** renders a larger size than the lg variant (40px)",
-              "fieldName": "size"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-icon",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALIcon",
-          "declaration": {
-            "name": "ALIcon",
-            "module": "components/icon/icon.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-icon",
-          "declaration": {
-            "name": "ALIcon",
-            "module": "components/icon/icon.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALIcon",
-            "module": "components/icon/icon.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/input/input.ts",
       "declarations": [
         {
@@ -7104,6 +7015,290 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/icon/icon.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-icon-[ICON_NAME]",
+          "name": "ALIcon",
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-icon'"
+            },
+            {
+              "kind": "field",
+              "name": "iconTitle",
+              "type": {
+                "text": "string"
+              },
+              "description": "Icon title",
+              "attribute": "iconTitle"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'"
+              },
+              "description": "Icon size\n- Default size is 16px\n- **xs** renders a smaller size than default (8px)\n- **sm** renders a smaller size than default (12px)\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)\n- **xxl** renders a larger size than the lg variant (36px)\n- **xxxl** renders a larger size than the lg variant (40px)",
+              "attribute": "size"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "iconTitle",
+              "type": {
+                "text": "string"
+              },
+              "description": "Icon title",
+              "fieldName": "iconTitle"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'"
+              },
+              "description": "Icon size\n- Default size is 16px\n- **xs** renders a smaller size than default (8px)\n- **sm** renders a smaller size than default (12px)\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)\n- **xxl** renders a larger size than the lg variant (36px)\n- **xxxl** renders a larger size than the lg variant (40px)",
+              "fieldName": "size"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-icon",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALIcon",
+          "declaration": {
+            "name": "ALIcon",
+            "module": "components/icon/icon.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-icon",
+          "declaration": {
+            "name": "ALIcon",
+            "module": "components/icon/icon.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALIcon",
+            "module": "components/icon/icon.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/layout/layout.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-layout",
+          "name": "ALLayout",
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-layout'"
+            },
+            {
+              "kind": "field",
+              "name": "gap",
+              "type": {
+                "text": "'none' | 'sm' | 'lg' | 'xl'"
+              },
+              "description": "Gap variant (Default is 16px)\n- **none** yields a layout whose layout sections are spaced without any gutter in between on large screens.\n- **sm** yields a layout whose layout sections are spaced 8px apart on large screens. Small screens gutters move to 16px between.\n- **lg** yields a layout whose layout sections are spaced 24px apart on large screens. Small screens gutters move to 16px between.\n- **xl** yields a layout whose layout sections are spaced 32px apart on large screens. Small screens gutters move to 16px between.",
+              "attribute": "gap"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'sidebar-left' | 'sidebar-right'"
+              },
+              "description": "Style variants\n- **sidebar-left** formats the first `layout-section` component as a left sidebar\n- **sidebar-right** formats the second `layout-section` component as a right sidebar",
+              "attribute": "variant"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "gap",
+              "type": {
+                "text": "'none' | 'sm' | 'lg' | 'xl'"
+              },
+              "description": "Gap variant (Default is 16px)\n- **none** yields a layout whose layout sections are spaced without any gutter in between on large screens.\n- **sm** yields a layout whose layout sections are spaced 8px apart on large screens. Small screens gutters move to 16px between.\n- **lg** yields a layout whose layout sections are spaced 24px apart on large screens. Small screens gutters move to 16px between.\n- **xl** yields a layout whose layout sections are spaced 32px apart on large screens. Small screens gutters move to 16px between.",
+              "fieldName": "gap"
+            },
+            {
+              "name": "variant",
+              "type": {
+                "text": "'sidebar-left' | 'sidebar-right'"
+              },
+              "description": "Style variants\n- **sidebar-left** formats the first `layout-section` component as a left sidebar\n- **sidebar-right** formats the second `layout-section` component as a right sidebar",
+              "fieldName": "variant"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-layout",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALLayout",
+          "declaration": {
+            "name": "ALLayout",
+            "module": "components/layout/layout.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-layout",
+          "declaration": {
+            "name": "ALLayout",
+            "module": "components/layout/layout.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALLayout",
+            "module": "components/layout/layout.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/layout-section/layout-section.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-layout-section",
+          "name": "ALLayoutSection",
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-layout-section'"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-layout-section",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALLayoutSection",
+          "declaration": {
+            "name": "ALLayoutSection",
+            "module": "components/layout-section/layout-section.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-layout-section",
+          "declaration": {
+            "name": "ALLayoutSection",
+            "module": "components/layout-section/layout-section.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALLayoutSection",
+            "module": "components/layout-section/layout-section.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/layout-container/layout-container.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-layout-container",
+          "name": "ALLayoutContainer",
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-layout-container'"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-layout-container",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALLayoutContainer",
+          "declaration": {
+            "name": "ALLayoutContainer",
+            "module": "components/layout-container/layout-container.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-layout-container",
+          "declaration": {
+            "name": "ALLayoutContainer",
+            "module": "components/layout-container/layout-container.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALLayoutContainer",
+            "module": "components/layout-container/layout-container.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/input-stepper/input-stepper.ts",
       "declarations": [
         {
@@ -7543,201 +7738,6 @@
           "declaration": {
             "name": "ALInputStepper",
             "module": "components/input-stepper/input-stepper.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/layout/layout.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-layout",
-          "name": "ALLayout",
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-layout'"
-            },
-            {
-              "kind": "field",
-              "name": "gap",
-              "type": {
-                "text": "'none' | 'sm' | 'lg' | 'xl'"
-              },
-              "description": "Gap variant (Default is 16px)\n- **none** yields a layout whose layout sections are spaced without any gutter in between on large screens.\n- **sm** yields a layout whose layout sections are spaced 8px apart on large screens. Small screens gutters move to 16px between.\n- **lg** yields a layout whose layout sections are spaced 24px apart on large screens. Small screens gutters move to 16px between.\n- **xl** yields a layout whose layout sections are spaced 32px apart on large screens. Small screens gutters move to 16px between.",
-              "attribute": "gap"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'sidebar-left' | 'sidebar-right'"
-              },
-              "description": "Style variants\n- **sidebar-left** formats the first `layout-section` component as a left sidebar\n- **sidebar-right** formats the second `layout-section` component as a right sidebar",
-              "attribute": "variant"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "gap",
-              "type": {
-                "text": "'none' | 'sm' | 'lg' | 'xl'"
-              },
-              "description": "Gap variant (Default is 16px)\n- **none** yields a layout whose layout sections are spaced without any gutter in between on large screens.\n- **sm** yields a layout whose layout sections are spaced 8px apart on large screens. Small screens gutters move to 16px between.\n- **lg** yields a layout whose layout sections are spaced 24px apart on large screens. Small screens gutters move to 16px between.\n- **xl** yields a layout whose layout sections are spaced 32px apart on large screens. Small screens gutters move to 16px between.",
-              "fieldName": "gap"
-            },
-            {
-              "name": "variant",
-              "type": {
-                "text": "'sidebar-left' | 'sidebar-right'"
-              },
-              "description": "Style variants\n- **sidebar-left** formats the first `layout-section` component as a left sidebar\n- **sidebar-right** formats the second `layout-section` component as a right sidebar",
-              "fieldName": "variant"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-layout",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALLayout",
-          "declaration": {
-            "name": "ALLayout",
-            "module": "components/layout/layout.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-layout",
-          "declaration": {
-            "name": "ALLayout",
-            "module": "components/layout/layout.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALLayout",
-            "module": "components/layout/layout.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/layout-container/layout-container.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-layout-container",
-          "name": "ALLayoutContainer",
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-layout-container'"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-layout-container",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALLayoutContainer",
-          "declaration": {
-            "name": "ALLayoutContainer",
-            "module": "components/layout-container/layout-container.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-layout-container",
-          "declaration": {
-            "name": "ALLayoutContainer",
-            "module": "components/layout-container/layout-container.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALLayoutContainer",
-            "module": "components/layout-container/layout-container.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/layout-section/layout-section.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-layout-section",
-          "name": "ALLayoutSection",
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-layout-section'"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-layout-section",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALLayoutSection",
-          "declaration": {
-            "name": "ALLayoutSection",
-            "module": "components/layout-section/layout-section.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-layout-section",
-          "declaration": {
-            "name": "ALLayoutSection",
-            "module": "components/layout-section/layout-section.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALLayoutSection",
-            "module": "components/layout-section/layout-section.ts"
           }
         }
       ]
@@ -8439,103 +8439,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/logo/logo.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-logo\n- **slot**: The component content",
-          "name": "ALLogo",
-          "slots": [
-            {
-              "name": "",
-              "description": "The component content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-logo'"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'northright' | 'odyssey' | 'southleft'"
-              },
-              "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **odyssey** displays the Odyssey logo\n- **southleft** displays the Southleft logo",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "default": "'/'",
-              "description": "The logo link URL",
-              "attribute": "href"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'northright' | 'odyssey' | 'southleft'"
-              },
-              "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **odyssey** displays the Odyssey logo\n- **southleft** displays the Southleft logo",
-              "fieldName": "variant"
-            },
-            {
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "default": "'/'",
-              "description": "The logo link URL",
-              "fieldName": "href"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-logo",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALLogo",
-          "declaration": {
-            "name": "ALLogo",
-            "module": "components/logo/logo.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-logo",
-          "declaration": {
-            "name": "ALLogo",
-            "module": "components/logo/logo.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALLogo",
-            "module": "components/logo/logo.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/menu/menu.ts",
       "declarations": [
         {
@@ -8879,6 +8782,103 @@
           "declaration": {
             "name": "ALMenu",
             "module": "components/menu/menu.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/logo/logo.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-logo\n- **slot**: The component content",
+          "name": "ALLogo",
+          "slots": [
+            {
+              "name": "",
+              "description": "The component content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-logo'"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'northright' | 'odyssey' | 'southleft'"
+              },
+              "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **odyssey** displays the Odyssey logo\n- **southleft** displays the Southleft logo",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "default": "'/'",
+              "description": "The logo link URL",
+              "attribute": "href"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'northright' | 'odyssey' | 'southleft'"
+              },
+              "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **odyssey** displays the Odyssey logo\n- **southleft** displays the Southleft logo",
+              "fieldName": "variant"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "default": "'/'",
+              "description": "The logo link URL",
+              "fieldName": "href"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-logo",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALLogo",
+          "declaration": {
+            "name": "ALLogo",
+            "module": "components/logo/logo.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-logo",
+          "declaration": {
+            "name": "ALLogo",
+            "module": "components/logo/logo.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALLogo",
+            "module": "components/logo/logo.ts"
           }
         }
       ]
@@ -9302,152 +9302,6 @@
           "declaration": {
             "name": "ALMenuItem",
             "module": "components/menu-item/menu-item.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/pagination-item/pagination-item.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-pagination-item\n- **slot**: The pagination item's content",
-          "name": "ALPaginationItem",
-          "slots": [
-            {
-              "name": "",
-              "description": "The pagination item's content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-pagination-item'"
-            },
-            {
-              "kind": "field",
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "description": "Href for link",
-              "attribute": "href"
-            },
-            {
-              "kind": "field",
-              "name": "isDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Disabled state",
-              "attribute": "isDisabled"
-            },
-            {
-              "kind": "field",
-              "name": "isSelected",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Selected state",
-              "attribute": "isSelected"
-            },
-            {
-              "kind": "field",
-              "name": "isExpandable",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Expandable\n- **true** the item contains a popover with a list of page links\n- **false** the item contains a single page link",
-              "attribute": "isExpandable"
-            },
-            {
-              "kind": "field",
-              "name": "ariaLabel",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria label for the link for accessibility",
-              "attribute": "ariaLabel"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "description": "Href for link",
-              "fieldName": "href"
-            },
-            {
-              "name": "isDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Disabled state",
-              "fieldName": "isDisabled"
-            },
-            {
-              "name": "isSelected",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Selected state",
-              "fieldName": "isSelected"
-            },
-            {
-              "name": "isExpandable",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Expandable\n- **true** the item contains a popover with a list of page links\n- **false** the item contains a single page link",
-              "fieldName": "isExpandable"
-            },
-            {
-              "name": "ariaLabel",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria label for the link for accessibility",
-              "fieldName": "ariaLabel"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-pagination-item",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALPaginationItem",
-          "declaration": {
-            "name": "ALPaginationItem",
-            "module": "components/pagination-item/pagination-item.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-pagination-item",
-          "declaration": {
-            "name": "ALPaginationItem",
-            "module": "components/pagination-item/pagination-item.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALPaginationItem",
-            "module": "components/pagination-item/pagination-item.ts"
           }
         }
       ]
@@ -9911,6 +9765,458 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/pagination-item/pagination-item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-pagination-item\n- **slot**: The pagination item's content",
+          "name": "ALPaginationItem",
+          "slots": [
+            {
+              "name": "",
+              "description": "The pagination item's content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-pagination-item'"
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Href for link",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled state",
+              "attribute": "isDisabled"
+            },
+            {
+              "kind": "field",
+              "name": "isSelected",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Selected state",
+              "attribute": "isSelected"
+            },
+            {
+              "kind": "field",
+              "name": "isExpandable",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Expandable\n- **true** the item contains a popover with a list of page links\n- **false** the item contains a single page link",
+              "attribute": "isExpandable"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria label for the link for accessibility",
+              "attribute": "ariaLabel"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Href for link",
+              "fieldName": "href"
+            },
+            {
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled state",
+              "fieldName": "isDisabled"
+            },
+            {
+              "name": "isSelected",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Selected state",
+              "fieldName": "isSelected"
+            },
+            {
+              "name": "isExpandable",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Expandable\n- **true** the item contains a popover with a list of page links\n- **false** the item contains a single page link",
+              "fieldName": "isExpandable"
+            },
+            {
+              "name": "ariaLabel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria label for the link for accessibility",
+              "fieldName": "ariaLabel"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-pagination-item",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALPaginationItem",
+          "declaration": {
+            "name": "ALPaginationItem",
+            "module": "components/pagination-item/pagination-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-pagination-item",
+          "declaration": {
+            "name": "ALPaginationItem",
+            "module": "components/pagination-item/pagination-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALPaginationItem",
+            "module": "components/pagination-item/pagination-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/popover/popover.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-popover\n- **slot**: The main body of the popover\n- **slot** \"header\": The header of the popover that appears above the main slot\n- **slot** \"footer\": The footer of the popover that appears below the main slot\n- **slot** \"trigger\": The trigger that opens/closes the popover",
+          "name": "ALPopover",
+          "slots": [
+            {
+              "name": "",
+              "description": "The main body of the popover"
+            },
+            {
+              "name": "header",
+              "description": "The header of the popover that appears above the main slot"
+            },
+            {
+              "name": "footer",
+              "description": "The footer of the popover that appears below the main slot"
+            },
+            {
+              "name": "trigger",
+              "description": "The trigger that opens/closes the popover"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-popover'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "headingEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "buttonEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconCloseEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "focusTrapEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'menu'"
+              },
+              "description": "Variants\n- **default** Displays the popover panel with padding\n- **menu** Displays the popover panel without padding",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "Heading text that appears in the header region",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "position",
+              "type": {
+                "text": "| 'bottom-center'\n    | 'bottom-right'\n    | 'bottom-left'\n    | 'top-center'\n    | 'top-right'\n    | 'top-left'\n    | 'left'\n    | 'left-top'\n    | 'right'\n    | 'right-top'"
+              },
+              "default": "'bottom-left'",
+              "description": "Positions the dropdown popover absolutely to the trigger.\n- **default** places the popover to the bottom left\n- **bottom-center** places the popover to the bottom center\n- **bottom-right** places the popover to the bottom right\n- **bottom-left** places the popover to the bottom left\n- **top-center** places the popover to the top center\n- **top-right** places the popover to the top right\n- **top-left** places the popover to the top left\n- **left** places the popover to the left\n- **left-top** places the popover to the left top\n- **right** places the popover to the right\n- **right-top** places the popover to the right top",
+              "attribute": "position"
+            },
+            {
+              "kind": "field",
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Is active?\n- **true** Shows the popover container\n- **false** Hides the popover container",
+              "attribute": "isActive"
+            },
+            {
+              "kind": "field",
+              "name": "isDismissible",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Is dismissible?\n- **true** Shows the popover close button\n- **false** Hides the popover close button",
+              "attribute": "isDismissible"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+              "attribute": "ariaLabelledBy"
+            },
+            {
+              "kind": "field",
+              "name": "transitionDelay",
+              "type": {
+                "text": "number"
+              },
+              "default": "400",
+              "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
+              "attribute": "transitionDelay"
+            },
+            {
+              "kind": "field",
+              "name": "popoverTrigger",
+              "type": {
+                "text": "any[]"
+              },
+              "description": "Query the popover trigger"
+            },
+            {
+              "kind": "field",
+              "name": "popoverTriggerButton",
+              "type": {
+                "text": "any"
+              },
+              "description": "Query the popover trigger inner element",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "setAria",
+              "description": "Set aria-expanded to the trigger button\n1. Dynamically sets the aria-labelledby for A11y\n2. Set isExpanded to this.isActive if it's truthy, otherwise, set it to false"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnClickOutside",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ],
+              "description": "Handles the click event outside the component:\n1. Check if the popover is active\n2. Determine if the click occurred inside the active popover\n3. Check if the click occurred outside the active popover\n4. Close the popover if the click occurred outside it"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnKeydown",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Handle on keydown events\n1. When the Enter key is pressed on the trigger, open the popover and prevent default button click\n2. If the popover is open and escape is keyed, close the popover and return focus to the trigger button"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnCloseButton",
+              "description": "Handle on click of close button\n1. Toggle the active state between true and false\n2. Dispatch a custom event on click of close button"
+            },
+            {
+              "kind": "method",
+              "name": "toggleActive",
+              "privacy": "public",
+              "description": "Set popover active state\n1. Toggle the active state between true and false\n2. Open/close the popover container based on isActive"
+            },
+            {
+              "kind": "method",
+              "name": "open",
+              "privacy": "public",
+              "description": "Open popover\n1. Set isActive to true to show the popover\n2. Dispatch a custom event on open"
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "privacy": "public",
+              "description": "Close popover\n1. Set isActive to false to hide the popover\n2. Set the focus on trigger button element when the popover is closed\n3. Dispatch a custom event on close"
+            }
+          ],
+          "events": [
+            {
+              "name": "onPopoverCloseButton",
+              "description": ""
+            },
+            {
+              "name": "onPopoverOpen",
+              "description": ""
+            },
+            {
+              "name": "onPopoverClose",
+              "description": ""
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'menu'"
+              },
+              "description": "Variants\n- **default** Displays the popover panel with padding\n- **menu** Displays the popover panel without padding",
+              "fieldName": "variant"
+            },
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "Heading text that appears in the header region",
+              "fieldName": "heading"
+            },
+            {
+              "name": "position",
+              "type": {
+                "text": "| 'bottom-center'\n    | 'bottom-right'\n    | 'bottom-left'\n    | 'top-center'\n    | 'top-right'\n    | 'top-left'\n    | 'left'\n    | 'left-top'\n    | 'right'\n    | 'right-top'"
+              },
+              "default": "'bottom-left'",
+              "description": "Positions the dropdown popover absolutely to the trigger.\n- **default** places the popover to the bottom left\n- **bottom-center** places the popover to the bottom center\n- **bottom-right** places the popover to the bottom right\n- **bottom-left** places the popover to the bottom left\n- **top-center** places the popover to the top center\n- **top-right** places the popover to the top right\n- **top-left** places the popover to the top left\n- **left** places the popover to the left\n- **left-top** places the popover to the left top\n- **right** places the popover to the right\n- **right-top** places the popover to the right top",
+              "fieldName": "position"
+            },
+            {
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Is active?\n- **true** Shows the popover container\n- **false** Hides the popover container",
+              "fieldName": "isActive"
+            },
+            {
+              "name": "isDismissible",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Is dismissible?\n- **true** Shows the popover close button\n- **false** Hides the popover close button",
+              "fieldName": "isDismissible"
+            },
+            {
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+              "fieldName": "ariaLabelledBy"
+            },
+            {
+              "name": "transitionDelay",
+              "type": {
+                "text": "number"
+              },
+              "default": "400",
+              "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
+              "fieldName": "transitionDelay"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-popover",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALPopover",
+          "declaration": {
+            "name": "ALPopover",
+            "module": "components/popover/popover.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-popover",
+          "declaration": {
+            "name": "ALPopover",
+            "module": "components/popover/popover.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALPopover",
+            "module": "components/popover/popover.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/progress/progress.ts",
       "declarations": [
         {
@@ -10222,312 +10528,6 @@
           "declaration": {
             "name": "ALProgress",
             "module": "components/progress/progress.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/popover/popover.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-popover\n- **slot**: The main body of the popover\n- **slot** \"header\": The header of the popover that appears above the main slot\n- **slot** \"footer\": The footer of the popover that appears below the main slot\n- **slot** \"trigger\": The trigger that opens/closes the popover",
-          "name": "ALPopover",
-          "slots": [
-            {
-              "name": "",
-              "description": "The main body of the popover"
-            },
-            {
-              "name": "header",
-              "description": "The header of the popover that appears above the main slot"
-            },
-            {
-              "name": "footer",
-              "description": "The footer of the popover that appears below the main slot"
-            },
-            {
-              "name": "trigger",
-              "description": "The trigger that opens/closes the popover"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-popover'"
-            },
-            {
-              "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "headingEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "buttonEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "iconCloseEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "focusTrapEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'menu'"
-              },
-              "description": "Variants\n- **default** Displays the popover panel with padding\n- **menu** Displays the popover panel without padding",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "heading",
-              "type": {
-                "text": "string"
-              },
-              "description": "Heading text that appears in the header region",
-              "attribute": "heading"
-            },
-            {
-              "kind": "field",
-              "name": "position",
-              "type": {
-                "text": "| 'bottom-center'\n    | 'bottom-right'\n    | 'bottom-left'\n    | 'top-center'\n    | 'top-right'\n    | 'top-left'\n    | 'left'\n    | 'left-top'\n    | 'right'\n    | 'right-top'"
-              },
-              "default": "'bottom-left'",
-              "description": "Positions the dropdown popover absolutely to the trigger.\n- **default** places the popover to the bottom left\n- **bottom-center** places the popover to the bottom center\n- **bottom-right** places the popover to the bottom right\n- **bottom-left** places the popover to the bottom left\n- **top-center** places the popover to the top center\n- **top-right** places the popover to the top right\n- **top-left** places the popover to the top left\n- **left** places the popover to the left\n- **left-top** places the popover to the left top\n- **right** places the popover to the right\n- **right-top** places the popover to the right top",
-              "attribute": "position"
-            },
-            {
-              "kind": "field",
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Is active?\n- **true** Shows the popover container\n- **false** Hides the popover container",
-              "attribute": "isActive"
-            },
-            {
-              "kind": "field",
-              "name": "isDismissible",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Is dismissible?\n- **true** Shows the popover close button\n- **false** Hides the popover close button",
-              "attribute": "isDismissible"
-            },
-            {
-              "kind": "field",
-              "name": "ariaLabelledBy",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
-              "attribute": "ariaLabelledBy"
-            },
-            {
-              "kind": "field",
-              "name": "transitionDelay",
-              "type": {
-                "text": "number"
-              },
-              "default": "400",
-              "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
-              "attribute": "transitionDelay"
-            },
-            {
-              "kind": "field",
-              "name": "popoverTrigger",
-              "type": {
-                "text": "any[]"
-              },
-              "description": "Query the popover trigger"
-            },
-            {
-              "kind": "field",
-              "name": "popoverTriggerButton",
-              "type": {
-                "text": "any"
-              },
-              "description": "Query the popover trigger inner element",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "setAria",
-              "description": "Set aria-expanded to the trigger button\n1. Dynamically sets the aria-labelledby for A11y\n2. Set isExpanded to this.isActive if it's truthy, otherwise, set it to false"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnClickOutside",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ],
-              "description": "Handles the click event outside the component:\n1. Check if the popover is active\n2. Determine if the click occurred inside the active popover\n3. Check if the click occurred outside the active popover\n4. Close the popover if the click occurred outside it"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnKeydown",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ],
-              "description": "Handle on keydown events\n1. When the Enter key is pressed on the trigger, open the popover and prevent default button click\n2. If the popover is open and escape is keyed, close the popover and return focus to the trigger button"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnCloseButton",
-              "description": "Handle on click of close button\n1. Toggle the active state between true and false\n2. Dispatch a custom event on click of close button"
-            },
-            {
-              "kind": "method",
-              "name": "toggleActive",
-              "privacy": "public",
-              "description": "Set popover active state\n1. Toggle the active state between true and false\n2. Open/close the popover container based on isActive"
-            },
-            {
-              "kind": "method",
-              "name": "open",
-              "privacy": "public",
-              "description": "Open popover\n1. Set isActive to true to show the popover\n2. Dispatch a custom event on open"
-            },
-            {
-              "kind": "method",
-              "name": "close",
-              "privacy": "public",
-              "description": "Close popover\n1. Set isActive to false to hide the popover\n2. Set the focus on trigger button element when the popover is closed\n3. Dispatch a custom event on close"
-            }
-          ],
-          "events": [
-            {
-              "name": "onPopoverCloseButton",
-              "description": ""
-            },
-            {
-              "name": "onPopoverOpen",
-              "description": ""
-            },
-            {
-              "name": "onPopoverClose",
-              "description": ""
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'menu'"
-              },
-              "description": "Variants\n- **default** Displays the popover panel with padding\n- **menu** Displays the popover panel without padding",
-              "fieldName": "variant"
-            },
-            {
-              "name": "heading",
-              "type": {
-                "text": "string"
-              },
-              "description": "Heading text that appears in the header region",
-              "fieldName": "heading"
-            },
-            {
-              "name": "position",
-              "type": {
-                "text": "| 'bottom-center'\n    | 'bottom-right'\n    | 'bottom-left'\n    | 'top-center'\n    | 'top-right'\n    | 'top-left'\n    | 'left'\n    | 'left-top'\n    | 'right'\n    | 'right-top'"
-              },
-              "default": "'bottom-left'",
-              "description": "Positions the dropdown popover absolutely to the trigger.\n- **default** places the popover to the bottom left\n- **bottom-center** places the popover to the bottom center\n- **bottom-right** places the popover to the bottom right\n- **bottom-left** places the popover to the bottom left\n- **top-center** places the popover to the top center\n- **top-right** places the popover to the top right\n- **top-left** places the popover to the top left\n- **left** places the popover to the left\n- **left-top** places the popover to the left top\n- **right** places the popover to the right\n- **right-top** places the popover to the right top",
-              "fieldName": "position"
-            },
-            {
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Is active?\n- **true** Shows the popover container\n- **false** Hides the popover container",
-              "fieldName": "isActive"
-            },
-            {
-              "name": "isDismissible",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Is dismissible?\n- **true** Shows the popover close button\n- **false** Hides the popover close button",
-              "fieldName": "isDismissible"
-            },
-            {
-              "name": "ariaLabelledBy",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
-              "fieldName": "ariaLabelledBy"
-            },
-            {
-              "name": "transitionDelay",
-              "type": {
-                "text": "number"
-              },
-              "default": "400",
-              "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
-              "fieldName": "transitionDelay"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-popover",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALPopover",
-          "declaration": {
-            "name": "ALPopover",
-            "module": "components/popover/popover.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-popover",
-          "declaration": {
-            "name": "ALPopover",
-            "module": "components/popover/popover.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALPopover",
-            "module": "components/popover/popover.ts"
           }
         }
       ]
@@ -11936,538 +11936,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/select/select.model.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/select/select.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-select\n- **slot**: The select content\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
-          "name": "ALSelect",
-          "slots": [
-            {
-              "name": "",
-              "description": "The select content"
-            },
-            {
-              "name": "field-note",
-              "description": "If content is slotted, it will display in place of the fieldNote property"
-            },
-            {
-              "name": "error",
-              "description": "If content is slotted, it will display in place of the errorNote property"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-select'"
-            },
-            {
-              "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "dropdownPanelEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "fieldNoteEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "iconChevronDownEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "inputEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "searchEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "is Active",
-              "attribute": "isActive"
-            },
-            {
-              "kind": "field",
-              "name": "isActiveDropdown",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "is Active select\n1. Select is open when set to true. Close when set to false",
-              "attribute": "isActiveDropdown"
-            },
-            {
-              "kind": "field",
-              "name": "fieldId",
-              "type": {
-                "text": "string"
-              },
-              "description": "The unique id of the select",
-              "attribute": "fieldId"
-            },
-            {
-              "kind": "field",
-              "name": "title",
-              "type": {
-                "text": "string"
-              },
-              "description": "The select's title",
-              "attribute": "title"
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Label'",
-              "description": "The select's label",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "dataSource",
-              "type": {
-                "text": "Array<PartialDataSource>"
-              },
-              "description": "Select Datasource"
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "description": "The select's name attribute",
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "description": "The select's value attribute",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an input element",
-              "attribute": "placeholder"
-            },
-            {
-              "kind": "field",
-              "name": "fieldNote",
-              "type": {
-                "text": "string"
-              },
-              "description": "The select field note",
-              "attribute": "fieldNote"
-            },
-            {
-              "kind": "field",
-              "name": "errorNote",
-              "type": {
-                "text": "string"
-              },
-              "description": "The select error note",
-              "attribute": "errorNote"
-            },
-            {
-              "kind": "field",
-              "name": "ariaDescribedBy",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria describedby\n1. Used to connect the field note in select to the select menu for accessibility",
-              "attribute": "ariaDescribedBy"
-            },
-            {
-              "kind": "field",
-              "name": "isRequired",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "The select's required attribute",
-              "attribute": "isRequired"
-            },
-            {
-              "kind": "field",
-              "name": "isOptional",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
-              "attribute": "isOptional"
-            },
-            {
-              "kind": "field",
-              "name": "isDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "The select's disabled attribute",
-              "attribute": "isDisabled"
-            },
-            {
-              "kind": "field",
-              "name": "isError",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Error state",
-              "attribute": "isError"
-            },
-            {
-              "kind": "field",
-              "name": "isReadonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "description": "Readonly attribute\n- Specifies that an input field is read-only",
-              "attribute": "isReadonly"
-            },
-            {
-              "kind": "field",
-              "name": "hideLabel",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Hide the label?",
-              "attribute": "hideLabel"
-            },
-            {
-              "kind": "field",
-              "name": "hasSearch",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Add a search input to the dropdown panel",
-              "attribute": "hasSearch"
-            },
-            {
-              "kind": "field",
-              "name": "align",
-              "type": {
-                "text": "'bottom' | 'top'"
-              },
-              "default": "'bottom'",
-              "description": "**Select alignment**\n- **bottom** Dropdown panel appears on the bottom\n- **top** Dropdown panel appears on the top",
-              "attribute": "align"
-            },
-            {
-              "kind": "field",
-              "name": "activeElement",
-              "type": {
-                "text": "ALListItem"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "listItems",
-              "type": {
-                "text": "Array<ALListItem>"
-              },
-              "description": "Query all the list items",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "handleOnClickOutside",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ],
-              "description": "Handle click outside the component\n1. Close the show hide panel on click outside\n2. If the nav is already closed then we don't care about outside clicks and we\ncan bail early\n3. By the time a user clicks on the page the shadowRoot will almost certainly be\ndefined, but TypeScript isn't that trusting and sees this.shadowRoot as possibly\nundefined. To work around that we'll check that we have a shadowRoot (and a\nrendered .host) element here to appease the TypeScript compiler. This should never\nactually be shown or run for a human end user.\n4. Check to see if we clicked inside the active panel\n5. If the panel is active and we've clicked outside of the panel then it should\nbe closed."
-            },
-            {
-              "kind": "method",
-              "name": "toggleActive",
-              "description": "Set menu active state\n1. Toggle the active state between true and false"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnActiveDropdown",
-              "description": "Handles the activation behavior of the select:\n1. Positions the dropdown panel based on available viewport space\n2. Sets focus to the first element in the dropdown panel or the search box (if available) when active\n3. When the select is active:\n   3.1. If hasSearch is false and a value is available, focuses on the selected item & scrolls to view it\n   3.2. If hasSearch is true and a value is available, focuses on the search box (no need to focus the active element) & scrolls to view it\n4. When the select is active and no value is available:\n   4.1. If hasSearch is false, focuses on the first non-disabled element\n   4.2. If hasSearch is true, as the search box has focus, no need to focus the first non-disabled element"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnKeydown",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ],
-              "description": "Handle on select input keydown\n1. If key selected is enter or spacebar, toggle the menu open/close"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnKeydownDropdownPanel",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ],
-              "description": "Handle on keydown\n1. If the panel is open and escape is keyed, close the menu and return focus to the trigger button\n2. Find the last item in the list. Set the last element to that item to define variable\n3. If the last element is defined, once Tab is selected after that the panel will close"
-            },
-            {
-              "kind": "method",
-              "name": "addClickHandlers",
-              "description": "Lifecycle method triggered when the component is first updated on the page\n1. Attaches click handlers to ALListItem components within the select that do not contain children\n2. If the component is not readonly, clears the input value\n3. If the component is not readonly, focuses on the select after selecting an item\n4. Sets the select value with the text content of the selected list item\n5. Resizes the select to fit the value width if the variant is bare\n6. Ensures only the last selected item remains active"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnChange",
-              "description": "Change output binding\n1. If the input field is not readonly, then allow typing\n2. Clear the label & value's to show the filling text\n3. Set the select to active while filling"
-            }
-          ],
-          "events": [
-            {
-              "name": "onSelectOpen",
-              "description": ""
-            },
-            {
-              "name": "onSelectClose",
-              "description": ""
-            }
-          ],
-          "attributes": [
-            {
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "is Active",
-              "fieldName": "isActive"
-            },
-            {
-              "name": "isActiveDropdown",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "is Active select\n1. Select is open when set to true. Close when set to false",
-              "fieldName": "isActiveDropdown"
-            },
-            {
-              "name": "fieldId",
-              "type": {
-                "text": "string"
-              },
-              "description": "The unique id of the select",
-              "fieldName": "fieldId"
-            },
-            {
-              "name": "title",
-              "type": {
-                "text": "string"
-              },
-              "description": "The select's title",
-              "fieldName": "title"
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Label'",
-              "description": "The select's label",
-              "fieldName": "label"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "description": "The select's name attribute",
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "description": "The select's value attribute",
-              "fieldName": "value"
-            },
-            {
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an input element",
-              "fieldName": "placeholder"
-            },
-            {
-              "name": "fieldNote",
-              "type": {
-                "text": "string"
-              },
-              "description": "The select field note",
-              "fieldName": "fieldNote"
-            },
-            {
-              "name": "errorNote",
-              "type": {
-                "text": "string"
-              },
-              "description": "The select error note",
-              "fieldName": "errorNote"
-            },
-            {
-              "name": "ariaDescribedBy",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria describedby\n1. Used to connect the field note in select to the select menu for accessibility",
-              "fieldName": "ariaDescribedBy"
-            },
-            {
-              "name": "isRequired",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "The select's required attribute",
-              "fieldName": "isRequired"
-            },
-            {
-              "name": "isOptional",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
-              "fieldName": "isOptional"
-            },
-            {
-              "name": "isDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "The select's disabled attribute",
-              "fieldName": "isDisabled"
-            },
-            {
-              "name": "isError",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Error state",
-              "fieldName": "isError"
-            },
-            {
-              "name": "isReadonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "description": "Readonly attribute\n- Specifies that an input field is read-only",
-              "fieldName": "isReadonly"
-            },
-            {
-              "name": "hideLabel",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Hide the label?",
-              "fieldName": "hideLabel"
-            },
-            {
-              "name": "hasSearch",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Add a search input to the dropdown panel",
-              "fieldName": "hasSearch"
-            },
-            {
-              "name": "align",
-              "type": {
-                "text": "'bottom' | 'top'"
-              },
-              "default": "'bottom'",
-              "description": "**Select alignment**\n- **bottom** Dropdown panel appears on the bottom\n- **top** Dropdown panel appears on the top",
-              "fieldName": "align"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-select",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALSelect",
-          "declaration": {
-            "name": "ALSelect",
-            "module": "components/select/select.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-select",
-          "declaration": {
-            "name": "ALSelect",
-            "module": "components/select/select.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALSelect",
-            "module": "components/select/select.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/search/search.ts",
       "declarations": [
         {
@@ -13110,6 +12578,634 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/select/select.model.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/select/select.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-select\n- **slot**: The select content\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
+          "name": "ALSelect",
+          "slots": [
+            {
+              "name": "",
+              "description": "The select content"
+            },
+            {
+              "name": "field-note",
+              "description": "If content is slotted, it will display in place of the fieldNote property"
+            },
+            {
+              "name": "error",
+              "description": "If content is slotted, it will display in place of the errorNote property"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-select'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "dropdownPanelEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "fieldNoteEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconChevronDownEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "inputEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "searchEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "is Active",
+              "attribute": "isActive"
+            },
+            {
+              "kind": "field",
+              "name": "isActiveDropdown",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "is Active select\n1. Select is open when set to true. Close when set to false",
+              "attribute": "isActiveDropdown"
+            },
+            {
+              "kind": "field",
+              "name": "fieldId",
+              "type": {
+                "text": "string"
+              },
+              "description": "The unique id of the select",
+              "attribute": "fieldId"
+            },
+            {
+              "kind": "field",
+              "name": "title",
+              "type": {
+                "text": "string"
+              },
+              "description": "The select's title",
+              "attribute": "title"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Label'",
+              "description": "The select's label",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "dataSource",
+              "type": {
+                "text": "Array<PartialDataSource>"
+              },
+              "description": "Select Datasource"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "The select's name attribute",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "The select's value attribute",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an input element",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "fieldNote",
+              "type": {
+                "text": "string"
+              },
+              "description": "The select field note",
+              "attribute": "fieldNote"
+            },
+            {
+              "kind": "field",
+              "name": "errorNote",
+              "type": {
+                "text": "string"
+              },
+              "description": "The select error note",
+              "attribute": "errorNote"
+            },
+            {
+              "kind": "field",
+              "name": "ariaDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria describedby\n1. Used to connect the field note in select to the select menu for accessibility",
+              "attribute": "ariaDescribedBy"
+            },
+            {
+              "kind": "field",
+              "name": "isRequired",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The select's required attribute",
+              "attribute": "isRequired"
+            },
+            {
+              "kind": "field",
+              "name": "isOptional",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
+              "attribute": "isOptional"
+            },
+            {
+              "kind": "field",
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "The select's disabled attribute",
+              "attribute": "isDisabled"
+            },
+            {
+              "kind": "field",
+              "name": "isError",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Error state",
+              "attribute": "isError"
+            },
+            {
+              "kind": "field",
+              "name": "isReadonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Readonly attribute\n- Specifies that an input field is read-only",
+              "attribute": "isReadonly"
+            },
+            {
+              "kind": "field",
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Hide the label?",
+              "attribute": "hideLabel"
+            },
+            {
+              "kind": "field",
+              "name": "hasSearch",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Add a search input to the dropdown panel",
+              "attribute": "hasSearch"
+            },
+            {
+              "kind": "field",
+              "name": "align",
+              "type": {
+                "text": "'bottom' | 'top'"
+              },
+              "default": "'bottom'",
+              "description": "**Select alignment**\n- **bottom** Dropdown panel appears on the bottom\n- **top** Dropdown panel appears on the top",
+              "attribute": "align"
+            },
+            {
+              "kind": "field",
+              "name": "activeElement",
+              "type": {
+                "text": "ALListItem"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "listItems",
+              "type": {
+                "text": "Array<ALListItem>"
+              },
+              "description": "Query all the list items",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "handleOnClickOutside",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ],
+              "description": "Handle click outside the component\n1. Close the show hide panel on click outside\n2. If the nav is already closed then we don't care about outside clicks and we\ncan bail early\n3. By the time a user clicks on the page the shadowRoot will almost certainly be\ndefined, but TypeScript isn't that trusting and sees this.shadowRoot as possibly\nundefined. To work around that we'll check that we have a shadowRoot (and a\nrendered .host) element here to appease the TypeScript compiler. This should never\nactually be shown or run for a human end user.\n4. Check to see if we clicked inside the active panel\n5. If the panel is active and we've clicked outside of the panel then it should\nbe closed."
+            },
+            {
+              "kind": "method",
+              "name": "toggleActive",
+              "description": "Set menu active state\n1. Toggle the active state between true and false"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnActiveDropdown",
+              "description": "Handles the activation behavior of the select:\n1. Positions the dropdown panel based on available viewport space\n2. Sets focus to the first element in the dropdown panel or the search box (if available) when active\n3. When the select is active:\n   3.1. If hasSearch is false and a value is available, focuses on the selected item & scrolls to view it\n   3.2. If hasSearch is true and a value is available, focuses on the search box (no need to focus the active element) & scrolls to view it\n4. When the select is active and no value is available:\n   4.1. If hasSearch is false, focuses on the first non-disabled element\n   4.2. If hasSearch is true, as the search box has focus, no need to focus the first non-disabled element"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnKeydown",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Handle on select input keydown\n1. If key selected is enter or spacebar, toggle the menu open/close"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnKeydownDropdownPanel",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Handle on keydown\n1. If the panel is open and escape is keyed, close the menu and return focus to the trigger button\n2. Find the last item in the list. Set the last element to that item to define variable\n3. If the last element is defined, once Tab is selected after that the panel will close"
+            },
+            {
+              "kind": "method",
+              "name": "addClickHandlers",
+              "description": "Lifecycle method triggered when the component is first updated on the page\n1. Attaches click handlers to ALListItem components within the select that do not contain children\n2. If the component is not readonly, clears the input value\n3. If the component is not readonly, focuses on the select after selecting an item\n4. Sets the select value with the text content of the selected list item\n5. Resizes the select to fit the value width if the variant is bare\n6. Ensures only the last selected item remains active"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnChange",
+              "description": "Change output binding\n1. If the input field is not readonly, then allow typing\n2. Clear the label & value's to show the filling text\n3. Set the select to active while filling"
+            }
+          ],
+          "events": [
+            {
+              "name": "onSelectOpen",
+              "description": ""
+            },
+            {
+              "name": "onSelectClose",
+              "description": ""
+            }
+          ],
+          "attributes": [
+            {
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "is Active",
+              "fieldName": "isActive"
+            },
+            {
+              "name": "isActiveDropdown",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "is Active select\n1. Select is open when set to true. Close when set to false",
+              "fieldName": "isActiveDropdown"
+            },
+            {
+              "name": "fieldId",
+              "type": {
+                "text": "string"
+              },
+              "description": "The unique id of the select",
+              "fieldName": "fieldId"
+            },
+            {
+              "name": "title",
+              "type": {
+                "text": "string"
+              },
+              "description": "The select's title",
+              "fieldName": "title"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Label'",
+              "description": "The select's label",
+              "fieldName": "label"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "The select's name attribute",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "The select's value attribute",
+              "fieldName": "value"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an input element",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "fieldNote",
+              "type": {
+                "text": "string"
+              },
+              "description": "The select field note",
+              "fieldName": "fieldNote"
+            },
+            {
+              "name": "errorNote",
+              "type": {
+                "text": "string"
+              },
+              "description": "The select error note",
+              "fieldName": "errorNote"
+            },
+            {
+              "name": "ariaDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria describedby\n1. Used to connect the field note in select to the select menu for accessibility",
+              "fieldName": "ariaDescribedBy"
+            },
+            {
+              "name": "isRequired",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The select's required attribute",
+              "fieldName": "isRequired"
+            },
+            {
+              "name": "isOptional",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
+              "fieldName": "isOptional"
+            },
+            {
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "The select's disabled attribute",
+              "fieldName": "isDisabled"
+            },
+            {
+              "name": "isError",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Error state",
+              "fieldName": "isError"
+            },
+            {
+              "name": "isReadonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Readonly attribute\n- Specifies that an input field is read-only",
+              "fieldName": "isReadonly"
+            },
+            {
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Hide the label?",
+              "fieldName": "hideLabel"
+            },
+            {
+              "name": "hasSearch",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Add a search input to the dropdown panel",
+              "fieldName": "hasSearch"
+            },
+            {
+              "name": "align",
+              "type": {
+                "text": "'bottom' | 'top'"
+              },
+              "default": "'bottom'",
+              "description": "**Select alignment**\n- **bottom** Dropdown panel appears on the bottom\n- **top** Dropdown panel appears on the top",
+              "fieldName": "align"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-select",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALSelect",
+          "declaration": {
+            "name": "ALSelect",
+            "module": "components/select/select.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-select",
+          "declaration": {
+            "name": "ALSelect",
+            "module": "components/select/select.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALSelect",
+            "module": "components/select/select.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/stepper/stepper.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-stepper\n- **slot**: The stepper content, a set of stepper items",
+          "name": "ALStepper",
+          "slots": [
+            {
+              "name": "",
+              "description": "The stepper content, a set of stepper items"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-stepper'"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'vertical'"
+              },
+              "description": "Variant\n- **default** renders a Stepper with a horizontal layout\n- **vertical** renders a Stepper with a vertical layout",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "stepperItems",
+              "type": {
+                "text": "Array<ALStepperItem>"
+              },
+              "description": "Query the Stepper item components within the Stepper"
+            },
+            {
+              "kind": "method",
+              "name": "setStepNumber",
+              "description": "Set step number\n1. Loop through all the ALStepperItem's and set the step number based on the index\n2. Check if it's the last item in the array and set the isLast property"
+            },
+            {
+              "kind": "method",
+              "name": "setVerticalItems",
+              "description": "Set vertical items\n1. If the varient is equal to vertical, set the ALStepperItem's to vertical as well"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'vertical'"
+              },
+              "description": "Variant\n- **default** renders a Stepper with a horizontal layout\n- **vertical** renders a Stepper with a vertical layout",
+              "fieldName": "variant"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-stepper",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALStepper",
+          "declaration": {
+            "name": "ALStepper",
+            "module": "components/stepper/stepper.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-stepper",
+          "declaration": {
+            "name": "ALStepper",
+            "module": "components/stepper/stepper.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALStepper",
+            "module": "components/stepper/stepper.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/spinner/spinner.ts",
       "declarations": [
         {
@@ -13306,102 +13402,6 @@
           "declaration": {
             "name": "ALSkeleton",
             "module": "components/skeleton/skeleton.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/stepper/stepper.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-stepper\n- **slot**: The stepper content, a set of stepper items",
-          "name": "ALStepper",
-          "slots": [
-            {
-              "name": "",
-              "description": "The stepper content, a set of stepper items"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-stepper'"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'vertical'"
-              },
-              "description": "Variant\n- **default** renders a Stepper with a horizontal layout\n- **vertical** renders a Stepper with a vertical layout",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "stepperItems",
-              "type": {
-                "text": "Array<ALStepperItem>"
-              },
-              "description": "Query the Stepper item components within the Stepper"
-            },
-            {
-              "kind": "method",
-              "name": "setStepNumber",
-              "description": "Set step number\n1. Loop through all the ALStepperItem's and set the step number based on the index\n2. Check if it's the last item in the array and set the isLast property"
-            },
-            {
-              "kind": "method",
-              "name": "setVerticalItems",
-              "description": "Set vertical items\n1. If the varient is equal to vertical, set the ALStepperItem's to vertical as well"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'vertical'"
-              },
-              "description": "Variant\n- **default** renders a Stepper with a horizontal layout\n- **vertical** renders a Stepper with a vertical layout",
-              "fieldName": "variant"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-stepper",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALStepper",
-          "declaration": {
-            "name": "ALStepper",
-            "module": "components/stepper/stepper.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-stepper",
-          "declaration": {
-            "name": "ALStepper",
-            "module": "components/stepper/stepper.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALStepper",
-            "module": "components/stepper/stepper.ts"
           }
         }
       ]
@@ -13741,223 +13741,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/tab-panel/tab-panel.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-tab-panel\n- **slot**: The tab panel content",
-          "name": "ALTabPanel",
-          "slots": [
-            {
-              "name": "",
-              "description": "The tab panel content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-tab-panel'"
-            },
-            {
-              "kind": "field",
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Active state\n- **true** Renders a tab panel with selected/active state\n- **false** Renders a tab panel without selected/active state",
-              "attribute": "isActive"
-            },
-            {
-              "kind": "field",
-              "name": "ariaId",
-              "type": {
-                "text": "string"
-              },
-              "description": "ID used to connect the tab panel to the tab aria-controls",
-              "attribute": "ariaId"
-            },
-            {
-              "kind": "field",
-              "name": "ariaLabelledBy",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria labelledby property\n- Used to connect tab trigger and tab panel for accessibility",
-              "attribute": "ariaLabelledBy"
-            },
-            {
-              "kind": "field",
-              "name": "idx",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "Index to track tab panel",
-              "attribute": "idx"
-            },
-            {
-              "kind": "field",
-              "name": "tabPanelEl",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "description": "Query the tab panel element inside the ALTabPanel"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Active state\n- **true** Renders a tab panel with selected/active state\n- **false** Renders a tab panel without selected/active state",
-              "fieldName": "isActive"
-            },
-            {
-              "name": "ariaId",
-              "type": {
-                "text": "string"
-              },
-              "description": "ID used to connect the tab panel to the tab aria-controls",
-              "fieldName": "ariaId"
-            },
-            {
-              "name": "ariaLabelledBy",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria labelledby property\n- Used to connect tab trigger and tab panel for accessibility",
-              "fieldName": "ariaLabelledBy"
-            },
-            {
-              "name": "idx",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "Index to track tab panel",
-              "fieldName": "idx"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-tab-panel",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALTabPanel",
-          "declaration": {
-            "name": "ALTabPanel",
-            "module": "components/tab-panel/tab-panel.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-tab-panel",
-          "declaration": {
-            "name": "ALTabPanel",
-            "module": "components/tab-panel/tab-panel.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALTabPanel",
-            "module": "components/tab-panel/tab-panel.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/text-passage/text-passage.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-text-passage\n- **slot**: The text passage content",
-          "name": "ALTextPassage",
-          "slots": [
-            {
-              "name": "",
-              "description": "The text passage content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-text-passage'"
-            },
-            {
-              "kind": "field",
-              "name": "maxWidth",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
-              "attribute": "maxWidth"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "maxWidth",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
-              "fieldName": "maxWidth"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-text-passage",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALTextPassage",
-          "declaration": {
-            "name": "ALTextPassage",
-            "module": "components/text-passage/text-passage.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-text-passage",
-          "declaration": {
-            "name": "ALTextPassage",
-            "module": "components/text-passage/text-passage.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALTextPassage",
-            "module": "components/text-passage/text-passage.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/tabs/tabs.ts",
       "declarations": [
         {
@@ -14219,6 +14002,223 @@
           "declaration": {
             "name": "ALTabs",
             "module": "components/tabs/tabs.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/text-passage/text-passage.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-text-passage\n- **slot**: The text passage content",
+          "name": "ALTextPassage",
+          "slots": [
+            {
+              "name": "",
+              "description": "The text passage content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-text-passage'"
+            },
+            {
+              "kind": "field",
+              "name": "maxWidth",
+              "type": {
+                "text": "'sm'"
+              },
+              "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
+              "attribute": "maxWidth"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "maxWidth",
+              "type": {
+                "text": "'sm'"
+              },
+              "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
+              "fieldName": "maxWidth"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-text-passage",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALTextPassage",
+          "declaration": {
+            "name": "ALTextPassage",
+            "module": "components/text-passage/text-passage.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-text-passage",
+          "declaration": {
+            "name": "ALTextPassage",
+            "module": "components/text-passage/text-passage.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALTextPassage",
+            "module": "components/text-passage/text-passage.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/tab-panel/tab-panel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-tab-panel\n- **slot**: The tab panel content",
+          "name": "ALTabPanel",
+          "slots": [
+            {
+              "name": "",
+              "description": "The tab panel content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-tab-panel'"
+            },
+            {
+              "kind": "field",
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Active state\n- **true** Renders a tab panel with selected/active state\n- **false** Renders a tab panel without selected/active state",
+              "attribute": "isActive"
+            },
+            {
+              "kind": "field",
+              "name": "ariaId",
+              "type": {
+                "text": "string"
+              },
+              "description": "ID used to connect the tab panel to the tab aria-controls",
+              "attribute": "ariaId"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria labelledby property\n- Used to connect tab trigger and tab panel for accessibility",
+              "attribute": "ariaLabelledBy"
+            },
+            {
+              "kind": "field",
+              "name": "idx",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Index to track tab panel",
+              "attribute": "idx"
+            },
+            {
+              "kind": "field",
+              "name": "tabPanelEl",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "description": "Query the tab panel element inside the ALTabPanel"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Active state\n- **true** Renders a tab panel with selected/active state\n- **false** Renders a tab panel without selected/active state",
+              "fieldName": "isActive"
+            },
+            {
+              "name": "ariaId",
+              "type": {
+                "text": "string"
+              },
+              "description": "ID used to connect the tab panel to the tab aria-controls",
+              "fieldName": "ariaId"
+            },
+            {
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria labelledby property\n- Used to connect tab trigger and tab panel for accessibility",
+              "fieldName": "ariaLabelledBy"
+            },
+            {
+              "name": "idx",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Index to track tab panel",
+              "fieldName": "idx"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-tab-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALTabPanel",
+          "declaration": {
+            "name": "ALTabPanel",
+            "module": "components/tab-panel/tab-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-tab-panel",
+          "declaration": {
+            "name": "ALTabPanel",
+            "module": "components/tab-panel/tab-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALTabPanel",
+            "module": "components/tab-panel/tab-panel.ts"
           }
         }
       ]
@@ -14847,6 +14847,136 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/theme-switcher/theme-switcher.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-theme-switcher\n- **slot**: The component content",
+          "name": "ALThemeSwitcher",
+          "slots": [
+            {
+              "name": "",
+              "description": "The component content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-theme-switcher'"
+            },
+            {
+              "kind": "field",
+              "name": "scopedOnly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When true, do not perform the legacy global `<style>` swap."
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "popoverEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "buttonEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "menuEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "menuItemEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconSettingsEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "setTheme",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "ThemeKey"
+                  }
+                }
+              ],
+              "description": "Set theme by key. The data-driven implementation:\n\n  1. Walk up the DOM until we find an `<al-theme>` ancestor (the scoped\n     target). When present, set `brand` and `mode` attributes on it —\n     no global mutation.\n\n  2. If no `<al-theme>` ancestor exists AND `scopedOnly` is false,\n     perform the legacy `<style id=\"al-tokens-sheet\">` swap. This is\n     the `dual` fallback the migration manifest requires (G2).\n\n  3. Dispatch `onThemeSwitcherChange` with the resolved attrs."
+            },
+            {
+              "kind": "method",
+              "name": "setStyles",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "ThemeKey"
+                  }
+                }
+              ],
+              "description": "Backward-compatible alias. Delete once T6.1 codemods consumers."
+            }
+          ],
+          "events": [
+            {
+              "name": "onThemeSwitcherChange",
+              "description": ""
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-theme-switcher",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALThemeSwitcher",
+          "declaration": {
+            "name": "ALThemeSwitcher",
+            "module": "components/theme-switcher/theme-switcher.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-theme-switcher",
+          "declaration": {
+            "name": "ALThemeSwitcher",
+            "module": "components/theme-switcher/theme-switcher.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALThemeSwitcher",
+            "module": "components/theme-switcher/theme-switcher.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/time-selector-list/time-selector-list.ts",
       "declarations": [
         {
@@ -15190,266 +15320,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/theme-switcher/theme-switcher.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-theme-switcher\n- **slot**: The component content",
-          "name": "ALThemeSwitcher",
-          "slots": [
-            {
-              "name": "",
-              "description": "The component content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-theme-switcher'"
-            },
-            {
-              "kind": "field",
-              "name": "scopedOnly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "When true, do not perform the legacy global `<style>` swap."
-            },
-            {
-              "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "popoverEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "buttonEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "menuEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "menuItemEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "iconSettingsEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "setTheme",
-              "parameters": [
-                {
-                  "name": "key",
-                  "type": {
-                    "text": "ThemeKey"
-                  }
-                }
-              ],
-              "description": "Set theme by key. The data-driven implementation:\n\n  1. Walk up the DOM until we find an `<al-theme>` ancestor (the scoped\n     target). When present, set `brand` and `mode` attributes on it —\n     no global mutation.\n\n  2. If no `<al-theme>` ancestor exists AND `scopedOnly` is false,\n     perform the legacy `<style id=\"al-tokens-sheet\">` swap. This is\n     the `dual` fallback the migration manifest requires (G2).\n\n  3. Dispatch `onThemeSwitcherChange` with the resolved attrs."
-            },
-            {
-              "kind": "method",
-              "name": "setStyles",
-              "parameters": [
-                {
-                  "name": "key",
-                  "type": {
-                    "text": "ThemeKey"
-                  }
-                }
-              ],
-              "description": "Backward-compatible alias. Delete once T6.1 codemods consumers."
-            }
-          ],
-          "events": [
-            {
-              "name": "onThemeSwitcherChange",
-              "description": ""
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-theme-switcher",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALThemeSwitcher",
-          "declaration": {
-            "name": "ALThemeSwitcher",
-            "module": "components/theme-switcher/theme-switcher.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-theme-switcher",
-          "declaration": {
-            "name": "ALThemeSwitcher",
-            "module": "components/theme-switcher/theme-switcher.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALThemeSwitcher",
-            "module": "components/theme-switcher/theme-switcher.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/toast-group/toast-group.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-toast-group\n- **slot**: One or more individual toast components",
-          "name": "ALToastGroup",
-          "slots": [
-            {
-              "name": "",
-              "description": "One or more individual toast components"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-toast-group'"
-            },
-            {
-              "kind": "field",
-              "name": "position",
-              "type": {
-                "text": "'top' | 'bottom'"
-              },
-              "description": "Position property\n- **default** Displays the toast group where ever it's placed on the page\n- **top** Displays the toast group absolutely at the top center of the screen\n- **bottom** Displays the toast group absolutely at the top center of the screen",
-              "attribute": "position"
-            },
-            {
-              "kind": "field",
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Is active?\n- **true** Displays the toast group on the screen\n- **false** Hides the toast group on the screen",
-              "attribute": "isActive"
-            },
-            {
-              "kind": "field",
-              "name": "toastList",
-              "type": {
-                "text": "Array<ALToast>"
-              },
-              "description": "Query the toast components in the toast group"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnToastClose",
-              "description": "Handle a toast closed event\n1. Find the number of currently active toasts in the group\n2. If there are no active toasts, close the toast group"
-            },
-            {
-              "kind": "method",
-              "name": "open",
-              "privacy": "public",
-              "description": "Open toast group\n1. Set active to true to show the toasts\n2. Dispatch a custom event on open of the toast group"
-            },
-            {
-              "kind": "method",
-              "name": "close",
-              "privacy": "public",
-              "description": "Close toast group\n1. Set active to true to show the toasts\n2. Dispatch a custom event on close of the toast group"
-            }
-          ],
-          "events": [
-            {
-              "name": "onToastGroupOpen",
-              "description": ""
-            },
-            {
-              "name": "onToastGroupClose",
-              "description": ""
-            }
-          ],
-          "attributes": [
-            {
-              "name": "position",
-              "type": {
-                "text": "'top' | 'bottom'"
-              },
-              "description": "Position property\n- **default** Displays the toast group where ever it's placed on the page\n- **top** Displays the toast group absolutely at the top center of the screen\n- **bottom** Displays the toast group absolutely at the top center of the screen",
-              "fieldName": "position"
-            },
-            {
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Is active?\n- **true** Displays the toast group on the screen\n- **false** Hides the toast group on the screen",
-              "fieldName": "isActive"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-toast-group",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALToastGroup",
-          "declaration": {
-            "name": "ALToastGroup",
-            "module": "components/toast-group/toast-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-toast-group",
-          "declaration": {
-            "name": "ALToastGroup",
-            "module": "components/toast-group/toast-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALToastGroup",
-            "module": "components/toast-group/toast-group.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/toast/toast.ts",
       "declarations": [
         {
@@ -15739,6 +15609,136 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/toast-group/toast-group.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-toast-group\n- **slot**: One or more individual toast components",
+          "name": "ALToastGroup",
+          "slots": [
+            {
+              "name": "",
+              "description": "One or more individual toast components"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-toast-group'"
+            },
+            {
+              "kind": "field",
+              "name": "position",
+              "type": {
+                "text": "'top' | 'bottom'"
+              },
+              "description": "Position property\n- **default** Displays the toast group where ever it's placed on the page\n- **top** Displays the toast group absolutely at the top center of the screen\n- **bottom** Displays the toast group absolutely at the top center of the screen",
+              "attribute": "position"
+            },
+            {
+              "kind": "field",
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Is active?\n- **true** Displays the toast group on the screen\n- **false** Hides the toast group on the screen",
+              "attribute": "isActive"
+            },
+            {
+              "kind": "field",
+              "name": "toastList",
+              "type": {
+                "text": "Array<ALToast>"
+              },
+              "description": "Query the toast components in the toast group"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnToastClose",
+              "description": "Handle a toast closed event\n1. Find the number of currently active toasts in the group\n2. If there are no active toasts, close the toast group"
+            },
+            {
+              "kind": "method",
+              "name": "open",
+              "privacy": "public",
+              "description": "Open toast group\n1. Set active to true to show the toasts\n2. Dispatch a custom event on open of the toast group"
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "privacy": "public",
+              "description": "Close toast group\n1. Set active to true to show the toasts\n2. Dispatch a custom event on close of the toast group"
+            }
+          ],
+          "events": [
+            {
+              "name": "onToastGroupOpen",
+              "description": ""
+            },
+            {
+              "name": "onToastGroupClose",
+              "description": ""
+            }
+          ],
+          "attributes": [
+            {
+              "name": "position",
+              "type": {
+                "text": "'top' | 'bottom'"
+              },
+              "description": "Position property\n- **default** Displays the toast group where ever it's placed on the page\n- **top** Displays the toast group absolutely at the top center of the screen\n- **bottom** Displays the toast group absolutely at the top center of the screen",
+              "fieldName": "position"
+            },
+            {
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Is active?\n- **true** Displays the toast group on the screen\n- **false** Hides the toast group on the screen",
+              "fieldName": "isActive"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-toast-group",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALToastGroup",
+          "declaration": {
+            "name": "ALToastGroup",
+            "module": "components/toast-group/toast-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-toast-group",
+          "declaration": {
+            "name": "ALToastGroup",
+            "module": "components/toast-group/toast-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALToastGroup",
+            "module": "components/toast-group/toast-group.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/toggle/toggle.ts",
       "declarations": [
         {
@@ -15899,246 +15899,6 @@
           "declaration": {
             "name": "ALToggle",
             "module": "components/toggle/toggle.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/toggle-button/toggle-button.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-toggle-button\n- **slot**: The content to display in the toggle button",
-          "name": "ALToggleButton",
-          "slots": [
-            {
-              "name": "",
-              "description": "The content to display in the toggle button"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-toggle-button'"
-            },
-            {
-              "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'background'"
-              },
-              "description": "Variant\n- **default** renders the toggle button without background styles\n- **background** renders the toggle button with background styles",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "isSelected",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Indicates the selected state of the toggle button.",
-              "attribute": "isSelected"
-            },
-            {
-              "kind": "field",
-              "name": "isSmall",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "If true, a fixed width will be set on the button.\n- Dynamically set based on the slotted component",
-              "attribute": "isSmall"
-            },
-            {
-              "kind": "field",
-              "name": "hasToggle",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Has toggle?\n- Is dynamically set if the first time slotted is a ALPopover or ALMenu\n- **true** does not toggle the isSelected state\n- **false** toggles the isSelected state",
-              "attribute": "hasToggle"
-            },
-            {
-              "kind": "field",
-              "name": "toggleButton",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "description": "Query the toggle button"
-            },
-            {
-              "kind": "field",
-              "name": "toggleButtonContent",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "description": "Query the toggle button content"
-            },
-            {
-              "kind": "field",
-              "name": "slottedEls",
-              "type": {
-                "text": "Array<any>"
-              },
-              "description": "Query the slotted elements"
-            },
-            {
-              "kind": "field",
-              "name": "hasPopover",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Check if toggle button has a popover and set property",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "setIsSmall",
-              "description": "Set is small\n1. If the toggle button content width is less than 48, then set isSmall to true to remove the padding."
-            },
-            {
-              "kind": "method",
-              "name": "toggleSelected",
-              "description": "Toggle toggle button selected state\n1. Toggle the selected state between true and false\n2. Select/deselect the toggle button based on isSelected"
-            },
-            {
-              "kind": "method",
-              "name": "selectToggleButton",
-              "privacy": "public",
-              "description": "Select the toggle button\n1. Set isSelected to true\n2. If has a slotted popover, set is active to true\n3. Dispatch the custom event"
-            },
-            {
-              "kind": "method",
-              "name": "deselectToggleButton",
-              "privacy": "public",
-              "description": "Deselect the toggle button\n1. Set isSelected to false\n2. Return focus to the toggle button\n3. If has a slotted popover, set is active to false\n4. Dispatch the custom event"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnClick",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ],
-              "description": "Handle on click\n1. If the toggle button is clicked, toggle the selected state"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnKeydown",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ],
-              "description": "Handle on keydown\n1. If enter key is pressed, set selected state"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnClickOutside",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ],
-              "description": "Handles the click event outside the component:\n1. Check if the toggle button is selected\n2. Determine if the click occurred inside the selected toggle button\n3. Check if the click occurred outside the selected toggle button\n4. Close the toggle button if the click occurred outside it"
-            }
-          ],
-          "events": [
-            {
-              "name": "onToggleButtonSelect",
-              "description": ""
-            },
-            {
-              "name": "onToggleButtonDeselect",
-              "description": ""
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'background'"
-              },
-              "description": "Variant\n- **default** renders the toggle button without background styles\n- **background** renders the toggle button with background styles",
-              "fieldName": "variant"
-            },
-            {
-              "name": "isSelected",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Indicates the selected state of the toggle button.",
-              "fieldName": "isSelected"
-            },
-            {
-              "name": "isSmall",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "If true, a fixed width will be set on the button.\n- Dynamically set based on the slotted component",
-              "fieldName": "isSmall"
-            },
-            {
-              "name": "hasToggle",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Has toggle?\n- Is dynamically set if the first time slotted is a ALPopover or ALMenu\n- **true** does not toggle the isSelected state\n- **false** toggles the isSelected state",
-              "fieldName": "hasToggle"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-toggle-button",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALToggleButton",
-          "declaration": {
-            "name": "ALToggleButton",
-            "module": "components/toggle-button/toggle-button.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-toggle-button",
-          "declaration": {
-            "name": "ALToggleButton",
-            "module": "components/toggle-button/toggle-button.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALToggleButton",
-            "module": "components/toggle-button/toggle-button.ts"
           }
         }
       ]
@@ -16560,6 +16320,246 @@
           "declaration": {
             "name": "ALToggleButtonGroup",
             "module": "components/toggle-button-group/toggle-button-group.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/toggle-button/toggle-button.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-toggle-button\n- **slot**: The content to display in the toggle button",
+          "name": "ALToggleButton",
+          "slots": [
+            {
+              "name": "",
+              "description": "The content to display in the toggle button"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-toggle-button'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'background'"
+              },
+              "description": "Variant\n- **default** renders the toggle button without background styles\n- **background** renders the toggle button with background styles",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "isSelected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Indicates the selected state of the toggle button.",
+              "attribute": "isSelected"
+            },
+            {
+              "kind": "field",
+              "name": "isSmall",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "If true, a fixed width will be set on the button.\n- Dynamically set based on the slotted component",
+              "attribute": "isSmall"
+            },
+            {
+              "kind": "field",
+              "name": "hasToggle",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Has toggle?\n- Is dynamically set if the first time slotted is a ALPopover or ALMenu\n- **true** does not toggle the isSelected state\n- **false** toggles the isSelected state",
+              "attribute": "hasToggle"
+            },
+            {
+              "kind": "field",
+              "name": "toggleButton",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "description": "Query the toggle button"
+            },
+            {
+              "kind": "field",
+              "name": "toggleButtonContent",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "description": "Query the toggle button content"
+            },
+            {
+              "kind": "field",
+              "name": "slottedEls",
+              "type": {
+                "text": "Array<any>"
+              },
+              "description": "Query the slotted elements"
+            },
+            {
+              "kind": "field",
+              "name": "hasPopover",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Check if toggle button has a popover and set property",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "setIsSmall",
+              "description": "Set is small\n1. If the toggle button content width is less than 48, then set isSmall to true to remove the padding."
+            },
+            {
+              "kind": "method",
+              "name": "toggleSelected",
+              "description": "Toggle toggle button selected state\n1. Toggle the selected state between true and false\n2. Select/deselect the toggle button based on isSelected"
+            },
+            {
+              "kind": "method",
+              "name": "selectToggleButton",
+              "privacy": "public",
+              "description": "Select the toggle button\n1. Set isSelected to true\n2. If has a slotted popover, set is active to true\n3. Dispatch the custom event"
+            },
+            {
+              "kind": "method",
+              "name": "deselectToggleButton",
+              "privacy": "public",
+              "description": "Deselect the toggle button\n1. Set isSelected to false\n2. Return focus to the toggle button\n3. If has a slotted popover, set is active to false\n4. Dispatch the custom event"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnClick",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ],
+              "description": "Handle on click\n1. If the toggle button is clicked, toggle the selected state"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnKeydown",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Handle on keydown\n1. If enter key is pressed, set selected state"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnClickOutside",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ],
+              "description": "Handles the click event outside the component:\n1. Check if the toggle button is selected\n2. Determine if the click occurred inside the selected toggle button\n3. Check if the click occurred outside the selected toggle button\n4. Close the toggle button if the click occurred outside it"
+            }
+          ],
+          "events": [
+            {
+              "name": "onToggleButtonSelect",
+              "description": ""
+            },
+            {
+              "name": "onToggleButtonDeselect",
+              "description": ""
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'background'"
+              },
+              "description": "Variant\n- **default** renders the toggle button without background styles\n- **background** renders the toggle button with background styles",
+              "fieldName": "variant"
+            },
+            {
+              "name": "isSelected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Indicates the selected state of the toggle button.",
+              "fieldName": "isSelected"
+            },
+            {
+              "name": "isSmall",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "If true, a fixed width will be set on the button.\n- Dynamically set based on the slotted component",
+              "fieldName": "isSmall"
+            },
+            {
+              "name": "hasToggle",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Has toggle?\n- Is dynamically set if the first time slotted is a ALPopover or ALMenu\n- **true** does not toggle the isSelected state\n- **false** toggles the isSelected state",
+              "fieldName": "hasToggle"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-toggle-button",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALToggleButton",
+          "declaration": {
+            "name": "ALToggleButton",
+            "module": "components/toggle-button/toggle-button.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-toggle-button",
+          "declaration": {
+            "name": "ALToggleButton",
+            "module": "components/toggle-button/toggle-button.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALToggleButton",
+            "module": "components/toggle-button/toggle-button.ts"
           }
         }
       ]
