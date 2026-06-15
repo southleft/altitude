@@ -61,6 +61,7 @@ export * from './tab-panel/tab-panel';
 export * from './tabs/tabs';
 export * from './text-passage/text-passage';
 export * from './textarea/textarea';
+export * from './theme/theme';
 export * from './theme-switcher/theme-switcher';
 export * from './time-selector-list/time-selector-list';
 export * from './toast/toast';

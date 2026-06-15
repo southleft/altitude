@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-theme.schema.json",
+  "title": "ALTheme (al-theme)",
+  "description": "Component: al-theme\n- **slot**: The content tree the theme applies to.",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-theme",
+    "className": "ALTheme",
+    "module": "components/theme/theme.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": true
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The content tree the theme applies to."
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-theme"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "brand": {
+          "description": "Brand identifier — matches a key in the brand bundle table.",
+          "type": "string"
+        },
+        "mode": {
+          "description": "typescript: Mode",
+          "type": "string"
+        },
+        "density": {
+          "description": "typescript: Density",
+          "type": "string"
+        },
+        "contrast": {
+          "description": "typescript: Contrast",
+          "type": "string"
+        },
+        "motion": {
+          "description": "typescript: Motion | undefined",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

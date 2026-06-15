@@ -1,4 +1,4 @@
-import { html, LitElement } from 'lit';
+import { html, LitElement, type CSSResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
@@ -22,6 +22,31 @@ export interface ALEvent extends Event {
     originalEvent: Event;
     detailObj: DetailObj;
   };
+}
+
+/**
+ * T4.3 — module-level cache for the shared theme stylesheet.
+ *
+ * The legacy implementation regex-stripped a global `<style id="al-theme-sheet">`
+ * element and adopted it into every shadow root. That coupled themed
+ * components to a singleton document mutation and made multi-theme subtrees
+ * impossible.
+ *
+ * The new model:
+ *   - Tokens inherit through the document via CSS custom properties.
+ *   - Constructable stylesheets adopted by `<al-theme>` (the scoped host,
+ *     T4.2) provide the per-subtree token overrides.
+ *   - This module-level `themeSheet` is a *bare* `CSSStyleSheet` that
+ *     existed only to keep legacy components running; once T4.8 codemods
+ *     every pilot to `scoped-complete`, this can be deleted.
+ *   - **No regex transformation of any document content.**
+ */
+let themeSheet: CSSStyleSheet | null = null;
+
+function getSharedThemeSheet(): CSSStyleSheet {
+  if (themeSheet) return themeSheet;
+  themeSheet = new CSSStyleSheet();
+  return themeSheet;
 }
 
 /**
@@ -89,29 +114,14 @@ export class ALElement extends LitElement {
   }
 
   /**
-   * Get the global styles
+   * T4.3 — returns the shared (empty) theme stylesheet. Kept for backward
+   * compatibility with legacy components that call `this.getGlobalStyles()`
+   * directly. The contents come from `<al-theme>` token overrides cascading
+   * into the shadow root via CSS custom properties — NOT from regex-
+   * scraping document `<style>` content.
    */
-  getGlobalStyles() {
-    const themeGlobal = `__AL__THEME_SHEET`;
-    const themeSheetId = 'al-theme-sheet';
-    // If the theme sheet is not available globally, create it from the themeSheetId
-    if (!globalThis.hasOwnProperty(themeGlobal)) {
-      const themeSheet = document.documentElement.querySelector(`style#${themeSheetId}`) || document.querySelector(`#${themeSheetId}`);
-      // Make the theme sheet available globally
-      (globalThis as any)[themeGlobal] = new CSSStyleSheet();
-      if (themeSheet) {
-        // Remove any custom properties or imports from the theme sheet
-        // This is to prevent the theme sheet from overriding the custom properties
-        // that are set in the mounted component
-        const regex = /(@import\surl\(.+\);|(--[\w-]+:[^;]+;))/g;
-        const themeSheetContent = themeSheet.textContent;
-        const cleanedThemeSheetContent = themeSheetContent.replace(regex, '');
-        (globalThis as any)[themeGlobal].replaceSync(cleanedThemeSheetContent);
-      } else {
-        console.error(`Altitude style#${themeSheetId} not found`);
-      }
-    }
-    return (globalThis as any)[themeGlobal]
+  getGlobalStyles(): CSSStyleSheet {
+    return getSharedThemeSheet();
   }
 
   /**
@@ -120,11 +130,14 @@ export class ALElement extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
 
-    // Supply an empty CSSStyleSheet if adoptedStyleSheets is undefined
-    const adoptedStyleSheets = this.shadowRoot.adoptedStyleSheets || [] as CSSStyleSheet[];
-
-    // Adopt the theme sheet
-    this.shadowRoot.adoptedStyleSheets = [...adoptedStyleSheets, this.getGlobalStyles()];
+    // T4.3 — adopt the shared theme stylesheet so legacy components keep
+    // their old shape. Once a component flips to `scoped-complete`, this
+    // call is a no-op (the stylesheet is empty) and the component derives
+    // all token values from `var(--al-…)` lookups against `<al-theme>`.
+    if (this.shadowRoot) {
+      const adopted = this.shadowRoot.adoptedStyleSheets || ([] as CSSStyleSheet[]);
+      this.shadowRoot.adoptedStyleSheets = [...adopted, this.getGlobalStyles()];
+    }
   }
 
   /**

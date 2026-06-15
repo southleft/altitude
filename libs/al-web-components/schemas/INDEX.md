@@ -13,7 +13,7 @@ The schemas are consumed by the T3.4 contract validator.
 | `badge` | legacy | ALBadge | [`al-badge.schema.json`](./al-badge.schema.json) |
 | `breadcrumbs` | legacy | ALBreadcrumbs | [`al-breadcrumbs.schema.json`](./al-breadcrumbs.schema.json) |
 | `breadcrumbs-item` | legacy | ALBreadcrumbsItem | [`al-breadcrumbs-item.schema.json`](./al-breadcrumbs-item.schema.json) |
-| `button` | legacy | ALButton | [`al-button.schema.json`](./al-button.schema.json) |
+| `button` | scoped-complete | ALButton | [`al-button.schema.json`](./al-button.schema.json) |
 | `button-group` | legacy | ALButtonGroup | [`al-button-group.schema.json`](./al-button-group.schema.json) |
 | `calendar` | legacy | ALCalendar | [`al-calendar.schema.json`](./al-calendar.schema.json) |
 | `card` | legacy | ALCard | [`al-card.schema.json`](./al-card.schema.json) |
@@ -23,7 +23,7 @@ The schemas are consumed by the T3.4 contract validator.
 | `chip-group` | legacy | ALChipGroup | [`al-chip-group.schema.json`](./al-chip-group.schema.json) |
 | `date-picker` | legacy | ALDatePicker | [`al-date-picker.schema.json`](./al-date-picker.schema.json) |
 | `date-time-picker` | legacy | ALDateTimePicker | [`al-date-time-picker.schema.json`](./al-date-time-picker.schema.json) |
-| `dialog` | legacy | ALDialog | [`al-dialog.schema.json`](./al-dialog.schema.json) |
+| `dialog` | scoped-complete | ALDialog | [`al-dialog.schema.json`](./al-dialog.schema.json) |
 | `divider` | legacy | ALDivider | [`al-divider.schema.json`](./al-divider.schema.json) |
 | `drawer` | legacy | ALDrawer | [`al-drawer.schema.json`](./al-drawer.schema.json) |
 | `dropdown-panel` | legacy | ALDropdownPanel | [`al-dropdown-panel.schema.json`](./al-dropdown-panel.schema.json) |
@@ -33,7 +33,7 @@ The schemas are consumed by the T3.4 contract validator.
 | `header` | legacy | ALHeader | [`al-header.schema.json`](./al-header.schema.json) |
 | `heading` | legacy | ALHeading | [`al-heading.schema.json`](./al-heading.schema.json) |
 | `icon` | legacy | ALIcon | [`al-icon.schema.json`](./al-icon.schema.json) |
-| `input` | legacy | ALInput | [`al-input.schema.json`](./al-input.schema.json) |
+| `input` | scoped-complete | ALInput | [`al-input.schema.json`](./al-input.schema.json) |
 | `input-stepper` | legacy | ALInputStepper | [`al-input-stepper.schema.json`](./al-input-stepper.schema.json) |
 | `layout` | legacy | ALLayout | [`al-layout.schema.json`](./al-layout.schema.json) |
 | `layout-container` | legacy | ALLayoutContainer | [`al-layout-container.schema.json`](./al-layout-container.schema.json) |
@@ -52,7 +52,7 @@ The schemas are consumed by the T3.4 contract validator.
 | `radio-group` | legacy | ALRadioGroup | [`al-radio-group.schema.json`](./al-radio-group.schema.json) |
 | `range` | legacy | ALRange | [`al-range.schema.json`](./al-range.schema.json) |
 | `search` | legacy | ALSearch | [`al-search.schema.json`](./al-search.schema.json) |
-| `select` | legacy | ALSelect | [`al-select.schema.json`](./al-select.schema.json) |
+| `select` | scoped-complete | ALSelect | [`al-select.schema.json`](./al-select.schema.json) |
 | `skeleton` | legacy | ALSkeleton | [`al-skeleton.schema.json`](./al-skeleton.schema.json) |
 | `spinner` | legacy | ALSpinner | [`al-spinner.schema.json`](./al-spinner.schema.json) |
 | `stepper` | legacy | ALStepper | [`al-stepper.schema.json`](./al-stepper.schema.json) |
@@ -62,7 +62,8 @@ The schemas are consumed by the T3.4 contract validator.
 | `tabs` | legacy | ALTabs | [`al-tabs.schema.json`](./al-tabs.schema.json) |
 | `text-passage` | legacy | ALTextPassage | [`al-text-passage.schema.json`](./al-text-passage.schema.json) |
 | `textarea` | legacy | ALTextarea | [`al-textarea.schema.json`](./al-textarea.schema.json) |
-| `theme-switcher` | legacy | ALThemeSwitcher | [`al-theme-switcher.schema.json`](./al-theme-switcher.schema.json) |
+| `theme` | scoped-complete | ALTheme | [`al-theme.schema.json`](./al-theme.schema.json) |
+| `theme-switcher` | scoped-complete | ALThemeSwitcher | [`al-theme-switcher.schema.json`](./al-theme-switcher.schema.json) |
 | `time-selector-list` | legacy | ALTimeSelectorList | [`al-time-selector-list.schema.json`](./al-time-selector-list.schema.json) |
 | `toast` | legacy | ALToast | [`al-toast.schema.json`](./al-toast.schema.json) |
 | `toast-group` | legacy | ALToastGroup | [`al-toast-group.schema.json`](./al-toast-group.schema.json) |
