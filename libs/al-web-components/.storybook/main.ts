@@ -9,6 +9,20 @@ import { mergeConfig } from 'vite';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
+// Under pnpm's symlinked layout, @storybook/addon-docs's MDX loader injects
+// an `import` whose specifier is a `file:///…` absolute URL pointing into
+// the pnpm virtual store. Rollup cannot resolve `file:` URIs, so the
+// preview build crashes on any MDX file. This plugin strips the prefix so
+// Rollup sees an absolute filesystem path it can load.
+const fileUrlResolver = {
+  name: 'al-mdx-file-url-resolver',
+  enforce: 'pre' as const,
+  resolveId(id: string) {
+    if (id.startsWith('file://')) return fileURLToPath(id);
+    return null;
+  },
+};
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const config: StorybookConfig = {
@@ -38,6 +52,7 @@ const config: StorybookConfig = {
   } as any,
   viteFinal: async (cfg) => {
     return mergeConfig(cfg, {
+      plugins: [fileUrlResolver],
       esbuild: {
         target: 'es2022',
         tsconfigRaw: {
