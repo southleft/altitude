@@ -1,4 +1,8 @@
-const StyleDictionary = require('style-dictionary');
+// During the T1.1 parallel-pipeline period both v3 and v5 must build. v5 is
+// installed under `style-dictionary` (and replaces what used to be v3 there);
+// v3 lives under the `style-dictionary-3` npm alias. This require swap keeps
+// the legacy config running unchanged until T6.2 deletes it.
+const StyleDictionary = require('style-dictionary-3');
 
 /**
  * Define theme customizations
