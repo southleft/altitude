@@ -28,8 +28,12 @@ const crypto = require('node:crypto');
 
 const REPO = path.resolve(__dirname, '..');
 const TOKEN_DIST = path.join(REPO, 'libs', 'al-web-components', 'styles', 'dist');
-const OUT_DIR = path.join(REPO, '.altitude', 'baselines', 'tokens');
-const OUT_FILE = path.join(OUT_DIR, 'snapshot.json');
+// Allow tests to redirect output to a temp file via env var so they can
+// re-run the capture without mutating the committed baseline.
+const OUT_FILE = process.env.ALTITUDE_TOKEN_SNAPSHOT_OUT
+  ? path.resolve(process.env.ALTITUDE_TOKEN_SNAPSHOT_OUT)
+  : path.join(REPO, '.altitude', 'baselines', 'tokens', 'snapshot.json');
+const OUT_DIR = path.dirname(OUT_FILE);
 
 function walk(dir, exts) {
   if (!fs.existsSync(dir)) return [];

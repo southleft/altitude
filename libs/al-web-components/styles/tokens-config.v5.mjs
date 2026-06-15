@@ -112,10 +112,6 @@ StyleDictionary.registerFormat({
       .map((token) => {
         let name;
         let value = tokenValue(token);
-        // Defensive: JSON normalize so the formatter is value-shape agnostic.
-        try {
-          value = JSON.parse(JSON.stringify(value));
-        } catch {}
 
         if (token.name.includes('font-weight')) {
           name = token.name;

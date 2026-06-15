@@ -47,20 +47,22 @@ function main() {
   }
   const baseline = JSON.parse(fs.readFileSync(BASELINE, 'utf8'));
 
-  // Recapture into a tmp by reading the script and overriding its OUT path
-  // via env. The simpler thing: just run the script, then copy the file aside
-  // and restore the baseline.
-  const stash = fs.readFileSync(BASELINE);
+  // Recapture into a tmpfile via the capture script's env override so the
+  // committed baseline is never touched (race-safe across parallel jobs).
+  const tmpDir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'al-tokens-'));
+  const tmp = path.join(tmpDir, 'snapshot.json');
   try {
-    execSync(`node ${CAPTURE_SCRIPT}`, { cwd: REPO, stdio: 'pipe' });
+    execSync(`node ${CAPTURE_SCRIPT}`, {
+      cwd: REPO,
+      stdio: 'pipe',
+      env: { ...process.env, ALTITUDE_TOKEN_SNAPSHOT_OUT: tmp },
+    });
   } catch (err) {
-    fs.writeFileSync(BASELINE, stash);
     console.error('[tokens:contract] capture failed:', err.message);
     process.exit(2);
   }
-  const current = JSON.parse(fs.readFileSync(BASELINE, 'utf8'));
-  // Restore the committed baseline immediately so this script is non-mutating.
-  fs.writeFileSync(BASELINE, stash);
+  const current = JSON.parse(fs.readFileSync(tmp, 'utf8'));
+  fs.rmSync(tmpDir, { recursive: true, force: true });
 
   const tol = Number(process.env.ALTITUDE_TOKEN_TOLERANCE || '0');
 

@@ -10,7 +10,7 @@
     "build": "npm run build:tokens && npm run build:icons && npm run build:custom-elements.json && del-cli dist && webpack && tsc",
     "build:storybook": "storybook build",
     "build:tokens": "node ./styles/tokens-config.js",
-    "build:tokens:v5": "node ../../scripts/convert-tokens-to-dtcg.js && node ./styles/tokens-config.v5.mjs",
+    "build:tokens:v5": "node ../../scripts/convert-tokens-to-dtcg.js && node ./styles/tokens-config.v5.mjs && node ../../scripts/emit-token-types.js",
     "build:tokens:parallel": "yarn build:tokens && yarn build:tokens:v5 && node ../../scripts/check-tokens-parity.js",
     "test:tokens": "node ../../scripts/test-tokens-contract.js",
     "build:icons": "node ./icons/icons-config.js",
