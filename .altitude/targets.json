@@ -1,0 +1,40 @@
+{
+  "$comment": "T0.5 — committed targets for the v2 refactor. Read by scripts (e.g., contract validators, codegen) so wrappers/codegen are designed for the end-state. Drift between this file and reality is a refactor smell.",
+  "schemaVersion": 1,
+  "targets": {
+    "react": "19.x",
+    "reactDom": "19.x",
+    "typesReact": "19.x",
+    "lit": "3.3.x",
+    "litReact": "latest-compat-r19",
+    "styleDictionary": "5.x",
+    "storybook": "10.4.x",
+    "storybookBuilder": "vite",
+    "storybookTestRunner": "vitest",
+    "vite": "5.x",
+    "typescript": "5.x-latest",
+    "eslint": "9.x",
+    "eslintConfigStyle": "flat",
+    "tsEslint": "8.x",
+    "dateFns": "4.x",
+    "node": "lts/jod",
+    "packageManager": "pnpm",
+    "cemAnalyzer": "@custom-elements-manifest/analyzer",
+    "vrtTool": "playwright",
+    "decoratorMode": "experimental",
+    "useDefineForClassFields": false
+  },
+  "decisions": {
+    "pilotComponents": ["button", "input", "select", "dialog", "theme-switcher"],
+    "registryModes": ["stable", "versioned", "manual"],
+    "themeAxes": ["brand", "mode", "density", "contrast", "motion"],
+    "cascadeLayers": ["al.reset", "al.base", "al.theme", "al.component", "al.override"],
+    "migrationStates": ["legacy", "dual", "scoped-complete"]
+  },
+  "rationale": {
+    "decoratorMode": "G7: never change build tooling and language semantics in the same step. Standard decorators are deferred to T7.1.",
+    "packageManager": "User-confirmed pnpm over yarn 4 (stricter dep graph catches phantom deps).",
+    "vrtTool": "User-confirmed Playwright (free, in-repo, runs in CI).",
+    "pilotComponents": "G3 pilot gate: 5 components prove every pattern end-to-end before scaling to ~65."
+  }
+}
