@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-toast-group.schema.json",
+  "title": "ALToastGroup (al-toast-group)",
+  "description": "Component: al-toast-group\n- **slot**: One or more individual toast components",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-toast-group",
+    "className": "ALToastGroup",
+    "module": "components/toast-group/toast-group.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "One or more individual toast components"
+      }
+    ],
+    "events": [
+      {
+        "name": "onToastGroupOpen",
+        "description": ""
+      },
+      {
+        "name": "onToastGroupClose",
+        "description": ""
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-toast-group"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "position": {
+          "description": "Position property\n- **default** Displays the toast group where ever it's placed on the page\n- **top** Displays the toast group absolutely at the top center of the screen\n- **bottom** Displays the toast group absolutely at the top center of the screen",
+          "type": "string",
+          "enum": [
+            "top",
+            "bottom"
+          ]
+        },
+        "isActive": {
+          "description": "Is active?\n- **true** Displays the toast group on the screen\n- **false** Hides the toast group on the screen",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

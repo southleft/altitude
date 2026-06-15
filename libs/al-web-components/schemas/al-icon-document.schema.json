@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-icon-document.schema.json",
+  "title": "ALIconDocument (al-icon-document)",
+  "description": "Icon: al-icon-document",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-icon-document",
+    "className": "ALIconDocument",
+    "module": "components/icon/icons/document.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-icon-document"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "iconTitle": {
+          "description": "Icon title",
+          "type": "string"
+        },
+        "size": {
+          "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon",
+          "type": "string",
+          "enum": [
+            "xs",
+            "sm",
+            "md",
+            "lg",
+            "xl",
+            "xxl",
+            "xxxl"
+          ]
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

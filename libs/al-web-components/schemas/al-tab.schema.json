@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-tab.schema.json",
+  "title": "ALTab (al-tab)",
+  "description": "Component: al-tab\n- **slot**: The tab label",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-tab",
+    "className": "ALTab",
+    "module": "components/tab/tab.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The tab label"
+      }
+    ],
+    "events": [
+      {
+        "name": "onTabSelect",
+        "description": ""
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-tab"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "isActive": {
+          "description": "Active state\n- **true** Renders a tab with selected/active state\n- **false** Renders a tab without selected/active state",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "Disabled attribute\n- **true** Renders a tab with the disabled property and state\n- **false** Renders a tab without the disabled property and state",
+          "type": "boolean"
+        },
+        "ariaId": {
+          "description": "ID used to connect the tab panel to the tab aria-controls",
+          "type": "string"
+        },
+        "ariaControls": {
+          "description": "Aria controls attribute\n- Sets to the id used to connect the tab trigger to the tab panel",
+          "type": "string"
+        },
+        "idx": {
+          "description": "Index to track tab",
+          "type": "number"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

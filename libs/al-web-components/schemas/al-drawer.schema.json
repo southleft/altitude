@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-drawer.schema.json",
+  "title": "ALDrawer (al-drawer)",
+  "description": "Component: al-drawer\n- **slot**: The drawer content",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-drawer",
+    "className": "ALDrawer",
+    "module": "components/drawer/drawer.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The drawer content"
+      }
+    ],
+    "events": [
+      {
+        "name": "onDrawerCloseButton",
+        "description": ""
+      },
+      {
+        "name": "onDrawerOpen",
+        "description": ""
+      },
+      {
+        "name": "onDrawerClose",
+        "description": ""
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-drawer"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "alignment": {
+          "description": "typescript: 'right'",
+          "type": "string"
+        },
+        "width": {
+          "description": "Width of drawer panel when expanded / collapsed as side panel",
+          "type": "number"
+        },
+        "hasBackdrop": {
+          "description": "Fade/ghost back the page background content",
+          "type": "boolean"
+        },
+        "isActive": {
+          "description": "Is active?\n- **true** Shows the drawer container\n- **false** Hides the drawer container",
+          "type": "boolean"
+        },
+        "ariaLabelledBy": {
+          "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+          "type": "string"
+        },
+        "disableBackdropClick": {
+          "description": "Disable to close the drawer on outside click",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

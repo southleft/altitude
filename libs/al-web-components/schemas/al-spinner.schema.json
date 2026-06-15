@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-spinner.schema.json",
+  "title": "ALSpinner (al-spinner)",
+  "description": "Component: el-spinner\n\nSpinner is used when retrieving data or performing slow computations, to notify users that their action is being processed.",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-spinner",
+    "className": "ALSpinner",
+    "module": "components/spinner/spinner.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-spinner"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "inverted": {
+          "description": "Inverted variant\n1) Used for dark backgrounds",
+          "type": "boolean"
+        },
+        "small": {
+          "description": "Small loader",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

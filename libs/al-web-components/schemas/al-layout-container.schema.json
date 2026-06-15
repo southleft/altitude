@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-layout-container.schema.json",
+  "title": "ALLayoutContainer (al-layout-container)",
+  "description": "Component: al-layout-container",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-layout-container",
+    "className": "ALLayoutContainer",
+    "module": "components/layout-container/layout-container.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-layout-container"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

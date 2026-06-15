@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-chip-group.schema.json",
+  "title": "ALChipGroup (al-chip-group)",
+  "description": "Component: al-chip-group\n- **slot**: The chip group content, a set of chips",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-chip-group",
+    "className": "ALChipGroup",
+    "module": "components/chip-group/chip-group.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The chip group content, a set of chips"
+      }
+    ],
+    "events": [
+      {
+        "name": "onChipGroupExpand",
+        "description": ""
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-chip-group"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "chipsVisible": {
+          "description": "Set the number of visible chips",
+          "type": "number"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

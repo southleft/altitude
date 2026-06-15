@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-link.schema.json",
+  "title": "ALLink (al-link)",
+  "description": "Component: al-link\n- **slot**: The link text",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-link",
+    "className": "ALLink",
+    "module": "components/link/link.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The link text"
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-link"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "href": {
+          "description": "The link URL",
+          "type": "string"
+        },
+        "variant": {
+          "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset",
+          "type": "string",
+          "enum": [
+            "xs",
+            "sm",
+            "lg"
+          ]
+        },
+        "target": {
+          "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
+          "type": "string",
+          "enum": [
+            "_blank",
+            "_self",
+            "_parent",
+            "_top"
+          ]
+        },
+        "label": {
+          "description": "Aria label attribute\n- Optional aria-label for a11y\n- Most screen readers will read out loud the aria-label attribute in place of the link text. This is used for links that have text such as 'Learn more' or 'Read more'.",
+          "type": "string"
+        },
+        "ariaLabelledBy": {
+          "description": "Aria Labelled By attribute\n- Optional aria-labelledby for a11y\n- There may be instances where a nearby headline can act is the perfect label for a general link.",
+          "type": "string"
+        },
+        "linkTitle": {
+          "description": "Title attribute\n- Optional title for a11y\n- If a link opens a new window or performs an action, use the title attribute to provide a tooltip with additional information.",
+          "type": "string"
+        },
+        "isDisabled": {
+          "description": "Disabled attribute",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

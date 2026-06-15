@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-header.schema.json",
+  "title": "ALHeader (al-header)",
+  "description": "Component: al-header\n- **slot**: The components content",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-header",
+    "className": "ALHeader",
+    "module": "components/header/header.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The components content"
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-header"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-checkbox.schema.json",
+  "title": "ALCheckbox (al-checkbox)",
+  "description": "Component: al-checkbox\n- **slot**: The component content that appears next to the checkbox\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-checkbox",
+    "className": "ALCheckbox",
+    "module": "components/checkbox/checkbox.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The component content that appears next to the checkbox"
+      },
+      {
+        "name": "field-note",
+        "description": "If content is slotted, it will display in place of the fieldNote property"
+      },
+      {
+        "name": "error",
+        "description": "If content is slotted, it will display in place of the errorNote property"
+      }
+    ],
+    "events": [
+      {
+        "name": "onCheckboxChange",
+        "description": ""
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-checkbox"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "isChecked": {
+          "description": "Checked attribute\n- Changes the component's treatment to represent an checked state",
+          "type": "boolean"
+        },
+        "isIndeterminate": {
+          "description": "Indeterminate state\n- Changes the component's treatment to represent an indeterminate state",
+          "type": "boolean"
+        },
+        "isError": {
+          "description": "Error state\n- Changes the component's treatment to represent an error state",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
+          "type": "boolean"
+        },
+        "isRequired": {
+          "description": "Required attribute\n- Sets the checkbox to be required for validation",
+          "type": "boolean"
+        },
+        "hideLabel": {
+          "description": "Hide label?\n- If true, hides the label from displaying",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name attribute",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value attribute",
+          "type": "string"
+        },
+        "errorNote": {
+          "description": "Error message\n- An error field note that displays below the checkbox input",
+          "type": "string"
+        },
+        "fieldNote": {
+          "description": "Field note\n- The helper text that displays below the checkbox input",
+          "type": "string"
+        },
+        "fieldId": {
+          "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
+          "type": "string"
+        },
+        "ariaDescribedBy": {
+          "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

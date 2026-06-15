@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-toast.schema.json",
+  "title": "ALToast (al-toast)",
+  "description": "Component: al-toast\n- **slot**: The toast title or primary text\n- **slot** \"actions\": Actions to optionally display in the toast\n- **slot** \"icon\": Slot in an icon to override the default one",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-toast",
+    "className": "ALToast",
+    "module": "components/toast/toast.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The toast title or primary text"
+      },
+      {
+        "name": "actions",
+        "description": "Actions to optionally display in the toast"
+      },
+      {
+        "name": "icon",
+        "description": "Slot in an icon to override the default one"
+      }
+    ],
+    "events": [
+      {
+        "name": "onToastGroupOpen",
+        "description": ""
+      },
+      {
+        "name": "onToastClose",
+        "description": ""
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-toast"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "description": "Variants\n- **default** renders a toast that represents an informative state\n- **success** renders a toast that represents a success state\n- **warning** renders a toast that represents a warning state\n- **danger** renders a toast that represents an danger state",
+          "type": "string",
+          "enum": [
+            "info",
+            "success",
+            "warning",
+            "danger"
+          ]
+        },
+        "description": {
+          "description": "The toast description text",
+          "type": "string"
+        },
+        "isActive": {
+          "description": "Is active?\n- **true** Displays the toast on the screen\n- **false** Hides the toast on the screen",
+          "type": "boolean"
+        },
+        "isDismissible": {
+          "description": "Is dismissible?\n- **false** If false, the toast will auto close after a delay\n- **true**  If true, this disables auto close and adds the ability for the user close the toast",
+          "type": "boolean"
+        },
+        "autoClose": {
+          "description": "Auto close?\n- Set whether you want the toast group to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
+          "type": "boolean"
+        },
+        "autoCloseDelay": {
+          "description": "Delay property\n1. Number of seconds to close the toast group when autoClose is enabled\n2. Default amount is 3",
+          "type": "number"
+        },
+        "showProgress": {
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

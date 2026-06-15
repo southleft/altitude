@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-chip.schema.json",
+  "title": "ALChip (al-chip)",
+  "description": "Component: al-chip\n- **slot**: The chip content",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-chip",
+    "className": "ALChip",
+    "module": "components/chip/chip.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The chip content"
+      }
+    ],
+    "events": [
+      {
+        "name": "onChipClose",
+        "description": ""
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-chip"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "description": "Variant\n- **default** A chip with a strong contrast background\n- **secondary** A chip with a outline\n- **info** A chip with a info background\n- **success** A chip with a success background\n- **warning** A chip with a warning background\n- **danger** A chip with a danger background",
+          "type": "string",
+          "enum": [
+            "secondary",
+            "info",
+            "success",
+            "warning",
+            "danger"
+          ]
+        },
+        "type": {
+          "description": "typescript: 'squared'",
+          "type": "string"
+        },
+        "isDismissible": {
+          "description": "Dismissible property\n- **true** Adds an X to hide the chip on click\n- **false** Hides the X so the chip can not be hidden",
+          "type": "boolean"
+        },
+        "isDismissed": {
+          "description": "Is dismissed property\n- **true** Hides the chip\n- **false** Shows the chip",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

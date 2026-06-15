@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-card.schema.json",
+  "title": "ALCard (al-card)",
+  "description": "Component: al-card\n- **slot**: The main content of the card that appers below the header\n- **slot** \"actions-start\": The actions the appear to the top-left of the card\n- **slot** \"action-right\": The actions the appear to the top-right of the card\n- **slot** \"image\": The main image of the card that appears below the actions\n- **slot** \"header\": The main title of the card that appears below the image",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-card",
+    "className": "ALCard",
+    "module": "components/card/card.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The main content of the card that appers below the header"
+      },
+      {
+        "name": "actions-start",
+        "description": "The actions the appear to the top-left of the card"
+      },
+      {
+        "name": "action-right",
+        "description": "The actions the appear to the top-right of the card"
+      },
+      {
+        "name": "image",
+        "description": "The main image of the card that appears below the actions"
+      },
+      {
+        "name": "header",
+        "description": "The main title of the card that appears below the image"
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-card"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "layout": {
+          "description": "typescript: 'inline'",
+          "type": "string"
+        },
+        "variant": {
+          "description": "typescript: 'bare'",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

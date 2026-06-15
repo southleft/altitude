@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-toggle-button-group.schema.json",
+  "title": "ALToggleButtonGroup (al-toggle-button-group)",
+  "description": "Component: al-toggle-button-group\n- **slot**: A set of toggle buttons",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-toggle-button-group",
+    "className": "ALToggleButtonGroup",
+    "module": "components/toggle-button-group/toggle-button-group.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "A set of toggle buttons"
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-toggle-button-group"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "description": "typescript: 'background'",
+          "type": "string"
+        },
+        "orientation": {
+          "description": "typescript: 'vertical'",
+          "type": "string"
+        },
+        "gap": {
+          "description": "typescript: 'sm'",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

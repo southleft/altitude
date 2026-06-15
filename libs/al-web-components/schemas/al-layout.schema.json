@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-layout.schema.json",
+  "title": "ALLayout (al-layout)",
+  "description": "Component: al-layout",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-layout",
+    "className": "ALLayout",
+    "module": "components/layout/layout.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-layout"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "gap": {
+          "description": "Gap variant (Default is 16px)\n- **none** yields a layout whose layout sections are spaced without any gutter in between on large screens.\n- **sm** yields a layout whose layout sections are spaced 8px apart on large screens. Small screens gutters move to 16px between.\n- **lg** yields a layout whose layout sections are spaced 24px apart on large screens. Small screens gutters move to 16px between.\n- **xl** yields a layout whose layout sections are spaced 32px apart on large screens. Small screens gutters move to 16px between.",
+          "type": "string",
+          "enum": [
+            "none",
+            "sm",
+            "lg",
+            "xl"
+          ]
+        },
+        "variant": {
+          "description": "Style variants\n- **sidebar-left** formats the first `layout-section` component as a left sidebar\n- **sidebar-right** formats the second `layout-section` component as a right sidebar",
+          "type": "string",
+          "enum": [
+            "sidebar-left",
+            "sidebar-right"
+          ]
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

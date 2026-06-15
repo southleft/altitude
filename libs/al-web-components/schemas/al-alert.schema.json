@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-alert.schema.json",
+  "title": "ALAlert (al-alert)",
+  "description": "Component: al-alert\n- **slot**: The alert's main content or title\n- **slot** \"icon\": Slot in an icon to override the default one",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-alert",
+    "className": "ALAlert",
+    "module": "components/alert/alert.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The alert's main content or title"
+      },
+      {
+        "name": "icon",
+        "description": "Slot in an icon to override the default one"
+      }
+    ],
+    "events": [
+      {
+        "name": "close",
+        "description": ""
+      },
+      {
+        "name": "open",
+        "description": ""
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-alert"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "description": "Variants\n- **default** renders a alert that represents an informative state\n- **success** renders a alert that represents a success state\n- **warning** renders a alert that represents a warning state\n- **danger** renders a alert that represents an danger state",
+          "type": "string",
+          "enum": [
+            "success",
+            "warning",
+            "danger"
+          ]
+        },
+        "title": {
+          "description": "Optional title of the alert",
+          "type": "string"
+        },
+        "isActive": {
+          "description": "isActive boolean\n- If true, the alert displays on the page\n- If false, the alert is hidden from the page",
+          "type": "boolean"
+        },
+        "autoClose": {
+          "description": "Auto close?\n- Set whether you want the alert to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
+          "type": "boolean"
+        },
+        "autoCloseDelay": {
+          "description": "Auto close delay\n1. Number of seconds to close the alert when autoClose is enabled\n2. Default amount is 3",
+          "type": "number"
+        },
+        "isDismissible": {
+          "description": "Dismissible?\n- If true, displays a close button with close functionality on the alert",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-menu-item.schema.json",
+  "title": "ALMenuItem (al-menu-item)",
+  "description": "Component: al-menu-item\n- **slot**: The content to display in the menu item\n- **slot** \"before\": Optional prefix content to display in the menu item",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-menu-item",
+    "className": "ALMenuItem",
+    "module": "components/menu-item/menu-item.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The content to display in the menu item"
+      },
+      {
+        "name": "before",
+        "description": "Optional prefix content to display in the menu item"
+      }
+    ],
+    "events": [
+      {
+        "name": "onMenuItemSelect",
+        "description": ""
+      },
+      {
+        "name": "onMenuItemExpand",
+        "description": ""
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-menu-item"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "href": {
+          "description": "The optional menu link URL",
+          "type": "string"
+        },
+        "target": {
+          "description": "Target attribute for the menu link (i.e. set to _blank to open in new tab)",
+          "type": "string",
+          "enum": [
+            "_blank",
+            "_self",
+            "_parent",
+            "_top"
+          ]
+        },
+        "linkTitle": {
+          "description": "Title attribute\n- Optional title for a11y\n- If a link opens a new window or performs an action, use the title attribute to provide a tooltip with additional information.",
+          "type": "string"
+        },
+        "isHeader": {
+          "description": "isHeader property\n- **true** Applies the header treatment to the menu item",
+          "type": "boolean"
+        },
+        "isExpandableHeader": {
+          "description": "isExpandableHeader property\n- **true** Applies expandable functionality to the menu item",
+          "type": "boolean"
+        },
+        "isExpanded": {
+          "description": "isExpanded property\n- **true** Applies the expanded treatment to a Header item\n- **false** Applies the collapsed treatment to a Header item",
+          "type": "boolean"
+        },
+        "isSelected": {
+          "description": "Selected attribute\n- Changes the component's treatment to represent a selected state",
+          "type": "boolean"
+        },
+        "isFocused": {
+          "description": "Current attribute\n- Changes the component's treatment to represent a focused state",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
+          "type": "boolean"
+        },
+        "isHidden": {
+          "description": "Is hidden property\n- Is set on child menu items based on their Header's expanded state\n- **true** Hide the item\n- **false** Show the item",
+          "type": "boolean"
+        },
+        "groupId": {
+          "description": "Group id property\n- Dynamically set by the Menu parent component\n- Used to associate menu group headers and group items",
+          "type": "string"
+        },
+        "idx": {
+          "description": "Index property\n- Dynamically set by the Menu parent component\n- Used to track and set focus with keyboard navigation",
+          "type": "number"
+        },
+        "indentation": {
+          "description": "Indentation\n- Dynamically set by the menu parent component\n- Adds padding to a menu item to left-align its text with that of its Header",
+          "type": "number"
+        },
+        "label": {
+          "description": "Label attribute\n- Sets the ariaLabel for A11y",
+          "type": "string"
+        },
+        "ariaControls": {
+          "description": "Aria controls\n- Associates a Expandable Header's control with the items in that group",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

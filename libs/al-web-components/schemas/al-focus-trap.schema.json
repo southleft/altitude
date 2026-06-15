@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-focus-trap.schema.json",
+  "title": "ALFocusTrap (al-focus-trap)",
+  "description": "Component: al-focus-trap\n- **slot**: The content to trap in the focus trap",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-focus-trap",
+    "className": "ALFocusTrap",
+    "module": "components/focus-trap/focus-trap.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The content to trap in the focus trap"
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-focus-trap"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "isActive": {
+          "description": "Is the focus trap active?",
+          "type": "boolean"
+        },
+        "transitionDelay": {
+          "description": "Delay in milliseconds before the focus trap is activated.\n- Can be set by the component using focus trap, when there is a css transition that needs to complete before the focus trap activates.",
+          "type": "number"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

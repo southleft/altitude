@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-skeleton.schema.json",
+  "title": "ALSkeleton (al-skeleton)",
+  "description": "Component: al-skeleton",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-skeleton",
+    "className": "ALSkeleton",
+    "module": "components/skeleton/skeleton.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-skeleton"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "description": "Variant\n- **default** renders a rectangular skeleton\n- **circle** renders a round skeleton\n- **square** renders a sqaure skeleton",
+          "type": "string",
+          "enum": [
+            "circle",
+            "square"
+          ]
+        },
+        "width": {
+          "description": "The width of the skeleton\n- If no value is entered, it defaults to 100%",
+          "type": "number"
+        },
+        "height": {
+          "description": "The height of the skeleton\n- If no value is entered, it defaults to auto",
+          "type": "number"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

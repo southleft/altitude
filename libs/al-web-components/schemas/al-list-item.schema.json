@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-list-item.schema.json",
+  "title": "ALListItem (al-list-item)",
+  "description": "Component: al-list-item\n- **slot**: The content of the list item",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-list-item",
+    "className": "ALListItem",
+    "module": "components/list-item/list-item.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The content of the list item"
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-list-item"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "description": "typescript: 'static'",
+          "type": "string"
+        },
+        "isError": {
+          "description": "Error state\n1. Changes the component's treatment to represent an error",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "Disabled attribute",
+          "type": "boolean"
+        },
+        "behavior": {
+          "description": "typescript: 'flyout'",
+          "type": "string"
+        },
+        "flyoutPosition": {
+          "description": "Flyout position (only use with flyout behavior)\n- **left** positions the flyout menu to the left of the item trigger\n- **bottom** positions the flyout menu below the item trigger",
+          "type": "string",
+          "enum": [
+            "left",
+            "bottom",
+            "top"
+          ]
+        },
+        "href": {
+          "description": "URL if this is an <a> element - this swaps <button> for <a>",
+          "type": "string"
+        },
+        "value": {
+          "description": "typescript: string | { label: string; value: any; [key: string]: unknown }",
+          "type": "string"
+        },
+        "isActive": {
+          "description": "Active state",
+          "type": "boolean"
+        },
+        "isCurrent": {
+          "description": "Current state",
+          "type": "boolean"
+        },
+        "onClick": {
+          "description": "typescript: () => void",
+          "type": "string"
+        },
+        "target": {
+          "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one.\n  If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
+          "type": "string",
+          "enum": [
+            "_blank",
+            "_self",
+            "_parent",
+            "_top"
+          ]
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

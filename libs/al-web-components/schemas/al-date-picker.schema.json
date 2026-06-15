@@ -1,0 +1,172 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-date-picker.schema.json",
+  "title": "ALDatePicker (al-date-picker)",
+  "description": "Component: al-date-picker\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-date-picker",
+    "className": "ALDatePicker",
+    "module": "components/date-picker/date-picker.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "field-note",
+        "description": "If content is slotted, it will display in place of the fieldNote property"
+      },
+      {
+        "name": "error",
+        "description": "If content is slotted, it will display in place of the errorNote property"
+      }
+    ],
+    "events": [
+      {
+        "name": "onDatePickerOpen",
+        "description": ""
+      },
+      {
+        "name": "onDatePickerClose",
+        "description": ""
+      },
+      {
+        "name": "onDatePickerChange",
+        "description": ""
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-date-picker"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fieldId": {
+          "description": "The unique id of the field",
+          "type": "string"
+        },
+        "label": {
+          "description": "The field's label",
+          "type": "string"
+        },
+        "hideLabel": {
+          "description": "Hide label?",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "The field's name attribute",
+          "type": "string"
+        },
+        "value": {
+          "description": "The field's value attribute",
+          "type": "string"
+        },
+        "placeholder": {
+          "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an input element",
+          "type": "string"
+        },
+        "fieldNote": {
+          "description": "The field note displayed beneath the field",
+          "type": "string"
+        },
+        "errorNote": {
+          "description": "Error note displayed beneath the field when in an error state",
+          "type": "string"
+        },
+        "ariaDescribedBy": {
+          "description": "Aria describedby\n- Used to connect the field note in the field to the input for accessibility",
+          "type": "string"
+        },
+        "isRequired": {
+          "description": "The field's required attribute",
+          "type": "boolean"
+        },
+        "isOptional": {
+          "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "The field's disabled attribute",
+          "type": "boolean"
+        },
+        "isError": {
+          "description": "Error state indicating an issue with the field",
+          "type": "boolean"
+        },
+        "isActive": {
+          "description": "Indicates whether a date has been selected",
+          "type": "boolean"
+        },
+        "selectedDate": {
+          "description": "typescript: any",
+          "type": "string"
+        },
+        "setActiveDate": {
+          "description": "typescript: any",
+          "type": "string"
+        },
+        "isoFormat": {
+          "description": "ISO Format for date",
+          "type": "string"
+        },
+        "dateFormat": {
+          "description": "Specify date format for UI display",
+          "type": "string",
+          "enum": [
+            "MMM dd, yyyy",
+            "MM/dd/yyyy",
+            "dd/MM/yyyy",
+            "yyyy/MM/dd",
+            "MMM dd yyyy",
+            "dd MMM yyyy"
+          ]
+        },
+        "disabledMinDate": {
+          "description": "typescript: any",
+          "type": "string"
+        },
+        "disabledMaxDate": {
+          "description": "typescript: any",
+          "type": "string"
+        },
+        "multiYear": {
+          "description": "Amount of years to go before and after the current date",
+          "type": "number"
+        },
+        "previousButtonText": {
+          "description": "Previous month button text",
+          "type": "string"
+        },
+        "nextButtonText": {
+          "description": "Next month button text",
+          "type": "string"
+        },
+        "isDayShortHand": {
+          "description": "Show the day of the week as a short hand, e.g. \"M\" for Monday",
+          "type": "boolean"
+        },
+        "startOnMonday": {
+          "description": "Start the day of the week on Monday",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

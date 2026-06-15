@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-button-group.schema.json",
+  "title": "ALButtonGroup (al-button-group)",
+  "description": "Component: al-button-group\n- **slot**: The button group content, a set of buttons",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-button-group",
+    "className": "ALButtonGroup",
+    "module": "components/button-group/button-group.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The button group content, a set of buttons"
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-button-group"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "behavior": {
+          "description": "Behavior variant\n- **default** renders the buttons in a row\n- **stacked** renders the buttons stacked on top of each other\n- **stretched** renders the buttons stretched to the width of the container\n- **responsive** renders the buttons stacked on small screens and in a row when space becomes available",
+          "type": "string",
+          "enum": [
+            "stacked",
+            "stretched",
+            "responsive"
+          ]
+        },
+        "alignment": {
+          "description": "Alignment variant\n- **default** aligns the buttons to the left of the container\n- **center** aligns the buttons to the center of the container\n- **right** aligns the buttons to the right of the container",
+          "type": "string",
+          "enum": [
+            "center",
+            "right"
+          ]
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

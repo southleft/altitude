@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-search.schema.json",
+  "title": "ALSearch (al-search)",
+  "description": "Component: al-search\n- **slot**: The search's dropdown content\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-search",
+    "className": "ALSearch",
+    "module": "components/search/search.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The search's dropdown content"
+      },
+      {
+        "name": "field-note",
+        "description": "If content is slotted, it will display in place of the fieldNote property"
+      },
+      {
+        "name": "error",
+        "description": "If content is slotted, it will display in place of the errorNote property"
+      }
+    ],
+    "events": [
+      {
+        "name": "onSearchChange",
+        "description": ""
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-search"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ariaControlsId": {
+          "description": "The unique id of the field",
+          "type": "string"
+        },
+        "fieldId": {
+          "description": "The unique id of the field",
+          "type": "string"
+        },
+        "label": {
+          "description": "Label of the form field",
+          "type": "string"
+        },
+        "fieldNote": {
+          "description": "Description for the field",
+          "type": "string"
+        },
+        "errorNote": {
+          "description": "Error message for the field",
+          "type": "string"
+        },
+        "hideLabel": {
+          "description": "Visually hide the label from the UI",
+          "type": "boolean"
+        },
+        "buttonText": {
+          "description": "Search button text",
+          "type": "string"
+        },
+        "clearButtonText": {
+          "description": "Clear button text",
+          "type": "string"
+        },
+        "isDisabled": {
+          "description": "Disabled attribute",
+          "type": "boolean"
+        },
+        "isActive": {
+          "description": "Active state",
+          "type": "boolean"
+        },
+        "isActiveDropdown": {
+          "description": "Active state",
+          "type": "boolean"
+        },
+        "isError": {
+          "description": "Error state",
+          "type": "boolean"
+        },
+        "placeholder": {
+          "description": "Placeholder text",
+          "type": "string"
+        },
+        "value": {
+          "description": "Input value",
+          "type": "string"
+        },
+        "ariaDescribedBy": {
+          "description": "Aria describedby\n1. Used to connect the field note and errorNote for accessibility",
+          "type": "string"
+        },
+        "isDynamic": {
+          "description": "is Dynamic",
+          "type": "boolean"
+        },
+        "position": {
+          "description": "Position property",
+          "type": "string",
+          "enum": [
+            "bottom",
+            "top"
+          ]
+        },
+        "maxlength": {
+          "description": "Maxlength of characters for the search",
+          "type": "number"
+        },
+        "isFocusedIn": {
+          "description": "Focused in menu toggle",
+          "type": "boolean"
+        },
+        "isEmpty": {
+          "description": "Use this Flag along with emptyMessage named slot to report error message",
+          "type": "boolean"
+        },
+        "ariaActiveDescendantId": {
+          "description": "Active element in the dropdown panel\n1. This is used to read out the active value to the user",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

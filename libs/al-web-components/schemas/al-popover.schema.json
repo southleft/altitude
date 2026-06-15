@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-popover.schema.json",
+  "title": "ALPopover (al-popover)",
+  "description": "Component: al-popover\n- **slot**: The main body of the popover\n- **slot** \"header\": The header of the popover that appears above the main slot\n- **slot** \"footer\": The footer of the popover that appears below the main slot\n- **slot** \"trigger\": The trigger that opens/closes the popover",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-popover",
+    "className": "ALPopover",
+    "module": "components/popover/popover.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The main body of the popover"
+      },
+      {
+        "name": "header",
+        "description": "The header of the popover that appears above the main slot"
+      },
+      {
+        "name": "footer",
+        "description": "The footer of the popover that appears below the main slot"
+      },
+      {
+        "name": "trigger",
+        "description": "The trigger that opens/closes the popover"
+      }
+    ],
+    "events": [
+      {
+        "name": "onPopoverCloseButton",
+        "description": ""
+      },
+      {
+        "name": "onPopoverOpen",
+        "description": ""
+      },
+      {
+        "name": "onPopoverClose",
+        "description": ""
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-popover"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "description": "typescript: 'menu'",
+          "type": "string"
+        },
+        "heading": {
+          "description": "Heading text that appears in the header region",
+          "type": "string"
+        },
+        "position": {
+          "description": "Positions the dropdown popover absolutely to the trigger.\n- **default** places the popover to the bottom left\n- **bottom-center** places the popover to the bottom center\n- **bottom-right** places the popover to the bottom right\n- **bottom-left** places the popover to the bottom left\n- **top-center** places the popover to the top center\n- **top-right** places the popover to the top right\n- **top-left** places the popover to the top left\n- **left** places the popover to the left\n- **left-top** places the popover to the left top\n- **right** places the popover to the right\n- **right-top** places the popover to the right top",
+          "type": "string",
+          "enum": [
+            "bottom-center",
+            "bottom-right",
+            "bottom-left",
+            "top-center",
+            "top-right",
+            "top-left",
+            "left",
+            "left-top",
+            "right",
+            "right-top"
+          ]
+        },
+        "isActive": {
+          "description": "Is active?\n- **true** Shows the popover container\n- **false** Hides the popover container",
+          "type": "boolean"
+        },
+        "isDismissible": {
+          "description": "Is dismissible?\n- **true** Shows the popover close button\n- **false** Hides the popover close button",
+          "type": "boolean"
+        },
+        "ariaLabelledBy": {
+          "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+          "type": "string"
+        },
+        "transitionDelay": {
+          "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
+          "type": "number"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

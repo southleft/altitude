@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-progress.schema.json",
+  "title": "ALProgress (al-progress)",
+  "description": "Component: al-progress",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-progress",
+    "className": "ALProgress",
+    "module": "components/progress/progress.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [],
+    "events": [
+      {
+        "name": "onProgressChange",
+        "description": ""
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-progress"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "isCircle": {
+          "description": "Is circle?\n- **true** Displays a circular progress indicator\n- **false** Displays a linear progress indicator",
+          "type": "boolean"
+        },
+        "circleSize": {
+          "description": "Circle size property\n- Sets the width of the circular progress indicator\n- **default** 16px\n- **md** 24px\n- **lg** 32px\n- **xl** 40px",
+          "type": "string",
+          "enum": [
+            "md",
+            "lg",
+            "xl"
+          ]
+        },
+        "showLabel": {
+          "description": "Show label?\n**true** Displays the progress label\n**false** Does not display a progress label",
+          "type": "boolean"
+        },
+        "labelType": {
+          "description": "typescript: 'ratio'",
+          "type": "string"
+        },
+        "duration": {
+          "description": "Duration of the progress in seconds\n- Default is 0",
+          "type": "number"
+        },
+        "currentProgress": {
+          "description": "The current completed value of the progress\n- Default is 0",
+          "type": "number"
+        },
+        "endProgress": {
+          "description": "The value at which the progress will end\n- Default is 100",
+          "type": "number"
+        },
+        "labelAria": {
+          "description": "Aria label for A11y\n- Default is \"progress\"",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

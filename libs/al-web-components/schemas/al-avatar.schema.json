@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-avatar.schema.json",
+  "title": "ALAvatar (al-avatar)",
+  "description": "Component: al-avatar\n- **slot**: The avatar content",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-avatar",
+    "className": "ALAvatar",
+    "module": "components/avatar/avatar.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The avatar content"
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-avatar"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "description": "typescript: 'sm'",
+          "type": "string"
+        },
+        "hasBadge": {
+          "description": "Has Badge?\n- If true, shows the badge on the outside of the avatar circle\n- If false, hides the badge",
+          "type": "boolean"
+        },
+        "badgeVariant": {
+          "description": "Badge state variant\n- **default** Displays a badge with the default state\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+          "type": "string",
+          "enum": [
+            "success",
+            "warning",
+            "danger"
+          ]
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

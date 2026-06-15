@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-accordion-panel.schema.json",
+  "title": "ALAccordionPanel (al-accordion-panel)",
+  "description": "Component: al-accordion-panel\n- **slot**: The accordion panel content",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-accordion-panel",
+    "className": "ALAccordionPanel",
+    "module": "components/accordion-panel/accordion-panel.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The accordion panel content"
+      }
+    ],
+    "events": [
+      {
+        "name": "onAccordionPanelOpen",
+        "description": ""
+      },
+      {
+        "name": "onAccordionPanelClose",
+        "description": ""
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-accordion-panel"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "isActive": {
+          "description": "Active property\n1. Panel is open when set to true. Close when set to false",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "Disabled property",
+          "type": "boolean"
+        },
+        "isLast": {
+          "description": "Is last?\n- Dynamically set by the ALAccordion\n- Removes the bottom border if it is the last item",
+          "type": "boolean"
+        },
+        "idx": {
+          "description": "Index of the panel\n- Dynamically set by the ALAccordion",
+          "type": "number"
+        },
+        "ariaControls": {
+          "description": "Aria Controls attribute\n- Dynamically set for A11y",
+          "type": "string"
+        },
+        "ariaLabelledBy": {
+          "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

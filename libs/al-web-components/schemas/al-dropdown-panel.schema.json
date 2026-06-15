@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-dropdown-panel.schema.json",
+  "title": "ALDropdownPanel (al-dropdown-panel)",
+  "description": "Component: al-dropdown-panel\n- **slot**: The dropdown panel content",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-dropdown-panel",
+    "className": "ALDropdownPanel",
+    "module": "components/dropdown-panel/dropdown-panel.ts",
+    "migration": {
+      "state": "legacy",
+      "react19": false,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "name": "",
+        "description": "The dropdown panel content"
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-dropdown-panel"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "hasScroll": {
+          "description": "Adds a max height and scrolling of the panel",
+          "type": "boolean"
+        },
+        "hasHeader": {
+          "description": "Changes styling on panel for variant with header",
+          "type": "boolean"
+        },
+        "hasFooter": {
+          "description": "Changes styling on panel for variant with footer",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}
