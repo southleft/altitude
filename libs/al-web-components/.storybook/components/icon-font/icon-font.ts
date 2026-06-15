@@ -1,6 +1,7 @@
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import styles from './icon-font.scss';
+import IconCss from '../../../components/icon/fonts/iconfont.css?raw';
 import '../token-code/token-code';
 
 @customElement('icon-font')
@@ -10,7 +11,6 @@ export class IconFont extends LitElement {
   }
 
   getIconMap(): { name: string; code: string }[] {
-    const IconCss = require('!!raw-loader!../../../components/icon/fonts/iconfont.css').default;
     return IconCss.match(/\.icon-[^\}]+\}/g).map((icon) => {
       const iconCode = icon.match(/content: "(.*?)";/) || icon.match(/content: '(.*?)';/);
       return {
@@ -22,17 +22,18 @@ export class IconFont extends LitElement {
 
   renderIconList(iconMap: { name: string; code: string }[]) {
     return iconMap.map((item) => {
+      const unicode = item.code.replace(`\\`, '\\u');
+      const htmlEntity = item.code.replace(`\\`, '&#x') + ';';
       return html`
-        <token-specimen
-          variant="icon"
-          name="icon-${item.name}"
-          value="${item.name}"
-          codeUnicode="${item.code.replace(`\\`, '\\u')}"
-          codeHtml="${item.code.replace(`\\`, '&#x') + ';'}"
-          exampleClass="icon"
-        >
-          <div class="icon icon-${item.name}"></div>
-        </token-specimen>
+        <tr class="token-specimen token-specimen--icon">
+          <td><token-code value="icon-${item.name}"></token-code></td>
+          <td><token-code value="${unicode}"></token-code></td>
+          <td><token-code value="${htmlEntity}"></token-code></td>
+          <td>${item.name}</td>
+          <td class="token-specimen__example">
+            <div class="icon"><div class="icon icon-${item.name}"></div></div>
+          </td>
+        </tr>
       `;
     });
   }

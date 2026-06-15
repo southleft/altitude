@@ -1,6 +1,7 @@
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
+import sharedUtilities from '../styles/shadow-utilities.scss';
 
 export interface ALElementProps {
   styleModifier?: string;
@@ -36,9 +37,11 @@ export interface ALEvent extends Event {
  *   - Tokens inherit through the document via CSS custom properties.
  *   - Constructable stylesheets adopted by `<al-theme>` (the scoped host,
  *     T4.2) provide the per-subtree token overrides.
- *   - This module-level `themeSheet` is a *bare* `CSSStyleSheet` that
- *     existed only to keep legacy components running; once T4.8 codemods
- *     every pilot to `scoped-complete`, this can be deleted.
+ *   - Global utility classes (`.al-u-*`) compiled from `styles/core/utilities`
+ *     are adopted here so legacy components that accept utility values via
+ *     `styleModifier` continue to work inside shadow DOM. The legacy build
+ *     adopted the entire ~44 KB main.scss; this shared sheet holds only the
+ *     ~7 KB utility surface — tokens still come from `var(--al-…)` lookups.
  *   - **No regex transformation of any document content.**
  */
 let themeSheet: CSSStyleSheet | null = null;
@@ -46,6 +49,11 @@ let themeSheet: CSSStyleSheet | null = null;
 function getSharedThemeSheet(): CSSStyleSheet {
   if (themeSheet) return themeSheet;
   themeSheet = new CSSStyleSheet();
+  try {
+    themeSheet.replaceSync(String(sharedUtilities ?? ''));
+  } catch {
+    // SSR / non-DOM environments: leave the sheet empty.
+  }
   return themeSheet;
 }
 
