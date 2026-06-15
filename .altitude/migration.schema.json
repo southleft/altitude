@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/migration.schema.json",
+  "title": "Altitude v2 migration manifest",
+  "description": "Per-component migration state, read by CI to gate feature work and by generators to scope output. See NEXT-GEN-UPGRADE-PLAN.md §6.",
+  "type": "object",
+  "required": ["compatBudget", "components"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "compatBudget": {
+      "type": "object",
+      "required": ["deprecateAliasesBy"],
+      "additionalProperties": false,
+      "properties": {
+        "deprecateAliasesBy": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+(-[A-Za-z0-9.-]+)?$",
+          "description": "SemVer version by which legacy aliases (tokens, tag suffixes) may be removed."
+        }
+      }
+    },
+    "components": {
+      "type": "object",
+      "description": "Map of kebab-case component name → migration entry.",
+      "patternProperties": {
+        "^[a-z][a-z0-9-]*$": { "$ref": "#/definitions/ComponentMigration" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "ComponentMigration": {
+      "type": "object",
+      "required": ["state", "react19", "headless", "ssr"],
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": ["legacy", "dual", "scoped-complete"],
+          "description": "Migration state. `legacy` = un-migrated (CI rejects feature work). `dual` = supports old + new APIs, requires `expiry`. `scoped-complete` = fully on the new model."
+        },
+        "react19": {
+          "type": "boolean",
+          "description": "True once the React wrapper passes the contract tests on React 19."
+        },
+        "headless": {
+          "type": "boolean",
+          "description": "True if the behavior has been extracted into a reactive controller (P5)."
+        },
+        "ssr": {
+          "type": "boolean",
+          "description": "True if Declarative Shadow DOM + Lit SSR is wired and the SSR fixture renders + hydrates without FOUC."
+        },
+        "expiry": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+(-[A-Za-z0-9.-]+)?$",
+          "description": "Required when state is `dual`. SemVer version after which the legacy code path may be removed."
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "state": { "const": "dual" } } },
+          "then": { "required": ["expiry"] }
+        }
+      ]
+    }
+  }
+}
