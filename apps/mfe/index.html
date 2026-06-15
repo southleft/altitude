@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Altitude — MFE coexistence fixture</title>
     <link rel="stylesheet" href="al-web-components/dist/css/main.css" />
+    <script>
+      // Must run before any ES module import: legacy auto-register flag.
+      window.alAutoRegistry = true;
+    </script>
     <style>
       body { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
       section { padding: 1rem; border: 1px solid currentColor; }

@@ -1,0 +1,93 @@
+#!/usr/bin/env node
+/**
+ * T0.1 — Token baseline snapshotter.
+ *
+ * Reads every `--al-*` CSS variable emitted under
+ * `libs/al-web-components/styles/dist/` and writes a deterministic JSON
+ * snapshot to `.altitude/baselines/tokens/snapshot.json`. The plan demands
+ * byte-comparability of the SD v3 → v5 transition (T1.1); this snapshot
+ * is the input to that comparison.
+ *
+ * Snapshot shape:
+ * {
+ *   "version": 1,
+ *   "totalVariables": <int>,
+ *   "byFile": { "<relpath>": <int> },
+ *   "variables": [
+ *     { "name": "--al-color-foo", "value": "#abc", "file": "<relpath>", "raw": "<name>: <value>" }
+ *   ],
+ *   "hash": "<sha256 of normalized output>"
+ * }
+ */
+
+'use strict';
+
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+
+const REPO = path.resolve(__dirname, '..');
+const TOKEN_DIST = path.join(REPO, 'libs', 'al-web-components', 'styles', 'dist');
+const OUT_DIR = path.join(REPO, '.altitude', 'baselines', 'tokens');
+const OUT_FILE = path.join(OUT_DIR, 'snapshot.json');
+
+function walk(dir, exts) {
+  if (!fs.existsSync(dir)) return [];
+  const out = [];
+  for (const name of fs.readdirSync(dir)) {
+    const p = path.join(dir, name);
+    const st = fs.statSync(p);
+    if (st.isDirectory()) out.push(...walk(p, exts));
+    else if (exts.some((e) => p.endsWith(e))) out.push(p);
+  }
+  return out;
+}
+
+function extractVars(file) {
+  const text = fs.readFileSync(file, 'utf8');
+  const out = [];
+  // Match both CSS custom props (`--al-foo: value;`) and SCSS variables (`$al-foo: value;`).
+  const re = /(?:^|[\s{;])(?:--|\$)(al-[a-z0-9-]+)\s*:\s*([^;]+);/gi;
+  let m;
+  while ((m = re.exec(text))) {
+    out.push({ name: '--' + m[1], value: m[2].trim(), file: path.relative(REPO, file) });
+  }
+  return out;
+}
+
+function main() {
+  if (!fs.existsSync(TOKEN_DIST)) {
+    console.error(`[tokens] ${TOKEN_DIST} does not exist; did you run \`yarn workspace al-web-components build:tokens\`?`);
+    process.exit(1);
+  }
+
+  const files = walk(TOKEN_DIST, ['.css', '.scss']);
+  const all = files.flatMap(extractVars);
+  // Deterministic order: by file, then by name.
+  all.sort((a, b) => (a.file === b.file ? a.name.localeCompare(b.name) : a.file.localeCompare(b.file)));
+
+  // Per-file counts.
+  const byFile = {};
+  for (const v of all) byFile[v.file] = (byFile[v.file] || 0) + 1;
+
+  // Hash the normalized "name: value" stream so we can detect *any* change.
+  const stream = all.map((v) => `${v.name}: ${v.value}`).join('\n');
+  const hash = crypto.createHash('sha256').update(stream).digest('hex');
+
+  const snapshot = {
+    version: 1,
+    capturedAt: 'baseline',
+    totalVariables: all.length,
+    uniqueNames: new Set(all.map((v) => v.name)).size,
+    byFile,
+    variables: all,
+    hash,
+  };
+
+  fs.mkdirSync(OUT_DIR, { recursive: true });
+  fs.writeFileSync(OUT_FILE, JSON.stringify(snapshot, null, 2) + '\n');
+  console.log(`[tokens] wrote ${all.length} variable occurrences (${snapshot.uniqueNames} unique names) across ${Object.keys(byFile).length} files → ${path.relative(REPO, OUT_FILE)}`);
+  console.log(`[tokens] hash: ${hash}`);
+}
+
+main();

@@ -30,10 +30,16 @@
     "dev:index": "npx serve ./dist",
     "gate:migration": "node scripts/check-migration-gate.js",
     "gate:baselines": "node scripts/check-baselines-gate.js",
-    "gate:self-test": "bash scripts/__tests__/gate-self-test.sh"
+    "gate:self-test": "bash scripts/__tests__/gate-self-test.sh",
+    "baselines:tokens": "node scripts/capture-token-baseline.js",
+    "baselines:bundle": "node scripts/capture-bundle-baseline.js",
+    "baselines:vrt": "playwright test --update-snapshots",
+    "baselines:capture": "yarn build && yarn workspace al-app-web-components build && yarn baselines:tokens && yarn baselines:bundle && yarn baselines:vrt",
+    "test:vrt": "playwright test"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
+    "@playwright/test": "^1.42.0",
     "@storybook/react-webpack5": "7.6.20",
     "storybook": "7.6.20"
   }

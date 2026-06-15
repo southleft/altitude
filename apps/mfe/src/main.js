@@ -1,5 +1,6 @@
 // T0.3 MFE fixture — minimal until T4.6 lands `registerAltitude({ mode: 'versioned' })`.
 // For now we just import the pilot components so the build verifies module shape.
+// `window.alAutoRegistry = true` is set inline in index.html BEFORE this module loads.
 import 'al-web-components/dist/components/button/button.js';
 import 'al-web-components/dist/components/theme-switcher/theme-switcher.js';
 
