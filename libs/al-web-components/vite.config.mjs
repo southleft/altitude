@@ -116,7 +116,7 @@ export default defineConfig({
     copyPublicDir: false,
     rollupOptions: {
       input: entries,
-      external: [/^lit(\/.*)?$/, /^date-fns(\/.*)?$/],
+      external: [/^lit(\/.*)?$/, /^lit-html(\/.*)?$/, /^@lit\/.*/, /^date-fns(\/.*)?$/, 'nanoid'],
       // Preserve every entry's exports even when no other entry imports them.
       // Without this, Rollup's tree-shaking drops `export { ALAccordion }` for
       // any class that isn't downstream-consumed, breaking the library's

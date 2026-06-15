@@ -4,27 +4,29 @@
   "version": "1.0.0",
   "private": true,
   "license": "UNLICENSED",
-  "packageManager": "yarn@1.22.21",
-  "workspaces": [
-    "libs/*",
-    "apps/*"
-  ],
-  "resolutions": {
-    "react": "19.2.7",
-    "react-dom": "19.2.7"
+  "packageManager": "pnpm@9.15.0",
+  "pnpm": {
+    "overrides": {
+      "react": "19.2.7",
+      "react-dom": "19.2.7"
+    },
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "@swc/core"
+    ]
   },
   "scripts": {
-    "build": "yarn workspace al-web-components build && yarn workspace al-react build",
-    "build:storybook-web-components": "yarn workspace al-web-components build:storybook --output-dir ../../dist/storybook/web-components",
-    "build:storybook-react": "yarn workspace al-react build:storybook --output-dir ../../dist/storybook/react",
-    "build:app-angular": "yarn workspace al-app-angular build --output-path ../../dist/angular --base-href /angular/browser/",
-    "build:app-react": "yarn workspace al-app-react build --base=/react --outDir ../../dist/react",
-    "build:app-svelte": "yarn workspace al-app-svelte build --base=/svelte --outDir ../../dist/svelte",
-    "build:app-web-components": "yarn workspace al-app-web-components build",
-    "build:app-mfe": "yarn workspace al-app-mfe build",
-    "build:app-ssr": "yarn workspace al-app-ssr build",
-    "build:fixtures": "yarn build:app-web-components && yarn build:app-react && yarn build:app-mfe && yarn build:app-ssr",
-    "build:all": "yarn build && yarn build:storybook-web-components && yarn build:storybook-react && yarn build:app-angular && yarn build:app-react && yarn build:app-svelte && yarn copy:components && yarn copy:index",
+    "build": "pnpm --filter al-web-components build && pnpm --filter al-react build",
+    "build:storybook-web-components": "pnpm --filter al-web-components build:storybook --output-dir ../../dist/storybook/web-components",
+    "build:storybook-react": "pnpm --filter al-react build:storybook --output-dir ../../dist/storybook/react",
+    "build:app-angular": "pnpm --filter al-app-angular build --output-path ../../dist/angular --base-href /angular/browser/",
+    "build:app-react": "pnpm --filter al-app-react build --base=/react --outDir ../../dist/react",
+    "build:app-svelte": "pnpm --filter al-app-svelte build --base=/svelte --outDir ../../dist/svelte",
+    "build:app-web-components": "pnpm --filter al-app-web-components build",
+    "build:app-mfe": "pnpm --filter al-app-mfe build",
+    "build:app-ssr": "pnpm --filter al-app-ssr build",
+    "build:fixtures": "pnpm run build:app-web-components && pnpm run build:app-react && pnpm run build:app-mfe && pnpm run build:app-ssr",
+    "build:all": "pnpm run build && pnpm run build:storybook-web-components && pnpm run build:storybook-react && pnpm run build:app-angular && pnpm run build:app-react && pnpm run build:app-svelte && pnpm run copy:components && pnpm run copy:index",
     "copy:components": "cp -r ./libs/al-web-components/dist ./dist/al-web-components",
     "copy:index": "cp ./index.html ./dist/index.html",
     "dev:index": "npx serve ./dist",
@@ -34,9 +36,9 @@
     "baselines:tokens": "node scripts/capture-token-baseline.js",
     "baselines:bundle": "node scripts/capture-bundle-baseline.js",
     "baselines:vrt": "playwright test --update-snapshots",
-    "baselines:capture": "yarn build && yarn workspace al-app-web-components build && yarn baselines:tokens && yarn baselines:bundle && yarn baselines:vrt",
+    "baselines:capture": "pnpm run build && pnpm --filter al-app-web-components build && pnpm run baselines:tokens && pnpm run baselines:bundle && pnpm run baselines:vrt",
     "test:vrt": "playwright test",
-    "release": "yarn build && changeset publish",
+    "release": "pnpm run build && changeset publish",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

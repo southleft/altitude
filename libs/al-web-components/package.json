@@ -4,21 +4,21 @@
   "version": "1.0.0",
   "private": true,
   "license": "UNLICENSED",
-  "packageManager": "yarn@1.22.21",
+  "packageManager": "pnpm@9.15.0",
   "scripts": {
     "start": "storybook dev -p 6006",
     "build": "npm run build:tokens && npm run build:icons && npm run build:custom-elements.json && del-cli dist && vite build -c vite.config.mjs && tsc && node ../../scripts/copy-assets-to-dist.js",
     "build:storybook": "storybook build",
     "build:tokens": "node ../../scripts/convert-tokens-to-dtcg.js && node ./styles/tokens-config.v5.mjs && node ../../scripts/emit-token-types.js && node ../../scripts/copy-tokens-to-legacy-dist.js",
-    "build:tokens:v5": "yarn build:tokens",
+    "build:tokens:v5": "pnpm run build:tokens",
     "build:vite": "vite build -c vite.config.mjs",
     "build:vite-spike": "vite build -c vite.spike.config.mjs",
-    "build:tokens:parallel": "yarn build:tokens && yarn build:tokens:v5 && node ../../scripts/check-tokens-parity.js",
+    "build:tokens:parallel": "pnpm run build:tokens && pnpm run build:tokens:v5 && node ../../scripts/check-tokens-parity.js",
     "test:tokens": "node ../../scripts/test-tokens-contract.js",
     "build:icons": "node ./icons/icons-config.js",
     "build:custom-elements.json": "cem analyze --config custom-elements-manifest.config.mjs --outdir . && node ../../scripts/generate-component-schemas.js && node ../../scripts/generate-schema-index.js",
     "test": "test-storybook --url http://localhost:6006",
-    "test:ci": "concurrently -k -s first -n 'sb,test' -c 'magenta,blue' 'yarn start --quiet' 'wait-on tcp:6006 && test-storybook --url http://localhost:6006'",
+    "test:ci": "concurrently -k -s first -n 'sb,test' -c 'magenta,blue' 'pnpm start --quiet' 'wait-on tcp:6006 && test-storybook --url http://localhost:6006'",
     "plop": "plop --plopfile plop/plop-config.js"
   },
   "files": [
@@ -26,7 +26,9 @@
   ],
   "dependencies": {
     "date-fns": "^4.0.0",
-    "lit": "^3.3.0"
+    "lit": "^3.3.0",
+    "lit-html": "^3.3.3",
+    "nanoid": "^5.1.11"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.10.0",
@@ -35,6 +37,7 @@
     "@storybook/test-runner": "^0.24",
     "@storybook/web-components": "^10.4",
     "@storybook/web-components-vite": "^10.4",
+    "@types/node": "^20.11.10",
     "@vusion/webfonts-generator": "^0.8.0",
     "axe-playwright": "^2",
     "concurrently": "^8",

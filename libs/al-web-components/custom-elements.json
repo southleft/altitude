@@ -120,6 +120,258 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/alert/alert.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-alert\n- **slot**: The alert's main content or title\n- **slot** \"icon\": Slot in an icon to override the default one",
+          "name": "ALAlert",
+          "slots": [
+            {
+              "name": "",
+              "description": "The alert's main content or title"
+            },
+            {
+              "name": "icon",
+              "description": "Slot in an icon to override the default one"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-alert'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconDoneEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconInfoEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconWarningEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconWarningTriangleEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconCloseEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "buttonEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'success' | 'warning' | 'danger'"
+              },
+              "description": "Variants\n- **default** renders a alert that represents an informative state\n- **success** renders a alert that represents a success state\n- **warning** renders a alert that represents a warning state\n- **danger** renders a alert that represents an danger state",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "title",
+              "type": {
+                "text": "string"
+              },
+              "description": "Optional title of the alert",
+              "attribute": "title"
+            },
+            {
+              "kind": "field",
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "isActive boolean\n- If true, the alert displays on the page\n- If false, the alert is hidden from the page",
+              "attribute": "isActive"
+            },
+            {
+              "kind": "field",
+              "name": "autoClose",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Auto close?\n- Set whether you want the alert to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
+              "attribute": "autoClose"
+            },
+            {
+              "kind": "field",
+              "name": "autoCloseDelay",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "Auto close delay\n1. Number of seconds to close the alert when autoClose is enabled\n2. Default amount is 3",
+              "attribute": "autoCloseDelay"
+            },
+            {
+              "kind": "field",
+              "name": "isDismissible",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Dismissible?\n- If true, displays a close button with close functionality on the alert",
+              "attribute": "isDismissible"
+            },
+            {
+              "kind": "field",
+              "name": "_timer",
+              "type": {
+                "text": "ReturnType<typeof setTimeout>"
+              },
+              "privacy": "private",
+              "description": "Internal property store setTimeout() method so that we can clear timer later"
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseOver",
+              "description": "Mouseover event\n1. On mouseover of the alert, clear the timer to pause auto close"
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseLeave",
+              "description": "Mouseleave event\n1. Resume auto close with a new timeout"
+            },
+            {
+              "kind": "method",
+              "name": "handleAutoClose",
+              "description": "Auto close\n1. Automatically close the alert after delay time"
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "privacy": "public",
+              "description": "Close alert\n1. Set isActive to false to hide the alert\n2. Dispatch a custom event on close"
+            },
+            {
+              "kind": "method",
+              "name": "open",
+              "privacy": "public",
+              "description": "Open alert\n1. Set isActive to true to show the alert\n2. Dispatch a custom event on open"
+            }
+          ],
+          "events": [
+            {
+              "name": "close",
+              "description": ""
+            },
+            {
+              "name": "open",
+              "description": ""
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'success' | 'warning' | 'danger'"
+              },
+              "description": "Variants\n- **default** renders a alert that represents an informative state\n- **success** renders a alert that represents a success state\n- **warning** renders a alert that represents a warning state\n- **danger** renders a alert that represents an danger state",
+              "fieldName": "variant"
+            },
+            {
+              "name": "title",
+              "type": {
+                "text": "string"
+              },
+              "description": "Optional title of the alert",
+              "fieldName": "title"
+            },
+            {
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "isActive boolean\n- If true, the alert displays on the page\n- If false, the alert is hidden from the page",
+              "fieldName": "isActive"
+            },
+            {
+              "name": "autoClose",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Auto close?\n- Set whether you want the alert to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
+              "fieldName": "autoClose"
+            },
+            {
+              "name": "autoCloseDelay",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "Auto close delay\n1. Number of seconds to close the alert when autoClose is enabled\n2. Default amount is 3",
+              "fieldName": "autoCloseDelay"
+            },
+            {
+              "name": "isDismissible",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Dismissible?\n- If true, displays a close button with close functionality on the alert",
+              "fieldName": "isDismissible"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-alert",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALAlert",
+          "declaration": {
+            "name": "ALAlert",
+            "module": "components/alert/alert.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-alert",
+          "declaration": {
+            "name": "ALAlert",
+            "module": "components/alert/alert.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALAlert",
+            "module": "components/alert/alert.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/accordion-panel/accordion-panel.ts",
       "declarations": [
         {
@@ -562,404 +814,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/alert/alert.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-alert\n- **slot**: The alert's main content or title\n- **slot** \"icon\": Slot in an icon to override the default one",
-          "name": "ALAlert",
-          "slots": [
-            {
-              "name": "",
-              "description": "The alert's main content or title"
-            },
-            {
-              "name": "icon",
-              "description": "Slot in an icon to override the default one"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-alert'"
-            },
-            {
-              "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "iconDoneEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "iconInfoEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "iconWarningEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "iconWarningTriangleEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "iconCloseEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "buttonEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'success' | 'warning' | 'danger'"
-              },
-              "description": "Variants\n- **default** renders a alert that represents an informative state\n- **success** renders a alert that represents a success state\n- **warning** renders a alert that represents a warning state\n- **danger** renders a alert that represents an danger state",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "title",
-              "type": {
-                "text": "string"
-              },
-              "description": "Optional title of the alert",
-              "attribute": "title"
-            },
-            {
-              "kind": "field",
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "isActive boolean\n- If true, the alert displays on the page\n- If false, the alert is hidden from the page",
-              "attribute": "isActive"
-            },
-            {
-              "kind": "field",
-              "name": "autoClose",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Auto close?\n- Set whether you want the alert to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
-              "attribute": "autoClose"
-            },
-            {
-              "kind": "field",
-              "name": "autoCloseDelay",
-              "type": {
-                "text": "number"
-              },
-              "default": "3",
-              "description": "Auto close delay\n1. Number of seconds to close the alert when autoClose is enabled\n2. Default amount is 3",
-              "attribute": "autoCloseDelay"
-            },
-            {
-              "kind": "field",
-              "name": "isDismissible",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Dismissible?\n- If true, displays a close button with close functionality on the alert",
-              "attribute": "isDismissible"
-            },
-            {
-              "kind": "field",
-              "name": "_timer",
-              "type": {
-                "text": "ReturnType<typeof setTimeout>"
-              },
-              "privacy": "private",
-              "description": "Internal property store setTimeout() method so that we can clear timer later"
-            },
-            {
-              "kind": "method",
-              "name": "handleMouseOver",
-              "description": "Mouseover event\n1. On mouseover of the alert, clear the timer to pause auto close"
-            },
-            {
-              "kind": "method",
-              "name": "handleMouseLeave",
-              "description": "Mouseleave event\n1. Resume auto close with a new timeout"
-            },
-            {
-              "kind": "method",
-              "name": "handleAutoClose",
-              "description": "Auto close\n1. Automatically close the alert after delay time"
-            },
-            {
-              "kind": "method",
-              "name": "close",
-              "privacy": "public",
-              "description": "Close alert\n1. Set isActive to false to hide the alert\n2. Dispatch a custom event on close"
-            },
-            {
-              "kind": "method",
-              "name": "open",
-              "privacy": "public",
-              "description": "Open alert\n1. Set isActive to true to show the alert\n2. Dispatch a custom event on open"
-            }
-          ],
-          "events": [
-            {
-              "name": "close",
-              "description": ""
-            },
-            {
-              "name": "open",
-              "description": ""
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'success' | 'warning' | 'danger'"
-              },
-              "description": "Variants\n- **default** renders a alert that represents an informative state\n- **success** renders a alert that represents a success state\n- **warning** renders a alert that represents a warning state\n- **danger** renders a alert that represents an danger state",
-              "fieldName": "variant"
-            },
-            {
-              "name": "title",
-              "type": {
-                "text": "string"
-              },
-              "description": "Optional title of the alert",
-              "fieldName": "title"
-            },
-            {
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "isActive boolean\n- If true, the alert displays on the page\n- If false, the alert is hidden from the page",
-              "fieldName": "isActive"
-            },
-            {
-              "name": "autoClose",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Auto close?\n- Set whether you want the alert to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
-              "fieldName": "autoClose"
-            },
-            {
-              "name": "autoCloseDelay",
-              "type": {
-                "text": "number"
-              },
-              "default": "3",
-              "description": "Auto close delay\n1. Number of seconds to close the alert when autoClose is enabled\n2. Default amount is 3",
-              "fieldName": "autoCloseDelay"
-            },
-            {
-              "name": "isDismissible",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Dismissible?\n- If true, displays a close button with close functionality on the alert",
-              "fieldName": "isDismissible"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-alert",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALAlert",
-          "declaration": {
-            "name": "ALAlert",
-            "module": "components/alert/alert.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-alert",
-          "declaration": {
-            "name": "ALAlert",
-            "module": "components/alert/alert.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALAlert",
-            "module": "components/alert/alert.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/breadcrumbs-item/breadcrumbs-item.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-breadcrumbs-item\n- **slot**: The breadcrumb item's content, typically text",
-          "name": "ALBreadcrumbsItem",
-          "slots": [
-            {
-              "name": "",
-              "description": "The breadcrumb item's content, typically text"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-breadcrumbs-item'"
-            },
-            {
-              "kind": "field",
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "description": "Link URL",
-              "attribute": "href"
-            },
-            {
-              "kind": "field",
-              "name": "target",
-              "type": {
-                "text": "'_blank' | '_self' | '_parent' | '_top'"
-              },
-              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)",
-              "attribute": "target"
-            },
-            {
-              "kind": "field",
-              "name": "isCurrent",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Indicates if this the is the currently active breadcrumb item\n- **true** This is the current breadcrumb\n- **false** This is not the current breadcrumb",
-              "attribute": "isCurrent"
-            },
-            {
-              "kind": "field",
-              "name": "isTruncated",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Truncated attribute\n- Dynamically set by the ALBreadcrumbs\n- **true** The slotted content does not display in an <a></a> or <button></button>\n- **false** The slotted content does displays in an <a></a> or <button></button>",
-              "attribute": "isTruncated"
-            },
-            {
-              "kind": "field",
-              "name": "hasSeparator",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Indicates whether or not to add a separator icon after the breadcrumb item",
-              "attribute": "hasSeparator"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "description": "Link URL",
-              "fieldName": "href"
-            },
-            {
-              "name": "target",
-              "type": {
-                "text": "'_blank' | '_self' | '_parent' | '_top'"
-              },
-              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)",
-              "fieldName": "target"
-            },
-            {
-              "name": "isCurrent",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Indicates if this the is the currently active breadcrumb item\n- **true** This is the current breadcrumb\n- **false** This is not the current breadcrumb",
-              "fieldName": "isCurrent"
-            },
-            {
-              "name": "isTruncated",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Truncated attribute\n- Dynamically set by the ALBreadcrumbs\n- **true** The slotted content does not display in an <a></a> or <button></button>\n- **false** The slotted content does displays in an <a></a> or <button></button>",
-              "fieldName": "isTruncated"
-            },
-            {
-              "name": "hasSeparator",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Indicates whether or not to add a separator icon after the breadcrumb item",
-              "fieldName": "hasSeparator"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-breadcrumbs-item",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALBreadcrumbsItem",
-          "declaration": {
-            "name": "ALBreadcrumbsItem",
-            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-breadcrumbs-item",
-          "declaration": {
-            "name": "ALBreadcrumbsItem",
-            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALBreadcrumbsItem",
-            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/breadcrumbs/breadcrumbs.ts",
       "declarations": [
         {
@@ -1160,6 +1014,152 @@
           "declaration": {
             "name": "ALBreadcrumbs",
             "module": "components/breadcrumbs/breadcrumbs.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/breadcrumbs-item/breadcrumbs-item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-breadcrumbs-item\n- **slot**: The breadcrumb item's content, typically text",
+          "name": "ALBreadcrumbsItem",
+          "slots": [
+            {
+              "name": "",
+              "description": "The breadcrumb item's content, typically text"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-breadcrumbs-item'"
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Link URL",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "'_blank' | '_self' | '_parent' | '_top'"
+              },
+              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)",
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "isCurrent",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Indicates if this the is the currently active breadcrumb item\n- **true** This is the current breadcrumb\n- **false** This is not the current breadcrumb",
+              "attribute": "isCurrent"
+            },
+            {
+              "kind": "field",
+              "name": "isTruncated",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Truncated attribute\n- Dynamically set by the ALBreadcrumbs\n- **true** The slotted content does not display in an <a></a> or <button></button>\n- **false** The slotted content does displays in an <a></a> or <button></button>",
+              "attribute": "isTruncated"
+            },
+            {
+              "kind": "field",
+              "name": "hasSeparator",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Indicates whether or not to add a separator icon after the breadcrumb item",
+              "attribute": "hasSeparator"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Link URL",
+              "fieldName": "href"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "'_blank' | '_self' | '_parent' | '_top'"
+              },
+              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)",
+              "fieldName": "target"
+            },
+            {
+              "name": "isCurrent",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Indicates if this the is the currently active breadcrumb item\n- **true** This is the current breadcrumb\n- **false** This is not the current breadcrumb",
+              "fieldName": "isCurrent"
+            },
+            {
+              "name": "isTruncated",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Truncated attribute\n- Dynamically set by the ALBreadcrumbs\n- **true** The slotted content does not display in an <a></a> or <button></button>\n- **false** The slotted content does displays in an <a></a> or <button></button>",
+              "fieldName": "isTruncated"
+            },
+            {
+              "name": "hasSeparator",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Indicates whether or not to add a separator icon after the breadcrumb item",
+              "fieldName": "hasSeparator"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-breadcrumbs-item",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALBreadcrumbsItem",
+          "declaration": {
+            "name": "ALBreadcrumbsItem",
+            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-breadcrumbs-item",
+          "declaration": {
+            "name": "ALBreadcrumbsItem",
+            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALBreadcrumbsItem",
+            "module": "components/breadcrumbs-item/breadcrumbs-item.ts"
           }
         }
       ]
@@ -5129,6 +5129,122 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/dropdown-panel/dropdown-panel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-dropdown-panel\n- **slot**: The dropdown panel content",
+          "name": "ALDropdownPanel",
+          "slots": [
+            {
+              "name": "",
+              "description": "The dropdown panel content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-dropdown-panel'"
+            },
+            {
+              "kind": "field",
+              "name": "hasScroll",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Adds a max height and scrolling of the panel",
+              "attribute": "hasScroll"
+            },
+            {
+              "kind": "field",
+              "name": "hasHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Changes styling on panel for variant with header",
+              "attribute": "hasHeader"
+            },
+            {
+              "kind": "field",
+              "name": "hasFooter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Changes styling on panel for variant with footer",
+              "attribute": "hasFooter"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "hasScroll",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Adds a max height and scrolling of the panel",
+              "fieldName": "hasScroll"
+            },
+            {
+              "name": "hasHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Changes styling on panel for variant with header",
+              "fieldName": "hasHeader"
+            },
+            {
+              "name": "hasFooter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Changes styling on panel for variant with footer",
+              "fieldName": "hasFooter"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-dropdown-panel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALDropdownPanel",
+          "declaration": {
+            "name": "ALDropdownPanel",
+            "module": "components/dropdown-panel/dropdown-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-dropdown-panel",
+          "declaration": {
+            "name": "ALDropdownPanel",
+            "module": "components/dropdown-panel/dropdown-panel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALDropdownPanel",
+            "module": "components/dropdown-panel/dropdown-panel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/drawer/drawer.ts",
       "declarations": [
         {
@@ -5404,122 +5520,6 @@
           "declaration": {
             "name": "ALDrawer",
             "module": "components/drawer/drawer.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/dropdown-panel/dropdown-panel.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-dropdown-panel\n- **slot**: The dropdown panel content",
-          "name": "ALDropdownPanel",
-          "slots": [
-            {
-              "name": "",
-              "description": "The dropdown panel content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-dropdown-panel'"
-            },
-            {
-              "kind": "field",
-              "name": "hasScroll",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Adds a max height and scrolling of the panel",
-              "attribute": "hasScroll"
-            },
-            {
-              "kind": "field",
-              "name": "hasHeader",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Changes styling on panel for variant with header",
-              "attribute": "hasHeader"
-            },
-            {
-              "kind": "field",
-              "name": "hasFooter",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Changes styling on panel for variant with footer",
-              "attribute": "hasFooter"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "hasScroll",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Adds a max height and scrolling of the panel",
-              "fieldName": "hasScroll"
-            },
-            {
-              "name": "hasHeader",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Changes styling on panel for variant with header",
-              "fieldName": "hasHeader"
-            },
-            {
-              "name": "hasFooter",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Changes styling on panel for variant with footer",
-              "fieldName": "hasFooter"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-dropdown-panel",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALDropdownPanel",
-          "declaration": {
-            "name": "ALDropdownPanel",
-            "module": "components/dropdown-panel/dropdown-panel.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-dropdown-panel",
-          "declaration": {
-            "name": "ALDropdownPanel",
-            "module": "components/dropdown-panel/dropdown-panel.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALDropdownPanel",
-            "module": "components/dropdown-panel/dropdown-panel.ts"
           }
         }
       ]
@@ -7549,59 +7549,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/layout-container/layout-container.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-layout-container",
-          "name": "ALLayoutContainer",
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-layout-container'"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-layout-container",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALLayoutContainer",
-          "declaration": {
-            "name": "ALLayoutContainer",
-            "module": "components/layout-container/layout-container.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-layout-container",
-          "declaration": {
-            "name": "ALLayoutContainer",
-            "module": "components/layout-container/layout-container.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALLayoutContainer",
-            "module": "components/layout-container/layout-container.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/layout/layout.ts",
       "declarations": [
         {
@@ -7691,6 +7638,59 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/layout-container/layout-container.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-layout-container",
+          "name": "ALLayoutContainer",
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-layout-container'"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-layout-container",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALLayoutContainer",
+          "declaration": {
+            "name": "ALLayoutContainer",
+            "module": "components/layout-container/layout-container.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-layout-container",
+          "declaration": {
+            "name": "ALLayoutContainer",
+            "module": "components/layout-container/layout-container.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALLayoutContainer",
+            "module": "components/layout-container/layout-container.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/layout-section/layout-section.ts",
       "declarations": [
         {
@@ -7738,6 +7738,324 @@
           "declaration": {
             "name": "ALLayoutSection",
             "module": "components/layout-section/layout-section.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/link/link.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-link\n- **slot**: The link text",
+          "name": "ALLink",
+          "slots": [
+            {
+              "name": "",
+              "description": "The link text"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-link'"
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "The link URL",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'xs' | 'sm' | 'lg'"
+              },
+              "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "'_blank' | '_self' | '_parent' | '_top'"
+              },
+              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria label attribute\n- Optional aria-label for a11y\n- Most screen readers will read out loud the aria-label attribute in place of the link text. This is used for links that have text such as 'Learn more' or 'Read more'.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Labelled By attribute\n- Optional aria-labelledby for a11y\n- There may be instances where a nearby headline can act is the perfect label for a general link.",
+              "attribute": "ariaLabelledBy"
+            },
+            {
+              "kind": "field",
+              "name": "linkTitle",
+              "type": {
+                "text": "string"
+              },
+              "description": "Title attribute\n- Optional title for a11y\n- If a link opens a new window or performs an action, use the title attribute to provide a tooltip with additional information.",
+              "attribute": "linkTitle"
+            },
+            {
+              "kind": "field",
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled attribute",
+              "attribute": "isDisabled"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "The link URL",
+              "fieldName": "href"
+            },
+            {
+              "name": "variant",
+              "type": {
+                "text": "'xs' | 'sm' | 'lg'"
+              },
+              "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset",
+              "fieldName": "variant"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "'_blank' | '_self' | '_parent' | '_top'"
+              },
+              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
+              "fieldName": "target"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria label attribute\n- Optional aria-label for a11y\n- Most screen readers will read out loud the aria-label attribute in place of the link text. This is used for links that have text such as 'Learn more' or 'Read more'.",
+              "fieldName": "label"
+            },
+            {
+              "name": "ariaLabelledBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria Labelled By attribute\n- Optional aria-labelledby for a11y\n- There may be instances where a nearby headline can act is the perfect label for a general link.",
+              "fieldName": "ariaLabelledBy"
+            },
+            {
+              "name": "linkTitle",
+              "type": {
+                "text": "string"
+              },
+              "description": "Title attribute\n- Optional title for a11y\n- If a link opens a new window or performs an action, use the title attribute to provide a tooltip with additional information.",
+              "fieldName": "linkTitle"
+            },
+            {
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled attribute",
+              "fieldName": "isDisabled"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-link",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALLink",
+          "declaration": {
+            "name": "ALLink",
+            "module": "components/link/link.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-link",
+          "declaration": {
+            "name": "ALLink",
+            "module": "components/link/link.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALLink",
+            "module": "components/link/link.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/list/list.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-list\n- **slot**: The list items",
+          "name": "ALList",
+          "slots": [
+            {
+              "name": "",
+              "description": "The list items"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-list'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "behavior",
+              "type": {
+                "text": "'overflow'"
+              },
+              "description": "Behavior\n- **overflow** turns the list into an overflow list",
+              "attribute": "behavior"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal'"
+              },
+              "description": "Orientation\n- default renders a stacked list\n- **horizontal** renders the list side-by-side and wraps unless overflow is turned on",
+              "attribute": "orientation"
+            },
+            {
+              "kind": "field",
+              "name": "isStart",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "isStart state\n1) Controls the beginning gradient on the overflow list"
+            },
+            {
+              "kind": "field",
+              "name": "isEnd",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "isEnd state\n1) Controls the ending gradient on the overflow list"
+            },
+            {
+              "kind": "field",
+              "name": "listItems",
+              "type": {
+                "text": "Array<ALListItem>"
+              },
+              "description": "Query all the ALListItems's"
+            },
+            {
+              "kind": "method",
+              "name": "onScroll",
+              "description": "On overflow list inner scroll\n1) On scroll, if position from left is greater than 0, set isStart to false. Otherwise set isStart to true.\n2) On scroll, If last child is fully in the viewport, set isEnd to true. Otherwise, set isEnd to false."
+            },
+            {
+              "kind": "method",
+              "name": "setShadows",
+              "description": "Set right and left gradients on overflow list\n1) Target the overflow list items and calculate the width of the children + margin\n2) Get the total width of the children offscreen when items overflow\n3) If table width is less than or equal to overflow list width, remove all shadows\n4) If overflow list  inner scroll isn't all the way to the left or to the right, turn all shadows on\n5) If overflow list inner scroll left 2px is >= to width of table offscreen, turn off right shadow and turn left shadow on\n6) Else, set the right shadow to true and the left shadow to false\n7) Overflow list inner scrollLeft is off by 2px and needs that additional 2 pixels to remove the end shadow\nonce scrolled all the way to the right."
+            },
+            {
+              "kind": "method",
+              "name": "setIndentation"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "behavior",
+              "type": {
+                "text": "'overflow'"
+              },
+              "description": "Behavior\n- **overflow** turns the list into an overflow list",
+              "fieldName": "behavior"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal'"
+              },
+              "description": "Orientation\n- default renders a stacked list\n- **horizontal** renders the list side-by-side and wraps unless overflow is turned on",
+              "fieldName": "orientation"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-list",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALList",
+          "declaration": {
+            "name": "ALList",
+            "module": "components/list/list.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-list",
+          "declaration": {
+            "name": "ALList",
+            "module": "components/list/list.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALList",
+            "module": "components/list/list.ts"
           }
         }
       ]
@@ -8121,16 +8439,16 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/list/list.ts",
+      "path": "components/logo/logo.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-list\n- **slot**: The list items",
-          "name": "ALList",
+          "description": "Component: al-logo\n- **slot**: The component content",
+          "name": "ALLogo",
           "slots": [
             {
               "name": "",
-              "description": "The list items"
+              "description": "The component content"
             }
           ],
           "members": [
@@ -8141,298 +8459,77 @@
                 "text": "string"
               },
               "static": true,
-              "default": "'al-list'"
-            },
-            {
-              "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "behavior",
-              "type": {
-                "text": "'overflow'"
-              },
-              "description": "Behavior\n- **overflow** turns the list into an overflow list",
-              "attribute": "behavior"
-            },
-            {
-              "kind": "field",
-              "name": "orientation",
-              "type": {
-                "text": "'horizontal'"
-              },
-              "description": "Orientation\n- default renders a stacked list\n- **horizontal** renders the list side-by-side and wraps unless overflow is turned on",
-              "attribute": "orientation"
-            },
-            {
-              "kind": "field",
-              "name": "isStart",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "isStart state\n1) Controls the beginning gradient on the overflow list"
-            },
-            {
-              "kind": "field",
-              "name": "isEnd",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "isEnd state\n1) Controls the ending gradient on the overflow list"
-            },
-            {
-              "kind": "field",
-              "name": "listItems",
-              "type": {
-                "text": "Array<ALListItem>"
-              },
-              "description": "Query all the ALListItems's"
-            },
-            {
-              "kind": "method",
-              "name": "onScroll",
-              "description": "On overflow list inner scroll\n1) On scroll, if position from left is greater than 0, set isStart to false. Otherwise set isStart to true.\n2) On scroll, If last child is fully in the viewport, set isEnd to true. Otherwise, set isEnd to false."
-            },
-            {
-              "kind": "method",
-              "name": "setShadows",
-              "description": "Set right and left gradients on overflow list\n1) Target the overflow list items and calculate the width of the children + margin\n2) Get the total width of the children offscreen when items overflow\n3) If table width is less than or equal to overflow list width, remove all shadows\n4) If overflow list  inner scroll isn't all the way to the left or to the right, turn all shadows on\n5) If overflow list inner scroll left 2px is >= to width of table offscreen, turn off right shadow and turn left shadow on\n6) Else, set the right shadow to true and the left shadow to false\n7) Overflow list inner scrollLeft is off by 2px and needs that additional 2 pixels to remove the end shadow\nonce scrolled all the way to the right."
-            },
-            {
-              "kind": "method",
-              "name": "setIndentation"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "behavior",
-              "type": {
-                "text": "'overflow'"
-              },
-              "description": "Behavior\n- **overflow** turns the list into an overflow list",
-              "fieldName": "behavior"
-            },
-            {
-              "name": "orientation",
-              "type": {
-                "text": "'horizontal'"
-              },
-              "description": "Orientation\n- default renders a stacked list\n- **horizontal** renders the list side-by-side and wraps unless overflow is turned on",
-              "fieldName": "orientation"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-list",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALList",
-          "declaration": {
-            "name": "ALList",
-            "module": "components/list/list.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-list",
-          "declaration": {
-            "name": "ALList",
-            "module": "components/list/list.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALList",
-            "module": "components/list/list.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/link/link.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-link\n- **slot**: The link text",
-          "name": "ALLink",
-          "slots": [
-            {
-              "name": "",
-              "description": "The link text"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-link'"
-            },
-            {
-              "kind": "field",
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "description": "The link URL",
-              "attribute": "href"
+              "default": "'al-logo'"
             },
             {
               "kind": "field",
               "name": "variant",
               "type": {
-                "text": "'xs' | 'sm' | 'lg'"
+                "text": "'northright' | 'odyssey' | 'southleft'"
               },
-              "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset",
+              "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **odyssey** displays the Odyssey logo\n- **southleft** displays the Southleft logo",
               "attribute": "variant"
             },
             {
               "kind": "field",
-              "name": "target",
-              "type": {
-                "text": "'_blank' | '_self' | '_parent' | '_top'"
-              },
-              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
-              "attribute": "target"
-            },
-            {
-              "kind": "field",
-              "name": "label",
+              "name": "href",
               "type": {
                 "text": "string"
               },
-              "description": "Aria label attribute\n- Optional aria-label for a11y\n- Most screen readers will read out loud the aria-label attribute in place of the link text. This is used for links that have text such as 'Learn more' or 'Read more'.",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "ariaLabelledBy",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria Labelled By attribute\n- Optional aria-labelledby for a11y\n- There may be instances where a nearby headline can act is the perfect label for a general link.",
-              "attribute": "ariaLabelledBy"
-            },
-            {
-              "kind": "field",
-              "name": "linkTitle",
-              "type": {
-                "text": "string"
-              },
-              "description": "Title attribute\n- Optional title for a11y\n- If a link opens a new window or performs an action, use the title attribute to provide a tooltip with additional information.",
-              "attribute": "linkTitle"
-            },
-            {
-              "kind": "field",
-              "name": "isDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Disabled attribute",
-              "attribute": "isDisabled"
+              "default": "'/'",
+              "description": "The logo link URL",
+              "attribute": "href"
             }
           ],
           "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'northright' | 'odyssey' | 'southleft'"
+              },
+              "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **odyssey** displays the Odyssey logo\n- **southleft** displays the Southleft logo",
+              "fieldName": "variant"
+            },
             {
               "name": "href",
               "type": {
                 "text": "string"
               },
-              "description": "The link URL",
+              "default": "'/'",
+              "description": "The logo link URL",
               "fieldName": "href"
-            },
-            {
-              "name": "variant",
-              "type": {
-                "text": "'xs' | 'sm' | 'lg'"
-              },
-              "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset",
-              "fieldName": "variant"
-            },
-            {
-              "name": "target",
-              "type": {
-                "text": "'_blank' | '_self' | '_parent' | '_top'"
-              },
-              "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
-              "fieldName": "target"
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria label attribute\n- Optional aria-label for a11y\n- Most screen readers will read out loud the aria-label attribute in place of the link text. This is used for links that have text such as 'Learn more' or 'Read more'.",
-              "fieldName": "label"
-            },
-            {
-              "name": "ariaLabelledBy",
-              "type": {
-                "text": "string"
-              },
-              "description": "Aria Labelled By attribute\n- Optional aria-labelledby for a11y\n- There may be instances where a nearby headline can act is the perfect label for a general link.",
-              "fieldName": "ariaLabelledBy"
-            },
-            {
-              "name": "linkTitle",
-              "type": {
-                "text": "string"
-              },
-              "description": "Title attribute\n- Optional title for a11y\n- If a link opens a new window or performs an action, use the title attribute to provide a tooltip with additional information.",
-              "fieldName": "linkTitle"
-            },
-            {
-              "name": "isDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Disabled attribute",
-              "fieldName": "isDisabled"
             }
           ],
           "superclass": {
             "name": "ALElement",
             "module": "/components/ALElement"
           },
-          "tagName": "al-link",
+          "tagName": "al-logo",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "ALLink",
+          "name": "ALLogo",
           "declaration": {
-            "name": "ALLink",
-            "module": "components/link/link.ts"
+            "name": "ALLogo",
+            "module": "components/logo/logo.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "al-link",
+          "name": "al-logo",
           "declaration": {
-            "name": "ALLink",
-            "module": "components/link/link.ts"
+            "name": "ALLogo",
+            "module": "components/logo/logo.ts"
           }
         },
         {
           "kind": "custom-element-definition",
           "declaration": {
-            "name": "ALLink",
-            "module": "components/link/link.ts"
+            "name": "ALLogo",
+            "module": "components/logo/logo.ts"
           }
         }
       ]
@@ -8782,103 +8879,6 @@
           "declaration": {
             "name": "ALMenu",
             "module": "components/menu/menu.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/logo/logo.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-logo\n- **slot**: The component content",
-          "name": "ALLogo",
-          "slots": [
-            {
-              "name": "",
-              "description": "The component content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-logo'"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'northright' | 'odyssey' | 'southleft'"
-              },
-              "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **odyssey** displays the Odyssey logo\n- **southleft** displays the Southleft logo",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "default": "'/'",
-              "description": "The logo link URL",
-              "attribute": "href"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'northright' | 'odyssey' | 'southleft'"
-              },
-              "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **odyssey** displays the Odyssey logo\n- **southleft** displays the Southleft logo",
-              "fieldName": "variant"
-            },
-            {
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "default": "'/'",
-              "description": "The logo link URL",
-              "fieldName": "href"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-logo",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALLogo",
-          "declaration": {
-            "name": "ALLogo",
-            "module": "components/logo/logo.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-logo",
-          "declaration": {
-            "name": "ALLogo",
-            "module": "components/logo/logo.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALLogo",
-            "module": "components/logo/logo.ts"
           }
         }
       ]
@@ -13110,6 +13110,117 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/skeleton/skeleton.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-skeleton",
+          "name": "ALSkeleton",
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-skeleton'"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'circle' | 'square'"
+              },
+              "description": "Variant\n- **default** renders a rectangular skeleton\n- **circle** renders a round skeleton\n- **square** renders a sqaure skeleton",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "The width of the skeleton\n- If no value is entered, it defaults to 100%",
+              "attribute": "width"
+            },
+            {
+              "kind": "field",
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "The height of the skeleton\n- If no value is entered, it defaults to auto",
+              "attribute": "height"
+            },
+            {
+              "kind": "method",
+              "name": "setWidthHeight",
+              "description": "Set the width and height\n1. Add a custom property to adjust the width of the skeleton\n2. Add a custom property to adjust the height of the skeleton"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'circle' | 'square'"
+              },
+              "description": "Variant\n- **default** renders a rectangular skeleton\n- **circle** renders a round skeleton\n- **square** renders a sqaure skeleton",
+              "fieldName": "variant"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "The width of the skeleton\n- If no value is entered, it defaults to 100%",
+              "fieldName": "width"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "The height of the skeleton\n- If no value is entered, it defaults to auto",
+              "fieldName": "height"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-skeleton",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALSkeleton",
+          "declaration": {
+            "name": "ALSkeleton",
+            "module": "components/skeleton/skeleton.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-skeleton",
+          "declaration": {
+            "name": "ALSkeleton",
+            "module": "components/skeleton/skeleton.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALSkeleton",
+            "module": "components/skeleton/skeleton.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/spinner/spinner.ts",
       "declarations": [
         {
@@ -13457,117 +13568,6 @@
           "declaration": {
             "name": "ALStepperItem",
             "module": "components/stepper-item/stepper-item.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/skeleton/skeleton.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-skeleton",
-          "name": "ALSkeleton",
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-skeleton'"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'circle' | 'square'"
-              },
-              "description": "Variant\n- **default** renders a rectangular skeleton\n- **circle** renders a round skeleton\n- **square** renders a sqaure skeleton",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "width",
-              "type": {
-                "text": "number"
-              },
-              "description": "The width of the skeleton\n- If no value is entered, it defaults to 100%",
-              "attribute": "width"
-            },
-            {
-              "kind": "field",
-              "name": "height",
-              "type": {
-                "text": "number"
-              },
-              "description": "The height of the skeleton\n- If no value is entered, it defaults to auto",
-              "attribute": "height"
-            },
-            {
-              "kind": "method",
-              "name": "setWidthHeight",
-              "description": "Set the width and height\n1. Add a custom property to adjust the width of the skeleton\n2. Add a custom property to adjust the height of the skeleton"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'circle' | 'square'"
-              },
-              "description": "Variant\n- **default** renders a rectangular skeleton\n- **circle** renders a round skeleton\n- **square** renders a sqaure skeleton",
-              "fieldName": "variant"
-            },
-            {
-              "name": "width",
-              "type": {
-                "text": "number"
-              },
-              "description": "The width of the skeleton\n- If no value is entered, it defaults to 100%",
-              "fieldName": "width"
-            },
-            {
-              "name": "height",
-              "type": {
-                "text": "number"
-              },
-              "description": "The height of the skeleton\n- If no value is entered, it defaults to auto",
-              "fieldName": "height"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-skeleton",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALSkeleton",
-          "declaration": {
-            "name": "ALSkeleton",
-            "module": "components/skeleton/skeleton.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-skeleton",
-          "declaration": {
-            "name": "ALSkeleton",
-            "module": "components/skeleton/skeleton.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALSkeleton",
-            "module": "components/skeleton/skeleton.ts"
           }
         }
       ]
@@ -14147,6 +14147,84 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/text-passage/text-passage.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-text-passage\n- **slot**: The text passage content",
+          "name": "ALTextPassage",
+          "slots": [
+            {
+              "name": "",
+              "description": "The text passage content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-text-passage'"
+            },
+            {
+              "kind": "field",
+              "name": "maxWidth",
+              "type": {
+                "text": "'sm'"
+              },
+              "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
+              "attribute": "maxWidth"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "maxWidth",
+              "type": {
+                "text": "'sm'"
+              },
+              "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
+              "fieldName": "maxWidth"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-text-passage",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALTextPassage",
+          "declaration": {
+            "name": "ALTextPassage",
+            "module": "components/text-passage/text-passage.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-text-passage",
+          "declaration": {
+            "name": "ALTextPassage",
+            "module": "components/text-passage/text-passage.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALTextPassage",
+            "module": "components/text-passage/text-passage.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/textarea/textarea.ts",
       "declarations": [
         {
@@ -14609,84 +14687,6 @@
           "declaration": {
             "name": "ALTextarea",
             "module": "components/textarea/textarea.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/text-passage/text-passage.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-text-passage\n- **slot**: The text passage content",
-          "name": "ALTextPassage",
-          "slots": [
-            {
-              "name": "",
-              "description": "The text passage content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-text-passage'"
-            },
-            {
-              "kind": "field",
-              "name": "maxWidth",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
-              "attribute": "maxWidth"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "maxWidth",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
-              "fieldName": "maxWidth"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-text-passage",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALTextPassage",
-          "declaration": {
-            "name": "ALTextPassage",
-            "module": "components/text-passage/text-passage.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-text-passage",
-          "declaration": {
-            "name": "ALTextPassage",
-            "module": "components/text-passage/text-passage.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALTextPassage",
-            "module": "components/text-passage/text-passage.ts"
           }
         }
       ]
@@ -15905,152 +15905,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/toggle-button-group/toggle-button-group.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-toggle-button-group\n- **slot**: A set of toggle buttons",
-          "name": "ALToggleButtonGroup",
-          "slots": [
-            {
-              "name": "",
-              "description": "A set of toggle buttons"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-toggle-button-group'"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'background'"
-              },
-              "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "orientation",
-              "type": {
-                "text": "'vertical'"
-              },
-              "description": "Orientation\n- **default** renders the toggle button's in a horizontal row\n- **vertical** renders the toggle button's in a vertical row",
-              "attribute": "orientation"
-            },
-            {
-              "kind": "field",
-              "name": "gap",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Gap\n- **default** adds no gap between the toggle buttons\n- **sm** adds a 16px gap between the toggle buttons",
-              "attribute": "gap"
-            },
-            {
-              "kind": "field",
-              "name": "selectedItem",
-              "type": {
-                "text": "ALToggleButton"
-              },
-              "description": "Selected item\n- The currently selected Toggle Button in the group"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnToggleButtonSelect",
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "ALToggleButton"
-                  }
-                }
-              ],
-              "description": "Handle when a Toggle Button in the group is selected\n1. Set the previously selected item's isSelected state to false\n2. Store the newly selected item on the toggle button's state"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnClickOutside",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ],
-              "description": "Handles the click event outside the component:\n1. Check if the toggle button is selected\n2. Determine if the click occurred inside the selected toggle button\n3. Check if the click occurred outside the selected toggle button\n4. Close the toggle button if the click occurred outside it"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'background'"
-              },
-              "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles",
-              "fieldName": "variant"
-            },
-            {
-              "name": "orientation",
-              "type": {
-                "text": "'vertical'"
-              },
-              "description": "Orientation\n- **default** renders the toggle button's in a horizontal row\n- **vertical** renders the toggle button's in a vertical row",
-              "fieldName": "orientation"
-            },
-            {
-              "name": "gap",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Gap\n- **default** adds no gap between the toggle buttons\n- **sm** adds a 16px gap between the toggle buttons",
-              "fieldName": "gap"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-toggle-button-group",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALToggleButtonGroup",
-          "declaration": {
-            "name": "ALToggleButtonGroup",
-            "module": "components/toggle-button-group/toggle-button-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-toggle-button-group",
-          "declaration": {
-            "name": "ALToggleButtonGroup",
-            "module": "components/toggle-button-group/toggle-button-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALToggleButtonGroup",
-            "module": "components/toggle-button-group/toggle-button-group.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/toggle-button/toggle-button.ts",
       "declarations": [
         {
@@ -16285,6 +16139,152 @@
           "declaration": {
             "name": "ALToggleButton",
             "module": "components/toggle-button/toggle-button.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/toggle-button-group/toggle-button-group.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-toggle-button-group\n- **slot**: A set of toggle buttons",
+          "name": "ALToggleButtonGroup",
+          "slots": [
+            {
+              "name": "",
+              "description": "A set of toggle buttons"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-toggle-button-group'"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'background'"
+              },
+              "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'vertical'"
+              },
+              "description": "Orientation\n- **default** renders the toggle button's in a horizontal row\n- **vertical** renders the toggle button's in a vertical row",
+              "attribute": "orientation"
+            },
+            {
+              "kind": "field",
+              "name": "gap",
+              "type": {
+                "text": "'sm'"
+              },
+              "description": "Gap\n- **default** adds no gap between the toggle buttons\n- **sm** adds a 16px gap between the toggle buttons",
+              "attribute": "gap"
+            },
+            {
+              "kind": "field",
+              "name": "selectedItem",
+              "type": {
+                "text": "ALToggleButton"
+              },
+              "description": "Selected item\n- The currently selected Toggle Button in the group"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnToggleButtonSelect",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "ALToggleButton"
+                  }
+                }
+              ],
+              "description": "Handle when a Toggle Button in the group is selected\n1. Set the previously selected item's isSelected state to false\n2. Store the newly selected item on the toggle button's state"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnClickOutside",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ],
+              "description": "Handles the click event outside the component:\n1. Check if the toggle button is selected\n2. Determine if the click occurred inside the selected toggle button\n3. Check if the click occurred outside the selected toggle button\n4. Close the toggle button if the click occurred outside it"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'background'"
+              },
+              "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles",
+              "fieldName": "variant"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'vertical'"
+              },
+              "description": "Orientation\n- **default** renders the toggle button's in a horizontal row\n- **vertical** renders the toggle button's in a vertical row",
+              "fieldName": "orientation"
+            },
+            {
+              "name": "gap",
+              "type": {
+                "text": "'sm'"
+              },
+              "description": "Gap\n- **default** adds no gap between the toggle buttons\n- **sm** adds a 16px gap between the toggle buttons",
+              "fieldName": "gap"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-toggle-button-group",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALToggleButtonGroup",
+          "declaration": {
+            "name": "ALToggleButtonGroup",
+            "module": "components/toggle-button-group/toggle-button-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-toggle-button-group",
+          "declaration": {
+            "name": "ALToggleButtonGroup",
+            "module": "components/toggle-button-group/toggle-button-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALToggleButtonGroup",
+            "module": "components/toggle-button-group/toggle-button-group.ts"
           }
         }
       ]
@@ -16560,524 +16560,6 @@
           "declaration": {
             "name": "ALTooltip",
             "module": "components/tooltip/tooltip.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/add.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/add.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/attachment.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/attachment.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/bell.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/bell.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/bookmark.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/bookmark.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/calendar.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/calendar.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/check.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/check.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/chevron-down.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/chevron-down.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/chevron-left.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/chevron-left.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/chevron-right.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/chevron-right.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/chevron-up.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/chevron-up.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/clock.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/clock.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/close.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/close.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/copy.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/copy.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/document.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/document.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/dots-horizontal.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/dots-horizontal.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/dots-vertical.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/dots-vertical.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/emoji.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/emoji.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/filter.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/filter.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/help.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/help.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/home.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/home.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/info.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/info.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/layout-masonry.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/layout-masonry.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/list.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/list.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/menu.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/menu.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/minus.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/minus.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/pin.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/pin.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/search.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/search.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/send.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/send.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/settings.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/settings.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/sign-in.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/sign-in.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/sign-out.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/sign-out.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/star.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/star.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/success.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/success.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/support.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/support.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/user.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/user.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/warning-circle.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/warning-circle.svg.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/svgs/warning-triangle.svg.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "components/icon/svgs/warning-triangle.svg.ts"
           }
         }
       ]
@@ -20371,6 +19853,524 @@
           "declaration": {
             "name": "ALIconWarningTriangle",
             "module": "components/icon/icons/warning-triangle.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/add.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/add.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/attachment.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/attachment.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/bell.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/bell.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/bookmark.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/bookmark.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/calendar.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/calendar.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/check.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/check.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/chevron-down.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/chevron-down.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/chevron-left.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/chevron-left.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/chevron-right.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/chevron-right.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/chevron-up.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/chevron-up.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/clock.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/clock.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/close.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/close.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/copy.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/copy.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/document.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/document.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/dots-horizontal.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/dots-horizontal.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/dots-vertical.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/dots-vertical.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/emoji.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/emoji.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/filter.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/filter.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/help.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/help.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/home.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/home.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/info.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/info.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/layout-masonry.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/layout-masonry.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/list.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/list.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/menu.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/menu.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/minus.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/minus.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/pin.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/pin.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/search.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/search.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/send.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/send.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/settings.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/settings.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/sign-in.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/sign-in.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/sign-out.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/sign-out.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/star.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/star.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/success.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/success.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/support.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/support.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/user.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/user.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/warning-circle.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/warning-circle.svg.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/svgs/warning-triangle.svg.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "components/icon/svgs/warning-triangle.svg.ts"
           }
         }
       ]

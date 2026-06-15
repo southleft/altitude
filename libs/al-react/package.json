@@ -4,11 +4,11 @@
   "version": "1.0.0",
   "private": true,
   "license": "UNLICENSED",
-  "packageManager": "yarn@1.22.21",
+  "packageManager": "pnpm@9.15.0",
   "main": "dist/index.js",
   "scripts": {
     "start": "storybook dev -p 9009",
-    "build": "yarn del-cli dist && tsc && cp -r ./.storybook/static/images ./dist/images 2>/dev/null || true && cp -r ../al-web-components/dist/css ./dist 2>/dev/null || true",
+    "build": "pnpm exec del-cli dist && tsc && cp -r ./.storybook/static/images ./dist/images 2>/dev/null || true && cp -r ../al-web-components/dist/css ./dist 2>/dev/null || true",
     "build:storybook": "storybook build",
     "plop": "plop --plopfile plop/plop-config.js"
   },
@@ -19,6 +19,7 @@
   ],
   "dependencies": {
     "@lit/react": "^1.0.6",
+    "al-web-components": "workspace:*",
     "react": "^19",
     "react-dom": "^19"
   },
