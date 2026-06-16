@@ -9,7 +9,7 @@ To build tokens, follow these steps:
 3. Run the following command to trigger the build process of generating the necessary token files for your project.
 
 ```
-yarn build:tokens
+pnpm build:tokens
 ```
 
 ## How to Update Tokens
@@ -26,7 +26,7 @@ This project is connected to Figma via Token Studio. Follow these steps to add n
 ## How to Add a New Theme
 To add a new theme, follow these steps:
 
-1. Open the `tokens-config.js` file.
+1. Open the `tokens-config.v5.mjs` file (Style Dictionary v5 ESM config).
 2. Locate the section where themes are built, identified by `styleDictionaryBuildTheme('themeName');`.
 3. Add a new line following the existing pattern, replacing `themeName` with the name of your new theme.
 4. Save the file.
@@ -55,7 +55,7 @@ For example:
 ## How to Add a New Brand
 To add a new brand, follow these steps:
 
-1. Open the `tokens-config.js` file.
+1. Open the `tokens-config.v5.mjs` file (Style Dictionary v5 ESM config).
 2. Locate the section where brands are built, identified by `styleDictionaryBuildBrand('themeName', 'brandName');`.
 3. Add a new line following the existing pattern, replacing `themeName` with the relevant theme and `brandName` with the name of your new brand.
 4. Save the file.

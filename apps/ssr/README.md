@@ -7,8 +7,8 @@ into a real Lit SSR renderer with Declarative Shadow DOM.
 ## Run locally
 
 ```bash
-yarn workspace al-app-ssr build     # writes ./dist/*.html
-yarn workspace al-app-ssr start     # http://localhost:5177
+pnpm --filter al-app-ssr build     # writes ./dist/*.html
+pnpm --filter al-app-ssr start     # http://localhost:5177
 ```
 
 ## What changes at T5.2

@@ -8,9 +8,9 @@ this fixture won't build.
 ## Run locally
 
 ```bash
-yarn workspace al-web-components build         # produce the dist this app imports
-yarn workspace al-app-web-components start     # Vite dev server on :5173
-yarn workspace al-app-web-components build     # production build into ./dist
+pnpm --filter al-web-components build         # produce the dist this app imports
+pnpm --filter al-app-web-components start     # Vite dev server on :5173
+pnpm --filter al-app-web-components build     # production build into ./dist
 ```
 
 ## What this fixture covers

@@ -1,77 +1,96 @@
-# Build pipeline — webpack + Vite parallel (Phase 2)
+# Build pipeline — Vite 5 (post-Phase 2)
 
 ## Overview
 
-T2.2 swapped the *capacity* to build via Vite without yet retiring webpack.
-Both pipelines coexist during this transition, much like the SD v3 / v5
-token pipelines (see `.altitude/TOKENS.md`).
+After T2.1 / T2.2 / T2.4, both libraries and both Storybooks build through
+**Vite 5**. The legacy webpack 5 + babel + sass-loader pipeline that shipped
+1.0 is retired; its configs are removed from the repo.
 
-| Builder | Source | Output | Purpose |
+| Surface | Builder | Config | Output |
 |---|---|---|---|
-| webpack 5 + babel + sass-loader | `libs/al-web-components/components/**/*.ts` (legacy SCSS imports) | `libs/al-web-components/dist/` | Ships the live `1.0.0` publish surface |
-| Vite 5 (esbuild + Rollup) | Same source via the in-memory `?inline` rewrite plugin | `libs/al-web-components/dist-vite/` | The Vite-built parallel that T2.2 builds and Gate P2 lands on |
+| `al-web-components` library | Vite 5 (esbuild + Rollup) | `libs/al-web-components/vite.config.mjs` | `libs/al-web-components/dist/` |
+| `al-react` library | Vite 5 | `libs/al-react/` (default config) | `libs/al-react/dist/` |
+| `al-web-components` Storybook | Storybook 10 + `@storybook/web-components-vite` | `libs/al-web-components/.storybook/main.ts` | `dist/storybook/web-components/` |
+| `al-react` Storybook | Storybook 10 + `@storybook/react-vite` | `libs/al-react/.storybook/main.ts` | `dist/storybook/react/` |
 
-The Vite config preserves G7 (decorator semantics): `experimentalDecorators: true`,
+The Vite config preserves **G7** (decorator semantics): `experimentalDecorators: true`,
 `useDefineForClassFields: false`, esbuild target `es2022`.
 
 ## Commands
 
 ```bash
-# Workspace-relative:
-yarn workspace al-web-components build              # legacy webpack
-yarn workspace al-web-components build:vite         # T2.2 Vite (parallel)
-yarn workspace al-web-components build:vite-spike   # T2.1 single-component spike
+# Library builds:
+pnpm --filter al-web-components build                            # al-web-components → dist/
+pnpm --filter al-react build                                     # al-react → dist/
+pnpm run build                                                   # both libraries
 
-# Top-level gates:
-node scripts/check-vite-spike.js                    # T2.1 bundle assertions
-node scripts/check-vite-export-parity.js            # T2.2 zero public-export removals
+# Storybook builds:
+pnpm --filter al-web-components start                            # dev server :6006
+pnpm --filter al-web-components build:storybook \
+    --output-dir ../../dist/storybook/web-components             # static export
+pnpm --filter al-react start                                     # dev server :9009
+pnpm --filter al-react build:storybook \
+    --output-dir ../../dist/storybook/react
+
+# Everything:
+pnpm run build:all                                               # libs + both SBs + apps
 ```
 
-## Acceptance hit by Phase 2 so far
+## SCSS handling
 
-| Task | Acceptance | Status |
-|---|---|---|
-| T2.1 | SCSS compiles to constructable stylesheet that lands in shadow root | ✅ `check-vite-spike.js` PASS |
-| T2.1 | VRT matches P0 baseline within tolerance | ✅ pilot VRT passes when dist is swapped from webpack to Vite output |
-| T2.2 | `yarn build` exits 0 (vite is added; webpack still works) | ✅ `yarn workspace al-web-components build:vite` exits 0 in 1–2s |
-| T2.2 | API-extractor/AST diff = zero public export removals | ✅ `check-vite-export-parity.js` PASS — 103 files compared |
-| T2.2 | `publint` 0 errors | ⚠ Deferred — publint flags pre-existing missing `main`/`exports`/`types` fields. Resolving these requires choosing the `dist/` source of truth (currently webpack; Vite swap completes the work). Tracked for T2.2 final |
-| T2.2 | Pilot stories render | ✅ pilots-VRT against Vite-built button/input/select/dialog/theme-switcher pass |
+Vite ingests `*.scss` natively. The Vite config switches the SCSS preprocessor
+to Sass's **`modern-compiler`** API (`css.preprocessorOptions.scss.api`), so
+there are no `legacy-js-api` deprecation warnings. The SCSS source itself uses
+the modern Sass module system — every `@import` was migrated to `@use` /
+`@forward` so Dart Sass 3.0 (which removes `@import`) won't break the build.
 
-## How the rewrite plugin works
-
-`libs/al-web-components/components/<name>/<name>.ts` source today uses:
+Component `.ts` files keep the simple form:
 
 ```ts
 import styles from './<name>.scss';
 static get styles() { return unsafeCSS(styles.toString()); }
 ```
 
-Webpack reads this via `sass-loader` + `raw-loader` and produces an object
-whose `.toString()` returns the compiled CSS. Vite's equivalent is the
-`?inline` query (Vite's canonical "raw string from this asset" mechanism).
-Changing 64 components in this PR would be its own commit-soup; instead the
-Vite plugin rewrites the import in memory before esbuild sees it:
+A small Vite plugin (`rewriteScssImports` in `vite.config.mjs`) appends
+`?inline` to those imports in memory so Vite returns the compiled CSS as a
+string. Keeping the source spelling identical to webpack's avoids touching
+65 components for a build-tool change.
 
-```js
-import styles from './x.scss'        →        import styles from './x.scss?inline'
-```
+## SCSS structure
 
-The trailing `.toString()` in the static-styles getter is a no-op on the
-returned string, so the line stays unchanged. T6.2 (post-Phase-6 cleanup)
-will codemod the source files so the rewrite plugin is no longer needed.
+- `libs/al-web-components/styles/main.scss` — entry: emits the full theme
+  CSS (Storybook preview consumes it). Forwards Sass variables + mixins to
+  downstream consumers like `.storybook/docs.scss`.
+- `libs/al-web-components/styles/component.scss` — consumed by every leaf
+  component. `@forward`s variables + mixins; `@use`s reset so its CSS gets
+  emitted in each component's scoped sheet.
+- `libs/al-web-components/styles/shadow-utilities.scss` — adopted into every
+  component's shadow root by `ALElement.getSharedThemeSheet()`. Carries
+  only the `.al-u-*` utility classes (~7 KB) so components that accept
+  utility values via `styleModifier` keep working without each one needing
+  to import the utilities locally.
+- `libs/al-web-components/styles/core/` — partials (reset, variables, mixins,
+  utilities, layers) — all `@use` / `@forward` module-system files.
 
-## What's not yet covered
+## Acceptance status
 
-- **Production `dist/` swap.** `build:vite` writes to `dist-vite/` instead of
-  replacing `dist/`. The swap is intentionally deferred until T3.4's contract
-  validator lands so the cutover is gated by a robust check.
-- **`setGlobalStyles.ts`** uses webpack-specific loader syntax
-  (`!!raw-loader!sass-loader!../styles/main.scss`). It is excluded from the
-  Vite entry list; the legacy webpack build still emits it, and T4.3 removes
-  the global-style approach entirely.
-- **publint clean.** Closes when the dist swap lands (the package's
-  `main`/`exports`/`types` need real file paths; today the absent fields are
-  a pre-existing characteristic of the legacy package).
-- **T2.3, T2.4 — yarn1→pnpm, Lit 3.3, TS, ESLint 9 flat, date-fns 4,
-  Storybook 10.** These follow the build foundation.
+All Phase 2 acceptance criteria are green and merged on `feature/v2`:
+
+| Task | Acceptance | Status |
+|---|---|---|
+| T2.1 | SCSS compiles to constructable stylesheet adopted into shadow root | ✅ |
+| T2.2 | `pnpm --filter al-web-components build` exits 0 via Vite (webpack retired) | ✅ |
+| T2.2 | AST diff = zero public export removals vs P0 dist | ✅ |
+| T2.2 | publint 0 errors | ✅ |
+| T2.3 | yarn → pnpm 9, Node 22 LTS, Lit 3.3, TS 5.9, ESLint 9, date-fns 4 | ✅ |
+| T2.4 | Storybook 10 with Vite framework, Storybook Test runner, axe-playwright a11y | ✅ |
+
+See the PR body and `CHANGELOG.md` `[Unreleased]` for the full rollup.
+
+## Notes for future agents
+
+- The legacy `setGlobalStyles.ts` that used webpack-only `!!raw-loader!sass-loader!`
+  syntax is **gone** — `ALElement.getSharedThemeSheet()` is the replacement.
+- The library `dist/` is the source of truth for consumers; there is no
+  separate `dist-vite/` parallel anymore (it was the T2.2 staging output and
+  was retired at T2.2 finalization).

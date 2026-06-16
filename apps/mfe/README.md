@@ -14,10 +14,10 @@ stays identical.
 ## Run locally
 
 ```bash
-yarn workspace al-web-components build
-yarn workspace al-app-mfe start    # Vite dev server on :5175
-yarn workspace al-app-mfe build
-yarn test:vrt --grep mfe           # Playwright versioned-registration test
+pnpm --filter al-web-components build
+pnpm --filter al-app-mfe start    # Vite dev server on :5175
+pnpm --filter al-app-mfe build
+pnpm test:vrt --grep mfe           # Playwright versioned-registration test
 ```
 
 ## How the API is used

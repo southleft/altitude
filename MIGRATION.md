@@ -2,7 +2,7 @@
 
 Altitude v2 changes the theming model from a single global `<style>`
 mutation to a scoped `<al-theme>` host. Most consumers can migrate in
-two edits + a `yarn upgrade`.
+two edits + a `pnpm upgrade`.
 
 ## TL;DR
 
@@ -129,9 +129,14 @@ the same values in v2's default theme.
 
 ## 6. Storybook / dev tooling
 
-- v2 ships Vite + Storybook tracking ahead (Storybook 10 staged through
-  the workspace). Existing `.storybook/preview.ts` keeps working;
-  components render under both webpack and Vite library builds.
+- v2 ships **Vite 5** as the library + Storybook builder (webpack removed),
+  **Storybook 10** with the `@storybook/web-components-vite` /
+  `@storybook/react-vite` framework, **pnpm 9** workspaces, **Node 22 LTS**.
+- Sass is on `@use` / `@forward` with the modern compiler API — zero
+  deprecation warnings in the build pipeline.
+- Existing `.storybook/preview.ts` keeps working; components render via
+  the Vite library build only (the parallel webpack pipeline was retired
+  end-of-Phase-2).
 
 ## 7. SSR
 

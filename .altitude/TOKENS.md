@@ -1,5 +1,12 @@
 # Token pipeline — v3 + v5 parallel (Phase 1)
 
+> **Status (2026-06-16):** Style Dictionary v5 is the active source of truth.
+> The v3-shaped output is preserved by writing the v5 emit through
+> `scripts/copy-tokens-to-legacy-dist.js` so existing `--al-*` consumers
+> keep their byte-identical names. `tokens-config.js` was deleted in T6.2;
+> the legacy `tokens/` source and `dist/` output dir remain until T6.2's
+> "zero legacy components" gate clears (see §"Phase 6 follow-up" below).
+
 ## Overview
 
 We currently run **two pipelines side-by-side**:
@@ -19,10 +26,10 @@ every v5 build.
 
 ```bash
 # Workspace-relative (most common):
-yarn workspace al-web-components build:tokens            # v3 only
-yarn workspace al-web-components build:tokens:v5         # v5 only (regenerates DTCG → emits dist-v5/)
-yarn workspace al-web-components build:tokens:parallel   # v3 + v5 + parity gate
-yarn workspace al-web-components test:tokens             # contract tests vs .altitude/baselines/tokens/
+pnpm --filter al-web-components build:tokens            # v3 only
+pnpm --filter al-web-components build:tokens:v5         # v5 only (regenerates DTCG → emits dist-v5/)
+pnpm --filter al-web-components build:tokens:parallel   # v3 + v5 + parity gate
+pnpm --filter al-web-components test:tokens             # contract tests vs .altitude/baselines/tokens/
 
 # Top-level:
 node scripts/convert-tokens-to-dtcg.js                   # legacy JSON → DTCG JSON

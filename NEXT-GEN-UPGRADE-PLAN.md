@@ -1,8 +1,8 @@
 # Altitude → Next-Gen: Upgrade & Architecture Plan
 
-> **Status:** proposed · **Owner:** Brad / SouthLeft · **Date:** 2026-06-15
+> **Status:** **✅ COMPLETE** — all phases P0–P6 landed on `feature/v2` (PR open against `main`). **Owner:** Brad / SouthLeft. **Date:** 2026-06-15 → **Completed:** 2026-06-16.
 > **Method:** validated by a 3-AI red-team (Claude + Gemini + Codex), 2 converging rounds.
-> **How to use this doc:** every task has an ID (e.g. `T2.2`). Point an agent at a task ("execute T2.2 from NEXT-GEN-UPGRADE-PLAN.md"). Do not skip the **Gate** at the end of each phase. Phases are ordered by dependency and risk — do not reorder without re-checking the dependency notes.
+> **How to use this doc:** every task has an ID (e.g. `T2.2`). The body below is preserved as the **historical specification** the v2 work was executed against. Acceptance criteria stated here have been satisfied unless explicitly carried into a follow-up; see `CHANGELOG.md` `[Unreleased]` for the rollup of what landed and `AGENTS.md` for the current authoring contract.
 
 ---
 
@@ -99,19 +99,19 @@ Each task: **Goal · Changes · Acceptance (objectively verifiable) · Depends o
 - **T1.1 — Parallel SD v5 pipeline.**
   Goal: DTCG source + Style Dictionary v5, emitting **byte-comparable** legacy `--al-*` names alongside new DTCG/JSON/TS outputs, running *next to* the v3 pipeline (not replacing it yet).
   Changes: convert tier-1/2/3 tokens to DTCG (`$value`/`$type`), keep Tokens Studio compatibility; rewrite `tokens-config.js` to ESM + async SD v5 (port the custom `tokens`, `scss/variables`, `json/flat` formatters and the box-shadow/typography/space helpers to v5's async API); freeze current public token names as aliases.
-  Acceptance: `yarn build:tokens:v5` emits CSS whose `--al-*` variable set is **byte-identical** to the v3 output (snapshot diff = empty) **plus** DTCG + TS-types artifacts; alias map committed.
+  Acceptance: `pnpm build:tokens:v5` emits CSS whose `--al-*` variable set is **byte-identical** to the v3 output (snapshot diff = empty) **plus** DTCG + TS-types artifacts; alias map committed.
   Depends on: T0.1.
 
 - **T1.2 — Token-contract tests.**
   Goal: lock token stability.
   Changes: tests asserting name stability, counts, values, alias resolution, and zero invalid/dangling refs.
-  Acceptance: `yarn test:tokens` passes; mutating a token name without an alias fails the suite.
+  Acceptance: `pnpm test:tokens` passes; mutating a token name without an alias fails the suite.
   Depends on: T1.1.
 
 - **T1.3 — Figma / Tokens-Studio ingestion + round-trip.**
   Goal: define how DTCG JSON enters the repo and stays in sync.
   Changes: document + script the ingest (export → validate → commit), ownership, and round-trip rules.
-  Acceptance: `yarn tokens:ingest` validates an export and writes DTCG files; invalid export is rejected with a clear error.
+  Acceptance: `pnpm tokens:ingest` validates an export and writes DTCG files; invalid export is rejected with a clear error.
   Depends on: T1.1.
 
 **Gate P1:** v5 pipeline byte-matches legacy var names · token-contract tests green · ingestion documented.
@@ -127,19 +127,19 @@ Each task: **Goal · Changes · Acceptance (objectively verifiable) · Depends o
 - **T2.2 — Builder migration webpack → Vite (libs).**
   Goal: replace webpack+babel build with Vite; keep `tsc` for `.d.ts`. **Keep `experimentalDecorators: true` + `useDefineForClassFields: false`** — do not touch decorator semantics (G7).
   Changes: Vite lib config for `al-web-components` and `al-react`; remove babel decorator plugin chain from the build only; apply the chosen style strategy across components (codemod if needed).
-  Acceptance: `yarn build` exits 0; an API-extractor/AST diff shows **zero public export removals** vs the P0 dist; `publint` reports 0 errors; pilot stories render.
+  Acceptance: `pnpm build` exits 0; an API-extractor/AST diff shows **zero public export removals** vs the P0 dist; `publint` reports 0 errors; pilot stories render.
   Depends on: T2.1.
 
 - **T2.3 — Dependency majors.**
   Goal: aggressive modernization, one PR per major with rollback.
   Changes: Yarn 1→4 (or pnpm) + Node LTS; Lit 3.3.3; TS latest; ESLint 9 flat + ts-eslint 8; date-fns 4; sass latest.
-  Acceptance: each upgrade lands as its own green PR (typecheck + lint + build + pilot stories); `yarn install` clean; lint passes repo-wide under flat config.
+  Acceptance: each upgrade lands as its own green PR (typecheck + lint + build + pilot stories); `pnpm install` clean; lint passes repo-wide under flat config.
   Depends on: T2.2.
 
 - **T2.4 — Storybook 7 → 10 (Vite builder) + test harness.**
   Goal: modern Storybook + fill the missing-tests gap.
   Changes: migrate to Storybook 10 with the Vite builder; port addons (a11y, status); enable Storybook Test (Vitest) for interaction + a11y + visual.
-  Acceptance: both Storybooks boot; `yarn test-storybook` runs in CI; ≥5 components have interaction tests; a11y checks run.
+  Acceptance: both Storybooks boot; `pnpm test-storybook` runs in CI; ≥5 components have interaction tests; a11y checks run.
   Depends on: T2.2, T2.3.
 
 **Gate P2:** new stack green on the pilot component · export parity proven · Storybook + tests in CI · VRT within tolerance vs P0.
@@ -159,7 +159,7 @@ Each task: **Goal · Changes · Acceptance (objectively verifiable) · Depends o
   Acceptance: validator fails on a deliberately-invalid fixture and passes on a valid one.
   Depends on: T3.2.
 - **T3.5 — Deterministic generators.** Extend plop to scaffold component + story + docs + tests + token aliases + schema from one spec.
-  Acceptance: `yarn plop component X` yields a component that builds, passes the validator, and has a generated schema.
+  Acceptance: `pnpm plop component X` yields a component that builds, passes the validator, and has a generated schema.
   Depends on: T3.1, T3.4.
 
 **Gate P3:** CEM 100% · validator green in CI · generator output is schema-valid.

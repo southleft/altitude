@@ -26,7 +26,7 @@ For a component to render with Lit SSR:
 1. `static styles` must not call `unsafeCSS` over an unbundled string at
    class-evaluation time — the dom-shim doesn't expose `CSSStyleSheet`.
    Our pattern (`unsafeCSS(styles.toString())`) works because the source
-   string is inlined by webpack/Vite before SSR; the resulting
+   string is inlined by Vite (via `?inline`) before SSR; the resulting
    `CSSResult` is shim-safe.
 2. `connectedCallback()` must not access `document` synchronously. Our
    `ALElement.connectedCallback` adopts a stylesheet via
@@ -62,6 +62,6 @@ For a component to render with Lit SSR:
 ## Test
 
 ```bash
-yarn workspace al-app-ssr build       # writes dist/al-*.html
-yarn test:vrt --grep ssr              # Playwright hydration assertion
+pnpm --filter al-app-ssr build       # writes dist/al-*.html
+pnpm test:vrt --grep ssr              # Playwright hydration assertion
 ```

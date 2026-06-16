@@ -13,17 +13,15 @@ The authoritative plan lives in [`NEXT-GEN-UPGRADE-PLAN.md`](./NEXT-GEN-UPGRADE-
 3. **Honor the guardrails.** Anything that crosses G1, G2, G7, or G8 must call
    that out in the PR — don't bury it.
 
-## Setup (current legacy stack — changes in T2.3)
+## Setup
 
 ```bash
-nvm use            # node 20.19.4
-yarn install       # yarn 1.22.21
-yarn build         # libraries
-yarn workspace al-web-components start   # Storybook on :6006
-yarn workspace al-react start            # Storybook on :9009
+nvm use                                  # Node 22 LTS (pinned in .nvmrc)
+pnpm install                             # pnpm 9 workspaces
+pnpm run build                           # build both libraries
+pnpm --filter al-web-components start    # Storybook on :6006
+pnpm --filter al-react start             # Storybook on :9009
 ```
-
-After T2.3 lands, this will switch to pnpm and Node LTS (22/24).
 
 ## Branch model
 
@@ -53,7 +51,7 @@ Use the template at `pull_request_template.md`. Key fields:
 Every PR with a public-API or token change must include a changeset:
 
 ```bash
-yarn changeset
+pnpm dlx changeset
 ```
 
 Pick `patch`/`minor`/`major` per the [semver policy](./.altitude/SEMVER.md).
