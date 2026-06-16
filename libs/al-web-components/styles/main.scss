@@ -1,11 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+@use './core/variables' as *;
+@use './core/mixins' as *;
+@forward './core/variables';
+@forward './core/mixins';
 // T4.1 — declare cascade layer order before any layered rule.
-@import './core/layers';
-@import './dist/scss/theme/tokens-dark.scss';
-@import './core/variables';
-@import './core/mixins';
-@import './core/base';
-@import './core/utilities';
+@use './core/layers';
+@use './dist/scss/theme/tokens-dark.scss';
+@use './core/base';
+@use './core/utilities';
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap');
 
 /* Storybook specific styles */
 .docs-story {
