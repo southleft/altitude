@@ -66,6 +66,15 @@ const config: StorybookConfig = {
       // SCSS imports inside component .ts files use the bare form
       // `import styles from './x.scss'`. Vite returns a CSSResult-friendly
       // string already; no extra loader needed.
+      css: {
+        preprocessorOptions: {
+          scss: {
+            // Use Sass's modern compiler API (Vite 5 still defaults to
+            // the deprecated legacy JS API).
+            api: 'modern-compiler',
+          },
+        },
+      },
       resolve: {
         alias: {
           'al-web-components': resolve(__dirname, '..'),

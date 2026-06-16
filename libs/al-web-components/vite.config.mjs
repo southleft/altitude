@@ -102,6 +102,16 @@ export default defineConfig({
       },
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // Use Sass's modern compiler API (Vite 5 still defaults to the
+        // deprecated legacy JS API, which triggers a per-compile warning
+        // and is slated for removal in Dart Sass 2.0).
+        api: 'modern-compiler',
+      },
+    },
+  },
   plugins: [rewriteScssImports()],
   build: {
     target: 'es2022',
