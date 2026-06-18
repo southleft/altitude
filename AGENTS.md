@@ -83,6 +83,208 @@ For a web component (`libs/al-web-components/components/<name>/`):
    (T4.6 explicit API: modes `stable` | `versioned` | `manual`). The
    legacy `register({...})` export still works as a thin shim.
 
+### Naming and API conventions
+
+These conventions are enforced by convention (not lint yet) and used across
+every shipped component. Mirror them when scaffolding a new component:
+
+| Concern | Convention | Example |
+|---|---|---|
+| **Primary action** | `<al-button>` with **no** `variant` attribute — "primary" is the implicit default. The `variant` enum is only `'secondary' \| 'tertiary' \| 'bare' \| 'danger'`. | `<al-button>Save</al-button>` |
+| **Boolean property names** | Prefix with `is*` (state) or `has*` (capability) | `isDisabled`, `isPressed`, `isExpanded`, `hasBadge` |
+| **Event names** | Camel-case `on<Component><Action>` | `onChipClose`, `onMenuItemSelect`, `onAccordionPanelToggle` |
+| **Event dispatch** | Use `this.dispatch({ eventName, e, detailObj })` — the ALElement helper, not raw `dispatchEvent` | see "ALElement public API" below |
+| **Component-tier CSS variables** | `--al-<component>-<role>` with a `var(--al-theme-*, …)` fallback so consumers can override at the component scope without breaking the theme cascade | `var(--al-button-background, var(--al-theme-color-background-default))` |
+| **BEM class prefix** | `al-c-<component>` for the root element, `al-c-<component>__<part>` for parts, `al-c-<component>--<modifier>` for variants | `.al-c-button`, `.al-c-button__icon`, `.al-c-button--danger` |
+| **SCSS cascade layer** | Wrap every rule in `@layer al.component { … }` so consumers can override via the `al.override` layer | (see `components/divider/divider.scss`) |
+| **SCSS module imports** | `@use '../../styles/component' as *;` (modern Sass module system — no `@import`) | top of every leaf component .scss |
+| **`bundle.ts`** | **Hand-maintained, alphabetical.** Add one `export …` line for every new component. The bundler picks it up. | `libs/al-web-components/components/bundle.ts` |
+| **Storybook taxonomy** | Title prefix decides folder. `Atoms/X` = standalone primitive (single tag, no composition). `Molecules/X` = composes 2+ atoms. `Organisms/X` = page-level region (header/layout). `Templates/X` = full page templates. | `title: 'Atoms/Stat Card'` |
+
+### Precedent map — which existing component to mirror
+
+When scaffolding a new component, **start from a precedent**. The matrix
+below points at the closest existing analog; copy its file shape, naming
+patterns, and JSDoc style.
+
+| If your new component is… | Mirror | Why |
+|---|---|---|
+| **Small inline labeled atom** (badge/pill/chip-like, dismissible) | `al-chip` | Has `isDismissible` / `isDismissed` boolean prefix and the `onChipClose` event — the canonical small-atom pattern |
+| **Notification banner** (auto-dismiss, multiple variants) | `al-toast` | Variant-based status surface with timed dismissal |
+| **Static labeled atom** (no interaction, just a swatch + number) | `al-badge` | Variant-driven display-only atom |
+| **Expandable section** | `al-accordion-panel` | Open/close state pattern, slotted content |
+| **Trigger-and-floating-content composite** (kebab menu, tooltip on click) | `al-popover` + child content | See "Composition recipes" below — trigger slot pattern |
+| **Form input wrapper** | `al-input` | Field-note + variant + isRequired/isDisabled state pattern |
+| **Page section** | `al-layout-section` | Cascade-layer + max-width pattern |
+
+If nothing matches: copy the *most recently shipped* atom (`al-chip` is the
+current freshest convention) and ask for review.
+
+### Composition recipes — canonical patterns
+
+When you're composing existing components into a pattern, prefer the
+recipes below over inventing wiring. Every recipe was derived from a
+shipped story or page template.
+
+**Kebab menu (3-dot action menu):**
+
+```html
+<al-popover variant="menu" position="bottom-right">
+  <al-button slot="trigger" variant="tertiary" hideText label="Open actions"
+             ariaControls="actions-menu">
+    <al-icon-dots-vertical slot="before" iconTitle="Actions"></al-icon-dots-vertical>
+  </al-button>
+  <al-menu id="actions-menu" label="Actions">
+    <al-menu-item label="Edit">Edit</al-menu-item>
+    <al-menu-item label="Delete">Delete</al-menu-item>
+  </al-menu>
+</al-popover>
+```
+
+`al-popover` `position` is one of: `bottom-center` | `bottom-right` | `bottom-left` | `top-center` | `top-right` | `top-left` | `left` | `left-top` | `right` | `right-top` — no `*-end` / `*-start` aliases. `variant="menu"` is the only variant value.
+
+Wire the menu selection with the real event:
+`@onMenuItemSelect=${(e) => /* e.detail.value */}`.
+
+**Card with a primary action in the corner:**
+
+```html
+<al-card>
+  <div slot="header">Title</div>
+  <p>Body</p>
+  <al-button slot="actions-start" variant="primary">View</al-button>
+</al-card>
+```
+
+`al-card` slots map to corners: `header` (top, full-width), `image` (top,
+flush), `action-right` (top-right, single control like a kebab),
+`actions-start` (bottom row, leading edge), default slot (body).
+
+**Avatar with status dot:**
+
+```html
+<al-avatar hasBadge badgeVariant="success">
+  <img src="…" alt="Jane Doe" />
+</al-avatar>
+```
+
+For a textual status badge next to the name, use a separate `<al-badge variant="success">Active</al-badge>` adjacent to the heading.
+
+**Page-level layout with vertical rhythm:**
+
+Use `<al-layout-container>` + `<al-layout-section>` + `<al-layout>` with
+`styleModifier="al-u-gap-lg"` (or `-md`/`-xl`) instead of raw `<div>` +
+inline flex. The `al-u-*` utility classes reach the shadow root via
+`ALElement.getSharedThemeSheet()`.
+
+### Utility classes — the complete `.al-u-*` surface
+
+`styleModifier` accepts any of the utility classes below, joined by
+spaces. The list is exhaustive — **do not invent `al-u-justify-end` /
+`al-u-display-flex` / `al-u-align-center` etc.**, they don't exist.
+
+Source: `libs/al-web-components/styles/core/utilities/*.scss`.
+
+| Family | Class | Notes |
+|---|---|---|
+| **Spacing** | `al-u-gap[--xxxs|--xxs|--xs|--sm|--md|--lg|--xl|--xxl|--xxxl|--super|--none]` | Vertical stack (flex column) with the named gap |
+| Spacing | `al-u-gap--row` | Modifier — combine with a `al-u-gap-*` size to switch to a horizontal row |
+| Spacing | `al-u-flex-direction-row` | Standalone row flex without changing gap |
+| **Grid** | `al-u-grid` | 12-column grid container (uses `--al-grid-cols: 12`) |
+| Grid | `al-u-grid--align-center` \| `--align-end` \| `--align-stretch` | `align-items` modifier on the grid |
+| Grid | `al-u-grid--justify-center` \| `--justify-end` \| `--justify-space-between` | `justify-content` modifier on the grid |
+| **Typography** | `al-u-theme-typography-{body|heading|display}-{xs|sm|md|lg}[-bold]` | Maps to the matching mixin |
+| **Visibility** | `al-u-is-vishidden` | Visually-hidden (screen-reader only) |
+| Visibility | `al-u-is-overflow-hidden` | `overflow: hidden` |
+
+For row layouts with right-aligned content, use `<al-layout>` with `gap`
+and CSS — not a fabricated utility class.
+
+### Tokens you may reference
+
+The full token surface is digested for you. Read these to verify a token
+exists before referencing it:
+
+- `libs/al-web-components/styles/dist/tokens.json` — every `--al-*` name with
+  its resolved value (328 tokens).
+- `libs/al-web-components/styles/dist-v5/aliases.json` — the frozen alias
+  contract (names that cannot drift through 3.0).
+
+**Suffix matrix — per role, not per family**. The roles + suffixes that actually exist are NOT uniform across the matrix. Verify against `tokens.json` before inventing combinations.
+
+`--al-theme-color-content-<role>[-<suffix>]`:
+
+| Role | Available suffixes |
+|---|---|
+| `default` | _(no suffix)_, `-weak` |
+| `primary`, `secondary` | `-default`, `-weak`, `-strong` |
+| `info`, `success`, `warning`, `danger` | `-default`, `-weak` _(no `-strong` / `-stronger`)_ |
+| `inverse` | `-default`, `-strong` |
+| `disabled` | `-default` |
+
+The `background-*` and `border-*` families follow a similar role-specific
+pattern (not the same scheme as content). Always grep `tokens.json` to
+confirm a specific combination exists.
+
+**Numeric tiers:**
+
+| Family | Prefix | Tier |
+|---|---|---|
+| Font sizes | `--al-font-size-<n>` | `-10`, `-12`, `-14`, `-16`, `-18`, `-20`, `-24`, `-28`, `-32`, `-36`. **No t-shirt sizes (`-sm` / `-md` / `-lg` / `-2xl`).** |
+| Font weights | `--al-font-weight-<w>` | `-regular`, `-bold`. **No `-light`, `-medium`, `-semibold`, `-heavy`.** |
+| Border width | `--al-theme-border-width-<n>` | `-1`, `-2`, `-4`. |
+| Animation duration | `--al-animation-duration-<n>` | `-2`, `-4`, `-6`, `-8` (×100ms). |
+| Animation timing | `--al-animation-timing-<curve>` | `-ease`, `-linear`, `-cubic-bezier`. |
+
+**T-shirt tiers (spacing + border radius):**
+
+- `--al-theme-space[-<size>]` — base `--al-theme-space` (1× = 0.5rem), then `-xxxs`, `-xxs`, `-xs`, `-sm`, `-md`, `-lg`, `-xl`, `-xxl`, `-super`.
+- `--al-theme-border-radius[-<size>]` — t-shirt scale.
+
+**Do not invent:**
+- `--al-theme-focus-ring-*` (doesn't exist; use `outline` rules from the `al-focus` mixin).
+- `--al-theme-transition-duration-*` (use `--al-animation-duration-*`).
+- `--al-theme-color-content-default-stronger` / `-weaker` (`default` role has only `(none)` and `-weak`).
+- `--al-font-weight-semibold` / `-medium` (only `-regular` and `-bold` exist).
+- T-shirt font sizes — only the numeric tier above.
+
+When in doubt: `grep -c "<your-token-name>" libs/al-web-components/styles/dist/tokens.json` before you ship it.
+
+### ALElement public API
+
+These are the helpers `ALElement` exposes that your component will use.
+They are not documented in the CEM (which only describes the public element
+contract), so reference this section instead of reading the source:
+
+```ts
+// Dispatch a custom event with bubbles + composed. detailObj is the public payload.
+this.dispatch({
+  eventName: 'onChipClose',
+  e?: Event,                 // optional originating event (re-surfaced under detail.originalEvent)
+  detailObj?: { [k]: unknown },
+  optionsObj?: EventInit,
+}): CustomEvent;
+
+// Build a classMap including the base class, an inherited styleModifier, and your modifiers.
+this.componentClassNames(
+  baseClassName: string,
+  additionalClassNames?: { [cls]: boolean }
+): DirectiveResult;
+
+// Slot helpers: return true when the named slot has light-DOM children.
+this.slotEmpty(slotName?: string): boolean;
+this.slotNotEmpty(slotName?: string): boolean;
+
+// Inherited from ALElement.styleModifier — accept utility class strings
+// from consumers via the `styleModifier` attribute. Already wired into
+// componentClassNames() above; just declare it as a property.
+@property() accessor styleModifier: string;
+```
+
+`ALElement.connectedCallback()` adopts the shared utility stylesheet
+into your shadow root automatically — utility classes passed via
+`styleModifier` (e.g. `al-u-gap-lg`) will apply inside the shadow.
+
 For a React wrapper (`libs/al-react/src/components/<Name>/`):
 
 - One file: `createComponent({react, tagName, elementClass, events})` from

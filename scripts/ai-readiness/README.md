@@ -1,0 +1,113 @@
+# AI-Readiness Harness
+
+Measures how well an AI consumer (Claude or Codex) can build correctly using only the documents + manifest the Altitude design system publishes. Repeatable across iterations — score deltas show which docs/manifest changes moved the needle.
+
+## What it tests
+
+Three task surfaces, each run by N agents per model:
+
+| Task | What it asks the agent to do | Why |
+|---|---|---|
+| **A — Composition** | Compose a user profile card pattern using only real `<al-*>` components | Tests discoverability + comprehension of the composition surface |
+| **B — Scaffold** | Generate a new `<al-stat-card>` component from scratch | Tests authoring conventions + token-name knowledge |
+| **C — Violation spotting** | Audit a deliberately non-conformant `<al-tag>` PR | Tests how legible the conventions are to a reviewer |
+
+Each attempt returns strict JSON (validated against `schemas/*.schema.json`). A judge agent then scores every attempt against the ground-truth CEM digest and token digest. A synthesizer rolls task scores into an overall AI-readiness number.
+
+## Multi-model
+
+The fleet runs **claude** and **codex** CLIs in parallel for every attempt — true cross-model evidence about the docs (not about any one model's training distribution). Add more models by extending `RUNNERS` in `run-probe.mjs`.
+
+## Quick start
+
+```bash
+# 1) Run the fleet (defaults: 3 attempts × 3 tasks × 2 models = 18 invocations).
+node scripts/ai-readiness/run-probe.mjs
+
+# 2) Judge + synthesize that run.
+node scripts/ai-readiness/run-judge.mjs .altitude/ai-readiness/runs/<runId>/
+```
+
+The fleet phase writes per-attempt JSON files plus a `run.json` manifest. The judge phase writes per-task `judge-*.json`, an overall `report.json`, and a human-readable `REPORT.md`.
+
+### Common flags
+
+```bash
+# Increase fleet size for tighter confidence bounds (~150k tokens per +1):
+node scripts/ai-readiness/run-probe.mjs --fleet=5
+
+# Only Claude (skip Codex):
+node scripts/ai-readiness/run-probe.mjs --models=claude
+
+# Only a single task (good for iterating on one prompt):
+node scripts/ai-readiness/run-probe.mjs --tasks=A
+```
+
+## Binary discovery
+
+The harness auto-finds the **real** CLI binary on every developer's machine. It explicitly skips agent-wrappers (Superconductor, Claude Code installer shims, etc.) that tail a session file and never exit on `--help`.
+
+Discovery order:
+1. `CLAUDE_BIN` / `CODEX_BIN` env vars
+2. `PATH` directories, excluding any whose name contains `superconductor` / `claude-installer` / `nvm-shim`
+3. Common install locations: `/opt/homebrew/bin`, `/usr/local/bin`, `/usr/bin`, `~/.local/bin`, `~/.cargo/bin`, `~/.npm-global/bin`
+
+If discovery fails:
+
+```bash
+# Pin to your machine's real binaries:
+CLAUDE_BIN=/path/to/real/claude CODEX_BIN=/path/to/real/codex \
+  node scripts/ai-readiness/run-probe.mjs
+```
+
+## Cost + duration
+
+Per run with defaults (3 fleet × 3 tasks × 2 models + 3 judges + 1 synth):
+- ~20 LLM invocations
+- ~600k–800k tokens
+- ~5–8 min wall (everything runs in parallel)
+- ~$2–$4 in API spend, depending on the models' current pricing
+
+## Layout
+
+```
+scripts/ai-readiness/
+├── README.md                      # this file
+├── run-probe.mjs                  # fleet phase (multi-model)
+├── run-judge.mjs                  # judge + synthesis phase
+├── build-cem-digest.mjs            # regenerate the manifest digest
+├── build-tokens-digest.mjs         # regenerate the tokens digest
+├── lib.mjs                        # shared helpers (findBinary, runChild, extractJson)
+├── tasks/                         # prompt files, one per task
+│   ├── A-composition.md
+│   ├── B-scaffold.md
+│   └── C-violation.md
+└── schemas/                       # strict JSON Schemas; passed to both CLIs as --output-schema / --json-schema
+    ├── composition.schema.json
+    ├── scaffold.schema.json
+    └── violation.schema.json
+```
+
+The per-run outputs (attempts, judges, report) land under `.altitude/ai-readiness/runs/<runId>/` and are **gitignored** — they're empirical measurements that should not be committed.
+
+## Iterating on AI readiness
+
+The point of the harness is the **delta** between runs. Workflow:
+
+1. Run a baseline:
+   ```bash
+   node scripts/ai-readiness/run-probe.mjs
+   node scripts/ai-readiness/run-judge.mjs .altitude/ai-readiness/runs/<id>/
+   ```
+2. Read `REPORT.md`. The `topRecommendations` field is ordered by predicted impact.
+3. Apply 1–3 of the top recommendations (typically edits to `AGENTS.md` or JSDoc).
+4. Re-run the probe. Compare scores per task.
+5. Commit only the *docs* / *manifest* changes that moved the needle.
+
+This loop is how the design system actually gets more AI-ready: empirical evidence, not "this AGENTS.md feels comprehensive."
+
+## Extending
+
+- **Add a task:** drop a new prompt in `tasks/` + a matching schema in `schemas/`, then add an entry to `TASKS` in `run-probe.mjs`.
+- **Add a model:** add a new runner function in `run-probe.mjs` (`RUNNERS.foo`), then run with `--models=claude,codex,foo`.
+- **Add a scoring dimension:** extend the judge schema in `run-judge.mjs` (`JUDGE_SCHEMA.properties.perAttempt.items.scores`).

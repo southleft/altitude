@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["template", "usedComponents", "assumptions", "sourceUsed"],
+  "additionalProperties": false,
+  "properties": {
+    "template": { "type": "string", "description": "Lit html template body (no surrounding html`` needed)" },
+    "usedComponents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["tag", "attributes", "slots", "events"],
+        "additionalProperties": false,
+        "properties": {
+          "tag": { "type": "string" },
+          "attributes": { "type": "array", "items": { "type": "string" } },
+          "slots": { "type": "array", "items": { "type": "string" } },
+          "events": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "assumptions": { "type": "array", "items": { "type": "string" } },
+    "sourceUsed": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Files you consulted; ['docs only'] if you stuck to CLAUDE.md/AGENTS.md/digests"
+    }
+  }
+}
