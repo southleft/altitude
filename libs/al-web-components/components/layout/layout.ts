@@ -5,6 +5,8 @@ import styles from './layout.scss';
 
 /**
  * Component: al-layout
+ *
+ * @slot - The layout content (typically `<al-layout-section>` children, or arbitrary content stacked with the configured `gap`).
  */
 export class ALLayout extends ALElement {
   static el = 'al-layout';

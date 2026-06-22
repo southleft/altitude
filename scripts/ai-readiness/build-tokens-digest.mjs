@@ -26,15 +26,46 @@ for (const k of keys) {
   (groups[fam] = groups[fam] || []).push({ name: '--' + k, value: t[k] });
 }
 
+// Build the role-suffix matrix for content/background/border color families
+// from the actual tokens. Role-suffix combinations that don't exist are
+// hallucination targets — the matrix below is the authoritative list, derived
+// from the live tokens.json.
+function roleMatrix(prefix) {
+  const m = {};
+  for (const k of keys) {
+    if (!k.startsWith(prefix)) continue;
+    const tail = k.slice(prefix.length);
+    const parts = tail.split('-');
+    const role = parts[0];
+    const suffix = parts.slice(1).join('-') || '(none)';
+    (m[role] = m[role] || new Set()).add(suffix);
+  }
+  const out = {};
+  for (const [role, set] of Object.entries(m)) out[role] = [...set].sort();
+  return out;
+}
+
 const digest = {
   source: 'libs/al-web-components/styles/dist/tokens.json',
   total: keys.length,
   conventions: {
     cssVariablePrefix: '--al-',
-    contentColorSuffixes: ['-default', '-weak', '-weaker', '-strong', '-stronger', '-strongest'],
     fontSizeNamingScheme: 'numeric — --al-font-size-10..36 (NOT t-shirt sizes like -sm/-md/-lg/-2xl)',
+    fontWeights: '--al-font-weight-regular and --al-font-weight-bold ONLY (no -light, -medium, -semibold, -heavy)',
     themeTokensPrefix: '--al-theme-* (single-layer of indirection over the al-color-* / al-font-size-* primitives)',
     primitiveTokensPrefix: '--al-color-*, --al-font-size-*, --al-space-*, --al-border-*, --al-shadow-*, --al-animation-*',
+    contentColorSuffixesByRole: roleMatrix('al-theme-color-content-'),
+    backgroundColorSuffixesByRole: roleMatrix('al-theme-color-background-'),
+    borderColorSuffixesByRole: roleMatrix('al-theme-color-border-'),
+    notExistDoNotInvent: [
+      '--al-theme-focus-ring-*',
+      '--al-theme-transition-duration-* (use --al-animation-duration-*)',
+      '--al-theme-color-content-default-stronger',
+      '--al-theme-color-content-default-weaker',
+      '--al-font-weight-semibold',
+      '--al-font-weight-medium',
+      '--al-theme-border-radius-pill (round = 50% circle, not a pill)',
+    ],
   },
   groups,
 };

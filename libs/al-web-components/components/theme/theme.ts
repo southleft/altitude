@@ -21,11 +21,6 @@ import { property } from 'lit/decorators.js';
 import { ALElement } from '../ALElement';
 import styles from './theme.scss';
 
-type Mode = 'light' | 'dark';
-type Density = 'compact' | 'cozy' | 'comfortable';
-type Contrast = 'normal' | 'more';
-type Motion = 'full' | 'reduced';
-
 /**
  * Component: al-theme
  * - **slot**: The content tree the theme applies to.
@@ -33,16 +28,16 @@ type Motion = 'full' | 'reduced';
 export class ALTheme extends ALElement {
   static el = 'al-theme';
 
-  /** Brand identifier — matches a key in the brand bundle table. */
-  @property() accessor brand: string = 'altitude';
+  /** Brand identifier. Currently shipped: 'altitude' | 'northright' | 'odyssey' | 'southleft'. */
+  @property() accessor brand: 'altitude' | 'northright' | 'odyssey' | 'southleft' = 'altitude';
   /** Color mode. */
-  @property() accessor mode: Mode = 'light';
+  @property() accessor mode: 'light' | 'dark' = 'light';
   /** Density axis. */
-  @property() accessor density: Density = 'comfortable';
+  @property() accessor density: 'compact' | 'cozy' | 'comfortable' = 'comfortable';
   /** Contrast axis. */
-  @property() accessor contrast: Contrast = 'normal';
+  @property() accessor contrast: 'normal' | 'more' = 'normal';
   /** Motion axis. Falls back to `prefers-reduced-motion` when unset. */
-  @property() accessor motion: Motion | undefined;
+  @property() accessor motion: 'full' | 'reduced' | undefined;
 
   static get styles() {
     return [

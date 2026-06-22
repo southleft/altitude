@@ -33,23 +33,42 @@
       "additionalProperties": false,
       "properties": {
         "brand": {
-          "description": "Brand identifier — matches a key in the brand bundle table.",
-          "type": "string"
+          "description": "Brand identifier. Currently shipped: 'altitude' | 'northright' | 'odyssey' | 'southleft'.",
+          "type": "string",
+          "enum": [
+            "altitude",
+            "northright",
+            "odyssey",
+            "southleft"
+          ]
         },
         "mode": {
-          "description": "typescript: Mode",
-          "type": "string"
+          "description": "Color mode.",
+          "type": "string",
+          "enum": [
+            "light",
+            "dark"
+          ]
         },
         "density": {
-          "description": "typescript: Density",
-          "type": "string"
+          "description": "Density axis.",
+          "type": "string",
+          "enum": [
+            "compact",
+            "cozy",
+            "comfortable"
+          ]
         },
         "contrast": {
-          "description": "typescript: Contrast",
-          "type": "string"
+          "description": "Contrast axis.",
+          "type": "string",
+          "enum": [
+            "normal",
+            "more"
+          ]
         },
         "motion": {
-          "description": "typescript: Motion | undefined",
+          "description": "typescript: 'full' | 'reduced' | undefined",
           "type": "string"
         }
       }

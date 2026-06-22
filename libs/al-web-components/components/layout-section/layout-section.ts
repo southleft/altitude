@@ -4,6 +4,8 @@ import styles from './layout-section.scss';
 
 /**
  * Component: al-layout-section
+ *
+ * @slot - The section content. Renders inside a `<section>` element so consumers can rely on the landmark semantics.
  */
 export class ALLayoutSection extends ALElement {
   static el = 'al-layout-section';
