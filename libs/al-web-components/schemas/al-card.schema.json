@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://southleft.com/altitude/al-card.schema.json",
   "title": "ALCard (al-card)",
-  "description": "Component: al-card\n- **slot**: The main content of the card that appers below the header\n- **slot** \"actions-start\": The actions the appear to the top-left of the card\n- **slot** \"action-right\": The actions the appear to the top-right of the card\n- **slot** \"image\": The main image of the card that appears below the actions\n- **slot** \"header\": The main title of the card that appears below the image",
+  "description": "Component: al-card",
   "type": "object",
   "altitude": {
     "tagName": "al-card",
@@ -16,24 +16,28 @@
     },
     "slots": [
       {
-        "name": "",
-        "description": "The main content of the card that appers below the header"
+        "description": "The main content of the card (renders below the header).",
+        "name": ""
       },
       {
-        "name": "actions-start",
-        "description": "The actions the appear to the top-left of the card"
+        "description": "Trailing-action row, leading edge (bottom-left). Use for a \"View\" / \"Open\" primary action.",
+        "name": "actions-start"
       },
       {
-        "name": "action-right",
-        "description": "The actions the appear to the top-right of the card"
+        "description": "Trailing-action row, trailing edge (bottom-right). Use for the canonical bottom-right primary action.",
+        "name": "actions-end"
       },
       {
-        "name": "image",
-        "description": "The main image of the card that appears below the actions"
+        "description": "Top-right single control (kebab / overflow menu).",
+        "name": "action-right"
       },
       {
-        "name": "header",
-        "description": "The main title of the card that appears below the image"
+        "description": "Hero image rendered above the header. Renders flush with the card edge.",
+        "name": "image"
+      },
+      {
+        "description": "Card heading row.",
+        "name": "header"
       }
     ],
     "events": [],

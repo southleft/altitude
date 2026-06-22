@@ -160,7 +160,9 @@ async function runCodexAttempt({ bin, prompt, schemaPath, label }) {
     fullPrompt,
   ];
   const t0 = Date.now();
-  const res = await runChild(bin, args, { timeoutMs: 8 * 60 * 1000 });
+  // 15 min — codex consistently hits >8m on B-scaffold (heavy file reads
+  // + structured-output strictness). Empirically 12-15m clears it.
+  const res = await runChild(bin, args, { timeoutMs: 15 * 60 * 1000 });
   let lastMessage = '';
   if (existsSync(lastMessageFile)) {
     try { lastMessage = readFileSync(lastMessageFile, 'utf8'); } catch {}

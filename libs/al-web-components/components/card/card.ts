@@ -5,11 +5,13 @@ import styles from './card.scss';
 
 /**
  * Component: al-card
- * - **slot**: The main content of the card that appers below the header
- * - **slot** "actions-start": The actions the appear to the top-left of the card
- * - **slot** "action-right": The actions the appear to the top-right of the card
- * - **slot** "image": The main image of the card that appears below the actions
- * - **slot** "header": The main title of the card that appears below the image
+ *
+ * @slot - The main content of the card (renders below the header).
+ * @slot actions-start - Trailing-action row, leading edge (bottom-left). Use for a "View" / "Open" primary action.
+ * @slot actions-end - Trailing-action row, trailing edge (bottom-right). Use for the canonical bottom-right primary action.
+ * @slot action-right - Top-right single control (kebab / overflow menu).
+ * @slot image - Hero image rendered above the header. Renders flush with the card edge.
+ * @slot header - Card heading row.
  */
 export class ALCard extends ALElement {
   static el = 'al-card';
