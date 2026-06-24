@@ -7,7 +7,17 @@ import styles from './menu.scss';
 
 /**
  * Component: al-menu
- * - **slot**: The menu items in the menu
+ *
+ * @slot - The menu items in the menu (children must be `<al-menu-item>`).
+ *
+ * The `onMenuItemSelect` event is dispatched by `<al-menu-item>` with
+ * `bubbles: true, composed: true` and surfaces here on `<al-menu>`. **Bind
+ * the listener on `<al-menu>`**, not on each item — the event carries the
+ * selected item's `value` in `e.detail`:
+ *
+ *     <al-menu @onMenuItemSelect=${(e) => handleSelect(e.detail.value)}>
+ *       <al-menu-item value="edit" label="Edit">Edit</al-menu-item>
+ *     </al-menu>
  */
 export class ALMenu extends ALElement {
   static el = 'al-menu';

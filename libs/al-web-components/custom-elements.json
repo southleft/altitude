@@ -575,16 +575,16 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/badge/badge.ts",
+      "path": "components/avatar/avatar.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-badge\n- **slot**: The badge content",
-          "name": "ALBadge",
+          "description": "Component: al-avatar\n- **slot**: The avatar content",
+          "name": "ALAvatar",
           "slots": [
             {
               "name": "",
-              "description": "The badge content"
+              "description": "The avatar content"
             }
           ],
           "members": [
@@ -595,97 +595,102 @@
                 "text": "string"
               },
               "static": true,
-              "default": "'al-badge'"
+              "default": "'al-avatar'"
             },
             {
               "kind": "field",
-              "name": "isDot",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "isDot boolean\n- Makes the badge a small dot only",
-              "attribute": "isDot"
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "badgeEl",
+              "privacy": "private"
             },
             {
               "kind": "field",
               "name": "variant",
               "type": {
-                "text": "'info' | 'success' | 'warning' | 'danger'"
+                "text": "'sm'"
               },
-              "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+              "description": "Avatar varaint\n- **default** Renders an avatar with an height & width of 40px\n- **sm** Renders an avatar with an height & width of 28px",
               "attribute": "variant"
             },
             {
               "kind": "field",
-              "name": "position",
+              "name": "hasBadge",
               "type": {
-                "text": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'"
+                "text": "boolean"
               },
-              "description": "Positions the badge absolutely to its parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right",
-              "attribute": "position"
+              "description": "Has Badge?\n- If true, shows the badge on the outside of the avatar circle\n- If false, hides the badge",
+              "attribute": "hasBadge"
             },
             {
-              "kind": "method",
-              "name": "handlePosition",
-              "description": "Handle position\n1. If a position is defined, then apply position: relative to the direct parent element"
+              "kind": "field",
+              "name": "badgeVariant",
+              "type": {
+                "text": "'success' | 'warning' | 'danger'"
+              },
+              "description": "Badge state variant\n- **default** Displays a badge with the default state\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+              "attribute": "badgeVariant"
             }
           ],
           "attributes": [
             {
-              "name": "isDot",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "isDot boolean\n- Makes the badge a small dot only",
-              "fieldName": "isDot"
-            },
-            {
               "name": "variant",
               "type": {
-                "text": "'info' | 'success' | 'warning' | 'danger'"
+                "text": "'sm'"
               },
-              "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+              "description": "Avatar varaint\n- **default** Renders an avatar with an height & width of 40px\n- **sm** Renders an avatar with an height & width of 28px",
               "fieldName": "variant"
             },
             {
-              "name": "position",
+              "name": "hasBadge",
               "type": {
-                "text": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'"
+                "text": "boolean"
               },
-              "description": "Positions the badge absolutely to its parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right",
-              "fieldName": "position"
+              "description": "Has Badge?\n- If true, shows the badge on the outside of the avatar circle\n- If false, hides the badge",
+              "fieldName": "hasBadge"
+            },
+            {
+              "name": "badgeVariant",
+              "type": {
+                "text": "'success' | 'warning' | 'danger'"
+              },
+              "description": "Badge state variant\n- **default** Displays a badge with the default state\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+              "fieldName": "badgeVariant"
             }
           ],
           "superclass": {
             "name": "ALElement",
             "module": "/components/ALElement"
           },
-          "tagName": "al-badge",
+          "tagName": "al-avatar",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "ALBadge",
+          "name": "ALAvatar",
           "declaration": {
-            "name": "ALBadge",
-            "module": "components/badge/badge.ts"
+            "name": "ALAvatar",
+            "module": "components/avatar/avatar.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "al-badge",
+          "name": "al-avatar",
           "declaration": {
-            "name": "ALBadge",
-            "module": "components/badge/badge.ts"
+            "name": "ALAvatar",
+            "module": "components/avatar/avatar.ts"
           }
         },
         {
           "kind": "custom-element-definition",
           "declaration": {
-            "name": "ALBadge",
-            "module": "components/badge/badge.ts"
+            "name": "ALAvatar",
+            "module": "components/avatar/avatar.ts"
           }
         }
       ]
@@ -1044,16 +1049,16 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/avatar/avatar.ts",
+      "path": "components/badge/badge.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-avatar\n- **slot**: The avatar content",
-          "name": "ALAvatar",
+          "description": "Component: al-badge\n- **slot**: The badge content",
+          "name": "ALBadge",
           "slots": [
             {
               "name": "",
-              "description": "The avatar content"
+              "description": "The badge content"
             }
           ],
           "members": [
@@ -1064,102 +1069,97 @@
                 "text": "string"
               },
               "static": true,
-              "default": "'al-avatar'"
+              "default": "'al-badge'"
             },
             {
               "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "badgeEl",
-              "privacy": "private"
+              "name": "isDot",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "isDot boolean\n- Makes the badge a small dot only",
+              "attribute": "isDot"
             },
             {
               "kind": "field",
               "name": "variant",
               "type": {
-                "text": "'sm'"
+                "text": "'info' | 'success' | 'warning' | 'danger'"
               },
-              "description": "Avatar varaint\n- **default** Renders an avatar with an height & width of 40px\n- **sm** Renders an avatar with an height & width of 28px",
+              "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
               "attribute": "variant"
             },
             {
               "kind": "field",
-              "name": "hasBadge",
+              "name": "position",
               "type": {
-                "text": "boolean"
+                "text": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'"
               },
-              "description": "Has Badge?\n- If true, shows the badge on the outside of the avatar circle\n- If false, hides the badge",
-              "attribute": "hasBadge"
+              "description": "Positions the badge absolutely to its parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right",
+              "attribute": "position"
             },
             {
-              "kind": "field",
-              "name": "badgeVariant",
-              "type": {
-                "text": "'success' | 'warning' | 'danger'"
-              },
-              "description": "Badge state variant\n- **default** Displays a badge with the default state\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
-              "attribute": "badgeVariant"
+              "kind": "method",
+              "name": "handlePosition",
+              "description": "Handle position\n1. If a position is defined, then apply position: relative to the direct parent element"
             }
           ],
           "attributes": [
             {
-              "name": "variant",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Avatar varaint\n- **default** Renders an avatar with an height & width of 40px\n- **sm** Renders an avatar with an height & width of 28px",
-              "fieldName": "variant"
-            },
-            {
-              "name": "hasBadge",
+              "name": "isDot",
               "type": {
                 "text": "boolean"
               },
-              "description": "Has Badge?\n- If true, shows the badge on the outside of the avatar circle\n- If false, hides the badge",
-              "fieldName": "hasBadge"
+              "description": "isDot boolean\n- Makes the badge a small dot only",
+              "fieldName": "isDot"
             },
             {
-              "name": "badgeVariant",
+              "name": "variant",
               "type": {
-                "text": "'success' | 'warning' | 'danger'"
+                "text": "'info' | 'success' | 'warning' | 'danger'"
               },
-              "description": "Badge state variant\n- **default** Displays a badge with the default state\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
-              "fieldName": "badgeVariant"
+              "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+              "fieldName": "variant"
+            },
+            {
+              "name": "position",
+              "type": {
+                "text": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'"
+              },
+              "description": "Positions the badge absolutely to its parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right",
+              "fieldName": "position"
             }
           ],
           "superclass": {
             "name": "ALElement",
             "module": "/components/ALElement"
           },
-          "tagName": "al-avatar",
+          "tagName": "al-badge",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "ALAvatar",
+          "name": "ALBadge",
           "declaration": {
-            "name": "ALAvatar",
-            "module": "components/avatar/avatar.ts"
+            "name": "ALBadge",
+            "module": "components/badge/badge.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "al-avatar",
+          "name": "al-badge",
           "declaration": {
-            "name": "ALAvatar",
-            "module": "components/avatar/avatar.ts"
+            "name": "ALBadge",
+            "module": "components/badge/badge.ts"
           }
         },
         {
           "kind": "custom-element-definition",
           "declaration": {
-            "name": "ALAvatar",
-            "module": "components/avatar/avatar.ts"
+            "name": "ALBadge",
+            "module": "components/badge/badge.ts"
           }
         }
       ]
@@ -6142,65 +6142,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/header/header.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-header\n- **slot**: The components content",
-          "name": "ALHeader",
-          "slots": [
-            {
-              "name": "",
-              "description": "The components content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-header'"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-header",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALHeader",
-          "declaration": {
-            "name": "ALHeader",
-            "module": "components/header/header.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-header",
-          "declaration": {
-            "name": "ALHeader",
-            "module": "components/header/header.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALHeader",
-            "module": "components/header/header.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/focus-trap/focus-trap.ts",
       "declarations": [
         {
@@ -6366,6 +6307,65 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/header/header.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-header\n- **slot**: The components content",
+          "name": "ALHeader",
+          "slots": [
+            {
+              "name": "",
+              "description": "The components content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-header'"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-header",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALHeader",
+          "declaration": {
+            "name": "ALHeader",
+            "module": "components/header/header.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-header",
+          "declaration": {
+            "name": "ALHeader",
+            "module": "components/header/header.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALHeader",
+            "module": "components/header/header.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/heading/heading.ts",
       "declarations": [
         {
@@ -6474,6 +6474,95 @@
           "declaration": {
             "name": "ALHeading",
             "module": "components/heading/heading.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/icon.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-icon-[ICON_NAME]",
+          "name": "ALIcon",
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-icon'"
+            },
+            {
+              "kind": "field",
+              "name": "iconTitle",
+              "type": {
+                "text": "string"
+              },
+              "description": "Icon title",
+              "attribute": "iconTitle"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'"
+              },
+              "description": "Icon size\n- Default size is 16px\n- **xs** renders a smaller size than default (8px)\n- **sm** renders a smaller size than default (12px)\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)\n- **xxl** renders a larger size than the lg variant (36px)\n- **xxxl** renders a larger size than the lg variant (40px)",
+              "attribute": "size"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "iconTitle",
+              "type": {
+                "text": "string"
+              },
+              "description": "Icon title",
+              "fieldName": "iconTitle"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'"
+              },
+              "description": "Icon size\n- Default size is 16px\n- **xs** renders a smaller size than default (8px)\n- **sm** renders a smaller size than default (12px)\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)\n- **xxl** renders a larger size than the lg variant (36px)\n- **xxxl** renders a larger size than the lg variant (40px)",
+              "fieldName": "size"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-icon",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALIcon",
+          "declaration": {
+            "name": "ALIcon",
+            "module": "components/icon/icon.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-icon",
+          "declaration": {
+            "name": "ALIcon",
+            "module": "components/icon/icon.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALIcon",
+            "module": "components/icon/icon.ts"
           }
         }
       ]
@@ -7013,95 +7102,6 @@
           "declaration": {
             "name": "ALInput",
             "module": "components/input/input.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/icon/icon.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-icon-[ICON_NAME]",
-          "name": "ALIcon",
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-icon'"
-            },
-            {
-              "kind": "field",
-              "name": "iconTitle",
-              "type": {
-                "text": "string"
-              },
-              "description": "Icon title",
-              "attribute": "iconTitle"
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'"
-              },
-              "description": "Icon size\n- Default size is 16px\n- **xs** renders a smaller size than default (8px)\n- **sm** renders a smaller size than default (12px)\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)\n- **xxl** renders a larger size than the lg variant (36px)\n- **xxxl** renders a larger size than the lg variant (40px)",
-              "attribute": "size"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "iconTitle",
-              "type": {
-                "text": "string"
-              },
-              "description": "Icon title",
-              "fieldName": "iconTitle"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'"
-              },
-              "description": "Icon size\n- Default size is 16px\n- **xs** renders a smaller size than default (8px)\n- **sm** renders a smaller size than default (12px)\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)\n- **xxl** renders a larger size than the lg variant (36px)\n- **xxxl** renders a larger size than the lg variant (40px)",
-              "fieldName": "size"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-icon",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALIcon",
-          "declaration": {
-            "name": "ALIcon",
-            "module": "components/icon/icon.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-icon",
-          "declaration": {
-            "name": "ALIcon",
-            "module": "components/icon/icon.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALIcon",
-            "module": "components/icon/icon.ts"
           }
         }
       ]
@@ -8558,6 +8558,355 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/menu/menu.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-menu",
+          "name": "ALMenu",
+          "slots": [
+            {
+              "description": "The menu items in the menu (children must be `<al-menu-item>`). The `onMenuItemSelect` event is dispatched by `<al-menu-item>` with `bubbles: true, composed: true` and surfaces here on `<al-menu>`. **Bind the listener on `<al-menu>`**, not on each item — the event carries the selected item's `value` in `e.detail`: <al-menu @onMenuItemSelect=${(e) => handleSelect(e.detail.value)}> <al-menu-item value=\"edit\" label=\"Edit\">Edit</al-menu-item> </al-menu>",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-menu'"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'simple'"
+              },
+              "description": "Variant\n- **default** Display the menu items with a background and padding\n- **simple** Display the menu items without a background and padding",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Width property\n- If set, the menu will be constrained to this width in px",
+              "attribute": "width"
+            },
+            {
+              "kind": "field",
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "Height property\n- If set, the menu will be constrained to this height in px and enable vertical scrolling",
+              "attribute": "height"
+            },
+            {
+              "kind": "field",
+              "name": "id",
+              "type": {
+                "text": "string"
+              },
+              "description": "Id attribute\n- Unique id used for A11y\n- Associate the menu with the trigger that controls its open/close state",
+              "attribute": "id"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Menu'",
+              "description": "Label attribute\n- Sets ariaLabel for A11y",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "indentGroupItems",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Indent group items attribute\n**true** - Applies padding to left align the text on group Menu Items with the text of the group Header\n**false** - Does not apply extra padding",
+              "attribute": "indentGroupItems"
+            },
+            {
+              "kind": "field",
+              "name": "hasOverflow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Is set to true when the total height of items in the menu is greater than the menu's height attribute\n- **true** Displays a scrollbar to handle vertical overflow"
+            },
+            {
+              "kind": "field",
+              "name": "focusedItem",
+              "type": {
+                "text": "ALMenuItem"
+              },
+              "description": "The currently focused item in the menu list"
+            },
+            {
+              "kind": "field",
+              "name": "selectedItem",
+              "type": {
+                "text": "ALMenuItem"
+              },
+              "description": "The currently selected item in the menu list"
+            },
+            {
+              "kind": "field",
+              "name": "validItemCount",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Keeps track of the number of valid (expanded/visible, not disabled) items in the list\n- Used to control keyboard focus"
+            },
+            {
+              "kind": "field",
+              "name": "menuItems",
+              "type": {
+                "text": "Array<ALMenuItem>"
+              },
+              "description": "Query the menu item components within the menu"
+            },
+            {
+              "kind": "field",
+              "name": "menuList",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "description": "Query the UL element within the menu"
+            },
+            {
+              "kind": "field",
+              "name": "_maxIndex",
+              "type": {
+                "text": "number"
+              },
+              "description": "The last index of menu items, used to control keyboard focus",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "syncHeadersWithItems",
+              "description": "Dynamically associate Group Menu items with their Headers, and set indexes on items for keyboard navigation\n1. Initalize the valid item count at 0\n2. Iterate over all menu items\n3. Initialize the items index to null\n4. If the item is a Header: set its index, and increment the valid item count\n5. If the item has an index greater than 0, set the margin block start to 12px\n6. If the item is an Expandable Group Header:\n- Store it as the Group Header in the loop\n- Assign it a group id, if not previously set\n- Assign it a unique id, if not previously set\n7. If the item is not a Header, a Group Header **has** been stored, and the item has does not already have a group id:\n- Assign the item the current group id\n- Apply the item a unique id\n- Add this unique id to the aria-controls attribute for the group's expand control\n8. If required, apply padding to align the items's text with its Header\n9. If the item's Group Header is expanded: assign its index and increment the valid item count\n10. When the next item is not a header, remove the stored Group Header\n11. If the item is not a Header or part of a group, assign its index and increment the valid item count"
+            },
+            {
+              "kind": "method",
+              "name": "setIndentation",
+              "parameters": [
+                {
+                  "name": "currentHeader",
+                  "type": {
+                    "text": "ALMenuItem"
+                  }
+                },
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "ALMenuItem"
+                  }
+                }
+              ],
+              "description": "Dynamically set inline start padding on child menu items\n1. Reset the padding to 0\n2. If the Group Header has prefix content, add padding to account for prefix content width\n3. If there is no prefix content, set the padding to the default width"
+            },
+            {
+              "kind": "method",
+              "name": "setWidthHeight",
+              "description": "Set the width and height\n1. Add a custom property to adjust the width of the menu list\n2. Add a custom property to adjust the height of the menu list and enable scroll"
+            },
+            {
+              "kind": "method",
+              "name": "getNewValidItem",
+              "return": {
+                "type": {
+                  "text": "ALMenuItem"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "currentIndex",
+                  "type": {
+                    "text": "number"
+                  },
+                  "description": "The index of the item that currently has focus"
+                },
+                {
+                  "name": "isPrevious",
+                  "type": {
+                    "text": "boolean"
+                  },
+                  "description": "A flag indicating whether to look for the previous item (true) or the next item (false)\n1. Calculate the index of the new menu item based on the 'isPrevious' flag\n2. Handle boundary conditions by looping to the other end if necessary\n3. Find the new item to focus based on the new index\n4. Return the new item"
+                }
+              ],
+              "description": "Find the previous or next valid item in the menu list that can receive focus"
+            },
+            {
+              "kind": "method",
+              "name": "setFocusedItem",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "ALMenuItem"
+                  }
+                }
+              ],
+              "description": "When a new item is focused:\n1. Set the previously selected item's isFocused state to false\n2. Store the newly focused item on the menu's state\n3. Apply focus to the new item"
+            },
+            {
+              "kind": "method",
+              "name": "setFocusAdjacentItem",
+              "parameters": [
+                {
+                  "name": "currentItem",
+                  "type": {
+                    "text": "ALMenuItem"
+                  },
+                  "description": "The currently focused menu item"
+                },
+                {
+                  "name": "isPrevious",
+                  "type": {
+                    "text": "boolean"
+                  },
+                  "description": "A flag indicating whether to focus the previous item (true) or the next item (false)\n1. Get the next or previous valid item that will receive focus\n2. Set focus to the new item's inner element"
+                }
+              ],
+              "description": "Set the focused item to the previous or next menu item based on the 'isPrevious' flag"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnKeydown",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Handle keydown event\n1. On Down Arrow or Right Arrow key, move focus to the next item. Or, if focus is on the last valid item, move focus to the first valid item in the list.\n2. On Up Arrow or Left Arrow key, move focus to the previous item. Or, if focus is on the first valid item, move focus to the last valid item in the list.\n3. On Home key, move focus to the first valid item in the list.\n4. On End key, move focus to the last valid item in the list."
+            },
+            {
+              "kind": "method",
+              "name": "handleOnMenuItemSelect",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "ALMenuItem"
+                  }
+                }
+              ],
+              "description": "When a new item is selected:\n1. Set the previously selected item's isSelected state to false\n2. Store the newly selected item on the menu's state"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnMenuItemExpand",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "When a menu Group Header is Expanded:\n1. Show/hide items that belong to the given Group Header, and reassign valid indexes for keyboard navigation"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'simple'"
+              },
+              "description": "Variant\n- **default** Display the menu items with a background and padding\n- **simple** Display the menu items without a background and padding",
+              "fieldName": "variant"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Width property\n- If set, the menu will be constrained to this width in px",
+              "fieldName": "width"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "Height property\n- If set, the menu will be constrained to this height in px and enable vertical scrolling",
+              "fieldName": "height"
+            },
+            {
+              "name": "id",
+              "type": {
+                "text": "string"
+              },
+              "description": "Id attribute\n- Unique id used for A11y\n- Associate the menu with the trigger that controls its open/close state",
+              "fieldName": "id"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Menu'",
+              "description": "Label attribute\n- Sets ariaLabel for A11y",
+              "fieldName": "label"
+            },
+            {
+              "name": "indentGroupItems",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Indent group items attribute\n**true** - Applies padding to left align the text on group Menu Items with the text of the group Header\n**false** - Does not apply extra padding",
+              "fieldName": "indentGroupItems"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-menu",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALMenu",
+          "declaration": {
+            "name": "ALMenu",
+            "module": "components/menu/menu.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-menu",
+          "declaration": {
+            "name": "ALMenu",
+            "module": "components/menu/menu.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALMenu",
+            "module": "components/menu/menu.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/menu-item/menu-item.ts",
       "declarations": [
         {
@@ -9438,355 +9787,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/menu/menu.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-menu\n- **slot**: The menu items in the menu",
-          "name": "ALMenu",
-          "slots": [
-            {
-              "name": "",
-              "description": "The menu items in the menu"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-menu'"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'simple'"
-              },
-              "description": "Variant\n- **default** Display the menu items with a background and padding\n- **simple** Display the menu items without a background and padding",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "width",
-              "type": {
-                "text": "number"
-              },
-              "description": "Width property\n- If set, the menu will be constrained to this width in px",
-              "attribute": "width"
-            },
-            {
-              "kind": "field",
-              "name": "height",
-              "type": {
-                "text": "number"
-              },
-              "description": "Height property\n- If set, the menu will be constrained to this height in px and enable vertical scrolling",
-              "attribute": "height"
-            },
-            {
-              "kind": "field",
-              "name": "id",
-              "type": {
-                "text": "string"
-              },
-              "description": "Id attribute\n- Unique id used for A11y\n- Associate the menu with the trigger that controls its open/close state",
-              "attribute": "id"
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Menu'",
-              "description": "Label attribute\n- Sets ariaLabel for A11y",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "indentGroupItems",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Indent group items attribute\n**true** - Applies padding to left align the text on group Menu Items with the text of the group Header\n**false** - Does not apply extra padding",
-              "attribute": "indentGroupItems"
-            },
-            {
-              "kind": "field",
-              "name": "hasOverflow",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Is set to true when the total height of items in the menu is greater than the menu's height attribute\n- **true** Displays a scrollbar to handle vertical overflow"
-            },
-            {
-              "kind": "field",
-              "name": "focusedItem",
-              "type": {
-                "text": "ALMenuItem"
-              },
-              "description": "The currently focused item in the menu list"
-            },
-            {
-              "kind": "field",
-              "name": "selectedItem",
-              "type": {
-                "text": "ALMenuItem"
-              },
-              "description": "The currently selected item in the menu list"
-            },
-            {
-              "kind": "field",
-              "name": "validItemCount",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "Keeps track of the number of valid (expanded/visible, not disabled) items in the list\n- Used to control keyboard focus"
-            },
-            {
-              "kind": "field",
-              "name": "menuItems",
-              "type": {
-                "text": "Array<ALMenuItem>"
-              },
-              "description": "Query the menu item components within the menu"
-            },
-            {
-              "kind": "field",
-              "name": "menuList",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "description": "Query the UL element within the menu"
-            },
-            {
-              "kind": "field",
-              "name": "_maxIndex",
-              "type": {
-                "text": "number"
-              },
-              "description": "The last index of menu items, used to control keyboard focus",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "syncHeadersWithItems",
-              "description": "Dynamically associate Group Menu items with their Headers, and set indexes on items for keyboard navigation\n1. Initalize the valid item count at 0\n2. Iterate over all menu items\n3. Initialize the items index to null\n4. If the item is a Header: set its index, and increment the valid item count\n5. If the item has an index greater than 0, set the margin block start to 12px\n6. If the item is an Expandable Group Header:\n- Store it as the Group Header in the loop\n- Assign it a group id, if not previously set\n- Assign it a unique id, if not previously set\n7. If the item is not a Header, a Group Header **has** been stored, and the item has does not already have a group id:\n- Assign the item the current group id\n- Apply the item a unique id\n- Add this unique id to the aria-controls attribute for the group's expand control\n8. If required, apply padding to align the items's text with its Header\n9. If the item's Group Header is expanded: assign its index and increment the valid item count\n10. When the next item is not a header, remove the stored Group Header\n11. If the item is not a Header or part of a group, assign its index and increment the valid item count"
-            },
-            {
-              "kind": "method",
-              "name": "setIndentation",
-              "parameters": [
-                {
-                  "name": "currentHeader",
-                  "type": {
-                    "text": "ALMenuItem"
-                  }
-                },
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "ALMenuItem"
-                  }
-                }
-              ],
-              "description": "Dynamically set inline start padding on child menu items\n1. Reset the padding to 0\n2. If the Group Header has prefix content, add padding to account for prefix content width\n3. If there is no prefix content, set the padding to the default width"
-            },
-            {
-              "kind": "method",
-              "name": "setWidthHeight",
-              "description": "Set the width and height\n1. Add a custom property to adjust the width of the menu list\n2. Add a custom property to adjust the height of the menu list and enable scroll"
-            },
-            {
-              "kind": "method",
-              "name": "getNewValidItem",
-              "return": {
-                "type": {
-                  "text": "ALMenuItem"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "currentIndex",
-                  "type": {
-                    "text": "number"
-                  },
-                  "description": "The index of the item that currently has focus"
-                },
-                {
-                  "name": "isPrevious",
-                  "type": {
-                    "text": "boolean"
-                  },
-                  "description": "A flag indicating whether to look for the previous item (true) or the next item (false)\n1. Calculate the index of the new menu item based on the 'isPrevious' flag\n2. Handle boundary conditions by looping to the other end if necessary\n3. Find the new item to focus based on the new index\n4. Return the new item"
-                }
-              ],
-              "description": "Find the previous or next valid item in the menu list that can receive focus"
-            },
-            {
-              "kind": "method",
-              "name": "setFocusedItem",
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "ALMenuItem"
-                  }
-                }
-              ],
-              "description": "When a new item is focused:\n1. Set the previously selected item's isFocused state to false\n2. Store the newly focused item on the menu's state\n3. Apply focus to the new item"
-            },
-            {
-              "kind": "method",
-              "name": "setFocusAdjacentItem",
-              "parameters": [
-                {
-                  "name": "currentItem",
-                  "type": {
-                    "text": "ALMenuItem"
-                  },
-                  "description": "The currently focused menu item"
-                },
-                {
-                  "name": "isPrevious",
-                  "type": {
-                    "text": "boolean"
-                  },
-                  "description": "A flag indicating whether to focus the previous item (true) or the next item (false)\n1. Get the next or previous valid item that will receive focus\n2. Set focus to the new item's inner element"
-                }
-              ],
-              "description": "Set the focused item to the previous or next menu item based on the 'isPrevious' flag"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnKeydown",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ],
-              "description": "Handle keydown event\n1. On Down Arrow or Right Arrow key, move focus to the next item. Or, if focus is on the last valid item, move focus to the first valid item in the list.\n2. On Up Arrow or Left Arrow key, move focus to the previous item. Or, if focus is on the first valid item, move focus to the last valid item in the list.\n3. On Home key, move focus to the first valid item in the list.\n4. On End key, move focus to the last valid item in the list."
-            },
-            {
-              "kind": "method",
-              "name": "handleOnMenuItemSelect",
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "ALMenuItem"
-                  }
-                }
-              ],
-              "description": "When a new item is selected:\n1. Set the previously selected item's isSelected state to false\n2. Store the newly selected item on the menu's state"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnMenuItemExpand",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "When a menu Group Header is Expanded:\n1. Show/hide items that belong to the given Group Header, and reassign valid indexes for keyboard navigation"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'simple'"
-              },
-              "description": "Variant\n- **default** Display the menu items with a background and padding\n- **simple** Display the menu items without a background and padding",
-              "fieldName": "variant"
-            },
-            {
-              "name": "width",
-              "type": {
-                "text": "number"
-              },
-              "description": "Width property\n- If set, the menu will be constrained to this width in px",
-              "fieldName": "width"
-            },
-            {
-              "name": "height",
-              "type": {
-                "text": "number"
-              },
-              "description": "Height property\n- If set, the menu will be constrained to this height in px and enable vertical scrolling",
-              "fieldName": "height"
-            },
-            {
-              "name": "id",
-              "type": {
-                "text": "string"
-              },
-              "description": "Id attribute\n- Unique id used for A11y\n- Associate the menu with the trigger that controls its open/close state",
-              "fieldName": "id"
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Menu'",
-              "description": "Label attribute\n- Sets ariaLabel for A11y",
-              "fieldName": "label"
-            },
-            {
-              "name": "indentGroupItems",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Indent group items attribute\n**true** - Applies padding to left align the text on group Menu Items with the text of the group Header\n**false** - Does not apply extra padding",
-              "fieldName": "indentGroupItems"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-menu",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALMenu",
-          "declaration": {
-            "name": "ALMenu",
-            "module": "components/menu/menu.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-menu",
-          "declaration": {
-            "name": "ALMenu",
-            "module": "components/menu/menu.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALMenu",
-            "module": "components/menu/menu.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/pagination-item/pagination-item.ts",
       "declarations": [
         {
@@ -10239,301 +10239,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/radio/radio.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-radio\n- **slot**: The component content that appears next to the radio\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
-          "name": "ALRadio",
-          "slots": [
-            {
-              "name": "",
-              "description": "The component content that appears next to the radio"
-            },
-            {
-              "name": "field-note",
-              "description": "If content is slotted, it will display in place of the fieldNote property"
-            },
-            {
-              "name": "error",
-              "description": "If content is slotted, it will display in place of the errorNote property"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-radio'"
-            },
-            {
-              "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "fieldNoteEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "isChecked",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Checked attribute",
-              "attribute": "isChecked"
-            },
-            {
-              "kind": "field",
-              "name": "isError",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Error state\n- Changes the component's treatment to represent an error state",
-              "attribute": "isError"
-            },
-            {
-              "kind": "field",
-              "name": "isDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
-              "attribute": "isDisabled"
-            },
-            {
-              "kind": "field",
-              "name": "isRequired",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Required attribute\n- Sets the radio to be required for validation",
-              "attribute": "isRequired"
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "description": "Name attribute",
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "description": "Value attribute",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "hideLabel",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Hide label?\n- If true, hides the label from displaying",
-              "attribute": "hideLabel"
-            },
-            {
-              "kind": "field",
-              "name": "errorNote",
-              "type": {
-                "text": "string"
-              },
-              "description": "Error message\n- An error field note that displays below the radio input",
-              "attribute": "errorNote"
-            },
-            {
-              "kind": "field",
-              "name": "fieldNote",
-              "type": {
-                "text": "string"
-              },
-              "description": "Field note\n- The helper text that displays below the radio input",
-              "attribute": "fieldNote"
-            },
-            {
-              "kind": "field",
-              "name": "fieldId",
-              "type": {
-                "text": "string"
-              },
-              "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
-              "attribute": "fieldId"
-            },
-            {
-              "kind": "field",
-              "name": "ariaDescribedBy",
-              "type": {
-                "text": "string"
-              },
-              "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
-              "attribute": "ariaDescribedBy"
-            },
-            {
-              "kind": "method",
-              "name": "toggleChecked",
-              "description": "Toggle checked\n1. Set the checked state\n2. Dispatch the custom event"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnChange",
-              "description": "Handle on change of the radio item\n- Check the item"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnKeydown",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ],
-              "description": "Handle on keydown of the radio item\n- Check the item"
-            }
-          ],
-          "events": [
-            {
-              "name": "onRadioChange",
-              "description": ""
-            }
-          ],
-          "attributes": [
-            {
-              "name": "isChecked",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Checked attribute",
-              "fieldName": "isChecked"
-            },
-            {
-              "name": "isError",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Error state\n- Changes the component's treatment to represent an error state",
-              "fieldName": "isError"
-            },
-            {
-              "name": "isDisabled",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
-              "fieldName": "isDisabled"
-            },
-            {
-              "name": "isRequired",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Required attribute\n- Sets the radio to be required for validation",
-              "fieldName": "isRequired"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "description": "Name attribute",
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "description": "Value attribute",
-              "fieldName": "value"
-            },
-            {
-              "name": "hideLabel",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Hide label?\n- If true, hides the label from displaying",
-              "fieldName": "hideLabel"
-            },
-            {
-              "name": "errorNote",
-              "type": {
-                "text": "string"
-              },
-              "description": "Error message\n- An error field note that displays below the radio input",
-              "fieldName": "errorNote"
-            },
-            {
-              "name": "fieldNote",
-              "type": {
-                "text": "string"
-              },
-              "description": "Field note\n- The helper text that displays below the radio input",
-              "fieldName": "fieldNote"
-            },
-            {
-              "name": "fieldId",
-              "type": {
-                "text": "string"
-              },
-              "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
-              "fieldName": "fieldId"
-            },
-            {
-              "name": "ariaDescribedBy",
-              "type": {
-                "text": "string"
-              },
-              "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
-              "fieldName": "ariaDescribedBy"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-radio",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALRadio",
-          "declaration": {
-            "name": "ALRadio",
-            "module": "components/radio/radio.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-radio",
-          "declaration": {
-            "name": "ALRadio",
-            "module": "components/radio/radio.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALRadio",
-            "module": "components/radio/radio.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/progress/progress.ts",
       "declarations": [
         {
@@ -10845,6 +10550,301 @@
           "declaration": {
             "name": "ALProgress",
             "module": "components/progress/progress.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/radio/radio.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-radio\n- **slot**: The component content that appears next to the radio\n- **slot** \"field-note\": If content is slotted, it will display in place of the fieldNote property\n- **slot** \"error\": If content is slotted, it will display in place of the errorNote property",
+          "name": "ALRadio",
+          "slots": [
+            {
+              "name": "",
+              "description": "The component content that appears next to the radio"
+            },
+            {
+              "name": "field-note",
+              "description": "If content is slotted, it will display in place of the fieldNote property"
+            },
+            {
+              "name": "error",
+              "description": "If content is slotted, it will display in place of the errorNote property"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-radio'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "fieldNoteEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "isChecked",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Checked attribute",
+              "attribute": "isChecked"
+            },
+            {
+              "kind": "field",
+              "name": "isError",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Error state\n- Changes the component's treatment to represent an error state",
+              "attribute": "isError"
+            },
+            {
+              "kind": "field",
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
+              "attribute": "isDisabled"
+            },
+            {
+              "kind": "field",
+              "name": "isRequired",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Required attribute\n- Sets the radio to be required for validation",
+              "attribute": "isRequired"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name attribute",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Value attribute",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Hide label?\n- If true, hides the label from displaying",
+              "attribute": "hideLabel"
+            },
+            {
+              "kind": "field",
+              "name": "errorNote",
+              "type": {
+                "text": "string"
+              },
+              "description": "Error message\n- An error field note that displays below the radio input",
+              "attribute": "errorNote"
+            },
+            {
+              "kind": "field",
+              "name": "fieldNote",
+              "type": {
+                "text": "string"
+              },
+              "description": "Field note\n- The helper text that displays below the radio input",
+              "attribute": "fieldNote"
+            },
+            {
+              "kind": "field",
+              "name": "fieldId",
+              "type": {
+                "text": "string"
+              },
+              "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
+              "attribute": "fieldId"
+            },
+            {
+              "kind": "field",
+              "name": "ariaDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
+              "attribute": "ariaDescribedBy"
+            },
+            {
+              "kind": "method",
+              "name": "toggleChecked",
+              "description": "Toggle checked\n1. Set the checked state\n2. Dispatch the custom event"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnChange",
+              "description": "Handle on change of the radio item\n- Check the item"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnKeydown",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Handle on keydown of the radio item\n- Check the item"
+            }
+          ],
+          "events": [
+            {
+              "name": "onRadioChange",
+              "description": ""
+            }
+          ],
+          "attributes": [
+            {
+              "name": "isChecked",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Checked attribute",
+              "fieldName": "isChecked"
+            },
+            {
+              "name": "isError",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Error state\n- Changes the component's treatment to represent an error state",
+              "fieldName": "isError"
+            },
+            {
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
+              "fieldName": "isDisabled"
+            },
+            {
+              "name": "isRequired",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Required attribute\n- Sets the radio to be required for validation",
+              "fieldName": "isRequired"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name attribute",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Value attribute",
+              "fieldName": "value"
+            },
+            {
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Hide label?\n- If true, hides the label from displaying",
+              "fieldName": "hideLabel"
+            },
+            {
+              "name": "errorNote",
+              "type": {
+                "text": "string"
+              },
+              "description": "Error message\n- An error field note that displays below the radio input",
+              "fieldName": "errorNote"
+            },
+            {
+              "name": "fieldNote",
+              "type": {
+                "text": "string"
+              },
+              "description": "Field note\n- The helper text that displays below the radio input",
+              "fieldName": "fieldNote"
+            },
+            {
+              "name": "fieldId",
+              "type": {
+                "text": "string"
+              },
+              "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
+              "fieldName": "fieldId"
+            },
+            {
+              "name": "ariaDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
+              "fieldName": "ariaDescribedBy"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-radio",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALRadio",
+          "declaration": {
+            "name": "ALRadio",
+            "module": "components/radio/radio.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-radio",
+          "declaration": {
+            "name": "ALRadio",
+            "module": "components/radio/radio.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALRadio",
+            "module": "components/radio/radio.ts"
           }
         }
       ]
@@ -12600,304 +12600,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/skeleton/skeleton.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-skeleton",
-          "name": "ALSkeleton",
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-skeleton'"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'circle' | 'square'"
-              },
-              "description": "Variant\n- **default** renders a rectangular skeleton\n- **circle** renders a round skeleton\n- **square** renders a sqaure skeleton",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "width",
-              "type": {
-                "text": "number"
-              },
-              "description": "The width of the skeleton\n- If no value is entered, it defaults to 100%",
-              "attribute": "width"
-            },
-            {
-              "kind": "field",
-              "name": "height",
-              "type": {
-                "text": "number"
-              },
-              "description": "The height of the skeleton\n- If no value is entered, it defaults to auto",
-              "attribute": "height"
-            },
-            {
-              "kind": "method",
-              "name": "setWidthHeight",
-              "description": "Set the width and height\n1. Add a custom property to adjust the width of the skeleton\n2. Add a custom property to adjust the height of the skeleton"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'circle' | 'square'"
-              },
-              "description": "Variant\n- **default** renders a rectangular skeleton\n- **circle** renders a round skeleton\n- **square** renders a sqaure skeleton",
-              "fieldName": "variant"
-            },
-            {
-              "name": "width",
-              "type": {
-                "text": "number"
-              },
-              "description": "The width of the skeleton\n- If no value is entered, it defaults to 100%",
-              "fieldName": "width"
-            },
-            {
-              "name": "height",
-              "type": {
-                "text": "number"
-              },
-              "description": "The height of the skeleton\n- If no value is entered, it defaults to auto",
-              "fieldName": "height"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-skeleton",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALSkeleton",
-          "declaration": {
-            "name": "ALSkeleton",
-            "module": "components/skeleton/skeleton.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-skeleton",
-          "declaration": {
-            "name": "ALSkeleton",
-            "module": "components/skeleton/skeleton.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALSkeleton",
-            "module": "components/skeleton/skeleton.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/spinner/spinner.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: el-spinner\n\nSpinner is used when retrieving data or performing slow computations, to notify users that their action is being processed.",
-          "name": "ALSpinner",
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-spinner'"
-            },
-            {
-              "kind": "field",
-              "name": "inverted",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Inverted variant\n1) Used for dark backgrounds",
-              "attribute": "inverted"
-            },
-            {
-              "kind": "field",
-              "name": "small",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Small loader",
-              "attribute": "small"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "inverted",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Inverted variant\n1) Used for dark backgrounds",
-              "fieldName": "inverted"
-            },
-            {
-              "name": "small",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Small loader",
-              "fieldName": "small"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-spinner",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALSpinner",
-          "declaration": {
-            "name": "ALSpinner",
-            "module": "components/spinner/spinner.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-spinner",
-          "declaration": {
-            "name": "ALSpinner",
-            "module": "components/spinner/spinner.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALSpinner",
-            "module": "components/spinner/spinner.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/stepper/stepper.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-stepper\n- **slot**: The stepper content, a set of stepper items",
-          "name": "ALStepper",
-          "slots": [
-            {
-              "name": "",
-              "description": "The stepper content, a set of stepper items"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-stepper'"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'vertical'"
-              },
-              "description": "Variant\n- **default** renders a Stepper with a horizontal layout\n- **vertical** renders a Stepper with a vertical layout",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "stepperItems",
-              "type": {
-                "text": "Array<ALStepperItem>"
-              },
-              "description": "Query the Stepper item components within the Stepper"
-            },
-            {
-              "kind": "method",
-              "name": "setStepNumber",
-              "description": "Set step number\n1. Loop through all the ALStepperItem's and set the step number based on the index\n2. Check if it's the last item in the array and set the isLast property"
-            },
-            {
-              "kind": "method",
-              "name": "setVerticalItems",
-              "description": "Set vertical items\n1. If the varient is equal to vertical, set the ALStepperItem's to vertical as well"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'vertical'"
-              },
-              "description": "Variant\n- **default** renders a Stepper with a horizontal layout\n- **vertical** renders a Stepper with a vertical layout",
-              "fieldName": "variant"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-stepper",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALStepper",
-          "declaration": {
-            "name": "ALStepper",
-            "module": "components/stepper/stepper.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-stepper",
-          "declaration": {
-            "name": "ALStepper",
-            "module": "components/stepper/stepper.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALStepper",
-            "module": "components/stepper/stepper.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/select/select.model.ts",
       "declarations": [],
       "exports": []
@@ -13430,6 +13132,304 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/skeleton/skeleton.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-skeleton",
+          "name": "ALSkeleton",
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-skeleton'"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'circle' | 'square'"
+              },
+              "description": "Variant\n- **default** renders a rectangular skeleton\n- **circle** renders a round skeleton\n- **square** renders a sqaure skeleton",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "The width of the skeleton\n- If no value is entered, it defaults to 100%",
+              "attribute": "width"
+            },
+            {
+              "kind": "field",
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "The height of the skeleton\n- If no value is entered, it defaults to auto",
+              "attribute": "height"
+            },
+            {
+              "kind": "method",
+              "name": "setWidthHeight",
+              "description": "Set the width and height\n1. Add a custom property to adjust the width of the skeleton\n2. Add a custom property to adjust the height of the skeleton"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'circle' | 'square'"
+              },
+              "description": "Variant\n- **default** renders a rectangular skeleton\n- **circle** renders a round skeleton\n- **square** renders a sqaure skeleton",
+              "fieldName": "variant"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "The width of the skeleton\n- If no value is entered, it defaults to 100%",
+              "fieldName": "width"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "The height of the skeleton\n- If no value is entered, it defaults to auto",
+              "fieldName": "height"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-skeleton",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALSkeleton",
+          "declaration": {
+            "name": "ALSkeleton",
+            "module": "components/skeleton/skeleton.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-skeleton",
+          "declaration": {
+            "name": "ALSkeleton",
+            "module": "components/skeleton/skeleton.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALSkeleton",
+            "module": "components/skeleton/skeleton.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/spinner/spinner.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: el-spinner\n\nSpinner is used when retrieving data or performing slow computations, to notify users that their action is being processed.",
+          "name": "ALSpinner",
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-spinner'"
+            },
+            {
+              "kind": "field",
+              "name": "inverted",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Inverted variant\n1) Used for dark backgrounds",
+              "attribute": "inverted"
+            },
+            {
+              "kind": "field",
+              "name": "small",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Small loader",
+              "attribute": "small"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "inverted",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Inverted variant\n1) Used for dark backgrounds",
+              "fieldName": "inverted"
+            },
+            {
+              "name": "small",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Small loader",
+              "fieldName": "small"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-spinner",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALSpinner",
+          "declaration": {
+            "name": "ALSpinner",
+            "module": "components/spinner/spinner.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-spinner",
+          "declaration": {
+            "name": "ALSpinner",
+            "module": "components/spinner/spinner.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALSpinner",
+            "module": "components/spinner/spinner.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/stepper/stepper.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-stepper\n- **slot**: The stepper content, a set of stepper items",
+          "name": "ALStepper",
+          "slots": [
+            {
+              "name": "",
+              "description": "The stepper content, a set of stepper items"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-stepper'"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'vertical'"
+              },
+              "description": "Variant\n- **default** renders a Stepper with a horizontal layout\n- **vertical** renders a Stepper with a vertical layout",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "stepperItems",
+              "type": {
+                "text": "Array<ALStepperItem>"
+              },
+              "description": "Query the Stepper item components within the Stepper"
+            },
+            {
+              "kind": "method",
+              "name": "setStepNumber",
+              "description": "Set step number\n1. Loop through all the ALStepperItem's and set the step number based on the index\n2. Check if it's the last item in the array and set the isLast property"
+            },
+            {
+              "kind": "method",
+              "name": "setVerticalItems",
+              "description": "Set vertical items\n1. If the varient is equal to vertical, set the ALStepperItem's to vertical as well"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'vertical'"
+              },
+              "description": "Variant\n- **default** renders a Stepper with a horizontal layout\n- **vertical** renders a Stepper with a vertical layout",
+              "fieldName": "variant"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-stepper",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALStepper",
+          "declaration": {
+            "name": "ALStepper",
+            "module": "components/stepper/stepper.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-stepper",
+          "declaration": {
+            "name": "ALStepper",
+            "module": "components/stepper/stepper.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALStepper",
+            "module": "components/stepper/stepper.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/stepper-item/stepper-item.ts",
       "declarations": [
         {
@@ -13902,6 +13902,84 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/text-passage/text-passage.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-text-passage\n- **slot**: The text passage content",
+          "name": "ALTextPassage",
+          "slots": [
+            {
+              "name": "",
+              "description": "The text passage content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-text-passage'"
+            },
+            {
+              "kind": "field",
+              "name": "maxWidth",
+              "type": {
+                "text": "'sm'"
+              },
+              "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
+              "attribute": "maxWidth"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "maxWidth",
+              "type": {
+                "text": "'sm'"
+              },
+              "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
+              "fieldName": "maxWidth"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-text-passage",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALTextPassage",
+          "declaration": {
+            "name": "ALTextPassage",
+            "module": "components/text-passage/text-passage.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-text-passage",
+          "declaration": {
+            "name": "ALTextPassage",
+            "module": "components/text-passage/text-passage.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALTextPassage",
+            "module": "components/text-passage/text-passage.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/tabs/tabs.ts",
       "declarations": [
         {
@@ -14163,84 +14241,6 @@
           "declaration": {
             "name": "ALTabs",
             "module": "components/tabs/tabs.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/text-passage/text-passage.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-text-passage\n- **slot**: The text passage content",
-          "name": "ALTextPassage",
-          "slots": [
-            {
-              "name": "",
-              "description": "The text passage content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-text-passage'"
-            },
-            {
-              "kind": "field",
-              "name": "maxWidth",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
-              "attribute": "maxWidth"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "maxWidth",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
-              "fieldName": "maxWidth"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-text-passage",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALTextPassage",
-          "declaration": {
-            "name": "ALTextPassage",
-            "module": "components/text-passage/text-passage.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-text-passage",
-          "declaration": {
-            "name": "ALTextPassage",
-            "module": "components/text-passage/text-passage.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALTextPassage",
-            "module": "components/text-passage/text-passage.ts"
           }
         }
       ]
@@ -15761,18 +15761,12 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/toggle-button-group/toggle-button-group.ts",
+      "path": "components/toggle/toggle.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-toggle-button-group\n- **slot**: A set of toggle buttons",
-          "name": "ALToggleButtonGroup",
-          "slots": [
-            {
-              "name": "",
-              "description": "A set of toggle buttons"
-            }
-          ],
+          "description": "Component: al-toggle",
+          "name": "ALToggle",
           "members": [
             {
               "kind": "field",
@@ -15781,126 +15775,152 @@
                 "text": "string"
               },
               "static": true,
-              "default": "'al-toggle-button-group'"
+              "default": "'al-toggle'"
             },
             {
               "kind": "field",
-              "name": "variant",
+              "name": "isChecked",
               "type": {
-                "text": "'background'"
+                "text": "boolean"
               },
-              "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles",
-              "attribute": "variant"
+              "description": "Checked attribute\n- If true, sets the treatment to represent an on state\n- If false, sets the treatment to represent an off state",
+              "attribute": "isChecked"
             },
             {
               "kind": "field",
-              "name": "orientation",
+              "name": "isDisabled",
               "type": {
-                "text": "'vertical'"
+                "text": "boolean"
               },
-              "description": "Orientation\n- **default** renders the toggle button's in a horizontal row\n- **vertical** renders the toggle button's in a vertical row",
-              "attribute": "orientation"
+              "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
+              "attribute": "isDisabled"
             },
             {
               "kind": "field",
-              "name": "gap",
+              "name": "fieldId",
               "type": {
-                "text": "'sm'"
+                "text": "string"
               },
-              "description": "Gap\n- **default** adds no gap between the toggle buttons\n- **sm** adds a 16px gap between the toggle buttons",
-              "attribute": "gap"
+              "description": "Field ID\n- Links the label to the toggle\n- By default it is autogenerated by nanoid",
+              "attribute": "fieldId"
             },
             {
               "kind": "field",
-              "name": "selectedItem",
+              "name": "label",
               "type": {
-                "text": "ALToggleButton"
+                "text": "string"
               },
-              "description": "Selected item\n- The currently selected Toggle Button in the group"
+              "default": "'Toggle'",
+              "description": "Label\n- The text inside the label tag\n- Does not display on the front-end, but is used for A11y",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name attribute\n- The name attribute used on the toggle",
+              "attribute": "name"
             },
             {
               "kind": "method",
-              "name": "handleOnToggleButtonSelect",
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "ALToggleButton"
-                  }
-                }
-              ],
-              "description": "Handle when a Toggle Button in the group is selected\n1. Set the previously selected item's isSelected state to false\n2. Store the newly selected item on the toggle button's state"
+              "name": "triggerToggleEvent",
+              "description": "Trigger toggle event\n 1. Toggle the component's checked state\n 2. Dispatch the custom event"
             },
             {
               "kind": "method",
-              "name": "handleOnClickOutside",
+              "name": "handleKeydown",
               "parameters": [
                 {
                   "name": "e",
                   "type": {
-                    "text": "MouseEvent"
+                    "text": "KeyboardEvent"
                   }
                 }
               ],
-              "description": "Handles the click event outside the component:\n1. Check if the toggle button is selected\n2. Determine if the click occurred inside the selected toggle button\n3. Check if the click occurred outside the selected toggle button\n4. Close the toggle button if the click occurred outside it"
+              "description": "Handle on keydown events\n1. If the Enter key is pressed, trigger the toggle event"
+            }
+          ],
+          "events": [
+            {
+              "name": "onToggleChange",
+              "description": ""
             }
           ],
           "attributes": [
             {
-              "name": "variant",
+              "name": "isChecked",
               "type": {
-                "text": "'background'"
+                "text": "boolean"
               },
-              "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles",
-              "fieldName": "variant"
+              "description": "Checked attribute\n- If true, sets the treatment to represent an on state\n- If false, sets the treatment to represent an off state",
+              "fieldName": "isChecked"
             },
             {
-              "name": "orientation",
+              "name": "isDisabled",
               "type": {
-                "text": "'vertical'"
+                "text": "boolean"
               },
-              "description": "Orientation\n- **default** renders the toggle button's in a horizontal row\n- **vertical** renders the toggle button's in a vertical row",
-              "fieldName": "orientation"
+              "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
+              "fieldName": "isDisabled"
             },
             {
-              "name": "gap",
+              "name": "fieldId",
               "type": {
-                "text": "'sm'"
+                "text": "string"
               },
-              "description": "Gap\n- **default** adds no gap between the toggle buttons\n- **sm** adds a 16px gap between the toggle buttons",
-              "fieldName": "gap"
+              "description": "Field ID\n- Links the label to the toggle\n- By default it is autogenerated by nanoid",
+              "fieldName": "fieldId"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Toggle'",
+              "description": "Label\n- The text inside the label tag\n- Does not display on the front-end, but is used for A11y",
+              "fieldName": "label"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name attribute\n- The name attribute used on the toggle",
+              "fieldName": "name"
             }
           ],
           "superclass": {
             "name": "ALElement",
             "module": "/components/ALElement"
           },
-          "tagName": "al-toggle-button-group",
+          "tagName": "al-toggle",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "ALToggleButtonGroup",
+          "name": "ALToggle",
           "declaration": {
-            "name": "ALToggleButtonGroup",
-            "module": "components/toggle-button-group/toggle-button-group.ts"
+            "name": "ALToggle",
+            "module": "components/toggle/toggle.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "al-toggle-button-group",
+          "name": "al-toggle",
           "declaration": {
-            "name": "ALToggleButtonGroup",
-            "module": "components/toggle-button-group/toggle-button-group.ts"
+            "name": "ALToggle",
+            "module": "components/toggle/toggle.ts"
           }
         },
         {
           "kind": "custom-element-definition",
           "declaration": {
-            "name": "ALToggleButtonGroup",
-            "module": "components/toggle-button-group/toggle-button-group.ts"
+            "name": "ALToggle",
+            "module": "components/toggle/toggle.ts"
           }
         }
       ]
@@ -16147,12 +16167,18 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/toggle/toggle.ts",
+      "path": "components/toggle-button-group/toggle-button-group.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-toggle",
-          "name": "ALToggle",
+          "description": "Component: al-toggle-button-group\n- **slot**: A set of toggle buttons",
+          "name": "ALToggleButtonGroup",
+          "slots": [
+            {
+              "name": "",
+              "description": "A set of toggle buttons"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -16161,152 +16187,126 @@
                 "text": "string"
               },
               "static": true,
-              "default": "'al-toggle'"
+              "default": "'al-toggle-button-group'"
             },
             {
               "kind": "field",
-              "name": "isChecked",
+              "name": "variant",
               "type": {
-                "text": "boolean"
+                "text": "'background'"
               },
-              "description": "Checked attribute\n- If true, sets the treatment to represent an on state\n- If false, sets the treatment to represent an off state",
-              "attribute": "isChecked"
+              "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles",
+              "attribute": "variant"
             },
             {
               "kind": "field",
-              "name": "isDisabled",
+              "name": "orientation",
               "type": {
-                "text": "boolean"
+                "text": "'vertical'"
               },
-              "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
-              "attribute": "isDisabled"
+              "description": "Orientation\n- **default** renders the toggle button's in a horizontal row\n- **vertical** renders the toggle button's in a vertical row",
+              "attribute": "orientation"
             },
             {
               "kind": "field",
-              "name": "fieldId",
+              "name": "gap",
               "type": {
-                "text": "string"
+                "text": "'sm'"
               },
-              "description": "Field ID\n- Links the label to the toggle\n- By default it is autogenerated by nanoid",
-              "attribute": "fieldId"
+              "description": "Gap\n- **default** adds no gap between the toggle buttons\n- **sm** adds a 16px gap between the toggle buttons",
+              "attribute": "gap"
             },
             {
               "kind": "field",
-              "name": "label",
+              "name": "selectedItem",
               "type": {
-                "text": "string"
+                "text": "ALToggleButton"
               },
-              "default": "'Toggle'",
-              "description": "Label\n- The text inside the label tag\n- Does not display on the front-end, but is used for A11y",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "description": "Name attribute\n- The name attribute used on the toggle",
-              "attribute": "name"
+              "description": "Selected item\n- The currently selected Toggle Button in the group"
             },
             {
               "kind": "method",
-              "name": "triggerToggleEvent",
-              "description": "Trigger toggle event\n 1. Toggle the component's checked state\n 2. Dispatch the custom event"
+              "name": "handleOnToggleButtonSelect",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "ALToggleButton"
+                  }
+                }
+              ],
+              "description": "Handle when a Toggle Button in the group is selected\n1. Set the previously selected item's isSelected state to false\n2. Store the newly selected item on the toggle button's state"
             },
             {
               "kind": "method",
-              "name": "handleKeydown",
+              "name": "handleOnClickOutside",
               "parameters": [
                 {
                   "name": "e",
                   "type": {
-                    "text": "KeyboardEvent"
+                    "text": "MouseEvent"
                   }
                 }
               ],
-              "description": "Handle on keydown events\n1. If the Enter key is pressed, trigger the toggle event"
-            }
-          ],
-          "events": [
-            {
-              "name": "onToggleChange",
-              "description": ""
+              "description": "Handles the click event outside the component:\n1. Check if the toggle button is selected\n2. Determine if the click occurred inside the selected toggle button\n3. Check if the click occurred outside the selected toggle button\n4. Close the toggle button if the click occurred outside it"
             }
           ],
           "attributes": [
             {
-              "name": "isChecked",
+              "name": "variant",
               "type": {
-                "text": "boolean"
+                "text": "'background'"
               },
-              "description": "Checked attribute\n- If true, sets the treatment to represent an on state\n- If false, sets the treatment to represent an off state",
-              "fieldName": "isChecked"
+              "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles",
+              "fieldName": "variant"
             },
             {
-              "name": "isDisabled",
+              "name": "orientation",
               "type": {
-                "text": "boolean"
+                "text": "'vertical'"
               },
-              "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
-              "fieldName": "isDisabled"
+              "description": "Orientation\n- **default** renders the toggle button's in a horizontal row\n- **vertical** renders the toggle button's in a vertical row",
+              "fieldName": "orientation"
             },
             {
-              "name": "fieldId",
+              "name": "gap",
               "type": {
-                "text": "string"
+                "text": "'sm'"
               },
-              "description": "Field ID\n- Links the label to the toggle\n- By default it is autogenerated by nanoid",
-              "fieldName": "fieldId"
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Toggle'",
-              "description": "Label\n- The text inside the label tag\n- Does not display on the front-end, but is used for A11y",
-              "fieldName": "label"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "description": "Name attribute\n- The name attribute used on the toggle",
-              "fieldName": "name"
+              "description": "Gap\n- **default** adds no gap between the toggle buttons\n- **sm** adds a 16px gap between the toggle buttons",
+              "fieldName": "gap"
             }
           ],
           "superclass": {
             "name": "ALElement",
             "module": "/components/ALElement"
           },
-          "tagName": "al-toggle",
+          "tagName": "al-toggle-button-group",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "ALToggle",
+          "name": "ALToggleButtonGroup",
           "declaration": {
-            "name": "ALToggle",
-            "module": "components/toggle/toggle.ts"
+            "name": "ALToggleButtonGroup",
+            "module": "components/toggle-button-group/toggle-button-group.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "al-toggle",
+          "name": "al-toggle-button-group",
           "declaration": {
-            "name": "ALToggle",
-            "module": "components/toggle/toggle.ts"
+            "name": "ALToggleButtonGroup",
+            "module": "components/toggle-button-group/toggle-button-group.ts"
           }
         },
         {
           "kind": "custom-element-definition",
           "declaration": {
-            "name": "ALToggle",
-            "module": "components/toggle/toggle.ts"
+            "name": "ALToggleButtonGroup",
+            "module": "components/toggle-button-group/toggle-button-group.ts"
           }
         }
       ]

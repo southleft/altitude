@@ -78,10 +78,22 @@ For a web component (`libs/al-web-components/components/<name>/`):
 5. Styles imported from the sibling `.scss` and exposed via
    `static get styles() { return unsafeCSS(styles.toString()); }`.
    The Vite build re-routes `*.scss` → `*.scss?inline` automatically.
-6. Composite components register sub-components via
-   `registerAltitude({mode, suffix}, elements)` in `directives/register.ts`
-   (T4.6 explicit API: modes `stable` | `versioned` | `manual`). The
-   legacy `register({...})` export still works as a thin shim.
+6. **Two registration helpers — different audiences. Don't confuse them.**
+   - **`registerAltitude({ mode, suffix? }, elements)`** is the
+     **consumer-facing** entry point. An app calls it ONCE at boot to
+     register a set of Altitude components into `customElements`.
+     Modes: `stable` (plain tags), `versioned` (suffixed for MFE
+     coexistence), `manual` (caller owns `customElements.define`).
+   - **`register({ child1: ALChild1, child2: ALChild2 })`** is the
+     **intra-component** helper used by composites that inject
+     sub-components into their own template (e.g. `al-chip` injects
+     `al-icon-close`). It returns an `elementMap` consumed by
+     `unsafeStatic` in the render template. Every shipped composite
+     uses this — `chip.ts`, `alert.ts`, `toast.ts`, etc. — and that
+     is correct; do NOT replace those with `registerAltitude`.
+
+   Quick rule: if you're an APP, call `registerAltitude`. If you're a
+   COMPONENT composing sub-components, call `register`.
 
 ### "New component" deliverable checklist
 
@@ -140,11 +152,13 @@ every shipped component. Mirror them when scaffolding a new component:
 
 | Concern | Convention | Example |
 |---|---|---|
+| **Class name** | PascalCase with a **capitalized `AL`** prefix — `ALTag`, not `AlTag`. Must match the `bundle.ts` export and the `HTMLElementTagNameMap` value. | `export class ALStatCard extends ALElement` |
 | **Primary action** | `<al-button>` with **no** `variant` attribute — "primary" is the implicit default. The `variant` enum is only `'secondary' \| 'tertiary' \| 'bare' \| 'danger'`. | `<al-button>Save</al-button>` |
 | **Boolean property names** | Prefix with `is*` (state) or `has*` (capability) | `isDisabled`, `isPressed`, `isExpanded`, `hasBadge` |
 | **Event names** | Camel-case `on<Component><Action>` | `onChipClose`, `onMenuItemSelect`, `onAccordionPanelOpen` / `onAccordionPanelClose` |
 | **Event dispatch** | Use `this.dispatch({ eventName, e, detailObj })` — the ALElement helper, not raw `dispatchEvent` | see "ALElement public API" below |
-| **Component-tier CSS variables** | `--al-<component>-<role>` with a `var(--al-theme-*, …)` fallback so consumers can override at the component scope without breaking the theme cascade | `var(--al-button-background, var(--al-theme-color-background-default))` |
+| **Component-tier CSS variables** | **OPTIONAL** for display atoms (badge, chip, stat-card) — the canonical chip precedent references `--al-theme-*` tokens directly without an intermediate `--al-<component>-*` hook. Use `--al-<component>-<role>` with a `var(--al-theme-*, …)` fallback ONLY when the component needs a *named, documented override surface* (e.g. `al-button` exposes `--al-button-background` so consumers can override per-button without forking the theme). Absence is NOT a violation. | `var(--al-button-background, var(--al-theme-color-background-default))` for an interactive control; bare `var(--al-theme-color-content-default-weak)` for a display atom |
+| **Typography** | Set type via the `al-theme-typography-*` mixins (`@include al-theme-typography-display-sm-bold;`, `@include al-theme-typography-body-sm;`, etc.). Do NOT hand-assemble from raw `--al-font-size-*` / `--al-font-weight-*` / `--al-line-height-*` primitives. The mixins live in `libs/al-web-components/styles/core/mixins/typography.scss`. | `@include al-theme-typography-heading-md-bold;` |
 | **BEM class prefix** | `al-c-<component>` for the root element, `al-c-<component>__<part>` for parts, `al-c-<component>--<modifier>` for variants | `.al-c-button`, `.al-c-button__icon`, `.al-c-button--danger` |
 | **SCSS cascade layer** | Wrap every rule in `@layer al.component { … }` so consumers can override via the `al.override` layer | (see `components/divider/divider.scss`) |
 | **SCSS module imports** | `@use '../../styles/component' as *;` (modern Sass module system — no `@import`) | top of every leaf component .scss |
@@ -193,6 +207,7 @@ consumer's burden of wiring up the close event.
 | **Color (default variant)** | `color: var(--al-theme-color-content-default-weak);` |
 | **Focus ring** | `&:focus-visible { @include al-focus; }` — never re-author an outline rule. |
 | **Hide-when-dismissed** | `.al-is-dismissed { display: none; }` inside `@layer al.component { … }`. |
+| **Host display** | `:host { display: contents; }` — the host has NO visual properties of its own. Never set `display: inline-block` / `padding` / `border-radius` / `font-family` on `:host`; style the inner `.al-c-<name>` instead. This is non-negotiable for every component; see the blocker checklist row. |
 
 A consumer-controlled `close()` (the host calls back into the consumer
 without owning `isDismissed`) is acceptable for atoms that need
@@ -222,8 +237,14 @@ shipped story or page template.
 
 `al-popover` `position` is one of: `bottom-center` | `bottom-right` | `bottom-left` | `top-center` | `top-right` | `top-left` | `left` | `left-top` | `right` | `right-top` — no `*-end` / `*-start` aliases. `variant="menu"` is the only variant value.
 
-Wire the menu selection with the real event:
-`@onMenuItemSelect=${(e) => /* e.detail.value */}`.
+**Event bind site:** `onMenuItemSelect` is dispatched by `<al-menu-item>` with `bubbles: true, composed: true`, so it surfaces on the surrounding `<al-menu>`. **The canonical bind site is on `<al-menu>`, not the individual items** — the event carries the selected item's `value` in `e.detail`:
+
+```html
+<al-menu @onMenuItemSelect=${(e) => handleSelect(e.detail.value)}>
+  <al-menu-item value="edit" label="Edit">Edit</al-menu-item>
+  …
+</al-menu>
+```
 
 **Card with a primary action in the corner:**
 

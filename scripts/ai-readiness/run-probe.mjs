@@ -117,6 +117,34 @@ function discoverBinaries() {
 }
 
 // ---------- attempt runners ----------
+//
+// An attempt's `parsed` is the model's structured output. When the schema is
+// loose (every top-level field is `required` but the values are arrays that
+// can be `[]`), a model that returns an empty object passes validation but
+// carries no signal — `files: [], usedComponents: [], violations: []`. Those
+// "void" payloads scored 0/0/0 in v6 and dragged a model's average. The
+// judge can't know the difference between "agent declined" and "agent
+// thought there was nothing to say", so we detect emptiness here.
+
+function isVoidPayload(parsed) {
+  if (!parsed || typeof parsed !== 'object') return false;
+  // A payload is void if every array-typed field is empty AND every
+  // string-typed field is missing/empty. Conservative: if at least one
+  // array has elements OR a non-empty string is present, the payload is
+  // considered substantive.
+  let arrCount = 0, nonEmptyArrCount = 0, strCount = 0, nonEmptyStrCount = 0;
+  for (const v of Object.values(parsed)) {
+    if (Array.isArray(v)) {
+      arrCount++;
+      if (v.length > 0) nonEmptyArrCount++;
+    } else if (typeof v === 'string') {
+      strCount++;
+      if (v.trim().length > 0) nonEmptyStrCount++;
+    }
+  }
+  if (arrCount === 0 && strCount === 0) return false; // nothing to judge
+  return nonEmptyArrCount === 0 && nonEmptyStrCount === 0;
+}
 
 async function runClaudeAttempt({ bin, prompt, schemaPath, label }) {
   const schema = readFileSync(schemaPath, 'utf8');
@@ -128,7 +156,7 @@ async function runClaudeAttempt({ bin, prompt, schemaPath, label }) {
     fullPrompt,
   ];
   const t0 = Date.now();
-  const res = await runChild(bin, args, { timeoutMs: 8 * 60 * 1000 });
+  const res = await runChild(bin, args, { timeoutMs: 12 * 60 * 1000 });
   let parsed = null;
   try {
     const envelope = JSON.parse(res.stdout);
@@ -140,14 +168,13 @@ async function runClaudeAttempt({ bin, prompt, schemaPath, label }) {
     label, model: 'claude', exitCode: res.exitCode, durationMs: Date.now() - t0,
     raw: res.stdout, stderrTail: res.stderr.slice(-500),
     parsed,
+    void: isVoidPayload(parsed),
   };
 }
 
 async function runCodexAttempt({ bin, prompt, schemaPath, label }) {
   const schema = readFileSync(schemaPath, 'utf8');
   const fullPrompt = `${CONTEXT}\n\n---\n\n${prompt}\n\n---\n\nReturn JSON matching the schema attached via --output-schema.`;
-  // codex exec --json emits JSONL events; --output-last-message writes the
-  // final agent message to a file. We use both.
   const lastMessageFile = `/tmp/codex-last-${label.replace(/[^\w-]/g, '_')}-${Date.now()}.json`;
   const args = [
     'exec',
@@ -160,21 +187,41 @@ async function runCodexAttempt({ bin, prompt, schemaPath, label }) {
     fullPrompt,
   ];
   const t0 = Date.now();
-  // 15 min — codex consistently hits >8m on B-scaffold (heavy file reads
-  // + structured-output strictness). Empirically 12-15m clears it.
+  // 15 min — codex consistently hits >8m on B-scaffold.
   const res = await runChild(bin, args, { timeoutMs: 15 * 60 * 1000 });
   let lastMessage = '';
   if (existsSync(lastMessageFile)) {
     try { lastMessage = readFileSync(lastMessageFile, 'utf8'); } catch {}
   }
+  const parsed = extractJson(lastMessage) || extractJson(res.stdout);
   return {
     label, model: 'codex', exitCode: res.exitCode, durationMs: Date.now() - t0,
     raw: lastMessage || res.stdout, stderrTail: res.stderr.slice(-500),
-    parsed: extractJson(lastMessage) || extractJson(res.stdout),
+    parsed,
+    void: isVoidPayload(parsed),
   };
 }
 
 const RUNNERS = { claude: runClaudeAttempt, codex: runCodexAttempt };
+
+// One-shot retry wrapper: if the first attempt comes back void (or
+// completely unparseable on an exit-0 run), try once more with a sharper
+// "do not return an empty payload" instruction prepended. Logs the retry
+// so it's visible in the per-attempt JSON.
+async function runWithRetry(runner, opts) {
+  const first = await runner(opts);
+  const needsRetry = first.exitCode === 0 && (first.void || !first.parsed);
+  if (!needsRetry) return first;
+  const augmented = `IMPORTANT: A prior call returned an empty payload (no findings / files / components). Do not do that here — every top-level array MUST be substantive, or your response is not useful. Read the digests first if needed.\n\n${opts.prompt}`;
+  const retry = await runner({ ...opts, prompt: augmented });
+  return {
+    ...retry,
+    label: opts.label,
+    retried: true,
+    firstAttemptVoid: first.void,
+    firstAttemptParsed: !!first.parsed,
+  };
+}
 
 // ---------- main ----------
 
@@ -212,7 +259,7 @@ async function main() {
       const bin = binaries[j.model];
       const runner = RUNNERS[j.model];
       console.log(`[start] ${j.label}`);
-      const out = await runner({ bin, prompt: j.prompt, schemaPath: j.schemaPath, label: j.label });
+      const out = await runWithRetry(runner, { bin, prompt: j.prompt, schemaPath: j.schemaPath, label: j.label });
       const outPath = resolve(attemptsDir, `${j.label}.json`);
       writeFileSync(outPath, JSON.stringify({
         taskId: j.task.id,
@@ -220,8 +267,19 @@ async function main() {
         attempt: j.i,
         ...out,
       }, null, 2));
-      console.log(`[done ] ${j.label}  exit=${out.exitCode}  parsed=${out.parsed ? 'yes' : 'NO'}  ${(out.durationMs / 1000).toFixed(1)}s`);
-      return { label: j.label, taskId: j.task.id, model: j.model, ok: !!out.parsed };
+      const status = out.parsed && !out.void ? 'ok'
+        : out.parsed && out.void ? 'VOID'
+        : 'NO-PARSE';
+      const retryNote = out.retried ? ` retried(firstVoid=${out.firstAttemptVoid})` : '';
+      console.log(`[done ] ${j.label}  exit=${out.exitCode}  ${status}${retryNote}  ${(out.durationMs / 1000).toFixed(1)}s`);
+      return {
+        label: j.label, taskId: j.task.id, model: j.model,
+        ok: !!out.parsed && !out.void,
+        parsedButVoid: !!out.parsed && !!out.void,
+        retried: !!out.retried,
+        exitCode: out.exitCode,
+        durationMs: out.durationMs,
+      };
     })
   );
 
@@ -234,16 +292,27 @@ async function main() {
     attempts: results,
     summary: {
       total: results.length,
-      parsedOk: results.filter(r => r.ok).length,
-      byModel: Object.fromEntries(MODELS.map(m => [m, results.filter(r => r.model === m && r.ok).length])),
+      gradeable: results.filter(r => r.ok).length,
+      void: results.filter(r => r.parsedButVoid).length,
+      noParse: results.filter(r => !r.ok && !r.parsedButVoid).length,
+      retried: results.filter(r => r.retried).length,
+      byModel: Object.fromEntries(MODELS.map(m => [m, {
+        gradeable: results.filter(r => r.model === m && r.ok).length,
+        void: results.filter(r => r.model === m && r.parsedButVoid).length,
+        noParse: results.filter(r => r.model === m && !r.ok && !r.parsedButVoid).length,
+        total: results.filter(r => r.model === m).length,
+      }])),
     },
   };
   writeFileSync(resolve(runDir, 'run.json'), JSON.stringify(manifest, null, 2));
 
   console.log('\n=== fleet summary ===');
-  console.log(`  ${manifest.summary.parsedOk}/${manifest.summary.total} attempts parsed`);
-  for (const [m, n] of Object.entries(manifest.summary.byModel)) {
-    console.log(`  ${m}: ${n}/${results.filter(r => r.model === m).length}`);
+  console.log(`  gradeable: ${manifest.summary.gradeable}/${manifest.summary.total}`);
+  console.log(`  void     : ${manifest.summary.void}`);
+  console.log(`  no-parse : ${manifest.summary.noParse}`);
+  console.log(`  retried  : ${manifest.summary.retried}`);
+  for (const [m, s] of Object.entries(manifest.summary.byModel)) {
+    console.log(`  ${m}: gradeable ${s.gradeable}/${s.total}  void=${s.void}  no-parse=${s.noParse}`);
   }
   console.log(`\nRun dir: ${runDir}`);
   console.log('Next: node scripts/ai-readiness/run-judge.mjs ' + runDir);
