@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://southleft.com/altitude/al-button.schema.json",
   "title": "ALButton (al-button)",
-  "description": "Component: al-button\n- **slot**: The button text content\n- **slot** \"before\": Content to display before the button text, typically an icon\n- **slot** \"after\": Content to display after the button text, typically an icon",
+  "description": "Component: al-button",
   "type": "object",
   "altitude": {
     "tagName": "al-button",
@@ -16,16 +16,16 @@
     },
     "slots": [
       {
-        "name": "",
-        "description": "The button text content"
+        "description": "The button text content. Omit when rendering an icon-only button (set `hideText` + `label` instead).",
+        "name": ""
       },
       {
-        "name": "before",
-        "description": "Content to display before the button text, typically an icon"
+        "description": "Content to display before the button text, typically an icon.",
+        "name": "before"
       },
       {
-        "name": "after",
-        "description": "Content to display after the button text, typically an icon"
+        "description": "Content to display after the button text, typically an icon. Icon-only button pattern: set `hideText` + provide an accessible name via `label`, then place the icon in the `before` slot. Do NOT also include a visible text node — the slot's default text content is hidden but still present in the layout, and a duplicate label produces a redundant accessible name. Example: <al-button hideText label=\"Open actions menu\" ariaControls=\"menu-id\"> <al-icon-dots-vertical slot=\"before\" iconTitle=\"Actions\"></al-icon-dots-vertical> </al-button>",
+        "name": "after"
       }
     ],
     "events": [],
