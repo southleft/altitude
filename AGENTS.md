@@ -75,6 +75,19 @@ For a web component (`libs/al-web-components/components/<name>/`):
 4. Slot/event/CSS-part docs go in the class-level JSDoc using
    `@slot`, `@event`, `@csspart`, `@cssproperty` tags (the CEM picks
    these up; the legacy `* - **slot**:` prose is being codemodded out).
+
+   **`@cssproperty` semantics — important.** This tag documents the
+   component's **OWN public override surface** — the
+   `--al-<component>-<role>` variables that consumers can set to
+   customize a single instance without touching the theme. It does
+   **NOT** enumerate the global `--al-theme-*` tokens the component
+   merely consumes. Example: `<al-button>` exposes
+   `--al-button-background` as its own override hook (a `@cssproperty`);
+   the `--al-theme-color-background-default` token it falls back to is
+   NOT a `@cssproperty` of al-button. Over-documenting consumed theme
+   tokens pollutes the manifest with cssproperties the component
+   doesn't actually own, degrading the digest's value for downstream
+   agents.
 5. Styles imported from the sibling `.scss` and exposed via
    `static get styles() { return unsafeCSS(styles.toString()); }`.
    The Vite build re-routes `*.scss` → `*.scss?inline` automatically.
@@ -84,13 +97,24 @@ For a web component (`libs/al-web-components/components/<name>/`):
      register a set of Altitude components into `customElements`.
      Modes: `stable` (plain tags), `versioned` (suffixed for MFE
      coexistence), `manual` (caller owns `customElements.define`).
-   - **`register({ child1: ALChild1, child2: ALChild2 })`** is the
-     **intra-component** helper used by composites that inject
+   - **`register({ elements: [[tagName, ClassRef]], suffix?, prefix? })`**
+     is the **intra-component** helper used by composites that inject
      sub-components into their own template (e.g. `al-chip` injects
-     `al-icon-close`). It returns an `elementMap` consumed by
-     `unsafeStatic` in the render template. Every shipped composite
-     uses this — `chip.ts`, `alert.ts`, `toast.ts`, etc. — and that
-     is correct; do NOT replace those with `registerAltitude`.
+     `al-icon-close`). It returns a `Map<originalTag, registeredTag>`
+     consumed by `unsafeStatic` in the render template. The canonical
+     shape mirrors `chip.ts`:
+     ```ts
+     private elementMap = register({
+       elements: [[ALIconClose.el, ALIconClose]],
+       suffix: (globalThis as any).alAutoRegistry === true ? '' : PackageJson.version
+     });
+     private iconCloseEl = unsafeStatic(this.elementMap.get(ALIconClose.el));
+     ```
+     Every shipped composite uses this — `chip.ts`, `alert.ts`,
+     `toast.ts`, etc. — and that is correct; do NOT replace those
+     with `registerAltitude`. **`elements` is an array of
+     `[tagName, ClassRef]` tuples; do not pass a `{ key: ClassRef }`
+     object map (that signature does not exist).**
 
    Quick rule: if you're an APP, call `registerAltitude`. If you're a
    COMPONENT composing sub-components, call `register`.
@@ -116,6 +140,7 @@ weight an omission in a code review:
 | **blocker** | **Self-register guard** at the bottom of the .ts file, matching the pilot pattern:<br /><br />`if ((globalThis as any).alAutoRegistry === true && customElements.get(ALFoo.el) === undefined) { customElements.define(ALFoo.el, ALFoo); }` |
 | **blocker** | **`HTMLElementTagNameMap` declaration** at the bottom of the .ts file, so consumer TypeScript gets the right type for `document.querySelector('al-foo')`. |
 | **blocker** | **Sibling `.scss`** that `@use '../../styles/component' as *;` and wraps rules in `@layer al.component { … }`. Use the `:host { display: contents }` pattern + style the inner element when you need a transparent host. |
+| **blocker** | **Focus ring on every interactive control** — `&:focus-visible { @include al-focus; }` on the inner clickable / focusable element. Never re-author an outline. This is non-negotiable for buttons, links, dismissible chips, menu items, anything that takes focus. |
 | **blocker** | **Storybook stories** at `<name>.stories.ts` — CSF3 object stories with `tags: ['autodocs']`, one story per visually-meaningful state. |
 | **blocker** | **`bundle.ts` export** — add one alphabetical `export … from './<name>/<name>'` line **in place** in the existing file.
 
@@ -176,7 +201,7 @@ patterns, and JSDoc style.
 | If your new component is… | Mirror | Why |
 |---|---|---|
 | **Small inline labeled atom** (badge/pill/chip-like, dismissible) | `al-chip` | Has `isDismissible` / `isDismissed` boolean prefix and the `onChipClose` event — the canonical small-atom pattern. See "Canonical dismissible-atom recipe" below. |
-| **Metric / stat with directional indicator** (KPI card, stat tile) | `al-badge` (status surface) + compose `al-icon-chevron-up` / `al-icon-chevron-down` for trend direction | Reuses the variant-driven small atom for the badge, and the named icon components for direction (do not hand-roll a CSS triangle or Unicode ▲/▼ glyph) |
+| **Metric / stat with directional indicator** (KPI card, stat tile) | `al-badge` (status surface) + compose `al-icon-chevron-up` / `al-icon-chevron-down` for trend direction | Reuses the variant-driven small atom for the badge, and the named icon components for direction (do not hand-roll a CSS triangle or Unicode ▲/▼ glyph). **Canonical surface:** `value: string` (display numeric, consumer formats), `label: string`, `trend: 'up' \| 'down' \| 'none'` (the `'none'` neutral state renders the delta with no direction icon and `color: var(--al-theme-color-content-default-weak)`), `delta: string` (e.g. `"+12%"`), and a `slot="icon"` for a leading icon. Compose `<al-badge>` only when the stat itself communicates a status (success/warning); for a plain numeric tile, render the value with the typography mixin directly and skip the badge. |
 | **Notification banner** (auto-dismiss, multiple variants) | `al-toast` | Variant-based status surface with timed dismissal |
 | **Static labeled atom** (no interaction, just a swatch + number) | `al-badge` | Variant-driven display-only atom |
 | **Expandable section** | `al-accordion-panel` | Open/close state pattern, slotted content |
@@ -200,7 +225,7 @@ consumer's burden of wiring up the close event.
 | **Boolean props** | `isDismissible: boolean` (capability) + `isDismissed: boolean` (state) — the `is*` prefix applies. |
 | **Close event** | `this.dispatch({ eventName: 'onChipClose' })` (use ALElement's dispatch — bubbles + composed). For `al-tag` mirror as `onTagClose`. |
 | **Close keyboard** | `handleOnKeydown(e)` on the host: if `e.code === 'Escape' && this.isDismissible` call `close()`. |
-| **Close icon** | Compose `<al-icon-close>` (registered via `register({ iconClose: ALIconClose })` + `unsafeStatic`) inside the host, with an accessible name on the surrounding button. |
+| **Close icon** | Compose `<al-icon-close>` registered via `register({ elements: [[ALIconClose.el, ALIconClose]], suffix })` + `unsafeStatic` (see "Two registration helpers" rule above for the canonical signature), with an accessible name on the surrounding button. |
 | **Padding** | `padding: var(--al-theme-space-xxs) var(--al-theme-space-sm);` |
 | **Internal gap** | `gap: var(--al-theme-space-xs);` |
 | **Radius** | `border-radius: size(4);` (the `size()` Sass function from `styles/component`, not a `--al-theme-border-radius-*` token; `border-radius-round` is `50%` = circle, not pill) |
@@ -209,10 +234,15 @@ consumer's burden of wiring up the close event.
 | **Hide-when-dismissed** | `.al-is-dismissed { display: none; }` inside `@layer al.component { … }`. |
 | **Host display** | `:host { display: contents; }` — the host has NO visual properties of its own. Never set `display: inline-block` / `padding` / `border-radius` / `font-family` on `:host`; style the inner `.al-c-<name>` instead. This is non-negotiable for every component; see the blocker checklist row. |
 
-A consumer-controlled `close()` (the host calls back into the consumer
-without owning `isDismissed`) is acceptable for atoms that need
-external orchestration (e.g. a chip group that animates removal). Do
-NOT flag a controlled `close()` as a convention violation.
+> **⚠ Reviewer callout — controlled `close()` is SANCTIONED.**
+> A host that exposes a public `close()` method without owning
+> `isDismissed` (the consumer's parent container manages dismissal
+> state — e.g. a chip group that animates removal, a tag list managed
+> by a form) is a documented, acceptable pattern. **Do NOT flag a
+> controlled `close()` as a convention violation in a code review.**
+> The canonical recipe above (own `isDismissed` + the
+> `al-is-dismissed` hide class) is one of two acceptable shapes, not
+> the only one.
 
 ### Composition recipes — canonical patterns
 

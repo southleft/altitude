@@ -45,6 +45,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "value": {
+          "description": "Selection value surfaced via `e.detail.value` on the bubbled\n`onMenuItemSelect` event. Use this to give the consumer an opaque\nidentifier for the item (e.g. `value=\"edit\"`) so they don't have to\npattern-match on label or DOM ref.",
+          "type": "string"
+        },
         "href": {
           "description": "The optional menu link URL",
           "type": "string"

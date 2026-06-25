@@ -35,6 +35,15 @@ export class ALMenuItem extends ALElement {
   }
 
   /**
+   * Selection value surfaced via `e.detail.value` on the bubbled
+   * `onMenuItemSelect` event. Use this to give the consumer an opaque
+   * identifier for the item (e.g. `value="edit"`) so they don't have to
+   * pattern-match on label or DOM ref.
+   */
+  @property()
+  accessor value: string;
+
+  /**
    * The optional menu link URL
    */
   @property()
@@ -260,6 +269,7 @@ export class ALMenuItem extends ALElement {
       this.dispatch({
         eventName: 'onMenuItemSelect',
         detailObj: {
+          value: this.value,
           selected: this.isSelected,
           item: this
         }
