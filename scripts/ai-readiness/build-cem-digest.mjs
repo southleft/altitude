@@ -30,7 +30,7 @@ const CEM_PATH = resolve(ROOT, 'libs/al-web-components/custom-elements.json');
 const TMP_OUT = '/tmp/ai-readiness-cem-digest.json';
 const REPO_OUT = resolve(ROOT, '.altitude/ai-readiness/cem-digest.json');
 
-const DESC_MAX = 600;
+const DESC_MAX = 1200;
 const clip = (s) => (s || '').slice(0, DESC_MAX);
 
 // Per-tag machine-readable carve-outs. Each entry is a sanctioned pattern
@@ -83,6 +83,42 @@ const DO_NOT_FLAG = {
   ],
 };
 
+// Forward-looking stubs: components that don't exist in the CEM yet but
+// the docs (AGENTS.md) already cite. Without these, prose cross-references
+// like "see al-tag's doNotFlag" turn into dangling references that hurt
+// review precision (v11 hit this on al-tag).
+const FORWARD_STUBS = {
+  'al-tag': {
+    tag: 'al-tag',
+    status: 'planned',
+    note: 'Component not shipped yet. Docs reference this tag for contract pinning purposes.',
+    attributes: [],
+    events: [],
+    slots: [],
+    cssParts: [],
+    cssProperties: [],
+  },
+  'al-stat-card': {
+    tag: 'al-stat-card',
+    status: 'planned',
+    note: 'Component not shipped yet. Canonical contract lives in AGENTS.md > "Canonical stat-card contract".',
+    attributes: [],
+    events: [],
+    slots: [],
+    cssParts: [],
+    cssProperties: [],
+  },
+};
+
+// Slot-description enrichment: prose rules that should travel with the
+// manifest (so digest-only consumers see them too). Each key is "tag.slot",
+// the value is appended to whatever description the JSDoc carries.
+const SLOT_ENRICHMENT = {
+  'al-card.header': `\n\n**Blessed light-DOM cluster pattern.** Projecting multiple atoms (avatar + name + status badge) into this slot requires inline-flex with theme tokens — al-u-* utilities do NOT adopt into light-DOM slot content. Sanctioned shape: <div slot="header" style="display:flex; gap:var(--al-theme-space-sm); align-items:center;">…</div>. Do NOT hand-roll rem values (token drift).`,
+  'al-card.action-right': `\n\n**Kebab / overflow menu composite (canonical).** This slot accepts a self-contained <al-popover variant="menu" position="bottom-right"> whose trigger slot holds an icon-only <al-button hideText label="…"> + chevron icon, and whose default slot holds an <al-menu> with @onMenuItemSelect bound. The popover trigger slot auto-wires open/close — no manual isActive needed. See AGENTS.md "Kebab menu (3-dot action menu)" recipe.`,
+  'al-card.actions-end': `\n\n**Canonical bottom-right primary action.** Drop variant for the primary look (omit the attribute); use variant="tertiary" for a secondary action.`,
+};
+
 const cem = JSON.parse(readFileSync(CEM_PATH, 'utf8'));
 const tags = {};
 for (const m of cem.modules || []) {
@@ -100,14 +136,25 @@ for (const m of cem.modules || []) {
         type: e.type?.text || 'CustomEvent',
         description: clip(e.description),
       })),
-      slots: (d.slots || []).map(s => ({
-        name: s.name || '(default)',
-        description: clip(s.description),
-      })),
+      slots: (d.slots || []).map(s => {
+        const name = s.name || '(default)';
+        const extra = SLOT_ENRICHMENT[`${d.tagName}.${name}`] || '';
+        return {
+          name,
+          description: clip((s.description || '') + extra),
+        };
+      }),
       cssParts: (d.cssParts || []).map(p => p.name),
       cssProperties: (d.cssProperties || []).map(p => p.name),
       doNotFlag: DO_NOT_FLAG[d.tagName] || [],
     };
+  }
+}
+// Merge forward-looking stubs after CEM iteration so they always appear
+// even when no source has been written yet.
+for (const [tag, stub] of Object.entries(FORWARD_STUBS)) {
+  if (!tags[tag]) {
+    tags[tag] = { ...stub, doNotFlag: DO_NOT_FLAG[tag] || [] };
   }
 }
 
