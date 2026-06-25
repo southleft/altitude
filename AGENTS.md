@@ -246,6 +246,28 @@ independent scaffolders produce visually-identical output.
 | **Slot** | `slot="icon"` for an optional leading icon. Slot existence is gated via `slotNotEmpty('icon')` — **add `@slotchange=${() => this.requestUpdate()}` on the `<slot>` because slotNotEmpty is non-reactive** (see "ALElement public API" below). |
 | **Badge composition** | Compose `<al-badge>` only when the stat itself communicates a status (success/warning). For a plain numeric tile, render the value with the typography mixin directly and skip the badge. |
 | **Trend icon** | Use `al-icon-chevron-up` / `al-icon-chevron-down`. Do NOT hand-roll a CSS triangle or use Unicode ▲/▼ glyphs. |
+| **Trend-row gating** | Render the trend row only when `delta` is a non-empty string (the consumer's signal that a comparison exists). If `trend === 'none'` AND `delta` is set, still render the row but omit the direction icon — never invent a default delta to satisfy the row. |
+| **Accessibility — trend cue** | The direction is conveyed by BOTH color and icon — but color alone is insufficient. Set `iconTitle="Trending up"` / `iconTitle="Trending down"` on the chevron AND mirror the same string to an `aria-label` on the trend container so non-sighted users hear the direction. |
+| **CSS parts** | Expose three: `@csspart container` (the bordered surface), `@csspart value` (the numeric), `@csspart trend` (the row containing delta + chevron). Consumers theme via these, not by descending the BEM tree. |
+| **Property defaults** | `@property accessor foo: T = '<default>'` initializers are PERMITTED under G7 (`useDefineForClassFields: false` plus `experimentalDecorators: true` keep field initializers reactive). The pilots all use them. Setting a default in the accessor is canonical; omitting it just means "no initial value" — both are valid. |
+
+### Canonical al-tag contract (al-tag)
+
+Mirrors the al-chip dismissible-atom recipe. Pin these so reviewers and
+scaffolders converge.
+
+| Concern | Decision |
+|---|---|
+| **Taxonomy** | `Atoms/Tag`. |
+| **Variant union** | `'secondary' \| 'info' \| 'success' \| 'warning' \| 'danger'` — no `'default'` member. The default state is the UNSET attribute (mirrors al-button "primary = unset"). Reviewer: flag a literal `variant="default"` as a typing bug. |
+| **Variant default styling** | When `variant` is unset, render the neutral surface using `--al-theme-color-content-default-weak` for text and `--al-theme-color-background-default-weak` for the chip body. |
+| **Boolean props** | `isDismissible: boolean` (capability). If owning state: `isDismissed: boolean`. Same `is*` prefix as chip. |
+| **Dismissal model** | Same as `al-chip`: two acceptable shapes — owned `isDismissed` + `.al-is-dismissed` hide class OR controlled `close()` without owned state. Reviewers MUST NOT flag controlled-close as a violation (see CEM digest `doNotFlag` for this tag). |
+| **Close event** | `this.dispatch({ eventName: 'onTagClose', detailObj: { value: this.value } })`. The `value` mirrors `al-menu-item.value` for consumer pattern-matching. |
+| **Focus ring** | `&:focus-visible { @include al-focus; }` on the inner clickable element (blocker — same as the global rule). |
+| **Tokens** | Padding `var(--al-theme-space-xxs) var(--al-theme-space-sm)`, gap `var(--al-theme-space-xs)`, radius `size(4)` (NOT `--al-theme-border-radius-round` which is 50% = circle), per-variant `color` from `--al-theme-color-content-<role>-default`. |
+| **Host display** | `:host { display: contents; }` — style the inner `.al-c-tag`, never the host. |
+| **Stories** | CSF3 object stories with `tags: ['autodocs']`, one story per variant + dismissible state. |
 
 ### Canonical dismissible-atom recipe (from `al-chip`)
 

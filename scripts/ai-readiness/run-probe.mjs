@@ -73,6 +73,8 @@ Every \`--al-*\` design-token name with its resolved value, grouped by family, p
 
 **Note on overrides:** the digest enforces "no fabricated \`--al-theme-*\` names" — it does NOT forbid declaring brand-new \`--al-<component>-<role>\` override hooks for a component you're scaffolding. Those hooks are declared by the component and intentionally not in the digest; document them via \`@cssproperty\`.
 
+**Note on \`doNotFlag\`:** every tag in the digest carries a \`doNotFlag\` array of MACHINE-READABLE sanctioned patterns. For Task C (violation review), you MUST read the relevant tag's \`doNotFlag\` array before enumerating findings, and you MUST NOT report any pattern listed there as a convention violation. Examples: \`al-chip.doNotFlag\` includes "controlled-close-without-isDismissed" — a chip-like component that has a public \`close()\` without owning \`isDismissed\` state is acceptable and must not be flagged. Reproducing the cited prose AGENTS.md rules as findings is also a misuse of the docs.
+
 Source tree: ${ROOT}/libs/al-web-components/components/
 You MAY explore source if the docs leave you uncertain — record every file you read in \`sourceUsed\`. Fewer source files = more AI-ready docs.
 

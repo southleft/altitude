@@ -177,13 +177,15 @@ ${readFileSync(resolve(SCRIPT_DIR, 'tasks', `${taskId.split('-')[0]}-${taskId.sp
 ${valid.map((a, i) => `## Attempt ${i + 1} (label=${a.label}, model=${a.model})\n\`\`\`json\n${JSON.stringify(a.output, null, 2)}\n\`\`\``).join('\n\n')}
 
 # Ground truth
-- CEM digest: /tmp/ai-readiness-cem-digest.json (Read it to verify tag/attr/slot/event/enum-value claims).
-- Tokens digest: /tmp/ai-readiness-tokens-digest.json (verify every --al-* token name).
+- CEM digest: ${ROOT}/.altitude/ai-readiness/cem-digest.json (also /tmp). Verify tag/attr/slot/event/enum-value claims. Every tag carries a \`doNotFlag\` array of machine-readable sanctioned patterns reviewers MUST NOT cite as violations — if an attempt's "violations" array reports a finding that matches a doNotFlag pattern for the component under review, count it as a FALSE POSITIVE and dock conventionCompliance accordingly.
+- Tokens digest: ${ROOT}/.altitude/ai-readiness/tokens-digest.json (also /tmp). Verify every --al-* token name.
 - Altitude docs: ${ROOT}/CLAUDE.md, ${ROOT}/AGENTS.md, ${ROOT}/MIGRATION.md
 - Source: ${ROOT}/libs/al-web-components/components/
 
 # Your job
 Score each attempt 0–10 on correctness / conventionCompliance / completeness. Count fabricated tags / attrs / slots / events / enum-values / token names in hallucinationCount. Count files read beyond docs+digests in sourceFilesRead. Identify commonFailures across attempts and docGaps (point at specific file paths) where filling the gap would prevent these mistakes. Set taskId="${taskId}".
+
+**For Task C specifically:** any finding that matches a \`doNotFlag\` rule for the component under review is a FALSE POSITIVE — list it in \`specificFailures\` as "false positive: <pattern>" and apply a meaningful conventionCompliance penalty (typically -1 to -2 per false positive, capped at 0). Do not double-penalize the same false positive across attempts in commonFailures.
 
 If both claude and codex attempts are present, fill perModelSummary with avg scores per model so the synthesizer can compare distributions.
 
