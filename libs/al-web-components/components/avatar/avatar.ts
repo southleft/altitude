@@ -10,7 +10,16 @@ import styles from './avatar.scss';
 
 /**
  * Component: al-avatar
- * - **slot**: The avatar content
+ *
+ * @slot - The avatar content. Slot an `<img alt="…">` for a user photo,
+ * a single-letter initial string, or an `<al-icon-*>` placeholder. The host
+ * **renders as a circle by default** (no `variant` / `shape` attribute is
+ * needed for the circular form). The accessible name comes from slotted
+ * content — supply meaningful `alt` text on `<img>` or visible initials;
+ * a bare `aria-hidden` decorative avatar leaves the avatar unlabeled.
+ *
+ * @slot badge - Optional small status indicator rendered as a corner overlay
+ * (only honored when `hasBadge` is set).
  */
 export class ALAvatar extends ALElement {
   static el = 'al-avatar';

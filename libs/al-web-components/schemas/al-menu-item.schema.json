@@ -46,7 +46,7 @@
       "additionalProperties": false,
       "properties": {
         "value": {
-          "description": "Selection value surfaced via `e.detail.value` on the bubbled\n`onMenuItemSelect` event. Use this to give the consumer an opaque\nidentifier for the item (e.g. `value=\"edit\"`) so they don't have to\npattern-match on label or DOM ref.",
+          "description": "Selection value surfaced via `e.detail.value` on the bubbled\n`onMenuItemSelect` event. Use this to give the consumer an opaque\nidentifier for the item (e.g. `value=\"edit\"`) so they don't have to\npattern-match on label or DOM ref.\n\nNote on labeling: the **default slot supplies the visible AND\naccessible name** for text items — `<al-menu-item value=\"edit\">Edit profile</al-menu-item>`\nis sufficient. The `label` attribute is only required for\nicon-only menu items where there is no visible text. Setting both\n`label=\"Edit\"` and the slot to \"Edit\" produces a duplicate\naccessible name.",
           "type": "string"
         },
         "href": {

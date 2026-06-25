@@ -216,7 +216,7 @@ patterns, and JSDoc style.
 | If your new component is… | Mirror | Why |
 |---|---|---|
 | **Small inline labeled atom** (badge/pill/chip-like, dismissible) | `al-chip` | Has `isDismissible` / `isDismissed` boolean prefix and the `onChipClose` event — the canonical small-atom pattern. See "Canonical dismissible-atom recipe" below. |
-| **Metric / stat with directional indicator** (KPI card, stat tile) | `al-badge` (status surface) + compose `al-icon-chevron-up` / `al-icon-chevron-down` for trend direction | Reuses the variant-driven small atom for the badge, and the named icon components for direction (do not hand-roll a CSS triangle or Unicode ▲/▼ glyph). **Canonical surface:** `value: string` (display numeric, consumer formats), `label: string`, `trend: 'up' \| 'down' \| 'none'` (the `'none'` neutral state renders the delta with no direction icon and `color: var(--al-theme-color-content-default-weak)`), `delta: string` (e.g. `"+12%"`), and a `slot="icon"` for a leading icon. Compose `<al-badge>` only when the stat itself communicates a status (success/warning); for a plain numeric tile, render the value with the typography mixin directly and skip the badge. |
+| **Metric / stat with directional indicator** (KPI card, stat tile) | `al-badge` (status surface) + compose `al-icon-chevron-up` / `al-icon-chevron-down` for trend direction | See the full canonical contract immediately below the precedent map — taxonomy, visual surface, value typography, owned hooks, trend polarity. |
 | **Notification banner** (auto-dismiss, multiple variants) | `al-toast` | Variant-based status surface with timed dismissal |
 | **Static labeled atom** (no interaction, just a swatch + number) | `al-badge` | Variant-driven display-only atom |
 | **Expandable section** | `al-accordion-panel` | Open/close state pattern, slotted content |
@@ -227,6 +227,26 @@ patterns, and JSDoc style.
 If nothing matches: copy the *most recently shipped* atom (`al-chip` is the
 current freshest convention) and ask for review.
 
+### Canonical stat-card contract (al-stat-card)
+
+When scaffolding `<al-stat-card>` or any metric / KPI tile, follow this
+contract verbatim. The contract is intentionally narrow so two
+independent scaffolders produce visually-identical output.
+
+| Concern | Decision |
+|---|---|
+| **Taxonomy** | `Atoms/Stat Card`. Composing internal `<al-icon-*>` atoms for decoration does NOT promote a display atom to a Molecule. Badge/chip/stat-card all remain Atoms. |
+| **Visual surface** | Bordered card (NOT a bare inline tile). Padding: `var(--al-theme-space-md)`. Border-radius: `var(--al-theme-border-radius)`. Border: `var(--al-theme-border-width) solid var(--al-theme-color-border-default)`. Background: `var(--al-theme-color-background-default)`. No shadow by default. |
+| **Value typography** | `@include al-theme-typography-display-sm-bold;` — do NOT hand-assemble from raw `--al-font-size-*` / `--al-font-weight-*` primitives. The mixin lives in `libs/al-web-components/styles/core/mixins/typography.scss`. |
+| **Label typography** | `@include al-theme-typography-body-sm;` with `color: var(--al-theme-color-content-default-weak);`. |
+| **Delta typography** | `@include al-theme-typography-body-xs;`. Color by trend (see Trend polarity row). |
+| **Properties** | `value: string` (display numeric, consumer formats — see "Display numerics" in the Naming table), `label: string`, `trend: 'up' \| 'down' \| 'none'`, `delta: string` (e.g. `"+12%"`), `invertPolarity: boolean` (escape hatch for metrics where down=good — see Trend polarity below). |
+| **Owned override hooks** | Exactly ONE: `--al-stat-card-value-color` with `var(--al-theme-color-content-default)` fallback. Documented via `@cssproperty`. Do not invent additional hooks unless the consumer override case is documented. |
+| **Trend polarity** | Default: `trend='up'` uses `--al-theme-color-content-success-default`, `trend='down'` uses `--al-theme-color-content-danger-default`, `trend='none'` uses `--al-theme-color-content-default-weak` with NO direction icon. **`invertPolarity` flips up↔down** for metrics where lower is better (cost, latency, churn, open tickets) — without this escape hatch every consumer hardcodes the same misleading polarity. |
+| **Slot** | `slot="icon"` for an optional leading icon. Slot existence is gated via `slotNotEmpty('icon')` — **add `@slotchange=${() => this.requestUpdate()}` on the `<slot>` because slotNotEmpty is non-reactive** (see "ALElement public API" below). |
+| **Badge composition** | Compose `<al-badge>` only when the stat itself communicates a status (success/warning). For a plain numeric tile, render the value with the typography mixin directly and skip the badge. |
+| **Trend icon** | Use `al-icon-chevron-up` / `al-icon-chevron-down`. Do NOT hand-roll a CSS triangle or use Unicode ▲/▼ glyphs. |
+
 ### Canonical dismissible-atom recipe (from `al-chip`)
 
 Use this as the spine for any small inline atom (chip/pill/tag/tagging
@@ -234,6 +254,18 @@ input). The contract is intentionally narrow — controlled `close()` is
 acceptable, but owning state (`isDismissed` toggle + the
 `al-is-dismissed` hide class) is canonical because it removes the
 consumer's burden of wiring up the close event.
+
+> **⚠ Reviewer must-read.** Two patterns are equally sanctioned:
+> (a) the component **owns** `isDismissed` + `al-is-dismissed` class
+> (canonical), or (b) the component exposes a **controlled `close()`**
+> method with NO owned `isDismissed` state (consumer-orchestrated).
+> Pattern (b) is correct, supported, and shipped. **Reviewers — do
+> NOT flag pattern (b) as a violation.** Specifically, do NOT write a
+> finding that says "missing isDismissed property", "missing
+> al-is-dismissed hide class", "missing close handler that toggles
+> state", or similar — those are pattern-(a) requirements, not
+> universal ones. Cite the "Dismissal model" row below for the
+> authoritative shape.
 
 The **Severity** column maps to the same scale as the new-component
 checklist: `blocker` is a must (its absence is a hard convention
@@ -280,6 +312,8 @@ shipped story or page template.
 ```
 
 `al-popover` `position` is one of: `bottom-center` | `bottom-right` | `bottom-left` | `top-center` | `top-right` | `top-left` | `left` | `left-top` | `right` | `right-top` — no `*-end` / `*-start` aliases. `variant="menu"` is the only variant value.
+
+**Anchoring guidance:** for a kebab in `al-card`'s `action-right` slot (top-right corner), use `position="bottom-right"` so the menu opens DOWNWARD and AWAY from the edge of the card. The rule: pick the `position` whose first segment is the OPPOSITE side of the trigger's location (trigger top → menu `bottom-*`, trigger right edge → menu `*-right` so it opens inward).
 
 **Event bind site:** `onMenuItemSelect` is dispatched by `<al-menu-item>` with `bubbles: true, composed: true`, so it surfaces on the surrounding `<al-menu>`. **The canonical bind site is on `<al-menu>`, not the individual items** — the event carries the selected item's `value` in `e.detail`:
 
@@ -449,6 +483,10 @@ this.componentClassNames(
 ): DirectiveResult;
 
 // Slot helpers: return true when the named slot has light-DOM children.
+// Implemented via querySelector — evaluated once at render time.
+// **Non-reactive.** If slot content can change at runtime (icons added
+// later, conditional slotted children), add `@slotchange=${() => this.requestUpdate()}`
+// on the `<slot>` element so the host re-renders when assigned nodes change.
 this.slotEmpty(slotName?: string): boolean;
 this.slotNotEmpty(slotName?: string): boolean;
 

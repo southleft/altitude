@@ -39,6 +39,13 @@ export class ALMenuItem extends ALElement {
    * `onMenuItemSelect` event. Use this to give the consumer an opaque
    * identifier for the item (e.g. `value="edit"`) so they don't have to
    * pattern-match on label or DOM ref.
+   *
+   * Note on labeling: the **default slot supplies the visible AND
+   * accessible name** for text items — `<al-menu-item value="edit">Edit profile</al-menu-item>`
+   * is sufficient. The `label` attribute is only required for
+   * icon-only menu items where there is no visible text. Setting both
+   * `label="Edit"` and the slot to "Edit" produces a duplicate
+   * accessible name.
    */
   @property()
   accessor value: string;
