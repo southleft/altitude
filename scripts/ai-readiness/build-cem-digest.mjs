@@ -58,6 +58,12 @@ const DO_NOT_FLAG = {
       severity: 'do-not-flag',
       citation: 'AGENTS.md Canonical al-tag contract',
     },
+    {
+      pattern: 'dispatch-only-handler-IS-controlled-close',
+      rule: 'AFFIRMATIVE: A handler method (named `handleClose`, `onClose`, `dismiss`, or anything else) that ONLY dispatches a close event (no `isDismissed` state mutation, no method literally named `close()`) IS the sanctioned controlled-close shape. It COUNTS as controlled-close. Do NOT flag it as "incomplete", "partial", "neither shape", or "missing close() method". The method name does not matter — what matters is that the dismissal decision is delegated to the consumer via the dispatched event. Reviewers reasoning "this is neither owned-state nor a literal close() method, therefore neither shape" are misreading the rule.',
+      severity: 'do-not-flag',
+      citation: 'AGENTS.md Canonical al-tag contract, Dismissal model row',
+    },
   ],
   'al-button': [
     {
