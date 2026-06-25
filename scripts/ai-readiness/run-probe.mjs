@@ -65,11 +65,13 @@ You may Read these files:
 - ${ROOT}/AGENTS.md (the agent contract: guardrails, authoring rules, Naming + API conventions, Precedent map, Composition recipes, Tokens you may reference, ALElement public API)
 - ${ROOT}/MIGRATION.md (1.x → 2.x migration, theme/registry/SSR)
 
-GROUND TRUTH MANIFEST: /tmp/ai-readiness-cem-digest.json
+GROUND TRUTH MANIFEST: ${ROOT}/.altitude/ai-readiness/cem-digest.json (also mirrored at /tmp/ai-readiness-cem-digest.json)
 This is a JSON map of every real \`<al-*>\` tag with its real attributes (with **enum value sets** in the \`type\` field — e.g. al-button variant is \`"'secondary' | 'tertiary' | 'bare' | 'danger'"\`), slots (with descriptions), events, cssParts, cssProperties. If you reference a tag/attr/event/slot/enum-value that is NOT in this file, that is a hallucination.
 
-GROUND TRUTH TOKENS: /tmp/ai-readiness-tokens-digest.json
-Every \`--al-*\` design-token name with its resolved value, grouped by family, plus a \`conventions\` block. If you reference a token NOT in this file, that is a token-name hallucination.
+GROUND TRUTH TOKENS: ${ROOT}/.altitude/ai-readiness/tokens-digest.json (also mirrored at /tmp/ai-readiness-tokens-digest.json)
+Every \`--al-*\` design-token name with its resolved value, grouped by family, plus a \`conventions\` block. Token names in the digest are listed WITH the \`--\` prefix in \`groups\` and WITHOUT it as flat keys in the source \`libs/al-web-components/styles/dist/tokens.json\`. If you reference a token NOT in either form, that is a token-name hallucination.
+
+**Note on overrides:** the digest enforces "no fabricated \`--al-theme-*\` names" — it does NOT forbid declaring brand-new \`--al-<component>-<role>\` override hooks for a component you're scaffolding. Those hooks are declared by the component and intentionally not in the digest; document them via \`@cssproperty\`.
 
 Source tree: ${ROOT}/libs/al-web-components/components/
 You MAY explore source if the docs leave you uncertain — record every file you read in \`sourceUsed\`. Fewer source files = more AI-ready docs.

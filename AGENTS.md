@@ -88,6 +88,21 @@ For a web component (`libs/al-web-components/components/<name>/`):
    tokens pollutes the manifest with cssproperties the component
    doesn't actually own, degrading the digest's value for downstream
    agents.
+
+   **A new component-owned override hook is INTENTIONALLY absent from
+   the tokens digest.** The tokens digest enforces "no fabricated
+   `--al-theme-*` names" — it does NOT forbid you from declaring a
+   brand-new `--al-<component>-<role>` override hook for your own
+   component. The two are different surfaces:
+   - Consumed theme tokens (`--al-theme-color-background-default`) →
+     must exist in the tokens digest (digest is the contract).
+   - Owned component override hooks (`--al-stat-card-value-color`) →
+     declared by the component itself, documented via `@cssproperty`,
+     wired in SCSS with a `var(--al-theme-*, …)` fallback. The digest
+     intentionally does not list these.
+   If a recipe / precedent tells you to declare a new
+   `--al-<component>-*` hook, the absence of that name from the
+   tokens digest is correct — emit the hook anyway.
 5. Styles imported from the sibling `.scss` and exposed via
    `static get styles() { return unsafeCSS(styles.toString()); }`.
    The Vite build re-routes `*.scss` → `*.scss?inline` automatically.
@@ -220,29 +235,28 @@ acceptable, but owning state (`isDismissed` toggle + the
 `al-is-dismissed` hide class) is canonical because it removes the
 consumer's burden of wiring up the close event.
 
-| Concern | Pattern |
-|---|---|
-| **Boolean props** | `isDismissible: boolean` (capability) + `isDismissed: boolean` (state) — the `is*` prefix applies. |
-| **Close event** | `this.dispatch({ eventName: 'onChipClose' })` (use ALElement's dispatch — bubbles + composed). For `al-tag` mirror as `onTagClose`. |
-| **Close keyboard** | `handleOnKeydown(e)` on the host: if `e.code === 'Escape' && this.isDismissible` call `close()`. |
-| **Close icon** | Compose `<al-icon-close>` registered via `register({ elements: [[ALIconClose.el, ALIconClose]], suffix })` + `unsafeStatic` (see "Two registration helpers" rule above for the canonical signature), with an accessible name on the surrounding button. |
-| **Padding** | `padding: var(--al-theme-space-xxs) var(--al-theme-space-sm);` |
-| **Internal gap** | `gap: var(--al-theme-space-xs);` |
-| **Radius** | `border-radius: size(4);` (the `size()` Sass function from `styles/component`, not a `--al-theme-border-radius-*` token; `border-radius-round` is `50%` = circle, not pill) |
-| **Color (default variant)** | `color: var(--al-theme-color-content-default-weak);` |
-| **Focus ring** | `&:focus-visible { @include al-focus; }` — never re-author an outline rule. |
-| **Hide-when-dismissed** | `.al-is-dismissed { display: none; }` inside `@layer al.component { … }`. |
-| **Host display** | `:host { display: contents; }` — the host has NO visual properties of its own. Never set `display: inline-block` / `padding` / `border-radius` / `font-family` on `:host`; style the inner `.al-c-<name>` instead. This is non-negotiable for every component; see the blocker checklist row. |
+The **Severity** column maps to the same scale as the new-component
+checklist: `blocker` is a must (its absence is a hard convention
+violation); `enhancement` is nice-to-have (its absence is NOT a
+violation — do not flag it in reviews).
 
-> **⚠ Reviewer callout — controlled `close()` is SANCTIONED.**
-> A host that exposes a public `close()` method without owning
-> `isDismissed` (the consumer's parent container manages dismissal
-> state — e.g. a chip group that animates removal, a tag list managed
-> by a form) is a documented, acceptable pattern. **Do NOT flag a
-> controlled `close()` as a convention violation in a code review.**
-> The canonical recipe above (own `isDismissed` + the
-> `al-is-dismissed` hide class) is one of two acceptable shapes, not
-> the only one.
+| Severity | Concern | Pattern |
+|---|---|---|
+| **blocker** | **Host display** | `:host { display: contents; }` — the host has NO visual properties of its own. Never set `display: inline-block` / `padding` / `border-radius` / `font-family` on `:host`; style the inner `.al-c-<name>` instead. |
+| **blocker** | **Dismissal model** | EITHER own `isDismissed` state (canonical: `isDismissible: boolean` capability + `isDismissed: boolean` state toggled by `close()`, with `.al-is-dismissed { display: none }`) OR expose a controlled `close()` method without owning `isDismissed` (the consumer's container manages dismissal — chip groups, tag lists in a form). **Both shapes are acceptable. Do NOT flag a controlled `close()` as a violation.** |
+| **blocker** | **Boolean props (when owning state)** | `isDismissible: boolean` (capability) + `isDismissed: boolean` (state) — the `is*` prefix applies. |
+| **blocker** | **Close event** | `this.dispatch({ eventName: 'onChipClose' })` (use ALElement's dispatch — bubbles + composed). For `al-tag` mirror as `onTagClose`. |
+| **blocker** | **Focus ring** | `&:focus-visible { @include al-focus; }` on the inner clickable element. Never re-author an outline rule. (Already in the blocker checklist; restated here for visibility.) |
+| **blocker** | **Padding / radius / color tokens** | `padding: var(--al-theme-space-xxs) var(--al-theme-space-sm);`, `border-radius: size(4);` (NOT `--al-theme-border-radius-round` — that's `50%` = circle, not pill), `color: var(--al-theme-color-content-default-weak);`. Token names must verify against the digest. |
+| **blocker** | **Internal gap** | `gap: var(--al-theme-space-xs);` |
+| **blocker** | **Hide-when-dismissed** | `.al-is-dismissed { display: none; }` inside `@layer al.component { … }`. (Only required when owning `isDismissed`; controlled-close hosts skip this.) |
+| **enhancement** | **Close keyboard** | `handleOnKeydown(e)` on the host: if `e.code === 'Escape' && this.isDismissible` call `close()`. Nice-to-have for keyboard parity; not a review-blocker if absent on a small atom. |
+| **enhancement** | **Close icon composition** | Compose `<al-icon-close>` registered via `register({ elements: [[ALIconClose.el, ALIconClose]], suffix })` + `unsafeStatic` (see "Two registration helpers" rule above), with an accessible name on the surrounding button. The component may instead accept the icon via a slot — both are sanctioned. |
+
+_The "Dismissal model" row above is the single source of truth on
+this. The owned-state shape is the canonical recipe spine; the
+controlled-`close()` shape is equally sanctioned. Reviewers — do not
+flag controlled-close as a violation._
 
 ### Composition recipes — canonical patterns
 
@@ -302,19 +316,22 @@ line — projects multiple atoms into a single slot. Two important rules:
    class="al-u-gap-sm">` inside `slot="header"` does NOT pick up the
    utility class — the rule only lives in shadow trees that adopted
    the shared utility sheet via `ALElement.getSharedThemeSheet()`.
-2. **Use `<al-layout>` for the cluster** so the utility classes apply,
-   OR use an explicitly-blessed inline `style="display:flex; gap:var(--al-theme-space-sm); align-items:center;"`
-   referencing real `--al-theme-space-*` tokens. Either is sanctioned;
-   what is NOT sanctioned is `<div>` + `al-u-*` (silent no-op) or
-   `<div>` + hand-rolled rem values (token drift).
+2. **`<al-layout>` is a VERTICAL stack only.** It exposes `gap` for
+   row-spacing and `variant: 'sidebar-left' | 'sidebar-right'` — there
+   is no horizontal row affordance. Do NOT use `<al-layout slot="header">`
+   to lay out a horizontal cluster; it renders a column.
+3. **For a horizontal cluster, use blessed inline flex with theme tokens.**
+   This is the sanctioned shape. Do NOT use a raw `<div>` with `al-u-*`
+   utility classes (silent no-op in light-DOM slot content) or with
+   hand-rolled rem values (token drift).
 
 ```html
 <al-card>
-  <al-layout slot="header" gap="sm">
+  <div slot="header" style="display:flex; gap:var(--al-theme-space-sm); align-items:center;">
     <al-avatar><img src="…" alt="Jane Doe" /></al-avatar>
     <al-heading variant="md" tagName="h3">Jane Doe</al-heading>
     <al-badge variant="success">Active</al-badge>
-  </al-layout>
+  </div>
   <p>…body…</p>
   <al-button slot="actions-end">View profile</al-button>
 </al-card>
