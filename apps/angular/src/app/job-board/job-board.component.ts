@@ -27,6 +27,7 @@ import "al-web-components/dist/components/text-passage/text-passage.js";
 
 @Component({
   selector: 'app-job-board',
+  standalone: false,
   templateUrl: './job-board.component.html',
   styleUrl: './job-board.component.scss'
 })

@@ -34,6 +34,7 @@ import "al-web-components/dist/components/theme-switcher/theme-switcher.js";
 
 @Component({
   selector: 'app-root',
+  standalone: false,
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
