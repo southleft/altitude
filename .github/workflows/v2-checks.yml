@@ -15,14 +15,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
       - name: Install root deps
-        run: yarn install --ignore-scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Changeset status (warn-only on docs/infra PRs)
-        run: yarn changeset status --since=origin/${{ github.base_ref }} || true
+        run: pnpm exec changeset status --since=origin/${{ github.base_ref }} || true
 
   migration-gate:
     name: G2 - migration manifest gate
@@ -44,14 +46,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
       - name: Install root deps
-        run: yarn install --ignore-scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build libraries
-        run: yarn build
+        run: pnpm run build
       - name: al-web-components publish dry-run
         run: cd libs/al-web-components && npm publish --dry-run
       - name: al-react publish dry-run
@@ -73,16 +77,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
       - name: Install
-        run: yarn install --ignore-scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build libraries
-        run: yarn build
+        run: pnpm run build
       - name: Build fixtures (web-components / react / mfe / ssr)
-        run: yarn build:fixtures
+        run: pnpm run build:fixtures
 
   gate-self-test:
     name: G2/G8 gate self-test
@@ -91,30 +97,34 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
       - name: Run gate self-test
-        run: yarn gate:self-test
+        run: pnpm run gate:self-test
 
   baselines-vrt:
     name: T0.1 - VRT vs committed baselines
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
       - name: Install
-        run: yarn install --ignore-scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Install Playwright browsers
-        run: yarn playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium
       - name: Build libraries + fixture
-        run: yarn build && yarn workspace al-app-web-components build
+        run: pnpm run build && pnpm --filter al-app-web-components build
       - name: Run VRT against baselines
-        run: yarn test:vrt
+        run: pnpm run test:vrt
       - name: Upload diffs on failure
         if: failure()
         uses: actions/upload-artifact@v4
@@ -127,18 +137,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
       - name: Install
-        run: yarn install --ignore-scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build tokens
-        run: yarn workspace al-web-components build:tokens
+        run: pnpm --filter al-web-components build:tokens
       - name: Re-snapshot tokens (to a temp file) and compare hash to committed
         run: |
           cp .altitude/baselines/tokens/snapshot.json /tmp/committed.json
-          yarn baselines:tokens
+          pnpm run baselines:tokens
           NEW_HASH=$(node -e "console.log(require('./.altitude/baselines/tokens/snapshot.json').hash)")
           OLD_HASH=$(node -e "console.log(require('/tmp/committed.json').hash)")
           echo "committed: $OLD_HASH"
@@ -155,18 +167,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
       - name: Install
-        run: yarn install --ignore-scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build libraries
-        run: yarn build
+        run: pnpm run build
       - name: Re-snapshot bundle and compare totalBytes
         run: |
           cp .altitude/baselines/bundle/snapshot.json /tmp/committed.json
-          yarn baselines:bundle
+          pnpm run baselines:bundle
           NEW=$(node -e "console.log(require('./.altitude/baselines/bundle/snapshot.json').totalBytes)")
           OLD=$(node -e "console.log(require('/tmp/committed.json').totalBytes)")
           echo "committed totalBytes: $OLD"
@@ -184,20 +198,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
       - name: Install
-        run: yarn install --ignore-scripts --ignore-engines
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build webpack lib (baseline)
-        run: yarn build
+        run: pnpm run build
       - name: Build Vite spike
-        run: yarn workspace al-web-components build:vite-spike
+        run: pnpm --filter al-web-components build:vite-spike
       - name: T2.1 — Vite spike bundle assertions
         run: node scripts/check-vite-spike.js
       - name: Build Vite lib
-        run: yarn workspace al-web-components build:vite
+        run: pnpm --filter al-web-components build:vite
       - name: T2.2 — Vite vs webpack export parity (zero removals)
         run: node scripts/check-vite-export-parity.js
       - name: T2.2 — bundle.ts completeness (no component drift)
@@ -208,14 +224,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
       - name: Install
-        run: yarn install --ignore-scripts --ignore-engines
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build CEM + schemas
-        run: yarn workspace al-web-components build:custom-elements.json
+        run: pnpm --filter al-web-components build:custom-elements.json
       - name: T3.1 — CEM coverage
         run: node scripts/check-cem-coverage.js
       - name: T3.4 — contract validator
@@ -226,14 +244,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
       - name: Install
-        run: yarn install --ignore-scripts --ignore-engines
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build libs
-        run: yarn build
+        run: pnpm run build
       - name: Bundle budget
         run: node scripts/check-bundle-budget.js
 
@@ -242,12 +262,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
       - name: Install
-        run: yarn install --ignore-scripts --ignore-engines
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Run controller unit tests
         run: node scripts/test-controllers.js
 
@@ -280,30 +302,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
       - name: Install
-        run: yarn install --ignore-scripts --ignore-engines
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Lint repo
-        run: yarn lint
+        run: pnpm run lint
 
   storybook-test:
     name: T2.4 Storybook Test (interactions + a11y)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
       - name: Install
-        run: yarn install --ignore-scripts --ignore-engines
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Install Playwright browsers
-        run: yarn playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium
       - name: Build libs
-        run: yarn build
+        run: pnpm run build
       - name: Build static Storybook
-        run: yarn workspace al-web-components build:storybook --output-dir /tmp/sb-static
+        run: pnpm --filter al-web-components build:storybook --output-dir /tmp/sb-static
       - name: Serve static Storybook
         run: nohup npx -y http-server /tmp/sb-static -p 6006 -s > /tmp/sb-serve.log 2>&1 &
       - name: Wait for Storybook
@@ -313,7 +339,7 @@ jobs:
             sleep 1
           done
       - name: Run test-storybook (interactions + axe-core a11y)
-        run: yarn workspace al-web-components test
+        run: pnpm --filter al-web-components test
         continue-on-error: true  # 3 pre-existing Lit warnings; tracked separately
 
   a11y:
@@ -321,18 +347,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
       - name: Install
-        run: yarn install --ignore-scripts --ignore-engines
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Install Playwright browsers
-        run: yarn playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium
       - name: Build libs + fixture
-        run: yarn build && yarn workspace al-app-web-components build
+        run: pnpm run build && pnpm --filter al-app-web-components build
       - name: Start fixture preview
-        run: nohup yarn workspace al-app-web-components preview &
+        run: nohup pnpm --filter al-app-web-components preview &
       - name: Wait for preview
         run: |
           for i in {1..30}; do
@@ -347,12 +375,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
       - name: Install
-        run: yarn install --ignore-scripts --ignore-engines
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: T4.6 — registry-modes smoke test
         run: node scripts/check-register-altitude.js
 

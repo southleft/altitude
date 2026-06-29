@@ -146,7 +146,7 @@ function main() {
 
   console.log('[tokens:ingest] running parity + contract…');
   try {
-    execSync('yarn workspace al-web-components build:tokens:v5', { cwd: REPO, stdio: 'inherit' });
+    execSync('pnpm --filter al-web-components build:tokens:v5', { cwd: REPO, stdio: 'inherit' });
   } catch (err) {
     fail(`build:tokens:v5 failed after ingest: ${err.message}`);
   }

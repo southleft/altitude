@@ -19,20 +19,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
       - name: Install
-        run: yarn install --ignore-scripts --ignore-engines
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build all libraries
-        run: yarn build
+        run: pnpm run build
       - name: Create release PR or publish
         uses: changesets/action@v1
         with:
           # Publishes with --provenance via NPM_CONFIG_PROVENANCE below.
-          publish: yarn release
-          version: yarn changeset version
+          publish: pnpm release
+          version: pnpm exec changeset version
           commit: "chore(release): version packages"
           title: "chore(release): v2"
         env:

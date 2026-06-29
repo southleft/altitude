@@ -74,7 +74,10 @@ function componentOf(file) {
   if (file.startsWith(WC_PREFIX)) {
     const rest = file.slice(WC_PREFIX.length);
     const seg = rest.split('/')[0];
-    if (seg === 'ALElement.ts' || seg === '__tests__') return null;
+    // Components are directories. Skip loose top-level files (the `bundle.ts`
+    // barrel, the `ALElement.ts` base class, etc.) and the shared test dir —
+    // only kebab-case component directories are subject to the gate.
+    if (seg.includes('.') || seg === '__tests__') return null;
     return seg; // already kebab-case
   }
   // React wrapper — convert PascalCase to kebab-case via a known table
