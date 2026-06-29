@@ -1,3 +1,18 @@
+---
+import 'al-web-components/dist/css/main.css';
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Astro - Altitude Web Application</title>
+  <!-- Opt the deep component imports into self-registration. Must run (inline)
+       before the bundled module script below, which imports the components. -->
+  <script is:inline>window.alAutoRegistry = true;</script>
+</head>
+<body>
 <al-theme brand="altitude" mode="dark">
 <main class="al-l-dashboard">
   <div class="al-l-dashboard__help-popover">
@@ -14,16 +29,15 @@
   </div>
   <al-layout variant="sidebar-left" gap="none">
     <div class="al-l-dashboard__sidebar">
-      <slot name="sidebar">
         <div class="al-l-dashboard__sidebar-logo">
           <al-logo href="/">
             By Southleft
           </al-logo>
         </div>
         <al-menu class="al-l-dashboard__sidebar-menu">
-          <al-menu-item href="/" isHeader="true"><al-icon-home slot="before"></al-icon-home>Dashboard<al-badge variant="danger">12</al-badge></al-badge></al-menu-item>
+          <al-menu-item href="/" isHeader="true"><al-icon-home slot="before"></al-icon-home>Dashboard<al-badge variant="danger">12</al-badge></al-menu-item>
           <al-menu-item href="/" isHeader="true"><al-icon-list slot="before"></al-icon-list>Job Board</al-menu-item>
-          <al-menu-item isHeader="true"><al-icon-calendar></al-icon-calendar slot="before">Schedule</al-menu-item>
+          <al-menu-item isHeader="true"><al-icon-calendar slot="before"></al-icon-calendar>Schedule</al-menu-item>
           <al-menu-item isHeader="true" isExpandableHeader="true"><al-icon-support slot="before"></al-icon-support>Resources</al-menu-item>
           <al-menu-item>Contact Us</al-menu-item>
           <al-menu-item>Customer Support</al-menu-item>
@@ -34,7 +48,7 @@
             <div slot="trigger" class="al-l-dashboard__user">
               <al-avatar>TP</al-avatar>
               <p>TJ Pitre</p>
-              <al-button variant="bare" hideText="true"><al-icon-chevron-up slot="before"></al-icon-chevron-down></al-button>
+              <al-button variant="bare" hideText="true"><al-icon-chevron-up slot="before"></al-icon-chevron-up></al-button>
             </div>
             <al-menu>
               <al-menu-item><al-icon-user></al-icon-user>Profile</al-menu-item>
@@ -44,7 +58,6 @@
             </al-menu>
           </al-popover>
         </div>
-      </slot>
     </div>
     <div class="al-l-dashboard__content">
       <al-header class="al-l-dashboard__header">
@@ -119,7 +132,6 @@
                 <al-select class="al-u-grid__item col:12 col:6@lg col:3@xxl" label="Location">
                   <al-icon-pin slot="before"></al-icon-pin>
                   <al-list>
-                    <my-select></my-select>
                   </al-list>
                 </al-select>
                 <al-dialog class="al-u-grid__item col:12 col:6@lg col:3@xxl" hasBackdrop="true">
@@ -164,7 +176,6 @@
                     <al-select label="Location">
                       <al-icon-pin slot="before"></al-icon-pin>
                       <al-list>
-                        <my-select></my-select>
                       </al-list>
                     </al-select>
                     <al-range label="Radius" behavior="range" max="1000" step="10"></al-range>
@@ -335,4 +346,58 @@
   </al-layout>
 </main>
 </al-theme>
-<script type="module" src="/_public/browser/index.mjs"></script>
+<script>
+import 'al-web-components/dist/components/avatar/avatar';
+import 'al-web-components/dist/components/badge/badge';
+import 'al-web-components/dist/components/breadcrumbs-item/breadcrumbs-item';
+import 'al-web-components/dist/components/breadcrumbs/breadcrumbs';
+import 'al-web-components/dist/components/button-group/button-group';
+import 'al-web-components/dist/components/button/button';
+import 'al-web-components/dist/components/card/card';
+import 'al-web-components/dist/components/checkbox-group/checkbox-group';
+import 'al-web-components/dist/components/checkbox/checkbox';
+import 'al-web-components/dist/components/chip-group/chip-group';
+import 'al-web-components/dist/components/chip/chip';
+import 'al-web-components/dist/components/dialog/dialog';
+import 'al-web-components/dist/components/divider/divider';
+import 'al-web-components/dist/components/drawer/drawer';
+import 'al-web-components/dist/components/header/header';
+import 'al-web-components/dist/components/heading/heading';
+import 'al-web-components/dist/components/icon/icons/bell';
+import 'al-web-components/dist/components/icon/icons/calendar';
+import 'al-web-components/dist/components/icon/icons/chevron-up';
+import 'al-web-components/dist/components/icon/icons/document';
+import 'al-web-components/dist/components/icon/icons/dots-vertical';
+import 'al-web-components/dist/components/icon/icons/filter';
+import 'al-web-components/dist/components/icon/icons/help';
+import 'al-web-components/dist/components/icon/icons/home';
+import 'al-web-components/dist/components/icon/icons/list';
+import 'al-web-components/dist/components/icon/icons/menu';
+import 'al-web-components/dist/components/icon/icons/pin';
+import 'al-web-components/dist/components/icon/icons/settings';
+import 'al-web-components/dist/components/icon/icons/sign-out';
+import 'al-web-components/dist/components/icon/icons/star';
+import 'al-web-components/dist/components/icon/icons/support';
+import 'al-web-components/dist/components/icon/icons/user';
+import 'al-web-components/dist/components/input/input';
+import 'al-web-components/dist/components/layout-container/layout-container';
+import 'al-web-components/dist/components/layout-section/layout-section';
+import 'al-web-components/dist/components/layout/layout';
+import 'al-web-components/dist/components/list-item/list-item';
+import 'al-web-components/dist/components/list/list';
+import 'al-web-components/dist/components/logo/logo';
+import 'al-web-components/dist/components/menu-item/menu-item';
+import 'al-web-components/dist/components/menu/menu';
+import 'al-web-components/dist/components/pagination/pagination';
+import 'al-web-components/dist/components/popover/popover';
+import 'al-web-components/dist/components/radio-group/radio-group';
+import 'al-web-components/dist/components/radio/radio';
+import 'al-web-components/dist/components/range/range';
+import 'al-web-components/dist/components/search/search';
+import 'al-web-components/dist/components/select/select';
+import 'al-web-components/dist/components/text-passage/text-passage';
+import 'al-web-components/dist/components/theme-switcher/theme-switcher';
+import 'al-web-components/dist/components/theme/theme';
+import 'al-web-components/dist/components/toggle-button/toggle-button';</script>
+</body>
+</html>
