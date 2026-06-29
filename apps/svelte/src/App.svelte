@@ -6,10 +6,12 @@
   import JobBoard from './lib/JobBoard.svelte'
 </script>
 
-<Router>
-  <Layout>
-    <Route path="/"><JobBoard /></Route>
-    <Route path="/dashboard"><Dashboard /></Route>
-    <Route path="*"><JobBoard /></Route>
-  </Layout>
-</Router>
+<al-theme brand="altitude" mode="dark">
+  <Router>
+    <Layout>
+      <Route path="/"><JobBoard /></Route>
+      <Route path="/dashboard"><Dashboard /></Route>
+      <Route path="*"><JobBoard /></Route>
+    </Layout>
+  </Router>
+</al-theme>

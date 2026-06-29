@@ -48,4 +48,5 @@ import 'al-web-components/dist/components/search/search';
 import 'al-web-components/dist/components/select/select';
 import 'al-web-components/dist/components/text-passage/text-passage';
 import 'al-web-components/dist/components/theme-switcher/theme-switcher';
+import 'al-web-components/dist/components/theme/theme';
 import 'al-web-components/dist/components/toggle-button/toggle-button';
