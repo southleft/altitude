@@ -391,12 +391,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install ajv
-        run: npm install --no-save ajv@^8.12.0
+          cache: 'pnpm'
+      - name: Install
+        # `ajv` is a root devDependency; pnpm understands the workspace:*
+        # protocol that the example apps use (plain `npm install` does not).
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Validate manifest against schema
         run: |
           node -e "
