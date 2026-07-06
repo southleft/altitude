@@ -16,7 +16,26 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'node:path';
 
+// SCSS import-rewrite plugin — mirrors the main vite.config.mjs. Components
+// (e.g. ALElement.ts) use bare `import styles from './x.scss'`; Vite needs the
+// `?inline` query to hand back the raw CSS string. Without this, the spike
+// build fails with `"default" is not exported by "…scss"`.
+function rewriteScssImports() {
+  const importRe = /(import\s+\w+\s+from\s+['"][^'"]+\.scss)(['"])/g;
+  return {
+    name: 'altitude-rewrite-scss',
+    enforce: 'pre',
+    transform(code, id) {
+      if (!/\.tsx?$/.test(id)) return null;
+      if (!/\.scss['"]/.test(code)) return null;
+      const out = code.replace(importRe, (m, before, quote) => `${before}?inline${quote}`);
+      return out === code ? null : { code: out, map: null };
+    },
+  };
+}
+
 export default defineConfig({
+  plugins: [rewriteScssImports()],
   esbuild: {
     target: 'es2022',
     tsconfigRaw: {

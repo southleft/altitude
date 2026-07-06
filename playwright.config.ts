@@ -34,7 +34,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'yarn workspace al-app-web-components preview',
+    command: 'pnpm --filter al-app-web-components preview',
     url: 'http://localhost:5174',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
