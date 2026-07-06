@@ -11,7 +11,7 @@
     "build:storybook": "storybook build",
     "build:tokens": "node ../../scripts/convert-tokens-to-dtcg.js && node ./styles/tokens-config.v5.mjs && node ../../scripts/emit-token-types.js && node ../../scripts/copy-tokens-to-legacy-dist.js",
     "build:tokens:v5": "pnpm run build:tokens",
-    "build:vite": "vite build -c vite.config.mjs",
+    "build:vite": "vite build -c vite.config.mjs --outDir dist-vite --emptyOutDir",
     "build:vite-spike": "vite build -c vite.spike.config.mjs",
     "build:tokens:parallel": "pnpm run build:tokens && pnpm run build:tokens:v5 && node ../../scripts/check-tokens-parity.js",
     "test:tokens": "node ../../scripts/test-tokens-contract.js",
