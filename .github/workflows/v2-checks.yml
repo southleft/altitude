@@ -125,7 +125,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
+          # No cache:'pnpm' here: this job runs only zero-dependency Node gate
+          # scripts (no `pnpm install`), so there's no pnpm store to cache and
+          # the setup-node post-step cache-save fails with a Path Validation
+          # Error nondeterministically.
       - name: Run gate self-test
         run: pnpm run gate:self-test
 
