@@ -1,31 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Altitude</title>
-    <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="/favicon.ico">
+    <!-- Opt the imported component modules into self-registration. Must run
+         (inline) before the bundled module below imports them. -->
     <script>
-      globalThis.alAutoRegistry = true;
+      window.alAutoRegistry = true;
     </script>
-    <script type="module">
-      import setGlobalStyles from '/al-web-components/directives/setGlobalStyles.js';
-      setGlobalStyles();
-    </script>
-    <script type="module" defer>
-      import '/al-web-components/components/button/button.js';
-      import '/al-web-components/components/card/card.js';
-      import '/al-web-components/components/divider/divider.js';
-      import '/al-web-components/components/header/header.js';
-      import '/al-web-components/components/heading/heading.js';
-      import '/al-web-components/components/icon/icons/document.js';
-      import '/al-web-components/components/layout-container/layout-container.js';
-      import '/al-web-components/components/layout/layout.js';
-      import '/al-web-components/components/layout-section/layout-section.js';
-      import '/al-web-components/components/logo/logo.js';
-      import '/al-web-components/components/tab-panel/tab-panel.js';
-      import '/al-web-components/components/tab/tab.js';
-      import '/al-web-components/components/tabs/tabs.js';
-      import '/al-web-components/components/text-passage/text-passage.js';
-    </script>
+    <script type="module" src="/src/main.js"></script>
     <style type="text/css">
       * {
         box-sizing: border-box;
@@ -37,6 +22,7 @@
     </style>
 </head>
 <body>
+  <al-theme brand="altitude" mode="dark">
   <main>
     <al-layout style="--al-layout-min-height: auto;" gap="lg">
       <al-header>
@@ -121,6 +107,13 @@
                   <al-text-passage>Web application leveraging Svelte framework with seamless integration of Web Components.</al-text-passage>
                   <al-button href="/svelte" target="_blank">View</al-button>
                 </al-card>
+                <al-card>
+                  <al-heading variant="sm" tagName="h3" isBold="true">
+                    <a href="/astro" target="_blank">Astro</a>
+                  </al-heading>
+                  <al-text-passage>Web application leveraging Astro framework with seamless integration of Web Components.</al-text-passage>
+                  <al-button href="/astro" target="_blank">View</al-button>
+                </al-card>
               </div>
             </al-tab-panel>
           </al-tabs>
@@ -128,5 +121,6 @@
       </al-layout-container>
     </al-layout>
   </main>
+  </al-theme>
 </body>
 </html>
