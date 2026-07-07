@@ -90,6 +90,29 @@ jobs:
       - name: Build fixtures (web-components / react / mfe / ssr)
         run: pnpm run build:fixtures
 
+  build-all:
+    # Cloudflare Pages parity: no other job runs the full build:all (libs +
+    # both Storybooks + angular/react/svelte/astro), so app/framework build
+    # breakage — e.g. an Angular-22 Node-version mismatch — previously only
+    # surfaced at deploy. Pin Node to .nvmrc (Cloudflare's source of truth)
+    # and run the exact deploy command to catch it in PRs instead.
+    name: build:all (Cloudflare parity)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js (from .nvmrc — same as Cloudflare)
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        # No --ignore-scripts: mirror Cloudflare's plain install so the
+        # onlyBuiltDependencies (esbuild, @swc/core) postinstalls run.
+        run: pnpm install --frozen-lockfile
+      - name: Build everything (libs + storybooks + angular/react/svelte/astro)
+        run: pnpm run build:all
+
   gate-self-test:
     name: G2/G8 gate self-test
     runs-on: ubuntu-latest
