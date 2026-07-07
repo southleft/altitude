@@ -46,7 +46,11 @@ const config: StorybookConfig = {
     '@storybook/addon-a11y',
     '@storybook/addon-docs',
   ],
-  staticDirs: ['../dist'],
+  // '../dist' serves the built component modules; './static' serves the
+  // manager brand assets (images/logo.svg referenced by theme.js brandImage).
+  // Without './static' the sidebar logo 404s (Cloudflare then serves the SPA
+  // fallback HTML for it, so the brand image is broken).
+  staticDirs: ['../dist', './static'],
   docs: {
     autodocs: true,
   } as any,

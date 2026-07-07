@@ -1,5 +1,9 @@
 ---
 import 'al-web-components/dist/css/main.css';
+// App-specific dashboard/job-board layout (ported from the Svelte demo) — the
+// .al-l-* classes are not part of main.css, so without this the dashboard
+// grid/sidebar is unstyled and the page doesn't match the other demos.
+import '../styles/dashboard.css';
 ---
 
 <!doctype html>
