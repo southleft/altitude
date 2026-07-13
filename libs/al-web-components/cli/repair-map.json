@@ -1,0 +1,27 @@
+{
+  "_meta": {
+    "purpose": "Machine-readable repair guide for Altitude usage violations. Keyed by the stable error CODE emitted by the validator (cli/validate.mjs). An agent that gets a violation looks up its `code` here to learn how to fix it. Human prose lives in cli/REPAIR.md.",
+    "honesty": "If no Altitude element, attribute, or value expresses what a design needs, STOP. Do not invent an attribute, hard-code a color, or reach past the design system to fake it. Report the gap — an honest 'Altitude can't express X yet' is useful signal, while a faked workaround is silent drift the next person inherits.",
+    "codesAreStable": "Error codes are append-only. A code's meaning never changes and it is never removed; only the human `detail` may change."
+  },
+  "ERR_UNKNOWN_COMPONENT": {
+    "title": "Unknown element",
+    "means": "An `<al-*>` tag is not a registered Altitude custom element — a typo or a hallucinated name.",
+    "fix": "Use a real Altitude element. If a suggestion is offered, it is the nearest registered tag. If nothing fits, do not invent one — report the gap."
+  },
+  "ERR_UNKNOWN_ATTRIBUTE": {
+    "title": "Unknown attribute",
+    "means": "An attribute was set that the element's contract does not declare.",
+    "fix": "Remove the attribute, or replace it with a valid one from the element's contract. slot, id, class, style, part, aria-*, data-*, and event/framework bindings are always allowed."
+  },
+  "ERR_INVALID_ENUM": {
+    "title": "Invalid value",
+    "means": "An attribute was given a value outside its allowed set.",
+    "fix": "Set the attribute to one of its allowed values. If a suggestion is offered, it is the nearest allowed value."
+  },
+  "ERR_TYPE_MISMATCH": {
+    "title": "Type mismatch",
+    "means": "An attribute was given a value of the wrong type (e.g. a non-boolean where a boolean is expected).",
+    "fix": "Pass a value of the type the attribute expects (boolean attributes take true/false or bare presence)."
+  }
+}

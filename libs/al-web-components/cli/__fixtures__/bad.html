@@ -1,0 +1,12 @@
+<!-- Fixture: each al-* usage below is a distinct contract violation the validator MUST catch. -->
+<section>
+  <al-button variant="primary">Save</al-button>        <!-- invalid-enum: "primary" is not an al-button variant -->
+  <al-button colour="red">Nope</al-button>             <!-- unknown-attribute: colour -->
+  <al-buton variant="secondary">Typo</al-buton>        <!-- unknown-component: al-buton -> al-button -->
+  <al-button hideText="maybe">Icon</al-button>         <!-- type-mismatch: hideText is boolean -->
+
+  <!-- valid usages below — must NOT be flagged -->
+  <al-button variant="tertiary" isDisabled>Ok</al-button>
+  <al-button variant="bare" hideText="true" slot="footer">Fine</al-button>
+  <al-badge>3</al-badge>
+</section>

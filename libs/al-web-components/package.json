@@ -19,10 +19,16 @@
     "build:custom-elements.json": "cem analyze --config custom-elements-manifest.config.mjs --outdir . && node ../../scripts/generate-component-schemas.js && node ../../scripts/generate-schema-index.js",
     "test": "test-storybook --url http://localhost:6006",
     "test:ci": "concurrently -k -s first -n 'sb,test' -c 'magenta,blue' 'pnpm start --quiet' 'wait-on tcp:6006 && test-storybook --url http://localhost:6006'",
-    "plop": "plop --plopfile plop/plop-config.js"
+    "plop": "plop --plopfile plop/plop-config.js",
+    "validate:usage": "node cli/validate.mjs"
+  },
+  "bin": {
+    "altitude-validate": "./cli/validate.mjs"
   },
   "files": [
-    "dist"
+    "dist",
+    "cli",
+    "custom-elements.json"
   ],
   "dependencies": {
     "date-fns": "^4.0.0",
