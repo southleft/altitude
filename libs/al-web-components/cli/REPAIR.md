@@ -75,12 +75,13 @@ This CLI is the **lite, shippable** face of Altitude's contracts — dependency-
 anywhere with just Node. Its contract source is the shipped `custom-elements.json` (CEM), so it can
 never drift from the real component API.
 
-- It validates **`<al-*>` custom-element usage** across any surface Altitude is consumed from —
-  plain HTML, Svelte, Astro, Angular/Vue templates, Lit templates. Framework binding syntax
-  (`[x]=`, `:x=`, `?x=`, `.x=`, `bind:x`, `{expr}`, `${expr}`) is recognized and its **value** is
-  treated as dynamic — the attribute is still checked for existence, but its value isn't
-  enum/type-checked (it can't be known statically).
-- It does **not** yet validate the `al-react` JSX wrappers (`<Button variant="…">`), slot names, or
-  required-attribute/composition rules. Those are natural follow-ons on the same CEM.
+- It validates two surfaces off the same CEM: **`<al-*>` custom-element usage** (plain HTML, Svelte,
+  Astro, Angular/Vue templates, Lit templates) and **`al-react` JSX wrappers**
+  (`<ALButton variant="…">` imported from `al-react`). In JSX the same checks apply to props.
+  Framework binding syntax (`[x]=`, `:x=`, `?x=`, `.x=`, `bind:x`, `{expr}`, `${expr}`) and JSX
+  `{...spread}` are recognized and treated as dynamic — the attribute/prop is still checked for
+  existence, but its value isn't enum/type-checked (it can't be known statically).
+- It does **not** yet validate slot names or required-attribute/composition rules. Those are
+  natural follow-ons on the same CEM.
 - Because the CEM doesn't surface inherited base-class members per element, the one inherited prop
   Altitude components share — `styleModifier` (from `ALElement`) — is allowlisted explicitly.

@@ -2,9 +2,10 @@
 /**
  * Altitude — design-system usage validator (shippable CLI)
  *
- * A fresh, dependency-free validator that checks how code USES Altitude web components
- * (`<al-*>` custom elements) against the library's own Custom Elements Manifest, and returns
- * actionable, self-heal-oriented feedback so an agent can fix invalid usage on its own.
+ * A fresh, dependency-free validator that checks how code USES Altitude — both the web components
+ * (`<al-*>` custom elements) and the al-react JSX wrappers (`<ALButton/>` from `al-react`) — against
+ * the library's own Custom Elements Manifest, and returns actionable, self-heal-oriented feedback
+ * so an agent can fix invalid usage on its own.
  *
  *   npx altitude-validate <file-or-dir>          # human report, non-zero exit on any error
  *   npx altitude-validate --json <file-or-dir>   # one JSON envelope on stdout (for agents)
@@ -17,8 +18,9 @@
  *
  * It is intentionally framework-agnostic: it scans `<al-*>` tags out of any markup surface Altitude
  * is consumed from — plain HTML, Svelte, Astro, Angular/Vue templates, or Lit `html` templates —
- * and is tolerant of binding syntax (`[x]=`, `:x=`, `?x=`, `.x=`, `bind:x`, `{expr}`, `${expr}`),
- * which it marks dynamic and skips for value checks (still counted as present).
+ * plus `<AL*>` al-react wrappers in JSX/TSX (resolved via each file's `al-react` imports). It is
+ * tolerant of binding syntax (`[x]=`, `:x=`, `?x=`, `.x=`, `bind:x`, `{expr}`, `${expr}`) and JSX
+ * `{...spread}`, which it marks dynamic and skips for value checks (still counted as present).
  *
  * Checks: unknown-component, unknown-attribute, invalid-enum, type-mismatch. Each violation carries
  * a STABLE machine code, a did-you-mean suggestion where useful, and a concrete `fix` sourced from
@@ -45,6 +47,7 @@ const GLOBAL_ATTRS = new Set([
   'slot', 'id', 'class', 'classname', 'style', 'part', 'exportparts', 'title', 'hidden', 'dir',
   'lang', 'role', 'tabindex', 'is', 'contenteditable', 'draggable', 'spellcheck', 'translate',
   'inert', 'popover', 'autofocus', 'key', 'ref', 'itemprop', 'itemscope', 'itemtype', 'accesskey',
+  'children', 'dangerouslysetinnerhtml', // React-only, harmless on any element
 ]);
 
 // Props on the `ALElement` base class, inherited by every Altitude component. The CEM analyzer
@@ -86,7 +89,8 @@ function parseType(text) {
 
 function loadContracts(cemPath) {
   const cem = JSON.parse(readFileSync(cemPath, 'utf8'));
-  const components = new Map(); // tagName -> { tag, className, attrs: Map<name,{name,type}> }
+  const components = new Map();  // tagName   -> spec  (for `<al-*>` custom-element usage)
+  const byClassName = new Map(); // className -> spec  (for al-react wrappers: `<ALButton/>` -> ALButton)
   for (const mod of cem.modules ?? []) {
     for (const d of mod.declarations ?? []) {
       if (!d.customElement || !d.tagName) continue;
@@ -94,10 +98,26 @@ function loadContracts(cemPath) {
       for (const a of d.attributes ?? []) {
         attrs.set(a.name, { name: a.name, type: parseType(a.type?.text), typeText: a.type?.text });
       }
-      components.set(d.tagName, { tag: d.tagName, className: d.name, attrs });
+      const spec = { tag: d.tagName, className: d.name, attrs };
+      components.set(d.tagName, spec);
+      if (d.name) byClassName.set(d.name, spec);
     }
   }
-  return components;
+  return { components, byClassName };
+}
+
+/** Map local import name -> exported name for `al-react` wrappers used in a file (named imports). */
+function parseReactImports(text) {
+  const map = new Map();
+  const re = /import\s+(?:type\s+)?\{([^}]*)\}\s*from\s*['"]al-react(?:\/[^'"]*)?['"]/g;
+  let m;
+  while ((m = re.exec(text))) {
+    for (const raw of m[1].split(',')) {
+      const mm = /^([A-Za-z_$][\w$]*)(?:\s+as\s+([A-Za-z_$][\w$]*))?$/.exec(raw.trim());
+      if (mm) map.set(mm[2] || mm[1], mm[1]); // local -> imported
+    }
+  }
+  return map;
 }
 
 // ── did-you-mean ─────────────────────────────────────────────────────────────────────────────
@@ -142,6 +162,12 @@ function parseAttrs(s) {
   while (i < n) {
     while (i < n && (isWs(s[i]) || s[i] === '/')) i++;
     if (i >= n) break;
+    if (s[i] === '{') { // JSX spread / expression container: {...props}
+      let depth = 0;
+      while (i < n) { const c = s[i++]; if (c === '{') depth++; else if (c === '}') { depth--; if (depth === 0) break; } }
+      out.push({ rawName: null, value: undefined, kind: 'spread' });
+      continue;
+    }
     let name = '';
     while (i < n && !isWs(s[i]) && s[i] !== '=' && s[i] !== '/' && s[i] !== '>') name += s[i++];
     if (!name) { i++; continue; }
@@ -222,45 +248,70 @@ function checkValue(value, type) {
   return { rule: 'type-mismatch', allowed: type.booleanOk ? ['true', 'false'] : type.numberOk ? ['<number>'] : [] };
 }
 
-function validateSource(filePath, text, components, sink) {
+function validateSource(filePath, text, contracts, sink) {
+  const { components, byClassName } = contracts;
+  // al-react wrappers are only in scope for files that import them; web components are always global.
+  const reactMap = text.includes('al-react') ? parseReactImports(text) : new Map();
+
   const lineStarts = [0];
   for (let i = 0; i < text.length; i++) if (text[i] === '\n') lineStarts.push(i + 1);
 
-  // Find opening `<al-...>` tags (skip closing `</al-...>`). Attribute region allows quoted strings
-  // and {…}/${…} expressions containing '>' without prematurely ending the tag.
-  const re = /<(al-[a-z][a-z0-9-]*)((?:"[^"]*"|'[^']*'|\{[^{}]*\}|`[^`]*`|[^>])*?)\/?>/g;
+  // Resolve a JSX/markup tag name to a contract: `<al-*>` web components (always), or `<AL*>`
+  // al-react wrappers imported in this file. Everything else (div, user components) → ignored.
+  const resolve = (name) => {
+    if (/^al-[a-z]/.test(name)) {
+      const spec = components.get(name);
+      return spec ? { spec, display: name, mode: 'wc' } : { unknown: name, display: name, mode: 'wc' };
+    }
+    if (/^[A-Z]/.test(name) && reactMap.has(name)) {
+      const imported = reactMap.get(name);
+      const spec = byClassName.get(imported);
+      return spec ? { spec, display: name, mode: 'react' } : { unknown: imported, display: name, mode: 'react' };
+    }
+    return null;
+  };
+
+  // Opening tags only. The attribute region allows quoted strings and {…}/${…} expressions
+  // (incl. one level of nested braces) so a '>' inside them doesn't prematurely end the tag.
+  const re = /<([A-Za-z][A-Za-z0-9-]*)((?:"[^"]*"|'[^']*'|\{(?:[^{}]|\{[^{}]*\})*\}|`[^`]*`|[^>])*?)\/?>/g;
   let m;
   while ((m = re.exec(text))) {
-    const tag = m[1];
+    const r = resolve(m[1]);
+    if (!r) continue;
     const attrsRaw = m[2] ?? '';
     const { line, column } = lineColAt(lineStarts, m.index);
+    const noun = r.mode === 'react' ? 'prop' : 'attribute';
     sink.totalUsages++;
     const before = sink.violations.length;
-    const bc = (sink.byComponent[tag] ??= { usages: 0, errors: 0 });
+    const bc = (sink.byComponent[r.display] ??= { usages: 0, errors: 0 });
     bc.usages++;
 
     const push = (rule, detail, extra = {}) => sink.violations.push({
-      file: filePath, line, column, component: tag, rule, code: CODES[rule], severity: 'error', detail,
+      file: filePath, line, column, component: r.display, rule, code: CODES[rule], severity: 'error', detail,
       ...(extra.suggestion ? { suggestion: extra.suggestion } : {}),
       fix: buildFix(CODES[rule], extra),
     });
 
-    if (!components.has(tag)) {
-      const suggestion = didYouMean(tag, components.keys());
-      push('unknown-component', `<${tag}> is not a registered Altitude element (typo or hallucination)`, { suggestion });
+    if (r.unknown) {
+      const pool = r.mode === 'react' ? byClassName.keys() : components.keys();
+      push('unknown-component', r.mode === 'react'
+        ? `<${r.display}> is imported from al-react but maps to no registered Altitude component (typo or hallucination)`
+        : `<${r.display}> is not a registered Altitude element (typo or hallucination)`,
+        { suggestion: didYouMean(r.unknown, pool) });
       bc.errors++; sink.failingUsages++;
       continue;
     }
 
-    const spec = components.get(tag);
+    const spec = r.spec;
     for (const { rawName, value, kind } of parseAttrs(attrsRaw)) {
+      if (kind === 'spread') continue; // {...props} — suppresses nothing checkable here
       const c = classifyAttr(rawName);
       if (c.skip) continue;
       const name = c.name;
       if (isGlobalAttr(name) || ALTITUDE_BASE_ATTRS.has(name)) continue;
       const attr = spec.attrs.get(name);
       if (!attr) {
-        push('unknown-attribute', `<${tag}> has no attribute "${name}" (allowed: ${[...spec.attrs.keys()].join(', ') || 'none'})`,
+        push('unknown-attribute', `<${r.display}> has no ${noun} "${name}" (allowed: ${[...spec.attrs.keys()].join(', ') || 'none'})`,
           { allowed: [...spec.attrs.keys()], suggestion: didYouMean(name, spec.attrs.keys()) });
         continue;
       }
@@ -268,7 +319,7 @@ function validateSource(filePath, text, components, sink) {
       const bad = checkValue(value, attr.type);
       if (bad) {
         const suggestion = bad.rule === 'invalid-enum' ? didYouMean(value, attr.type.literals) : undefined;
-        push(bad.rule, `attribute "${name}"="${value}" ${bad.rule === 'invalid-enum' ? 'is not one of the allowed values' : `must be ${attr.typeText}`}`,
+        push(bad.rule, `${noun} "${name}"="${value}" ${bad.rule === 'invalid-enum' ? 'is not one of the allowed values' : `must be ${attr.typeText}`}`,
           { allowed: bad.allowed, suggestion });
       }
     }
@@ -291,9 +342,9 @@ function gatherFiles(target) {
 export function validateApp(target, opts = {}) {
   const cemPath = resolveCemPath(opts.cemPath);
   if (!cemPath) throw new Error('could not locate custom-elements.json (the Altitude CEM). Pass --cem <path> or set ALTITUDE_CEM.');
-  const components = loadContracts(cemPath);
+  const contracts = loadContracts(cemPath);
   const sink = { violations: [], byComponent: {}, totalUsages: 0, failingUsages: 0 };
-  for (const f of gatherFiles(target)) validateSource(f, readFileSync(f, 'utf8'), components, sink);
+  for (const f of gatherFiles(target)) validateSource(f, readFileSync(f, 'utf8'), contracts, sink);
   return {
     passRate: sink.totalUsages === 0 ? 1 : (sink.totalUsages - sink.failingUsages) / sink.totalUsages,
     totalUsages: sink.totalUsages,

@@ -65,6 +65,25 @@ pnpm gate:self-test                                         # G2/G8 gate scripts
 
 If any of the above is red, the change isn't ready to commit.
 
+### Validate your DS usage, then self-heal
+
+When you author or edit code that **consumes** Altitude — `<al-*>` custom elements in any
+markup (HTML / Svelte / Astro / Angular / Lit templates) or `al-react` `<AL*>` JSX wrappers —
+run the usage validator and fix what it reports before moving on:
+
+```bash
+npx altitude-validate <file-or-dir>          # human report, non-zero exit on any violation
+npx altitude-validate --json <file-or-dir>   # one JSON envelope on stdout (for a self-heal loop)
+pnpm --filter al-web-components validate:usage <file-or-dir>   # in-repo equivalent
+```
+
+It checks each usage against the shipped CEM and returns violations with a stable `code`
+(`ERR_UNKNOWN_COMPONENT`, `ERR_UNKNOWN_ATTRIBUTE`, `ERR_INVALID_ENUM`, `ERR_TYPE_MISMATCH`), a
+did-you-mean `suggestion`, and a concrete `fix`. **Self-heal loop:** run `--json` → for each
+violation apply its `fix` (full recipe in [`libs/al-web-components/cli/REPAIR.md`](./libs/al-web-components/cli/REPAIR.md),
+keyed by `code`) → re-run until exit 0. If a fix would require inventing an element, attribute, or
+value that doesn't exist, **stop and report the gap** — don't fake it past the design system.
+
 ## Component authoring rules (per pilot pattern)
 
 For a web component (`libs/al-web-components/components/<name>/`):

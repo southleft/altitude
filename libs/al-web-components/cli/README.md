@@ -1,8 +1,9 @@
 # cli/ — the Altitude usage validator
 
 The consumer-facing, agent-runnable face of Altitude's component contracts. Point it at code that
-uses Altitude web components and it tells you — with an actionable fix per finding — where that
-usage breaks the component contracts, so an agent can self-heal its output.
+uses Altitude — the web components (`<al-*>`) or the `al-react` JSX wrappers (`<ALButton/>`) — and it
+tells you, with an actionable fix per finding, where that usage breaks the component contracts, so an
+agent can self-heal its output.
 
 ```bash
 # in a consumer app that installed al-web-components
@@ -17,10 +18,10 @@ pnpm --filter al-web-components validate:usage libs/al-web-components/cli/__fixt
 
 | file | what it is |
 |---|---|
-| `validate.mjs` | The CLI + a `validateApp()` export. Scans `<al-*>` tags out of any markup surface and checks each against the shipped CEM. Zero dependencies (plain Node). |
+| `validate.mjs` | The CLI + a `validateApp()` export. Scans `<al-*>` tags and `al-react` `<AL*>` JSX wrappers out of any surface and checks each against the shipped CEM. Zero dependencies (plain Node). |
 | `repair-map.json` | Machine-readable repair guide: stable `CODE` → `{ title, means, fix }`, plus the "don't fake it" honesty note. The CLI reads this for each violation's base fix wording; agents can read it directly. |
 | `REPAIR.md` | The prose repair guide — one section per error code, with before→after examples and the self-heal loop. |
-| `__fixtures__/bad.html` | A known-bad file (one of each violation) used to prove the validator. |
+| `__fixtures__/bad.html`, `__fixtures__/bad.jsx` | Known-bad files (one of each violation, web-component and al-react) used to prove the validator. |
 
 ## How it works
 
@@ -32,8 +33,9 @@ become the allowed enum values.
 
 - **Contract source:** resolved from `../custom-elements.json` (the package root, shipped via the
   package `files`). Override with `--cem <path>` or `ALTITUDE_CEM`.
-- **Framework-agnostic:** validates the universal `<al-*>` surface, so one tool covers the HTML,
-  Svelte, Astro, and Angular demos alike. Binding syntax is tolerated (value treated as dynamic).
+- **Framework-agnostic:** validates the universal `<al-*>` surface (HTML, Svelte, Astro, Angular)
+  and the `al-react` JSX wrappers (`<AL*>`, resolved per-file from `al-react` imports) — one tool,
+  every demo. Binding syntax and JSX `{...spread}` are tolerated (value treated as dynamic).
 - **Stable codes:** `ERR_UNKNOWN_COMPONENT`, `ERR_UNKNOWN_ATTRIBUTE`, `ERR_INVALID_ENUM`,
   `ERR_TYPE_MISMATCH` — append-only, so agents can rely on them.
 
@@ -54,5 +56,4 @@ report the gap** instead — see the honesty note in `REPAIR.md`.
 Altitude also emits per-component JSON schemas (`scripts/generate-component-schemas.js`) alongside
 the CEM. This validator deliberately uses the CEM as its single source because it's the canonical,
 `customElements`-declared artifact; the schemas are an equivalent alternative if richer per-prop
-metadata is ever needed. A JSX validator for the `al-react` wrappers is a natural follow-on on the
-same contract.
+metadata is ever needed. Both the `<al-*>` and `al-react` surfaces validate off that one CEM.
