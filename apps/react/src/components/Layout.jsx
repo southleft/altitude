@@ -87,7 +87,7 @@ export default function Dashboard() {
                   <ALButton slot="trigger" hideText={true} variant="bare"><ALBadge variant="danger" slot="after" isDot={true} className="al-l-dashboard__notifications-badge"></ALBadge><ALIconBell slot="after"></ALIconBell></ALButton>
                   <ALHeading slot="header" tagName="h3" variant="sm" isBold={true}>Notifications</ALHeading>
                   <div className="al-u-gap-xs">
-                    <ALCard variant="bare" layout="inline" href="#">
+                    <ALCard variant="bare" layout="inline">
                       <ALAvatar slot="image" hasBadge={true} badgeVariant="success">KP</ALAvatar>
                       <p className="al-u-theme-typography-body-sm"><strong>@kploransky</strong> sent you a message</p>
                       <p className="al-u-theme-typography-body-xs">Thursday 4:20pm</p>
@@ -95,7 +95,7 @@ export default function Dashboard() {
                       <p slot="actions-end" className="al-u-theme-typography-body-xs">2 hours ago</p>
                     </ALCard>
                     <ALDivider></ALDivider>
-                    <ALCard variant="bare" layout="inline" href="#">
+                    <ALCard variant="bare" layout="inline">
                       <ALAvatar slot="image">EB</ALAvatar>
                       <p className="al-u-theme-typography-body-sm"><strong>@ebrown</strong> sent you a message</p>
                       <p className="al-u-theme-typography-body-xs">Thursday 5:14pm</p>
@@ -103,7 +103,7 @@ export default function Dashboard() {
                       <p slot="actions-end" className="al-u-theme-typography-body-xs">3 hours ago</p>
                     </ALCard>
                     <ALDivider></ALDivider>
-                    <ALCard variant="bare" layout="inline" href="#">
+                    <ALCard variant="bare" layout="inline">
                       <ALAvatar slot="image">BV</ALAvatar>
                       <p className="al-u-theme-typography-body-sm"><strong>@bvoran</strong> invited you to a <strong>Design Systems Workshop</strong></p>
                       <p className="al-u-theme-typography-body-xs">Wednesday 6:32pm</p>

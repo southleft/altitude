@@ -56,7 +56,7 @@
           </al-list>
         {/each}
       </al-select>
-      <al-dialog class="al-u-grid__item col:12 col:6@lg col:3@xxl" hasBackdrop={true}>
+      <al-dialog class="al-u-grid__item col:12 col:6@lg col:3@xxl">
         <al-input label="Filters" isReadonly={true} slot="trigger">
           <al-icon-filter slot="before"></al-icon-filter>
           <al-badge slot="after">3</al-badge>

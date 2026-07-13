@@ -32,7 +32,7 @@ export default function JobBoard({ children }) {
               ))}
             </ALList>
           </ALSelect>
-          <ALDialog className="al-u-grid__item col:12 col:6@lg col:3@xxl" hasBackdrop={true}>
+          <ALDialog className="al-u-grid__item col:12 col:6@lg col:3@xxl">
             <ALInput label="Filters" isReadonly={true} slot="trigger">
               <ALIconFilter slot="before"></ALIconFilter>
               <ALBadge slot="after">3</ALBadge>
