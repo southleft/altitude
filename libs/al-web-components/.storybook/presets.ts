@@ -1,5 +1,3 @@
-/// <reference types="vite/client" />
-//
 // Curated theme presets for the Storybook toolbar.
 // Spec: 2026-07-28-storybook-preset-toolbar-switcher.
 //
@@ -22,12 +20,13 @@ export type PresetContrast = 'normal' | 'more';
 
 /**
  * The brand x mode pairs the token pipeline actually emits, from the `brands`
- * array at `styles/tokens-config.v5.mjs:335-341`. Odyssey and Southleft are
+ * array in `styles/tokens-config.v5.mjs`. Odyssey and Southleft are
  * deliberately dark-only; naming `{ brand: 'southleft', mode: 'light' }` in
- * `PRESETS` is a *compile* error rather than a runtime 404 on a bundle.
+ * `PRESETS` is a *compile* error rather than a runtime surprise.
  *
- * Adding a light build for those brands belongs to
- * `2026-07-28-complete-brand-build-matrix`, not here.
+ * Still a compile-time guard now that `brand` is a `:host` rule: a brand with
+ * no build for a mode has no scoped block for it either, so the pair would
+ * render the brand's mode-independent identity over the wrong mode's colours.
  */
 export type PresetBundle =
   | { brand: 'altitude'; mode: 'light' | 'dark' }
@@ -41,16 +40,12 @@ export type Preset = PresetBundle & {
   /** Toolbar label. */
   label: string;
   /**
-   * OPTIONAL, and omitted on purpose for most presets.
-   *
-   * `:host([density])` hardcodes `--al-theme-space-{sm,md,lg}`
-   * (`components/theme/theme.scss:20-34`) and those hardcodes do NOT match the
-   * emitted bundle: the bundle ships `sm: 0.75rem / md: 1.25rem / lg: 1.5rem`
-   * (`styles/dist/scss/theme/tokens-dark.scss:265-268`) while
-   * `density="comfortable"` writes `0.75 / 1 / 1.5rem`. So writing
-   * `density="comfortable"` is NOT a no-op — it silently shrinks
-   * `--al-theme-space-md`. A preset that leaves `density` undefined renders
-   * exactly what the bundle says. See `.altitude/BRANDS.md` §4.
+   * OPTIONAL. `comfortable` no longer needs to be avoided: it used to write
+   * `--al-theme-space-md: 1rem` where the bundle says 1.25rem, so naming the
+   * axis at its own default silently reflowed the story. That rule is gone
+   * (`components/theme/theme.scss`) — the base ramp IS comfortable — so
+   * `density` is now safe to write on any preset. Omitting it and writing
+   * `comfortable` are equivalent; `compact` / `cozy` shrink from there.
    */
   density?: PresetDensity;
   /** OPTIONAL. `contrast="normal"` matches no rule, so only `'more'` is worth setting. */
@@ -89,58 +84,14 @@ export const PRESETS: Preset[] = [
  */
 export const DEFAULT_PRESET_ID = 'altitude-dark';
 
-/**
- * Every brand bundle, keyed by module specifier, pulled in with one glob
- * instead of six import lines. Two reasons this is a glob and not
- * `import x from '../styles/dist/scss/brand/…?inline'`:
- *
- *   1. Adding a preset stays a genuinely ONE-LINE change (R1) — no second
- *      edit to add an import and wire it into the entry.
- *   2. `styles/dist/` is a GITIGNORED BUILD ARTIFACT
- *      (`libs/al-web-components/.gitignore:7`) that does not exist in a fresh
- *      clone. A static `?inline` import of a missing file is an unhandleable
- *      Vite "failed to resolve import" that takes the whole preview down; a
- *      glob that matches nothing just yields `{}`, which lets
- *      `presetTokens()` throw the actionable message below instead (R6).
- */
-const BUNDLES = import.meta.glob('../styles/dist/scss/brand/*.scss', {
-  query: '?inline',
-  import: 'default',
-  eager: true,
-}) as Record<string, string>;
-
-/** Module specifier of the bundle a preset needs. */
-export function presetBundleSpecifier(preset: PresetBundle): string {
-  return `../styles/dist/scss/brand/tokens-${preset.brand}-${preset.mode}.scss`;
-}
-
-/**
- * The raw `:root { --al-*: … }` CSS text for a preset.
- *
- * Throws with an actionable message when the build artifact is missing (R6).
- * `.storybook/main.ts` runs the same check in Node before the dev server
- * boots, so this is the second line of defence, not the first.
- */
-export function presetTokens(preset: Preset): string {
-  const specifier = presetBundleSpecifier(preset);
-  const css = BUNDLES[specifier];
-  if (typeof css !== 'string') {
-    throw new Error(
-      [
-        `[al-storybook] No token bundle for preset "${preset.id}" (${preset.brand}/${preset.mode}).`,
-        `  Expected: libs/al-web-components/styles/dist/scss/brand/tokens-${preset.brand}-${preset.mode}.scss`,
-        `  styles/dist/ is a gitignored BUILD ARTIFACT — a fresh clone does not have it.`,
-        ``,
-        `  Fix:  pnpm --filter al-web-components build:tokens`,
-        ``,
-        `  Bundles currently resolved: ${Object.keys(BUNDLES).length === 0 ? '(none)' : Object.keys(BUNDLES).map((k) => k.split('/').pop()).join(', ')}`,
-        `  If the file really is not emitted, the brand x mode pair is not in the`,
-        `  \`brands\` array at styles/tokens-config.v5.mjs:335-341.`,
-      ].join('\n'),
-    );
-  }
-  return css;
-}
+// `presetTokens()` / `presetBundleSpecifier()` and the `import.meta.glob` over
+// `../styles/dist/scss/brand/*.scss` lived here until
+// `2026-07-28-scoped-token-emission-brand-wiring`. They existed for one reason:
+// `brand` could only be delivered by swapping a whole `:root` stylesheet,
+// because no `:host([brand])` rule existed. Now the emitter writes those rules
+// into `<al-theme>`'s own styles, the decorator sets one attribute, and there
+// is nothing to glob — so they are gone rather than left as dead coupling to a
+// gitignored artifact.
 
 /** Resolve a `globals.alPreset` value, falling back to the default. */
 export function getPreset(id: unknown): Preset {

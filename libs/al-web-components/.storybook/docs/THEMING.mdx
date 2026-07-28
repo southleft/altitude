@@ -64,21 +64,23 @@ array in `styles/tokens-config.v5.mjs`:
 TypeScript error, not a runtime surprise — the `PresetBundle` union in `presets.ts` is the guard.
 Emitting the missing light builds is token-pipeline work, not Storybook work.
 
-### Careful with `density`
+### `density` and `contrast`
 
-`density` is **optional and usually omitted**, on purpose. `:host([density])` hardcodes
-`--al-theme-space-{sm,md,lg}` in `components/theme/theme.scss`, and those hardcodes do **not**
-match the emitted bundle: the bundle ships `sm: 0.75rem / md: 1.25rem / lg: 1.5rem`, while
-`density="comfortable"` writes `0.75 / 1 / 1.5rem`. So `density="comfortable"` is *not* a no-op —
-it silently shrinks `--al-theme-space-md`. A preset that leaves `density` undefined renders
-exactly what the bundle says. See `.altitude/BRANDS.md` §4.
+Both are optional. `density` used to be a trap: `:host([density='comfortable'])` wrote
+`--al-theme-space-md: 1rem` where the bundle says 1.25rem, so naming the axis at its *own default
+value* silently reflowed the story — which is why five of these six presets left it off. That rule
+is now deleted. The base ramp **is** comfortable, so omitting `density` and writing
+`density="comfortable"` are the same thing, and `compact` / `cozy` shrink from there.
+See `.altitude/BRANDS.md` §4.
 
 `contrast="normal"` matches no rule at all, so only `contrast: 'more'` is worth writing.
 
 ## Prerequisite: build the tokens first
 
-`styles/dist/` is a **generated, gitignored build artifact**. A fresh clone does not have it, and
-the preset config reads the brand bundles out of it:
+`styles/dist/` and `styles/dist-v5/` are **generated, gitignored build artifacts**. A fresh clone
+has neither, and `components/theme/theme.scss` `@use`s the scoped host partials out of
+`styles/dist-v5/scss/host/` — so without them Storybook does not render a degraded toolbar, it
+fails to compile any component at all:
 
 ```bash
 pnpm --filter al-web-components build:tokens
@@ -91,13 +93,23 @@ first.
 
 ## How a preset reaches the canvas
 
-Two mechanisms, both required, because the axes are not delivered the same way:
+**One mechanism: four attributes on one `<al-theme>` element.**
 
-| axis | delivered by | why |
-| --- | --- | --- |
-| `brand` | global stylesheet swap | Every bundle is emitted as an unlayered `:root` block and `theme.scss` has **no** `:host([brand])` rule, so the attribute alone styles nothing. |
-| `density`, `contrast` | attribute on `<al-theme>` | Host rules only; no bundle varies by either. |
-| `mode` | **both** | The host rule carries two custom properties; the per-mode bundle carries the whole surface. |
+| axis | delivered by |
+| --- | --- |
+| `brand` | generated `:host([brand='x'])` + `:host([brand='x'][mode='y'])` blocks in `<al-theme>`'s own styles |
+| `mode` | generated `:host([mode='y'])` block, same place |
+| `density`, `contrast` | hand-written `:host([density])` / `:host([contrast])` rules in `theme.scss` |
+
+The brand and mode blocks come from `styles/tokens-config.v5.mjs` into
+`styles/dist-v5/scss/host/` and reach the component through one `@use` in `theme.scss`. They are
+**deltas** — each restates only what differs from the base `:root` bundle the page already loads,
+which is what keeps the whole matrix at ~16 KB instead of ~105 KB. The corollary: `<al-theme>`
+*composes on top of* a base token sheet, it does not replace one.
+
+This decorator used to swap a whole `:root` stylesheet into `<head>` to deliver `brand`, with an
+always-last ordering guard, because no `:host([brand])` rule existed. That is gone, along with the
+`style#al-preset-tokens` element. No global state is left, so nothing leaks out of the wrapper.
 
 `<al-theme>` uses `display: contents`, so the wrapper is layout-neutral. Note that the four
 brands genuinely differ in **size** (type ramp, spacing, radius), so switching preset reflows the
@@ -109,12 +121,9 @@ story — that is the payload, not a bug.
 | --- | --- | --- |
 | `style#al-theme-sheet` | `.storybook/preview.ts` | `main.scss` + the default altitude-dark `:root` block. The decorator never touches it. |
 | `style#iconfont-style` | `.storybook/preview.ts` | Never touched. |
-| `style#al-preset-tokens` | `.storybook/with-preset.ts` | Exactly one, re-appended so it stays after every other stylesheet in `<head>`. |
-| `style#al-tokens-sheet` | `<al-theme-switcher>` | Distinct id; the two never clobber each other. |
+| `style#al-tokens-sheet` | `<al-theme-switcher>` | The **deprecated** global-swap fallback; only reachable when no `<al-theme>` ancestor exists. |
 
-`style#al-theme-sheet` and `style#al-preset-tokens` are unlayered `:root` rules of identical
-specificity, so **document order decides and last wins**. That is why the decorator re-appends
-rather than mutating in place.
+The decorator owns no `<style>` element at all any more.
 
 ## Opting a story out
 
@@ -127,27 +136,28 @@ export default {
 };
 ```
 
-The decorator then skips **both** halves — no `<al-theme>` wrapper and no token swap — and
-removes any `style#al-preset-tokens` left behind by the previously viewed story.
+The decorator then renders the story with no `<al-theme>` wrapper at all, so it inherits the
+document's `:root` tokens exactly as it does on `main`.
 
-The `<al-theme-switcher>` stories use this. That component walks up for an `<al-theme>` ancestor
-and takes its scoped path when it finds one, and its own `style#al-tokens-sheet` would land
-*before* the decorator's always-last block — so with the decorator active its menu would look
-broken in its own story.
+The `<al-theme-switcher>` stories use this, so that the component's own deprecated global-swap
+fallback stays reachable in its own story instead of being short-circuited by a wrapper.
 
-Note the consequence elsewhere: inside any *other* preset-wrapped story that embeds
-`<al-theme-switcher>` (the Dashboard template, for example), the in-canvas switcher finds the
-decorator's wrapper and takes the scoped path, so only `mode` visibly moves. Use the toolbar for
-brand.
+Elsewhere the switcher is now **fully** functional inside a preset-wrapped story: it sets `brand`
+and `mode` on the wrapper it finds and both are host rules, so both visibly move. Before scoped
+emission only `mode` did — the brand half needed a global sheet the switcher's scoped path
+deliberately does not touch.
 
 ## Known limits
 
 - **The Storybook chrome stays dark.** The manager theme is hardcoded (`.storybook/theme.js`).
   A preset changes the preview iframe only; re-theming the manager is out of scope.
-- **One preset per iframe.** A docs page renders many stories into one iframe, so they all share
-  the selected preset. Two brands side by side on one page needs scoped token emission
-  (`:host([brand])` rules), which does not exist yet.
-- **`mode` on the wrapper is worth 2 properties.** `:host([mode='dark'])` hardcodes
-  `--al-theme-color-background-default: #161616` and `--al-theme-color-content-default: #f4f4f4`,
-  while the dark bundle resolves those to `#181818` / `#f8f8f6`. Inside the wrapper the host rule
-  wins. No brand overrides either token, so nothing brand-specific is lost.
+- **One preset per iframe** — the toolbar is a single global, so a docs page's stories all share
+  it. That is now a *toolbar* limit and not a technical one: `brand` is a `:host` rule, so two
+  `<al-theme>` subtrees on one page genuinely compute different values. Proof:
+  `.altitude/visual-compare/brands.scoped.png`, asserted by `pnpm test:scoped-theming`.
+- **`<al-theme>` is a delta, not a bundle.** The scoped blocks restate only what differs from the
+  base `:root` sheet, so a page that loads no Altitude CSS gets an `<al-theme>` with nothing to
+  resolve against. Keep `main.css` (or some `:root` bundle) loaded.
+- **A brand with no build for a mode has no block for it.** Odyssey and Southleft are dark-only,
+  so `<al-theme brand="odyssey" mode="light">` renders odyssey's type/radius/spacing over the
+  light colour surface. The `PresetBundle` union makes that unreachable from a preset.

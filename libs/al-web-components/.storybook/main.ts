@@ -26,36 +26,45 @@ const fileUrlResolver = {
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Pre-flight for the toolbar preset switcher (R6).
+// Pre-flight for the generated token artifacts.
 //
-// `.storybook/presets.ts` reads the emitted brand token bundles out of
-// `styles/dist/scss/brand/`, which is a GENERATED, GITIGNORED build artifact
-// (`libs/al-web-components/.gitignore:7`) produced by `build:tokens`. A fresh
-// clone does not have it. Failing here, in Node, before the dev server boots,
-// turns "the whole Storybook is broken" into one actionable line in the
-// terminal.
+// Two directories under `styles/` are GENERATED and GITIGNORED
+// (`libs/al-web-components/.gitignore:7`), produced by `build:tokens`, and a
+// fresh clone has neither. Failing here, in Node, before the dev server boots,
+// turns "the whole Storybook is broken" into one actionable line.
+//
+// The `scss/host/` entry is the one that matters most: `theme.scss` `@use`s it,
+// so a missing directory is not a degraded toolbar — it is a Sass compile error
+// that takes down every story that renders any component. It replaced the
+// `scss/brand/` check, which existed only for the preset switcher's old
+// stylesheet swap; `scss/brand/` is still listed because
+// `components/theme-switcher/theme-switcher.ts:15-20` imports six files out of
+// it for its legacy global-swap fallback.
 //
 // CI is fine as-is: the root `build:storybook-web-components`
 // (`package.json:20`) is preceded by `pnpm run build`, and
 // `libs/al-web-components/package.json` chains `build:tokens` first inside
 // `build`.
-const BRAND_BUNDLE_DIR = resolve(__dirname, '../styles/dist/scss/brand');
-const brandBundles = existsSync(BRAND_BUNDLE_DIR)
-  ? readdirSync(BRAND_BUNDLE_DIR).filter((f) => f.endsWith('.scss'))
-  : [];
-if (brandBundles.length === 0) {
-  throw new Error(
-    [
-      '',
-      '[al-storybook] Missing generated token bundles.',
-      `  Expected *.scss in: ${BRAND_BUNDLE_DIR}`,
-      '  styles/dist/ is a gitignored BUILD ARTIFACT — a fresh clone does not have it,',
-      '  and .storybook/presets.ts (the toolbar preset switcher) needs it.',
-      '',
-      '  Fix:  pnpm --filter al-web-components build:tokens',
-      '',
-    ].join('\n'),
-  );
+for (const [rel, why] of [
+  ['../styles/dist-v5/scss/host', 'components/theme/theme.scss @uses it for the :host([brand]) rules'],
+  ['../styles/dist/scss/brand', 'components/theme-switcher/theme-switcher.ts imports six bundles from it'],
+] as const) {
+  const dir = resolve(__dirname, rel);
+  const found = existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith('.scss')) : [];
+  if (found.length === 0) {
+    throw new Error(
+      [
+        '',
+        '[al-storybook] Missing generated token artifacts.',
+        `  Expected *.scss in: ${dir}`,
+        `  Needed because: ${why}`,
+        '  These are gitignored BUILD ARTIFACTS — a fresh clone does not have them.',
+        '',
+        '  Fix:  pnpm --filter al-web-components build:tokens',
+        '',
+      ].join('\n'),
+    );
+  }
 }
 
 const config: StorybookConfig = {
