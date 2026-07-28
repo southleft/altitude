@@ -48,20 +48,76 @@ function walk(dir, rootStrip) {
   return out;
 }
 
+const ESC_CR = Buffer.from('\\r', 'latin1'); // the two chars backslash + 'r'
+
+/**
+ * Bytes of carriage-return inflation in `file`.
+ *
+ * WHY THIS EXISTS. The snapshot records file SIZES, and file sizes for this
+ * build are EOL-sensitive in two places:
+ *
+ *   1. Vite's `.js.map` files embed the `.ts` sources verbatim in
+ *      `sourcesContent`. JSON-serialized, each CRLF costs the escaped `\r`
+ *      sequence — 2 bytes more than a bare LF.
+ *   2. `scripts/copy-assets-to-dist.js` mirrors .svg/.hbs/.js assets from
+ *      source into dist/ byte-for-byte, carrying their CRs with them.
+ *
+ * Measured on 2026-07-28, one commit, Node 20.18.1 + pnpm 9.15.0 both sides:
+ * a CRLF working tree built 38,547 B (1.094 %) larger than a Linux LF build,
+ * with 875 of 1022 files byte-identical and every differing byte a carriage
+ * return. `baselines-bundle` allows 1 % — so a snapshot captured from a CRLF
+ * tree fails CI by construction, and is worse than a stale file because it
+ * looks authoritative.
+ *
+ * `.gitattributes` pins the working tree to LF on every platform, which is
+ * the actual fix. This is the tripwire for the day that stops being true —
+ * a clone made before that commit, a `core.autocrlf` override, or an editor
+ * that rewrites on save. Fail loudly rather than commit a poisoned baseline.
+ */
+function crInflation(buf) {
+  if (buf.includes(0)) return 0; // binary — CR bytes are content
+  let raw = 0;
+  for (let i = 0; i < buf.length; i++) if (buf[i] === 13) raw++;
+  let esc = 0;
+  let i = 0;
+  while ((i = buf.indexOf(ESC_CR, i)) !== -1) { esc++; i += ESC_CR.length; }
+  return raw + esc * 2;
+}
+
 function main() {
   const snapshot = { version: 1, capturedAt: 'baseline', packages: {}, totalBytes: 0 };
+  let inflation = 0;
+  const inflated = [];
 
   for (const pkg of PACKAGES) {
     const distRoot = path.join(REPO, 'libs', pkg, 'dist');
     if (!fs.existsSync(distRoot)) {
-      console.error(`[bundle] ${distRoot} does not exist; run \`yarn build\` first.`);
+      console.error(`[bundle] ${distRoot} does not exist; run \`pnpm build\` first.`);
       process.exit(1);
     }
     const entries = walk(distRoot, distRoot).sort((a, b) => a.rel.localeCompare(b.rel));
+    for (const e of entries) {
+      const n = crInflation(fs.readFileSync(path.join(distRoot, e.rel)));
+      if (n) { inflation += n; inflated.push(`${pkg}/${e.rel} (+${n} B)`); }
+    }
     const files = Object.fromEntries(entries.map((e) => [e.rel, e.bytes]));
     const totalBytes = entries.reduce((s, e) => s + e.bytes, 0);
     snapshot.packages[pkg] = { totalBytes, fileCount: entries.length, files };
     snapshot.totalBytes += totalBytes;
+  }
+
+  if (inflation > 0 && !process.env.ALTITUDE_ALLOW_CRLF_CAPTURE) {
+    console.error(`\n[bundle] REFUSING TO CAPTURE: dist/ carries ${inflation} bytes of carriage returns`);
+    console.error(`[bundle] across ${inflated.length} file(s). That is ${(inflation / snapshot.totalBytes * 100).toFixed(3)}% of the total, and`);
+    console.error('[bundle] `baselines-bundle` in CI allows 1% — a snapshot taken from a CRLF');
+    console.error('[bundle] working tree is guaranteed to disagree with the Linux runner.\n');
+    for (const f of inflated.slice(0, 5)) console.error(`           ${f}`);
+    if (inflated.length > 5) console.error(`           ... and ${inflated.length - 5} more`);
+    console.error('\n[bundle] Fix — renormalize the working tree to LF (`.gitattributes` pins it):');
+    console.error('           git rm --cached -r . -q && git reset --hard');
+    console.error('           pnpm run build');
+    console.error('\n[bundle] Override with ALTITUDE_ALLOW_CRLF_CAPTURE=1 only if you know why.\n');
+    process.exit(1);
   }
 
   fs.mkdirSync(OUT_DIR, { recursive: true });
