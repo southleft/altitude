@@ -21,6 +21,11 @@ export default [
       'libs/al-web-components/custom-elements.json',
       'libs/al-web-components/schemas/**',
       'apps/angular/.angular/**',
+      // `astro sync` / `astro build` generate `.astro/*.d.ts` (gitignored at
+      // .gitignore:59). Two of its emitted rules trip typescript-eslint, so
+      // `pnpm lint` failed on any machine that had built the Astro app while
+      // passing on a fresh CI clone. Same class as `.angular/` above.
+      '**/.astro/**',
       'apps/**/build/**',
       'apps/**/dist/**',
       'apps/**/.svelte-kit/**',
