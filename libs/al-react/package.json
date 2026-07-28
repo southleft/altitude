@@ -8,7 +8,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "storybook dev -p 9009",
-    "build": "pnpm exec del-cli dist && tsc && cp -r ./.storybook/static/images ./dist/images 2>/dev/null || true && cp -r ../al-web-components/dist/css ./dist 2>/dev/null || true",
+    "build": "pnpm exec del-cli dist && tsc && node ../../scripts/copy-react-assets.js",
     "build:storybook": "storybook build",
     "plop": "plop --plopfile plop/plop-config.js"
   },

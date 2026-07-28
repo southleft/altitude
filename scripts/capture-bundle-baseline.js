@@ -38,7 +38,11 @@ function walk(dir, rootStrip) {
     const p = path.join(dir, name);
     const st = fs.statSync(p);
     if (st.isDirectory()) out.push(...walk(p, rootStrip));
-    else out.push({ rel: path.relative(rootStrip, p), bytes: st.size });
+    // Normalize to POSIX separators. `path.relative` yields backslashes on
+    // Windows, which rewrote every key in the snapshot and made the diff look
+    // like a full add/remove of the package — the baseline must be identical
+    // regardless of which platform captured it.
+    else out.push({ rel: path.relative(rootStrip, p).split(path.sep).join('/'), bytes: st.size });
   }
   return out;
 }

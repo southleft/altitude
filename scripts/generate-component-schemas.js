@@ -134,7 +134,12 @@ function main() {
   let written = 0;
   for (const c of classes) {
     const schema = classToSchema(c, migration);
-    fs.writeFileSync(path.join(OUT_DIR, `${c.tagName}.schema.json`), JSON.stringify(schema, null, 2) + '\n');
+    // Normalize CRLF inside string values (JSDoc descriptions carry the source
+    // file's line endings verbatim). Without this, regenerating on Windows
+    // rewrites every schema with `\r\n` escapes and produces ~60 files of pure
+    // line-ending churn that buries the real diff.
+    const json = JSON.stringify(schema, (_k, v) => (typeof v === 'string' ? v.split('\r\n').join('\n') : v), 2);
+    fs.writeFileSync(path.join(OUT_DIR, `${c.tagName}.schema.json`), json + '\n');
     written++;
   }
   console.log(`[schemas] wrote ${written} component schema(s) → libs/al-web-components/schemas/`);
