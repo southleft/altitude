@@ -9,9 +9,10 @@ import { ALMenu } from '../menu/menu';
 import { ALMenuItem } from '../menu-item/menu-item';
 import { ALIconSettings } from '../icon/icons/settings';
 import styles from './theme-switcher.scss';
-// T4.5 — legacy stylesheet imports retained for the `dual`-state fallback
-// when a host page hasn't wrapped its content in <al-theme>. Once T4.8
-// flips every consumer to <al-theme>, these imports can be deleted.
+// T4.5 — legacy stylesheet imports retained for the DEPRECATED global-swap
+// fallback (removal target 3.0.0; see MIGRATION.md § "Legacy fallback").
+// Reachable only when the switcher finds no <al-theme> ancestor.
+// `apps/web-components/index.html` is the remaining in-repo consumer.
 import tokensAltitudeDark from '../../styles/dist/scss/brand/tokens-altitude-dark.scss';
 import tokensAltitudeLight from '../../styles/dist/scss/brand/tokens-altitude-light.scss';
 import tokensNorthrightLight from '../../styles/dist/scss/brand/tokens-northright-light.scss';
@@ -64,7 +65,15 @@ const BRANDS: BrandEntry[] = [
 export class ALThemeSwitcher extends ALElement {
   static el = 'al-theme-switcher';
 
-  /** When true, do not perform the legacy global `<style>` swap. */
+  /**
+   * When true, do not perform the legacy global `<style>` swap.
+   *
+   * @deprecated The swap it disables is itself deprecated (removal target
+   * 3.0.0). Wrapping content in `<al-theme>` makes both this flag and the swap
+   * irrelevant — the scoped path is taken automatically, and since
+   * `2026-07-28-scoped-token-emission-brand-wiring` it moves `brand` as well as
+   * `mode`. See MIGRATION.md § "Legacy fallback".
+   */
   scopedOnly = false;
 
   private elementMap = register({
@@ -96,8 +105,10 @@ export class ALThemeSwitcher extends ALElement {
    *      no global mutation.
    *
    *   2. If no `<al-theme>` ancestor exists AND `scopedOnly` is false,
-   *      perform the legacy `<style id="al-tokens-sheet">` swap. This is
-   *      the `dual` fallback the migration manifest requires (G2).
+   *      perform the legacy `<style id="al-tokens-sheet">` swap. DEPRECATED,
+   *      removal target 3.0.0 — kept because `apps/web-components/index.html`
+   *      uses the switcher with no wrapper. See MIGRATION.md § "Legacy
+   *      fallback".
    *
    *   3. Dispatch `onThemeSwitcherChange` with the resolved attrs.
    */

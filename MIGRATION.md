@@ -68,18 +68,57 @@ Multi-brand pages? Nest:
 ```
 
 The two buttons compute distinct `--al-*` values without touching `:root`.
+That is now true and tested — `pnpm test:scoped-theming` renders exactly this
+markup for all four brands in one document and asserts the computed values
+differ, and `.altitude/visual-compare/brands.scoped.png` is the picture. Before
+`2026-07-28-scoped-token-emission-brand-wiring` it was aspirational: `brand`
+was typed and documented but no `:host([brand])` rule existed, so both buttons
+rendered identically.
 
-### Legacy fallback
+### `<al-theme>` composes; it does not replace your token sheet
 
-`<al-theme-switcher>` keeps its v1 behavior when called outside an
-`<al-theme>` ancestor. To opt out of the legacy path:
+The scoped blocks are **deltas** over the base `:root` bundle — each restates
+only what differs, which is what keeps all six brand×mode combinations at
+~16 KB instead of ~105 KB. **Keep `dist/css/main.css` (or some `:root` token
+bundle) loaded.** Without one, a brand's literal values still apply while every
+`var(--al-color-*)` reference in it dangles.
+
+Two related consequences:
+
+- `brand` and `mode` are independent. A brand's mode-independent identity
+  (type ramp, radii, spacing, border weights) lives in `:host([brand='x'])`, so
+  `<al-theme brand="odyssey">` with no `mode` still looks like odyssey.
+- A brand with no build for a mode has no block for it. Odyssey and Southleft
+  are dark-only, so `<al-theme brand="odyssey" mode="light">` renders odyssey's
+  shape over the light colour surface.
+
+### Legacy fallback — DEPRECATED, removal target 3.0.0
+
+`<al-theme-switcher>` keeps its v1 behavior — swapping a whole
+`<style id="al-tokens-sheet">` into `document.head` — **only** when it finds no
+`<al-theme>` ancestor. With an ancestor it takes the scoped path
+(`theme-switcher.ts:109-113`), sets `brand` and `mode` on that element, and
+never touches the document.
+
+**Status: deprecated as of this release; scheduled for removal in 3.0.0.**
+It is kept rather than deleted because two consumers still need it today:
+`apps/web-components/index.html` uses the switcher with no `<al-theme>`
+wrapper, and the Storybook `<al-theme-switcher>` stories opt out of the preset
+decorator precisely so this path stays exercised. Wrap your content in
+`<al-theme>` and the fallback becomes unreachable at no cost — since scoped
+emission landed, the scoped path now moves **both** axes, where before it moved
+only `mode`.
+
+To opt out of the legacy path explicitly:
 
 ```js
 document.querySelector('al-theme-switcher').scopedOnly = true;
 ```
 
-Plan to call this out in your release checklist before deprecation
-budget 3.0.0.
+Migration for 3.0.0: wrap in `<al-theme>`, or set `scopedOnly = true` and
+drive `brand` / `mode` yourself. Once every consumer is wrapped, the six
+`?inline` bundle imports at `theme-switcher.ts:15-20` and the `styles/dist/`
+legacy mirror they are the last reason for can both go.
 
 ## 2. Switch to the explicit registry modes
 
