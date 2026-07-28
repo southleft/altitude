@@ -28,6 +28,27 @@ const CEM_PATH = path.join(REPO, 'libs/al-web-components/custom-elements.json');
 const MIGRATION_PATH = path.join(REPO, '.altitude/migration.json');
 const OUT_DIR = path.join(REPO, 'libs/al-web-components/schemas');
 
+/**
+ * Byte-reproducibility guard.
+ *
+ * Descriptions in these schemas are copied verbatim out of the CEM, which
+ * copies them verbatim out of the component JSDoc. A CR that survives into a
+ * JSON string VALUE is serialized as the escaped `\r` sequence — real file
+ * content that `.gitattributes` cannot normalize away, and the reason a
+ * Windows build used to rewrite all ~97 schema files. The CEM emitter now
+ * strips CR at the source (`libs/al-web-components/cem-plugins/al-deterministic.mjs`);
+ * this is the second line of defence so a hand-edited or externally-produced
+ * manifest can't reintroduce it here.
+ */
+function stripCarriageReturns(node) {
+  if (typeof node === 'string') return node.replace(/\r\n?/g, '\n');
+  if (Array.isArray(node)) return node.map(stripCarriageReturns);
+  if (node && typeof node === 'object') {
+    return Object.fromEntries(Object.entries(node).map(([k, v]) => [k, stripCarriageReturns(v)]));
+  }
+  return node;
+}
+
 function attrTypeToJsonSchema(typeText) {
   if (!typeText) return { type: 'string' };
   const trimmed = typeText.trim();
@@ -86,7 +107,7 @@ function classToSchema(c, migration) {
     altitude: {
       tagName: c.tagName,
       className: c.name,
-      module: c.path || c.module,
+      module: String(c.path || c.module || '').split('\\').join('/'),
       ...(migrationEntry ? { migration: migrationEntry } : {}),
       slots: c.slots || [],
       events: (c.events || []).map((e) => ({ name: e.name, description: e.description || '' })),
@@ -131,9 +152,13 @@ function main() {
       })
   );
 
+  // Stable order so the log line (and any future aggregate output) does not
+  // depend on the manifest's module order.
+  classes.sort((a, b) => (a.tagName < b.tagName ? -1 : a.tagName > b.tagName ? 1 : 0));
+
   let written = 0;
   for (const c of classes) {
-    const schema = classToSchema(c, migration);
+    const schema = stripCarriageReturns(classToSchema(c, migration));
     fs.writeFileSync(path.join(OUT_DIR, `${c.tagName}.schema.json`), JSON.stringify(schema, null, 2) + '\n');
     written++;
   }

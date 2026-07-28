@@ -4,6 +4,7 @@
 // for T3.2 schemas, T3.3 AGENTS.md/llms.txt, and T3.4 contract validator.
 
 import altitudeConventions from './cem-plugins/al-conventions.mjs';
+import altitudeDeterministic from './cem-plugins/al-deterministic.mjs';
 
 export default {
   globs: ['components/**/*.ts'],
@@ -20,5 +21,11 @@ export default {
   dev: false,
   // Altitude conventions: surfaces `static el` as tagName and parses the
   // legacy prose JSDoc for slots/events/csspart/cssproperty.
-  plugins: [altitudeConventions()],
+  //
+  // `altitudeDeterministic` MUST stay last: its `packageLinkPhase` is the
+  // final pass over the assembled manifest (strips CR out of every string,
+  // stable-sorts modules by path) so the emitted JSON is byte-identical on
+  // Windows and Linux. Removing it reintroduces the ~97-file CRLF churn and
+  // the random module permutation.
+  plugins: [altitudeConventions(), altitudeDeterministic()],
 };
