@@ -333,6 +333,11 @@ async function build() {
 
   const themes = ['light', 'dark'];
   const brands = [
+    // `altitude` is the default brand (`<al-theme brand>` in components/theme/theme.ts).
+    // It builds in BOTH modes because the base theme output it used to stand in for
+    // exists in both; southleft/odyssey are deliberately dark-only.
+    { theme: 'light', brand: 'altitude' },
+    { theme: 'dark', brand: 'altitude' },
     { theme: 'dark', brand: 'southleft' },
     { theme: 'light', brand: 'northright' },
     { theme: 'dark', brand: 'northright' },
