@@ -6,6 +6,7 @@
 
 import type { StorybookConfig } from '@storybook/web-components-vite';
 import { mergeConfig } from 'vite';
+import { existsSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
@@ -24,6 +25,38 @@ const fileUrlResolver = {
 };
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// Pre-flight for the toolbar preset switcher (R6).
+//
+// `.storybook/presets.ts` reads the emitted brand token bundles out of
+// `styles/dist/scss/brand/`, which is a GENERATED, GITIGNORED build artifact
+// (`libs/al-web-components/.gitignore:7`) produced by `build:tokens`. A fresh
+// clone does not have it. Failing here, in Node, before the dev server boots,
+// turns "the whole Storybook is broken" into one actionable line in the
+// terminal.
+//
+// CI is fine as-is: the root `build:storybook-web-components`
+// (`package.json:20`) is preceded by `pnpm run build`, and
+// `libs/al-web-components/package.json` chains `build:tokens` first inside
+// `build`.
+const BRAND_BUNDLE_DIR = resolve(__dirname, '../styles/dist/scss/brand');
+const brandBundles = existsSync(BRAND_BUNDLE_DIR)
+  ? readdirSync(BRAND_BUNDLE_DIR).filter((f) => f.endsWith('.scss'))
+  : [];
+if (brandBundles.length === 0) {
+  throw new Error(
+    [
+      '',
+      '[al-storybook] Missing generated token bundles.',
+      `  Expected *.scss in: ${BRAND_BUNDLE_DIR}`,
+      '  styles/dist/ is a gitignored BUILD ARTIFACT — a fresh clone does not have it,',
+      '  and .storybook/presets.ts (the toolbar preset switcher) needs it.',
+      '',
+      '  Fix:  pnpm --filter al-web-components build:tokens',
+      '',
+    ].join('\n'),
+  );
+}
 
 const config: StorybookConfig = {
   framework: {
