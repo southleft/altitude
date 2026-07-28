@@ -55,9 +55,23 @@ const config: StorybookConfig = {
   // Without './static' the sidebar logo 404s (Cloudflare then serves the SPA
   // fallback HTML for it, so the brand image is broken).
   staticDirs: ['../dist', './static'],
-  docs: {
-    autodocs: true,
-  } as any,
+
+  // NOTE: the old `docs: { autodocs: true }` was removed here. That option no
+  // longer exists in Storybook 10 (core `DocsOptions` is only
+  // `{ defaultName, docsMode }`), and the `as any` cast was hiding the fact
+  // that it had become a no-op. Autodocs is tag-driven now and is switched on
+  // globally via `tags: ['autodocs']` in preview.ts.
+
+  // The onboarding checklist and the "what's new" toast both sit inside the
+  // sidebar/footer area and fight the reskin for space.
+  // NOTE: the flag is `sidebarOnboardingChecklist` — there is a `Feature.ONBOARDING`
+  // enum member in the type defs, but it is not the config key.
+  features: {
+    sidebarOnboardingChecklist: false,
+  },
+  core: {
+    disableWhatsNewNotifications: true,
+  },
   viteFinal: async (cfg) => {
     return mergeConfig(cfg, {
       // themeApiPlugin serves /api/theme during `storybook dev`, mirroring the
@@ -71,6 +85,18 @@ const config: StorybookConfig = {
             target: 'es2022',
             useDefineForClassFields: false,
             experimentalDecorators: true,
+            // JSX for the custom docs page (.storybook/blocks/AltitudeDocsPage.tsx).
+            //
+            // Vite still loads the nearest tsconfig and then spreads
+            // `tsconfigRaw.compilerOptions` over it — so these fields win, but
+            // they do not erase the rest. Our tsconfig.json sets no `jsx`, so
+            // without this esbuild falls back to the classic transform and the
+            // page dies with "React is not defined".
+            //
+            // Do NOT also set `esbuild.jsx` at the Vite level: Vite nulls
+            // `compilerOptions.jsx` when that option is present. One mechanism only.
+            jsx: 'react-jsx',
+            jsxImportSource: 'react',
           },
         },
       },

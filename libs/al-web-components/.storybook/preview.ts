@@ -12,6 +12,14 @@ import mainStyles from '../styles/main.scss?inline';
 import { EVENTS } from './ai-theme/constants';
 import { applyTheme, resetTheme } from './ai-theme/apply';
 import type { ApplyPayload } from './ai-theme/types';
+// The docs page renders inside the preview iframe with its own theme, entirely
+// separate from the manager chrome. Without this it stays on Storybook's light
+// default, which is why the docs page read as a white slab against dark chrome.
+import managerTheme from './theme';
+// NOTE: this lives in `blocks/`, not `docs/`. The `./docs/*.@(js|jsx|ts|tsx|mdx)`
+// stories glob in main.ts would otherwise try to index it as a story file and
+// fail the build with "Unable to index".
+import AltitudeDocsPage from './blocks/AltitudeDocsPage';
 
 setCustomElementsManifest(customElements);
 
@@ -72,7 +80,18 @@ export const excludeRegexArray = [
 ];
 
 const preview: Preview = {
+  // Global autodocs switch. Storybook 10 dropped `docs.autodocs` from main.ts;
+  // this tag is the replacement. Every component file already sets it locally,
+  // so this mainly guarantees new components get a docs page by default.
+  tags: ['autodocs'],
+
   parameters: {
+    docs: {
+      theme: managerTheme,
+      // Custom autodocs template. Attached MDX (`<Meta of={Stories} />`) still
+      // takes precedence over this, so the Foundations pages are untouched.
+      page: AltitudeDocsPage,
+    },
     actions: { argTypesRegex: '^on.*' },
     controls: {
       exclude: new RegExp(excludeRegexArray.join('|')),
