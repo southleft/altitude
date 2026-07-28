@@ -1,6 +1,6 @@
 import { html, LitElement, unsafeCSS, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import styles from './icon-svgs.scss';
+import styles from './icon-catalog.scss';
 
 // The `<al-icon>` element itself, plus every glyph registered eagerly. `all.ts`
 // is ~230 KB gzipped and exists for exactly this page — it is deliberately not a
@@ -15,8 +15,8 @@ if (customElements.get(ALIcon.el) === undefined) customElements.define(ALIcon.el
 /** Render budget. 1,512 icons means 1,512 shadow roots — filter first, then render. */
 const PAGE_SIZE = 120;
 
-@customElement('icon-svgs')
-export class IconSvgs extends LitElement {
+@customElement('icon-catalog')
+export class IconCatalog extends LitElement {
   static get styles() {
     return unsafeCSS(styles.toString());
   }
@@ -180,6 +180,6 @@ export class IconSvgs extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'icon-svgs': IconSvgs;
+    'icon-catalog': IconCatalog;
   }
 }
