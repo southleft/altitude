@@ -48,6 +48,48 @@ For a component to render with Lit SSR:
 4. Test fixture flips `data-hydration` from `pending` → `complete` once
    the import resolves.
 
+## Scoped theming under DSD (`2026-07-28-scoped-token-emission-brand-wiring`)
+
+**Decision: eager. `<al-theme>` carries every scoped brand/mode block in
+`static styles`, so `@lit-labs/ssr` serializes all of them into each host's DSD
+template. Measured cost: 19,641 bytes per `<al-theme>` element**, with no
+cross-instance dedup. In practice that is once per page — every app fixture
+uses `<al-theme>` as a single root wrapper.
+
+The alternative — serializing only the *active* brand×mode block — was
+considered and rejected: `static styles` is a property of the CLASS, not the
+instance, so "only the active block" means either a distinct subclass per
+brand×mode (a public API of 12 classes to save 16 KB) or a runtime
+`adoptedStyleSheets` push, which by definition is not serialized and would mean
+**no** brand theming without JavaScript. Eager is the only option that renders
+branded with JS disabled, and 19 KB of custom-property text gzips to ~1.5 KB.
+
+Verified 2026-07-28 on `apps/ssr/dist/al-theme.html`, Chromium with
+`javaScriptEnabled: false`:
+
+| | value |
+|---|---|
+| `<al-theme>` has a shadow root | `true` (from the DSD template, no JS) |
+| `customElements.get('al-theme')` | `undefined` — nothing upgraded |
+| probe `font` | `18px/32px Georgia, Cambria, serif` — odyssey's type ramp |
+| probe `color` | `rgb(164, 153, 129)` — odyssey's taupe accent |
+
+Two things this exposed, both fixed in the same change:
+
+- **The pilot had never actually server-rendered.** Nothing in
+  `apps/ssr/scripts/build.mjs` imported a component definition, and lit-ssr can
+  only serialize a class it knows, so every pilot page emitted a bare unknown
+  element with no template at all. Registration is now opt-in per pilot
+  (`ssr: true`) and only `al-theme` opts in — see the note in that file about
+  `ALElement.slotEmpty()` throwing under the DOM shim, which makes the other
+  five strictly worse if registered.
+- **The pages' `main.css` link was one directory short** and had always 404'd.
+  That matters now: the scoped blocks are **deltas** over the base `:root`
+  bundle, so without it a brand's literal values (type ramp, radii) still apply
+  while every `var(--al-color-*)` reference dangles. Odyssey rendered Georgia
+  18/32 in black. **`<al-theme>` composes on top of a base token sheet; it does
+  not replace one.**
+
 ## Known fallbacks
 
 - The current SSR build script emits a DSD wrapper around each pilot
