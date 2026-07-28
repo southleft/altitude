@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Altitude brands — side by side</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #0b0b0b;
+        color: #f4f4f4;
+        font-family: system-ui, sans-serif;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1px;
+        background: #333;
+      }
+      .col {
+        display: flex;
+        flex-direction: column;
+        background: #0b0b0b;
+      }
+      .col h2 {
+        margin: 0;
+        padding: 0.75rem 1rem;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        border-bottom: 1px solid #333;
+      }
+      .col h2 small {
+        display: block;
+        font-weight: 400;
+        text-transform: none;
+        letter-spacing: 0;
+        opacity: 0.6;
+      }
+      iframe {
+        border: 0;
+        width: 100%;
+        height: 900px;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Four columns, one brand token bundle each, identical markup, identical
+         mode / density / contrast. Iframes are what let each column link
+         exactly one `:root` bundle; `<al-theme brand>` does not emit scoped
+         selectors yet (owned by the scoped-token-emission spec). -->
+    <div class="grid">
+      <div class="col">
+        <h2>altitude<small>neutral reference</small></h2>
+        <iframe src="./altitude.html" title="altitude"></iframe>
+      </div>
+      <div class="col">
+        <h2>northright<small>dense operational</small></h2>
+        <iframe src="./northright.html" title="northright"></iframe>
+      </div>
+      <div class="col">
+        <h2>odyssey<small>airy editorial</small></h2>
+        <iframe src="./odyssey.html" title="odyssey"></iframe>
+      </div>
+      <div class="col">
+        <h2>southleft<small>high-contrast utilitarian</small></h2>
+        <iframe src="./southleft.html" title="southleft"></iframe>
+      </div>
+    </div>
+  </body>
+</html>

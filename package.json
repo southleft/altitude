@@ -34,6 +34,8 @@
     "gate:migration": "node scripts/check-migration-gate.js",
     "gate:baselines": "node scripts/check-baselines-gate.js",
     "gate:self-test": "bash scripts/__tests__/gate-self-test.sh",
+    "test:brands": "node scripts/check-brand-distinctiveness.js",
+    "brands:compare": "node scripts/build-brand-compare.mjs",
     "baselines:tokens": "node scripts/capture-token-baseline.js",
     "baselines:bundle": "node scripts/capture-bundle-baseline.js",
     "baselines:vrt": "playwright test --update-snapshots",

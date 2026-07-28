@@ -31,7 +31,13 @@ playwright-report
 
 # visual parity artifacts (not source)
 .altitude/visual-parity/
-.altitude/visual-compare/
+# visual-compare holds throwaway local-vs-prod captures, EXCEPT the brand
+# distinctiveness harness and its committed artifact, which are review
+# evidence for .altitude/BRANDS.md. `/*` (not `/`) so the negations below can
+# re-include — git cannot re-include a path whose parent directory is excluded.
+.altitude/visual-compare/*
+!.altitude/visual-compare/harness/
+!.altitude/visual-compare/brands.dark.png
 .altitude/visual-parity-before/
 .altitude/visual-parity-after/
 .altitude/icon-check/
