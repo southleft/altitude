@@ -85,6 +85,7 @@ Accumulated across three specs, none of which could capture it:
 | `2026-07-28-complete-brand-build-matrix` | ~+69 KB (four `altitude` bundles) |
 | `2026-07-28-define-brand-identities` | ~+12 KB (brand token content) |
 | `2026-07-28-scoped-token-emission-brand-wiring` | **+18,263 B**, measured |
+| `2026-07-28-react-storybook-preset-switcher` | **0 B on al-web-components**; al-react gains one wrapper (`src/components/Theme/`) |
 
 The last one was measured directly — same machine, same commit, only the two
 source files reverted — as 3,020,929 B → 3,039,192 B, 588 → 590 files. It
@@ -102,6 +103,22 @@ lands entirely in three entries:
 `al-react` is **unchanged**: it copies only `dist/css`, and `dist/css` is
 byte-identical (the scoped host partials are deliberately not mirrored there —
 see `scripts/copy-tokens-to-legacy-dist.js`).
+
+`2026-07-28-react-storybook-preset-switcher` touched no al-web-components
+source at all, so it moves nothing on that side. On al-react it adds one
+wrapper folder; `tsc` emits it into `dist/src/components/Theme/`, a few hundred
+bytes. **It was also not captured on Windows, and the reason is now measured
+rather than inherited:** `pnpm --filter al-react build` prints "The system
+cannot find the path specified." twice — once for `cp -r ./.storybook/static/
+images ./dist/images` and once for `cp -r ../al-web-components/dist/css
+./dist`. Both are swallowed by `2>/dev/null || true`, which is exactly the
+silent failure described above. A Linux recapture picks this spec's delta up
+with the other three.
+
+Noticed while confirming that: `libs/al-react/package.json` declares
+`"main": "dist/index.js"`, but `tsc` resolves its rootDir across the imported
+`package.json` and emits to `dist/src/index.js`. The entry point has been wrong
+independently of any of this; worth its own fix.
 
 Against the CI ceiling — 1 % of `totalBytes: 3330888` = **33,309 bytes across
 both packages** (`.github/workflows/v2-checks.yml:191-220`) — this spec spends
