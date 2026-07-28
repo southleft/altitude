@@ -151,6 +151,16 @@ jobs:
         run: pnpm run build && pnpm --filter al-app-web-components build
       - name: Run VRT against baselines
         run: pnpm run test:vrt
+      # Scoped `<al-theme brand>` regression guard. Deliberately NOT a pixel
+      # baseline: the brands differentiate through SYSTEM font stacks (Georgia,
+      # Consolas / ui-monospace), which resolve differently on this runner than
+      # on a contributor's machine, so a golden screenshot would be permanently
+      # red. This asserts the brands differ FROM EACH OTHER in computed style,
+      # which is platform-stable and is the property that actually regressed
+      # before (`brand` was inert for a whole release with every gate green).
+      # Reuses this job's build + chromium; it renders its own page on :5198.
+      - name: Scoped theming (four brands, one document)
+        run: pnpm run test:scoped-theming -- --no-screenshot
       - name: Upload diffs on failure
         if: failure()
         uses: actions/upload-artifact@v4
