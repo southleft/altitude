@@ -12,8 +12,8 @@ import styles from './theme-switcher.scss';
 // T4.5 — legacy stylesheet imports retained for the `dual`-state fallback
 // when a host page hasn't wrapped its content in <al-theme>. Once T4.8
 // flips every consumer to <al-theme>, these imports can be deleted.
-import tokensDark from '../../styles/dist/scss/theme/tokens-dark.scss';
-import tokensLight from '../../styles/dist/scss/theme/tokens-light.scss';
+import tokensAltitudeDark from '../../styles/dist/scss/brand/tokens-altitude-dark.scss';
+import tokensAltitudeLight from '../../styles/dist/scss/brand/tokens-altitude-light.scss';
 import tokensNorthrightLight from '../../styles/dist/scss/brand/tokens-northright-light.scss';
 import tokensNorthrightDark from '../../styles/dist/scss/brand/tokens-northright-dark.scss';
 import tokensOdyssey from '../../styles/dist/scss/brand/tokens-odyssey-dark.scss';
@@ -49,8 +49,8 @@ interface BrandEntry {
 }
 
 const BRANDS: BrandEntry[] = [
-  { key: 'dark', label: 'Theme: Dark', legacyTokens: tokensDark, themeAttrs: { brand: 'altitude', mode: 'dark' } },
-  { key: 'light', label: 'Theme: Light', legacyTokens: tokensLight, themeAttrs: { brand: 'altitude', mode: 'light' } },
+  { key: 'dark', label: 'Theme: Dark', legacyTokens: tokensAltitudeDark, themeAttrs: { brand: 'altitude', mode: 'dark' } },
+  { key: 'light', label: 'Theme: Light', legacyTokens: tokensAltitudeLight, themeAttrs: { brand: 'altitude', mode: 'light' } },
   { key: 'northright-light', label: 'Brand: Northright (Light)', legacyTokens: tokensNorthrightLight, themeAttrs: { brand: 'northright', mode: 'light' }, logo: 'northright' },
   { key: 'northright-dark', label: 'Brand: Northright (Dark)', legacyTokens: tokensNorthrightDark, themeAttrs: { brand: 'northright', mode: 'dark' }, logo: 'northright' },
   { key: 'odyssey', label: 'Brand: Odyssey', legacyTokens: tokensOdyssey, themeAttrs: { brand: 'odyssey', mode: 'dark' }, logo: 'odyssey' },
