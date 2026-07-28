@@ -21,16 +21,32 @@ const REPO = path.resolve(__dirname, '..');
 const V5 = path.join(REPO, 'libs/al-web-components/styles/dist-v5');
 const LEGACY = path.join(REPO, 'libs/al-web-components/styles/dist');
 
-function copy(srcRoot, dstRoot) {
+// Emitted by `tokens-config.v5.mjs` for `components/theme/theme.scss` to
+// `@use` at compile time. Deliberately NOT mirrored into the legacy dist:
+//
+//   * it is a new artifact, so no legacy import path resolves to it and
+//     mirroring would only create fresh coupling to a directory this script's
+//     header already schedules for deletion;
+//   * `scripts/copy-assets-to-dist.js:37` copies all of `styles/dist/` into
+//     the published `dist/css/`, and `libs/al-react/package.json:11` copies
+//     that again — so a mirrored copy would ship ~15 KB of `:host` rules twice
+//     into places where `:host` can never match anything; and
+//   * `scripts/capture-token-baseline.js` walks `styles/dist/`, so mirroring
+//     would add ~200 duplicate declarations to the token baseline for no
+//     signal.
+const SKIP_RELATIVE = new Set(['scss/host']);
+
+function copy(srcRoot, dstRoot, rel = '') {
   if (!fs.existsSync(srcRoot)) return;
   for (const name of fs.readdirSync(srcRoot)) {
     if (name.startsWith('.')) continue;
+    if (SKIP_RELATIVE.has(rel ? `${rel}/${name}` : name)) continue;
     const src = path.join(srcRoot, name);
     const dst = path.join(dstRoot, name);
     const st = fs.statSync(src);
     if (st.isDirectory()) {
       fs.mkdirSync(dst, { recursive: true });
-      copy(src, dst);
+      copy(src, dst, rel ? `${rel}/${name}` : name);
     } else {
       fs.copyFileSync(src, dst);
     }
