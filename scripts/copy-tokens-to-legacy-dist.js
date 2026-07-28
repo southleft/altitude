@@ -41,6 +41,18 @@ if (!fs.existsSync(V5)) {
   console.error('[copy-tokens-legacy] missing v5 dist; run build:tokens first.');
   process.exit(1);
 }
+// Clear `dist/` first so this is a true mirror, not an accumulation.
+//
+// `tokens-config.v5.mjs` rm -rf's `dist-v5/` at the top of build(), so
+// deletions surface there. Without the same treatment here, a brand or theme
+// removed from the `brands`/`themes` arrays leaves its emission behind in
+// `dist/` forever on any machine that had built it before. That matters
+// because `scripts/capture-token-baseline.js` walks `dist/`, not `dist-v5/`:
+// a stale file becomes phantom tokens in a locally-captured baseline, which
+// then disagrees with the CI runner's clean-checkout build for reasons that
+// are invisible in the diff. See `.altitude/TOKENS.md`
+// § "Rebaselining after a token change".
+fs.rmSync(LEGACY, { recursive: true, force: true });
 fs.mkdirSync(LEGACY, { recursive: true });
 copy(V5, LEGACY);
 console.log('[copy-tokens-legacy] mirrored dist-v5 → dist (legacy import paths).');
