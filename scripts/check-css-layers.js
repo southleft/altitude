@@ -24,6 +24,15 @@ const path = require('node:path');
 
 const REPO = path.resolve(__dirname, '..');
 const COMPONENTS = path.join(REPO, 'libs/al-web-components/components');
+// Generated `:host([brand])` / `:host([mode])` blocks that `theme.scss` pulls
+// in with `@use`. This checker parses raw SCSS text and only ever opened
+// `components/<name>/<name>.scss`, so anything arriving through `@use` was
+// INVISIBLE to it — `theme.scss` would have passed vacuously no matter what
+// the emitter produced. Lint the generated output directly instead.
+// `:host([brand='x'][mode='y'])` scores exactly 0,3,0 and sits on the ceiling
+// with zero headroom, so this is the check that catches an emitter change that
+// adds a third attribute.
+const GENERATED_HOST = path.join(REPO, 'libs/al-web-components/styles/dist-v5/scss/host');
 const MIGRATION = path.join(REPO, '.altitude/migration.json');
 const ALLOWLIST = path.join(REPO, '.altitude/css-specificity-allowlist.json');
 
@@ -124,11 +133,55 @@ function main() {
     if (localErrors.length > 5) console.error(`    …and ${localErrors.length - 5} more`);
   }
 
+  // ---- generated host partials (the `@use` blind spot) ----
+  //
+  // Skipped with a note rather than failed when absent: `styles/dist-v5/` is a
+  // gitignored build artifact, so a checkout that has not run `build:tokens`
+  // legitimately has nothing to lint. CI always builds first.
+  let hostFiles = 0;
+  if (!fs.existsSync(GENERATED_HOST)) {
+    console.log(
+      '[css-layers] note — styles/dist-v5/scss/host/ not built; generated selectors not linted. ' +
+        'Run `pnpm --filter al-web-components build:tokens`.'
+    );
+  } else {
+    for (const name of fs.readdirSync(GENERATED_HOST).sort()) {
+      if (!name.endsWith('.scss') || name.startsWith('_')) continue;
+      hostFiles++;
+      const text = fs.readFileSync(path.join(GENERATED_HOST, name), 'utf8');
+      const localErrors = [];
+      if (!/@layer\s+al\.theme\b/.test(text)) {
+        localErrors.push('missing `@layer al.theme { … }` wrapper');
+      }
+      for (const sel of parseSelectors(text)) {
+        if (allow.has(sel)) continue;
+        const [i, c, t] = specificity(sel);
+        if (i > 0 || c > 3 || c + t > 3) {
+          localErrors.push(`selector exceeds 0,3,0 budget (specificity ${i},${c},${t}): '${sel}'`);
+        }
+        if (/(^|[^-\w]):root\b/.test(sel)) {
+          localErrors.push(`generated host partial must not emit \`:root\`: '${sel}'`);
+        }
+      }
+      if (localErrors.length === 0) {
+        ok++;
+        continue;
+      }
+      errors += localErrors.length;
+      console.error(`[css-layers] FAIL — dist-v5/scss/host/${name}:`);
+      for (const e of localErrors.slice(0, 5)) console.error(`    ${e}`);
+    }
+  }
+
   if (errors === 0) {
-    console.log(`[css-layers] ${STRICT ? 'STRICT ' : ''}PASS — ${ok} component(s) compliant; ${skipped} legacy waiver(s).`);
+    console.log(
+      `[css-layers] ${STRICT ? 'STRICT ' : ''}PASS — ${ok} stylesheet(s) compliant ` +
+        `(${componentDirs.length - skipped} component(s) + ${hostFiles} generated host partial(s)); ` +
+        `${skipped} legacy waiver(s).`
+    );
     process.exit(0);
   }
-  console.error(`[css-layers] FAIL — ${errors} violation(s) across ${componentDirs.length} components.`);
+  console.error(`[css-layers] FAIL — ${errors} violation(s).`);
   process.exit(1);
 }
 
