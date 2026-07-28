@@ -122,11 +122,16 @@ export class ALElement extends LitElement {
   }
 
   /**
-   * T4.3 — returns the shared (empty) theme stylesheet. Kept for backward
+   * T4.3 — returns the shared utility stylesheet. Kept for backward
    * compatibility with legacy components that call `this.getGlobalStyles()`
-   * directly. The contents come from `<al-theme>` token overrides cascading
-   * into the shadow root via CSS custom properties — NOT from regex-
-   * scraping document `<style>` content.
+   * directly.
+   *
+   * It is NOT empty, whatever this comment used to say: `getSharedThemeSheet()`
+   * fills it from `styles/shadow-utilities.scss` — the ~7 KB `.al-u-*` utility
+   * surface, so `styleModifier` values keep working inside shadow DOM. It
+   * contains no tokens. Tokens reach components purely by custom-property
+   * inheritance from the nearest `<al-theme>` (or `:root`) — NOT from regex-
+   * scraping document `<style>` content, and not from this sheet.
    */
   getGlobalStyles(): CSSStyleSheet {
     return getSharedThemeSheet();
@@ -138,10 +143,12 @@ export class ALElement extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
 
-    // T4.3 — adopt the shared theme stylesheet so legacy components keep
-    // their old shape. Once a component flips to `scoped-complete`, this
-    // call is a no-op (the stylesheet is empty) and the component derives
-    // all token values from `var(--al-…)` lookups against `<al-theme>`.
+    // T4.3 — adopt the shared utility stylesheet so `styleModifier` values
+    // (`.al-u-*`) keep working inside shadow DOM. This is NOT a no-op for
+    // `scoped-complete` components and the sheet is NOT empty; it is the
+    // ~7 KB utility surface from `styles/shadow-utilities.scss`. Token values
+    // come from `var(--al-…)` lookups resolved by inheritance from the nearest
+    // `<al-theme>`, never from this sheet.
     if (this.shadowRoot) {
       const adopted = this.shadowRoot.adoptedStyleSheets || ([] as CSSStyleSheet[]);
       this.shadowRoot.adoptedStyleSheets = [...adopted, this.getGlobalStyles()];

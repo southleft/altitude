@@ -60,9 +60,16 @@ The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with 
 - See `.altitude/TOKENS.md` for the parallel-pipeline rationale
 
 ### Theming
-- Scoped `<al-theme brand mode density contrast>` host (Phase 4) — sets tokens on `:host`, not `:root`
-- Multiple brands can coexist in the same page
-- See `MIGRATION.md` for the v1→v2 theming migration
+- Scoped `<al-theme brand mode density contrast motion>` host (Phase 4) — sets tokens on `:host`, not `:root`
+- `brand` and `mode` come from generated `:host([brand])` / `:host([mode])` partials
+  (`styles/dist-v5/scss/host/`, emitted by `tokens-config.v5.mjs`, pulled into `theme.scss`);
+  `density`, `contrast` and `motion` are hand-written rules in `theme.scss`
+- Those partials are **deltas** over the base `:root` bundle — `<al-theme>` composes on top of
+  `dist/css/main.css`, it does not replace it
+- Multiple brands can coexist in the same page. Proof: `pnpm test:scoped-theming` +
+  `.altitude/visual-compare/brands.scoped.png` (four brands, one document, one `:root`)
+- See `MIGRATION.md` for the v1→v2 theming migration and `.altitude/BRANDS.md` for what a brand
+  may override
 
 ### Component Patterns
 All components follow consistent patterns:

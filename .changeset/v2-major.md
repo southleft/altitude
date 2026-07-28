@@ -11,7 +11,9 @@ Altitude v2 — scoped theming, AI contracts, modern toolchain.
   `<al-theme brand mode density contrast motion>` host instead of a global
   `<style>` mutation. Adjacent `<al-theme>` subtrees compute distinct
   `--al-*` values; multi-brand pages work without subtree contamination.
-  See `.altitude/SSR.md` and the `<al-theme>` component docs.
+  The host blocks are **deltas** over the base `:root` token sheet, so keep
+  `dist/css/main.css` loaded — `<al-theme>` composes on top of it rather than
+  replacing it. See `.altitude/SSR.md` and the `<al-theme>` component docs.
 - **Cascade layers.** `@layer al.reset, al.base, al.theme, al.component,
   al.override` is declared up front; every component stylesheet ships in
   `@layer al.component { … }`. Author overrides land in `al.override` so
