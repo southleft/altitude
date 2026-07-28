@@ -30,6 +30,10 @@ in the PR description. Eight non-negotiable guardrails (G1–G8) are CI-enforced
   `useDefineForClassFields: false`. Don't touch.
 - **G8 — Baselines move with build/dep changes**: token snapshot, bundle
   size, and VRT live at [`.altitude/baselines/`](./.altitude/baselines/).
+  Adding a token, brand, or theme requires regenerating
+  `.altitude/baselines/tokens/snapshot.json` in the same PR — CI compares its
+  sha256 with no tolerance. Procedure:
+  [`.altitude/TOKENS.md` § "Rebaselining after a token change"](./.altitude/TOKENS.md#rebaselining-after-a-token-change).
 
 ## Where to look for things
 
@@ -52,8 +56,8 @@ in the PR description. Eight non-negotiable guardrails (G1–G8) are CI-enforced
 
 ```bash
 # Whole-pipeline smoke test:
-pnpm --filter al-web-components build:tokens:parallel       # SD v3 + v5 byte-comparable
-pnpm --filter al-web-components test:tokens                 # contract tests
+pnpm --filter al-web-components build:tokens                # Style Dictionary v5 (the only token pipeline)
+pnpm --filter al-web-components test:tokens                 # token contract tests vs .altitude/baselines/
 pnpm --filter al-web-components build                       # library build (Vite)
 pnpm --filter al-web-components build:storybook \
     --output-dir ../../dist/storybook/web-components        # Storybook static

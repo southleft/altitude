@@ -36,6 +36,33 @@ pnpm baselines:tokens   # writes a fresh snapshot; diff against committed versio
 pnpm baselines:bundle   # same
 ```
 
+## Rebaselining tokens specifically
+
+Adding a brand, a theme, or any token moves `tokens/snapshot.json`. The full
+procedure — including the failure modes that are ordering artifacts rather than
+regressions — lives in
+[`.altitude/TOKENS.md` § "Rebaselining after a token change"](../TOKENS.md#rebaselining-after-a-token-change).
+The short version:
+
+```bash
+pnpm --filter al-web-components build:tokens   # styles/dist/ is gitignored; capture exits 1 without this
+node scripts/test-tokens-contract.js           # inspect the drift BEFORE overwriting
+pnpm run baselines:tokens                      # regenerate
+git diff --stat .altitude/baselines/tokens/snapshot.json
+```
+
+Then commit `snapshot.json` in the **same PR** as the token change.
+
+Two things to know before you debug a failure:
+
+- The enforcing gate is `.github/workflows/v2-checks.yml:161-189`
+  (`baselines-tokens`), a **sha256 equality test with no tolerance**.
+  `ALTITUDE_TOKEN_TOLERANCE` relaxes the *count* checks in
+  `scripts/test-tokens-contract.js` only — never value drift, never the CI job.
+- A one-brand addition produces a ~5000-line diff in `snapshot.json` because
+  the sorted `variables` array shifts. Review `totalVariables`, `uniqueNames`,
+  and the `byFile` key set, not the line diff.
+
 ## Baselines committed: 2026-06-15
 
 Captured against the legacy stack (Lit 3.1, webpack 5, Style Dictionary 3,
@@ -48,8 +75,10 @@ baseline in the same PR.
 - VRT: 5 PNGs in `screenshots/`.
 
 The v2 stack (Vite 5 + Storybook 10 + pnpm 9, see `.altitude/BUILD.md`)
-produces byte-identical token output (the v5 pipeline preserves `--al-*`
-names via custom transform groups) and a 51% smaller total bundle on the
-Vite build versus the legacy webpack baseline. The bundle baseline is
+preserved the `--al-*` token names through the Style Dictionary v3 → v5
+migration via custom transform groups, and produces a 51% smaller total bundle
+on the Vite build versus the legacy webpack baseline. (The byte-parity gate
+that policed that migration was retired once v3 was deleted — see
+`.altitude/TOKENS.md`.) The bundle baseline is
 intentionally kept on the webpack reference until the next major bump per
 the budget rationale in `.altitude/bundle-budget.json`.
