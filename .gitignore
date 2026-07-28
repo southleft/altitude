@@ -51,3 +51,11 @@ playwright-report
 # <<< monday-morning:mm <<<
 /.claude
 .mcp.json
+
+# Secrets. The AI Theme addon (.storybook/ai-theme) reads ANTHROPIC_API_KEY
+# from a local .env during `storybook dev`; production reads it from the
+# Cloudflare Pages environment. Never commit either.
+.env
+.env.*
+!.env.example
+.dev.vars

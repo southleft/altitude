@@ -8,6 +8,10 @@ import type { StorybookConfig } from '@storybook/web-components-vite';
 import { mergeConfig } from 'vite';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+// Explicit extension: Storybook warns on extensionless imports in main.ts,
+// and its ESM config loader resolves this path directly rather than through
+// TypeScript's resolver.
+import { themeApiPlugin } from './ai-theme/vite-plugin-theme-api.ts';
 
 // Under pnpm's symlinked layout, @storybook/addon-docs's MDX loader injects
 // an `import` whose specifier is a `file:///…` absolute URL pointing into
@@ -56,7 +60,10 @@ const config: StorybookConfig = {
   } as any,
   viteFinal: async (cfg) => {
     return mergeConfig(cfg, {
-      plugins: [fileUrlResolver],
+      // themeApiPlugin serves /api/theme during `storybook dev`, mirroring the
+      // Cloudflare Pages Function that serves it in production. Without it the
+      // AI panel would only work in the deployed build.
+      plugins: [fileUrlResolver, themeApiPlugin()],
       esbuild: {
         target: 'es2022',
         tsconfigRaw: {
