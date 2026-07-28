@@ -10,6 +10,35 @@ const config: TestRunnerConfig = {
   },
   async postVisit(page, context) {
     const storyContext = await getStoryContext(page, context);
+
+    // Preset switcher guard (spec 2026-07-28-storybook-preset-toolbar-switcher,
+    // R5). `<al-theme>` must be UPGRADED in the preview iframe, or every
+    // `:host([mode|density|contrast])` rule silently does nothing while the
+    // brand stylesheet swap keeps working — a failure that looks like
+    // "density does nothing", not like an error. See
+    // `.storybook/auto-registry.ts`.
+    const themeState = await page.evaluate(() => {
+      const root = document.querySelector('#storybook-root');
+      return {
+        defined: customElements.get('al-theme') !== undefined,
+        hasRoot: !!root,
+        hasWrapper: !!root?.querySelector('al-theme'),
+      };
+    });
+    if (!themeState.defined) {
+      throw new Error(
+        '[al-storybook] `al-theme` is not defined in the preview iframe. ' +
+          'The alAutoRegistry import-ordering hazard is back — see .storybook/auto-registry.ts.',
+      );
+    }
+    const presetDisabled = storyContext.parameters?.alPreset?.disable === true;
+    if (!presetDisabled && themeState.hasRoot && !themeState.hasWrapper) {
+      throw new Error(
+        '[al-storybook] The preset decorator did not wrap this story in <al-theme>. ' +
+          'Expected `#storybook-root al-theme` — see .storybook/with-preset.ts.',
+      );
+    }
+
     if (storyContext.parameters?.a11y?.disable) return;
     await checkA11y(page, '#storybook-root', {
       detailedReport: true,
