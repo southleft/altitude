@@ -99,10 +99,27 @@ StyleDictionary.registerTransformGroup({
 
 // ---------- custom formats (ported from v3 to v5 API) ----------
 
+/**
+ * The one place a declaration list becomes a CSS rule.
+ *
+ * `selector` and `layer` are FILE OPTIONS, not literals (R1 of
+ * `2026-07-28-scoped-token-emission-brand-wiring`). The defaults —
+ * `':root'` and no layer — reproduce the pre-existing output byte for byte,
+ * which is the entire back-compat strategy: ten apps, two Storybook previews
+ * and ten SCSS files consume the flat `:root` artifacts and none of them had
+ * to change.
+ */
+function renderRule(pairs, { selector = ':root', layer = null } = {}) {
+  const indent = layer ? '    ' : '  ';
+  const decls = pairs.map(([name, value]) => `${indent}${name}: ${value};`).join('\n');
+  if (!layer) return `${selector} {\n${decls}\n}\n`;
+  return `@layer ${layer} {\n  ${selector} {\n${decls}\n  }\n}\n`;
+}
+
 StyleDictionary.registerFormat({
   name: 'tokens',
   format: ({ dictionary, options }) => {
-    const otherVariables = dictionary.allTokens
+    const pairs = dictionary.allTokens
       .filter(
         (token) =>
           !token.name.endsWith('-italic') &&
@@ -140,12 +157,29 @@ StyleDictionary.registerFormat({
             });
           }
         }
-        return `  --${themePrefix}-${name}: ${value};`;
-      })
-      .filter(Boolean)
-      .join('\n');
+        return [`--${themePrefix}-${name}`, value];
+      });
 
-    return comment + `:root {\n${otherVariables}\n}\n`;
+    // R2 — scoped (host) emission is a DELTA, not a copy.
+    //
+    // `options.onlyNames` (a Set of `--al-…` names) and `options.omitEqualTo`
+    // (a Map of `--al-…` -> value read back from an already-emitted `:root`
+    // artifact) narrow the declaration list to exactly what the host has to
+    // restate. Both are absent for every `:root` file, so those keep emitting
+    // the full surface unchanged.
+    //
+    // Deltas rather than full 17 KB copies because a host INHERITS the base
+    // `:root` values through the shadow boundary — restating them costs
+    // ~105 KB across the matrix (3.2x the CI bundle allowance) to compute the
+    // same thing. See the spec's T9 measurement.
+    const only = options.onlyNames ?? null;
+    const base = options.omitEqualTo ?? null;
+    const kept = pairs.filter(
+      ([name, value]) =>
+        (!only || only.has(name)) && (!base || base.get(name) !== String(value))
+    );
+
+    return comment + renderRule(kept, { selector: options.selector, layer: options.layer });
   },
 });
 
