@@ -26,7 +26,27 @@
     "module": "ES2020",
     "declaration": true,
     "esModuleInterop": true,
+    // `rootDir` is PINNED, and the pin is load-bearing.
+    //
+    // Without it, tsc infers the common source directory from the input set —
+    // which includes `package.json` (all 66 wrappers do
+    // `import PackageJson from '../../../package.json'` for the `register({
+    // suffix })` version, and `resolveJsonModule` puts it in the program). The
+    // inferred root was therefore the PACKAGE root, not `src`, so the emit
+    // landed at `dist/src/index.js` while `package.json` declared
+    // `main: dist/index.js` — an entry point that did not exist. `apps/react`
+    // worked around it by deep-importing `al-react/dist/src`.
+    //
+    // Pinning `src` makes the emit match the manifest, and the JSON specifier
+    // stays correct by construction: `src/` and `dist/` are both one level
+    // below the package root, so `../../../package.json` resolves to the real
+    // `libs/al-react/package.json` from `dist/components/X/X.js` exactly as it
+    // does from `src/components/X/X.tsx`. It also stops tsc emitting a
+    // `dist/package.json` copy — the file that shadowed `/package.json` and
+    // broke every story when `.storybook/main.ts` served `staticDirs:
+    // ['../dist']`.
     "outDir": "dist",
+    "rootDir": "src",
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "useDefineForClassFields": false,

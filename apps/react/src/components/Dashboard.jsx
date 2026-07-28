@@ -1,4 +1,4 @@
-import { ALCalendar } from 'al-react/dist/src';
+import { ALCalendar } from 'al-react';
 import FPo from "./Fpo";
 
 const Home = () => {

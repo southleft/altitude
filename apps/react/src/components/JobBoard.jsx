@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ALBadge, ALButtonGroup, ALButton, ALCard, ALCheckboxGroup, ALCheckbox, ALChipGroup, ALChip, ALDialog, ALDivider, ALHeading, ALIconFilter, ALIconPin, ALIconStar, ALInput, ALLink, ALList, ALListItem, ALPagination, ALRadioGroup, ALRadio, ALRange, ALSearch, ALSelect, ALTextPassage } from 'al-react/dist/src';
+import { ALBadge, ALButtonGroup, ALButton, ALCard, ALCheckboxGroup, ALCheckbox, ALChipGroup, ALChip, ALDialog, ALDivider, ALHeading, ALIconFilter, ALIconPin, ALIconStar, ALInput, ALLink, ALList, ALListItem, ALPagination, ALRadioGroup, ALRadio, ALRange, ALSearch, ALSelect, ALTextPassage } from 'al-react';
 import './JobBoard.scss';
 
 export default function JobBoard({ children }) {

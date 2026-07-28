@@ -6,14 +6,21 @@
   "license": "UNLICENSED",
   "packageManager": "pnpm@9.15.0",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./dist/css/*": "./dist/css/*",
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "start": "storybook dev -p 9009",
     "build": "pnpm exec del-cli dist && tsc && cp -r ./.storybook/static/images ./dist/images 2>/dev/null || true && cp -r ../al-web-components/dist/css ./dist 2>/dev/null || true",
     "build:storybook": "storybook build",
     "plop": "plop --plopfile plop/plop-config.js"
   },
-  "entry": "dist/index.js",
-  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
