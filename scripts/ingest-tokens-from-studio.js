@@ -13,7 +13,10 @@
  *      b. Validates that no new token name collides with an existing one
  *         unless the operator passed `--accept-new-names`.
  *      c. Writes the export to `libs/al-web-components/styles/tokens-dtcg/`.
- *      d. Runs `build:tokens:v5` and the parity + contract gates.
+ *      d. Runs `build:tokens` to prove the export still builds.
+ *
+ * After an ingest, rebaseline: see `.altitude/TOKENS.md`
+ * § "Rebaselining after a token change".
  *
  * Round-trip: `yarn workspace al-web-components tokens:export` (separately,
  * not implemented here yet) walks `tokens-dtcg/` and emits a Tokens-Studio
@@ -144,13 +147,14 @@ function main() {
     fs.writeFileSync(path.join(outDir, `${safe}.json`), JSON.stringify(value, null, 2) + '\n');
   }
 
-  console.log('[tokens:ingest] running parity + contract…');
+  console.log('[tokens:ingest] rebuilding tokens…');
   try {
-    execSync('pnpm --filter al-web-components build:tokens:v5', { cwd: REPO, stdio: 'inherit' });
+    execSync('pnpm --filter al-web-components build:tokens', { cwd: REPO, stdio: 'inherit' });
   } catch (err) {
-    fail(`build:tokens:v5 failed after ingest: ${err.message}`);
+    fail(`build:tokens failed after ingest: ${err.message}`);
   }
   console.log('[tokens:ingest] PASS — ingest complete.');
+  console.log('[tokens:ingest] NEXT: rebaseline per .altitude/TOKENS.md § "Rebaselining after a token change".');
 }
 
 main();

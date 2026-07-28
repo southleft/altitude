@@ -48,6 +48,20 @@ function walk(dir, exts) {
   return out;
 }
 
+/**
+ * Repo-relative path with POSIX separators.
+ *
+ * `path.relative` yields backslashes on Windows, which would make the snapshot
+ * platform-dependent: `byFile` keys and `variables[].file` would differ between
+ * a Windows checkout and the Linux CI runner even though the token output is
+ * identical. (The `hash` is computed from the `name: value` stream only, so it
+ * would still match — the divergence used to hide in the JSON body as a
+ * whole-file diff.) Normalize so a re-capture is byte-reproducible anywhere.
+ */
+function relPosix(file) {
+  return path.relative(REPO, file).split(path.sep).join('/');
+}
+
 function extractVars(file) {
   const text = fs.readFileSync(file, 'utf8');
   const out = [];
@@ -58,7 +72,7 @@ function extractVars(file) {
     try { tree = JSON.parse(text); } catch { return out; }
     const visit = (node, prefix) => {
       if (node === null || typeof node !== 'object') {
-        out.push({ name: prefix, value: String(node), file: path.relative(REPO, file) });
+        out.push({ name: prefix, value: String(node), file: relPosix(file) });
         return;
       }
       for (const [k, v] of Object.entries(node)) {
@@ -72,7 +86,7 @@ function extractVars(file) {
   const re = /(?:^|[\s{;])(?:--|\$)(al-[a-z0-9-]+)\s*:\s*([^;]+);/gi;
   let m;
   while ((m = re.exec(text))) {
-    out.push({ name: '--' + m[1], value: m[2].trim(), file: path.relative(REPO, file) });
+    out.push({ name: '--' + m[1], value: m[2].trim(), file: relPosix(file) });
   }
   return out;
 }

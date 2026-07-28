@@ -13,7 +13,6 @@
     "build:tokens:v5": "pnpm run build:tokens",
     "build:vite": "vite build -c vite.config.mjs --outDir dist-vite --emptyOutDir",
     "build:vite-spike": "vite build -c vite.spike.config.mjs",
-    "build:tokens:parallel": "pnpm run build:tokens && pnpm run build:tokens:v5 && node ../../scripts/check-tokens-parity.js",
     "test:tokens": "node ../../scripts/test-tokens-contract.js",
     "build:icons": "node ./icons/icons-config.js",
     "build:custom-elements.json": "cem analyze --config custom-elements-manifest.config.mjs --outdir . && node ../../scripts/generate-component-schemas.js && node ../../scripts/generate-schema-index.js",
