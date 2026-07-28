@@ -9,7 +9,18 @@
   "typeRoots": ["./types", "./node_modules/@types", "./src"],
   "compilerOptions": {
     "allowJs": true,
-    "jsx": "react",
+    // `react` (the CLASSIC runtime) emits bare `React.createElement` calls and
+    // injects no import, so every module with JSX must import React itself.
+    // 64 of the 65 story files do not — `Button.stories.tsx` builds JSX in
+    // module-scope `args` and threw `ReferenceError: React is not defined` on
+    // load, taking the whole story file with it. Vite's esbuild transform reads
+    // this field, so the Storybook preview inherited it.
+    //
+    // `react-jsx` (the automatic runtime, React 17+) injects
+    // `react/jsx-runtime` itself. Modules that DO import React keep working,
+    // and `tsc`'s emitted output is unchanged: nothing in this file's `include`
+    // list contains JSX (the 66 wrappers are `createComponent` calls).
+    "jsx": "react-jsx",
     "target": "es6",
     "moduleResolution": "node",
     "module": "ES2020",
