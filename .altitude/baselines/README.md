@@ -63,6 +63,59 @@ Two things to know before you debug a failure:
   the sorted `variables` array shifts. Review `totalVariables`, `uniqueNames`,
   and the `byFile` key set, not the line diff.
 
+## OUTSTANDING: `bundle/snapshot.json` needs a Linux recapture
+
+**Do not capture it on Windows.** Two Windows-only faults make a local capture
+worse than the stale file:
+
+- `libs/al-react/package.json`'s `cp -r ../al-web-components/dist/css ./dist`
+  silently fails, so `al-react/dist` reads ~340 KB / 18 files light (measured
+  2026-07-28: 93,794 B against a 434,728 B baseline). That alone swings the
+  total by −6 %, which is why `check-bundle-budget.js` currently reports
+  `3253KB -> 3060KB (−5.94 %)` here — a measurement artifact, not a saving.
+- `pnpm run build` inflates ~160 dist files by a few bytes each (LF → CRLF in
+  emitted sourcemaps / svgs / hbs; the repo still has no `.gitattributes`).
+
+### What the recapture must show
+
+Accumulated across three specs, none of which could capture it:
+
+| Spec | al-web-components delta |
+|---|---|
+| `2026-07-28-complete-brand-build-matrix` | ~+69 KB (four `altitude` bundles) |
+| `2026-07-28-define-brand-identities` | ~+12 KB (brand token content) |
+| `2026-07-28-scoped-token-emission-brand-wiring` | **+18,263 B**, measured |
+
+The last one was measured directly — same machine, same commit, only the two
+source files reverted — as 3,020,929 B → 3,039,192 B, 588 → 590 files. It
+lands entirely in three entries:
+
+```
++21,549  components/theme/theme.js        (35 B -> 21,584 B)
+ +3,578  components/theme/theme.js.map
+ -3,415  components/bundle/bundle.js      (27,102 B -> 5,760 B)
+ -3,573  components/bundle/bundle.js.map
+    +35  styles/theme.js                  (new)
+    +89  styles/theme.js.map
+```
+
+`al-react` is **unchanged**: it copies only `dist/css`, and `dist/css` is
+byte-identical (the scoped host partials are deliberately not mirrored there —
+see `scripts/copy-tokens-to-legacy-dist.js`).
+
+Against the CI ceiling — 1 % of `totalBytes: 3330888` = **33,309 bytes across
+both packages** (`.github/workflows/v2-checks.yml:191-220`) — this spec spends
+**55 % of the whole allowance**, and the two predecessors have already
+overspent it. `baselines-bundle` is red until someone recaptures on Linux; it
+was red before this change too.
+
+`check-bundle-budget.js` additionally reports two per-file violations against
+`perFileDriftRatio 4.00`, both from the same structural fix:
+`components/theme/theme.js` and its map. That file was a 35-byte EMPTY stub —
+the Vite entry map spelled two different modules `theme` and the stylesheet
+entry won, so `<al-theme>` was never built at its documented path. Any ratio
+against 35 bytes is meaningless; the recapture resolves it.
+
 ## Baselines committed: 2026-06-15
 
 Captured against the legacy stack (Lit 3.1, webpack 5, Style Dictionary 3,
