@@ -117,6 +117,35 @@ run_in_worktree node scripts/check-baselines-gate.js --base="$BASE_REF" >/dev/nu
 assert_exit "baselines-gate (build change + baseline update)" 0 $?
 set -e
 
+step "6. Token build-config change without baselines update — baselines gate fails"
+# Guards the G8 anchor for `styles/tokens-config.v5.mjs`. Adding a brand to its
+# `brands` array changes the emitted token set without touching
+# `styles/tokens/**`, so this anchor is the only thing that catches it.
+( cd "$WORKTREE"
+  git reset --hard "$BASE_REF" >/dev/null
+  echo "// touch" >> libs/al-web-components/styles/tokens-config.v5.mjs
+  git add -A
+  git -c user.email=test@test -c user.name=test commit -m "edit token config" >/dev/null
+)
+set +e
+run_in_worktree node scripts/check-baselines-gate.js --base="$BASE_REF" >/dev/null 2>&1
+assert_exit "baselines-gate (token config change, no baseline update)" 1 $?
+set -e
+
+step "7. Token build-config change WITH baselines update — baselines gate passes"
+( cd "$WORKTREE"
+  git reset --hard "$BASE_REF" >/dev/null
+  echo "// touch" >> libs/al-web-components/styles/tokens-config.v5.mjs
+  mkdir -p .altitude/baselines/tokens
+  echo "{}" > .altitude/baselines/tokens/snapshot.json
+  git add -A
+  git -c user.email=test@test -c user.name=test commit -m "edit token config + baseline" >/dev/null
+)
+set +e
+run_in_worktree node scripts/check-baselines-gate.js --base="$BASE_REF" >/dev/null 2>&1
+assert_exit "baselines-gate (token config change + baseline update)" 0 $?
+set -e
+
 echo
 echo "Self-test: $PASS passed, $FAIL failed"
 git worktree remove --force "$WORKTREE" >/dev/null 2>&1 || true

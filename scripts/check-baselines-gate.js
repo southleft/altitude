@@ -12,7 +12,9 @@
  *   - package.json (root)
  *   - libs/al-web-components/webpack.config.js
  *   - libs/al-web-components/tsconfig.json
- *   - libs/al-web-components/styles/tokens-config.js
+ *   - libs/al-web-components/styles/tokens-config.v5.mjs (the token build
+ *     config — its `themes`/`brands` arrays decide which files are emitted,
+ *     so editing it changes token output without touching `styles/tokens/`)
  *   - libs/al-web-components/styles/tokens/** (token sources)
  *
  * Usage: node scripts/check-baselines-gate.js --base=origin/main
@@ -36,7 +38,11 @@ const WATCHED = [
   /^package\.json$/,
   /^libs\/al-web-components\/webpack\.config\.js$/,
   /^libs\/al-web-components\/tsconfig\.json$/,
-  /^libs\/al-web-components\/styles\/tokens-config\.js$/,
+  // The SD v3 config (`styles/tokens-config.js`) was deleted in T6.2; watching
+  // it was a permanently dead regex. `tokens-config.v5.mjs` is the sole token
+  // build config now — a brand added to its `brands` array changes the emitted
+  // token set without touching `styles/tokens/`.
+  /^libs\/al-web-components\/styles\/tokens-config\.v5\.mjs$/,
   /^libs\/al-web-components\/styles\/tokens\//,
 ];
 
