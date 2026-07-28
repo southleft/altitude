@@ -174,11 +174,12 @@ cp libs/al-web-components/styles/dist/core/variables.scss \
    libs/al-web-components/styles/core/variables.scss
 ```
 
-The comparison is CRLF-normalized. The repo has no `.gitattributes`, so a
-Windows checkout stores the tracked file with CRLF while Style Dictionary
-always emits LF; without normalization that alone failed the old parity gate.
-A repo-wide line-ending policy is a known open item, deliberately not landed
-here.
+The comparison is CRLF-normalized. That was load-bearing when the repo had no
+line-ending policy: a Windows checkout put CRLF on disk while Style Dictionary
+always emits LF, and that alone failed the old parity gate. As of 2026-07-28
+`.gitattributes` pins the working tree to LF on every platform, so the two
+sides agree natively — the normalization is now belt-and-braces and should
+stay, since it costs nothing and covers a checkout made before that commit.
 
 ## How the v5 pipeline preserves the `--al-*` names
 

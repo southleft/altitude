@@ -334,17 +334,20 @@ the shadow root:
 
 Same shape on `al-heading` and `al-input`'s field.
 
-### Known gate caveat — the bundle baseline
+### Resolved 2026-07-28 — the bundle baseline
 
-`.altitude/baselines/bundle/snapshot.json` is stale (it also predates the four
-`altitude` bundles the previous spec added) and must be recaptured **on
-Linux**. Two Windows-only faults make a local capture worse than the stale
-one: `pnpm run build` inflates ~160 dist files by a few bytes each
-(LF → CRLF in emitted sourcemaps / svgs / hbs templates; the repo has no
-`.gitattributes`), and al-react's `cp -r ../al-web-components/dist/css ./dist`
-step silently fails there, dropping 18 files and reading 6.5% low.
+This section used to say the baseline was stale, had to be recaptured **on
+Linux**, and that a Windows build inflated dist files and rewrote 98 unrelated
+files with CRLF churn. All three are fixed:
 
-Also note: `pnpm --filter al-web-components build` on Windows rewrites 98
-unrelated files (`custom-elements.json`, `schemas/*`, `components/icon/fonts/*`)
-with pure CRLF churn. Revert them with `git checkout --` or the diff becomes
-unreviewable.
+- `.gitattributes` pins the working tree to LF on every platform, so the build
+  is byte-reproducible. A Windows capture is now byte-identical to a Linux one
+  (verified against a real Linux build: same sha256, all 1022 files equal).
+  `capture-bundle-baseline.js` refuses to write a snapshot from a CRLF tree.
+- al-react's `cp -r … 2>/dev/null || true` steps are now
+  `libs/al-react/scripts/copy-dist-assets.mjs`, which fails loudly.
+- The CEM and schema emitters normalize `\r` and stable-sort modules, so
+  `pnpm --filter al-web-components build` is a genuine no-op on a clean tree.
+
+The baseline was recaptured on 2026-07-28 and includes the four `altitude`
+bundles. Details: `.altitude/baselines/README.md`.
