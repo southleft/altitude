@@ -83,10 +83,12 @@ page.on('console', (m) => m.type() === 'error' && pageErrors.push(m.text()));
 await page.goto(`http://localhost:${PORT}${PAGE}`, { waitUntil: 'load' });
 await page.waitForFunction(() => document.documentElement.dataset.ready === 'true', null, { timeout: 30_000 });
 
+// `[data-probe]` and not a tag selector, so the versioned-registry column
+// (`<al-theme-9-9-9>`) is reachable by exactly the same helpers.
 /** Computed custom property on the `<al-theme>` element itself. */
 const prop = (probe, name) =>
   page.evaluate(
-    ([p, n]) => getComputedStyle(document.querySelector(`al-theme[data-probe="${p}"]`)).getPropertyValue(n).trim(),
+    ([p, n]) => getComputedStyle(document.querySelector(`[data-probe="${p}"]`)).getPropertyValue(n).trim(),
     [probe, name]
   );
 
@@ -94,7 +96,7 @@ const prop = (probe, name) =>
 const inner = (probe, host, sel, css) =>
   page.evaluate(
     ([p, h, s, c]) => {
-      const scope = document.querySelector(`al-theme[data-probe="${p}"]`);
+      const scope = document.querySelector(`[data-probe="${p}"]`);
       const el = scope?.querySelector(h)?.shadowRoot?.querySelector(s);
       if (!el) return '(not found)';
       const st = getComputedStyle(el);
@@ -158,6 +160,23 @@ console.log(`      outer (southleft) ${outerFont}`);
 console.log(`      inner (odyssey)   ${innerFont}`);
 check(outerFont === fonts.southleft, 'outer subtree resolves to southleft');
 check(innerFont === fonts.odyssey, 'inner subtree resolves to odyssey, not the outer brand');
+
+// ---------- 4b: the versioned registry (T4.6) ----------
+//
+// The case that decided Option C over a document-level `al-theme[brand='x']`
+// rule: under `registerAltitude({ mode: 'versioned' })` the tag is
+// `al-theme-9-9-9`, which no type-selector rule would match. `:host` matches
+// whatever the host's tag is.
+
+console.log('\n  versioned registry — <al-theme-9-9-9 brand="odyssey">');
+const versionedTag = await page.evaluate(
+  () => document.querySelector('[data-probe="versioned"]')?.tagName.toLowerCase() ?? '(missing)'
+);
+const versionedFont = await inner('versioned', 'al-button', '.al-c-button', 'font');
+console.log(`      tag  ${versionedTag}`);
+console.log(`      font ${versionedFont}`);
+check(versionedTag === 'al-theme-9-9-9', 'the versioned host really is a suffixed tag');
+check(versionedFont === fonts.odyssey, 'the scoped brand block applies under a versioned tag too');
 
 // ---------- 5: the mode axis ----------
 

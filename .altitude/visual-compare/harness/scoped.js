@@ -10,7 +10,23 @@
 // `bundle.js` is imported rather than per-component modules because it is the
 // one entry that pulls in `<al-theme>` alongside everything the columns render.
 
-import '../../../libs/al-web-components/dist/components/bundle/bundle.js';
+import { ALTheme } from '../../../libs/al-web-components/dist/components/bundle/bundle.js';
+import { registerAltitude } from '../../../libs/al-web-components/dist/directives/register.js';
+
+// T4.6 registry, `versioned` mode: `<al-theme-9-9-9>`. This is the case a
+// document-level `al-theme[brand='x']` rule could not have served — the tag is
+// not `al-theme` — and it is why the spec rejected that option. `:host` matches
+// whatever the host element's tag is, and `static styles` belongs to the class,
+// so the scoped blocks come along. Asserted, not assumed, by
+// `check-scoped-theming.mjs`.
+//
+// The trivial subclass is a harness artefact, not part of the mechanism: this
+// page sets `alAutoRegistry = true`, so `ALTheme` itself is already bound to
+// `al-theme`, and `customElements.define` refuses to reuse a constructor. A
+// real versioned consumer sets `alAutoRegistry = false` and passes `ALTheme`
+// straight in. `static styles` is inherited either way.
+class ALThemeVersioned extends ALTheme {}
+registerAltitude({ mode: 'versioned', suffix: '9-9-9' }, [[ALTheme.el, ALThemeVersioned]]);
 
 const BRANDS = [
   ['altitude', 'neutral reference'],
@@ -98,7 +114,7 @@ document.getElementById('axes').innerHTML = [
       </al-theme>
     </div>`,
   },
-  // The motion axis (R5). `al-heading` transitions on
+  // The motion axis (R5). `al-button`'s root transitions on
   // `--al-theme-animation-duration`.
   column({
     title: 'motion · reduced',
@@ -110,6 +126,17 @@ document.getElementById('axes').innerHTML = [
       <al-button>No transition</al-button>
       <p>Compare with the altitude column above, which has no motion attribute.</p>`,
   }),
+  // The versioned registry (T4.6). Same class, tag `al-theme-9-9-9`.
+  `
+    <div class="col">
+      <h2>versioned tag<small>&lt;al-theme-9-9-9 brand="odyssey"&gt;</small></h2>
+      <al-theme-9-9-9 brand="odyssey" mode="dark" data-probe="versioned">
+        <div class="surface">
+          <al-heading variant="sm" tagName="h3">Odyssey, under a suffixed tag</al-heading>
+          <al-button>Versioned host</al-button>
+        </div>
+      </al-theme-9-9-9>
+    </div>`,
 ].join('');
 
 // Signal readiness to the screenshot driver.
