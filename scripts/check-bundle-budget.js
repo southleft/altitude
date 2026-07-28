@@ -22,7 +22,9 @@ function walk(root) {
     const p = path.join(root, name);
     const st = fs.statSync(p);
     if (st.isDirectory()) {
-      for (const c of walk(p)) out.push(path.join(name, c));
+      // POSIX-join: baseline keys are POSIX, so `path.join` would produce
+      // backslashes on Windows and miss every per-file lookup below.
+      for (const c of walk(p)) out.push(`${name}/${c}`);
     } else {
       out.push(name);
     }
