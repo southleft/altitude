@@ -148,6 +148,56 @@ al-react's `@lit/react`-backed wrappers handle the rest. R19 + custom
 elements still requires the explicit `events` map on each wrapper for
 listeners to bind — every shipped wrapper already declares this.
 
+### `<ALTheme>` — the React theming host
+
+`al-react` now ships a wrapper for `<al-theme>`, so a React tree can be
+themed without dropping to raw custom elements:
+
+```tsx
+import { ALTheme, ALButton } from 'al-react';
+
+<ALTheme brand="odyssey" mode="dark">
+  <ALButton>Label</ALButton>
+</ALTheme>;
+```
+
+Two things to know.
+
+**The tag is versioned.** `al-react` registers with
+`suffix: PackageJson.version`, so the element in the DOM is
+`<al-theme-1-0-0>`, not `<al-theme>`. Anything that looks a theme host up by
+tag name will not find it — including `<al-theme-switcher>`, whose
+`closest('al-theme')` walk is hardcoded to the plain tag. Set the axes on
+`<ALTheme>` directly rather than relying on that walk.
+
+**Pass only the axes you mean.** `density` and `contrast` are optional;
+omitting one leaves the attribute off, which is how you say "no position on
+this axis". `density="comfortable"` and omitting `density` are equivalent.
+
+`<ALTheme>` is not a bare `createComponent` wrapper like the other 65. It adds
+a layout effect that mirrors the five axes to ATTRIBUTES, because `@lit/react`
+sets reactive properties and every `:host([brand='…'])` / `:host([mode='…'])`
+rule the tokens live in is an attribute selector. Without it the props are
+accepted, the properties are correct, and nothing re-themes. See
+`libs/al-react/src/components/Theme/Theme.tsx`.
+
+### Theme presets in the React Storybook
+
+Both Storybooks carry the same **Preset** toolbar dropdown — brand + mode +
+density + contrast, snapped together — over one shared module,
+`libs/al-web-components/.storybook/presets.ts`. Adding a preset there makes it
+appear in both with no other edit. `parameters.alPreset = { disable: true }`
+opts a story out of the wrapper.
+
+`pnpm test:preset-parity` (`scripts/check-preset-parity.mjs`) drives both
+running Storybooks through every preset and fails if the toolbars, the host
+attributes, or the computed brand tokens diverge. Point it at non-default ports
+with `--wc <url> --react <url>`.
+
+The al-react Storybook requires a built al-web-components
+(`pnpm --filter al-web-components build`); it now says so instead of failing on
+an unresolved import.
+
 ## 4. New props on existing components
 
 - `<al-theme>` props: `brand`, `mode` (light|dark), `density`

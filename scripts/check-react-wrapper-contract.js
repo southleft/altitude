@@ -28,7 +28,14 @@ const path = require('node:path');
 const REPO = path.resolve(__dirname, '..');
 const REACT_PKG = path.join(REPO, 'libs/al-react/package.json');
 const REACT_SRC = path.join(REPO, 'libs/al-react/src/components');
-const PILOTS = ['Button', 'Input', 'Select', 'Dialog', 'ThemeSwitcher'];
+// `Theme` joined the list when `.altitude/migration.json` flipped
+// `theme.react19` to true (spec 2026-07-28-react-storybook-preset-switcher).
+// NOTE what this file can and cannot see: it checks the STATIC surface. The
+// wrapper's real contract — that the five axes reach ATTRIBUTES, not just
+// properties, because every `:host([brand='…'])` rule is an attribute selector
+// — is only observable in a browser, and is asserted by
+// `scripts/check-preset-parity.mjs`.
+const PILOTS = ['Button', 'Input', 'Select', 'Dialog', 'ThemeSwitcher', 'Theme'];
 
 function fail(msg) {
   console.error('[r-contract] FAIL —', msg);

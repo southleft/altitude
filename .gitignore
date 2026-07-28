@@ -41,6 +41,11 @@ playwright-report
 # The scoped `<al-theme brand>` proof — four brands in ONE document with one
 # `:root`, which the four-iframe brands.dark.png harness cannot express.
 !.altitude/visual-compare/brands.scoped.png
+# The same proof through the REACT wrapper, captured from the al-react
+# Storybook's `Foundations/Theme` -> `Brand` story. Its own artifact because
+# `<ALTheme>` reaches the attributes by a different route than lit-html does
+# (see libs/al-react/src/components/Theme/Theme.tsx) and can regress alone.
+!.altitude/visual-compare/brands.react.png
 .altitude/visual-parity-before/
 .altitude/visual-parity-after/
 .altitude/icon-check/
