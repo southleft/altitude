@@ -1,4 +1,4 @@
-import type { ComponentStoryObj } from '@storybook/react';
+import type { StoryObj } from '@storybook/react-vite';
 import IconSvgs from './IconSvgs';
 
 export default {
@@ -7,4 +7,4 @@ export default {
   parameters: { status: { type: 'beta' } }
 };
 
-export const Default: ComponentStoryObj<typeof IconSvgs> = { args: {} };
+export const Default: StoryObj<typeof IconSvgs> = { args: {} };

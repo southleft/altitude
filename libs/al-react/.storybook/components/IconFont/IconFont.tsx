@@ -1,9 +1,13 @@
 import './IconFont.scss?inline';
 import React from 'react';
+// WAS `require('!!raw-loader!…iconfont.css').default` — a webpack inline-loader
+// specifier. The builder is `@storybook/react-vite`, so there is no `require`
+// in the preview bundle and this story threw `ReferenceError: require is not
+// defined` on render. `?raw` is Vite's equivalent.
+import IconCss from '../../../../al-web-components/components/icon/fonts/iconfont.css?raw';
 
 class IconFont extends React.Component {
   getIconMap() {
-    const IconCss = require('!!raw-loader!../../../../al-web-components/components/icon/fonts/iconfont.css').default;
     return IconCss.match(/\.icon-[^\}]+\}/g).map((icon) => {
       const iconCode = icon.match(/content: "(.*?)";/) || icon.match(/content: '(.*?)';/);
       return {

@@ -1,4 +1,4 @@
-import type { ComponentStoryObj } from '@storybook/react';
+import type { StoryObj } from '@storybook/react-vite';
 import IconFont from './IconFont';
 
 export default {
@@ -7,4 +7,4 @@ export default {
   parameters: { status: { type: 'beta' } }
 };
 
-export const Default: ComponentStoryObj<typeof IconFont> = { args: {} };
+export const Default: StoryObj<typeof IconFont> = { args: {} };
