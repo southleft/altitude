@@ -44,7 +44,7 @@ if (customElements.get(ALTheme.el) === undefined) {
  * | `style#al-theme-sheet`   | `preview.ts:20-24` | base `main.scss` + the altitude-dark   |
  * |                          |                    | `:root` block. NEVER touched here.     |
  * | `style#iconfont-style`   | `preview.ts:26-30` | NEVER touched here.                    |
- * | `style#al-preset-tokens` | THIS MODULE        | exactly one; always last in `<head>`.  |
+ * | `style#al-preset-tokens` | THIS MODULE        | exactly one; after every other sheet.  |
  * | `style#al-tokens-sheet`  | `<al-theme-switcher>` | distinct id; resolved by opt-out.   |
  *
  * `style#al-theme-sheet` and `style#al-preset-tokens` are unlayered `:root`
@@ -52,6 +52,22 @@ if (customElements.get(ALTheme.el) === undefined) {
  * That is the entire reason this re-appends rather than mutates in place.
  */
 const PRESET_STYLE_ID = 'al-preset-tokens';
+
+/**
+ * "Last" means last among elements that can carry CSS, not
+ * `head.lastElementChild`. The static `build:storybook` output appends
+ * `<link rel="modulepreload">` tags for the lazy story chunks after our block
+ * (verified: indices 25-26 vs our 24), and those carry no rules — treating
+ * them as competition would make this re-append on every single render, which
+ * on a 29-story docs page is 29 needless style recalcs.
+ */
+function isAfterAllStylesheets(el: Element): boolean {
+  for (let n = el.nextElementSibling; n; n = n.nextElementSibling) {
+    if (n.tagName === 'STYLE') return false;
+    if (n.tagName === 'LINK' && (n.getAttribute('rel') || '').includes('stylesheet')) return false;
+  }
+  return true;
+}
 
 /**
  * @param css raw `:root { … }` text, or `null` to remove the block entirely
@@ -67,10 +83,8 @@ function applyTokens(css: string | null): void {
     return;
   }
 
-  // Already correct AND already last — nothing to do. Without this, a docs
-  // page (many stories, one iframe) would remove/re-append the same block once
-  // per story on every render.
-  if (existing && existing.textContent === css && existing === head.lastElementChild) return;
+  // Already correct AND still after every other stylesheet — nothing to do.
+  if (existing && existing.textContent === css && isAfterAllStylesheets(existing)) return;
 
   existing?.remove();
   const style = document.createElement('style');

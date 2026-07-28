@@ -109,7 +109,7 @@ story — that is the payload, not a bug.
 | --- | --- | --- |
 | `style#al-theme-sheet` | `.storybook/preview.ts` | `main.scss` + the default altitude-dark `:root` block. The decorator never touches it. |
 | `style#iconfont-style` | `.storybook/preview.ts` | Never touched. |
-| `style#al-preset-tokens` | `.storybook/with-preset.ts` | Exactly one, re-appended so it stays **last** in `<head>`. |
+| `style#al-preset-tokens` | `.storybook/with-preset.ts` | Exactly one, re-appended so it stays after every other stylesheet in `<head>`. |
 | `style#al-tokens-sheet` | `<al-theme-switcher>` | Distinct id; the two never clobber each other. |
 
 `style#al-theme-sheet` and `style#al-preset-tokens` are unlayered `:root` rules of identical
