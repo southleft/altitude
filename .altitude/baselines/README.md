@@ -63,82 +63,140 @@ Two things to know before you debug a failure:
   the sorted `variables` array shifts. Review `totalVariables`, `uniqueNames`,
   and the `byFile` key set, not the line diff.
 
-## OUTSTANDING: `bundle/snapshot.json` needs a Linux recapture
+## RESOLVED 2026-07-28: `bundle/snapshot.json` recaptured, and no longer Linux-only
 
-**Do not capture it on Windows.** Two Windows-only faults make a local capture
-worse than the stale file:
+`baselines-bundle` was red for six specs. It is green as of `b44d58f`, and the
+reason it could not be closed earlier — "you can only capture this on Linux" —
+has been removed rather than worked around.
 
-- `libs/al-react/package.json`'s `cp -r ../al-web-components/dist/css ./dist`
-  silently fails, so `al-react/dist` reads ~340 KB / 18 files light (measured
-  2026-07-28: 93,794 B against a 434,728 B baseline). That alone swings the
-  total by −6 %, which is why `check-bundle-budget.js` currently reports
-  `3253KB -> 3060KB (−5.94 %)` here — a measurement artifact, not a saving.
-- `pnpm run build` inflates ~160 dist files by a few bytes each (LF → CRLF in
-  emitted sourcemaps / svgs / hbs; the repo still has no `.gitattributes`).
+### Capture it wherever you like. Here is the proof.
 
-### What the recapture must show
+The snapshot records file **sizes**, and this build's sizes were EOL-sensitive
+in two places:
 
-Accumulated across three specs, none of which could capture it:
+1. Vite's `.js.map` files embed the `.ts` sources verbatim in
+   `sourcesContent`. JSON-serialized, every CRLF costs the escaped `\r`
+   sequence — 2 bytes more than a bare LF. **18,959 of them = 37,918 B.**
+2. `scripts/copy-assets-to-dist.js` mirrors `.svg` / `.hbs` / `.js` assets
+   from source into `dist/` byte-for-byte, carrying their CRs along.
+   **629 B.**
 
-| Spec | al-web-components delta |
-|---|---|
-| `2026-07-28-complete-brand-build-matrix` | ~+69 KB (four `altitude` bundles) |
-| `2026-07-28-define-brand-identities` | ~+12 KB (brand token content) |
-| `2026-07-28-scoped-token-emission-brand-wiring` | **+18,263 B**, measured |
-| `2026-07-28-react-storybook-preset-switcher` | **0 B on al-web-components**; al-react gains one wrapper (`src/components/Theme/`) |
+Measured directly rather than argued: one commit, Node 20.18.1 + pnpm 9.15.0
+on both sides, a Windows CRLF working tree against a **real Linux build** of
+the same tree.
 
-The last one was measured directly — same machine, same commit, only the two
-source files reverted — as 3,020,929 B → 3,039,192 B, 588 → 590 files. It
-lands entirely in three entries:
+| | total | files |
+|---|---|---|
+| Windows, CRLF working tree | 3,563,072 B | 1022 |
+| Linux | 3,524,525 B | 1022 |
+| **difference** | **38,547 B (1.094 %)** | 0 |
+
+875 of the 1022 built files were byte-identical; 147 differed; **no file
+existed on only one platform**, and the snapshot's key order was identical
+(so `localeCompare` ordering and the POSIX path normalization are both fine).
+Every one of the 38,547 differing bytes was a carriage return — the standalone
+CR audit predicted 38,547 and the cross-platform diff measured 38,547. Nothing
+else about the build is platform-dependent: not minification, not chunk
+hashing, not file ordering, not path separators.
+
+That 1.094 % against a 1 % ceiling is why the gate was unsatisfiable from
+Windows *by construction*.
+
+**The fix is `.gitattributes`: `* text=auto eol=lf`.** The working tree is now
+LF on every platform (git already stored LF; only the checkout changed). With
+that in place a Windows capture is **byte-identical to the Linux capture** —
+sha256 `e30e1221…` on both, all 1022 files equal, both totalling 3,524,525 B.
+
+`scripts/capture-bundle-baseline.js` now **refuses to write a snapshot** if
+`dist/` contains any carriage returns, naming the offending files and the
+renormalize command. Escape hatch: `ALTITUDE_ALLOW_CRLF_CAPTURE=1`. If you
+ever see it fire, your checkout predates the `.gitattributes` commit:
+
+```bash
+git rm --cached -r . -q && git reset --hard   # re-checkout under the attributes
+pnpm run build
+```
+
+### What moved, and why
 
 ```
-+21,549  components/theme/theme.js        (35 B -> 21,584 B)
- +3,578  components/theme/theme.js.map
- -3,415  components/bundle/bundle.js      (27,102 B -> 5,760 B)
- -3,573  components/bundle/bundle.js.map
-    +35  styles/theme.js                  (new)
-    +89  styles/theme.js.map
+totalBytes  3,330,888 -> 3,524,525   (+193,637, +5.81 %)
+  al-web-components  2,896,160 -> 3,002,910  (+106,750,  584 -> 590 files)
+  al-react             434,728 ->   521,615  ( +86,887,  425 -> 432 files)
 ```
 
-`al-react` is **unchanged**: it copies only `dist/css`, and `dist/css` is
-byte-identical (the scoped host partials are deliberately not mirrored there —
-see `scripts/copy-tokens-to-legacy-dist.js`).
+**al-web-components** — 6 files added, 28 changed, 0 removed:
 
-`2026-07-28-react-storybook-preset-switcher` touched no al-web-components
-source at all, so it moves nothing on that side. On al-react it adds one
-wrapper folder; `tsc` emits it into `dist/src/components/Theme/`, a few hundred
-bytes. **It was also not captured on Windows, and the reason is now measured
-rather than inherited:** `pnpm --filter al-react build` prints "The system
-cannot find the path specified." twice — once for `cp -r ./.storybook/static/
-images ./dist/images` and once for `cp -r ../al-web-components/dist/css
-./dist`. Both are swallowed by `2>/dev/null || true`, which is exactly the
-silent failure described above. A Linux recapture picks this spec's delta up
-with the other three.
+| bytes | what | spec |
+|---|---|---|
+| +69,474 | four `altitude` brand bundles (css + scss × dark + light) | `complete-brand-build-matrix` |
+| +21,549 | `components/theme/theme.js` — was a **35-byte empty stub**; the Vite entry map spelled two different modules `theme` and the stylesheet entry won, so `<al-theme>` was never built at its documented path | `scoped-token-emission-brand-wiring` |
+| +3,446 | `components/theme/theme.js.map` | same |
+| +4,891 | `components/theme-switcher/theme-switcher.js` | same |
+| +124 | `styles/theme.js` + `.map` (new) | same |
+| +6,870 | brand token content across the southleft / odyssey / altitude bundles, `tokens.d.ts`, `aliases.json` | `define-brand-identities` |
+| +396 | remainder across the css/scss token files | — |
 
-Noticed while confirming that: `libs/al-react/package.json` declares
-`"main": "dist/index.js"`, but `tsc` resolves its rootDir across the imported
-`package.json` and emits to `dist/src/index.js`. The entry point has been wrong
-independently of any of this; worth its own fix.
+That reconciles with the three predicted deltas (~+69 KB, ~+12 KB, and the
+directly-measured +18,263 B), which is the check worth doing: the recapture is
+verifiable rather than a rubber stamp.
 
-Against the CI ceiling — 1 % of `totalBytes: 3330888` = **33,309 bytes across
-both packages** (`.github/workflows/v2-checks.yml:191-220`) — this spec spends
-**55 % of the whole allowance**, and the two predecessors have already
-overspent it. `baselines-bundle` is red until someone recaptures on Linux; it
-was red before this change too.
+**al-react** — +7 files net, and almost none of it is new code:
 
-`check-bundle-budget.js` additionally reports two per-file violations against
-`perFileDriftRatio 4.00`, both from the same structural fix:
-`components/theme/theme.js` and its map. That file was a 35-byte EMPTY stub —
-the Vite entry map spelled two different modules `theme` and the stylesheet
-entry won, so `<al-theme>` was never built at its documented path. Any ratio
-against 35 bytes is meaningless; the recapture resolves it.
+- 406 files moved `dist/src/**` → `dist/**`. `tsconfig` now pins
+  `rootDir: "src"`, so the long-declared `"main": "dist/index.js"` is finally
+  a real file. Size-neutral per file.
+- `dist/package.json` (1,302 B) is no longer emitted — it was a
+  `resolveJsonModule` artifact that also broke every al-react Storybook story
+  by shadowing `/package.json` under `staticDirs`.
+- +12,074 B across 16 `css/` files mirrored from al-web-components.
+- The rest is the new `<ALTheme>` wrapper.
 
-## Baselines committed: 2026-06-15
+**Why al-react moved at all**, when the last handoff predicted it would not:
+`libs/al-react`'s two build copies used `cp -r … 2>/dev/null || true`, and
+`cp` does not exist in the shell npm uses on Windows. Both copies failed on
+every Windows build and the errors were swallowed, so `dist/` was missing the
+entire `dist/css` tree and the manager logo — 422,358 B across 22 files. They
+now run through `libs/al-react/scripts/copy-dist-assets.mjs`, which fails
+loudly. That silent failure is what made `check-bundle-budget.js` report
+`3253KB -> 3060KB (−5.94 %)` — a measurement artifact, not a saving.
 
-Captured against the legacy stack (Lit 3.1, webpack 5, Style Dictionary 3,
-React 18, yarn 1) as the pre-v2 reference. Token names and bundle totals are
-the spine of the **G8** gate; non-trivial drift requires updating the
-baseline in the same PR.
+### Current gate state
+
+```
+$ node scripts/check-bundle-budget.js
+[bundle-budget] total: 3442KB -> 3442KB (0.00%)
+[bundle-budget] PASS: within budget.
+```
+
+The two per-file violations against `perFileDriftRatio 4.00` are gone with the
+baseline; both were ratios taken against the 35-byte `theme.js` stub, where any
+ratio is meaningless.
+
+### Note on the gate's design
+
+`baselines-bundle` compares `totalBytes` with a **1 % tolerance**, while
+`.altitude/bundle-budget.json` allows **10 %** total drift. The tighter of the
+two is the reproducibility check, not the budget — it is asserting "a fresh
+build of this commit equals the committed snapshot", which should really be an
+equality test now that the build is byte-reproducible. The 1 % was described in
+the workflow as absorbing "gzip/minifier non-determinism"; there is none
+measurable. Tightening it to equality (like `baselines-tokens`, which is a
+sha256 with no tolerance) would turn a fuzzy gate into a precise one — left as
+a follow-up because it should land with a green run to point at.
+
+## Provenance
+
+| Baseline | Committed | Captured against |
+|---|---|---|
+| `bundle/snapshot.json` | **2026-07-28** | v2 stack — Vite 5, Lit 3.3, Style Dictionary 5, React 19, pnpm 9. LF working tree; platform-independent (see above). |
+| `tokens/snapshot.json` | 2026-06-15, maintained since | v2 token pipeline |
+| `screenshots/` | 2026-06-15, maintained since | Playwright, 5 pilots |
+
+The original 2026-06-15 set was captured against the legacy stack (Lit 3.1,
+webpack 5, Style Dictionary 3, React 18, yarn 1) as the pre-v2 reference. Token
+names and bundle totals are the spine of the **G8** gate; non-trivial drift
+requires updating the baseline in the same PR.
 
 - Token unique names: see `tokens/snapshot.json#uniqueNames`.
 - Bundle total: see `bundle/snapshot.json#totalBytes`.
@@ -146,9 +204,14 @@ baseline in the same PR.
 
 The v2 stack (Vite 5 + Storybook 10 + pnpm 9, see `.altitude/BUILD.md`)
 preserved the `--al-*` token names through the Style Dictionary v3 → v5
-migration via custom transform groups, and produces a 51% smaller total bundle
-on the Vite build versus the legacy webpack baseline. (The byte-parity gate
-that policed that migration was retired once v3 was deleted — see
-`.altitude/TOKENS.md`.) The bundle baseline is
-intentionally kept on the webpack reference until the next major bump per
-the budget rationale in `.altitude/bundle-budget.json`.
+migration via custom transform groups. (The byte-parity gate that policed that
+migration was retired once v3 was deleted — see `.altitude/TOKENS.md`.)
+
+**The bundle baseline is no longer the webpack reference.** Keeping it there
+was the plan in `.altitude/bundle-budget.json` ("re-capture under the new
+builder and tighten"), but `baselines-bundle` compares a *fresh build of the
+current commit* against it with a 1 % tolerance, so a stale reference is not a
+policy choice — it is a permanently red job. It now tracks the current build.
+`bundle-budget.json`'s 10 % / 400 % ratios are still sized for the old
+cross-builder comparison and could be tightened considerably now that baseline
+and build are the same stack; that is the remaining half of the T6.3 follow-up.
