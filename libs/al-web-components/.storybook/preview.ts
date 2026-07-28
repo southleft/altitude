@@ -7,6 +7,7 @@
 import type { Preview } from '@storybook/web-components';
 import { setCustomElementsManifest } from '@storybook/web-components';
 import { addons } from 'storybook/preview-api';
+import { html } from 'lit';
 import customElements from '../custom-elements.json';
 import mainStyles from '../styles/main.scss?inline';
 import { EVENTS } from './ai-theme/constants';
@@ -79,11 +80,50 @@ export const excludeRegexArray = [
   '^_.*',
 ];
 
+/**
+ * Gives a single-story view the same card chrome as the docs page.
+ *
+ * Selecting one story in the sidebar renders it bare on the canvas, which read
+ * as a different product from the docs page it sits under. This wraps it in the
+ * same frame + card (name on the left, addressable story id on the right) that
+ * `AltitudeDocsPage` renders, so the two views are continuous.
+ *
+ * Scope is deliberately narrow:
+ *  - Docs view is skipped — `AltitudeDocsPage` already supplies the card there,
+ *    and wrapping again would nest two.
+ *  - `layout: 'fullscreen'` is skipped. Pages and templates are meant to bleed
+ *    to the viewport edge; boxing them would misrepresent them.
+ *  - `parameters.alFrame = false` is an explicit per-story escape hatch.
+ */
+const storyFrame: NonNullable<Preview['decorators']>[number] = (story, context) => {
+  if (context.viewMode !== 'story') return story();
+
+  const layout = (context.parameters as any)?.layout;
+  if (layout === 'fullscreen') return story();
+  if ((context.parameters as any)?.alFrame === false) return story();
+
+  return html`
+    <div class="al-docs al-docs--story">
+      <div class="al-docs__stories">
+        <section class="al-docs__card">
+          <div class="al-docs__card-head">
+            <span class="al-docs__card-name">${context.name}</span>
+            <span class="al-docs__card-id">${context.id}</span>
+          </div>
+          <div class="al-docs__card-body">${story()}</div>
+        </section>
+      </div>
+    </div>
+  `;
+};
+
 const preview: Preview = {
   // Global autodocs switch. Storybook 10 dropped `docs.autodocs` from main.ts;
   // this tag is the replacement. Every component file already sets it locally,
   // so this mainly guarantees new components get a docs page by default.
   tags: ['autodocs'],
+
+  decorators: [storyFrame],
 
   parameters: {
     docs: {
