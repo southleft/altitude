@@ -53,6 +53,15 @@ function findIconEntries(iconsRoot) {
 const componentEntries = findComponentEntries(join(__dirname, 'components'));
 const iconEntries = findIconEntries(join(__dirname, 'components/icon/icons'));
 
+// NOTE the key `styles-theme`, not `theme`. `findComponentEntries` produces a
+// `theme` key for `components/theme/theme.ts` (it extends ALElement), and this
+// object literal used to spell the stylesheet entry `theme:` as well — so the
+// later key silently WON and `<al-theme>` was never built as an entry. The
+// symptom shipped: `dist/components/theme/theme.js` was a 35-byte empty file
+// while `dist/components/theme/theme.d.ts` (written by tsc, which does not
+// share this map) fully declared `ALTheme`. `apps/ssr/scripts/build.mjs:71`
+// imports exactly that path to hydrate its `<al-theme>` pilot and therefore
+// loaded nothing. Keeping the two entries distinct fixes both.
 const entries = {
   ...componentEntries,
   ...iconEntries,
@@ -60,7 +69,7 @@ const entries = {
   ALElement: join(__dirname, 'components/ALElement.ts'),
   'controllers/form': join(__dirname, 'controllers/form.ts'),
   bundle: join(__dirname, 'components/bundle.ts'),
-  theme: join(__dirname, 'styles/theme.ts'),
+  'styles-theme': join(__dirname, 'styles/theme.ts'),
 };
 
 // ---------- SCSS import-rewrite plugin ----------
@@ -143,7 +152,9 @@ export default defineConfig({
         // bundles main.scss → css/main.css; other entries don't emit CSS
         // because their styles ship inline via unsafeCSS.
         assetFileNames: (info) => {
-          if (info.name === 'theme.css') return 'css/main.css';
+          // The `styles-theme` entry (styles/theme.ts -> main.scss) is the only
+          // one that emits a CSS asset; keep its published name `css/main.css`.
+          if (info.name === 'styles-theme.css' || info.name === 'theme.css') return 'css/main.css';
           return 'assets/[name][extname]';
         },
         entryFileNames: (chunk) => {
@@ -156,6 +167,10 @@ export default defineConfig({
           if (chunk.name === 'ALElement') return 'components/ALElement.js';
           if (chunk.name.startsWith('controllers/')) return `${chunk.name}.js`;
           if (chunk.name === 'bundle') return 'components/bundle/bundle.js';
+          // The stylesheet entry emits an (empty) JS shim; its payload is the
+          // css/main.css asset above. `components/theme/theme.js` belongs to
+          // the <al-theme> COMPONENT entry and is emitted by the default rule.
+          if (chunk.name === 'styles-theme') return 'styles/theme.js';
           if (chunk.name === 'theme') return 'components/theme/theme.js';
           return `components/${chunk.name}/${chunk.name}.js`;
         },
