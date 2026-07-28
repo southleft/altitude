@@ -1,0 +1,62 @@
+# Altitude — line-ending contract.
+#
+# The repo had none until now, so what landed in a working tree depended on
+# each contributor's `core.autocrlf`. Every tracked text blob in the repo is
+# already LF (verified), so this file changes nothing about what is stored —
+# it only makes the behaviour explicit and machine-independent.
+
+# ---------------------------------------------------------------------------
+# Default: let git detect text and normalize to LF on commit. Working-tree EOL
+# stays platform-native (CRLF on Windows), which is what already happens under
+# `core.autocrlf=true` — so adding this does not force a re-checkout.
+# ---------------------------------------------------------------------------
+* text=auto
+
+# ---------------------------------------------------------------------------
+# Generated artifacts — LF in the WORKING TREE on every platform.
+#
+# Why these need `eol=lf` and the rest don't: their emitters write LF
+# unconditionally (`JSON.stringify`, `lines.join('\n')`). With a native-EOL
+# checkout the file on disk is CRLF, so every regeneration rewrites it as LF.
+# The content hash is unchanged, but git's stat cache can never settle
+# (`git status` shows " M" forever while `git diff` is empty — see
+# `git status --porcelain=v2`, which prints the same blob hash on both sides).
+# Pinning the checkout to LF makes generate → status a genuine no-op.
+#
+# This does NOT fix carriage returns that end up inside JSON *string values*
+# (serialized as the escaped `\r` sequence). Those are file content, not line
+# terminators, and git normalization cannot touch them — they are fixed in the
+# emitters: `libs/al-web-components/cem-plugins/al-deterministic.mjs` and
+# `scripts/generate-component-schemas.js`.
+# ---------------------------------------------------------------------------
+libs/al-web-components/custom-elements.json                text eol=lf
+libs/al-web-components/schemas/**                          text eol=lf
+libs/al-web-components/components/icon/fonts/iconfont.css  text eol=lf
+libs/al-web-components/components/icon/fonts/iconfont.svg  text eol=lf
+.altitude/baselines/**/*.json                              text eol=lf
+.altitude/ai-readiness/**/*.json                           text eol=lf
+.altitude/golden-snapshots/*.expected                      text eol=lf
+
+# Shell scripts must keep LF or they will not execute on Linux/macOS/CI.
+*.sh text eol=lf
+
+# Lockfiles are tool-written; keep them byte-stable across platforms.
+pnpm-lock.yaml text eol=lf
+package-lock.json text eol=lf
+
+# ---------------------------------------------------------------------------
+# Binary — never EOL-convert, never diff as text.
+# ---------------------------------------------------------------------------
+*.woff2 binary
+*.woff  binary
+*.ttf   binary
+*.eot   binary
+*.otf   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.pdf   binary
+*.zip   binary
