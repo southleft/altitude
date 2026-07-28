@@ -1,4 +1,4 @@
-import type { StoryObj } from '@storybook/react-webpack5';
+import type { StoryObj } from '@storybook/react-vite';
 import { ALDropdownPanel, ALList, ALListItem, ALIconSuccess, ALSearch } from '../..';
 
 export default {

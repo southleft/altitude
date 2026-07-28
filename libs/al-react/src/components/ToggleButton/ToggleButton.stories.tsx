@@ -1,4 +1,4 @@
-import type { StoryObj } from '@storybook/react-webpack5';
+import type { StoryObj } from '@storybook/react-vite';
 import { ALToggleButton, ALIconCalendar, ALAvatar, ALTooltip, ALPopover, ALIconChevronDown } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 

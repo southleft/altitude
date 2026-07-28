@@ -1,4 +1,4 @@
-import type { StoryObj } from '@storybook/react-webpack5';
+import type { StoryObj } from '@storybook/react-vite';
 import { ALRadio, ALFieldNote, ALIconWarningCircle, ALIconHelp } from '../..';
 
 export default {

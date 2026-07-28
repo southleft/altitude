@@ -77,6 +77,11 @@ pnpm --filter al-react plop        # `component` generator, PascalCase name
 ```
 
 It writes `src/components/<Name>/{<Name>.tsx,index.tsx,<Name>.stories.tsx}` and
-appends the barrel export. **Fix the generated story's import**: the template
-still says `@storybook/react-webpack5`, but the framework is
-`@storybook/react-vite`.
+appends the barrel export. The generated story imports `StoryObj` from
+`@storybook/react-vite`, matching the framework in `.storybook/main.ts` — no
+post-generation edit is needed.
+
+`@storybook/react-webpack5` appears nowhere in this package. It was never a
+declared dependency and was never installed; the 66 files that imported types
+from it type-checked only because story files are excluded from `tsconfig.json`
+and the specifier was erased before resolution.

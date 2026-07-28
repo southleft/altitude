@@ -1,4 +1,4 @@
-import type { StoryObj } from '@storybook/react-webpack5';
+import type { StoryObj } from '@storybook/react-vite';
 import { ALFocusTrap, ALButton, ALButtonGroup, ALDialog, ALTab, ALTabs, ALTabPanel } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 

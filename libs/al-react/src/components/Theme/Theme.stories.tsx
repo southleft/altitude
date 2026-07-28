@@ -1,11 +1,4 @@
 // `<ALTheme>` stories. Spec: 2026-07-28-react-storybook-preset-switcher (R7).
-//
-// NOTE the framework import below. Both the plop template
-// (`plop/templates/component/Component.stories.tsx.hbs`) and all 64
-// pre-existing story files import `StoryObj` from `@storybook/react-webpack5`,
-// which is NOT the configured framework — `.storybook/main.ts` sets
-// `@storybook/react-vite` and no `react-webpack5` dependency exists in
-// `package.json`. New files use the real one.
 import type { StoryObj } from '@storybook/react-vite';
 import React from 'react';
 import { ALTheme, ALButton, ALCard, ALTextPassage } from '../..';

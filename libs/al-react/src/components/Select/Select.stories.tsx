@@ -1,4 +1,4 @@
-import type { StoryObj } from '@storybook/react-webpack5';
+import type { StoryObj } from '@storybook/react-vite';
 import { ALSelect, ALFieldNote, ALIconWarningCircle, ALIconHelp, ALList, ALListItem } from '../..';
 
 const dataSource = [

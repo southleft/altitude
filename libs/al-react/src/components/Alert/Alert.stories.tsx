@@ -1,4 +1,4 @@
-import type { StoryObj } from '@storybook/react-webpack5';
+import type { StoryObj } from '@storybook/react-vite';
 import { ALAlert, ALTextPassage, ALButton } from '../..';
 
 export default {
