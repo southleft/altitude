@@ -41,6 +41,7 @@ in the PR description. Eight non-negotiable guardrails (G1–G8) are CI-enforced
 |---|---|
 | Plan + phase gates | [`NEXT-GEN-UPGRADE-PLAN.md`](./NEXT-GEN-UPGRADE-PLAN.md) |
 | Token engine docs | [`.altitude/TOKENS.md`](./.altitude/TOKENS.md) |
+| Brand contract + token reachability map | [`.altitude/BRANDS.md`](./.altitude/BRANDS.md) — **read before editing any `tier-2/brand/` file.** A brand carries the whole look (typography, radius, shadow, border width, spacing), and several obvious overrides are inert: `--al-theme-typography-*` has zero consumers, `theme.space.{sm,md,lg}` belongs to the `density` axis, `theme.border.radius.sm` is unused, and `letterSpacing` is dropped by the formatter. |
 | Build pipeline docs | [`.altitude/BUILD.md`](./.altitude/BUILD.md) |
 | Pinned target versions | [`.altitude/targets.json`](./.altitude/targets.json) |
 | Migration manifest | [`.altitude/migration.json`](./.altitude/migration.json) |
@@ -58,6 +59,8 @@ in the PR description. Eight non-negotiable guardrails (G1–G8) are CI-enforced
 # Whole-pipeline smoke test:
 pnpm --filter al-web-components build:tokens                # Style Dictionary v5 (the only token pipeline)
 pnpm --filter al-web-components test:tokens                 # token contract tests vs .altitude/baselines/
+pnpm test:brands                                            # brands must differ beyond colour; no inert overrides
+pnpm brands:compare                                         # rendered four-column check → .altitude/visual-compare/brands.dark.png
 pnpm --filter al-web-components build                       # library build (Vite)
 pnpm --filter al-web-components build:storybook \
     --output-dir ../../dist/storybook/web-components        # Storybook static
