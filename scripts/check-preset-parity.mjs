@@ -139,6 +139,19 @@ async function probe(page, base, storyId, presetId) {
   return { url, ...(await page.evaluate(PROBE)) };
 }
 
+/**
+ * CUSTOM-PROPERTY values come back as literal declaration text, so a minified
+ * stylesheet and an unminified one disagree on spelling for identical values —
+ * a `storybook build` React preview reports `.5rem` where a `storybook dev`
+ * web-components preview reports `0.5rem`. Real computed values (`font`,
+ * `backgroundColor`) are normalized by the engine and unaffected. Restore the
+ * leading zero and collapse whitespace so the check reports THEMING
+ * divergence, which is what it exists for, and not CSS minification.
+ */
+function norm(value) {
+  return typeof value === 'string' ? value.replace(/(^|[\s(,])\.(\d)/g, '$10.$2').replace(/\s+/g, ' ').trim() : value;
+}
+
 async function reachable(url) {
   try {
     const res = await fetch(`${url}/index.json`);
@@ -223,7 +236,7 @@ for (const preset of presets) {
   }
 
   for (const key of ['background', 'radius', 'spaceMd', 'font', 'buttonBackground']) {
-    if (wc[key] !== react[key]) {
+    if (norm(wc[key]) !== norm(react[key])) {
       failures.push(`${preset.id}: computed ${key} DIFFERS\n    web-components: ${wc[key]}\n    al-react:       ${react[key]}`);
     }
   }

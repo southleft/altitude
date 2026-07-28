@@ -6,6 +6,25 @@ import iconFontCSS from '../../al-web-components/components/icon/fonts/iconfont.
 import { DEFAULT_PRESET_ID, PRESET_TOOLBAR_ITEMS } from '../../al-web-components/.storybook/presets';
 import { withPreset } from './with-preset';
 
+// ONE stylesheet, not one per brand — and that is a finding, not an omission.
+//
+// The spec expected to inject per-brand token CSS here, because the
+// web-components preview used to swap a whole `:root` bundle to change brand.
+// `2026-07-28-scoped-token-emission-brand-wiring` retired that: the emitter now
+// writes `:host([brand='…'])` / `:host([brand='…'][mode='…'])` blocks into
+// `<al-theme>`'s own compiled styles, which ship inside
+// `dist/components/theme/theme.js`. The `<ALTheme>` wrapper imports that file,
+// so every brand travels with the component and there is nothing to inject.
+// Measured: `pnpm test:preset-parity` reads four distinct brand backgrounds,
+// radii and font stacks out of this preview with only the sheet below present.
+//
+// The per-brand CSS files do exist, and the spec's inferred path was right —
+// `scripts/copy-assets-to-dist.js` copies `styles/dist` (which itself contains
+// `css/`) into `dist/css`, so they land at the doubly nested
+// `al-web-components/dist/css/css/brand/tokens-<brand>-<mode>.css`, six of them.
+// They are the flat `:root` bundles, for consumers who theme a whole document.
+// Nothing in this Storybook needs them, and importing one would put a second,
+// unscoped `:root` bundle on the page and fight the host rules.
 const mainStyleElement = document.createElement('style');
 mainStyleElement.innerHTML = mainStyles as unknown as string;
 mainStyleElement.setAttribute('type', 'text/css');
