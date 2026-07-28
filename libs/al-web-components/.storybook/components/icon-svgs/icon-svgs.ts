@@ -1,13 +1,19 @@
-import { html, LitElement, unsafeCSS } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { html, LitElement, unsafeCSS, nothing } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import styles from './icon-svgs.scss';
-import '../token-code/token-code';
 
-// Eager-glob every <al-icon-*> component so they're registered before
-// render. Replaces the legacy webpack `require.context('…',false,/\.ts$/)`
-// dynamic loader.
-const ICON_MODULES = import.meta.glob('../../../components/icon/icons/*.ts', { eager: true }) as Record<string, unknown>;
+// The `<al-icon>` element itself, plus every glyph registered eagerly. `all.ts`
+// is ~230 KB gzipped and exists for exactly this page — it is deliberately not a
+// build entry point, so it can never reach an application bundle.
+import { ALIcon } from '../../../components/icon/icon';
+import '../../../components/icon/all';
+import { catalog, ICON_CATEGORIES } from '../../../components/icon/catalog';
+import { LEGACY_ALIASES, SHADOWED_LEGACY_NAMES } from '../../../components/icon/icon-aliases';
+
+if (customElements.get(ALIcon.el) === undefined) customElements.define(ALIcon.el, ALIcon);
+
+/** Render budget. 1,512 icons means 1,512 shadow roots — filter first, then render. */
+const PAGE_SIZE = 120;
 
 @customElement('icon-svgs')
 export class IconSvgs extends LitElement {
@@ -15,46 +21,158 @@ export class IconSvgs extends LitElement {
     return unsafeCSS(styles.toString());
   }
 
-  ALL_ICONS = Object.keys(ICON_MODULES)
-    .map((path) => ({ name: path.match(/\/([\w-]+)\.ts$/)![1] }))
-    .sort((a, b) => a.name.localeCompare(b.name));
+  @state() private accessor query = '';
+  @state() private accessor category: string | null = null;
+  @state() private accessor limit = PAGE_SIZE;
+  @state() private accessor copied: string | null = null;
 
-  renderIconList() {
-    return this.ALL_ICONS.map((item) => {
-      return unsafeHTML(
-        `<tr class="token-specimen token-specimen--icon">
-            <td><token-code value="&lt;al-icon-${item.name}&gt;&lt;/al-icon-${item.name}&gt;"></token-code></td>
-            <td>${item.name}</td>
-            <td class="token-specimen__example">
-              <div class="icon" style="--al-icon-width: var(--al-theme-icon); --al-icon-height: var(--al-theme-icon);">
-                <al-icon-${item.name}></al-icon-${item.name}>
-              </div>
-            </td>
-          </tr>`
-      );
+  private get filtered() {
+    const q = this.query.trim().toLowerCase();
+    return catalog.filter((icon) => {
+      if (this.category && !icon.categories.includes(this.category)) return false;
+      if (!q) return true;
+      // Search tags as well as the name — this is the payoff of Phosphor's
+      // metadata: typing "settings" should surface `gear`.
+      return icon.name.includes(q) || icon.tags.some((t) => t.toLowerCase().includes(q));
     });
   }
 
+  private onSearch(e: Event) {
+    this.query = (e.target as HTMLInputElement).value;
+    this.limit = PAGE_SIZE;
+  }
+
+  private setCategory(value: string | null) {
+    this.category = value;
+    this.limit = PAGE_SIZE;
+  }
+
+  private async copy(name: string) {
+    const snippet = `<al-icon name="${name}"></al-icon>`;
+    try {
+      await navigator.clipboard.writeText(snippet);
+      this.copied = name;
+      setTimeout(() => {
+        if (this.copied === name) this.copied = null;
+      }, 1200);
+    } catch {
+      // Clipboard is unavailable in some embedded/iframe contexts — not fatal.
+    }
+  }
+
+  private renderTile(icon: (typeof catalog)[number]) {
+    const isCopied = this.copied === icon.name;
+    return html`
+      <button
+        class="icon-tile ${isCopied ? 'icon-tile--copied' : ''}"
+        type="button"
+        title="${icon.tags.length ? `tags: ${icon.tags.join(', ')}` : icon.name}"
+        @click=${() => this.copy(icon.name)}
+      >
+        <al-icon name="${icon.name}" size="lg"></al-icon>
+        <span class="icon-tile__name">${icon.name}</span>
+        <span class="icon-tile__hint">${isCopied ? 'copied!' : 'click to copy'}</span>
+      </button>
+    `;
+  }
+
+  private renderLegacy() {
+    const rows = Object.keys(LEGACY_ALIASES).sort();
+    return html`
+      <section class="legacy">
+        <h2>Deprecated elements</h2>
+        <p>
+          The ${rows.length} original <code>&lt;al-icon-*&gt;</code> elements still work and now render Phosphor
+          artwork, but they are deprecated. Prefer <code>&lt;al-icon name="…"&gt;</code>.
+        </p>
+        <table class="legacy__table">
+          <thead>
+            <tr><th>Deprecated element</th><th>Replacement</th><th></th></tr>
+          </thead>
+          <tbody>
+            ${rows.map(
+              (legacy) => html`
+                <tr>
+                  <td><code>&lt;al-icon-${legacy}&gt;</code></td>
+                  <td><code>&lt;al-icon name="${LEGACY_ALIASES[legacy]}"&gt;</code></td>
+                  <td>
+                    ${SHADOWED_LEGACY_NAMES.includes(legacy)
+                      ? html`<span class="warn"
+                          >⚠ <code>name="${legacy}"</code> is a different Phosphor icon</span
+                        >`
+                      : nothing}
+                  </td>
+                </tr>
+              `
+            )}
+          </tbody>
+        </table>
+      </section>
+    `;
+  }
+
   render() {
+    const results = this.filtered;
+    const shown = results.slice(0, this.limit);
+
     return html`
       <section>
         <header>
-          <h1>Icon Svgs</h1>
-          <p>Icon names should accurately describe the represented concept or action in a clear and intuitive manner. Avoid obscure or ambiguous names that could lead to confusion or misinterpretation.</p>
+          <h1>Icons</h1>
+          <p>
+            ${catalog.length} icons from
+            <a href="https://phosphoricons.com" target="_blank" rel="noreferrer">Phosphor</a> (regular weight).
+            Search matches names <em>and</em> tags — try “settings”, “trash”, or “arrow”.
+          </p>
         </header>
-        <table>
-          <caption><h2>Sizes</h2></caption>
-          <thead>
-            <tr>
-              <th>Code</th>
-              <th>Name</th>
-              <th>Example</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${this.renderIconList()}
-          </tbody>
-        </table>
+
+        <div class="controls">
+          <input
+            class="controls__search"
+            type="search"
+            placeholder="Search ${catalog.length} icons…"
+            .value=${this.query}
+            @input=${this.onSearch}
+            aria-label="Search icons"
+          />
+          <div class="controls__categories" role="group" aria-label="Filter by category">
+            <button
+              type="button"
+              class="chip ${this.category === null ? 'chip--active' : ''}"
+              @click=${() => this.setCategory(null)}
+            >
+              All
+            </button>
+            ${ICON_CATEGORIES.map(
+              (cat) => html`
+                <button
+                  type="button"
+                  class="chip ${this.category === cat ? 'chip--active' : ''}"
+                  @click=${() => this.setCategory(cat)}
+                >
+                  ${cat}
+                </button>
+              `
+            )}
+          </div>
+        </div>
+
+        <p class="count">
+          ${results.length === 0
+            ? html`No icons match <strong>${this.query}</strong>.`
+            : html`Showing <strong>${shown.length}</strong> of <strong>${results.length}</strong> icons.`}
+        </p>
+
+        <div class="icon-grid">${shown.map((icon) => this.renderTile(icon))}</div>
+
+        ${results.length > shown.length
+          ? html`
+              <button class="more" type="button" @click=${() => (this.limit += PAGE_SIZE)}>
+                Show ${Math.min(PAGE_SIZE, results.length - shown.length)} more
+              </button>
+            `
+          : nothing}
+        ${this.renderLegacy()}
       </section>
     `;
   }

@@ -3,8 +3,42 @@ import * as Stories from './icon-svgs.stories';
 
 <Meta of={Stories} />
 
-# Icon Svgs
+# Icons
 
-Discover comprehensive documentation covering the utilization, integration, deletion, alteration, and customization of icons by visiting [this link](https://zeroheight.com/809ab055e/p/06b3aa-icons).
+Altitude ships the full [Phosphor](https://phosphoricons.com) icon set — 1,512 icons at `regular` weight, MIT licensed.
+
+## Usage
+
+Register the icons you use. This is tree-shakeable and renders synchronously, so it works under SSR and never flashes an empty box:
+
+```js
+import { caretDown, magnifyingGlass } from 'al-web-components/dist/components/icon/glyphs.js';
+import { registerIcons } from 'al-web-components/dist/components/icon/registry.js';
+
+registerIcons({ 'caret-down': caretDown, 'magnifying-glass': magnifyingGlass });
+```
+
+```html
+<al-icon name="caret-down" size="sm"></al-icon>
+<al-icon name="magnifying-glass" iconTitle="Search"></al-icon>
+```
+
+Set `iconTitle` when the icon carries meaning on its own — it becomes the accessible name. Leave it off for icons sitting beside visible text and they are correctly hidden from assistive technology.
+
+## Dynamic names
+
+If icon names come from data you do not control, opt into the loader once. This costs ~13 KB gzipped plus one request per icon, and it cannot render server-side:
+
+```js
+import 'al-web-components/dist/components/icon/lazy.js';
+```
+
+## Deprecated elements
+
+The 37 original `<al-icon-*>` elements still work and now render Phosphor artwork, but they are deprecated — see the table at the bottom of the catalog for replacements.
+
+One intentional collision: `<al-icon-list>` renders the legacy bulleted list (Phosphor `list-dashes`), while `<al-icon name="list">` renders the Phosphor hamburger. A legacy alias never shadows a real Phosphor name.
+
+Further documentation lives at [ZeroHeight](https://zeroheight.com/809ab055e/p/06b3aa-icons).
 
 <Canvas of={Stories.IconSvgs} sourceState="none" />

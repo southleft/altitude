@@ -117,6 +117,74 @@ listeners to bind — every shipped wrapper already declares this.
 - `<al-theme-switcher>` adds `scopedOnly` to suppress the legacy
   global-style fallback.
 
+## 4b. Icons — Phosphor
+
+Altitude now ships the full [Phosphor](https://phosphoricons.com) set (1,512
+icons, `regular` weight, MIT) instead of 37 hand-authored SVGs.
+
+**Existing markup keeps working.** All 37 `<al-icon-*>` elements and their
+`ALIcon*` React wrappers still exist and are still exported — they now render
+Phosphor artwork, so **icons will look different**. Phosphor's regular stroke is
+heavier than the old Altitude line work; budget a visual pass. The elements are
+deprecated and will be removed in 3.0.
+
+New code should use the name-based API with an explicit registration, which is
+tree-shakeable and renders synchronously (SSR-safe, no placeholder flash):
+
+```ts
+import { caretDown } from 'al-web-components/dist/components/icon/glyphs.js';
+import { registerIcons } from 'al-web-components/dist/components/icon/registry.js';
+registerIcons({ 'caret-down': caretDown });
+```
+```html
+<al-icon name="caret-down" size="sm"></al-icon>
+```
+
+If icon names come from data you don't control, opt into the loader once —
+~13 KB gzipped plus a request per icon, and it cannot render server-side:
+
+```ts
+import 'al-web-components/dist/components/icon/lazy.js';
+```
+
+### Legacy name → Phosphor name
+
+| 1.x | 2.x | | 1.x | 2.x |
+|---|---|---|---|---|
+| `add` | `plus` | | `menu` | `list` |
+| `attachment` | `paperclip` | | `pin` | `map-pin-simple-line` |
+| `chevron-down` | `caret-down` | | `search` | `magnifying-glass` |
+| `chevron-left` | `caret-left` | | `send` | `paper-plane-tilt` |
+| `chevron-right` | `caret-right` | | `settings` | `gear` |
+| `chevron-up` | `caret-up` | | `success` | `check-circle` |
+| `close` | `x` | | `support` | `headset` |
+| `document` | `file-text` | | `warning-triangle` | `warning` |
+| `dots-horizontal` | `dots-three` | | `emoji` | `smiley` |
+| `dots-vertical` | `dots-three-vertical` | | `filter` | `funnel` |
+| `help` | `question` | | `home` | `house` |
+| `layout-masonry` | `squares-four` | | `list` | `list-dashes` |
+
+Unchanged: `bell`, `bookmark`, `calendar`, `check`, `clock`, `copy`, `info`,
+`minus`, `sign-in`, `sign-out`, `star`, `user`, `warning-circle`.
+
+The full map lives in `libs/al-web-components/icons/legacy-aliases.json`.
+`<al-icon name="close">` also still resolves, because the alias map is consulted
+when a name isn't a Phosphor icon.
+
+> **One deliberate collision.** `<al-icon-list>` renders the legacy bulleted list
+> (Phosphor `list-dashes`), but `<al-icon name="list">` renders the Phosphor
+> hamburger. Name lookup checks the Phosphor catalog before the alias map, so a
+> legacy name can never shadow a real Phosphor icon. Migrate `<al-icon-list>` to
+> `<al-icon name="list-dashes">`.
+
+### Icon webfont
+
+The generated icon webfont is **removed**. The `.icon-<name>` utility classes and
+the `iconfont` `@font-face` no longer exist; `dist/fonts/iconfont.css` ships as an
+empty deprecation stub for one minor version so existing `@import`s don't 404.
+At 1,512 glyphs the base64-inlined font would have been ~275–400 KB. Replace
+`<span class="icon-close">` with `<al-icon name="x">`.
+
 ## 5. Tokens you may still rely on
 
 Token names are **frozen at the 1.0 alias map**

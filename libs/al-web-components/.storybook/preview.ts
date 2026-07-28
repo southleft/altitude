@@ -9,7 +9,6 @@ import { setCustomElementsManifest } from '@storybook/web-components';
 import { addons } from 'storybook/preview-api';
 import customElements from '../custom-elements.json';
 import mainStyles from '../styles/main.scss?inline';
-import iconFontCSS from '../components/icon/fonts/iconfont.css?inline';
 import { EVENTS } from './ai-theme/constants';
 import { applyTheme, resetTheme } from './ai-theme/apply';
 import type { ApplyPayload } from './ai-theme/types';
@@ -20,18 +19,12 @@ setCustomElementsManifest(customElements);
 // is true, mirroring the apps/web-components fixture.
 (globalThis as any).alAutoRegistry = true;
 
-// Inject the global theme + icon font into the iframe.
+// Inject the global theme into the iframe.
 const mainStyleElement = document.createElement('style');
 mainStyleElement.innerHTML = mainStyles as unknown as string;
 mainStyleElement.setAttribute('type', 'text/css');
 mainStyleElement.setAttribute('id', 'al-theme-sheet');
 document.head.appendChild(mainStyleElement);
-
-const iconFontStyleElement = document.createElement('style');
-iconFontStyleElement.setAttribute('type', 'text/css');
-iconFontStyleElement.setAttribute('id', 'iconfont-style');
-iconFontStyleElement.innerHTML = iconFontCSS as unknown as string;
-document.head.appendChild(iconFontStyleElement);
 
 // AI Theme addon (.storybook/ai-theme) — the manager panel derives a palette
 // and pushes it over the addon channel; we write it as inline custom

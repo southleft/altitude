@@ -244,7 +244,7 @@ patterns, and JSDoc style.
 | If your new component is… | Mirror | Why |
 |---|---|---|
 | **Small inline labeled atom** (badge/pill/chip-like, dismissible) | `al-chip` | Has `isDismissible` / `isDismissed` boolean prefix and the `onChipClose` event — the canonical small-atom pattern. See "Canonical dismissible-atom recipe" below. |
-| **Metric / stat with directional indicator** (KPI card, stat tile) | `al-badge` (status surface) + compose `al-icon-chevron-up` / `al-icon-chevron-down` for trend direction | See the full canonical contract immediately below the precedent map — taxonomy, visual surface, value typography, owned hooks, trend polarity. |
+| **Metric / stat with directional indicator** (KPI card, stat tile) | `al-badge` (status surface) + compose `<al-icon name="caret-up">` / `<al-icon name="caret-down">` for trend direction | See the full canonical contract immediately below the precedent map — taxonomy, visual surface, value typography, owned hooks, trend polarity. |
 | **Notification banner** (auto-dismiss, multiple variants) | `al-toast` | Variant-based status surface with timed dismissal |
 | **Static labeled atom** (no interaction, just a swatch + number) | `al-badge` | Variant-driven display-only atom |
 | **Expandable section** | `al-accordion-panel` | Open/close state pattern, slotted content |
@@ -263,7 +263,7 @@ independent scaffolders produce visually-identical output.
 
 | Concern | Decision |
 |---|---|
-| **Taxonomy** | `Atoms/Stat Card`. Composing internal `<al-icon-*>` atoms for decoration does NOT promote a display atom to a Molecule. Badge/chip/stat-card all remain Atoms. |
+| **Taxonomy** | `Atoms/Stat Card`. Composing internal `<al-icon>` atoms for decoration does NOT promote a display atom to a Molecule. Badge/chip/stat-card all remain Atoms. |
 | **Visual surface** | Bordered card (NOT a bare inline tile). Padding: `var(--al-theme-space-md)`. Border-radius: `var(--al-theme-border-radius)`. Border: `var(--al-theme-border-width) solid var(--al-theme-color-border-default)`. Background: `var(--al-theme-color-background-default)`. No shadow by default. |
 | **Value typography** | `@include al-theme-typography-display-sm-bold;` — do NOT hand-assemble from raw `--al-font-size-*` / `--al-font-weight-*` primitives. The mixin lives in `libs/al-web-components/styles/core/mixins/typography.scss`. |
 | **Label typography** | `@include al-theme-typography-body-sm;` with `color: var(--al-theme-color-content-default-weak);`. |
@@ -274,9 +274,9 @@ independent scaffolders produce visually-identical output.
 | **Slot** | `slot="icon"` for an optional leading icon. **Keep the `<slot>` permanently mounted** so `slotchange` keeps firing if content is added at runtime; gate only the WRAPPER element (e.g. `<div ?hidden=${!hasIcon}>` with a matching `[hidden] { display: none }` rule in @layer al.component, OR conditional class on a wrapper). Conditionally rendering the `<slot>` itself away (e.g. `${hasIcon ? html\`<slot>\` : ''}`) breaks late-add reactivity. Use `slotNotEmpty('icon')` to decide, plus `@slotchange=${() => this.requestUpdate()}` on the slot to re-evaluate when assigned nodes change. |
 | **Layout / DOM structure** | Exactly this hierarchy — independent scaffolders MUST produce visually-identical output: `<div class="al-c-stat-card" part="container">` (the bordered surface) containing, in this order: an optional `<div class="al-c-stat-card__icon" ?hidden=${!hasIcon}><slot name="icon" @slotchange=…></slot></div>` (icon row, top), then `<span class="al-c-stat-card__value" part="value">${value}</span>` (the numeric, full width), then `<span class="al-c-stat-card__label">${label}</span>` (label, immediately below value), then an optional trend row `<div class="al-c-stat-card__trend" part="trend" ?hidden=${!delta}>` containing the chevron + visually-hidden direction + visible `${delta}`. Vertical gaps: `gap: var(--al-theme-space-xs)` between value/label, `margin-block-start: var(--al-theme-space-sm)` on the trend row. Icon position: LEADING the value horizontally is NOT canonical — use the stacked vertical hierarchy above. |
 | **Accessibility — canonical shape** | Use shape (a) — `aria-hidden="true"` on the chevron + a visually-hidden `<span class="al-u-is-vishidden">Trending up,</span>` (or "Trending down,") immediately before the visible delta. Shape (b) (wrapping aria-label that includes the delta) is also acceptable but (a) is canonical: it keeps the visible delta on the screen-reader path naturally and avoids any masking risk. Pick (a) when scaffolding; flag (b) only if it omits the delta. |
-| **Chevron sizing** | `<al-icon-chevron-up size="sm">` / `<al-icon-chevron-down size="sm">` — size="sm" matches the body-xs delta typography. Do NOT let the icon use its default size; do NOT set width/height on `.al-c-stat-card__trend` to size the icon. |
+| **Chevron sizing** | `<al-icon name="caret-up" size="sm">` / `<al-icon name="caret-down" size="sm">` — size="sm" matches the body-xs delta typography. Do NOT let the icon use its default size; do NOT set width/height on `.al-c-stat-card__trend` to size the icon. |
 | **Badge composition** | Compose `<al-badge>` only when the stat itself communicates a status (success/warning). For a plain numeric tile, render the value with the typography mixin directly and skip the badge. |
-| **Trend icon** | Use `al-icon-chevron-up` / `al-icon-chevron-down`. Do NOT hand-roll a CSS triangle or use Unicode ▲/▼ glyphs. |
+| **Trend icon** | Use `<al-icon name="caret-up">` / `<al-icon name="caret-down">`. Do NOT hand-roll a CSS triangle or use Unicode ▲/▼ glyphs. (The deprecated `al-icon-chevron-up` / `al-icon-chevron-down` elements still render the same artwork, but new code should use `name=`.) |
 | **Trend-row gating** | Render the trend row only when `delta` is a non-empty string (the consumer's signal that a comparison exists). If `trend === 'none'` AND `delta` is set, still render the row but omit the direction icon — never invent a default delta to satisfy the row. |
 | **Accessibility — trend cue** | The direction is conveyed by BOTH color and icon — but color alone is insufficient. Two acceptable shapes: (a) Set `iconTitle="Trending up"` on the chevron, mark the chevron `aria-hidden="true"`, and add a visually-hidden `<span class="al-u-is-vishidden">Trending up,</span>` BEFORE the visible delta — the screen reader announces "Trending up, +12%" while sighted users see "+12%". (b) Fold the direction into a wrapping `aria-label` that INCLUDES the delta text — e.g. `aria-label="Trending up, +12%"`. **Do NOT set an `aria-label` that omits the delta** (e.g. `aria-label="Trending up"` next to a visible "+12%") — the aria-label REPLACES the accessible name, masking the visible delta from screen readers. |
 | **CSS parts** | Expose three: `@csspart container` (the bordered surface), `@csspart value` (the numeric), `@csspart trend` (the row containing delta + chevron). Consumers theme via these, not by descending the BEM tree. |
@@ -355,7 +355,7 @@ shipped story or page template.
 <al-popover variant="menu" position="bottom-right">
   <al-button slot="trigger" variant="tertiary" hideText label="Open actions"
              ariaControls="actions-menu">
-    <al-icon-dots-vertical slot="before" iconTitle="Actions"></al-icon-dots-vertical>
+    <al-icon name="dots-three-vertical" slot="before" iconTitle="Actions"></al-icon>
   </al-button>
   <al-menu id="actions-menu" label="Actions">
     <al-menu-item label="Edit">Edit</al-menu-item>
@@ -440,6 +440,52 @@ Use `<al-layout-container>` + `<al-layout-section>` + `<al-layout>` with
 `styleModifier="al-u-gap-lg"` (or `-md`/`-xl`) instead of raw `<div>` +
 inline flex. The `al-u-*` utility classes reach the shadow root via
 `ALElement.getSharedThemeSheet()`.
+
+### Icon system
+
+Altitude ships the full **Phosphor** set — 1,512 icons, `regular` weight, MIT
+licensed, from the `@phosphor-icons/core` devDependency. Source of truth for the
+roster is `libs/al-web-components/icons/icons-config.mjs`; browse them under
+`Foundations/Icons` in Storybook.
+
+**The canonical form is `<al-icon name="…">` with an explicit registration.**
+Registration is what makes it tree-shakeable and synchronous (so it renders
+under SSR and never flashes an empty box):
+
+```ts
+import { caretDown } from 'al-web-components/dist/components/icon/glyphs.js';
+import { registerIcons } from 'al-web-components/dist/components/icon/registry.js';
+registerIcons({ 'caret-down': caretDown });
+```
+```html
+<al-icon name="caret-down" size="sm"></al-icon>
+```
+
+Rules:
+
+- **Names are Phosphor's, kebab-case** — `x` (not `close`), `plus` (not `add`),
+  `caret-down` (not `chevron-down`), `magnifying-glass` (not `search`),
+  `dots-three-vertical` (not `dots-vertical`), `gear` (not `settings`).
+  Do NOT guess: check `libs/al-web-components/components/icon/catalog.ts`.
+- **`iconTitle` is the accessible name.** Set it when the icon carries meaning
+  on its own; omit it for icons beside visible text and they are correctly
+  hidden from assistive technology. Do NOT add your own `aria-label` to
+  `<al-icon>` — `iconTitle` already produces `role="img"` + `aria-label`.
+- **The 37 `<al-icon-*>` elements are deprecated but still work**, and now
+  render Phosphor artwork. `libs/al-web-components/icons/legacy-aliases.json`
+  is the hand-authored legacy→Phosphor map and the only place that mapping is
+  decided. Do NOT flag these as broken; do NOT add new ones.
+- **`name=` never resolves to a legacy alias before a real Phosphor icon.**
+  Lookup order is Phosphor catalog first, legacy alias only on a miss.
+  Consequence, and it is intentional: `<al-icon-list>` renders the legacy
+  bulleted list (Phosphor `list-dashes`) while `<al-icon name="list">` renders
+  the Phosphor hamburger. Do NOT "fix" this.
+- **`lazy.js` is opt-in, not the default.** Import it only when icon names come
+  from data you do not control; it costs ~13 KB gzipped plus a request per icon
+  and cannot render server-side.
+- **The icon webfont is gone.** `.icon-<name>` utility classes and the
+  `iconfont` `@font-face` no longer exist. `iconfont.css` is an empty
+  deprecation stub. Do NOT reintroduce font-based icons.
 
 ### Utility classes — the complete `.al-u-*` surface
 

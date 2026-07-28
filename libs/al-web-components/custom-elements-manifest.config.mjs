@@ -14,6 +14,20 @@ export default {
     'components/**/*.vite.ts',
     'components/ALElement.ts',
     'components/bundle.ts',
+    // Icon data + plumbing. These declare no custom elements, and the 1,512
+    // generated glyph modules would add ~2.6 MB to custom-elements.json and
+    // 1,512 near-identical files to schemas/. `icon-base.ts` is deliberately
+    // NOT excluded so the generated elements still inherit documented
+    // `iconTitle`/`size` members.
+    'components/icon/phosphor/**',
+    'components/icon/glyphs.ts',
+    'components/icon/lazy.ts',
+    'components/icon/all.ts',
+    'components/icon/catalog.ts',
+    'components/icon/icon-aliases.ts',
+    'components/icon/registry.ts',
+    'components/icon/types.ts',
+    'components/icon/preload-node.ts',
   ],
   outdir: '.',
   litelement: true,

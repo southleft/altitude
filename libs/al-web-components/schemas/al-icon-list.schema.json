@@ -16,7 +16,16 @@
     },
     "slots": [],
     "events": [],
-    "cssParts": [],
+    "cssParts": [
+      {
+        "name": "svg",
+        "description": "",
+        "inheritedFrom": {
+          "name": "ALIconBase",
+          "module": "components/icon/icon-base.ts"
+        }
+      }
+    ],
     "cssProperties": []
   },
   "properties": {
@@ -28,7 +37,7 @@
       "additionalProperties": false,
       "properties": {
         "iconTitle": {
-          "description": "Icon title",
+          "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text.",
           "type": "string"
         },
         "size": {
