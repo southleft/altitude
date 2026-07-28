@@ -1,3 +1,17 @@
+// Generated scoped token blocks for the `brand` and `mode` axes.
+//
+// `styles/dist-v5/scss/host/` is written by `styles/tokens-config.v5.mjs`
+// (see the "scoped `:host` emission" comment there for why the blocks are
+// deltas, why brand blocks are split, and the specificity arithmetic). It is a
+// GITIGNORED BUILD ARTIFACT, so this `@use` — like `styles/main.scss:7` — only
+// resolves after `pnpm --filter al-web-components build:tokens`, which
+// `package.json`'s `build` script always runs first.
+//
+// `dist-v5/` and not the legacy `dist/` mirror: these partials are a new
+// artifact with no legacy import path, and `scripts/copy-tokens-to-legacy-dist.js`
+// deliberately skips them so they are not re-shipped as dead CSS.
+@use '../../styles/dist-v5/scss/host';
+
 @layer al.theme {
   /* T4.2 — base host. Token override values are applied via attribute
      selectors so two adjacent `<al-theme>` subtrees produce distinct
@@ -6,31 +20,37 @@
     display: contents;
   }
 
-  /* ----- mode axis ----- */
-  :host([mode='light']) {
-    --al-theme-color-background-default: #ffffff;
-    --al-theme-color-content-default: #161616;
-  }
-  :host([mode='dark']) {
-    --al-theme-color-background-default: #161616;
-    --al-theme-color-content-default: #f4f4f4;
-  }
+  /* ----- mode axis -----
+     Lives entirely in the generated `:host([mode='…'])` partials above. It
+     used to be four hand-written declarations carrying literal hexes
+     (`#ffffff` / `#161616` / `#f4f4f4`) that CONTRADICTED the generated
+     tokens — the bundle says `var(--al-color-neutral-light-600)` /
+     `var(--al-color-neutral-dark-700)` / `var(--al-color-neutral-light-200)`
+     — and, sitting on the element, beat them for every consumer that wrapped
+     in `<al-theme mode>`. The generated blocks carry all 23 properties the two
+     base themes actually differ on, so `mode` now does what it says. */
 
-  /* ----- density axis (T4.4) ----- */
+  /* ----- density axis (T4.4) -----
+     Owns `theme.space.{sm,md,lg}` (`.altitude/BRANDS.md` §4-5). Values are
+     tier-1 `--al-space-*` references rather than raw rems so the ramp is
+     visible and stays in step with `tokens/tier-1/spacing.json`.
+
+     There is deliberately NO `[density='comfortable']` rule. It used to write
+     `--al-theme-space-md: 1rem` while the emitted bundle says
+     `var(--al-space-20)` (1.25rem), so the axis could not be written at its
+     own default value without silently reflowing the page — which is why five
+     of the six Storybook presets leave `density` unset
+     (`.storybook/presets.ts`, and `.mm/notes/preset-toolbar-switcher-handoff`
+     §2.1). The base ramp IS comfortable; naming it now costs nothing. */
   :host([density='compact']) {
-    --al-theme-space-sm: 0.25rem;
-    --al-theme-space-md: 0.5rem;
-    --al-theme-space-lg: 0.75rem;
+    --al-theme-space-sm: var(--al-space-4);
+    --al-theme-space-md: var(--al-space-8);
+    --al-theme-space-lg: var(--al-space-12);
   }
   :host([density='cozy']) {
-    --al-theme-space-sm: 0.5rem;
-    --al-theme-space-md: 0.75rem;
-    --al-theme-space-lg: 1rem;
-  }
-  :host([density='comfortable']) {
-    --al-theme-space-sm: 0.75rem;
-    --al-theme-space-md: 1rem;
-    --al-theme-space-lg: 1.5rem;
+    --al-theme-space-sm: var(--al-space-8);
+    --al-theme-space-md: var(--al-space-12);
+    --al-theme-space-lg: var(--al-space-16);
   }
 
   /* ----- contrast axis (T4.4) ----- */
@@ -38,19 +58,22 @@
     --al-theme-color-border-default: currentColor;
   }
 
-  /* ----- motion axis (T4.4) ----- */
+  /* ----- motion axis (T4.4) -----
+     These used to name `--al-theme-animation-duration-{2,4,6,8}`, which the
+     pipeline has never emitted — eight dead declarations, so `motion='reduced'`
+     and the `prefers-reduced-motion` fallback both did nothing. The emitted
+     tier-2 names are `--al-theme-animation-duration` and
+     `--al-theme-animation-duration-long` (`tokens/tier-2/animations.json`),
+     and they are what all 34 component call sites read; no component reads the
+     tier-1 `--al-animation-duration-N` directly. */
   :host([motion='reduced']) {
-    --al-theme-animation-duration-2: 0s;
-    --al-theme-animation-duration-4: 0s;
-    --al-theme-animation-duration-6: 0s;
-    --al-theme-animation-duration-8: 0s;
+    --al-theme-animation-duration: 0s;
+    --al-theme-animation-duration-long: 0s;
   }
   @media (prefers-reduced-motion: reduce) {
     :host(:not([motion='full'])) {
-      --al-theme-animation-duration-2: 0s;
-      --al-theme-animation-duration-4: 0s;
-      --al-theme-animation-duration-6: 0s;
-      --al-theme-animation-duration-8: 0s;
+      --al-theme-animation-duration: 0s;
+      --al-theme-animation-duration-long: 0s;
     }
   }
 }
