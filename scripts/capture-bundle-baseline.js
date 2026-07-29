@@ -39,9 +39,10 @@ function walk(dir, rootStrip) {
     const st = fs.statSync(p);
     if (st.isDirectory()) out.push(...walk(p, rootStrip));
     // POSIX-normalize the key. `path.relative` yields backslashes on Windows,
-    // which flips every key in the snapshot versus a Linux capture and makes
-    // the committed baseline uncomparable (and `check-bundle-budget.js`'s
-    // per-file lookup miss on every entry). Same class of bug as the one
+    // which flips every key in the snapshot versus a Linux capture: the diff
+    // reads as a full add/remove of the package, and `check-bundle-budget.js`'s
+    // per-file lookup misses on every entry. The baseline must be identical
+    // regardless of which platform captured it. Same class of bug as the one
     // fixed in capture-token-baseline.js (`relPosix`).
     else out.push({ rel: path.relative(rootStrip, p).split(path.sep).join('/'), bytes: st.size });
   }

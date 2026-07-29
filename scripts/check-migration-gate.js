@@ -84,6 +84,11 @@ function componentOf(file) {
   if (file.startsWith(REACT_PREFIX)) {
     const rest = file.slice(REACT_PREFIX.length);
     const seg = rest.split('/')[0];
+    // `Icons/` is a container of per-glyph wrappers (Icons/Add/Add.tsx, ...), not a
+    // component in its own right — `pascalToKebab` would yield `icons`, which is not
+    // a key in migration.json and would fail the gate for every icon PR. Every file
+    // under it belongs to the real `icon` component.
+    if (seg === 'Icons') return 'icon';
     return pascalToKebab(seg);
   }
   return null;

@@ -120,10 +120,36 @@ story — that is the payload, not a bug.
 | element | owner | rule |
 | --- | --- | --- |
 | `style#al-theme-sheet` | `.storybook/preview.ts` | `main.scss` + the default altitude-dark `:root` block. The decorator never touches it. |
-| `style#iconfont-style` | `.storybook/preview.ts` | Never touched. |
+| `style#al-docs-reskin` | `.storybook/preview-head.html` | The docs/story chrome (`--al-docs-*` on `:root`). Deliberately NOT `--al-theme-*`, so the frame stays constant while the preset changes. |
 | `style#al-tokens-sheet` | `<al-theme-switcher>` | The **deprecated** global-swap fallback; only reachable when no `<al-theme>` ancestor exists. |
 
+The `style#iconfont-style` row is gone: the icon webfont was removed with the
+Phosphor migration and `preview.ts` no longer injects it.
+
 The decorator owns no `<style>` element at all any more.
+
+### Interaction with the AI Theme console
+
+The AI Theme addon (`.storybook/ai-theme`, toolbar `◐` + panel) is the third
+writer of theme state, and it deliberately **stacks on top of** the preset
+rather than replacing it:
+
+- The preset decorator delivers its four axes as ATTRIBUTES on `<al-theme>`,
+  which resolve through `:host([brand])` rules compiled into the component.
+- `ai-theme/apply.ts` writes its derived palette as INLINE custom properties on
+  `<html>` **and on every live `<al-theme>` element**. An inline declaration
+  outranks a `:host` rule, so the AI palette wins wherever it defines a key and
+  the preset shows through everywhere else.
+- **Reset** removes only the inline properties, so you land back on whichever
+  preset the toolbar currently names.
+
+The wrapper is recreated on every story render, so `manager.tsx` re-asserts the
+palette on `STORY_RENDERED` / `DOCS_RENDERED`; that is what carries an AI theme
+across story navigation and across preset changes.
+
+Neither mechanism owns a toolbar global the other uses — the preset switcher
+owns `globals.alPreset`, the AI console owns no global at all and talks to the
+preview over its own channel events.
 
 ## Opting a story out
 

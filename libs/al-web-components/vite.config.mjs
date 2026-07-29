@@ -31,7 +31,11 @@ function findComponentEntries(componentsRoot) {
     const ts = join(dir, `${name}.ts`);
     try {
       const src = readFileSync(ts, 'utf8');
-      if (src.includes('extends ALElement')) out[name] = ts;
+      // Detect on `static el = `, not `extends ALElement`. Every registerable
+      // component declares a tag name that way, whereas the superclass varies —
+      // `ALIcon` extends `ALIconBase` (which extends ALElement), and a naive
+      // superclass check silently dropped components/icon/icon.ts from the build.
+      if (/static\s+el\s*=/.test(src)) out[name] = ts;
     } catch {}
   }
   return out;
@@ -62,9 +66,29 @@ const iconEntries = findIconEntries(join(__dirname, 'components/icon/icons'));
 // share this map) fully declared `ALTheme`. `apps/ssr/scripts/build.mjs:71`
 // imports exactly that path to hydrate its `<al-theme>` pilot and therefore
 // loaded nothing. Keeping the two entries distinct fixes both.
+
+// Public entry points of the Phosphor icon system. These need stable dist paths
+// because consumers import them directly:
+//
+//   import { caretDown } from 'al-web-components/dist/components/icon/glyphs.js';
+//   import { registerIcons } from 'al-web-components/dist/components/icon/registry.js';
+//
+// `catalog.ts` and `all.ts` are deliberately NOT entries — they are consumed
+// from source by the Storybook catalog page and must never reach an app bundle.
+// `types.ts` is type-only; tsc emits its declaration without a runtime chunk.
+const iconApiEntries = {
+  'icon/registry': join(__dirname, 'components/icon/registry.ts'),
+  'icon/icon-base': join(__dirname, 'components/icon/icon-base.ts'),
+  'icon/icon-aliases': join(__dirname, 'components/icon/icon-aliases.ts'),
+  'icon/glyphs': join(__dirname, 'components/icon/glyphs.ts'),
+  'icon/lazy': join(__dirname, 'components/icon/lazy.ts'),
+  'icon/preload-node': join(__dirname, 'components/icon/preload-node.ts'),
+};
+
 const entries = {
   ...componentEntries,
   ...iconEntries,
+  ...iconApiEntries,
   _register: join(__dirname, 'directives/register.ts'),
   ALElement: join(__dirname, 'components/ALElement.ts'),
   'controllers/form': join(__dirname, 'controllers/form.ts'),
@@ -163,6 +187,8 @@ export default defineConfig({
           if (chunk.name.startsWith('icon-')) {
             return `components/icon/icons/${chunk.name.replace(/^icon-/, '')}.js`;
           }
+          // Icon system public API: `icon/registry` -> components/icon/registry.js
+          if (chunk.name.startsWith('icon/')) return `components/${chunk.name}.js`;
           if (chunk.name === '_register') return 'directives/register.js';
           if (chunk.name === 'ALElement') return 'components/ALElement.js';
           if (chunk.name.startsWith('controllers/')) return `${chunk.name}.js`;
@@ -174,7 +200,19 @@ export default defineConfig({
           if (chunk.name === 'theme') return 'components/theme/theme.js';
           return `components/${chunk.name}/${chunk.name}.js`;
         },
-        chunkFileNames: 'chunks/[name]-[hash].js',
+        // Route pure Phosphor glyph data to its own directory. This is what makes
+        // the `sideEffects` allowlist in package.json able to mark glyph chunks
+        // side-effect-free WITHOUT also marking component chunks (which contain
+        // `customElements.define` calls) — webpack's `sideEffects` array has no
+        // negation, so the split has to happen by path.
+        //
+        // Without this, importing one glyph from glyphs.js retains all 1,512.
+        chunkFileNames: (chunk) => {
+          const ids = chunk.moduleIds || [];
+          const isGlyph =
+            ids.length > 0 && ids.every((id) => id.replace(/\\/g, '/').includes('/components/icon/phosphor/'));
+          return isGlyph ? 'icon-glyphs/[name]-[hash].js' : 'chunks/[name]-[hash].js';
+        },
       },
     },
   },

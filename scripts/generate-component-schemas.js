@@ -158,6 +158,12 @@ function main() {
 
   let written = 0;
   for (const c of classes) {
+    // JSDoc descriptions carry the source file's line endings verbatim, so a
+    // CRLF checkout would otherwise rewrite every schema with `\r\n` escapes —
+    // ~97 files of pure line-ending churn burying the real diff. `feature/v2`
+    // fixed this with a `JSON.stringify` replacer; `stripCarriageReturns`
+    // (above) subsumes it — it also normalizes a LONE `\r`, which the replacer
+    // left in place.
     const schema = stripCarriageReturns(classToSchema(c, migration));
     fs.writeFileSync(path.join(OUT_DIR, `${c.tagName}.schema.json`), JSON.stringify(schema, null, 2) + '\n');
     written++;

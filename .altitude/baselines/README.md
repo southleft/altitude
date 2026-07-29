@@ -161,11 +161,37 @@ now run through `libs/al-react/scripts/copy-dist-assets.mjs`, which fails
 loudly. That silent failure is what made `check-bundle-budget.js` report
 `3253KB -> 3060KB (−5.94 %)` — a measurement artifact, not a saving.
 
+### Recapture: the `feature/v2` merge (Phosphor + AI theme console)
+
+Merging `feature/v2` roughly doubled `dist/`, so the snapshot was recaptured
+again. Almost all of the absolute growth is the icon migration, which is on the
+other side of the merge and documented in `MIGRATION.md § 4b`; what is worth
+recording here is the delta **this branch** contributed on top of it.
+
+```
+totalBytes  6,814,415 -> 6,976,100   (+161,685, +2.37 %)
+  al-web-components   +74,705 B  (+6 files)
+  al-react            +86,980 B  (+7 files)
+```
+
+Both numbers reproduce the per-package table above, unchanged by the merge:
+
+- **al-web-components** — the four `altitude` brand bundles, and
+  `components/theme/theme.js` growing +21,549 B as it stops being a 35-byte
+  stub and starts carrying the six `:host([brand])` partials.
+- **al-react** — the `dist/src/**` → `dist/**` move, `dist/package.json` no
+  longer emitted, the mirrored `css/` tree, and the `<ALTheme>` wrapper.
+
+The CR guard in `capture-bundle-baseline.js` did **not** fire on this capture,
+which is the standing proof that `.gitattributes` is doing its job across the
+~1,560 newly-tracked Phosphor modules as well as the original tree. Two
+consecutive `pnpm run build` runs leave `git status` clean.
+
 ### Current gate state
 
 ```
 $ node scripts/check-bundle-budget.js
-[bundle-budget] total: 3442KB -> 3442KB (0.00%)
+[bundle-budget] total: 6813KB -> 6813KB (0.00%)
 [bundle-budget] PASS: within budget.
 ```
 

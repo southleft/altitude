@@ -48,8 +48,13 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {},
   },
+  // The `components/**/*.stories.@(js|jsx|ts|tsx)` glob (i.e. `.storybook/
+  // components/`) is gone. Its only two matches were the IconFont and IconSvgs
+  // docs stories, deleted with the Phosphor migration; the sole remaining
+  // occupant of that directory is `Fpo/`, a placeholder component imported BY
+  // other stories rather than a story itself. Storybook printed
+  // "No story files found for the specified pattern" on every boot for it.
   stories: [
-    'components/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/**/*.stories.@(js|jsx|ts|tsx)',
   ],
   addons: [

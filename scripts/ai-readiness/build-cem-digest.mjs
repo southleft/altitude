@@ -73,10 +73,36 @@ const DO_NOT_FLAG = {
       citation: 'AGENTS.md Naming and API conventions, "Primary action" row',
     },
   ],
+  'al-icon': [
+    {
+      pattern: 'phosphor-name-is-canonical',
+      rule: 'AFFIRMATIVE: `<al-icon name="...">` with any of the 1,512 Phosphor regular names is the CURRENT canonical form. Do NOT flag it as an unregistered tag, a missing `<al-icon-*>` element, or an invalid attribute. The 37 `<al-icon-<legacy>>` elements (al-icon-close, al-icon-add, al-icon-chevron-down, ...) still work but are DEPRECATED aliases — do NOT recommend migrating from `name=` back to them. Phosphor names differ from the old Altitude names: x (not close), plus (not add), caret-down (not chevron-down), magnifying-glass (not search), gear (not settings), dots-three-vertical (not dots-vertical).',
+      severity: 'do-not-flag',
+      citation: 'AGENTS.md > Icon system',
+    },
+    {
+      pattern: 'list-name-collision-is-intentional',
+      rule: '`<al-icon name="list">` (Phosphor hamburger) and `<al-icon-list>` (legacy bulleted list, = Phosphor `list-dashes`) intentionally render DIFFERENT artwork. Name resolution checks the Phosphor catalog BEFORE the legacy alias map, so a legacy name can never shadow a real Phosphor icon. Do NOT flag this divergence as an inconsistency or a mapping bug.',
+      severity: 'do-not-flag',
+      citation: 'icons/legacy-aliases.json shadowed[] + AGENTS.md > Icon system',
+    },
+    {
+      pattern: 'icon-title-not-aria-label',
+      rule: 'On `<al-icon>`, `iconTitle` IS the accessible-name API — it renders `role="img"` plus `aria-label`. An `<al-icon>` with NO iconTitle is intentionally `aria-hidden="true"` / `role="presentation"`, which is correct for a decorative icon next to visible text. Do NOT flag a missing aria-label on `<al-icon>`, and do NOT recommend adding aria-label alongside iconTitle.',
+      severity: 'do-not-flag',
+      citation: 'AGENTS.md > Icon system',
+    },
+    {
+      pattern: 'no-icon-webfont',
+      rule: 'The icon webfont was REMOVED. `.icon-<name>` utility classes and the `iconfont` @font-face no longer exist, and components/icon/fonts/iconfont.css is an intentionally empty deprecation stub. Do NOT flag the empty stub as a broken or truncated file, and do NOT suggest font-based icons.',
+      severity: 'do-not-flag',
+      citation: 'AGENTS.md > Icon system',
+    },
+  ],
   'al-stat-card': [
     {
       pattern: 'molecule-mis-taxonomy',
-      rule: 'A display atom that composes internal al-icon-* atoms for decoration remains an Atom. Do NOT flag `title: "Atoms/Stat Card"` as a taxonomy violation that "should be Molecules" — the Molecules tier is reserved for compositions that combine 2+ semantically meaningful atoms, not for atoms that wrap decorative icons.',
+      rule: 'A display atom that composes internal `<al-icon>` atoms for decoration remains an Atom. Do NOT flag `title: "Atoms/Stat Card"` as a taxonomy violation that "should be Molecules" — the Molecules tier is reserved for compositions that combine 2+ semantically meaningful atoms, not for atoms that wrap decorative icons.',
       severity: 'do-not-flag',
       citation: 'AGENTS.md Canonical stat-card contract, Taxonomy row',
     },

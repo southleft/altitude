@@ -71,7 +71,23 @@
 libs/al-web-components/custom-elements.json                text eol=lf
 libs/al-web-components/schemas/**                          text eol=lf
 libs/al-web-components/components/icon/fonts/iconfont.css  text eol=lf
-libs/al-web-components/components/icon/fonts/iconfont.svg  text eol=lf
+
+# Phosphor icon system — everything below is written by
+# `libs/al-web-components/icons/icons-config.mjs` (`pnpm --filter
+# al-web-components build:icons`) with `join('\n')`, and all of it is COMMITTED
+# (1,512 glyph modules + 37 legacy shims + five barrels). That combination is
+# what makes it EOL-sensitive: a CRLF checkout means every `build:icons` run
+# rewrites ~1,560 tracked files as LF, which is both the worst possible
+# `git status` noise and enough churn to move the bundle baseline.
+#
+# The `iconfont.svg` entry that used to sit above is gone with the webfont.
+libs/al-web-components/components/icon/phosphor/**         text eol=lf
+libs/al-web-components/components/icon/icons/**            text eol=lf
+libs/al-web-components/components/icon/glyphs.ts           text eol=lf
+libs/al-web-components/components/icon/catalog.ts          text eol=lf
+libs/al-web-components/components/icon/all.ts              text eol=lf
+libs/al-web-components/components/icon/lazy.ts             text eol=lf
+libs/al-web-components/components/icon/icon-aliases.ts     text eol=lf
 .altitude/baselines/**/*.json                              text eol=lf
 .altitude/ai-readiness/**/*.json                           text eol=lf
 .altitude/golden-snapshots/*.expected                      text eol=lf

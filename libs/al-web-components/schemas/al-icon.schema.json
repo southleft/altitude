@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://southleft.com/altitude/al-icon.schema.json",
   "title": "ALIcon (al-icon)",
-  "description": "Component: al-icon-[ICON_NAME]",
+  "description": "Component: al-icon\n\n- **slot**: an inline `<svg>`. Rendered only when `name` is not set, which\n  preserves the original slot-based behaviour byte for byte.",
   "type": "object",
   "altitude": {
     "tagName": "al-icon",
@@ -14,9 +14,23 @@
       "headless": false,
       "ssr": false
     },
-    "slots": [],
+    "slots": [
+      {
+        "name": "",
+        "description": "an inline `<svg>`. Rendered only when `name` is not set, which"
+      }
+    ],
     "events": [],
-    "cssParts": [],
+    "cssParts": [
+      {
+        "name": "svg",
+        "description": "",
+        "inheritedFrom": {
+          "name": "ALIconBase",
+          "module": "components/icon/icon-base.ts"
+        }
+      }
+    ],
     "cssProperties": []
   },
   "properties": {
@@ -27,12 +41,20 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "name": {
+          "description": "typescript: string | undefined",
+          "type": "string"
+        },
+        "weight": {
+          "description": "typescript: ALIconWeight",
+          "type": "string"
+        },
         "iconTitle": {
-          "description": "Icon title",
+          "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text.",
           "type": "string"
         },
         "size": {
-          "description": "Icon size\n- Default size is 16px\n- **xs** renders a smaller size than default (8px)\n- **sm** renders a smaller size than default (12px)\n- **md** renders a larger size than default (20px)\n- **lg** renders a larger size than the md variant (24px)\n- **xl** renders a larger size than the lg variant (32px)\n- **xxl** renders a larger size than the lg variant (36px)\n- **xxxl** renders a larger size than the lg variant (40px)",
+          "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon",
           "type": "string",
           "enum": [
             "xs",
