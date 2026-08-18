@@ -1,7 +1,7 @@
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { ALTheme as ALWebTheme } from 'al-web-components/dist/components/theme/theme';
-import register from 'al-web-components/dist/directives/register';
+import { ALTheme as ALWebTheme } from 'al-web-components/components/theme';
+import register from 'al-web-components/directives/register';
 import PackageJson from '../../../package.json';
 
 const elementMap = register({

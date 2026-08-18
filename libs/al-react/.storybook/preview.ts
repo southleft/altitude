@@ -1,7 +1,7 @@
 // T2.4 — Storybook 10 preview for al-react.
 
 import type { Preview } from '@storybook/react-vite';
-import mainStyles from '../../al-web-components/dist/css/main.css?inline';
+import mainStyles from '../../al-web-components/css/main.css?inline';
 import { DEFAULT_PRESET_ID, PRESET_TOOLBAR_ITEMS } from '../../al-web-components/.storybook/presets';
 import { withPreset } from './with-preset';
 
@@ -25,7 +25,7 @@ import { withPreset } from './with-preset';
 // The per-brand CSS files do exist, and the spec's inferred path was right —
 // `scripts/copy-assets-to-dist.js` copies `styles/dist` (which itself contains
 // `css/`) into `dist/css`, so they land at the doubly nested
-// `al-web-components/dist/css/css/brand/tokens-<brand>-<mode>.css`, six of them.
+// `al-web-components/css/css/brand/tokens-<brand>-<mode>.css`, six of them.
 // They are the flat `:root` bundles, for consumers who theme a whole document.
 // Nothing in this Storybook needs them, and importing one would put a second,
 // unscoped `:root` bundle on the page and fight the host rules.

@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALSpinner as ALWebSpinner } from 'al-web-components/dist/components/spinner/spinner';
-import register from 'al-web-components/dist/directives/register';
+import { ALSpinner as ALWebSpinner } from 'al-web-components/components/spinner';
+import register from 'al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

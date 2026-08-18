@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALChipGroup as ALWebChipGroup } from 'al-web-components/dist/components/chip-group/chip-group';
-import register from 'al-web-components/dist/directives/register';
+import { ALChipGroup as ALWebChipGroup } from 'al-web-components/components/chip-group';
+import register from 'al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

@@ -2,6 +2,48 @@
   "name": "al-web-components",
   "description": "The Web Component powered design system for web applications",
   "version": "1.0.0",
+  "exports": {
+    ".": {
+      "types": "./dist/components/bundle/bundle.d.ts",
+      "default": "./dist/components/bundle/bundle.js"
+    },
+    "./components/icon/icons/*": {
+      "types": "./dist/components/icon/icons/*.d.ts",
+      "default": "./dist/components/icon/icons/*.js"
+    },
+    "./components/icon/*": {
+      "types": "./dist/components/icon/*.d.ts",
+      "default": "./dist/components/icon/*.js"
+    },
+    "./components/*": {
+      "types": "./dist/components/*/*.d.ts",
+      "default": "./dist/components/*/*.js"
+    },
+    "./ALElement": {
+      "types": "./dist/components/ALElement.d.ts",
+      "default": "./dist/components/ALElement.js"
+    },
+    "./directives/*": {
+      "types": "./dist/directives/*.d.ts",
+      "default": "./dist/directives/*.js"
+    },
+    "./controllers/*": {
+      "types": "./dist/controllers/*.d.ts",
+      "default": "./dist/controllers/*.js"
+    },
+    "./icons/*": "./dist/icons/*",
+    "./icon-glyphs/*": "./dist/icon-glyphs/*",
+    "./custom-elements.json": "./custom-elements.json",
+    "./cli/*": "./cli/*",
+    "./schemas/*": "./schemas/*",
+    "./css/main.css": "./dist/css/main.css",
+    "./css/*": "./dist/css/*",
+    "./styles/*": "./dist/styles/*",
+    "./tokens.json": "./dist/css/tokens.json",
+    "./tokens.d.ts": "./dist/css/tokens.d.ts",
+    "./aliases.json": "./dist/css/aliases.json",
+    "./package.json": "./package.json"
+  },
   "private": true,
   "license": "UNLICENSED",
   "packageManager": "pnpm@9.15.0",
@@ -27,9 +69,10 @@
   "files": [
     "dist",
     "cli",
-    "custom-elements.json"
+    "custom-elements.json",
+    "schemas"
   ],
-  "//sideEffects": "ALLOWLIST of paths that DO have side effects. Everything not listed is treated as side-effect-free and may be dropped when unused. Component and chunk modules MUST stay listed: they call customElements.define at module scope, and dropping that silently renders every <al-*> tag as an unknown element. Phosphor glyph data is emitted to dist/icon-glyphs/ (see chunkFileNames in vite.config.mjs) precisely so it can be omitted here — that omission is what lets a consumer importing 3 icons from glyphs.js avoid shipping all 1,512.",
+  "//sideEffects": "ALLOWLIST of paths that DO have side effects. Everything not listed is treated as side-effect-free and may be dropped when unused. Component and chunk modules MUST stay listed: they call customElements.define at module scope, and dropping that silently renders every <al-*> tag as an unknown element. Phosphor glyph data is emitted to dist/icon-glyphs/ (see chunkFileNames in vite.config.mjs) precisely so it can be omitted here \u2014 that omission is what lets a consumer importing 3 icons from glyphs.js avoid shipping all 1,512.",
   "sideEffects": [
     "**/*.css",
     "**/*.scss",

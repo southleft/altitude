@@ -321,6 +321,27 @@ jobs:
       - name: Strict layer compliance (post-scale-out)
         run: node scripts/check-css-layers.js --strict
 
+  exports-map:
+    name: R6 package exports map vs built output
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      # The guard resolves export targets against real build output, so the
+      # libraries must be built first — a phantom entry is only detectable
+      # once dist/ exists.
+      - name: Build libraries
+        run: pnpm run build
+      - name: Exports map matches built output
+        run: pnpm run check:exports
+
   react-wrapper-contract:
     name: T4.7 React 19 wrapper contract
     runs-on: ubuntu-latest

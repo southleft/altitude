@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALHero as ALWebHero } from 'al-web-components/dist/components/hero/hero';
-import register from 'al-web-components/dist/directives/register';
+import { ALHero as ALWebHero } from 'al-web-components/components/hero';
+import register from 'al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

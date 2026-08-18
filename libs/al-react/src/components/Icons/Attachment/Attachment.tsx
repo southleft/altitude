@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALIconAttachment as ALWebIconAttachment } from 'al-web-components/dist/components/icon/icons/attachment';
-import register from 'al-web-components/dist/directives/register';
+import { ALIconAttachment as ALWebIconAttachment } from 'al-web-components/components/icon/icons/attachment';
+import register from 'al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../../package.json';
 

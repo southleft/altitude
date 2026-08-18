@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALToggleButton as ALWebToggleButton } from 'al-web-components/dist/components/toggle-button/toggle-button';
-import register from 'al-web-components/dist/directives/register';
+import { ALToggleButton as ALWebToggleButton } from 'al-web-components/components/toggle-button';
+import register from 'al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

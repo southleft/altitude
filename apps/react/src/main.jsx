@@ -5,8 +5,8 @@ import App from './App.jsx'
 // v2: setGlobalStyles() was removed (MIGRATION.md §9). The global utility/layout
 // classes (.al-l-*, .al-u-*) and base token defaults now ship as a static
 // stylesheet, and theming is a scoped <al-theme> host set up below.
-import 'al-web-components/dist/css/main.css';
-import 'al-web-components/dist/components/theme/theme';
+import 'al-web-components/css/main.css';
+import 'al-web-components/components/theme';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

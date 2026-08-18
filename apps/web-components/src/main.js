@@ -4,11 +4,11 @@
 // `window.alAutoRegistry = true` is set inline in index.html BEFORE this
 // module loads. ESM imports are hoisted, so setting the flag here would be
 // too late. T4.6 replaces this with the explicit `stable` registry mode.
-import 'al-web-components/dist/components/button/button.js';
-import 'al-web-components/dist/components/input/input.js';
-import 'al-web-components/dist/components/select/select.js';
-import 'al-web-components/dist/components/dialog/dialog.js';
-import 'al-web-components/dist/components/theme-switcher/theme-switcher.js';
+import 'al-web-components/components/button';
+import 'al-web-components/components/input';
+import 'al-web-components/components/select';
+import 'al-web-components/components/dialog';
+import 'al-web-components/components/theme-switcher';
 
 const open = document.getElementById('open');
 const dlg = document.getElementById('dlg');

@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALIconSuccess as ALWebIconSuccess } from 'al-web-components/dist/components/icon/icons/success';
-import register from 'al-web-components/dist/directives/register';
+import { ALIconSuccess as ALWebIconSuccess } from 'al-web-components/components/icon/icons/success';
+import register from 'al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../../package.json';
 

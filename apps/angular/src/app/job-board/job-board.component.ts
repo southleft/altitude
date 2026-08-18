@@ -1,29 +1,29 @@
 import { Component } from '@angular/core';
 
-import "al-web-components/dist/components/badge/badge.js";
-import "al-web-components/dist/components/button-group/button-group.js";
-import "al-web-components/dist/components/button/button.js";
-import "al-web-components/dist/components/card/card.js";
-import "al-web-components/dist/components/checkbox-group/checkbox-group.js";
-import "al-web-components/dist/components/checkbox/checkbox.js";
-import "al-web-components/dist/components/chip-group/chip-group.js";
-import "al-web-components/dist/components/dialog/dialog.js";
-import "al-web-components/dist/components/divider/divider.js";
-import "al-web-components/dist/components/heading/heading.js";
-import "al-web-components/dist/components/icon/icons/filter.js";
-import "al-web-components/dist/components/icon/icons/pin.js";
-import "al-web-components/dist/components/icon/icons/star.js";
-import "al-web-components/dist/components/input/input.js";
-import "al-web-components/dist/components/link/link.js";
-import "al-web-components/dist/components/list/list.js";
-import "al-web-components/dist/components/list-item/list-item.js";
-import "al-web-components/dist/components/pagination/pagination.js";
-import "al-web-components/dist/components/radio-group/radio-group.js";
-import "al-web-components/dist/components/radio/radio.js";
-import "al-web-components/dist/components/range/range.js";
-import "al-web-components/dist/components/search/search.js";
-import "al-web-components/dist/components/select/select.js";
-import "al-web-components/dist/components/text-passage/text-passage.js";
+import "al-web-components/components/badge";
+import "al-web-components/components/button-group";
+import "al-web-components/components/button";
+import "al-web-components/components/card";
+import "al-web-components/components/checkbox-group";
+import "al-web-components/components/checkbox";
+import "al-web-components/components/chip-group";
+import "al-web-components/components/dialog";
+import "al-web-components/components/divider";
+import "al-web-components/components/heading";
+import "al-web-components/components/icon/icons/filter";
+import "al-web-components/components/icon/icons/pin";
+import "al-web-components/components/icon/icons/star";
+import "al-web-components/components/input";
+import "al-web-components/components/link";
+import "al-web-components/components/list";
+import "al-web-components/components/list-item";
+import "al-web-components/components/pagination";
+import "al-web-components/components/radio-group";
+import "al-web-components/components/radio";
+import "al-web-components/components/range";
+import "al-web-components/components/search";
+import "al-web-components/components/select";
+import "al-web-components/components/text-passage";
 
 @Component({
   selector: 'app-job-board',

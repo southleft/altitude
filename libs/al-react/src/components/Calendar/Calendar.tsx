@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALCalendar as ALWebCalendar } from 'al-web-components/dist/components/calendar/calendar';
-import register from 'al-web-components/dist/directives/register';
+import { ALCalendar as ALWebCalendar } from 'al-web-components/components/calendar';
+import register from 'al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

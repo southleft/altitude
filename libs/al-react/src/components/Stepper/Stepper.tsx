@@ -1,6 +1,6 @@
 import { createComponent } from '@lit/react';
-import { ALStepper as ALWebStepper } from 'al-web-components/dist/components/stepper/stepper';
-import register from 'al-web-components/dist/directives/register';
+import { ALStepper as ALWebStepper } from 'al-web-components/components/stepper';
+import register from 'al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

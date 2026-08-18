@@ -22,8 +22,13 @@
     // list contains JSX (the 66 wrappers are `createComponent` calls).
     "jsx": "react-jsx",
     "target": "es6",
-    "moduleResolution": "node",
-    "module": "ES2020",
+    // `bundler` (not `node`) because al-web-components now publishes an
+    // `exports` map: classic `node` resolution ignores `exports` entirely, so
+    // every `al-web-components/components/*` subpath failed TS2307 while Vite
+    // resolved it fine. `bundler` reads `exports` and requires `module` to be
+    // `esnext`/`preserve`, hence the change just below.
+    "moduleResolution": "bundler",
+    "module": "esnext",
     "declaration": true,
     "esModuleInterop": true,
     // `rootDir` is PINNED, and the pin is load-bearing.

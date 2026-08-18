@@ -9,8 +9,8 @@
 // shared import with the version-pinned packages; the rest of this wiring
 // stays the same.
 
-import { ALButton } from 'al-web-components/dist/components/button/button.js';
-import { registerAltitude } from 'al-web-components/dist/directives/register.js';
+import { ALButton } from 'al-web-components/components/button';
+import { registerAltitude } from 'al-web-components/directives/register';
 
 const LEFT_SUFFIX = '1-0-0';
 const RIGHT_SUFFIX = '2-0-0';

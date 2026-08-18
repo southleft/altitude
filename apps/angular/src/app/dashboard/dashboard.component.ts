@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import "al-web-components/dist/components/calendar/calendar.js";
+import "al-web-components/components/calendar";
 
 @Component({
   selector: 'app-dashboard',

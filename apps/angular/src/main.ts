@@ -4,7 +4,7 @@ import { AppModule } from './app/app.module';
 // classes (.al-l-*, .al-u-*) and base token defaults now ship as a static
 // stylesheet (wired up via the `styles` array in angular.json), and theming is a
 // scoped <al-theme> host (see app.component.html).
-import 'al-web-components/dist/components/theme/theme';
+import 'al-web-components/components/theme';
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));

@@ -5,20 +5,20 @@
 // `window.alAutoRegistry = true` is set inline in index.html BEFORE this
 // module loads (ESM imports are hoisted, so setting it here would be too late)
 // so each imported component self-registers its custom element.
-import 'al-web-components/dist/css/main.css';
-import 'al-web-components/dist/components/theme/theme';
+import 'al-web-components/css/main.css';
+import 'al-web-components/components/theme';
 
-import 'al-web-components/dist/components/button/button';
-import 'al-web-components/dist/components/card/card';
-import 'al-web-components/dist/components/divider/divider';
-import 'al-web-components/dist/components/header/header';
-import 'al-web-components/dist/components/heading/heading';
-import 'al-web-components/dist/components/icon/icons/document';
-import 'al-web-components/dist/components/layout-container/layout-container';
-import 'al-web-components/dist/components/layout/layout';
-import 'al-web-components/dist/components/layout-section/layout-section';
-import 'al-web-components/dist/components/logo/logo';
-import 'al-web-components/dist/components/tab-panel/tab-panel';
-import 'al-web-components/dist/components/tab/tab';
-import 'al-web-components/dist/components/tabs/tabs';
-import 'al-web-components/dist/components/text-passage/text-passage';
+import 'al-web-components/components/button';
+import 'al-web-components/components/card';
+import 'al-web-components/components/divider';
+import 'al-web-components/components/header';
+import 'al-web-components/components/heading';
+import 'al-web-components/components/icon/icons/document';
+import 'al-web-components/components/layout-container';
+import 'al-web-components/components/layout';
+import 'al-web-components/components/layout-section';
+import 'al-web-components/components/logo';
+import 'al-web-components/components/tab-panel';
+import 'al-web-components/components/tab';
+import 'al-web-components/components/tabs';
+import 'al-web-components/components/text-passage';

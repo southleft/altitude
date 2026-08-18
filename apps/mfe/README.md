@@ -23,8 +23,8 @@ pnpm test:vrt --grep mfe           # Playwright versioned-registration test
 ## How the API is used
 
 ```js
-import { registerAltitude } from 'al-web-components/dist/directives/register.js';
-import { ALButton } from 'al-web-components/dist/components/button/button.js';
+import { registerAltitude } from 'al-web-components/directives/register';
+import { ALButton } from 'al-web-components/components/button';
 
 const map = registerAltitude({ mode: 'versioned', suffix: '1-0-0' }, [
   [ALButton.el, ALButton],
