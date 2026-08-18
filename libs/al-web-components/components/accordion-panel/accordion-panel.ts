@@ -11,7 +11,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 /**
  * Component: al-accordion-panel
- * - **slot**: The accordion panel content
+ * @slot - The accordion panel content
  */
 export class ALAccordionPanel extends ALElement {
   static el = 'al-accordion-panel';

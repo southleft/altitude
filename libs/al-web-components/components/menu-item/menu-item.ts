@@ -12,8 +12,8 @@ import styles from './menu-item.scss';
 
 /**
  * Component: al-menu-item
- * - **slot**: The content to display in the menu item
- * - **slot** "before": Optional prefix content to display in the menu item
+ * @slot - The content to display in the menu item
+ * @slot before - Optional prefix content to display in the menu item
  */
 export class ALMenuItem extends ALElement {
   static el = 'al-menu-item';

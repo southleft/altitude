@@ -8,7 +8,7 @@ import styles from './list.scss';
 
 /**
  * Component: al-list
- * - **slot**: The list items
+ * @slot - The list items
  */
 export class ALList extends ALElement {
   static el = 'al-list';

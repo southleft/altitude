@@ -73,7 +73,7 @@ const BRANDS: BrandEntry[] = [
 
 /**
  * Component: al-theme-switcher
- * - **slot**: The component content
+ * @slot - The component content
  */
 export class ALThemeSwitcher extends ALElement {
   static el = 'al-theme-switcher';

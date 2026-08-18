@@ -29,9 +29,9 @@ const endDot = '... '; /* 3 */
 
 /**
  * Component: al-pagination
- * - **slot** "label": If content is slotted, it will override the default pagination label
- * - **slot** "prev": If content is slotted, it will override the default "previous" icon
- * - **slot** "next": If content is slotted, it will override the default "next" icon
+ * @slot label - If content is slotted, it will override the default pagination label
+ * @slot prev - If content is slotted, it will override the default "previous" icon
+ * @slot next - If content is slotted, it will override the default "next" icon
  */
 export class ALPagination extends ALElement {
   static el = 'al-pagination';

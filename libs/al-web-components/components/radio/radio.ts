@@ -11,9 +11,9 @@ import styles from './radio.scss';
 
 /**
  * Component: al-radio
- * - **slot**: The component content that appears next to the radio
- * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
- * - **slot** "error": If content is slotted, it will display in place of the errorNote property
+ * @slot - The component content that appears next to the radio
+ * @slot field-note - If content is slotted, it will display in place of the fieldNote property
+ * @slot error - If content is slotted, it will display in place of the errorNote property
  */
 export class ALRadio extends ALElement {
   static el = 'al-radio';

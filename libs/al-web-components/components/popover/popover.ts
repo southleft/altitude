@@ -13,10 +13,10 @@ import styles from './popover.scss';
 
 /**
  * Component: al-popover
- * - **slot**: The main body of the popover
- * - **slot** "header": The header of the popover that appears above the main slot
- * - **slot** "footer": The footer of the popover that appears below the main slot
- * - **slot** "trigger": The trigger that opens/closes the popover
+ * @slot - The main body of the popover
+ * @slot header - The header of the popover that appears above the main slot
+ * @slot footer - The footer of the popover that appears below the main slot
+ * @slot trigger - The trigger that opens/closes the popover
  */
 export class ALPopover extends ALElement {
   static el = 'al-popover';

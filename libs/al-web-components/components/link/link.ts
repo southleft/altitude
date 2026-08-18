@@ -6,7 +6,7 @@ import styles from './link.scss';
 
 /**
  * Component: al-link
- * - **slot**: The link text
+ * @slot - The link text
  */
 export class ALLink extends ALElement {
   static el = 'al-link';

@@ -12,9 +12,9 @@ import styles from './checkbox-group.scss';
 
 /**
  * Component: al-checkbox-group
- * - **slot**: The component content, a set of checkbox items
- * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
- * - **slot** "error": If content is slotted, it will display in place of the errorNote property
+ * @slot - The component content, a set of checkbox items
+ * @slot field-note - If content is slotted, it will display in place of the fieldNote property
+ * @slot error - If content is slotted, it will display in place of the errorNote property
  */
 export class ALCheckboxGroup extends ALElement {
   static el = 'al-checkbox-group';

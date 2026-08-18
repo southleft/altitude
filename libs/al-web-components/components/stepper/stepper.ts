@@ -6,7 +6,7 @@ import styles from './stepper.scss';
 
 /**
  * Component: al-stepper
- * - **slot**: The stepper content, a set of stepper items
+ * @slot - The stepper content, a set of stepper items
  */
 export class ALStepper extends ALElement {
   static el = 'al-stepper';

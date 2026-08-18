@@ -6,7 +6,7 @@ import styles from './toggle-button-group.scss';
 
 /**
  * Component: al-toggle-button-group
- * - **slot**: A set of toggle buttons
+ * @slot - A set of toggle buttons
  */
 export class ALToggleButtonGroup extends ALElement {
   static el = 'al-toggle-button-group';

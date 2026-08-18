@@ -15,9 +15,9 @@ import styles from './toast.scss';
 
 /**
  * Component: al-toast
- * - **slot**: The toast title or primary text
- * - **slot** "actions": Actions to optionally display in the toast
- * - **slot** "icon": Slot in an icon to override the default one
+ * @slot - The toast title or primary text
+ * @slot actions - Actions to optionally display in the toast
+ * @slot icon - Slot in an icon to override the default one
  */
 export class ALToast extends ALElement {
   static el = 'al-toast';

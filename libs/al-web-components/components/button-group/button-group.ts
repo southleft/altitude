@@ -5,7 +5,7 @@ import styles from './button-group.scss';
 
 /**
  * Component: al-button-group
- * - **slot**: The button group content, a set of buttons
+ * @slot - The button group content, a set of buttons
  */
 export class ALButtonGroup extends ALElement {
   static el = 'al-button-group';

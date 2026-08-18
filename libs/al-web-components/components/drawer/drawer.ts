@@ -11,7 +11,7 @@ import { ALIconClose } from '../icon/icons/close';
 
 /**
  * Component: al-drawer
- * - **slot**: The drawer content
+ * @slot - The drawer content
  */
 export class ALDrawer extends ALElement {
   static el = 'al-drawer';

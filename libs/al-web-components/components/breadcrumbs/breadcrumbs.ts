@@ -17,7 +17,7 @@ import styles from './breadcrumbs.scss';
 
 /**
  * Component: al-breadcrumbs
- * - **slot**: The breadcrumbs content, a set of breadcrumb items
+ * @slot - The breadcrumbs content, a set of breadcrumb items
  */
 export class ALBreadcrumbs extends ALElement {
   static el = 'al-breadcrumbs';

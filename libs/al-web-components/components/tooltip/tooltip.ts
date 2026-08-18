@@ -7,9 +7,9 @@ import styles from './tooltip.scss';
 
 /**
  * Component: al-tooltip
- * - **slot**: The content that appears inside the tooltip
- * - **slot** "prefix": The content that appears before the main content
- * - **slot** "trigger": The trigger that opens the tooltip
+ * @slot - The content that appears inside the tooltip
+ * @slot prefix - The content that appears before the main content
+ * @slot trigger - The trigger that opens the tooltip
  */
 export class ALTooltip extends ALElement {
   static el = 'al-tooltip';

@@ -18,9 +18,9 @@ import styles from './select.scss';
 
 /**
  * Component: al-select
- * - **slot**: The select content
- * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
- * - **slot** "error": If content is slotted, it will display in place of the errorNote property
+ * @slot - The select content
+ * @slot field-note - If content is slotted, it will display in place of the fieldNote property
+ * @slot error - If content is slotted, it will display in place of the errorNote property
  */
 export class ALSelect extends ALElement {
   static el = 'al-select';

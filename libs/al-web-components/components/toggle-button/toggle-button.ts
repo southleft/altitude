@@ -9,7 +9,7 @@ import styles from './toggle-button.scss';
 
 /**
  * Component: al-toggle-button
- * - **slot**: The content to display in the toggle button
+ * @slot - The content to display in the toggle button
  */
 export class ALToggleButton extends ALElement {
   static el = 'al-toggle-button';

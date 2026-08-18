@@ -6,7 +6,7 @@ import styles from './tab.scss';
 
 /**
  * Component: al-tab
- * - **slot**: The tab label
+ * @slot - The tab label
  */
 export class ALTab extends ALElement {
   static el = 'al-tab';

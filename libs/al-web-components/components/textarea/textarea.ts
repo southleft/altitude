@@ -11,10 +11,10 @@ import styles from './textarea.scss';
 
 /**
  * Component: al-textarea
- * - **slot** "before": The content that appears before the text in the input
- * - **slot** "after": The content that appears after the text in the input
- * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
- * - **slot** "error": If content is slotted, it will display in place of the errorNote property
+ * @slot before - The content that appears before the text in the input
+ * @slot after - The content that appears after the text in the input
+ * @slot field-note - If content is slotted, it will display in place of the fieldNote property
+ * @slot error - If content is slotted, it will display in place of the errorNote property
  */
 export class ALTextarea extends ALElement {
   static el = 'al-textarea';

@@ -14,10 +14,10 @@ import styles from './dialog.scss';
 
 /**
  * Component: al-dialog
- * - **slot**: The main body of the dialog
- * - **slot** "trigger": The trigger that opens/closes the dialog
- * - **slot** "header": The header of the dialog that appears above the main slot
- * - **slot** "footer": The footer of the dialog that appears below the main slot
+ * @slot - The main body of the dialog
+ * @slot trigger - The trigger that opens/closes the dialog
+ * @slot header - The header of the dialog that appears above the main slot
+ * @slot footer - The footer of the dialog that appears below the main slot
  */
 export class ALDialog extends ALElement {
   static el = 'al-dialog';

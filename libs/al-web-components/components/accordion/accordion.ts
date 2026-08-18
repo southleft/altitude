@@ -6,7 +6,7 @@ import styles from './accordion.scss';
 
 /**
  * Component: al-accordion
- * - **slot**: The accordion content, a set of accordion panels
+ * @slot - The accordion content, a set of accordion panels
  */
 export class ALAccordion extends ALElement {
   static el = 'al-accordion';

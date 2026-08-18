@@ -14,8 +14,8 @@ import styles from './alert.scss';
 
 /**
  * Component: al-alert
- * - **slot**: The alert's main content or title
- * - **slot** "icon": Slot in an icon to override the default one
+ * @slot - The alert's main content or title
+ * @slot icon - Slot in an icon to override the default one
  * */
 export class ALAlert extends ALElement {
   static el = 'al-alert';

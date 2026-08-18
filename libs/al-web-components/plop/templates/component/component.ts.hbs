@@ -5,7 +5,15 @@ import styles from './{{dashCase name}}.scss';
 
 /**
  * Component: al-{{dashCase name}}
- * - **slot**: The component content
+ *
+ * Document the public surface with the modern tag dialect — the CEM is generated
+ * from these tags, and every AI-facing artifact is generated from the CEM.
+ * Delete any tag that does not apply; do NOT leave a placeholder description.
+ *
+ * @slot - The component content
+ * @csspart -
+ * @cssproperty --al-theme-... -
+ * @event al-{{dashCase name}}-change - Fired when ... (document at the dispatch site too)
  */
 export class AL{{pascalCase name}} extends ALElement {
   static el = 'al-{{dashCase name}}';

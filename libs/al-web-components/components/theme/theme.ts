@@ -23,7 +23,7 @@ import styles from './theme.scss';
 
 /**
  * Component: al-theme
- * - **slot**: The content tree the theme applies to.
+ * @slot - The content tree the theme applies to.
  */
 export class ALTheme extends ALElement {
   static el = 'al-theme';

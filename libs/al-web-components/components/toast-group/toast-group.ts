@@ -6,7 +6,7 @@ import styles from './toast-group.scss';
 
 /**
  * Component: al-toast-group
- * - **slot**: One or more individual toast components
+ * @slot - One or more individual toast components
  */
 export class ALToastGroup extends ALElement {
   static el = 'al-toast-group';

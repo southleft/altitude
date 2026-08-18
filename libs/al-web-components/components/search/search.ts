@@ -20,9 +20,9 @@ import styles from './search.scss';
 
 /**
  * Component: al-search
- * - **slot**: The search's dropdown content
- * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
- * - **slot** "error": If content is slotted, it will display in place of the errorNote property
+ * @slot - The search's dropdown content
+ * @slot field-note - If content is slotted, it will display in place of the fieldNote property
+ * @slot error - If content is slotted, it will display in place of the errorNote property
  */
 export class ALSearch extends ALElement {
   static el = 'al-search';

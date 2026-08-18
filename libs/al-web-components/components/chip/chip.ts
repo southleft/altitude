@@ -9,7 +9,7 @@ import styles from './chip.scss';
 
 /**
  * Component: al-chip
- * - **slot**: The chip content
+ * @slot - The chip content
  */
 export class ALChip extends ALElement {
   static el = 'al-chip';

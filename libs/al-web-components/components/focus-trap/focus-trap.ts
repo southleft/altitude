@@ -5,7 +5,7 @@ import getFocusableElements from '../../directives/getFocusableElements';
 
 /**
  * Component: al-focus-trap
- * - **slot**: The content to trap in the focus trap
+ * @slot - The content to trap in the focus trap
  */
 export class ALFocusTrap extends ALElement {
   static el = 'al-focus-trap';

@@ -6,7 +6,7 @@ import styles from './pagination-item.scss';
 
 /**
  * Component: al-pagination-item
- * - **slot**: The pagination item's content
+ * @slot - The pagination item's content
  */
 export class ALPaginationItem extends ALElement {
   static el = 'al-pagination-item';

@@ -12,9 +12,9 @@ import styles from './radio-group.scss';
 
 /**
  * Component: al-radio-group
- * - **slot**: The radio content, a set of radio items
- * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
- * - **slot** "error": If content is slotted, it will display in place of the errorNote property
+ * @slot - The radio content, a set of radio items
+ * @slot field-note - If content is slotted, it will display in place of the fieldNote property
+ * @slot error - If content is slotted, it will display in place of the errorNote property
  */
 export class ALRadioGroup extends ALElement {
   static el = 'al-radio-group';

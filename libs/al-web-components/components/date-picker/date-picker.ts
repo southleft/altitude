@@ -15,8 +15,8 @@ import styles from './date-picker.scss';
 
 /**
  * Component: al-date-picker
- * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
- * - **slot** "error": If content is slotted, it will display in place of the errorNote property
+ * @slot field-note - If content is slotted, it will display in place of the fieldNote property
+ * @slot error - If content is slotted, it will display in place of the errorNote property
  */
 export class ALDatePicker extends ALElement {
   static el = 'al-date-picker';

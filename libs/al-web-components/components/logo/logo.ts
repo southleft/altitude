@@ -5,7 +5,7 @@ import styles from './logo.scss';
 
 /**
  * Component: al-logo
- * - **slot**: The component content
+ * @slot - The component content
  */
 export class ALLogo extends ALElement {
   static el = 'al-logo';

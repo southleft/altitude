@@ -5,7 +5,7 @@ import styles from './text-passage.scss';
 
 /**
  * Component: al-text-passage
- * - **slot**: The text passage content
+ * @slot - The text passage content
  */
 export class ALTextPassage extends ALElement {
   static el = 'al-text-passage';

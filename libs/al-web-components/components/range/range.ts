@@ -14,9 +14,9 @@ const UPPER_RANGE = 'UPPERRANGE';
 
 /**
  * Component: al-range
- * - **slot** "label": If content is slotted, it will override the default range label
- * - **slot** "before": If content is slotted, it will override the default range "min" label text
- * - **slot** "after": If content is slotted, it will override the default range "max" label text
+ * @slot label - If content is slotted, it will override the default range label
+ * @slot before - If content is slotted, it will override the default range "min" label text
+ * @slot after - If content is slotted, it will override the default range "max" label text
  */
 export class ALRange extends ALElement {
   static el = 'al-range';

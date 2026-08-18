@@ -43,7 +43,7 @@ export const defaultTextConfig: FileUploadTextConfig = {
 
 /**
  * Component: al-file-upload
- * - **slot**: The component's content
+ * @slot - The component's content
  */
 export class ALFileUpload extends ALElement {
   static el = 'al-file-upload';

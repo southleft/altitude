@@ -40,8 +40,8 @@ import styles from './calendar.scss';
 
 /**
  * Component: al-calendar
- * - **slot** "before": If content is slotted, it will override the default "previous button" icon
- * - **slot** "after": If content is slotted, it will override the default "next button" icon
+ * @slot before - If content is slotted, it will override the default "previous button" icon
+ * @slot after - If content is slotted, it will override the default "next button" icon
  */
 export class ALCalendar extends ALElement {
   static el = 'al-calendar';

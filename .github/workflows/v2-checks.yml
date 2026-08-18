@@ -328,6 +328,26 @@ jobs:
       - name: Strict layer compliance (post-scale-out)
         run: node scripts/check-css-layers.js --strict
 
+  jsdoc-dialect:
+    name: R1/R2 JSDoc tag dialect + CEM event descriptions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      # The empty-event-description half reads the generated CEM, so it must be
+      # regenerated here rather than trusting the committed copy.
+      - name: Regenerate the CEM
+        run: pnpm --filter al-web-components build:custom-elements.json
+      - name: JSDoc dialect + CEM event descriptions
+        run: pnpm run check:jsdoc
+
   exports-map:
     name: R6 package exports map vs built output
     runs-on: ubuntu-latest

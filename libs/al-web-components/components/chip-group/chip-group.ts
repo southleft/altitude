@@ -9,7 +9,7 @@ import styles from './chip-group.scss';
 
 /**
  * Component: al-chip-group
- * - **slot**: The chip group content, a set of chips
+ * @slot - The chip group content, a set of chips
  */
 export class ALChipGroup extends ALElement {
   static el = 'al-chip-group';

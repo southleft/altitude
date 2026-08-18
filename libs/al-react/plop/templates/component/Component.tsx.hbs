@@ -13,5 +13,8 @@ export const AL{{pascalCase name}} = createComponent({
   react: React,
   tagName: elementMap.get(ALWeb{{pascalCase name}}.el),
   elementClass: ALWeb{{pascalCase name}},
+  // Map every custom event the web component dispatches so it surfaces as a
+  // React prop, e.g. `onChange: 'al-{{dashCase name}}-change'`. An empty map
+  // silently drops events — see spec 2026-08-18-unified-jsdoc-and-generated-ai-docs R5.
   events: {}
 });

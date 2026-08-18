@@ -14,8 +14,8 @@ import styles from './input-stepper.scss';
 
 /**
  * Component: al-input-stepper
- * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
- * - **slot** "error": If content is slotted, it will display in place of the errorNote property
+ * @slot field-note - If content is slotted, it will display in place of the fieldNote property
+ * @slot error - If content is slotted, it will display in place of the errorNote property
  */
 export class ALInputStepper extends ALElement {
   static el = 'al-input-stepper';

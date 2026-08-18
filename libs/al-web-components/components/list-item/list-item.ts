@@ -12,7 +12,7 @@ import styles from './list-item.scss';
 
 /**
  * Component: al-list-item
- * - **slot**: The content of the list item
+ * @slot - The content of the list item
  */
 export class ALListItem extends ALElement {
   static el = 'al-list-item';

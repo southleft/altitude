@@ -28,7 +28,7 @@ function warnOnce(key: string, message: string, level: 'warn' | 'error' = 'error
 /**
  * Component: al-icon
  *
- * - **slot**: an inline `<svg>`. Rendered only when `name` is not set, which
+ * @slot - an inline `<svg>`. Rendered only when `name` is not set, which
  *   preserves the original slot-based behaviour byte for byte.
  */
 export class ALIcon extends ALIconBase {

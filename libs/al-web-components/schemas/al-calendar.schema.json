@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://southleft.com/altitude/al-calendar.schema.json",
   "title": "ALCalendar (al-calendar)",
-  "description": "Component: al-calendar\n- **slot** \"before\": If content is slotted, it will override the default \"previous button\" icon\n- **slot** \"after\": If content is slotted, it will override the default \"next button\" icon",
+  "description": "Component: al-calendar",
   "type": "object",
   "altitude": {
     "tagName": "al-calendar",
@@ -16,12 +16,12 @@
     },
     "slots": [
       {
-        "name": "before",
-        "description": "If content is slotted, it will override the default \"previous button\" icon"
+        "description": "If content is slotted, it will override the default \"previous button\" icon",
+        "name": "before"
       },
       {
-        "name": "after",
-        "description": "If content is slotted, it will override the default \"next button\" icon"
+        "description": "If content is slotted, it will override the default \"next button\" icon",
+        "name": "after"
       }
     ],
     "events": [
