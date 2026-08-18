@@ -1,0 +1,179 @@
+@use '../../styles/component' as *;
+/* ------------------------------------*\
+  #HERO
+\*------------------------------------ */
+
+@layer al.component {
+  :host {
+    display: contents;
+  }
+
+  /**
+   * Hero band. All chrome comes from theme tokens so a brand switch
+   * restyles the hero without any per-brand CSS here.
+   */
+  .al-c-hero {
+    display: flex;
+    flex-direction: column;
+    gap: var(--al-theme-space-lg);
+    inline-size: 100%;
+    box-sizing: border-box;
+    padding-block: var(--al-hero-padding-block, calc(var(--al-theme-space) * 3));
+    color: var(--al-theme-color-content-default);
+  }
+
+  /**
+   * Main area: content + media
+   */
+  .al-c-hero__inner {
+    position: relative;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: var(--al-hero-gap, calc(var(--al-theme-space) * 2));
+    min-block-size: var(--al-hero-min-height, auto);
+    inline-size: 100%;
+  }
+
+  .al-c-hero--contained .al-c-hero__inner,
+  .al-c-hero--contained .al-c-hero__meta {
+    max-inline-size: var(--al-hero-max-width, 75rem);
+    margin-inline: auto;
+  }
+
+  /**
+   * Content column
+   */
+  .al-c-hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--al-theme-space);
+    flex: 1 1 24rem;
+    min-inline-size: 0;
+  }
+
+  .al-c-hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: var(--al-theme-space-xs);
+  }
+
+  .al-c-hero__heading {
+    max-inline-size: 100%;
+    overflow-wrap: break-word;
+  }
+
+  .al-c-hero__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--al-theme-space-xs);
+    max-inline-size: 40rem;
+  }
+
+  .al-c-hero__actions {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: var(--al-theme-space-xs);
+    margin-block-start: var(--al-theme-space-xs);
+  }
+
+  /**
+   * Media area
+   */
+  .al-c-hero__media {
+    flex: 1 1 20rem;
+    min-inline-size: 0;
+    order: 2;
+    border-radius: var(--al-theme-border-radius-lg);
+
+    ::slotted(*) {
+      inline-size: 100%;
+    }
+  }
+
+  .al-c-hero--media-start .al-c-hero__media {
+    order: 0;
+  }
+
+  /**
+   * Meta strip
+   */
+  .al-c-hero__meta {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: var(--al-theme-space-lg);
+    inline-size: 100%;
+    padding-block-start: var(--al-theme-space);
+  }
+
+  /**
+   * Centered layout — content centered, media below
+   */
+  .al-c-hero--centered {
+    .al-c-hero__inner {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .al-c-hero__content {
+      flex: 0 1 auto;
+      align-items: center;
+      text-align: center;
+    }
+
+    .al-c-hero__media {
+      order: 2;
+      flex: 0 1 auto;
+      inline-size: 100%;
+    }
+
+    .al-c-hero__meta {
+      justify-content: center;
+    }
+  }
+
+  /**
+   * Stacked layout — start-aligned content, full-width media below
+   */
+  .al-c-hero--stacked {
+    .al-c-hero__inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .al-c-hero__media {
+      order: 2;
+      inline-size: 100%;
+    }
+  }
+
+  /**
+   * Poster layout — media is a full-bleed backdrop, content sits on top
+   */
+  .al-c-hero--poster {
+    .al-c-hero__inner {
+      align-items: flex-end;
+    }
+
+    .al-c-hero__media {
+      position: absolute;
+      inset: 0;
+      order: 0;
+      border-radius: var(--al-theme-border-radius-lg);
+      overflow: hidden;
+
+      ::slotted(*) {
+        block-size: 100%;
+      }
+    }
+
+    .al-c-hero__content {
+      position: relative;
+      z-index: 1;
+      padding: calc(var(--al-theme-space) * 2);
+    }
+  }
+}

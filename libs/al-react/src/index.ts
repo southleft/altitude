@@ -25,6 +25,7 @@ export * from './components/FileUpload';
 export * from './components/FocusTrap';
 export * from './components/Header';
 export * from './components/Heading';
+export * from './components/Hero';
 export * from './components/Icon';
 export * from './components/Icons/Add';
 export * from './components/Icons/Attachment';

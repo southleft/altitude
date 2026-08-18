@@ -28,8 +28,16 @@ import styles from './theme.scss';
 export class ALTheme extends ALElement {
   static el = 'al-theme';
 
-  /** Brand identifier. Currently shipped: 'altitude' | 'northright' | 'odyssey' | 'southleft'. */
-  @property() accessor brand: 'altitude' | 'northright' | 'odyssey' | 'southleft' = 'altitude';
+  /** Brand identifier. Currently shipped: 'altitude' | 'northright' | 'odyssey' | 'southleft' | 'meridian' | 'voltage' | 'solstice' | 'nocturne'. */
+  @property() accessor brand:
+    | 'altitude'
+    | 'northright'
+    | 'odyssey'
+    | 'southleft'
+    | 'meridian'
+    | 'voltage'
+    | 'solstice'
+    | 'nocturne' = 'altitude';
   /** Color mode. */
   @property() accessor mode: 'light' | 'dark' = 'light';
   /** Density axis. */

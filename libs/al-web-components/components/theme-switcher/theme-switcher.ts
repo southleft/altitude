@@ -19,6 +19,10 @@ import tokensNorthrightLight from '../../styles/dist/scss/brand/tokens-northrigh
 import tokensNorthrightDark from '../../styles/dist/scss/brand/tokens-northright-dark.scss';
 import tokensOdyssey from '../../styles/dist/scss/brand/tokens-odyssey-dark.scss';
 import tokensSouthleft from '../../styles/dist/scss/brand/tokens-southleft-dark.scss';
+import tokensMeridian from '../../styles/dist/scss/brand/tokens-meridian-light.scss';
+import tokensVoltage from '../../styles/dist/scss/brand/tokens-voltage-dark.scss';
+import tokensSolstice from '../../styles/dist/scss/brand/tokens-solstice-light.scss';
+import tokensNocturne from '../../styles/dist/scss/brand/tokens-nocturne-dark.scss';
 
 /**
  * T4.5 — data-driven brand list. Adding a brand here is a config edit; the
@@ -34,7 +38,11 @@ type ThemeKey =
   | 'northright-light'
   | 'northright-dark'
   | 'odyssey'
-  | 'southleft';
+  | 'southleft'
+  | 'meridian'
+  | 'voltage'
+  | 'solstice'
+  | 'nocturne';
 
 interface BrandEntry {
   key: ThemeKey;
@@ -56,6 +64,11 @@ const BRANDS: BrandEntry[] = [
   { key: 'northright-dark', label: 'Brand: Northright (Dark)', legacyTokens: tokensNorthrightDark, themeAttrs: { brand: 'northright', mode: 'dark' }, logo: 'northright' },
   { key: 'odyssey', label: 'Brand: Odyssey', legacyTokens: tokensOdyssey, themeAttrs: { brand: 'odyssey', mode: 'dark' }, logo: 'odyssey' },
   { key: 'southleft', label: 'Brand: Southleft', legacyTokens: tokensSouthleft, themeAttrs: { brand: 'southleft', mode: 'dark' }, logo: 'southleft' },
+  // Showcase brands (spec 2026-08-17-themed-example-home-pages).
+  { key: 'meridian', label: 'Brand: Meridian', legacyTokens: tokensMeridian, themeAttrs: { brand: 'meridian', mode: 'light' } },
+  { key: 'voltage', label: 'Brand: Voltage', legacyTokens: tokensVoltage, themeAttrs: { brand: 'voltage', mode: 'dark' } },
+  { key: 'solstice', label: 'Brand: Solstice', legacyTokens: tokensSolstice, themeAttrs: { brand: 'solstice', mode: 'light' } },
+  { key: 'nocturne', label: 'Brand: Nocturne', legacyTokens: tokensNocturne, themeAttrs: { brand: 'nocturne', mode: 'dark' } },
 ];
 
 /**

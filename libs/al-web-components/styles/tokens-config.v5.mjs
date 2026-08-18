@@ -454,6 +454,13 @@ async function build() {
     { theme: 'light', brand: 'northright' },
     { theme: 'dark', brand: 'northright' },
     { theme: 'dark', brand: 'odyssey' },
+    // Showcase brands (spec 2026-08-17-themed-example-home-pages) — each is
+    // single-mode by design, matching the site persona it demonstrates:
+    // meridian/solstice are light-only, voltage/nocturne are dark-only.
+    { theme: 'light', brand: 'meridian' },
+    { theme: 'dark', brand: 'voltage' },
+    { theme: 'light', brand: 'solstice' },
+    { theme: 'dark', brand: 'nocturne' },
   ];
 
   // Per-theme css + scss tokens files. v3 emits variables.scss + tokens.json

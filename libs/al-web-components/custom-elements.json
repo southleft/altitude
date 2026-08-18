@@ -6484,6 +6484,172 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/hero/hero.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-hero\n\nA page-level hero band. Purely compositional: every visual decision\n(type scale, radius, spacing, color) comes from the active theme's\ntokens, so the same hero re-skins per brand. The `layout` prop is the\nstructural lever pages flip per theme so a brand change reads as a\ndifferent site, not a recolor.",
+          "name": "ALHero",
+          "cssProperties": [
+            {
+              "description": "Max width of the contained content. Default 75rem.",
+              "name": "--al-hero-max-width"
+            },
+            {
+              "description": "Minimum block size of the main area. Default none.",
+              "name": "--al-hero-min-height"
+            },
+            {
+              "description": "Gap between content and media. Defaults to the theme space ramp.",
+              "name": "--al-hero-gap"
+            },
+            {
+              "description": "Vertical padding of the band. Defaults to the theme space ramp.",
+              "name": "--al-hero-padding-block"
+            },
+            {
+              "name": "--al-hero-max-width",
+              "description": "Max width of the contained content. Default 75rem."
+            },
+            {
+              "name": "--al-hero-min-height",
+              "description": "Minimum block size of the main area. Default none."
+            },
+            {
+              "name": "--al-hero-gap",
+              "description": "Gap between content and media. Defaults to the theme space ramp."
+            },
+            {
+              "name": "--al-hero-padding-block",
+              "description": "Vertical padding of the band. Defaults to the theme space ramp."
+            }
+          ],
+          "slots": [
+            {
+              "description": "The main body copy of the hero (renders below the heading).",
+              "name": ""
+            },
+            {
+              "description": "Small intro line above the heading (chip, badge, or text).",
+              "name": "eyebrow"
+            },
+            {
+              "description": "The hero heading (typically an al-heading with a display variant).",
+              "name": "heading"
+            },
+            {
+              "description": "Call-to-action row (buttons/links).",
+              "name": "actions"
+            },
+            {
+              "description": "Visual area (image, illustration, or composed cards).",
+              "name": "media"
+            },
+            {
+              "description": "Bottom strip (stats, logo row, scroll hint). Renders full-width under the main area.",
+              "name": "meta"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-hero'"
+            },
+            {
+              "kind": "field",
+              "name": "layout",
+              "type": {
+                "text": "'centered' | 'stacked' | 'poster'"
+              },
+              "description": "Layout\n- **split** (default) Content on one side, media on the other\n- **centered** Content centered, media below\n- **stacked** Left-aligned content, full-width media below\n- **poster** Media as full-bleed backdrop, oversized content on top",
+              "attribute": "layout"
+            },
+            {
+              "kind": "field",
+              "name": "mediaPosition",
+              "type": {
+                "text": "'start'"
+              },
+              "description": "Media position (split layout only)\n- **default** Media renders after the content (end)\n- **start** Media renders before the content",
+              "attribute": "mediaPosition"
+            },
+            {
+              "kind": "field",
+              "name": "contained",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "When true, constrains content to `--al-hero-max-width` and centers it.",
+              "attribute": "contained"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "layout",
+              "type": {
+                "text": "'centered' | 'stacked' | 'poster'"
+              },
+              "description": "Layout\n- **split** (default) Content on one side, media on the other\n- **centered** Content centered, media below\n- **stacked** Left-aligned content, full-width media below\n- **poster** Media as full-bleed backdrop, oversized content on top",
+              "fieldName": "layout"
+            },
+            {
+              "name": "mediaPosition",
+              "type": {
+                "text": "'start'"
+              },
+              "description": "Media position (split layout only)\n- **default** Media renders after the content (end)\n- **start** Media renders before the content",
+              "fieldName": "mediaPosition"
+            },
+            {
+              "name": "contained",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "When true, constrains content to `--al-hero-max-width` and centers it.",
+              "fieldName": "contained"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-hero",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALHero",
+          "declaration": {
+            "name": "ALHero",
+            "module": "components/hero/hero.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-hero",
+          "declaration": {
+            "name": "ALHero",
+            "module": "components/hero/hero.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALHero",
+            "module": "components/hero/hero.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/icon/icon-base.ts",
       "declarations": [
         {
@@ -21062,10 +21228,10 @@
               "kind": "field",
               "name": "brand",
               "type": {
-                "text": "'altitude' | 'northright' | 'odyssey' | 'southleft'"
+                "text": "| 'altitude'\n    | 'northright'\n    | 'odyssey'\n    | 'southleft'\n    | 'meridian'\n    | 'voltage'\n    | 'solstice'\n    | 'nocturne'"
               },
               "default": "'altitude'",
-              "description": "Brand identifier. Currently shipped: 'altitude' | 'northright' | 'odyssey' | 'southleft'.",
+              "description": "Brand identifier. Currently shipped: 'altitude' | 'northright' | 'odyssey' | 'southleft' | 'meridian' | 'voltage' | 'solstice' | 'nocturne'.",
               "attribute": "brand"
             },
             {
@@ -21112,10 +21278,10 @@
             {
               "name": "brand",
               "type": {
-                "text": "'altitude' | 'northright' | 'odyssey' | 'southleft'"
+                "text": "| 'altitude'\n    | 'northright'\n    | 'odyssey'\n    | 'southleft'\n    | 'meridian'\n    | 'voltage'\n    | 'solstice'\n    | 'nocturne'"
               },
               "default": "'altitude'",
-              "description": "Brand identifier. Currently shipped: 'altitude' | 'northright' | 'odyssey' | 'southleft'.",
+              "description": "Brand identifier. Currently shipped: 'altitude' | 'northright' | 'odyssey' | 'southleft' | 'meridian' | 'voltage' | 'solstice' | 'nocturne'.",
               "fieldName": "brand"
             },
             {

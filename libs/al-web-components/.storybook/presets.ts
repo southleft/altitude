@@ -32,7 +32,13 @@ export type PresetBundle =
   | { brand: 'altitude'; mode: 'light' | 'dark' }
   | { brand: 'northright'; mode: 'light' | 'dark' }
   | { brand: 'odyssey'; mode: 'dark' }
-  | { brand: 'southleft'; mode: 'dark' };
+  | { brand: 'southleft'; mode: 'dark' }
+  // Showcase brands (spec 2026-08-17-themed-example-home-pages) — single-mode
+  // by design; see `styles/tokens-config.v5.mjs` `brands`.
+  | { brand: 'meridian'; mode: 'light' }
+  | { brand: 'voltage'; mode: 'dark' }
+  | { brand: 'solstice'; mode: 'light' }
+  | { brand: 'nocturne'; mode: 'dark' };
 
 export type Preset = PresetBundle & {
   /** Stable id — the value stored in `globals.alPreset`. Do not rename casually. */
@@ -73,6 +79,11 @@ export const PRESETS: Preset[] = [
   { id: 'northright-light', label: 'Northright · Light · Compact', brand: 'northright', mode: 'light', density: 'compact' },
   { id: 'odyssey-dark', label: 'Odyssey · Dark', brand: 'odyssey', mode: 'dark' },
   { id: 'southleft-dark', label: 'Southleft · Dark · High contrast', brand: 'southleft', mode: 'dark', contrast: 'more' },
+  // Showcase brands — the four "example site" identities used by Pages/Showcase Home.
+  { id: 'meridian-light', label: 'Meridian · Light', brand: 'meridian', mode: 'light' },
+  { id: 'voltage-dark', label: 'Voltage · Dark', brand: 'voltage', mode: 'dark' },
+  { id: 'solstice-light', label: 'Solstice · Light', brand: 'solstice', mode: 'light' },
+  { id: 'nocturne-dark', label: 'Nocturne · Dark', brand: 'nocturne', mode: 'dark' },
 ];
 
 /**

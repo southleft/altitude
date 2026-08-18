@@ -31,6 +31,7 @@ export * from './file-upload/file-upload';
 export * from './focus-trap/focus-trap';
 export * from './header/header';
 export * from './heading/heading';
+export * from './hero/hero';
 export * from './icon/icon';
 export * from './input/input';
 export * from './input-stepper/input-stepper';
