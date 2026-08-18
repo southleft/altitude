@@ -23,6 +23,13 @@ jobs:
           cache: 'pnpm'
       - name: Install root deps
         run: pnpm install --frozen-lockfile --ignore-scripts
+      # FATAL. The warn-only step below uses `|| true` so docs/infra PRs without a
+      # changeset stay green — but `|| true` also swallowed a stale `ignore` entry
+      # (`al-app-enhance`, a workspace deleted several commits earlier) that made
+      # `changeset status` throw a ValidationError. The release pipeline was broken
+      # and CI stayed green. This step validates the config itself and must pass.
+      - name: Validate changesets config
+        run: pnpm run check:changesets
       - name: Changeset status (warn-only on docs/infra PRs)
         run: pnpm exec changeset status --since=origin/${{ github.base_ref }} || true
 
