@@ -42,7 +42,7 @@ export const WithImage: StoryObj<typeof ALAvatar> = {
   args: {
     children: (
       <>
-        <img src="https://picsum.photos/80/80" alt="Alt text" />
+        <img src="https://placehold.co/80x80" alt="Alt text" />
       </>
     )
   }

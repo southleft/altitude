@@ -2,11 +2,14 @@ import { html, LitElement, unsafeCSS, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import styles from './icon-catalog.scss';
 
-// The `<al-icon>` element itself, plus every glyph registered eagerly. `all.ts`
-// is ~230 KB gzipped and exists for exactly this page — it is deliberately not a
-// build entry point, so it can never reach an application bundle.
+// The `<al-icon>` element itself, plus the lazy resolver. In `storybook dev`,
+// eagerly registering every glyph (`icon/all`) meant Vite served ~1,500
+// individual module requests before the page settled; the resolver instead
+// dynamic-imports only the ~120 glyphs a page of tiles actually shows, and the
+// registry's subscribe/repaint path fills tiles in as they land (no layout
+// shift — the icon box renders at full size before the glyph arrives).
 import { ALIcon } from '../../../components/icon/icon';
-import '../../../components/icon/all';
+import '../../../components/icon/lazy';
 import { catalog, ICON_CATEGORIES } from '../../../components/icon/catalog';
 import { LEGACY_ALIASES, SHADOWED_LEGACY_NAMES } from '../../../components/icon/icon-aliases';
 

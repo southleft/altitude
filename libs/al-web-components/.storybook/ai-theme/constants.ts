@@ -2,7 +2,6 @@
 
 export const ADDON_ID = 'altitude/ai-theme';
 export const TOOL_ID = `${ADDON_ID}/tool`;
-export const PANEL_ID = `${ADDON_ID}/panel`;
 
 export const EVENTS = {
   /** manager -> preview: apply this palette. */

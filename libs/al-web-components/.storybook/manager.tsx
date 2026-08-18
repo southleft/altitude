@@ -16,21 +16,20 @@ import {
   addons,
   types,
   useChannel,
-  useStorybookApi,
 } from 'storybook/manager-api';
 // Deliberately not IconButton: it is deprecated in Storybook 10.4 and logs on
 // every render. `Button variant="ghost" padding="small"` is what it rendered.
 import {
-  AddonPanel,
   Button,
   Form,
+  WithTooltip,
   createCopyToClipboardFunction,
 } from 'storybook/internal/components';
 import { DOCS_RENDERED, STORY_RENDERED } from 'storybook/internal/core-events';
 import { styled } from 'storybook/theming';
 
 import managerTheme from './theme';
-import { ADDON_ID, EVENTS, PANEL_ID, STORAGE_KEY, THEME_API, TOOL_ID } from './ai-theme/constants';
+import { ADDON_ID, EVENTS, STORAGE_KEY, THEME_API, TOOL_ID } from './ai-theme/constants';
 import { buildTheme, type BuildOptions } from './ai-theme/engine';
 import type { ApplyPayload, Direction, Theme } from './ai-theme/types';
 
@@ -596,37 +595,54 @@ const AIThemePanel: React.FC = () => {
 
 /* ------------------------------------------------------------------- tool */
 
-const AIThemeTool: React.FC = () => {
-  const api = useStorybookApi();
+/**
+ * The popover card the panel renders into. A fixed size, not content-driven:
+ * the transcript area grows as receipts type out, and a popover that resizes
+ * on every line would crawl across the screen.
+ */
+const PopoverCard = styled.div({
+  display: 'flex',
+  width: 420,
+  height: 440,
+  maxWidth: '90vw',
+  maxHeight: '70vh',
+});
 
-  return (
+const AIThemeTool: React.FC = () => (
+  // A toolbar popover, not an addon panel. The panel lived in the bottom
+  // drawer, which (a) is per-story chrome that competes with Controls/Actions
+  // and (b) does not exist on docs pages at all — exactly where a client
+  // browsing the library would want to try a theme. The popover is global:
+  // same entry point on every story and docs page. Theme state was already
+  // global (module-scope `session` + localStorage), so this is purely a UI
+  // relocation.
+  <WithTooltip
+    key={TOOL_ID}
+    trigger="click"
+    closeOnOutsideClick
+    placement="bottom"
+    // Storybook 11 makes this mandatory on the underlying PopoverProvider;
+    // omitting it logs a deprecation today.
+    ariaLabel="AI theme"
+    tooltip={() => (
+      <PopoverCard>
+        <AIThemePanel />
+      </PopoverCard>
+    )}
+  >
     <Button
-      key={TOOL_ID}
       type="button"
       variant="ghost"
       padding="small"
       title="AI theme"
       ariaLabel="AI theme"
-      // Always reveals the panel; deliberately not a toggle.
-      //
-      // `selectedPanel` is the only readable signal for "is this panel
-      // showing", and togglePanel() does not change it — so a toggle derived
-      // from it latches: once the panel is hidden the button keeps re-issuing
-      // togglePanel(false) and can never bring it back. Panel visibility
-      // itself is only inferable from layout sizes, which is not a contract
-      // worth depending on. Opening is the useful half; Storybook's own panel
-      // control closes it.
-      onClick={() => {
-        api.setSelectedPanel(PANEL_ID);
-        api.togglePanel(true);
-      }}
     >
       {/* @storybook/icons is a manager global but not a declared dependency of
           this package, so a glyph keeps the addon dependency-free. */}
       <Glyph aria-hidden="true">◐</Glyph>
     </Button>
-  );
-};
+  </WithTooltip>
+);
 
 /* --------------------------------------------------------------- register */
 
@@ -647,15 +663,5 @@ addons.register(ADDON_ID, () => {
     // where there is no canvas to theme.
     match: ({ viewMode, tabId }) => !tabId && (viewMode === 'story' || viewMode === 'docs'),
     render: AIThemeTool,
-  });
-
-  addons.add(PANEL_ID, {
-    type: types.PANEL,
-    title: 'AI Theme',
-    render: ({ active }) => (
-      <AddonPanel active={!!active}>
-        <AIThemePanel />
-      </AddonPanel>
-    ),
   });
 });

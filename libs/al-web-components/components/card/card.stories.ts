@@ -69,7 +69,7 @@ const TemplateWithContent = (args) => html`
         <al-menu-item>List Item 3</al-menu-item>
       </al-menu>
     </al-popover>
-  <img slot="image" alt="card image" src="https://fakeimg.pl/600x400" />
+  <img slot="image" alt="card image" src="https://placehold.co/600x400" />
   <al-heading slot="header" tagName="h3" variant="sm" ?isBold=${true}>Card title</al-heading>
   <al-text-passage>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dui leo, lacinia ut finibus sed, consectetur quis enim.</al-text-passage>
 </al-card>`;

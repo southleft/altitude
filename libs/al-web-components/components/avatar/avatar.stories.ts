@@ -36,7 +36,7 @@ const TemplateWithIcon = (args) => html`
 
 const TemplateWithImage = (args) => html`
   <al-avatar ${spread(args)} data-testid="avatar-with-image">
-    <img src="https://picsum.photos/80/80" alt="Alt text" />
+    <img src="https://placehold.co/80x80" alt="Alt text" />
   </al-avatar>
 `;
 

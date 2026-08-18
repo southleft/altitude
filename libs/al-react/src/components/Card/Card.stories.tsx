@@ -61,7 +61,7 @@ export const WithContent: StoryObj<typeof ALCard> = {
             <ALMenuItem>List Item 3</ALMenuItem>
           </ALMenu>
         </ALPopover>
-        <img slot="image" alt="card image" src="https://fakeimg.pl/600x400" />
+        <img slot="image" alt="card image" src="https://placehold.co/600x400" />
         <ALHeading slot="header" tagName="h3" variant="sm">Card title</ALHeading>
         <ALTextPassage>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dui leo, lacinia ut finibus sed, consectetur quis enim.</ALTextPassage>
       </>

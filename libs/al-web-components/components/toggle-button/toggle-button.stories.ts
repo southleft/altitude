@@ -67,7 +67,7 @@ DefaultPrefixIcon.args = {};
 const TemplateAvatar = (args) => html`
   <al-toggle-button ${spread(args)} data-testid="toggle-button">
     <al-avatar variant="sm" ?hasBadge=${true} badgeVariant="success">
-      <img src="https://picsum.photos/80/80" alt="Alt text" />
+      <img src="https://placehold.co/80x80" alt="Alt text" />
     </al-avatar>
   </al-toggle-button>
 `;
