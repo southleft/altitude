@@ -18,6 +18,9 @@ import styles from './toast.scss';
  * @slot - The toast title or primary text
  * @slot actions - Actions to optionally display in the toast
  * @slot icon - Slot in an icon to override the default one
+ *
+ * @event onToastClose - Fired when the toast is dismissed. Detail: `{ active }`.
+ * @event onToastGroupOpen - Fired when the toast becomes visible. Detail: `{ active }`. Note the name says `Group` although this is dispatched by the individual toast — see the known-issue note on `al-toast-group`.
  */
 export class ALToast extends ALElement {
   static el = 'al-toast';

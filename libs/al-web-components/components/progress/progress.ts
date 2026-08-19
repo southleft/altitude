@@ -5,6 +5,8 @@ import styles from './progress.scss';
 
 /**
  * Component: al-progress
+ *
+ * @event onProgressChange - Fired when the progress label updates. Detail: `{ label }` — the rendered label text, not the numeric value.
  */
 export class ALProgress extends ALElement {
   static el = 'al-progress';

@@ -13,5 +13,8 @@ export const ALAlert = createComponent({
   react: React,
   tagName: elementMap.get(ALWebAlert.el),
   elementClass: ALWebAlert,
-  events: {}
+  events: {
+    onClose: 'close',
+    onOpen: 'open'
+  }
 });

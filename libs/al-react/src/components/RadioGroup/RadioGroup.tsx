@@ -13,5 +13,7 @@ export const ALRadioGroup = createComponent({
   react: React,
   tagName: elementMap.get(ALWebRadioGroup.el),
   elementClass: ALWebRadioGroup,
-  events: {}
+  events: {
+    onRadioGroupChange: 'onRadioGroupChange'
+  }
 });

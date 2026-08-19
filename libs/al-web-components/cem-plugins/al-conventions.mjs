@@ -162,10 +162,34 @@ export default function altitudeConventions() {
         ...ast_parts.filter((p) => !cssParts.some((x) => x.name === p.name)),
       ];
 
-      if (slots.length) classDecl.slots = [...(classDecl.slots || []), ...slots];
-      if (mergedEvents.length) classDecl.events = [...(classDecl.events || []), ...mergedEvents];
-      if (mergedParts.length) classDecl.cssParts = [...(classDecl.cssParts || []), ...mergedParts];
-      if (cssProps.length) classDecl.cssProperties = [...(classDecl.cssProperties || []), ...cssProps];
+      // Merge BY NAME, never by blind concatenation.
+      //
+      // The analyzer parses the standard JSDoc tags (@slot/@event/@csspart/
+      // @cssproperty) itself, so `classDecl.*` may already hold an entry for a
+      // name this plugin also produced — from its own tag parsing or from AST
+      // dispatch-site inference. Concatenating duplicated every event the moment
+      // components gained real `@event` tags (54 -> 107). It went unnoticed only
+      // because no component had a single `@event` tag until then.
+      //
+      // Prefer whichever entry actually carries a description, so an analyzer
+      // stub never shadows a documented one (or vice versa).
+      const mergeByName = (existing = [], incoming = []) => {
+        const out = [...existing];
+        for (const item of incoming) {
+          const i = out.findIndex((x) => x.name === item.name);
+          if (i === -1) {
+            out.push(item);
+          } else if (!(out[i].description || '').trim() && (item.description || '').trim()) {
+            out[i] = { ...out[i], ...item };
+          }
+        }
+        return out;
+      };
+
+      if (slots.length) classDecl.slots = mergeByName(classDecl.slots, slots);
+      if (mergedEvents.length) classDecl.events = mergeByName(classDecl.events, mergedEvents);
+      if (mergedParts.length) classDecl.cssParts = mergeByName(classDecl.cssParts, mergedParts);
+      if (cssProps.length) classDecl.cssProperties = mergeByName(classDecl.cssProperties, cssProps);
     },
   };
 }

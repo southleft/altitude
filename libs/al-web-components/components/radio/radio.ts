@@ -14,6 +14,8 @@ import styles from './radio.scss';
  * @slot - The component content that appears next to the radio
  * @slot field-note - If content is slotted, it will display in place of the fieldNote property
  * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onRadioChange - Fired when this radio becomes checked. Detail: `{ checked, name, value }`.
  */
 export class ALRadio extends ALElement {
   static el = 'al-radio';

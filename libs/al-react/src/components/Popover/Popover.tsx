@@ -13,5 +13,9 @@ export const ALPopover = createComponent({
   react: React,
   tagName: elementMap.get(ALWebPopover.el),
   elementClass: ALWebPopover,
-  events: {}
+  events: {
+    onPopoverClose: 'onPopoverClose',
+    onPopoverCloseButton: 'onPopoverCloseButton',
+    onPopoverOpen: 'onPopoverOpen'
+  }
 });

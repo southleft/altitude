@@ -17,6 +17,10 @@ import styles from './popover.scss';
  * @slot header - The header of the popover that appears above the main slot
  * @slot footer - The footer of the popover that appears below the main slot
  * @slot trigger - The trigger that opens/closes the popover
+ *
+ * @event onPopoverOpen - Fired when the popover opens. Detail: `{ active }` — the new open state.
+ * @event onPopoverClose - Fired when the popover closes by any means. Detail: `{ active }`.
+ * @event onPopoverCloseButton - Fired only when the popover's close button is activated. Detail: `{ active }`. Use `onPopoverClose` to catch every close path.
  */
 export class ALPopover extends ALElement {
   static el = 'al-popover';

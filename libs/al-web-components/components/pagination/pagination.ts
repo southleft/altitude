@@ -32,6 +32,8 @@ const endDot = '... '; /* 3 */
  * @slot label - If content is slotted, it will override the default pagination label
  * @slot prev - If content is slotted, it will override the default "previous" icon
  * @slot next - If content is slotted, it will override the default "next" icon
+ *
+ * @event onPaginationChange - Fired when the page or page size changes. Detail: `{ pageNumber, pageSize, totalRecordSize }`.
  */
 export class ALPagination extends ALElement {
   static el = 'al-pagination';

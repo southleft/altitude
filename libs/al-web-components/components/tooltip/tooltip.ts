@@ -10,6 +10,9 @@ import styles from './tooltip.scss';
  * @slot - The content that appears inside the tooltip
  * @slot prefix - The content that appears before the main content
  * @slot trigger - The trigger that opens the tooltip
+ *
+ * @event onTooltipOpen - Fired when the tooltip becomes visible. Detail: `{ active }`.
+ * @event onTooltipClose - Fired when the tooltip hides. Detail: `{ active }`.
  */
 export class ALTooltip extends ALElement {
   static el = 'al-tooltip';

@@ -12,5 +12,10 @@ const elementMap = register({
 export const ALDatePicker = createComponent({
   react: React,
   tagName: elementMap.get(ALWebDatePicker.el),
-  elementClass: ALWebDatePicker
+  elementClass: ALWebDatePicker,
+  events: {
+    onDatePickerChange: 'onDatePickerChange',
+    onDatePickerClose: 'onDatePickerClose',
+    onDatePickerOpen: 'onDatePickerOpen'
+  }
 });

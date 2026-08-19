@@ -34,16 +34,16 @@
     ],
     "events": [
       {
-        "name": "onPopoverCloseButton",
-        "description": ""
-      },
-      {
         "name": "onPopoverOpen",
-        "description": ""
+        "description": "Fired when the popover opens. Detail: `{ active }` — the new open state."
       },
       {
         "name": "onPopoverClose",
-        "description": ""
+        "description": "Fired when the popover closes by any means. Detail: `{ active }`."
+      },
+      {
+        "name": "onPopoverCloseButton",
+        "description": "Fired only when the popover's close button is activated. Detail: `{ active }`. Use `onPopoverClose` to catch every close path."
       }
     ],
     "cssParts": [],

@@ -13,5 +13,8 @@ export const ALMenuItem = createComponent({
   react: React,
   tagName: elementMap.get(ALWebMenuItem.el),
   elementClass: ALWebMenuItem,
-  events: {}
+  events: {
+    onMenuItemExpand: 'onMenuItemExpand',
+    onMenuItemSelect: 'onMenuItemSelect'
+  }
 });

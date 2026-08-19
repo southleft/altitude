@@ -14,6 +14,6 @@ export const ALCheckbox = createComponent({
   tagName: elementMap.get(ALWebCheckbox.el),
   elementClass: ALWebCheckbox,
   events: {
-    onChange: 'change'
+    onCheckboxChange: 'onCheckboxChange'
   }
 });

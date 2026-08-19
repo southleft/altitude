@@ -15,6 +15,8 @@ import styles from './textarea.scss';
  * @slot after - The content that appears after the text in the input
  * @slot field-note - If content is slotted, it will display in place of the fieldNote property
  * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onTextareaChange - Fired when the textarea's value changes. Detail: `{ value }`.
  */
 export class ALTextarea extends ALElement {
   static el = 'al-textarea';

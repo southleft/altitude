@@ -17,6 +17,8 @@ import styles from './tabs.scss';
  * Component: al-tabs
  * @slot - The tab items for the tabs
  * @slot panel - The tab panels that correspond to the slotted tab items
+ *
+ * @event onTabsChange - Fired when the active tab changes, whether by user interaction or programmatically. Detail: `{ value, activeTabIdx }`.
  */
 export class ALTabs extends ALElement {
   static el = 'al-tabs';

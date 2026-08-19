@@ -112,12 +112,12 @@
           ],
           "events": [
             {
-              "name": "onAccordionPanelOpen",
-              "description": ""
+              "description": "Fired when the panel expands. Detail: `{ index, expanded }` — the panel's index within the accordion and its new expanded state.",
+              "name": "onAccordionPanelOpen"
             },
             {
-              "name": "onAccordionPanelClose",
-              "description": ""
+              "description": "Fired when the panel collapses. Detail: `{ index, expanded }` — the panel's index within the accordion and its new expanded state.",
+              "name": "onAccordionPanelClose"
             }
           ],
           "attributes": [
@@ -479,12 +479,12 @@
           ],
           "events": [
             {
-              "name": "close",
-              "description": ""
+              "description": "Fired when the alert becomes visible. Detail: `{ active }` — the new visibility state. Note this event name is unprefixed, unlike the rest of the library.",
+              "name": "open"
             },
             {
-              "name": "open",
-              "description": ""
+              "description": "Fired when the alert is dismissed. Detail: `{ active }` — the new visibility state. Note this event name is unprefixed, unlike the rest of the library.",
+              "name": "close"
             }
           ],
           "attributes": [
@@ -2003,8 +2003,8 @@
           ],
           "events": [
             {
-              "name": "onCalendarChange",
-              "description": ""
+              "description": "Fired when a date is selected. Detail: `{ value, rawDate }` — the date formatted per `dateFormat`, and the underlying `Date` object.",
+              "name": "onCalendarChange"
             }
           ],
           "attributes": [
@@ -2739,8 +2739,8 @@
           ],
           "events": [
             {
-              "name": "onCheckboxChange",
-              "description": ""
+              "description": "Fired when the checked state changes. Detail: `{ checked, indeterminate, value }`.",
+              "name": "onCheckboxChange"
             }
           ],
           "attributes": [
@@ -2955,8 +2955,8 @@
           ],
           "events": [
             {
-              "name": "onChipGroupExpand",
-              "description": ""
+              "description": "Fired when the group expands to reveal chips hidden behind the overflow control. Carries no detail payload.",
+              "name": "onChipGroupExpand"
             }
           ],
           "attributes": [
@@ -3095,8 +3095,8 @@
           ],
           "events": [
             {
-              "name": "onChipClose",
-              "description": ""
+              "description": "Fired when the chip's remove control is activated. Carries no detail payload; read the chip's own properties from `event.target`.",
+              "name": "onChipClose"
             }
           ],
           "attributes": [
@@ -3556,16 +3556,16 @@
           ],
           "events": [
             {
-              "name": "onDatePickerOpen",
-              "description": ""
+              "description": "Fired when the calendar overlay opens. Detail: `{ activeCalendar }` — the new open state.",
+              "name": "onDatePickerOpen"
             },
             {
-              "name": "onDatePickerClose",
-              "description": ""
+              "description": "Fired when the calendar overlay closes. Detail: `{ activeCalendar }` — the new open state.",
+              "name": "onDatePickerClose"
             },
             {
-              "name": "onDatePickerChange",
-              "description": ""
+              "description": "Fired when the selected date changes. Detail: `{ value }` — the formatted date string.",
+              "name": "onDatePickerChange"
             }
           ],
           "attributes": [
@@ -4367,20 +4367,20 @@
           ],
           "events": [
             {
-              "name": "onDateTimePickerOpen",
-              "description": ""
+              "description": "Fired when the calendar overlay opens. Detail: `{ activeCalendar }` — the new open state.",
+              "name": "onDateTimePickerOpen"
             },
             {
-              "name": "onDateTimePickerClose",
-              "description": ""
+              "description": "Fired when the calendar overlay closes. Detail: `{ activeCalendar }` — the new open state.",
+              "name": "onDateTimePickerClose"
             },
             {
-              "name": "onDateTimePickerDateChange",
-              "description": ""
+              "description": "Fired when the date portion changes. Detail: `{ value }` — the formatted date-time string. Fires independently of the time portion.",
+              "name": "onDateTimePickerDateChange"
             },
             {
-              "name": "onDateTimePickerTimeChange",
-              "description": ""
+              "description": "Fired when the time portion changes. Detail: `{ value }` — the formatted date-time string. Fires independently of the date portion.",
+              "name": "onDateTimePickerTimeChange"
             }
           ],
           "attributes": [
@@ -4958,16 +4958,16 @@
           ],
           "events": [
             {
-              "name": "onDialogCloseButton",
-              "description": ""
+              "description": "Fired when the dialog opens. Detail: `{ active, item }` — the new open state and the dialog element itself.",
+              "name": "onDialogOpen"
             },
             {
-              "name": "onDialogOpen",
-              "description": ""
+              "description": "Fired when the dialog closes by any means, including backdrop click and Escape. Detail: `{ active, item }`.",
+              "name": "onDialogClose"
             },
             {
-              "name": "onDialogClose",
-              "description": ""
+              "description": "Fired only when the dialog's close button is activated. Detail: `{ active, item }`. Use `onDialogClose` to catch every close path.",
+              "name": "onDialogCloseButton"
             }
           ],
           "attributes": [
@@ -5320,16 +5320,16 @@
           ],
           "events": [
             {
-              "name": "onDrawerCloseButton",
-              "description": ""
+              "description": "Fired when the drawer opens. Detail: `{ active }` — the new open state.",
+              "name": "onDrawerOpen"
             },
             {
-              "name": "onDrawerOpen",
-              "description": ""
+              "description": "Fired when the drawer closes by any means. Detail: `{ active }`.",
+              "name": "onDrawerClose"
             },
             {
-              "name": "onDrawerClose",
-              "description": ""
+              "description": "Fired only when the drawer's close button is activated. Detail: `{ active }`. Use `onDrawerClose` to catch every close path.",
+              "name": "onDrawerCloseButton"
             }
           ],
           "attributes": [
@@ -5953,12 +5953,12 @@
           ],
           "events": [
             {
-              "name": "onFileUploadFileRemove",
-              "description": ""
+              "description": "Fired when files are added. Detail: `{ uploadedFiles }` — the files accepted by this interaction.",
+              "name": "onFileUploadFileUpload"
             },
             {
-              "name": "onFileUploadFileUpload",
-              "description": ""
+              "description": "Fired when a file is removed. Detail: `{ updatedFiles }` — the remaining files after removal, not the removed one.",
+              "name": "onFileUploadFileRemove"
             }
           ],
           "attributes": [
@@ -6506,22 +6506,6 @@
             {
               "description": "Vertical padding of the band. Defaults to the theme space ramp.",
               "name": "--al-hero-padding-block"
-            },
-            {
-              "name": "--al-hero-max-width",
-              "description": "Max width of the contained content. Default 75rem."
-            },
-            {
-              "name": "--al-hero-min-height",
-              "description": "Minimum block size of the main area. Default none."
-            },
-            {
-              "name": "--al-hero-gap",
-              "description": "Gap between content and media. Defaults to the theme space ramp."
-            },
-            {
-              "name": "--al-hero-padding-block",
-              "description": "Vertical padding of the band. Defaults to the theme space ramp."
             }
           ],
           "slots": [
@@ -13165,8 +13149,8 @@
           ],
           "events": [
             {
-              "name": "onInputStepperChange",
-              "description": ""
+              "description": "Fired when the count changes via the increment/decrement controls or direct entry. Detail: `{ value }`.",
+              "name": "onInputStepperChange"
             }
           ],
           "attributes": [
@@ -13658,8 +13642,8 @@
           ],
           "events": [
             {
-              "name": "onInputChange",
-              "description": ""
+              "description": "Fired when the input's value changes. Detail: `{ value }`.",
+              "name": "onInputChange"
             }
           ],
           "attributes": [
@@ -15155,12 +15139,12 @@
           ],
           "events": [
             {
-              "name": "onMenuItemSelect",
-              "description": ""
+              "description": "Fired when the item is selected. Detail: `{ value, selected, item }` — the item's value, its new selected state, and the element itself.",
+              "name": "onMenuItemSelect"
             },
             {
-              "name": "onMenuItemExpand",
-              "description": ""
+              "description": "Fired when an item with a submenu expands or collapses. Detail: `{ expanded, item }`.",
+              "name": "onMenuItemExpand"
             }
           ],
           "attributes": [
@@ -16169,8 +16153,8 @@
           ],
           "events": [
             {
-              "name": "onPaginationChange",
-              "description": ""
+              "description": "Fired when the page or page size changes. Detail: `{ pageNumber, pageSize, totalRecordSize }`.",
+              "name": "onPaginationChange"
             }
           ],
           "attributes": [
@@ -16487,16 +16471,16 @@
           ],
           "events": [
             {
-              "name": "onPopoverCloseButton",
-              "description": ""
+              "description": "Fired when the popover opens. Detail: `{ active }` — the new open state.",
+              "name": "onPopoverOpen"
             },
             {
-              "name": "onPopoverOpen",
-              "description": ""
+              "description": "Fired when the popover closes by any means. Detail: `{ active }`.",
+              "name": "onPopoverClose"
             },
             {
-              "name": "onPopoverClose",
-              "description": ""
+              "description": "Fired only when the popover's close button is activated. Detail: `{ active }`. Use `onPopoverClose` to catch every close path.",
+              "name": "onPopoverCloseButton"
             }
           ],
           "attributes": [
@@ -16800,8 +16784,8 @@
           ],
           "events": [
             {
-              "name": "onProgressChange",
-              "description": ""
+              "description": "Fired when the progress label updates. Detail: `{ label }` — the rendered label text, not the numeric value.",
+              "name": "onProgressChange"
             }
           ],
           "attributes": [
@@ -17109,8 +17093,8 @@
           ],
           "events": [
             {
-              "name": "onRadioGroupChange",
-              "description": ""
+              "description": "Fired when the group's selection changes. Detail: `{ checked, name, value }` — taken from the newly checked radio.",
+              "name": "onRadioGroupChange"
             }
           ],
           "attributes": [
@@ -17396,8 +17380,8 @@
           ],
           "events": [
             {
-              "name": "onRadioChange",
-              "description": ""
+              "description": "Fired when this radio becomes checked. Detail: `{ checked, name, value }`.",
+              "name": "onRadioChange"
             }
           ],
           "attributes": [
@@ -18105,12 +18089,12 @@
           ],
           "events": [
             {
-              "name": "onRangeDrag",
-              "description": ""
+              "description": "Fired continuously while the thumb is dragged. Prefer `onRangeOutputValueChange` for committed values; this one fires on every move.",
+              "name": "onRangeDrag"
             },
             {
-              "name": "onRangeOutputValueChange",
-              "description": ""
+              "description": "Fired when the range's output value changes. Detail: `{ value }`.",
+              "name": "onRangeOutputValueChange"
             }
           ],
           "attributes": [
@@ -18740,8 +18724,8 @@
           ],
           "events": [
             {
-              "name": "onSearchChange",
-              "description": ""
+              "description": "Fired when the search query changes. Detail: `{ value }`.",
+              "name": "onSearchChange"
             }
           ],
           "attributes": [
@@ -19285,12 +19269,12 @@
           ],
           "events": [
             {
-              "name": "onSelectOpen",
-              "description": ""
+              "description": "Fired when the option list opens. Detail: `{ active }` — always `true`.",
+              "name": "onSelectOpen"
             },
             {
-              "name": "onSelectClose",
-              "description": ""
+              "description": "Fired when the option list closes. Detail: `{ active }` — always `false`.",
+              "name": "onSelectClose"
             }
           ],
           "attributes": [
@@ -20175,8 +20159,8 @@
           ],
           "events": [
             {
-              "name": "onTabSelect",
-              "description": ""
+              "description": "Fired when this tab is selected. Detail: `{ value, index }` — the tab element itself and its index.",
+              "name": "onTabSelect"
             }
           ],
           "attributes": [
@@ -20467,8 +20451,8 @@
           ],
           "events": [
             {
-              "name": "onTabsChange",
-              "description": ""
+              "description": "Fired when the active tab changes, whether by user interaction or programmatically. Detail: `{ value, activeTabIdx }`.",
+              "name": "onTabsChange"
             }
           ],
           "attributes": [
@@ -20859,8 +20843,8 @@
           ],
           "events": [
             {
-              "name": "onTextareaChange",
-              "description": ""
+              "description": "Fired when the textarea's value changes. Detail: `{ value }`.",
+              "name": "onTextareaChange"
             }
           ],
           "attributes": [
@@ -21162,8 +21146,8 @@
           ],
           "events": [
             {
-              "name": "onThemeSwitcherChange",
-              "description": ""
+              "description": "Fired when the theme changes. Detail: `{ currentTheme, currentLogo, scoped }` — `scoped` is `true` when an ancestor `<al-theme>` was found and updated, `false` when the deprecated global swap was used.",
+              "name": "onThemeSwitcherChange"
             }
           ],
           "superclass": {
@@ -21557,8 +21541,8 @@
           ],
           "events": [
             {
-              "name": "onTimeSelectorListChange",
-              "description": ""
+              "description": "Fired when a time is selected. Detail: `{ value }` — formatted per `timeFormat`.",
+              "name": "onTimeSelectorListChange"
             }
           ],
           "attributes": [
@@ -21767,12 +21751,12 @@
           ],
           "events": [
             {
-              "name": "onToastGroupOpen",
-              "description": ""
+              "description": "Fired when the group becomes visible. Detail: `{ active }`.",
+              "name": "onToastGroupOpen"
             },
             {
-              "name": "onToastGroupClose",
-              "description": ""
+              "description": "Fired when the group is dismissed. Detail: `{ active }`.",
+              "name": "onToastGroupClose"
             }
           ],
           "attributes": [
@@ -22015,12 +21999,12 @@
           ],
           "events": [
             {
-              "name": "onToastGroupOpen",
-              "description": ""
+              "description": "Fired when the toast is dismissed. Detail: `{ active }`.",
+              "name": "onToastClose"
             },
             {
-              "name": "onToastClose",
-              "description": ""
+              "description": "Fired when the toast becomes visible. Detail: `{ active }`. Note the name says `Group` although this is dispatched by the individual toast — see the known-issue note on `al-toast-group`.",
+              "name": "onToastGroupOpen"
             }
           ],
           "attributes": [
@@ -22425,12 +22409,12 @@
           ],
           "events": [
             {
-              "name": "onToggleButtonSelect",
-              "description": ""
+              "description": "Fired when the button becomes selected. Detail: `{ item, selected }`.",
+              "name": "onToggleButtonSelect"
             },
             {
-              "name": "onToggleButtonDeselect",
-              "description": ""
+              "description": "Fired when the button becomes deselected. Detail: `{ item, selected }`.",
+              "name": "onToggleButtonDeselect"
             }
           ],
           "attributes": [
@@ -22587,8 +22571,8 @@
           ],
           "events": [
             {
-              "name": "onToggleChange",
-              "description": ""
+              "description": "Fired when the toggle's checked state changes. Detail: `{ checked }`.",
+              "name": "onToggleChange"
             }
           ],
           "attributes": [
@@ -22849,12 +22833,12 @@
           ],
           "events": [
             {
-              "name": "onTooltipOpen",
-              "description": ""
+              "description": "Fired when the tooltip becomes visible. Detail: `{ active }`.",
+              "name": "onTooltipOpen"
             },
             {
-              "name": "onTooltipClose",
-              "description": ""
+              "description": "Fired when the tooltip hides. Detail: `{ active }`.",
+              "name": "onTooltipClose"
             }
           ],
           "attributes": [

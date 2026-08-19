@@ -30,12 +30,12 @@
     ],
     "events": [
       {
-        "name": "onToastGroupOpen",
-        "description": ""
+        "name": "onToastClose",
+        "description": "Fired when the toast is dismissed. Detail: `{ active }`."
       },
       {
-        "name": "onToastClose",
-        "description": ""
+        "name": "onToastGroupOpen",
+        "description": "Fired when the toast becomes visible. Detail: `{ active }`. Note the name says `Group` although this is dispatched by the individual toast — see the known-issue note on `al-toast-group`."
       }
     ],
     "cssParts": [],

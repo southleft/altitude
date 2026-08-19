@@ -12,6 +12,9 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 /**
  * Component: al-accordion-panel
  * @slot - The accordion panel content
+ *
+ * @event onAccordionPanelOpen - Fired when the panel expands. Detail: `{ index, expanded }` — the panel's index within the accordion and its new expanded state.
+ * @event onAccordionPanelClose - Fired when the panel collapses. Detail: `{ index, expanded }` — the panel's index within the accordion and its new expanded state.
  */
 export class ALAccordionPanel extends ALElement {
   static el = 'al-accordion-panel';

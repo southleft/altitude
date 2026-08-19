@@ -13,5 +13,8 @@ export const ALFileUpload = createComponent({
   react: React,
   tagName: elementMap.get(ALWebFileUpload.el),
   elementClass: ALWebFileUpload,
-  events: {}
+  events: {
+    onFileUploadFileRemove: 'onFileUploadFileRemove',
+    onFileUploadFileUpload: 'onFileUploadFileUpload'
+  }
 });

@@ -10,6 +10,8 @@ import styles from './chip-group.scss';
 /**
  * Component: al-chip-group
  * @slot - The chip group content, a set of chips
+ *
+ * @event onChipGroupExpand - Fired when the group expands to reveal chips hidden behind the overflow control. Carries no detail payload.
  */
 export class ALChipGroup extends ALElement {
   static el = 'al-chip-group';

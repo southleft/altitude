@@ -13,5 +13,7 @@ export const ALThemeSwitcher = createComponent({
   react: React,
   tagName: elementMap.get(ALWebThemeSwitcher.el),
   elementClass: ALWebThemeSwitcher,
-  events: {}
+  events: {
+    onThemeSwitcherChange: 'onThemeSwitcherChange'
+  }
 });

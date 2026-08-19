@@ -13,5 +13,7 @@ export const ALToggle = createComponent({
   react: React,
   tagName: elementMap.get(ALWebToggle.el),
   elementClass: ALWebToggle,
-  events: {}
+  events: {
+    onToggleChange: 'onToggleChange'
+  }
 });

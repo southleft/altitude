@@ -14,6 +14,6 @@ export const ALInputStepper = createComponent({
   tagName: elementMap.get(ALWebInputStepper.el),
   elementClass: ALWebInputStepper,
   events: {
-    onChange: 'change'
+    onInputStepperChange: 'onInputStepperChange'
   }
 });

@@ -10,6 +10,8 @@ import styles from './chip.scss';
 /**
  * Component: al-chip
  * @slot - The chip content
+ *
+ * @event onChipClose - Fired when the chip's remove control is activated. Carries no detail payload; read the chip's own properties from `event.target`.
  */
 export class ALChip extends ALElement {
   static el = 'al-chip';

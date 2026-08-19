@@ -16,6 +16,8 @@ import styles from './input.scss';
  * @slot after - The content that appears after the text in the input
  * @slot field-note - If content is slotted, it will display in place of the fieldNote property
  * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onInputChange - Fired when the input's value changes. Detail: `{ value }`.
  */
 export class ALInput extends ALElement {
   static el = 'al-input';

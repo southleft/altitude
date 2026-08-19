@@ -7,6 +7,8 @@ import styles from './toggle.scss';
 
 /**
  * Component: al-toggle
+ *
+ * @event onToggleChange - Fired when the toggle's checked state changes. Detail: `{ checked }`.
  */
 export class ALToggle extends ALElement {
   static el = 'al-toggle';

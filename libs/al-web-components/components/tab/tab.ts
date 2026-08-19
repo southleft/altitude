@@ -7,6 +7,8 @@ import styles from './tab.scss';
 /**
  * Component: al-tab
  * @slot - The tab label
+ *
+ * @event onTabSelect - Fired when this tab is selected. Detail: `{ value, index }` — the tab element itself and its index.
  */
 export class ALTab extends ALElement {
   static el = 'al-tab';

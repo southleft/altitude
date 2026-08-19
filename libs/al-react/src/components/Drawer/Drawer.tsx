@@ -13,5 +13,9 @@ export const ALDrawer = createComponent({
   react: React,
   tagName: elementMap.get(ALWebDrawer.el),
   elementClass: ALWebDrawer,
-  events: {}
+  events: {
+    onDrawerClose: 'onDrawerClose',
+    onDrawerCloseButton: 'onDrawerCloseButton',
+    onDrawerOpen: 'onDrawerOpen'
+  }
 });

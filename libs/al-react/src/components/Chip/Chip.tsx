@@ -13,5 +13,7 @@ export const ALChip = createComponent({
   react: React,
   tagName: elementMap.get(ALWebChip.el),
   elementClass: ALWebChip,
-  events: {}
+  events: {
+    onChipClose: 'onChipClose'
+  }
 });

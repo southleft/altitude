@@ -13,5 +13,8 @@ export const ALTooltip = createComponent({
   react: React,
   tagName: elementMap.get(ALWebTooltip.el),
   elementClass: ALWebTooltip,
-  events: {}
+  events: {
+    onTooltipClose: 'onTooltipClose',
+    onTooltipOpen: 'onTooltipOpen'
+  }
 });

@@ -23,6 +23,8 @@ import styles from './search.scss';
  * @slot - The search's dropdown content
  * @slot field-note - If content is slotted, it will display in place of the fieldNote property
  * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onSearchChange - Fired when the search query changes. Detail: `{ value }`.
  */
 export class ALSearch extends ALElement {
   static el = 'al-search';

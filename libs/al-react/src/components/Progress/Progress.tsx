@@ -13,5 +13,7 @@ export const ALProgress = createComponent({
   react: React,
   tagName: elementMap.get(ALWebProgress.el),
   elementClass: ALWebProgress,
-  events: {}
+  events: {
+    onProgressChange: 'onProgressChange'
+  }
 });

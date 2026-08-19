@@ -17,6 +17,9 @@ const UPPER_RANGE = 'UPPERRANGE';
  * @slot label - If content is slotted, it will override the default range label
  * @slot before - If content is slotted, it will override the default range "min" label text
  * @slot after - If content is slotted, it will override the default range "max" label text
+ *
+ * @event onRangeDrag - Fired continuously while the thumb is dragged. Prefer `onRangeOutputValueChange` for committed values; this one fires on every move.
+ * @event onRangeOutputValueChange - Fired when the range's output value changes. Detail: `{ value }`.
  */
 export class ALRange extends ALElement {
   static el = 'al-range';

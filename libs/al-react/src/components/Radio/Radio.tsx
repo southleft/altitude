@@ -13,5 +13,7 @@ export const ALRadio = createComponent({
   react: React,
   tagName: elementMap.get(ALWebRadio.el),
   elementClass: ALWebRadio,
-  events: {}
+  events: {
+    onRadioChange: 'onRadioChange'
+  }
 });

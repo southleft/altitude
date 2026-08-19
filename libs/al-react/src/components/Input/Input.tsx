@@ -13,5 +13,7 @@ export const ALInput = createComponent({
   react: React,
   tagName: elementMap.get(ALWebInput.el),
   elementClass: ALWebInput,
-  events: {}
+  events: {
+    onInputChange: 'onInputChange'
+  }
 });

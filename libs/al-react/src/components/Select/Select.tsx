@@ -13,5 +13,8 @@ export const ALSelect = createComponent({
   react: React,
   tagName: elementMap.get(ALWebSelect.el),
   elementClass: ALWebSelect,
-  events: {}
+  events: {
+    onSelectClose: 'onSelectClose',
+    onSelectOpen: 'onSelectOpen'
+  }
 });

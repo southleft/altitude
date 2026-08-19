@@ -13,5 +13,8 @@ export const ALToggleButton = createComponent({
   react: React,
   tagName: elementMap.get(ALWebToggleButton.el),
   elementClass: ALWebToggleButton,
-  events: {}
+  events: {
+    onToggleButtonDeselect: 'onToggleButtonDeselect',
+    onToggleButtonSelect: 'onToggleButtonSelect'
+  }
 });

@@ -17,6 +17,10 @@ import styles from './date-picker.scss';
  * Component: al-date-picker
  * @slot field-note - If content is slotted, it will display in place of the fieldNote property
  * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onDatePickerOpen - Fired when the calendar overlay opens. Detail: `{ activeCalendar }` — the new open state.
+ * @event onDatePickerClose - Fired when the calendar overlay closes. Detail: `{ activeCalendar }` — the new open state.
+ * @event onDatePickerChange - Fired when the selected date changes. Detail: `{ value }` — the formatted date string.
  */
 export class ALDatePicker extends ALElement {
   static el = 'al-date-picker';

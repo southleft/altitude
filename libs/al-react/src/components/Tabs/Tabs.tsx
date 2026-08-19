@@ -14,6 +14,6 @@ export const ALTabs = createComponent({
   tagName: elementMap.get(ALWebTabs.el),
   elementClass: ALWebTabs,
   events: {
-    onTabChange: 'tabChange'
+    onTabsChange: 'onTabsChange'
   }
 });

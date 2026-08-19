@@ -13,5 +13,7 @@ export const ALTextarea = createComponent({
   react: React,
   tagName: elementMap.get(ALWebTextarea.el),
   elementClass: ALWebTextarea,
-  events: {}
+  events: {
+    onTextareaChange: 'onTextareaChange'
+  }
 });

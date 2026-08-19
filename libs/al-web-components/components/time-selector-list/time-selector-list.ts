@@ -22,6 +22,8 @@ import styles from './time-selector-list.scss';
 
 /**
  * Component: al-time-selector-list
+ *
+ * @event onTimeSelectorListChange - Fired when a time is selected. Detail: `{ value }` — formatted per `timeFormat`.
  */
 export class ALTimeSelectorList extends ALElement {
   static el = 'al-time-selector-list';

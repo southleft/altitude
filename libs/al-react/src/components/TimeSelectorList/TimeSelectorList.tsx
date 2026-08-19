@@ -13,5 +13,7 @@ export const ALTimeSelectorList = createComponent({
   react: React,
   tagName: elementMap.get(ALWebTimeSelectorList.el),
   elementClass: ALWebTimeSelectorList,
-  events: {}
+  events: {
+    onTimeSelectorListChange: 'onTimeSelectorListChange'
+  }
 });

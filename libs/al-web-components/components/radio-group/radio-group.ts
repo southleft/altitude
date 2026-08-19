@@ -15,6 +15,8 @@ import styles from './radio-group.scss';
  * @slot - The radio content, a set of radio items
  * @slot field-note - If content is slotted, it will display in place of the fieldNote property
  * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onRadioGroupChange - Fired when the group's selection changes. Detail: `{ checked, name, value }` — taken from the newly checked radio.
  */
 export class ALRadioGroup extends ALElement {
   static el = 'al-radio-group';

@@ -13,5 +13,7 @@ export const ALIconCalendar = createComponent({
   react: React,
   tagName: elementMap.get(ALWebIconCalendar.el),
   elementClass: ALWebIconCalendar,
-  events: {}
+  events: {
+    onCalendarChange: 'onCalendarChange'
+  }
 });

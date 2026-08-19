@@ -21,6 +21,9 @@ import styles from './select.scss';
  * @slot - The select content
  * @slot field-note - If content is slotted, it will display in place of the fieldNote property
  * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onSelectOpen - Fired when the option list opens. Detail: `{ active }` — always `true`.
+ * @event onSelectClose - Fired when the option list closes. Detail: `{ active }` — always `false`.
  */
 export class ALSelect extends ALElement {
   static el = 'al-select';

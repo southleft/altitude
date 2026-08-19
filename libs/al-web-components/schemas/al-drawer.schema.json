@@ -22,16 +22,16 @@
     ],
     "events": [
       {
-        "name": "onDrawerCloseButton",
-        "description": ""
-      },
-      {
         "name": "onDrawerOpen",
-        "description": ""
+        "description": "Fired when the drawer opens. Detail: `{ active }` — the new open state."
       },
       {
         "name": "onDrawerClose",
-        "description": ""
+        "description": "Fired when the drawer closes by any means. Detail: `{ active }`."
+      },
+      {
+        "name": "onDrawerCloseButton",
+        "description": "Fired only when the drawer's close button is activated. Detail: `{ active }`. Use `onDrawerClose` to catch every close path."
       }
     ],
     "cssParts": [],

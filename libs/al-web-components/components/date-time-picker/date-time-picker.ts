@@ -21,6 +21,11 @@ import styles from './date-time-picker.scss';
  * Component: al-date-time-picker
  * @slot field-note - If content is slotted, it will display in place of the fieldNote property
  * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onDateTimePickerOpen - Fired when the calendar overlay opens. Detail: `{ activeCalendar }` — the new open state.
+ * @event onDateTimePickerClose - Fired when the calendar overlay closes. Detail: `{ activeCalendar }` — the new open state.
+ * @event onDateTimePickerDateChange - Fired when the date portion changes. Detail: `{ value }` — the formatted date-time string. Fires independently of the time portion.
+ * @event onDateTimePickerTimeChange - Fired when the time portion changes. Detail: `{ value }` — the formatted date-time string. Fires independently of the date portion.
  */
 export class ALDateTimePicker extends ALElement {
   static el = 'al-date-time-picker';

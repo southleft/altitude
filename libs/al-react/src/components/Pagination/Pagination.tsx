@@ -13,5 +13,7 @@ export const ALPagination = createComponent({
   react: React,
   tagName: elementMap.get(ALWebPagination.el),
   elementClass: ALWebPagination,
-  events: {}
+  events: {
+    onPaginationChange: 'onPaginationChange'
+  }
 });

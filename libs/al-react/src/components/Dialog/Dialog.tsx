@@ -13,5 +13,9 @@ export const ALDialog = createComponent({
   react: React,
   tagName: elementMap.get(ALWebDialog.el),
   elementClass: ALWebDialog,
-  events: {}
+  events: {
+    onDialogClose: 'onDialogClose',
+    onDialogCloseButton: 'onDialogCloseButton',
+    onDialogOpen: 'onDialogOpen'
+  }
 });

@@ -12,6 +12,10 @@ import { ALIconClose } from '../icon/icons/close';
 /**
  * Component: al-drawer
  * @slot - The drawer content
+ *
+ * @event onDrawerOpen - Fired when the drawer opens. Detail: `{ active }` — the new open state.
+ * @event onDrawerClose - Fired when the drawer closes by any means. Detail: `{ active }`.
+ * @event onDrawerCloseButton - Fired only when the drawer's close button is activated. Detail: `{ active }`. Use `onDrawerClose` to catch every close path.
  */
 export class ALDrawer extends ALElement {
   static el = 'al-drawer';

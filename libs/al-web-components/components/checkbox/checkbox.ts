@@ -14,6 +14,8 @@ import styles from './checkbox.scss';
  * @slot - The component content that appears next to the checkbox
  * @slot field-note - If content is slotted, it will display in place of the fieldNote property
  * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onCheckboxChange - Fired when the checked state changes. Detail: `{ checked, indeterminate, value }`.
  */
 export class ALCheckbox extends ALElement {
   static el = 'al-checkbox';

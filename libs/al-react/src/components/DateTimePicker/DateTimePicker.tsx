@@ -13,5 +13,10 @@ export const ALDateTimePicker = createComponent({
   react: React,
   tagName: elementMap.get(ALWebDateTimePicker.el),
   elementClass: ALWebDateTimePicker,
-  events: {}
+  events: {
+    onDateTimePickerClose: 'onDateTimePickerClose',
+    onDateTimePickerDateChange: 'onDateTimePickerDateChange',
+    onDateTimePickerOpen: 'onDateTimePickerOpen',
+    onDateTimePickerTimeChange: 'onDateTimePickerTimeChange'
+  }
 });

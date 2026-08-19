@@ -13,5 +13,8 @@ export const ALRange = createComponent({
   react: React,
   tagName: elementMap.get(ALWebRange.el),
   elementClass: ALWebRange,
-  events: {}
+  events: {
+    onRangeDrag: 'onRangeDrag',
+    onRangeOutputValueChange: 'onRangeOutputValueChange'
+  }
 });

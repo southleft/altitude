@@ -42,6 +42,8 @@ import styles from './calendar.scss';
  * Component: al-calendar
  * @slot before - If content is slotted, it will override the default "previous button" icon
  * @slot after - If content is slotted, it will override the default "next button" icon
+ *
+ * @event onCalendarChange - Fired when a date is selected. Detail: `{ value, rawDate }` — the date formatted per `dateFormat`, and the underlying `Date` object.
  */
 export class ALCalendar extends ALElement {
   static el = 'al-calendar';

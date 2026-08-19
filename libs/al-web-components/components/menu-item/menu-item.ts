@@ -14,6 +14,9 @@ import styles from './menu-item.scss';
  * Component: al-menu-item
  * @slot - The content to display in the menu item
  * @slot before - Optional prefix content to display in the menu item
+ *
+ * @event onMenuItemSelect - Fired when the item is selected. Detail: `{ value, selected, item }` — the item's value, its new selected state, and the element itself.
+ * @event onMenuItemExpand - Fired when an item with a submenu expands or collapses. Detail: `{ expanded, item }`.
  */
 export class ALMenuItem extends ALElement {
   static el = 'al-menu-item';

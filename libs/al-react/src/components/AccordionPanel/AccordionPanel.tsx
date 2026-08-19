@@ -13,5 +13,8 @@ export const ALAccordionPanel = createComponent({
   react: React,
   tagName: elementMap.get(ALWebAccordionPanel.el),
   elementClass: ALWebAccordionPanel,
-  events: {}
+  events: {
+    onAccordionPanelClose: 'onAccordionPanelClose',
+    onAccordionPanelOpen: 'onAccordionPanelOpen'
+  }
 });

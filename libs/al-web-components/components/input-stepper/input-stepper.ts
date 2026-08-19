@@ -16,6 +16,8 @@ import styles from './input-stepper.scss';
  * Component: al-input-stepper
  * @slot field-note - If content is slotted, it will display in place of the fieldNote property
  * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onInputStepperChange - Fired when the count changes via the increment/decrement controls or direct entry. Detail: `{ value }`.
  */
 export class ALInputStepper extends ALElement {
   static el = 'al-input-stepper';

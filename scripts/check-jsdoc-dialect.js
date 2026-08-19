@@ -9,11 +9,15 @@
  *      T1 codemodded all 52 remaining files to the tag dialect; this stops the
  *      plop templates or a hand-written component from walking it back.
  *
- *   2. EMPTY EVENT DESCRIPTIONS (ratcheted). Every event in the CEM should carry
- *      a description. 53 of 54 were empty when this gate was written, so failing
- *      outright would block every PR. Instead the gate holds a HIGH-WATER MARK:
- *      the count may fall, never rise. Lower ALLOWED_EMPTY_EVENTS as T2 lands.
- *      When it reaches 0, delete the ratchet and make it a plain assertion.
+ *   2. EMPTY EVENT DESCRIPTIONS (fatal). Every event in the CEM must carry a
+ *      description. This started as a ratchet at 53/54; T2 documented every
+ *      dispatch site, so it is now a hard assertion at zero.
+ *
+ *   3. DUPLICATE CEM ENTRIES (fatal). cem-plugins/al-conventions.mjs used to
+ *      concatenate its parsed tags onto whatever the analyzer had already found,
+ *      which silently doubled every event (54 -> 107) the moment components
+ *      gained real `@event` tags. It now merges by name; this gate makes a
+ *      regression loud instead of invisible.
  *
  * Exit 0 = clean, 1 = at least one problem.
  */
@@ -28,10 +32,13 @@ const PLOP = join(ROOT, 'libs/al-web-components/plop');
 const CEM = join(ROOT, 'libs/al-web-components/custom-elements.json');
 
 /**
- * High-water mark for CEM events with an empty description.
- * Ratchet DOWN as T2 documents dispatch sites. Never raise it.
+ * CEM events allowed to carry an empty description.
+ *
+ * This began as a high-water mark of 53 (of 54) because failing outright would
+ * have blocked every PR. T2 documented every dispatch site, so it is now a plain
+ * assertion: zero. Do not raise it — document the event at its dispatch site.
  */
-const ALLOWED_EMPTY_EVENTS = 53;
+const ALLOWED_EMPTY_EVENTS = 0;
 
 const LEGACY_PROSE = /-\s*\*\*(slot|event|csspart|cssproperty)\*\*/;
 
@@ -83,15 +90,28 @@ if (!existsSync(CEM)) {
   const cem = JSON.parse(readFileSync(CEM, 'utf8'));
   let total = 0;
   const empty = [];
+  const dupes = [];
   for (const mod of cem.modules || []) {
     for (const dec of mod.declarations || []) {
+      const tag = dec.tagName || dec.name;
+      const seen = new Map();
       for (const ev of dec.events || []) {
         total++;
-        if (!(ev.description || '').trim()) {
-          empty.push(`${dec.tagName || dec.name}#${ev.name}`);
-        }
+        if (!(ev.description || '').trim()) empty.push(`${tag}#${ev.name}`);
+        seen.set(ev.name, (seen.get(ev.name) || 0) + 1);
+      }
+      for (const [name, n] of seen) if (n > 1) dupes.push(`${tag}#${name} x${n}`);
+      // Slots/parts/properties go through the same merge path — check them too.
+      for (const [kind, list] of [['slot', dec.slots], ['cssPart', dec.cssParts], ['cssProperty', dec.cssProperties]]) {
+        const s2 = new Map();
+        for (const item of list || []) s2.set(item.name, (s2.get(item.name) || 0) + 1);
+        for (const [name, n] of s2) if (n > 1) dupes.push(`${tag} ${kind} "${name}" x${n}`);
       }
     }
+  }
+  for (const d of dupes) fail('DUPLICATE-CEM-ENTRY', d);
+  if (dupes.length) {
+    console.error('  ^ cem-plugins/al-conventions.mjs must merge by name, not concatenate.');
   }
   console.log(`  ${total} event(s) in the CEM, ${empty.length} with an empty description (allowed: ${ALLOWED_EMPTY_EVENTS})`);
 

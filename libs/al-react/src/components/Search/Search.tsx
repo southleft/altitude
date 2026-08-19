@@ -13,5 +13,7 @@ export const ALSearch = createComponent({
   react: React,
   tagName: elementMap.get(ALWebSearch.el),
   elementClass: ALWebSearch,
-  events: {}
+  events: {
+    onSearchChange: 'onSearchChange'
+  }
 });

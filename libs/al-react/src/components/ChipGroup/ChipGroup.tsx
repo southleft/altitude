@@ -13,5 +13,7 @@ export const ALChipGroup = createComponent({
   react: React,
   tagName: elementMap.get(ALWebChipGroup.el),
   elementClass: ALWebChipGroup,
-  events: {}
+  events: {
+    onChipGroupExpand: 'onChipGroupExpand'
+  }
 });

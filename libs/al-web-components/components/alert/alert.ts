@@ -16,7 +16,11 @@ import styles from './alert.scss';
  * Component: al-alert
  * @slot - The alert's main content or title
  * @slot icon - Slot in an icon to override the default one
- * */
+ *
+ *
+ * @event open - Fired when the alert becomes visible. Detail: `{ active }` — the new visibility state. Note this event name is unprefixed, unlike the rest of the library.
+ * @event close - Fired when the alert is dismissed. Detail: `{ active }` — the new visibility state. Note this event name is unprefixed, unlike the rest of the library.
+ */
 export class ALAlert extends ALElement {
   static el = 'al-alert';
 

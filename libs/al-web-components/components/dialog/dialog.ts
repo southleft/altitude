@@ -18,6 +18,10 @@ import styles from './dialog.scss';
  * @slot trigger - The trigger that opens/closes the dialog
  * @slot header - The header of the dialog that appears above the main slot
  * @slot footer - The footer of the dialog that appears below the main slot
+ *
+ * @event onDialogOpen - Fired when the dialog opens. Detail: `{ active, item }` — the new open state and the dialog element itself.
+ * @event onDialogClose - Fired when the dialog closes by any means, including backdrop click and Escape. Detail: `{ active, item }`.
+ * @event onDialogCloseButton - Fired only when the dialog's close button is activated. Detail: `{ active, item }`. Use `onDialogClose` to catch every close path.
  */
 export class ALDialog extends ALElement {
   static el = 'al-dialog';

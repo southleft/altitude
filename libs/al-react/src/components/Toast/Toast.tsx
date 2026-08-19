@@ -13,5 +13,8 @@ export const ALToast = createComponent({
   react: React,
   tagName: elementMap.get(ALWebToast.el),
   elementClass: ALWebToast,
-  events: {}
+  events: {
+    onToastClose: 'onToastClose',
+    onToastGroupOpen: 'onToastGroupOpen'
+  }
 });

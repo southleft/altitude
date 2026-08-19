@@ -74,6 +74,8 @@ const BRANDS: BrandEntry[] = [
 /**
  * Component: al-theme-switcher
  * @slot - The component content
+ *
+ * @event onThemeSwitcherChange - Fired when the theme changes. Detail: `{ currentTheme, currentLogo, scoped }` — `scoped` is `true` when an ancestor `<al-theme>` was found and updated, `false` when the deprecated global swap was used.
  */
 export class ALThemeSwitcher extends ALElement {
   static el = 'al-theme-switcher';
