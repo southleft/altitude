@@ -13,7 +13,7 @@
       }
       .grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         gap: 1px;
         background: #333;
       }
@@ -47,7 +47,7 @@
     </style>
   </head>
   <body>
-    <!-- Four columns, one brand token bundle each, identical markup, identical
+    <!-- Two columns, one brand token bundle each, identical markup, identical
          mode / density / contrast. Iframes are what let each column link
          exactly one `:root` bundle; `<al-theme brand>` does not emit scoped
          selectors yet (owned by the scoped-token-emission spec). -->
@@ -55,14 +55,6 @@
       <div class="col">
         <h2>altitude<small>neutral reference</small></h2>
         <iframe src="./altitude.html" title="altitude"></iframe>
-      </div>
-      <div class="col">
-        <h2>northright<small>dense operational</small></h2>
-        <iframe src="./northright.html" title="northright"></iframe>
-      </div>
-      <div class="col">
-        <h2>odyssey<small>airy editorial</small></h2>
-        <iframe src="./odyssey.html" title="odyssey"></iframe>
       </div>
       <div class="col">
         <h2>southleft<small>high-contrast utilitarian</small></h2>

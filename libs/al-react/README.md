@@ -36,7 +36,7 @@ import { ALTheme, ALButton } from 'al-react';
 
 | prop | values | notes |
 |---|---|---|
-| `brand` | `altitude` `northright` `odyssey` `southleft` | odyssey and southleft build **dark only** |
+| `brand` | `altitude` `southleft` | southleft builds **dark only** |
 | `mode` | `light` `dark` | |
 | `density` | `compact` `cozy` `comfortable` | optional; `comfortable` is the base ramp |
 | `contrast` | `normal` `more` | optional; `normal` matches no rule |
@@ -48,7 +48,7 @@ is how you say "no position on this axis".
 `<ALTheme>` is the one wrapper that is not a bare `createComponent` call. It
 mirrors the five axes to **attributes**, because `@lit/react` sets reactive
 properties and the rules carrying the tokens are attribute selectors
-(`:host([brand='odyssey'])`). Without the mirror the props are accepted and
+(`:host([brand='southleft'])`). Without the mirror the props are accepted and
 nothing re-themes. The reasoning is in `src/components/Theme/Theme.tsx`.
 
 `<al-theme-switcher>` finds its host with `closest('al-theme')`, which cannot

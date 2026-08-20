@@ -32,11 +32,22 @@ import {
   RADIUS_SCALES,
 } from './personalities';
 import {
+  CONTENT_WIDTHS,
+  GRID_DENSITIES,
+  HERO_COMPOSITIONS,
   PERSONALITIES,
+  SECTION_EMPHASIS,
+  SECTION_ORDER_IDS,
+  type ContentWidth,
   type Direction,
+  type GridDensity,
+  type HeroComposition,
   type Mode,
   type Personality,
   type Receipt,
+  type ResolvedLayout,
+  type SectionEmphasis,
+  type SectionId,
   type Theme,
 } from './types';
 
@@ -184,6 +195,80 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
   const motion = direction?.motion ?? preset.motion;
   const borderWeight = direction?.borderWeight ?? preset.borderWeight;
 
+  /* ---- layout (T5 — spec 2026-08-20-southleft-example-app) ----
+   * Same "seed, then let the AI override" shape as every dial above, for a
+   * southleft-app concern the Storybook console itself never reads (it has
+   * no page to lay out) — carried on `Theme.layout` and ignored by every
+   * other consumer. Deterministic and complete with no AI reachable, same
+   * guarantee the color/shape/motion dials already give. */
+  const seedHeroComposition: HeroComposition =
+    personality === 'brutalist' || personality === 'playful'
+      ? 'poster'
+      : personality === 'editorial'
+        ? 'centered'
+        : HERO_COMPOSITIONS[Math.floor(rng() * HERO_COMPOSITIONS.length)];
+
+  // Fisher-Yates over the SAME rng stream already seeded from the prompt
+  // hash above — deterministic per prompt+variant, no second seed to keep
+  // in sync with the color dials.
+  const seedSectionOrder: SectionId[] = [...SECTION_ORDER_IDS];
+  for (let i = seedSectionOrder.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [seedSectionOrder[i], seedSectionOrder[j]] = [seedSectionOrder[j], seedSectionOrder[i]];
+  }
+
+  const seedGridDensity: GridDensity =
+    personality === 'brutalist'
+      ? 'dense'
+      : personality === 'editorial' || personality === 'luxe'
+        ? 'airy'
+        : GRID_DENSITIES[Math.floor(rng() * GRID_DENSITIES.length)];
+
+  const seedContentWidth: ContentWidth =
+    personality === 'editorial' || personality === 'luxe'
+      ? 'narrow'
+      : personality === 'brutalist' || personality === 'playful'
+        ? 'wide'
+        : 'regular';
+
+  const seedSectionEmphasis: SectionEmphasis = SECTION_EMPHASIS[Math.floor(rng() * SECTION_EMPHASIS.length)];
+
+  const heroComposition: HeroComposition =
+    direction?.heroComposition && (HERO_COMPOSITIONS as readonly string[]).includes(direction.heroComposition)
+      ? direction.heroComposition
+      : seedHeroComposition;
+
+  const isSectionPermutation = (order: SectionId[] | undefined): order is SectionId[] =>
+    Array.isArray(order) &&
+    order.length === SECTION_ORDER_IDS.length &&
+    new Set(order).size === SECTION_ORDER_IDS.length &&
+    order.every((id) => (SECTION_ORDER_IDS as readonly string[]).includes(id));
+
+  let sectionOrder: SectionId[] = isSectionPermutation(direction?.sectionOrder)
+    ? direction.sectionOrder
+    : seedSectionOrder;
+  // Structural invariant, enforced here rather than trusted from either the
+  // AI or the seed shuffle: the call-to-action never precedes the proof.
+  if (sectionOrder.indexOf('cta') < sectionOrder.indexOf('work')) {
+    sectionOrder = sectionOrder.filter((id) => id !== 'cta');
+    sectionOrder.splice(sectionOrder.indexOf('work') + 1, 0, 'cta');
+  }
+
+  const gridDensity: GridDensity =
+    direction?.gridDensity && (GRID_DENSITIES as readonly string[]).includes(direction.gridDensity)
+      ? direction.gridDensity
+      : seedGridDensity;
+  const contentWidth: ContentWidth =
+    direction?.contentWidth && (CONTENT_WIDTHS as readonly string[]).includes(direction.contentWidth)
+      ? direction.contentWidth
+      : seedContentWidth;
+  const sectionEmphasis: SectionEmphasis =
+    direction?.sectionEmphasis && (SECTION_EMPHASIS as readonly string[]).includes(direction.sectionEmphasis)
+      ? direction.sectionEmphasis
+      : seedSectionEmphasis;
+
+  const layout: ResolvedLayout = { heroComposition, sectionOrder, gridDensity, contentWidth, sectionEmphasis };
+
   /* ---- colour ramps ---- */
   // Neutrals carry the tint; the light ramp gets a touch less so paper stays
   // paper even at `vivid`.
@@ -301,6 +386,37 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
   palette['--al-animation-duration-8'] = d8;
   palette['--al-animation-timing-cubic-bezier'] = timing;
 
+  /* ---- shape/motion ROLE tokens (2026-08-20-token-axes-expansion) ----
+   * APPEND-ONLY: `--al-theme-border-radius-role-*` / `--al-theme-animation-
+   * {duration,timing}-role-*` are the newer names `<al-theme shape>` /
+   * `<al-theme motion>` write (`components/theme/theme.scss`) and a growing
+   * set of components read via `var(--…-role-x, var(--…-legacy))` — see that
+   * file's "shape axis" / "motion axis" comments for why the role tokens
+   * carry no tier-2 `:root` default of their own. Nothing above this block
+   * changed — this just ALSO pushes the SAME `radius`/`motion` art-direction
+   * fields through the new names, inline, on top of the recipe the preset
+   * decorator may already have written (`apply.ts` writes over every live
+   * `<al-theme>`, and an inline declaration always outranks a `:host` rule
+   * AND wins the fallback race outright since the property is no longer
+   * absent), so an AI-derived theme is exactly as "wired" as an authored
+   * `shape`/`motion` preset. Mapped from the SAME `RADIUS_SCALES` /
+   * `MOTION_SCALES` tuples already destructured above — `role.control` and
+   * `role.surface` both take the `lg` stop, matching the fallback every
+   * wired component already reads; `role.duration.fast` and
+   * `role.easing.emphasized` reuse the closest existing stop (the
+   * personality scales don't carry a distinct "extra fast" duration or a
+   * second easing curve) rather than inventing a value with no design input
+   * behind it. */
+  palette['--al-theme-border-radius-role-action'] = r4;
+  palette['--al-theme-border-radius-role-control'] = r8;
+  palette['--al-theme-border-radius-role-surface'] = r8;
+  palette['--al-theme-border-radius-role-indicator'] = rRound;
+  palette['--al-theme-animation-duration-role-fast'] = d2;
+  palette['--al-theme-animation-duration-role-base'] = d2;
+  palette['--al-theme-animation-duration-role-slow'] = d4;
+  palette['--al-theme-animation-timing-role-standard'] = timing;
+  palette['--al-theme-animation-timing-role-emphasized'] = timing;
+
   return {
     prompt,
     variant,
@@ -311,6 +427,7 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
     palette,
     receipts,
     direction,
+    layout,
   };
 }
 

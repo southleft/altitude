@@ -8,12 +8,12 @@
  * anything, which is exactly how the attribute stayed inert for a whole
  * release while three documents advertised it.
  *
- * This script renders `.altitude/visual-compare/harness/scoped.html` — four
+ * This script renders `.altitude/visual-compare/harness/scoped.html` — two
  * brands, one document, one `:root` — and asserts:
  *
- *   1. four distinct computed `--al-theme-color-background-primary-default`
- *      values across four sibling hosts;
- *   2. four distinct computed `font` shorthands on a rendered element INSIDE
+ *   1. two distinct computed `--al-theme-color-background-primary-default`
+ *      values across two sibling hosts;
+ *   2. two distinct computed `font` shorthands on a rendered element INSIDE
  *      each column's shadow root (a custom-property diff proves the token
  *      moved; only a computed style proves it reached the component);
  *   3. the tier-1 properties brands override (`--al-typography-preset-16`,
@@ -46,7 +46,7 @@ const { createServer } = await import(pathToFileURL(viteEntry).href);
 
 const PAGE = '/.altitude/visual-compare/harness/scoped.html';
 const OUT = path.join(REPO, '.altitude', 'visual-compare', 'brands.scoped.png');
-const BRANDS = ['altitude', 'northright', 'odyssey', 'southleft'];
+const BRANDS = ['altitude', 'southleft'];
 const PORT = 5198;
 
 const distDir = path.join(REPO, 'libs', 'al-web-components', 'dist', 'components');
@@ -107,7 +107,7 @@ const inner = (probe, host, sel, css) =>
     [probe, host, sel, css]
   );
 
-console.log('\n[scoped-theming] four <al-theme brand> siblings, one document, one :root\n');
+console.log('\n[scoped-theming] two <al-theme brand> siblings, one document, one :root\n');
 
 // ---------- 1 + 3: custom properties on the hosts ----------
 
@@ -153,13 +153,13 @@ check(
 
 // ---------- 4: nesting ----------
 
-console.log('\n  nesting — odyssey inside southleft');
+console.log('\n  nesting — altitude inside southleft');
 const outerFont = await inner('outer', 'al-button', '.al-c-button', 'font');
 const innerFont = await inner('inner', 'al-button', '.al-c-button', 'font');
 console.log(`      outer (southleft) ${outerFont}`);
-console.log(`      inner (odyssey)   ${innerFont}`);
+console.log(`      inner (altitude)  ${innerFont}`);
 check(outerFont === fonts.southleft, 'outer subtree resolves to southleft');
-check(innerFont === fonts.odyssey, 'inner subtree resolves to odyssey, not the outer brand');
+check(innerFont === fonts.altitude, 'inner subtree resolves to altitude, not the outer brand');
 
 // ---------- 4b: the versioned registry (T4.6) ----------
 //
@@ -168,7 +168,7 @@ check(innerFont === fonts.odyssey, 'inner subtree resolves to odyssey, not the o
 // `al-theme-9-9-9`, which no type-selector rule would match. `:host` matches
 // whatever the host's tag is.
 
-console.log('\n  versioned registry — <al-theme-9-9-9 brand="odyssey">');
+console.log('\n  versioned registry — <al-theme-9-9-9 brand="southleft">');
 const versionedTag = await page.evaluate(
   () => document.querySelector('[data-probe="versioned"]')?.tagName.toLowerCase() ?? '(missing)'
 );
@@ -176,15 +176,15 @@ const versionedFont = await inner('versioned', 'al-button', '.al-c-button', 'fon
 console.log(`      tag  ${versionedTag}`);
 console.log(`      font ${versionedFont}`);
 check(versionedTag === 'al-theme-9-9-9', 'the versioned host really is a suffixed tag');
-check(versionedFont === fonts.odyssey, 'the scoped brand block applies under a versioned tag too');
+check(versionedFont === fonts.southleft, 'the scoped brand block applies under a versioned tag too');
 
 // ---------- 5: the mode axis ----------
 
-console.log('\n  mode — northright light vs dark, over a dark :root');
-const darkBg = await prop('northright', '--al-theme-color-background-default');
-const lightBg = await prop('northright-light', '--al-theme-color-background-default');
-const darkBorder = await prop('northright', '--al-theme-color-border-default');
-const lightBorder = await prop('northright-light', '--al-theme-color-border-default');
+console.log('\n  mode — altitude light vs dark, over a dark :root');
+const darkBg = await prop('altitude', '--al-theme-color-background-default');
+const lightBg = await prop('altitude-light', '--al-theme-color-background-default');
+const darkBorder = await prop('altitude', '--al-theme-color-border-default');
+const lightBorder = await prop('altitude-light', '--al-theme-color-border-default');
 console.log(`      background  dark ${darkBg}   light ${lightBg}`);
 console.log(`      border      dark ${darkBorder}   light ${lightBorder}`);
 check(darkBg !== lightBg, 'mode moves --al-theme-color-background-default');
@@ -193,10 +193,10 @@ check(
   'mode moves --al-theme-color-border-default too (it used to move exactly two properties, both hardcoded)'
 );
 const paintedLight = await page.evaluate(() =>
-  getComputedStyle(document.querySelector('al-theme[data-probe="northright-light"] .surface')).backgroundColor
+  getComputedStyle(document.querySelector('al-theme[data-probe="altitude-light"] .surface')).backgroundColor
 );
 const paintedDark = await page.evaluate(() =>
-  getComputedStyle(document.querySelector('al-theme[data-probe="northright"] .surface')).backgroundColor
+  getComputedStyle(document.querySelector('al-theme[data-probe="altitude"] .surface')).backgroundColor
 );
 console.log(`      painted     dark ${paintedDark}   light ${paintedLight}`);
 check(paintedLight !== paintedDark, 'the painted surface actually differs between the two modes');
@@ -241,4 +241,4 @@ if (failures.length) {
   for (const f of failures) console.error(`    ${f}`);
   process.exit(1);
 }
-console.log('\n[scoped-theming] PASS — <al-theme brand> renders four brands distinctly on one page.');
+console.log('\n[scoped-theming] PASS — <al-theme brand> renders two brands distinctly on one page.');

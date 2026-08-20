@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Altitude — four brands in one page, via &lt;al-theme brand&gt;</title>
+    <title>Altitude — two brands in one page, via &lt;al-theme brand&gt;</title>
     <script>
       globalThis.alAutoRegistry = true;
     </script>
@@ -15,14 +15,14 @@
       ONE flat token sheet for the whole document — the ordinary `:root` dark
       bundle every app already loads. Nothing here links a per-brand stylesheet.
       Every difference below is produced by `<al-theme brand>` alone, which is
-      the thing `brands.dark.png`'s four-iframe harness could not do.
+      the thing `brands.dark.png`'s per-iframe harness could not do.
     -->
     <link rel="stylesheet" href="../../../libs/al-web-components/dist/css/main.css" />
     <link rel="stylesheet" href="./scoped.css" />
   </head>
   <body>
     <header>
-      <h1>One page, one <code>:root</code>, four brands</h1>
+      <h1>One page, one <code>:root</code>, two brands</h1>
       <p>
         Each column is <code>&lt;al-theme brand="…" mode="dark"&gt;</code>. Same markup, same
         document stylesheet, no iframes.

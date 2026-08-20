@@ -17,11 +17,13 @@ const ALThemeBase = createComponent({
 });
 
 /**
- * The five axes. `components/theme/theme.scss` and the generated
+ * The seven axes (spec 2026-08-20-token-axes-expansion added `shape`;
+ * `motion` was already listed here even before any preset wrote it).
+ * `components/theme/theme.scss` and the generated
  * `styles/dist-v5/scss/host/*.scss` partials select on them with ATTRIBUTE
- * selectors — `:host([brand='odyssey'])`, `:host([mode='dark'])`, and so on.
+ * selectors — `:host([brand='southleft'])`, `:host([mode='dark'])`, and so on.
  */
-const AXES = ['brand', 'mode', 'density', 'contrast', 'motion'] as const;
+const AXES = ['brand', 'mode', 'density', 'contrast', 'motion', 'shape'] as const;
 
 export type ALThemeProps = React.ComponentPropsWithoutRef<typeof ALThemeBase>;
 
@@ -42,13 +44,13 @@ export type ALThemeProps = React.ComponentPropsWithoutRef<typeof ALThemeBase>;
  * actually carry the tokens matched nothing.
  *
  * Measured in the running React Storybook against the plop-generated wrapper,
- * on `<ALTheme brand="odyssey" mode="dark">`:
+ * on `<ALTheme brand="southleft" mode="dark">`:
  *
- *   element properties   brand='odyssey', mode='dark'      correct
+ *   element properties   brand='southleft', mode='dark'    correct
  *   element attributes   data-al-preset only               NO axes
  *   --al-theme-color-background-primary-default
  *                        #4375ff (altitude blue)           WRONG
- *                        odyssey resolves to #a49981
+ *                        southleft resolves to #f05735
  *
  * So the axes are mirrored to attributes here, in a layout effect that runs
  * after `createComponent`'s own (child effects flush before parent effects).

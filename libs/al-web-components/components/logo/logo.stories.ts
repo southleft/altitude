@@ -14,16 +14,6 @@ const Template = (args) => html`<al-logo ${spread(args)} data-testid="logo">By S
 export const Default = Template.bind({});
 Default.args = {};
 
-export const Northright = Template.bind({});
-Northright.args = {
-  variant: 'northright'
-};
-
-export const Odyssey = Template.bind({});
-Odyssey.args = {
-  variant: 'odyssey'
-};
-
 const TemplateSouthleft = (args) => html`<al-logo ${spread(args)}></al-logo>`;
 export const Southleft = TemplateSouthleft.bind({});
 Southleft.args = {

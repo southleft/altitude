@@ -47,15 +47,18 @@ export const withPreset: Decorator = (story, context) => {
 
   const preset: Preset = getPreset(context.globals?.alPreset);
 
-  // `density` / `contrast` are still written only when the preset names them —
-  // not because `comfortable` is dangerous any more (that rule is gone), but
-  // because `contrast="normal"` matches no rule and an absent attribute is the
-  // honest expression of "this preset does not take a position".
+  // `density` / `contrast` / `shape` / `motion` are still written only when
+  // the preset names them — not because `comfortable` is dangerous any more
+  // (that rule is gone), but because e.g. `contrast="normal"` / `shape="default"`
+  // / `motion="full"` match no rule and an absent attribute is the honest
+  // expression of "this preset does not take a position".
   return html`<al-theme
     brand=${preset.brand}
     mode=${preset.mode}
     density=${ifDefined(preset.density)}
     contrast=${ifDefined(preset.contrast)}
+    shape=${ifDefined(preset.shape)}
+    motion=${ifDefined(preset.motion)}
     data-al-preset=${preset.id}
     >${story()}</al-theme
   >`;

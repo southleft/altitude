@@ -36,7 +36,7 @@
     overflow-x: hidden; /* 1 */
     color: inherit;
     background: var(--al-theme-color-background-transparent);
-    transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+    transition: background-color var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
 
     &:hover:not(:active, :disabled) {
       background-color: var(--al-theme-color-background-default);
@@ -62,7 +62,7 @@
    * Accordion icon
    */
   .al-c-accordion-panel__icon {
-    transition: transform var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+    transition: transform var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
 
     /**
      * Accordion icon animation
@@ -81,7 +81,7 @@
     overflow: auto;
     visibility: hidden; /* 1 */
     max-height: 0;
-    transition: max-height var(--al-theme-animation-duration) var(--al-theme-animation-timing), visibility var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+    transition: max-height var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing)), visibility var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
 
     /**
      * Accordion panel body within active accordion panel

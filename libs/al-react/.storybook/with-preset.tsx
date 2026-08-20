@@ -13,7 +13,7 @@
 //     elementClass.prototype` (`create-component.js` -> `setProperty`), and
 //     `<al-theme>`'s five axes are `@property accessor`s with no `reflect`, so
 //     a React prop alone never produces the attribute that
-//     `:host([brand='odyssey'])` selects on. `ALTheme` (the wrapper) closes
+//     `:host([brand='southleft'])` selects on. `ALTheme` (the wrapper) closes
 //     that gap — see `src/components/Theme/Theme.tsx`.
 //
 //   * al-react registers with `suffix: PackageJson.version`, so the tag here is
@@ -45,16 +45,19 @@ export const withPreset: Decorator = (Story, context) => {
 
   const preset: Preset = getPreset(context.globals?.alPreset);
 
-  // `density` / `contrast` stay OPTIONAL in the preset tuple and are written
-  // only when a preset names them — copied verbatim from the web-components
-  // decorator. `contrast="normal"` matches no rule, and an absent attribute is
-  // the honest expression of "this preset takes no position on this axis".
+  // `density` / `contrast` / `shape` / `motion` stay OPTIONAL in the preset
+  // tuple and are written only when a preset names them — copied verbatim
+  // from the web-components decorator. `contrast="normal"` / `shape="default"`
+  // / `motion="full"` match no rule, and an absent attribute is the honest
+  // expression of "this preset takes no position on this axis".
   return (
     <ALTheme
       brand={preset.brand}
       mode={preset.mode}
       density={preset.density}
       contrast={preset.contrast}
+      shape={preset.shape}
+      motion={preset.motion}
       data-al-preset={preset.id}
     >
       <Story />

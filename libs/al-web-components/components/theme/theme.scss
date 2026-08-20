@@ -58,22 +58,115 @@
     --al-theme-color-border-default: currentColor;
   }
 
-  /* ----- motion axis (T4.4) -----
+  /* ----- motion axis (T4.4, expanded 2026-08-20-token-axes-expansion) -----
      These used to name `--al-theme-animation-duration-{2,4,6,8}`, which the
      pipeline has never emitted — eight dead declarations, so `motion='reduced'`
      and the `prefers-reduced-motion` fallback both did nothing. The emitted
      tier-2 names are `--al-theme-animation-duration` and
      `--al-theme-animation-duration-long` (`tokens/tier-2/animations.json`),
-     and they are what all 34 component call sites read; no component reads the
-     tier-1 `--al-animation-duration-N` directly. */
+     and they are what most component call sites read.
+
+     `expressive` is the third mode (Ryan's motion territory / Hyper Tokens
+     "motion" axis). It repoints the NEW role tokens
+     (`--al-theme-animation-duration-role-{fast,base,slow}` /
+     `-timing-role-{standard,emphasized}`) that a growing set of components
+     read instead of the legacy pair above (`accordion-panel.scss`,
+     `dialog.scss`, `popover.scss` so far).
+
+     UNLIKE the legacy pair, the role tokens have NO tier-2 `:root` default —
+     they exist ONLY here, as direct `:host` declarations. A wired component
+     reads them as `var(--al-theme-animation-duration-role-base,
+     var(--al-theme-animation-duration))`: with no `motion` attribute the
+     custom property is genuinely absent (not merely equal to the legacy
+     value), so the CSS fallback resolves to the legacy token — the SAME
+     reference the component used before adopting the role token, so `full`
+     stays byte-identical. This is deliberate, not an oversight: an earlier
+     draft gave the role tokens their own tier-2 default that
+     SELF-REFERENCED the legacy token
+     (`--al-theme-animation-duration-role-base: var(--al-theme-animation-duration)`)
+     and it looked identical in the generated CSS text, but custom-property
+     `var()` substitution resolves ONCE at the element that DECLARES the
+     reference — `:root` — and inherits the already-resolved value, not the
+     formula. That default would have been safe here only because duration
+     never varies by brand; the `shape` axis below hit the same pattern where
+     it DOES vary by brand, silently losing every brand's own radius. See
+     `.altitude/AXES.md` "Why role tokens have no tier-2 default". */
   :host([motion='reduced']) {
     --al-theme-animation-duration: 0s;
     --al-theme-animation-duration-long: 0s;
+    --al-theme-animation-duration-role-fast: 0s;
+    --al-theme-animation-duration-role-base: 0s;
+    --al-theme-animation-duration-role-slow: 0s;
   }
+  :host([motion='expressive']) {
+    --al-theme-animation-duration-role-fast: var(--al-animation-duration-3);
+    --al-theme-animation-duration-role-base: var(--al-animation-duration-6);
+    --al-theme-animation-duration-role-slow: var(--al-animation-duration-8);
+    --al-theme-animation-timing-role-standard: var(--al-animation-timing-spring);
+    --al-theme-animation-timing-role-emphasized: var(--al-animation-timing-spring);
+  }
+  /* Accessibility-first: OS `prefers-reduced-motion` still wins over a
+     decorative `motion='expressive'` choice, exactly as it already wins over
+     the unset default — only an explicit `motion='full'` opts back in. This
+     rule is last so it beats `[motion='expressive']` above at equal
+     specificity (source order). */
   @media (prefers-reduced-motion: reduce) {
     :host(:not([motion='full'])) {
       --al-theme-animation-duration: 0s;
       --al-theme-animation-duration-long: 0s;
+      --al-theme-animation-duration-role-fast: 0s;
+      --al-theme-animation-duration-role-base: 0s;
+      --al-theme-animation-duration-role-slow: 0s;
     }
+  }
+
+  /* ----- shape axis (2026-08-20-token-axes-expansion) -----
+     Like the role duration/easing tokens above, `--al-theme-border-radius-
+     role-{action,control,surface,indicator}` have NO tier-2 `:root` default
+     — they exist ONLY as the direct `:host` declarations below. A wired
+     component reads `var(--al-theme-border-radius-role-action,
+     var(--al-theme-border-radius))`: with no `shape` attribute the property
+     is absent and the fallback — the SAME per-brand token the component read
+     before adopting the role token (`--al-theme-border-radius` /
+     `-lg` / `-round`, each restated per brand in
+     `styles/dist-v5/scss/host/tokens-brand-*.scss`) — wins, so `default`
+     shape is byte-identical in EVERY brand, not just altitude.
+
+     A tier-2 default that SELF-REFERENCED the brand-aware token instead
+     (`role.action: {theme.border.radius.@}`) was the first draft, and it is
+     wrong: Style Dictionary happily resolves the reference and the generated
+     CSS reads `var(--al-theme-border-radius)`, but that declaration lives in
+     the UNLAYERED `:root` rule, and a browser resolves an inherited custom
+     property's `var()` ONCE, at the element that declares it — using
+     `:root`'s OWN cascade, not each descendant's. The role token would then
+     inherit `:root`'s baked altitude value (the ONLY element that legally
+     computes `--al-theme-border-radius` at `:root`) into every brand's
+     `<al-theme>`, silently discarding the brand's own `:host([brand='x'])`
+     override — proven live: `--al-theme-border-radius-role-action` read a
+     stale value under `brand="southleft"` while `--al-theme-border-radius`
+     correctly read the brand's own value on the SAME host. `sharp` / `pill`
+     override the role tokens
+     directly with tier-1 literals — a DIRECT declaration on `:host`, which
+     (unlike inheritance) always wins regardless of brand — which is also why
+     there is no per-brand shape file: the override is brand-agnostic by
+     construction, only the fallback path is brand-aware.
+
+     `indicator` (avatar, badge dot) is deliberately NOT touched by `pill`:
+     those elements already resolve to `50%` (a true circle), and stacking a
+     999px pill radius on an already-circular element is a no-op cascade,
+     not a meaningful override — omitting the declaration says that plainly.
+     `sharp` DOES square `indicator`: a square avatar is a legitimate shape
+     statement (the brutalist end of the axis), matching how `sharp` squares
+     every other role. */
+  :host([shape='sharp']) {
+    --al-theme-border-radius-role-action: var(--al-border-radius-0);
+    --al-theme-border-radius-role-control: var(--al-border-radius-0);
+    --al-theme-border-radius-role-surface: var(--al-border-radius-0);
+    --al-theme-border-radius-role-indicator: var(--al-border-radius-0);
+  }
+  :host([shape='pill']) {
+    --al-theme-border-radius-role-action: var(--al-border-radius-pill);
+    --al-theme-border-radius-role-control: var(--al-border-radius-pill);
+    --al-theme-border-radius-role-surface: var(--al-border-radius-pill);
   }
 }

@@ -60,7 +60,10 @@ const REACT = arg('react', 'http://localhost:9009').replace(/\/$/, '');
 const WC_STORY = 'atoms-button--default';
 const REACT_STORY = 'atoms-button--default';
 
-const AXES = ['brand', 'mode', 'density', 'contrast'];
+// `shape` / `motion` added by spec 2026-08-20-token-axes-expansion. `motion`
+// was a valid `<al-theme>` attribute before that spec (T4.4) but no preset
+// ever wrote it, so it never needed a slot here until the recipe presets did.
+const AXES = ['brand', 'mode', 'density', 'contrast', 'shape', 'motion'];
 
 // ---------------------------------------------------------------------------
 // The expected tuples. Read from `presets.ts` itself so this script cannot
@@ -104,15 +107,28 @@ const PROBE = () => {
     hostTag: host ? host.tagName.toLowerCase() : null,
     hostCount: root ? root.querySelectorAll('al-theme, al-theme-1-0-0').length : 0,
     attrs: host
-      ? Object.fromEntries(['brand', 'mode', 'density', 'contrast'].map((a) => [a, host.getAttribute(a)]))
+      ? Object.fromEntries(
+          ['brand', 'mode', 'density', 'contrast', 'shape', 'motion'].map((a) => [a, host.getAttribute(a)])
+        )
       : null,
     background: host
       ? getComputedStyle(host).getPropertyValue('--al-theme-color-background-primary-default').trim()
       : null,
     radius: host ? getComputedStyle(host).getPropertyValue('--al-theme-border-radius').trim() : null,
+    // Role tokens (spec 2026-08-20-token-axes-expansion). `radiusRoleAction`
+    // is what `al-button`'s own border-radius resolves through
+    // (`button.scss`), so this is the "computed style, not just an
+    // attribute" proof for `shape` that `radius` already is for `brand`.
+    radiusRoleAction: host
+      ? getComputedStyle(host).getPropertyValue('--al-theme-border-radius-role-action').trim()
+      : null,
+    durationRoleSlow: host
+      ? getComputedStyle(host).getPropertyValue('--al-theme-animation-duration-role-slow').trim()
+      : null,
     spaceMd: host ? getComputedStyle(host).getPropertyValue('--al-theme-space-md').trim() : null,
     font: label ? getComputedStyle(label).font : null,
     buttonBackground: surface ? getComputedStyle(surface).backgroundColor : null,
+    buttonRadius: surface ? getComputedStyle(surface).borderRadius : null,
     legacyTokensSheet: !!document.querySelector('style#al-tokens-sheet'),
     retiredPresetSheet: !!document.querySelector('style#al-preset-tokens'),
   };
@@ -235,18 +251,38 @@ for (const preset of presets) {
     }
   }
 
-  for (const key of ['background', 'radius', 'spaceMd', 'font', 'buttonBackground']) {
+  for (const key of [
+    'background',
+    'radius',
+    'radiusRoleAction',
+    'durationRoleSlow',
+    'spaceMd',
+    'font',
+    'buttonBackground',
+    'buttonRadius',
+  ]) {
     if (norm(wc[key]) !== norm(react[key])) {
       failures.push(`${preset.id}: computed ${key} DIFFERS\n    web-components: ${wc[key]}\n    al-react:       ${react[key]}`);
     }
   }
 
-  rows.push([preset.id, wc.attrs.brand, wc.attrs.mode, wc.attrs.density ?? '—', wc.attrs.contrast ?? '—', wc.background, wc.radius, wc.font]);
+  rows.push([
+    preset.id,
+    wc.attrs.brand,
+    wc.attrs.mode,
+    wc.attrs.density ?? '—',
+    wc.attrs.contrast ?? '—',
+    wc.attrs.shape ?? '—',
+    wc.attrs.motion ?? '—',
+    wc.background,
+    wc.radius,
+    wc.font,
+  ]);
 }
 
 await browser.close();
 
-const head = ['preset', 'brand', 'mode', 'density', 'contrast', 'background', 'radius', 'font'];
+const head = ['preset', 'brand', 'mode', 'density', 'contrast', 'shape', 'motion', 'background', 'radius', 'font'];
 const widths = head.map((h, i) => Math.max(h.length, ...rows.map((r) => String(r[i]).length)));
 const line = (cells) => cells.map((c, i) => String(c).padEnd(widths[i])).join('  ');
 console.log('');

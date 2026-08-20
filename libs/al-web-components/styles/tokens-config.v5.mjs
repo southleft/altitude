@@ -386,7 +386,7 @@ const brandConfig = (themeName, brandName) => ({
 // nothing.
 //
 // WHY THE BRAND BLOCKS ARE SPLIT IN TWO. `<al-theme>` does not reflect its
-// properties, so `<al-theme brand="odyssey">` with no `mode` attribute matches
+// properties, so `<al-theme brand="southleft">` with no `mode` attribute matches
 // no `[mode]` selector. Splitting each brand delta into
 //   * `:host([brand='x'])`          — the part that is identical in every mode
 //                                     the brand builds AND is not a property
@@ -394,8 +394,8 @@ const brandConfig = (themeName, brandName) => ({
 //   * `:host([brand='x'][mode='y'])` — the remainder
 // means a brand always contributes its mode-independent identity (type ramp,
 // radii, spacing, border weights) even with no `mode` set, and never asserts a
-// colour that contradicts the mode actually in force. Measured: northright and
-// southleft need no per-mode block at all; odyssey needs 7 declarations.
+// colour that contradicts the mode actually in force. Measured: southleft
+// needs no per-mode block at all today.
 //
 // SPECIFICITY. `:host([brand][mode])` is exactly 0,3,0 and `:host([brand])` /
 // `:host([mode])` are 0,2,0 — the budget `scripts/check-css-layers.js` enforces
@@ -447,20 +447,15 @@ async function build() {
   const brands = [
     // `altitude` is the default brand (`<al-theme brand>` in components/theme/theme.ts).
     // It builds in BOTH modes because the base theme output it used to stand in for
-    // exists in both; southleft/odyssey are deliberately dark-only.
+    // exists in both. southleft used to be dark-only ("ink"); spec
+    // 2026-08-20-southleft-example-app adds its light "paper" mode — the brand
+    // token deltas (colour, radius, border-width, shadow, typography) are
+    // theme-independent, so the SAME `tier-2/brand/southleft/*.json` files now
+    // build against both base themes.
     { theme: 'light', brand: 'altitude' },
     { theme: 'dark', brand: 'altitude' },
     { theme: 'dark', brand: 'southleft' },
-    { theme: 'light', brand: 'northright' },
-    { theme: 'dark', brand: 'northright' },
-    { theme: 'dark', brand: 'odyssey' },
-    // Showcase brands (spec 2026-08-17-themed-example-home-pages) — each is
-    // single-mode by design, matching the site persona it demonstrates:
-    // meridian/solstice are light-only, voltage/nocturne are dark-only.
-    { theme: 'light', brand: 'meridian' },
-    { theme: 'dark', brand: 'voltage' },
-    { theme: 'light', brand: 'solstice' },
-    { theme: 'dark', brand: 'nocturne' },
+    { theme: 'light', brand: 'southleft' },
   ];
 
   // Per-theme css + scss tokens files. v3 emits variables.scss + tokens.json

@@ -155,9 +155,11 @@ const preview: Preview = {
   // so this mainly guarantees new components get a docs page by default.
   tags: ['autodocs'],
 
-  // Curated theme presets — one dropdown that snaps brand + mode + density +
-  // contrast together. Items are DERIVED from `PRESETS`; adding a preset is a
-  // one-line append in `./presets.ts` and nothing here changes.
+  // Curated theme presets — one dropdown that snaps a brand + mode + density +
+  // contrast + shape + motion RECIPE together (spec
+  // 2026-08-20-token-axes-expansion added the last two). Items are DERIVED
+  // from `PRESETS`; adding a preset is a one-line append in `./presets.ts`
+  // and nothing here changes.
   //
   // No addon is required: Storybook 10 renders `globalTypes` toolbars from
   // core (`useGlobalTypes` in `storybook/dist/manager/runtime.js`), so
@@ -167,7 +169,7 @@ const preview: Preview = {
   globalTypes: {
     alPreset: {
       name: 'Preset',
-      description: 'Brand + mode + density + contrast, snapped together',
+      description: 'Brand + mode + density + contrast + shape + motion, snapped together',
       toolbar: {
         icon: 'paintbrush',
         items: PRESET_TOOLBAR_ITEMS,

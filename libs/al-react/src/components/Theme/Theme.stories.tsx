@@ -15,7 +15,7 @@ export default {
     alPreset: { disable: true },
   },
   argTypes: {
-    brand: { options: ['altitude', 'northright', 'odyssey', 'southleft'], control: { type: 'radio' } },
+    brand: { options: ['altitude', 'southleft'], control: { type: 'radio' } },
     mode: { options: ['light', 'dark'], control: { type: 'radio' } },
     density: { options: ['compact', 'cozy', 'comfortable'], control: { type: 'radio' } },
     contrast: { options: ['normal', 'more'], control: { type: 'radio' } },
@@ -48,16 +48,16 @@ export const Default: StoryObj<typeof ALTheme> = {
 };
 
 /**
- * Brand. Four `<al-theme>` subtrees, ONE document, one `:root`, no iframes.
+ * Brand. Two `<al-theme>` subtrees, ONE document, one `:root`, no iframes.
  * Only expressible because `2026-07-28-scoped-token-emission-brand-wiring`
  * emits `:host([brand])` blocks into the component's own styles — before it,
- * `brand` moved no computed token. Odyssey and southleft build dark only, so
- * all four are shown in `dark`.
+ * `brand` moved no computed token. Southleft builds dark only, so both are
+ * shown in `dark`.
  */
 export const Brand: StoryObj<typeof ALTheme> = {
   render: () => (
     <Row>
-      {(['altitude', 'northright', 'odyssey', 'southleft'] as const).map((brand) => (
+      {(['altitude', 'southleft'] as const).map((brand) => (
         <ALTheme key={brand} brand={brand} mode="dark">
           <Sample label={brand} />
         </ALTheme>
@@ -137,8 +137,8 @@ export const Nested: StoryObj<typeof ALTheme> = {
           <strong>outer — southleft</strong>
         </ALTextPassage>
         <ALButton>Label</ALButton>
-        <ALTheme brand="odyssey" mode="dark">
-          <Sample label="inner — odyssey" />
+        <ALTheme brand="altitude" mode="dark">
+          <Sample label="inner — altitude" />
         </ALTheme>
       </ALCard>
     </ALTheme>

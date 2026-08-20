@@ -2,7 +2,7 @@
 //
 // `brands.dark.png`'s harness gives each brand its own iframe so each can link
 // exactly one `:root` bundle — the only thing whole-stylesheet swapping can do.
-// This page renders the same component set FOUR TIMES IN ONE DOCUMENT with one
+// This page renders the same component set TWICE IN ONE DOCUMENT with one
 // shared `:root`, distinguished only by `<al-theme brand>`. If the scoped
 // `:host([brand])` blocks regress, every column collapses to the base theme and
 // `scripts/check-scoped-theming.mjs` fails.
@@ -30,8 +30,6 @@ registerAltitude({ mode: 'versioned', suffix: '9-9-9' }, [[ALTheme.el, ALThemeVe
 
 const BRANDS = [
   ['altitude', 'neutral reference'],
-  ['northright', 'dense operational'],
-  ['odyssey', 'airy editorial'],
   ['southleft', 'high-contrast utilitarian'],
 ];
 
@@ -88,25 +86,26 @@ document.getElementById('brands').innerHTML = BRANDS.map(([brand, archetype]) =>
 
 document.getElementById('axes').innerHTML = [
   // The mode axis, on a page whose `:root` is dark. Before this spec the light
-  // host carried two hardcoded hexes and everything else stayed dark.
+  // host carried two hardcoded hexes and everything else stayed dark. Altitude
+  // is the brand that builds both modes (southleft is dark-only).
   column({
-    title: 'northright · light',
+    title: 'altitude · light',
     subtitle: 'mode axis over a dark :root',
-    attrs: { brand: 'northright', mode: 'light' },
-    id: 'northright-light',
+    attrs: { brand: 'altitude', mode: 'light' },
+    id: 'altitude-light',
   }),
   // Nesting: the inner host must win (R3).
   {
     toString: () => `
     <div class="col">
-      <h2>nested<small>odyssey inside southleft</small></h2>
+      <h2>nested<small>altitude inside southleft</small></h2>
       <al-theme brand="southleft" mode="dark" data-probe="outer">
         <div class="surface">
           <al-heading variant="sm" tagName="h3">Outer — southleft</al-heading>
           <al-button>Outer button</al-button>
-          <al-theme brand="odyssey" mode="dark" data-probe="inner">
+          <al-theme brand="altitude" mode="dark" data-probe="inner">
             <div class="surface">
-              <al-heading variant="sm" tagName="h3">Inner — odyssey</al-heading>
+              <al-heading variant="sm" tagName="h3">Inner — altitude</al-heading>
               <al-button>Inner button</al-button>
             </div>
           </al-theme>
@@ -129,10 +128,10 @@ document.getElementById('axes').innerHTML = [
   // The versioned registry (T4.6). Same class, tag `al-theme-9-9-9`.
   `
     <div class="col">
-      <h2>versioned tag<small>&lt;al-theme-9-9-9 brand="odyssey"&gt;</small></h2>
-      <al-theme-9-9-9 brand="odyssey" mode="dark" data-probe="versioned">
+      <h2>versioned tag<small>&lt;al-theme-9-9-9 brand="southleft"&gt;</small></h2>
+      <al-theme-9-9-9 brand="southleft" mode="dark" data-probe="versioned">
         <div class="surface">
-          <al-heading variant="sm" tagName="h3">Odyssey, under a suffixed tag</al-heading>
+          <al-heading variant="sm" tagName="h3">Southleft, under a suffixed tag</al-heading>
           <al-button>Versioned host</al-button>
         </div>
       </al-theme-9-9-9>

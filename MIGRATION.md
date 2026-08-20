@@ -59,17 +59,17 @@ tokens on `:host`.
 Multi-brand pages? Nest:
 
 ```html
-<al-theme brand="northright" mode="light">
+<al-theme brand="altitude" mode="light">
   <al-button>Brand A</al-button>
 </al-theme>
-<al-theme brand="odyssey" mode="dark">
+<al-theme brand="southleft" mode="dark">
   <al-button>Brand B</al-button>
 </al-theme>
 ```
 
 The two buttons compute distinct `--al-*` values without touching `:root`.
 That is now true and tested — `pnpm test:scoped-theming` renders exactly this
-markup for all four brands in one document and asserts the computed values
+markup for both brands in one document and asserts the computed values
 differ, and `.altitude/visual-compare/brands.scoped.png` is the picture. Before
 `2026-07-28-scoped-token-emission-brand-wiring` it was aspirational: `brand`
 was typed and documented but no `:host([brand])` rule existed, so both buttons
@@ -78,18 +78,18 @@ rendered identically.
 ### `<al-theme>` composes; it does not replace your token sheet
 
 The scoped blocks are **deltas** over the base `:root` bundle — each restates
-only what differs, which is what keeps all six brand×mode combinations at
-~16 KB instead of ~105 KB. **Keep `dist/css/main.css` (or some `:root` token
-bundle) loaded.** Without one, a brand's literal values still apply while every
-`var(--al-color-*)` reference in it dangles.
+only what differs, which is what keeps all three brand×mode combinations at a
+fraction of what restating them in full would cost. **Keep `dist/css/main.css`
+(or some `:root` token bundle) loaded.** Without one, a brand's literal values
+still apply while every `var(--al-color-*)` reference in it dangles.
 
 Two related consequences:
 
 - `brand` and `mode` are independent. A brand's mode-independent identity
   (type ramp, radii, spacing, border weights) lives in `:host([brand='x'])`, so
-  `<al-theme brand="odyssey">` with no `mode` still looks like odyssey.
-- A brand with no build for a mode has no block for it. Odyssey and Southleft
-  are dark-only, so `<al-theme brand="odyssey" mode="light">` renders odyssey's
+  `<al-theme brand="southleft">` with no `mode` still looks like southleft.
+- A brand with no build for a mode has no block for it. Southleft is
+  dark-only, so `<al-theme brand="southleft" mode="light">` renders southleft's
   shape over the light colour surface.
 
 ### Legacy fallback — DEPRECATED, removal target 3.0.0
@@ -156,7 +156,7 @@ themed without dropping to raw custom elements:
 ```tsx
 import { ALTheme, ALButton } from 'al-react';
 
-<ALTheme brand="odyssey" mode="dark">
+<ALTheme brand="southleft" mode="dark">
   <ALButton>Label</ALButton>
 </ALTheme>;
 ```

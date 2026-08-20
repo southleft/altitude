@@ -35,6 +35,13 @@ header p {
   border-block: 1px solid #333;
 }
 
+/* `#brands` renders one column per shipped brand (two, since
+   2026-08-20-brand-pruning-and-storybook-de-bloat); `#axes` still renders
+   four demo columns, so only this grid narrows. */
+#brands.grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
 .col > h2 {
   margin: 0;
   padding: 0.75rem 1rem;

@@ -17,12 +17,26 @@
 export type PresetDensity = 'compact' | 'cozy' | 'comfortable';
 /** `<al-theme contrast>` values (`components/theme/theme.scss:37-39`). */
 export type PresetContrast = 'normal' | 'more';
+/**
+ * `<al-theme shape>` values — spec 2026-08-20-token-axes-expansion. Repoints
+ * `theme.border.radius.role.*`; `default` (omitted) reproduces the brand's
+ * own radius exactly.
+ */
+export type PresetShape = 'default' | 'sharp' | 'pill';
+/**
+ * `<al-theme motion>` values — spec 2026-08-20-token-axes-expansion.
+ * `expressive` lengthens/springs `theme.animation.{duration,timing}.role.*`;
+ * `reduced` still wins under OS `prefers-reduced-motion` unless `full` is set.
+ */
+export type PresetMotion = 'full' | 'reduced' | 'expressive';
 
 /**
  * The brand x mode pairs the token pipeline actually emits, from the `brands`
- * array in `styles/tokens-config.v5.mjs`. Odyssey and Southleft are
- * deliberately dark-only; naming `{ brand: 'southleft', mode: 'light' }` in
- * `PRESETS` is a *compile* error rather than a runtime surprise.
+ * array in `styles/tokens-config.v5.mjs`. Southleft used to be dark-only
+ * ("ink"); spec 2026-08-20-southleft-example-app adds its light "paper" mode,
+ * built from the same brand token deltas against the base light theme — so
+ * both `{ brand: 'southleft', mode: 'dark' }` and `{ brand: 'southleft', mode:
+ * 'light' }` now have an emitted bundle and a legal `PRESETS` entry.
  *
  * Still a compile-time guard now that `brand` is a `:host` rule: a brand with
  * no build for a mode has no scoped block for it either, so the pair would
@@ -30,15 +44,7 @@ export type PresetContrast = 'normal' | 'more';
  */
 export type PresetBundle =
   | { brand: 'altitude'; mode: 'light' | 'dark' }
-  | { brand: 'northright'; mode: 'light' | 'dark' }
-  | { brand: 'odyssey'; mode: 'dark' }
-  | { brand: 'southleft'; mode: 'dark' }
-  // Showcase brands (spec 2026-08-17-themed-example-home-pages) — single-mode
-  // by design; see `styles/tokens-config.v5.mjs` `brands`.
-  | { brand: 'meridian'; mode: 'light' }
-  | { brand: 'voltage'; mode: 'dark' }
-  | { brand: 'solstice'; mode: 'light' }
-  | { brand: 'nocturne'; mode: 'dark' };
+  | { brand: 'southleft'; mode: 'light' | 'dark' };
 
 export type Preset = PresetBundle & {
   /** Stable id — the value stored in `globals.alPreset`. Do not rename casually. */
@@ -56,34 +62,47 @@ export type Preset = PresetBundle & {
   density?: PresetDensity;
   /** OPTIONAL. `contrast="normal"` matches no rule, so only `'more'` is worth setting. */
   contrast?: PresetContrast;
+  /** OPTIONAL. `shape="default"` matches no rule, so only `'sharp'` / `'pill'` are worth setting. */
+  shape?: PresetShape;
+  /** OPTIONAL. `motion="full"` matches no rule, so only `'reduced'` / `'expressive'` are worth setting. */
+  motion?: PresetMotion;
 };
 
 /**
- * The curated list. Six entries — one per emitted brand x mode bundle, so this
- * list stays legibly parallel with `BRANDS` in
- * `components/theme-switcher/theme-switcher.ts:51-58`.
+ * The curated list. Three base entries — one per emitted brand x mode bundle
+ * (spec 2026-08-20-brand-pruning-and-storybook-de-bloat cut the system down
+ * to two brands), plus three "brand-as-recipe" demo presets that exercise
+ * the shape/density/contrast/motion axes.
  *
  * The density/contrast choices are not decoration: each one is the axis that
  * matches that brand's archetype in `.altitude/BRANDS.md` §7, so the two
  * host-only axes are demonstrated by the brands they actually suit.
- *   - northright is the "dense operational" brand -> `density: 'compact'`.
  *   - southleft is the "high-contrast utilitarian" brand -> `contrast: 'more'`.
- *   - odyssey is "airy editorial" and already ships a wider space ramp of its
- *     own; a density attribute would only fight it (it can *only* shrink
- *     space-md), so it is left off.
  */
 export const PRESETS: Preset[] = [
   { id: 'altitude-dark', label: 'Altitude · Dark', brand: 'altitude', mode: 'dark' },
   { id: 'altitude-light', label: 'Altitude · Light', brand: 'altitude', mode: 'light' },
-  { id: 'northright-dark', label: 'Northright · Dark · Compact', brand: 'northright', mode: 'dark', density: 'compact' },
-  { id: 'northright-light', label: 'Northright · Light · Compact', brand: 'northright', mode: 'light', density: 'compact' },
-  { id: 'odyssey-dark', label: 'Odyssey · Dark', brand: 'odyssey', mode: 'dark' },
   { id: 'southleft-dark', label: 'Southleft · Dark · High contrast', brand: 'southleft', mode: 'dark', contrast: 'more' },
-  // Showcase brands — the four "example site" identities used by Pages/Showcase Home.
-  { id: 'meridian-light', label: 'Meridian · Light', brand: 'meridian', mode: 'light' },
-  { id: 'voltage-dark', label: 'Voltage · Dark', brand: 'voltage', mode: 'dark' },
-  { id: 'solstice-light', label: 'Solstice · Light', brand: 'solstice', mode: 'light' },
-  { id: 'nocturne-dark', label: 'Nocturne · Dark', brand: 'nocturne', mode: 'dark' },
+  // "Paper" — southleft's light mode (spec 2026-08-20-southleft-example-app).
+  // Same brand deltas as southleft-dark (accent, radius, border-width,
+  // shadow, typography), rebuilt against the base light theme.
+  { id: 'southleft-light', label: 'Southleft · Paper · High contrast', brand: 'southleft', mode: 'light', contrast: 'more' },
+  // Brand-as-recipe demo presets (spec 2026-08-20-token-axes-expansion) —
+  // a preset is brand + mode + density + shape + motion, never one attribute
+  // flip. These three exercise the shape/density/contrast/motion axes in
+  // combination with the two brands above, so every axis value still has at
+  // least one preset demonstrating it after the brand prune:
+  //   * altitude (the neutral reference) + pill + expressive shows the axes
+  //     doing all the work with no brand help — a "friendly SaaS" recipe.
+  //   * altitude + compact + sharp is the re-homed "dense operational"
+  //     recipe (originally northright-dark-brutalist, cut with that brand) —
+  //     it keeps `shape: 'sharp'` covered by a preset.
+  //   * southleft (already sharp + high-contrast at the brand level) +
+  //     reduced motion demonstrates the accessibility axis composing with a
+  //     brand that already leans utilitarian.
+  { id: 'altitude-dark-playful', label: 'Altitude · Dark · Pill · Expressive', brand: 'altitude', mode: 'dark', shape: 'pill', motion: 'expressive' },
+  { id: 'altitude-dark-brutalist', label: 'Altitude · Dark · Compact · Sharp', brand: 'altitude', mode: 'dark', density: 'compact', shape: 'sharp' },
+  { id: 'southleft-dark-calm', label: 'Southleft · Dark · High contrast · Reduced motion', brand: 'southleft', mode: 'dark', contrast: 'more', motion: 'reduced' },
 ];
 
 /**

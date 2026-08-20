@@ -33,17 +33,11 @@
       "additionalProperties": false,
       "properties": {
         "brand": {
-          "description": "Brand identifier. Currently shipped: 'altitude' | 'northright' | 'odyssey' | 'southleft' | 'meridian' | 'voltage' | 'solstice' | 'nocturne'.",
+          "description": "Brand identifier. Currently shipped: 'altitude' | 'southleft'.",
           "type": "string",
           "enum": [
             "altitude",
-            "northright",
-            "odyssey",
-            "southleft",
-            "meridian",
-            "voltage",
-            "solstice",
-            "nocturne"
+            "southleft"
           ]
         },
         "mode": {
@@ -72,7 +66,11 @@
           ]
         },
         "motion": {
-          "description": "typescript: 'full' | 'reduced' | undefined",
+          "description": "typescript: 'full' | 'reduced' | 'expressive' | undefined",
+          "type": "string"
+        },
+        "shape": {
+          "description": "typescript: 'default' | 'sharp' | 'pill' | undefined",
           "type": "string"
         }
       }

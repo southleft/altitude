@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * R10 — the four-column brand distinctiveness artifact, and R7 — the rendered
+ * R10 — the per-brand-column distinctiveness artifact, and R7 — the rendered
  * typography check.
  *
  * Serves `.altitude/visual-compare/harness/` with Vite, renders the same fixed
@@ -32,7 +32,7 @@ const viteEntry = path.join(path.dirname(require_.resolve('vite/package.json')),
 const { createServer } = await import(pathToFileURL(viteEntry).href);
 const HARNESS = '/.altitude/visual-compare/harness/';
 const OUT = path.join(REPO, '.altitude', 'visual-compare', 'brands.dark.png');
-const BRANDS = ['altitude', 'northright', 'odyssey', 'southleft'];
+const BRANDS = ['altitude', 'southleft'];
 const PORT = 5199;
 
 const bundleDir = path.join(REPO, 'libs', 'al-web-components', 'styles', 'dist', 'css', 'brand');

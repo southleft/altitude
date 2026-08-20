@@ -19,7 +19,7 @@
     width: #{var(--al-theme-icon-xxxl)};
     height: #{var(--al-theme-icon-xxxl)};
     line-height: #{var(--al-theme-icon-xxxl)};
-    border-radius: var(--al-theme-border-radius-round);
+    border-radius: var(--al-theme-border-radius-role-indicator, var(--al-theme-border-radius-round));
     background: var(--al-theme-color-background-default-stronger);
     color: var(--al-theme-color-content-default);
 
@@ -56,6 +56,6 @@
     width: 100%;
     height: 100%;
     background-size: cover;
-    border-radius: var(--al-theme-border-radius-round);
+    border-radius: var(--al-theme-border-radius-role-indicator, var(--al-theme-border-radius-round));
   }
 }

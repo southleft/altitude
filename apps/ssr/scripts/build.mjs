@@ -23,7 +23,7 @@ const PILOTS = [
   { tag: 'al-theme-switcher', innerHTML: '' },
   // The scoped-theming pilot, and the only one that opts into real DSD (see
   // `ssr:` below). `brand` + `mode` are set so the generated
-  // `:host([brand='odyssey'])` block is what gets serialized, and the probe
+  // `:host([brand='southleft'])` block is what gets serialized, and the probe
   // paragraph reads two brand-owned custom properties so "renders branded with
   // JavaScript disabled" is something a screenshot can actually show.
   //
@@ -31,7 +31,7 @@ const PILOTS = [
   {
     tag: 'al-theme',
     ssr: true,
-    attrs: `brand="odyssey" mode="dark"`,
+    attrs: `brand="southleft" mode="dark"`,
     innerHTML:
       '<p style="color: var(--al-theme-color-background-primary-default); font: var(--al-typography-preset-16)">' +
       'Branded with JavaScript disabled.</p>',
@@ -114,7 +114,7 @@ const pageHtml = (pilot, dsd) => `<!doctype html>
          to: al-theme's scoped blocks are DELTAS over the base :root bundle, so
          with this sheet missing, a brand's literal values (type ramp, radii)
          still apply while every var(--al-color-*) reference in it dangles --
-         odyssey rendered Georgia 18/32 in black. -->
+         southleft rendered Georgia 18/32 in black. -->
     <link rel="stylesheet" href="../../../libs/al-web-components/dist/css/main.css" />
     <script>window.alAutoRegistry = true;</script>
   </head>

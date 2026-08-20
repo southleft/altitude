@@ -10,14 +10,6 @@ export default {
 
 export const Default: StoryObj<typeof ALLogo> = { args: {} };
 
-export const Northright: StoryObj<typeof ALLogo> = { args: {
-  variant: 'northright'
-} };
-
-export const Odyssey: StoryObj<typeof ALLogo> = { args: {
-  variant: 'odyssey'
-} };
-
 export const Southleft: StoryObj<typeof ALLogo> = { args: {
   variant: 'southleft',
   children: ''

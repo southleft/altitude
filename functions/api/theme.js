@@ -31,6 +31,20 @@ const ELEVATIONS = ['flat', 'subtle', 'lifted', 'deep']
 const MOTIONS = ['snappy', 'smooth', 'springy', 'stately']
 const BORDER_WEIGHTS = ['hairline', 'standard', 'thick']
 
+// Layout vocabulary — spec 2026-08-20-southleft-example-app, T5. Additive to
+// the art-direction contract: the AI still returns no CSS and no markup, only
+// small structured intent. `sectionOrder` is a permutation of the home page's
+// SIX reorderable sections — hero and footer are NOT in this vocabulary at
+// all, so the model has no way to misplace them; the client-side resolver
+// (apps/southleft/src/lib/layout-resolver.ts) enforces the rest of the
+// structural invariants (CTA never before featured work, reading order ==
+// DOM order) and degrades to the default order on anything malformed.
+const HERO_COMPOSITIONS = ['centered', 'split', 'poster']
+const SECTION_ORDER_IDS = ['logos', 'services', 'work', 'testimonials', 'insights', 'cta']
+const GRID_DENSITIES = ['airy', 'regular', 'dense']
+const CONTENT_WIDTHS = ['narrow', 'regular', 'wide']
+const SECTION_EMPHASIS = ['services', 'work', 'none']
+
 const SCHEMA = {
   type: 'object',
   additionalProperties: false,
@@ -48,6 +62,11 @@ const SCHEMA = {
     'borderWeight',
     'name',
     'quip',
+    'heroComposition',
+    'sectionOrder',
+    'gridDensity',
+    'contentWidth',
+    'sectionEmphasis',
   ],
   properties: {
     accentHue: {
@@ -120,6 +139,39 @@ const SCHEMA = {
       type: 'string',
       description: 'One dry lowercase remark about the theme, max 80 chars, no emoji',
     },
+    heroComposition: {
+      type: 'string',
+      enum: HERO_COMPOSITIONS,
+      description:
+        'How the home page hero composes. centered = content and media stacked, centered, no side-by-side tension — calm, editorial, reads like a title page. split = content and media side by side — the default, balanced, works for most prompts. poster = media becomes a full-bleed backdrop with content overlaid — dramatic, only earn this for prompts that want a big visual statement.',
+    },
+    sectionOrder: {
+      type: 'array',
+      description:
+        "The home page's six reorderable sections, permuted into the order they should read in top to bottom. The hero is always first and the footer is always last — do not include them, they are not part of this list and cannot move. Reorder the rest to match the prompt's priorities: a sales-forward prompt might want cta earlier, a proof-forward prompt might lead with work, a content-forward prompt might lead with insights. logos (client trust band), services (what we do), work (case studies), testimonials, insights (latest writing), cta (closing call to action) — list all six exactly once.",
+      items: { type: 'string', enum: SECTION_ORDER_IDS },
+      minItems: SECTION_ORDER_IDS.length,
+      maxItems: SECTION_ORDER_IDS.length,
+      uniqueItems: true,
+    },
+    gridDensity: {
+      type: 'string',
+      enum: GRID_DENSITIES,
+      description:
+        'How tightly the card grids pack. airy = generous gaps, room to breathe, editorial and calm. regular = the default rhythm. dense = tight gaps, a lot of content visible at once — technical, busy, information-forward prompts.',
+    },
+    contentWidth: {
+      type: 'string',
+      enum: CONTENT_WIDTHS,
+      description:
+        'How wide the page content column reads. narrow = a tight, book-like measure — literary, focused, luxury prompts. regular = the default. wide = an expansive, dashboard-like measure — technical, data-forward, maximalist prompts.',
+    },
+    sectionEmphasis: {
+      type: 'string',
+      enum: SECTION_EMPHASIS,
+      description:
+        "Which section gets the flagship (larger, asymmetric) tile in its card grid — a visual accent, not a content change. services = the first service gets top billing. work = the first case study gets top billing. none = every tile stays equal weight, which is itself a deliberate restrained choice for calm/minimal prompts.",
+    },
   },
 }
 
@@ -141,6 +193,8 @@ Calibration notes: "stark"/"minimal"/"clean" prompts want geometric, chroma 0.03
 secondaryHue is a relationship, not a third opinion: analogous (20-40 degrees off the accent) when the prompt wants harmony, complementary (~180 degrees off) when it wants tension or a genuine two-color system. Only stray further when the prompt names two specific things.
 
 Hue reference: reds ~20-30, oranges ~40-70, yellows ~85-100, greens ~130-160, teals ~180-200, blues ~230-260, violets ~290-310, pinks ~340-355. Neutrals usually take the accent hue or a subtle tilt away from it.
+
+You ALSO return layout intent for one specific page — heroComposition, sectionOrder, gridDensity, contentWidth, sectionEmphasis. Same rule as color: you return small structured dials, never markup or CSS, and a deterministic resolver on the client turns them into real DOM changes while enforcing its own structural invariants (the hero is always first, the footer is always last, the call-to-action never appears before the case studies) — so treat these five fields with the same restraint-not-safety mindset as the color dials. Let personality inform layout the way it informs shape: editorial reads centered/airy/narrow with insights or work given room to breathe; brutalist reads dense/wide with services or work given a blunt flagship tile; luxe reads centered or poster/airy/narrow, unhurried; playful reads poster/dense/wide, high energy. sectionOrder must still serve the prompt's actual priority, not just the personality template — a prompt that is explicitly about proof or credibility should pull "work" earlier; a prompt about staying in touch should pull "cta" earlier (but never ahead of "work", since nobody should be asked to call before they have seen the receipts).
 
 Be literal about the prompt's imagery. The quip is deadpan, lowercase, in the voice of a terminal comment.`
 
@@ -172,7 +226,12 @@ export async function onRequestPost({ request, env }) {
     },
     body: JSON.stringify({
       model: env.THEME_MODEL || 'claude-haiku-4-5',
-      max_tokens: 800,
+      // 800 -> 900: T5 (spec 2026-08-20-southleft-example-app) added five
+      // layout fields to SCHEMA, the heaviest being `sectionOrder` (six
+      // ~2-token enum values echoed back). A modest raise covers that; see
+      // the no-thinking rationale below, which is unchanged and still the
+      // reason this budget matters at all.
+      max_tokens: 900,
       // No `thinking` key at all. On claude-haiku-4-5 omitting it *is* "no
       // thinking" — the explicit { type: 'disabled' } form is only documented
       // for the 4.6+ family, so sending it here would be an unverified
@@ -216,6 +275,18 @@ export async function onRequestPost({ request, env }) {
   // the gap from the personality defaults.
   const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, Number(n) || 0))
   const hue = (v) => ((clamp(v, -360, 720) % 360) + 360) % 360
+
+  // sectionOrder must be a permutation of the six reorderable ids or the
+  // client can't trust it as one — same "enums other than personality fall
+  // through as undefined" contract as the fields above, just checked as a
+  // set instead of a single membership test. The client-side resolver
+  // degrades to its own default order on undefined, never throws.
+  const isSectionOrderPermutation =
+    Array.isArray(dir.sectionOrder) &&
+    dir.sectionOrder.length === SECTION_ORDER_IDS.length &&
+    new Set(dir.sectionOrder).size === SECTION_ORDER_IDS.length &&
+    dir.sectionOrder.every((id) => SECTION_ORDER_IDS.includes(id))
+
   return json(
     {
       accentHue: hue(dir.accentHue),
@@ -231,6 +302,11 @@ export async function onRequestPost({ request, env }) {
       borderWeight: BORDER_WEIGHTS.includes(dir.borderWeight) ? dir.borderWeight : undefined,
       name: String(dir.name || '').slice(0, 40),
       quip: String(dir.quip || '').slice(0, 90),
+      heroComposition: HERO_COMPOSITIONS.includes(dir.heroComposition) ? dir.heroComposition : undefined,
+      sectionOrder: isSectionOrderPermutation ? dir.sectionOrder : undefined,
+      gridDensity: GRID_DENSITIES.includes(dir.gridDensity) ? dir.gridDensity : undefined,
+      contentWidth: CONTENT_WIDTHS.includes(dir.contentWidth) ? dir.contentWidth : undefined,
+      sectionEmphasis: SECTION_EMPHASIS.includes(dir.sectionEmphasis) ? dir.sectionEmphasis : undefined,
     },
     200,
     // Identical prompts are cache-friendly upstream of us too, but POST
