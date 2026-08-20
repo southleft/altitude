@@ -1,7 +1,10 @@
 ---
-// Case-study detail — spec 2026-08-20-southleft-example-app, T4.
-// URL preserved exactly: /projects/<slug>
-// Paper (light) mode by default, matching v5's article/case-study convention.
+// Case-study detail — spec 2026-08-20-southleft-example-app, T4, corrected
+// T9 round 2. URL preserved exactly: /projects/<slug>. Ink (dark) mode by
+// default — verified against v5's real src/pages/projects/[slug].astro
+// (`<Base ... theme="dark">`); the previous "light, matching v5's
+// article/case-study convention" comment was wrong for case studies
+// specifically (insights articles DO default light — see that route).
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { SITE } from '../../lib/site';
@@ -32,7 +35,7 @@ const jsonLd = {
 <Base
   title={project.data.title}
   description={project.data.oneLiner || project.data.summary}
-  theme="light"
+  theme="dark"
   ogImage={project.data.hero}
   jsonLd={jsonLd}
 >

@@ -1,0 +1,173 @@
+---
+// Workshops, Training & Speaking — spec 2026-08-20-southleft-example-app, T10.
+// Content migrated verbatim from southleft-v5's src/pages/services/workshops-training.astro.
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import CTABand from '../../components/CTABand.astro';
+import { CTA } from '../../lib/site';
+import { withBase } from '../../lib/url';
+
+const allPosts = await getCollection('insights');
+const postBySlug = (slug: string) => allPosts.find((p) => p.id.replace(/\.md$/, '') === slug);
+const relatedPosts = [
+  'when-ai-meets-design-systems-my-storybook-webinar-recap',
+  'introducing-our-new-course-ai-design-systems',
+  'figma-mcp-design-systems-and-generative-ui',
+]
+  .map(postBySlug)
+  .filter((p) => p !== undefined);
+
+const formats = [
+  {
+    name: 'Team workshops',
+    body: 'Hands-on sessions built around your actual system: AI-readiness, MCP-driven design-to-code, generative UI with your own component library.',
+    items: ['Remote or on-site, scoped to your team', 'Kept small and hands-on', 'Exercise repos your team keeps'],
+  },
+  {
+    name: 'Training & mentorship',
+    body: 'Targeted learning programs, hands-on coaching, and knowledge transfer. We place your team at the center of the learning journey — active engagement, real problem-solving.',
+    items: ['Training & mentorship programs', 'Pairing & code review', 'Next-steps roadmap'],
+  },
+  {
+    name: 'Speaking',
+    body: 'Conference talks, webinars, and internal leadership sessions on AI + design systems — from practitioners, not pundits.',
+    items: ['Conference talks & webinars', 'Internal leadership sessions', 'Booked per event'],
+  },
+];
+
+const engagements = [
+  {
+    venue: 'Storybook webinar',
+    title: 'When AI Meets Design Systems',
+    desc: 'Invited by the Storybook team: why design systems give AI the context and structure it needs to be genuinely useful.',
+    href: '/insights/ai/when-ai-meets-design-systems-my-storybook-webinar-recap',
+  },
+  {
+    venue: 'Maven, with Joey Banks',
+    title: 'Doing More With Your Design System in Figma',
+    desc: 'Hosted with Joey Banks (Baseline Design): flexible components and libraries, Figma MCP, Figma Make, Storybook.',
+  },
+  {
+    venue: 'Into Design Systems',
+    title: 'Vibe Coding Design Systems — Online Jam',
+    desc: 'Spec-driven development, design tokens, and documentation sites built with Figma Make and MCP.',
+  },
+  {
+    venue: 'SuperFriendly',
+    title: 'AI-Enabled Design Systems and Product Design',
+    desc: 'How design systems became more essential in the AI era — not disrupted by it.',
+  },
+];
+---
+
+<Base
+  title="Workshops, Training & Speaking"
+  description="Hands-on workshops, team training, and conference talks on AI-native design systems — plus the AI & Design Systems course with Brad Frost. From the people building the tools."
+>
+  <div class="sl-container sl-section--tight">
+    <PageHero
+      label="workshops-training"
+      heading="Workshops, training & speaking"
+      dek="The fastest way to change how your team works is to work alongside people who've already made the shift. We run hands-on workshops on AI + design systems, MCP workflows, and design-to-code pipelines; deliver targeted training and mentorship programs; and speak at conferences, webinars, and internal events. You don't just get slides — you get working sessions built around your actual system."
+    >
+      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
+        <al-button href={withBase(CTA.href)}>Book a workshop</al-button>
+        <al-button variant="tertiary" href={withBase('/contact')}>Invite us to speak</al-button>
+      </div>
+    </PageHero>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-card>
+      <div slot="header">
+        <al-chip variant="secondary">new course</al-chip>
+        <al-heading tagName="h2" variant="md" isBold={true} style="margin-top: var(--al-theme-space-xs);">AI &amp; Design Systems — with Brad Frost</al-heading>
+      </div>
+      <al-text-passage maxWidth="md">
+        A new online course from Brad Frost and Southleft. Learn how to apply AI to design systems in
+        ways that are grounded, practical, and shaped by real work with large-scale teams.
+      </al-text-passage>
+      <al-list>
+        <al-list-item>Co-taught by the author of Atomic Design</al-list-item>
+        <al-list-item>Grounded in real large-scale client work</al-list-item>
+        <al-list-item>Practical AI workflows, not trend theory</al-list-item>
+        <al-list-item>Early access open now</al-list-item>
+      </al-list>
+      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
+        <al-button href={withBase('/insights/design-systems/introducing-our-new-course-ai-design-systems')}>Get early access</al-button>
+        <al-button variant="tertiary" href={withBase('/ai-design-systems')}>Explore the practice</al-button>
+      </div>
+    </al-card>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>Three ways to learn with us</al-heading>
+    <al-text-passage maxWidth="sm">For design systems and platform teams adopting AI workflows, engineering orgs that want structured upskilling over ad-hoc experimentation, and event organizers looking for practitioners.</al-text-passage>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {formats.map((f) => (
+        <div class="al-u-grid__item col:12 col:4@md">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>{f.name}</al-heading></div>
+            <al-text-passage>{f.body}</al-text-passage>
+            <al-list>
+              {f.items.map((item) => <al-list-item>{item}</al-list-item>)}
+            </al-list>
+          </al-card>
+        </div>
+      ))}
+    </div>
+    <al-text-passage maxWidth="md" style="margin-top: var(--al-theme-space-lg);">
+      Every engagement ends with follow-up materials: recordings, exercise repos, and a next-steps
+      roadmap — and the tooling we teach on is tooling we built:
+      <a href={withBase('/ai-design-systems')}>Story UI, FigmaLint, Figma Console MCP</a>.
+    </al-text-passage>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>Recent engagements</al-heading>
+    <al-text-passage maxWidth="sm">A sustained public teaching practice — webinars, workshops, and community sessions on AI + design systems. The blog's AI series is effectively open curriculum.</al-text-passage>
+    <div style="margin-top: var(--al-theme-space-lg);">
+      <al-button variant="tertiary" href={withBase('/contact')}>Book us for your event</al-button>
+    </div>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {engagements.map((e) => (
+        <div class="al-u-grid__item col:12 col:6@md">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header">
+              <al-chip variant="secondary">{e.venue}</al-chip>
+              <al-heading tagName="h3" variant="sm" isBold={true} style="margin-top: var(--al-theme-space-xs);">{e.title}</al-heading>
+            </div>
+            <al-text-passage>{e.desc}</al-text-passage>
+            {e.href && <al-link href={withBase(e.href)}>Read the recap →</al-link>}
+          </al-card>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  {relatedPosts.length > 0 && (
+    <div class="sl-container sl-section">
+      <div class="sl-section-header">
+        <div class="sl-stack sl-stack--sm">
+          <al-heading tagName="h2" variant="lg" isBold={true}>Sit in before you book</al-heading>
+          <al-text-passage maxWidth="sm">Recaps, course announcements, and workflow demos — the material we teach, published as we learn it.</al-text-passage>
+        </div>
+        <al-link href={withBase('/insights')}>All insights →</al-link>
+      </div>
+      <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+        {relatedPosts.map((p) => <div class="al-u-grid__item col:12 col:4@md"><ArticleCard post={p} /></div>)}
+      </div>
+    </div>
+  )}
+
+  <div class="sl-container sl-section">
+    <CTABand
+      heading="Bring the workshop to your team."
+      dek="Remote or on-site sessions built around your actual design system."
+      secondaryLabel="Contact us"
+      secondaryHref="/contact"
+    />
+  </div>
+</Base>

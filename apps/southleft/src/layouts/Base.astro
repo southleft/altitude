@@ -11,6 +11,7 @@ import '../styles/layout.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE } from '../lib/site';
+import { MEDIA_BASE, LOCAL_MEDIA_BASE, LOCAL_MEDIA_ACTIVE } from '../lib/media.mjs';
 
 interface Props {
   title: string;
@@ -70,6 +71,43 @@ const ldNodes = [organizationLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : 
     <script is:inline>window.alAutoRegistry = true;</script>
   </head>
   <body>
+    {LOCAL_MEDIA_ACTIVE && import.meta.env.DEV && (
+      <script is:inline define:vars={{ MEDIA_BASE, LOCAL_MEDIA_BASE }}>
+        // T11 — local media for dev. `resolveMedia()` (media.mjs) already
+        // localizes every content-collection `hero` field at render time;
+        // this covers the one thing it CAN'T reach — `<img>`s embedded
+        // directly in the migrated markdown BODIES (raw WordPress-export
+        // HTML a rehype pass can't walk, see media.mjs's header comment).
+        // Those bodies still carry the real, resolved MEDIA_BASE (remote)
+        // URL on disk; this rewrites them to the local path our own
+        // `vite-plugin-local-media.mjs` middleware serves, so the
+        // Cloudflare-Access-gated remote host is never hit in dev. Most of
+        // these carry `loading="lazy"` (the WordPress export markup did),
+        // so a MutationObserver that fires as soon as each element is
+        // inserted — well before an offscreen lazy image's real fetch
+        // begins — corrects the src before the browser ever requests it.
+        (function () {
+          function localize(root) {
+            root.querySelectorAll('img[src^="' + MEDIA_BASE + '"]').forEach((img) => {
+              img.src = LOCAL_MEDIA_BASE + img.src.slice(MEDIA_BASE.length);
+            });
+          }
+          localize(document);
+          new MutationObserver((mutations) => {
+            for (const m of mutations) {
+              for (const node of m.addedNodes) {
+                if (!(node instanceof Element)) continue;
+                if (node.matches && node.matches('img[src^="' + MEDIA_BASE + '"]')) {
+                  node.src = LOCAL_MEDIA_BASE + node.src.slice(MEDIA_BASE.length);
+                } else if (node.querySelectorAll) {
+                  localize(node);
+                }
+              }
+            }
+          }).observe(document.documentElement, { childList: true, subtree: true });
+        })();
+      </script>
+    )}
     <al-theme id="sl-theme" brand="southleft" mode={theme} contrast="more">
       <script is:inline>
         // Persisted ink/paper preference (localStorage) wins over the
@@ -97,18 +135,25 @@ const ldNodes = [organizationLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : 
 
     <script>
       // Ink/paper toggle — event-delegated so it works for any
-      // `[data-sl-mode-toggle]` control the header renders (T3).
+      // `[data-sl-mode-toggle]` control the header renders (T3). Icon-only
+      // (T9 round 2, matching v5's circular icon button) — the affordance
+      // updates via the `label`/`title` a11y properties, not text content.
+      function describeMode(next: string) {
+        return next === 'dark' ? 'Switch to paper (light) mode' : 'Switch to ink (dark) mode';
+      }
+
       document.addEventListener('click', (event) => {
         const target = event.target;
         if (!(target instanceof Element)) return;
-        const trigger = target.closest('[data-sl-mode-toggle]');
+        const trigger = target.closest<HTMLElement & { label?: string }>('[data-sl-mode-toggle]');
         if (!trigger) return;
         const themeHost = document.getElementById('sl-theme');
         if (!themeHost) return;
         const next = themeHost.getAttribute('mode') === 'dark' ? 'light' : 'dark';
         themeHost.setAttribute('mode', next);
         trigger.setAttribute('data-sl-mode', next);
-        trigger.textContent = next === 'dark' ? 'Paper' : 'Ink';
+        trigger.label = describeMode(next);
+        trigger.setAttribute('title', describeMode(next));
         try {
           localStorage.setItem('sl-mode', next);
         } catch (e) {
@@ -119,11 +164,12 @@ const ldNodes = [organizationLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : 
       // Reflect the resolved (possibly localStorage-restored) mode onto the
       // toggle's label on first paint.
       const themeHost = document.getElementById('sl-theme');
-      const toggle = document.querySelector('[data-sl-mode-toggle]');
+      const toggle = document.querySelector<HTMLElement & { label?: string }>('[data-sl-mode-toggle]');
       if (themeHost && toggle) {
         const current = themeHost.getAttribute('mode') === 'dark' ? 'dark' : 'light';
         toggle.setAttribute('data-sl-mode', current);
-        toggle.textContent = current === 'dark' ? 'Paper' : 'Ink';
+        toggle.label = describeMode(current);
+        toggle.setAttribute('title', describeMode(current));
       }
     </script>
 

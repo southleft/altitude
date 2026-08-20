@@ -1,0 +1,88 @@
+---
+// Altitude — Our Design System & AI Testbed — spec 2026-08-20-southleft-example-app, T10.
+// Content migrated verbatim from southleft-v5's src/pages/tools/altitude.astro.
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import CTABand from '../../components/CTABand.astro';
+import { CTA } from '../../lib/site';
+import { withBase } from '../../lib/url';
+
+const features = [
+  { name: 'Figma-first', body: 'The system starts in Figma — components, color, and typography structured for real handoff, with tokens managed at the source.' },
+  { name: 'Tokens via Style Dictionary', body: 'JSON design tokens compile automatically into styling formats for any framework. One source of truth, many outputs.' },
+  { name: 'Native web components, powered by Lit', body: 'Fast, lightweight, framework-agnostic — your UI isn\'t married to this year\'s framework.' },
+  { name: 'Wrappers for React, Svelte, and Angular', body: 'Prove-it integrations that let each team consume the same system in their own stack.' },
+  { name: 'Built to scale', body: 'The architecture grows with your product without trading away performance or stability.' },
+];
+
+const aiFits = [
+  { name: 'MCP servers', desc: 'read and write it', href: '/tools' },
+  { name: 'Story UI', desc: 'generates working layouts against it', href: 'https://github.com/southleft/story-ui' },
+  { name: 'FigmaLint', desc: 'audits it', href: 'https://github.com/southleft/figmalint' },
+];
+---
+
+<Base
+  title="Altitude — Our Design System & AI Testbed"
+  description="Altitude is Southleft's in-house design system: a Figma-to-production ecosystem built on Lit web components and Style Dictionary tokens — and the testbed for every AI integration we run."
+>
+  <div class="sl-container sl-section--tight">
+    <PageHero
+      label="altitude"
+      heading="Altitude — our design system, and our AI laboratory"
+      dek="Altitude is Southleft's in-house design system: a complete Figma-to-production ecosystem we use as the testbed for every AI integration and workflow experiment we run. It powers Story UI, FigmaLint demos, and our MCP research — and it can be the foundation your system starts from."
+    >
+      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
+        <al-button href={withBase(CTA.href)}>Schedule a demo</al-button>
+        <al-button variant="tertiary" href={withBase('/tools')}>Explore all our tools</al-button>
+      </div>
+    </PageHero>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>From Figma to final deployment</al-heading>
+    <al-text-passage maxWidth="sm">A complete ecosystem for design and development — every element aligned, from token to component to framework wrapper.</al-text-passage>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {features.map((f) => (
+        <div class="al-u-grid__item col:12 col:6@md col:4@lg">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>{f.name}</al-heading></div>
+            <al-text-passage>{f.body}</al-text-passage>
+          </al-card>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>Why start from Altitude instead of from scratch?</al-heading>
+    <al-text-passage maxWidth="md">
+      Every pattern in Altitude has been exercised by real client work and real AI tooling. When we
+      bootstrap your system from it, you skip the foundational decisions — token architecture,
+      component API design, framework strategy — and start where we already landed.
+    </al-text-passage>
+    <div style="margin-top: var(--al-theme-space-lg);">
+      <al-stat value="40%" label="reduction in design-to-code time on our Big Medium engagement" />
+    </div>
+    <al-link href={withBase('/figma-design-systems')} style="margin-top: var(--al-theme-space-sm); display: inline-block;">Read the full Big Medium story →</al-link>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>Structured the way AI needs</al-heading>
+    <al-text-passage maxWidth="md">
+      Altitude is the system behind our demos for a reason. If you want to see what an AI-ready
+      design system feels like, this is the demo.
+    </al-text-passage>
+    <al-list style="margin-top: var(--al-theme-space-lg);">
+      {aiFits.map((t) => (
+        <al-list-item>
+          <al-link href={t.href.startsWith('http') ? t.href : withBase(t.href)} target={t.href.startsWith('http') ? '_blank' : undefined}>{t.name}</al-link> — {t.desc}.
+        </al-list-item>
+      ))}
+    </al-list>
+  </div>
+
+  <div class="sl-container sl-section">
+    <CTABand heading="See Altitude up close" dek="Schedule a demo and bring your hardest workflow question." />
+  </div>
+</Base>

@@ -1,0 +1,124 @@
+---
+// Speaking & Teaching — spec 2026-08-20-southleft-example-app, T10.
+// Content migrated verbatim from southleft-v5's src/pages/speaking.astro +
+// src/lib/engagements.ts (also rendered on /ai-design-systems).
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import { CTA, SITE } from '../lib/site';
+import { withBase } from '../lib/url';
+
+const engagements = [
+  { type: 'podcast', title: 'Code & Pixels: AI & Design Systems', detail: 'Episode 31 with Adekunle Oduye and Kelly Harrop — thirty-five minutes on AI and design systems in the hybrid design-technology space.', href: 'https://www.buzzsprout.com/1958356/episodes/19431662' },
+  { type: 'session', title: 'Into Design Systems: AI Without the Chaos', detail: 'Context-Based Design Systems to the rescue — with Brad Frost and Ian Frost at the March 2026 conference: your organization\'s hard-earned best practices as guardrails for shipping with AI.', href: 'https://www.intodesignsystems.com/agenda' },
+  { type: 'webinar', title: 'zeroheight DS Live: Context-Based Design Systems', detail: 'Preparing design systems for an AI-driven future — the framework, live for the zeroheight community.', href: 'https://webinars.zeroheight.com/register/zeroheight-ds-live-tj-pitre-context-based-design-systems-preparing-for-an-ai-driven-future' },
+  { type: 'course', title: 'AI & Design Systems — with Brad Frost', detail: 'A co-created online course on applying AI to design systems — 16+ hours of lessons, community jam sessions, and demonstrations, grounded in real work with large-scale teams.', href: 'https://aianddesign.systems/' },
+  { type: 'webinar', title: 'Storybook: When AI Meets Design Systems', detail: 'Why design systems give AI the context it needs to be genuinely useful — for the Storybook community.', href: '/insights/ai/when-ai-meets-design-systems-my-storybook-webinar-recap' },
+  { type: 'workshop', title: 'Maven: Doing More With Your Design System in Figma', detail: 'Hosted with Joey Banks (Baseline Design) — flexible components and libraries, Figma MCP, Figma Make, and Storybook.', href: 'https://maven.com/p/d221a3/doing-more-with-your-design-system-in-figma' },
+  { type: 'session', title: 'Into Design Systems: Vibe Coding Design Systems', detail: 'Spec-driven development, token exports, and AI-built documentation sites — live at the Online Jam.' },
+  { type: 'talk', title: 'SuperFriendly: AI-Enabled Design Systems and Product Design', detail: 'How design systems become the leverage point for AI-era product design.' },
+];
+
+const interviews = [
+  { pull: 'AI just turns the lights on.', detail: 'Adaptive infrastructure, the discipline AI exposes, and why the invisible parts of a design system — structured context, metadata, behavioral intent — matter most.', cite: 'TJ Pitre on Design Systems and AI — Design Systems Collective', href: 'https://www.designsystemscollective.com/ai-just-turns-the-lights-on-tj-pitre-on-design-systems-and-ai-d57b095e9a90' },
+  { pull: 'AI-ready design systems.', detail: 'Structured context, metadata, token architecture, and the shift from component libraries to adaptive, AI-enabled infrastructure — with Arseni Harkunou.', cite: 'AI-Ready Design Systems w/ TJ Pitre — Product Craft', href: 'https://arseniharkunou.substack.com/p/ai-ready-design-systems-w-tj-pitre' },
+  { pull: 'From Flash to Figma to whatever comes next.', detail: 'The evolution of digital production — how dynamic, system-driven workflows replaced hand-built pages, and where AI takes it from here.', cite: 'The Evolution of Digital Production — Knapsack', href: 'https://www.knapsack.cloud/blog/the-evolution-of-digital-production-tj-pitre-talks-flash-figma-and-the-future-of-dynamic-design' },
+];
+
+const bring = [
+  { label: 'Conference talks', body: 'AI + design systems, told through shipped work and live tooling — Figma Console MCP, Story UI, and real client systems on screen.' },
+  { label: 'Team workshops', body: 'Hands-on sessions built around your actual system, not a demo repo. Design and engineering in the same room, working the same workflows.' },
+  { label: 'Podcasts and panels', body: 'Strong opinions, honestly argued: context beats autonomy, parity beats handoff, and your design system is about to become an API.' },
+];
+---
+
+<Base
+  title="Speaking & Teaching"
+  description="Talks, workshops, webinars, and the AI & Design Systems course with Brad Frost. Book Southleft for your conference, team, or podcast."
+>
+  <div class="sl-container sl-section--tight">
+    <PageHero label="speaking" heading="We say it on the record." dek="Talks, workshops, courses, and interviews on design systems and AI — always from shipped work, never from slideware. If your team or event wants the same, let's talk.">
+      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
+        <al-button href={withBase(CTA.href)}>Book a speaking engagement</al-button>
+        <al-button variant="tertiary" href={withBase('/services/workshops-training')}>Bring a workshop in-house</al-button>
+      </div>
+    </PageHero>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>Recent talks, workshops & the course</al-heading>
+    <al-text-passage maxWidth="sm">The same workflows we run with clients — live demos, real systems.</al-text-passage>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {engagements.map((e) => (
+        <div class="al-u-grid__item col:12 col:6@md">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header">
+              <al-chip variant="secondary">{e.type}</al-chip>
+              <al-heading tagName="h3" variant="sm" isBold={true} style="margin-top: var(--al-theme-space-xs);">{e.title}</al-heading>
+            </div>
+            <al-text-passage>{e.detail}</al-text-passage>
+            {e.href && <al-link href={e.href.startsWith('http') ? e.href : withBase(e.href)} target={e.href.startsWith('http') ? '_blank' : undefined}>Learn more →</al-link>}
+          </al-card>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>Interviews & press</al-heading>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {interviews.map((iv) => (
+        <div class="al-u-grid__item col:12 col:6@md">
+          <al-testimonial attribution={iv.cite.split(' — ')[0]} data-testimonial-role={iv.cite.split(' — ')[1] ?? ''}>{iv.pull} — {iv.detail}</al-testimonial>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>Context-Based Design Systems</al-heading>
+    <al-text-passage maxWidth="md">
+      A published, evolving model for design systems in the AI-driven product lifecycle — the
+      framework behind most of the talks above, with a one-year "Revisited" follow-up testing it
+      against reality.
+    </al-text-passage>
+    <div class="sl-header__nav" style="margin-top: var(--al-theme-space);">
+      <al-link href={withBase('/insights/design-systems/context-based-design-systems-a-new-model-for-the-ai-driven-product-lifecycle')}>The original →</al-link>
+      <al-link href={withBase('/insights/design-systems/context-based-design-systems-revisited')}>Revisited, one year in →</al-link>
+    </div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>What we bring to your stage or team</al-heading>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {bring.map((b) => (
+        <div class="al-u-grid__item col:12 col:4@md">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header"><al-chip variant="secondary">{b.label}</al-chip></div>
+            <al-text-passage>{b.body}</al-text-passage>
+          </al-card>
+        </div>
+      ))}
+    </div>
+    <al-text-passage maxWidth="md" style="margin-top: var(--al-theme-space-lg);">
+      Speaking inquiries: <al-link href={`mailto:${SITE.email}`}>{SITE.email}</al-link>
+    </al-text-passage>
+  </div>
+
+  <div class="sl-container sl-section">
+    <CTABand
+      heading="Want this energy at your event?"
+      dek="Tell us about your conference, meetup, or team — we'll bring the live demos."
+      secondaryLabel="Explore workshops & training"
+      secondaryHref="/services/workshops-training"
+    />
+  </div>
+</Base>
+
+<script>
+  customElements.whenDefined('al-testimonial').then(() => {
+    document.querySelectorAll('al-testimonial[data-testimonial-role]').forEach((el) => {
+      (el as HTMLElement & { role?: string }).role = el.dataset.testimonialRole;
+    });
+  });
+</script>

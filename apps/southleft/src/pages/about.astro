@@ -4,6 +4,7 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import CTABand from '../components/CTABand.astro';
+import { CTA } from '../lib/site';
 import { withBase } from '../lib/url';
 
 const values = [
@@ -24,6 +25,21 @@ const howWeWork = [
   { name: 'Direct access, always', body: 'You get a shared Slack channel with the actual engineers and designers on your project, plus a weekly 30-minute sync. No account-manager filter.' },
   { name: 'Kickoff in 2–3 weeks', body: 'That’s our standard runway after signing. On a deadline? Ask about rush scheduling.' },
 ];
+
+const logos = [
+  { file: 'ibm.webp', name: 'IBM' },
+  { file: 'google.webp', name: 'Google' },
+  { file: 'petsmart.webp', name: 'PetSmart' },
+  { file: 'toast.webp', name: 'Toast' },
+  { file: 'caterpillar.webp', name: 'Caterpillar' },
+  { file: 'cigna-health.webp', name: 'Cigna Health' },
+  { file: 'conde-nast.webp', name: 'Condé Nast' },
+  { file: 'docusign.webp', name: 'DocuSign' },
+  { file: 'state-farm.webp', name: 'State Farm' },
+  { file: 'ulta-beauty.webp', name: 'Ulta Beauty' },
+  { file: 'chubb.webp', name: 'CHUBB' },
+  { file: 'better-com.svg', name: 'Better.com' },
+];
 ---
 
 <Base
@@ -41,7 +57,7 @@ const howWeWork = [
   <div class="sl-container sl-section">
     <al-split-content mediaPosition="start">
       <div slot="media" class="sl-stack">
-        <al-heading tagName="h2" variant="md" isBold={true}>No sales team. No marketing department. Our work is our pipeline.</al-heading>
+        <al-heading tagName="h2" variant="lg" isBold={true}>No sales team. No marketing department. Our work is our pipeline.</al-heading>
       </div>
       <div slot="content" class="sl-stack">
         <al-text-passage>
@@ -60,8 +76,16 @@ const howWeWork = [
     </al-split-content>
   </div>
 
+  <!-- Trusted by (v5 section 02) -->
+  <div class="sl-container sl-section--tight">
+    <al-text-passage maxWidth="sm">Fourteen years of word-of-mouth referrals, from tech giants to community organizations.</al-text-passage>
+    <div class="sl-logo-wall" style="margin-top: var(--al-theme-space-lg);">
+      {logos.map((logo) => <img src={withBase(`/logos/${logo.file}`)} alt={logo.name} loading="lazy" />)}
+    </div>
+  </div>
+
   <div class="sl-container sl-section">
-    <al-heading tagName="h2" variant="sm" isBold={true}>Where we are now</al-heading>
+    <al-heading tagName="h2" variant="lg" isBold={true}>Where we are now</al-heading>
     <al-text-passage>
       In 2026, Southleft opened its next chapter — a formalized partnership with Baseline, and new
       leadership at the top. The team is the same. The clients are the same. The standards are the same.
@@ -92,7 +116,7 @@ const howWeWork = [
   </div>
 
   <div class="sl-container sl-section">
-    <al-heading tagName="h2" variant="sm" isBold={true}>Five things we won’t compromise on</al-heading>
+    <al-heading tagName="h2" variant="lg" isBold={true}>Five things we won’t compromise on</al-heading>
     <al-text-passage>The same values since 2012 — tightened for the work we do now.</al-text-passage>
     <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
       {values.map((v) => (
@@ -107,7 +131,7 @@ const howWeWork = [
   </div>
 
   <div class="sl-container sl-section">
-    <al-heading tagName="h2" variant="sm" isBold={true}>Who’s at the wheel</al-heading>
+    <al-heading tagName="h2" variant="lg" isBold={true}>Who’s at the wheel</al-heading>
     <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
       {leaders.map((person) => (
         <div class="al-u-grid__item col:12 col:6@md">
@@ -124,7 +148,7 @@ const howWeWork = [
   </div>
 
   <div class="sl-container sl-section">
-    <al-heading tagName="h2" variant="sm" isBold={true}>What working with us feels like</al-heading>
+    <al-heading tagName="h2" variant="lg" isBold={true}>What working with us feels like</al-heading>
     <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
       {howWeWork.map((item) => (
         <div class="al-u-grid__item col:12 col:4@md">
@@ -133,12 +157,15 @@ const howWeWork = [
         </div>
       ))}
     </div>
+    <al-button href={withBase(CTA.href)} style="margin-top: var(--al-theme-space-xl);">{CTA.label}</al-button>
   </div>
 
   <div class="sl-container sl-section">
     <CTABand
       heading="Let’s talk about your design system."
       dek="You’ll hear back from a practitioner, not a pipeline."
+      secondaryLabel="Get in touch"
+      secondaryHref="/contact"
     />
   </div>
 </Base>

@@ -1,10 +1,15 @@
 ---
-// Insights listing — spec 2026-08-20-southleft-example-app, T4-1.
+// Insights listing — spec 2026-08-20-southleft-example-app, T4-1, revised T9
+// round 3 to match v5's real src/pages/insights/index.astro section-by-section:
+// Substack link + category pills in the hero, a single featured post, then
+// the archive grid — no invented "Latest"/"The archive" headings (v5 uses a
+// bare section-rule kicker for both, not a full al-heading).
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
 import CTABand from '../../components/CTABand.astro';
+import { SITE } from '../../lib/site';
 import { withBase } from '../../lib/url';
 
 const posts = (await getCollection('insights')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
@@ -17,14 +22,15 @@ const categories = [...new Map(posts.map((p) => [p.data.category, p.data.categor
 
 <Base
   title="Insights"
-  description="Essays on design systems, AI, and front-end craft from the Southleft team."
+  description="Essays on design systems, AI, and front-end craft from the Southleft team — context-based systems, MCP tooling, and what we're learning in production."
 >
   <div class="sl-container sl-section--tight">
     <PageHero
       label="insights"
       heading="Insights"
-      dek="Design systems, AI, and the craft of building for the web — published as we learn it, from real client work and our own open-source tooling."
+      dek="Design systems, AI, and the craft of building for the web — published as we learn it, from real client work and our own open-source tooling. New posts also land on our Substack."
     >
+      <al-link href={SITE.substack} target="_blank" style="margin-top: var(--al-theme-space); display: inline-block;">Follow on Substack →</al-link>
       <nav class="sl-header__nav" aria-label="Browse by category" style="margin-top: var(--al-theme-space-lg);">
         {categories.map((c) => (
           <al-link href={withBase(`/insights/${c.slug}`)}>{c.name} ({c.count})</al-link>
@@ -34,7 +40,7 @@ const categories = [...new Map(posts.map((p) => [p.data.category, p.data.categor
   </div>
 
   <div class="sl-container sl-section">
-    <al-heading tagName="h2" variant="sm" isBold={true}>Latest</al-heading>
+    <p class="al-u-theme-typography-body-xs">01 / latest</p>
     <div class="al-u-grid" style="margin-top: var(--al-theme-space-lg);">
       <div class="al-u-grid__item col:12">
         <ArticleCard post={featured} featured />
@@ -43,7 +49,8 @@ const categories = [...new Map(posts.map((p) => [p.data.category, p.data.categor
   </div>
 
   <div class="sl-container sl-section">
-    <al-heading tagName="h2" variant="sm" isBold={true}>The archive — {rest.length} more posts</al-heading>
+    <p class="al-u-theme-typography-body-xs">02 / the archive</p>
+    <al-text-passage maxWidth="sm" style="margin-top: var(--al-theme-space-sm);">{rest.length} more posts — newest first.</al-text-passage>
     <div class="al-u-grid" style="margin-top: var(--al-theme-space-lg);">
       {rest.map((p) => (
         <div class="al-u-grid__item col:12 col:6@md col:4@lg">

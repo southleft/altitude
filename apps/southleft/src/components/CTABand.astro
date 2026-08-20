@@ -1,24 +1,30 @@
 ---
-// Closing CTA band — spec 2026-08-20-southleft-example-app, T3/T4-1.
+// Closing CTA band — spec 2026-08-20-southleft-example-app, T3/T4-1, revised
+// T9 round 2 to match v5's real CTABand.astro contract and defaults exactly
+// (props + default copy were previously invented, not transcribed).
 // al-hero, centered layout, no media — the same organism used for the page
 // hero, reused as a closing CTA band (a hero is compositionally exactly
 // that: eyebrow + heading + body + actions, no media required).
-import { SITE } from '../lib/site';
+import { CTA } from '../lib/site';
 import { withBase } from '../lib/url';
 
 interface Props {
   heading?: string;
   dek?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
 }
 const {
-  heading = 'Let’s build something that lasts.',
-  dek = 'A discovery call is the fastest way to find out whether Altitude — and Southleft — is the right fit for your team.',
+  heading = 'Is your design system AI-ready?',
+  dek = 'A 30-minute discovery call is the fastest way to find out where your leverage is.',
+  secondaryLabel = 'Ask about a workshop',
+  secondaryHref = '/services/workshops-training',
 } = Astro.props;
 ---
 
 <al-hero layout="centered" contained>
-  <al-heading slot="heading" tagName="h2" variant="lg" isBold={true}>{heading}</al-heading>
+  <al-heading slot="heading" tagName="h2" variant="display-md" isBold={true}>{heading}</al-heading>
   <al-text-passage>{dek}</al-text-passage>
-  <al-button slot="actions" href={SITE.calendly} target="_blank">Book a call</al-button>
-  <al-button slot="actions" variant="tertiary" href={withBase('/contact')}>Contact us</al-button>
+  <al-button slot="actions" href={withBase(CTA.href)}>{CTA.label}</al-button>
+  <al-button slot="actions" variant="tertiary" href={secondaryHref.startsWith('http') ? secondaryHref : withBase(secondaryHref)}>{secondaryLabel}</al-button>
 </al-hero>

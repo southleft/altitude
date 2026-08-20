@@ -1,0 +1,301 @@
+---
+// The Design Systems Aptitude Test — spec 2026-08-20-southleft-example-app, T10.
+// Content (all nine questions, answers, quips, grade bands) migrated verbatim
+// from southleft-v5's src/pages/quiz.astro. The interaction is reimplemented
+// with plain semantic HTML (fieldset/legend/button) + vanilla JS, styled only
+// with `.al-u-*` utilities and `--al-theme-*` tokens (v5's bespoke `.quiz-opt`
+// CSS is not reproduced 1:1 — see T9 verification notes) instead of Altitude
+// form components, since the "click an answer, see instant right/wrong
+// feedback" pattern has no al-* equivalent.
+import Base from '../layouts/Base.astro';
+import { CTA } from '../lib/site';
+import { withBase } from '../lib/url';
+
+interface Option {
+  t: string;
+  correct?: boolean;
+  quip: string;
+}
+interface Question {
+  q: string;
+  options: Option[];
+}
+
+const QUESTIONS: Question[] = [
+  {
+    q: 'A designer ships a button with #F15835. Your token red is #F05735. This is:',
+    options: [
+      { t: 'Close enough — nobody can see one digit', quip: 'One digit of drift today, forty shades of red by Q3. (We found exactly this bug on our own old site.)' },
+      { t: 'Drift. One red, referenced only by token.', correct: true, quip: 'Correct. There is only one red. It has a name. Use the name.' },
+      { t: 'An A/B testing opportunity', quip: 'Testing which nearly-identical red converts better is how design systems teams burn out.' },
+      { t: 'Job security', quip: 'Technically true. Ethically complicated.' },
+    ],
+  },
+  {
+    q: 'The correct token architecture, bottom to top:',
+    options: [
+      { t: 'component → semantic → primitive', quip: 'Upside down — components should never be the source of truth.' },
+      { t: 'primitive → semantic → component', correct: true, quip: 'Raw values → meaning → usage. Three tiers, one direction of dependency.' },
+      { t: 'Figma → Zeplin → vibes', quip: 'A workflow archaeologists will one day study.' },
+      { t: 'tokens.scss → tokens-new.scss → tokens-FINAL-v2.scss', quip: 'We’ve seen this in production. We still have the group-therapy receipts.' },
+    ],
+  },
+  {
+    q: 'Which token belongs in component code?',
+    options: [
+      { t: '--color-blue-500', quip: 'A primitive in a component is a future dark-mode bug wearing a disguise.' },
+      { t: '#006699', quip: 'A raw hex in a component is the same bug without the disguise.' },
+      { t: '--color-action-primary', correct: true, quip: 'Semantic tokens carry intent. When the brand shifts, the component doesn’t care.' },
+      { t: 'blue (the CSS keyword)', quip: 'Bold. Wrong, but bold.' },
+    ],
+  },
+  {
+    q: 'Dark mode lands on the roadmap. A tokenized system responds by:',
+    options: [
+      { t: 'Re-pointing the semantic alias layer', correct: true, quip: 'One layer flips, every component follows. (Press the ink/paper toggle in our nav — that’s all it does.)' },
+      { t: 'Adding .dark overrides to every component', quip: 'That’s 214 components × 2 forever. Hope you like merge conflicts.' },
+      { t: 'Shipping a second app', quip: 'Somewhere, a CFO just felt a chill and doesn’t know why.' },
+      { t: 'Announcing dark mode is “not aligned with brand”', quip: 'The brand is “we couldn’t figure out our CSS,” then.' },
+    ],
+  },
+  {
+    q: 'An AI agent is about to generate UI against your design system. What matters most?',
+    options: [
+      { t: 'A bigger model', quip: 'A bigger model hallucinates prettier rogue divs.' },
+      { t: 'Structured context it can read — tokens, typed components, real docs', correct: true, quip: 'AI doesn’t replace your system. It exposes it. This is the whole reason MCP servers exist.' },
+      { t: 'A very stern system prompt', quip: '“Please follow the brand” has never once worked.' },
+      { t: 'Hope', quip: 'Hope is not a design token.' },
+    ],
+  },
+  {
+    q: 'How many sources of truth should one design decision have?',
+    options: [
+      { t: '1', correct: true, quip: 'One. Everything else is a projection of it — CSS vars, Figma variables, Swift, whatever.' },
+      { t: '2 — one for design, one for engineering', quip: 'Two sources of truth is zero sources of truth with extra meetings.' },
+      { t: 'One per team', quip: 'Congratulations, you’ve invented brand drift as a service.' },
+      { t: 'Depends on the quarter', quip: 'The roadmap changes. The red should not.' },
+    ],
+  },
+  {
+    q: 'Your Figma library and your code library disagree. Who’s right?',
+    options: [
+      { t: 'Figma — design leads', quip: 'Until the shipped product disagrees with the deck in the board meeting.' },
+      { t: 'Code — it’s what users touch', quip: 'Closer. But “the code is right” is how designers stop trusting the system.' },
+      { t: 'Neither. Parity is the deliverable.', correct: true, quip: 'Code-to-design isn’t the point — system parity is.' },
+      { t: 'Whoever has the strongest opinions in Slack', quip: 'This is, statistically, how it actually gets decided. It shouldn’t be.' },
+    ],
+  },
+  {
+    q: 'What is a “rogue div”?',
+    options: [
+      { t: 'A div that files its own JIRA tickets', quip: 'If only they were that considerate.' },
+      { t: 'Unsystemized UI debt in a trench coat', correct: true, quip: 'Hand-styled, undocumented, unthemed — and multiplying while you read this.' },
+      { t: 'A distant, estranged cousin of the span family', quip: 'Divs and spans are actually close. It’s the inline-styled table that nobody invites anymore.' },
+      { t: 'A CSS reset gone feral', quip: 'Close in spirit. A reset at least had good intentions once.' },
+    ],
+  },
+  {
+    q: 'cubic-bezier(0.22, 1, 0.36, 1) is:',
+    options: [
+      { t: 'A lottery number', quip: 'The only lottery here is transition: all 0.5s — everyone loses.' },
+      { t: 'An easing token', correct: true, quip: 'Confident out-of-the-gate, gentle landing. One easing owns the brand — this one.' },
+      { t: 'Illegal in the EU', quip: 'GDPR has no opinion on motion curves. Yet.' },
+      { t: 'The same as “ease”', quip: 'Telling a motion designer your curve is “basically ease” is a workplace incident.' },
+    ],
+  },
+];
+
+const GRADES = [
+  { min: 0, name: 'Rogue Div', blurb: 'Unsystemized, hand-styled, but honestly? Full of potential. There’s a system for all of this — and helping teams build it is literally our job.' },
+  { min: 4, name: 'Component Librarian', blurb: 'Solid instincts. Your components are organized; your token layer has some gaps. A workshop would take you the rest of the way.' },
+  { min: 7, name: 'Token Whisperer', blurb: 'Dangerous in a design review, in the best way. You’d enjoy arguing with us about naming conventions — and we’d enjoy it too.' },
+  { min: 9, name: 'System Architect', blurb: 'Perfect score. You might be one of us. Either way, imagine what your org ships when everyone else scores like you do — that’s the actual work.' },
+];
+---
+
+<Base
+  title="The Design Systems Aptitude Test"
+  description="Nine questions on tokens, parity, drift, and rogue divs — from the people who build the tools. How fluent is your system thinking?"
+>
+  <div class="sl-container sl-section--tight">
+    <div class="sl-stack" style="text-align: center;">
+      <al-chip variant="secondary" style="align-self: center;">aptitude-test</al-chip>
+      <al-heading tagName="h1" variant="display-md" isBold={true}>The Design Systems Aptitude Test</al-heading>
+      <al-text-passage maxWidth="sm" style="margin-inline: auto;">
+        Nine questions. No time limit. Scored by the people who build design-system tooling for a
+        living — so yes, we're grading on conviction.
+      </al-text-passage>
+    </div>
+  </div>
+
+  <div class="sl-container sl-section sl-container--prose">
+    <div id="quiz" data-total={QUESTIONS.length}>
+      <p class="al-u-theme-typography-body-xs" id="quiz-step-label">Question <span id="quiz-step">01</span> / {String(QUESTIONS.length).padStart(2, '0')}</p>
+
+      {QUESTIONS.map((question, qi) => (
+        <fieldset class="sl-quiz-q sl-stack" data-q={qi} hidden={qi !== 0} style="margin-top: var(--al-theme-space-xl); border: none; padding: 0;">
+          <legend class="al-u-theme-typography-heading-sm">{question.q}</legend>
+          <div class="sl-stack sl-stack--sm">
+            {question.options.map((o, oi) => (
+              <button type="button" class="sl-quiz-opt" data-correct={o.correct ? 'true' : 'false'} data-quip={o.quip}>
+                <span class="sl-quiz-key" aria-hidden="true">{String.fromCharCode(97 + oi)}</span>
+                <span>{o.t}</span>
+              </button>
+            ))}
+          </div>
+          <p class="sl-quiz-quip al-u-theme-typography-body-sm" role="status" hidden></p>
+          <al-button class="sl-quiz-next" hidden>{qi === QUESTIONS.length - 1 ? 'See my grade' : 'Next question'}</al-button>
+        </fieldset>
+      ))}
+
+      <div id="quiz-result" hidden style="margin-top: var(--al-theme-space-xl);">
+        <al-card>
+          <div style="text-align: center;">
+            <al-chip variant="secondary">your grade</al-chip>
+            <p class="al-u-theme-typography-body-xs" style="margin-top: var(--al-theme-space-sm);">score: <span id="result-score"></span> / {QUESTIONS.length}</p>
+            <al-heading tagName="h2" variant="lg" isBold={true} id="result-name" style="margin-top: var(--al-theme-space-xs);"></al-heading>
+            <al-text-passage maxWidth="sm" id="result-blurb" style="margin-inline: auto; margin-top: var(--al-theme-space-sm);"></al-text-passage>
+            <div class="sl-header__nav" style="justify-content: center; margin-top: var(--al-theme-space-lg);">
+              <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
+              <al-button variant="tertiary" id="quiz-share">Copy my result</al-button>
+              <al-button variant="tertiary" id="quiz-retake">Retake</al-button>
+            </div>
+          </div>
+        </al-card>
+        <p class="al-u-theme-typography-body-xs" style="text-align: center; margin-top: var(--al-theme-space-lg);">
+          No data leaves your browser. We're a design systems agency, not an ad network.
+        </p>
+      </div>
+
+      <noscript>
+        <p class="al-u-theme-typography-body-sm" style="margin-top: var(--al-theme-space-xl);">
+          The interactive version needs JavaScript — but honestly, reading the answer options above is most of the curriculum.
+        </p>
+      </noscript>
+    </div>
+  </div>
+</Base>
+
+<style>
+  /* `.sl-quiz-q` also carries `.sl-stack` (`display: flex`, layout.css) —
+     equal-specificity attribute vs. class selector means source order
+     decides, and layout.css loads after the UA stylesheet's own `[hidden] {
+     display: none }`, so without this the flex display wins and every
+     question renders at once regardless of the `hidden` attribute. */
+  .sl-quiz-q[hidden] {
+    display: none;
+  }
+
+  .sl-quiz-opt {
+    display: flex;
+    align-items: baseline;
+    gap: var(--al-theme-space-sm);
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    color: var(--al-theme-color-content-default);
+    background: var(--al-theme-color-background-default-weak);
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+    border-radius: var(--al-theme-border-radius);
+    padding: var(--al-theme-space-sm) var(--al-theme-space);
+    cursor: pointer;
+    transition: border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing), background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  }
+  .sl-quiz-opt:hover:not(:disabled) {
+    border-color: var(--al-theme-color-border-primary-default);
+  }
+  .sl-quiz-opt:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+  .sl-quiz-opt.is-correct {
+    opacity: 1;
+    border-color: var(--al-theme-color-content-success-default, var(--al-theme-color-border-primary-default));
+  }
+  .sl-quiz-opt.is-wrong {
+    opacity: 1;
+    border-color: var(--al-theme-color-content-danger-default, var(--al-theme-color-border-primary-default));
+  }
+  .sl-quiz-key {
+    font-family: var(--al-theme-typography-family-mono, inherit);
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+    border-radius: var(--al-theme-border-radius-xs);
+    padding: 0 var(--al-theme-space-xs);
+    flex-shrink: 0;
+  }
+  .sl-quiz-quip {
+    margin-top: var(--al-theme-space);
+    color: var(--al-theme-color-content-default-weak);
+    border-inline-start: var(--al-theme-border-width-md) solid var(--al-theme-color-border-primary-default);
+    padding-inline-start: var(--al-theme-space-sm);
+  }
+</style>
+
+<script define:vars={{ GRADES }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const quiz = document.getElementById('quiz');
+    const total = Number(quiz?.dataset.total ?? 0);
+    const questions = [...document.querySelectorAll('.sl-quiz-q')];
+    const stepEl = document.getElementById('quiz-step');
+    let score = 0;
+
+    questions.forEach((q, qi) => {
+      const options = [...q.querySelectorAll('.sl-quiz-opt')];
+      const quip = q.querySelector('.sl-quiz-quip');
+      const next = q.querySelector('.sl-quiz-next');
+      let answered = false;
+
+      options.forEach((opt) => {
+        opt.addEventListener('click', () => {
+          if (answered) return;
+          answered = true;
+          const correct = opt.dataset.correct === 'true';
+          if (correct) score++;
+          opt.classList.add(correct ? 'is-correct' : 'is-wrong');
+          options.forEach((o) => {
+            o.disabled = true;
+            if (o.dataset.correct === 'true') o.classList.add('is-correct');
+          });
+          if (quip) {
+            quip.textContent = opt.dataset.quip;
+            quip.hidden = false;
+          }
+          if (next) {
+            next.hidden = false;
+            next.focus();
+          }
+        });
+      });
+
+      next?.addEventListener('click', () => {
+        q.hidden = true;
+        const nq = questions[qi + 1];
+        if (nq) {
+          nq.hidden = false;
+          if (stepEl) stepEl.textContent = String(qi + 2).padStart(2, '0');
+          nq.querySelector('.sl-quiz-opt')?.focus();
+        } else {
+          const grade = [...GRADES].reverse().find((g) => score >= g.min) ?? GRADES[0];
+          document.getElementById('result-score').textContent = String(score);
+          document.getElementById('result-name').textContent = grade.name;
+          document.getElementById('result-blurb').textContent = grade.blurb;
+          document.getElementById('quiz-result').hidden = false;
+          if (stepEl) stepEl.textContent = 'fin';
+          document.getElementById('quiz-result')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    document.getElementById('quiz-share')?.addEventListener('click', async () => {
+      const name = document.getElementById('result-name')?.textContent;
+      const text = `I scored ${score}/${total} — "${name}" — on Southleft's Design Systems Aptitude Test. How fluent is your system thinking?`;
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        /* clipboard unavailable — no-op */
+      }
+    });
+
+    document.getElementById('quiz-retake')?.addEventListener('click', () => location.reload());
+  });
+</script>

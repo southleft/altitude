@@ -1,17 +1,52 @@
 ---
-// Sticky primary nav — spec 2026-08-20-southleft-example-app, T3.
-// Services · Work · Insights · Tools · About + Calendly CTA + ink/paper toggle.
-import { NAV, SITE } from '../lib/site';
+// Sticky primary nav — spec 2026-08-20-southleft-example-app, T3, revised T9
+// round 2 for exact v5 parity: full 6-item nav (incl. "AI + Design Systems"),
+// two circular icon buttons (theme/AI-direction trigger, ink/paper toggle),
+// and a pill "Start a conversation" CTA — matching v5's Header.astro exactly.
+import { NAV, CTA } from '../lib/site';
 import { withBase } from '../lib/url';
 ---
 
 <al-header class="sl-header">
   <al-logo slot="before" variant="southleft" href={withBase('/')}>By Southleft</al-logo>
   <nav class="sl-header__nav" aria-label="Primary">
-    {NAV.map((item) => <al-link href={withBase(item.href)}>{item.label}</al-link>)}
+    {NAV.map((item) => <al-link variant="sm" href={withBase(item.href)}>{item.label}</al-link>)}
   </nav>
   <div slot="after" class="sl-header__actions">
-    <al-button variant="tertiary" data-sl-mode-toggle>Paper</al-button>
-    <al-button href={SITE.calendly} target="_blank">Book a call</al-button>
+    <al-button
+      variant="tertiary"
+      hideText
+      label="Open AI direction — derive your own theme"
+      title="Derive your own theme"
+      data-sl-ai-trigger
+    >
+      <svg slot="before" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <path d="M12 21a9 9 0 1 1 9-9c0 2.5-2 3-3.5 3H15a2 2 0 0 0-1.5 3.3c.6.7.2 1.7-.7 1.7Z"></path>
+        <circle cx="8" cy="10.5" r="0.6" fill="currentColor"></circle>
+        <circle cx="12" cy="7.5" r="0.6" fill="currentColor"></circle>
+        <circle cx="16" cy="10.5" r="0.6" fill="currentColor"></circle>
+      </svg>
+    </al-button>
+    <al-button variant="tertiary" hideText label="Switch to paper (light) mode" title="Ink / paper" data-sl-mode-toggle>
+      <svg slot="before" data-sl-mode-icon viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path>
+      </svg>
+    </al-button>
+    <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
   </div>
 </al-header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('[data-sl-ai-trigger]')?.addEventListener('click', () => {
+      // AIDirectionPanel (home page only) still owns the actual `al-drawer`
+      // trigger — `.sl-ai-fab` (visually hidden now the header icon is the
+      // real entry point, see layout.css) — so proxy-click it rather than
+      // reimplementing al-drawer's own open/focus-management logic. A no-op
+      // on pages without the panel is the correct degrade.
+      const fab = document.querySelector<HTMLElement>('.sl-ai-fab');
+      fab?.click();
+    });
+  });
+</script>

@@ -10,6 +10,7 @@
 //   byte-identical to v3 output.
 
 import { promises as fs } from 'node:fs';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import StyleDictionary from 'style-dictionary';
@@ -334,13 +335,43 @@ const brandIncludes = (themeName) => [
 // Removed rather than materialized so a tier-3 brand layer is re-added
 // deliberately — if brand identities need one, add the authored files under
 // `styles/tokens/tier-3/brand/<brand>/` AND restore the glob here together.
-const brandSources = (brandName) => [`${SD_ROOT}/tokens-dtcg/tier-2/brand/${brandName}/*.json`];
+//
+// PER-MODE BRAND COLOR DELTAS (spec 2026-08-20-southleft-example-app, T9
+// round 2 — see `.altitude/BRANDS.md` §1/§6 update). A brand's `colors.json`
+// is theme-INDEPENDENT by construction — the same file builds against both
+// `light` and `dark` includes (see `brands` array below), so a literal value
+// written there resolves identically in both builds and gets classified
+// `invariant` by the delta-splitter two screens down. That's correct for an
+// accent hue (southleft's red is red in both modes) but wrong for a NEUTRAL
+// canvas that must itself flip warm-dark ↔ warm-light with the mode — no
+// single theme-independent value can do that.
+// `tier-2/brand/<brand>/mode/<theme>/colors.json` (note: nested one level so
+// the existing `tier-2/brand/<brand>/*.json` glob — intentionally
+// non-recursive, matching `brandIncludes`'s own `tier-2/theme/${themeName}/
+// *.json` pattern — never touches it) is loaded ADDITIONALLY, only for that
+// theme's build. Because the two theme builds now genuinely diverge on these
+// properties, the existing delta-splitter (unchanged) correctly classifies
+// them `perMode` and routes them into the `:host([brand='<brand>']
+// [mode='<theme>'])` block (0,3,0) — which already outranks the mode axis's
+// own `:host([mode])` block (0,2,0) restating `background.default` /
+// `content.default` (BRANDS.md §5's "mode owns these" note predates any
+// brand having a reason to override them; the 0,3,0 selector was always
+// there for exactly this case). No other brand file, the delta-splitter, or
+// the `theme.scss` `@use` order needed to change.
+const brandSources = (brandName, themeName) => {
+  const files = [`${SD_ROOT}/tokens-dtcg/tier-2/brand/${brandName}/*.json`];
+  if (themeName) {
+    const modeFile = `${SD_ROOT}/tokens-dtcg/tier-2/brand/${brandName}/mode/${themeName}/colors.json`;
+    if (existsSync(modeFile)) files.push(modeFile);
+  }
+  return files;
+};
 
 const brandConfig = (themeName, brandName) => ({
   usesDtcg: true,
   log: { verbosity: 'verbose' },
   include: brandIncludes(themeName),
-  source: brandSources(brandName),
+  source: brandSources(brandName, themeName),
   platforms: {
     css: {
       transformGroup: 'css-v3-shape',
@@ -499,7 +530,7 @@ async function build() {
   const emitted = [];
   async function emitHost(destination, selector, narrowing, theme, brand) {
     const cfg = brand
-      ? { include: brandIncludes(theme), source: brandSources(brand) }
+      ? { include: brandIncludes(theme), source: brandSources(brand, theme) }
       : { source: themeSources(theme) };
     const sd = new StyleDictionary({
       usesDtcg: true,

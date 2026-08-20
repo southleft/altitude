@@ -1,0 +1,97 @@
+---
+// Northright — spec 2026-08-20-southleft-example-app, T10.
+// Content migrated verbatim from southleft-v5's src/pages/northright.astro.
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import { SITE } from '../lib/site';
+import { withBase } from '../lib/url';
+
+const features = [
+  { name: 'A real design process', body: 'Every Northright designer is also a developer, so what gets designed gets built — on budget, accessible, and structured for UX and SEO. You approve wireframes and designs before we build.' },
+  { name: 'A component library out of the box', body: 'Rich, customizable components — CTAs, data visualizations, and more — so you can build engaging pages without touching code. Need something unique? The same engineers who build for enterprise clients build it for you.' },
+  { name: 'WordPress underneath', body: 'The world\'s most trusted CMS. Update your own content with no technical background.' },
+  { name: 'Room to grow', body: 'Clean, scalable code. Add features and pages as your business evolves — no starting over.' },
+  { name: 'Hosting and support included', body: 'One monthly fee covers hosting, maintenance, and access to expert support.' },
+];
+
+const tiers = [
+  { name: 'Economy', price: '$10k', priceNote: 'one-time + $100/month hosting & maintenance', pages: '5–10 pages', who: 'For small businesses getting started online.' },
+  { name: 'Plus', price: '$15k', priceNote: 'one-time + $100/month hosting & maintenance', pages: '10–15 pages', who: 'For growing businesses with more complex needs.' },
+  { name: 'Premium', price: 'Custom quote', priceNote: '+ $100/month hosting & maintenance', pages: '15+ pages', who: 'Enterprise-grade customization.' },
+];
+
+const allTiers = ['Access to the design/development team', 'Site customized to your brand', 'Third-party integrations', 'Unique component design and development'];
+const contactMailto = `mailto:${SITE.email}?subject=${encodeURIComponent('Northright inquiry')}`;
+---
+
+<Base
+  title="Northright"
+  description="Northright is Southleft's fixed-price website platform for smaller teams — the middle path between no-code builders and full custom development, built on WordPress by senior engineers."
+>
+  <div class="sl-container sl-section--tight">
+    <PageHero
+      label="northright"
+      heading="A serious website, without the custom-build price"
+      dek="Not every project needs a design system engagement. Northright is our productized web platform for smaller teams — a fixed-price website, the middle path between no-code builders and full custom development, built on WordPress by the same senior team that ships enterprise design systems."
+    >
+      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
+        <al-button href={contactMailto}>Tell us about your site</al-button>
+        <al-button variant="tertiary" href={withBase('/services')}>See our main practice</al-button>
+      </div>
+    </PageHero>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>What you get</al-heading>
+    <al-text-passage maxWidth="sm">The same senior team, the same standards — packaged as a fast, fixed-price website.</al-text-passage>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {features.map((f) => (
+        <div class="al-u-grid__item col:12 col:6@md col:4@lg">
+          <al-heading tagName="h3" variant="sm" isBold={true}>{f.name}</al-heading>
+          <al-text-passage>{f.body}</al-text-passage>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>Fixed price. No surprises.</al-heading>
+    <al-text-passage maxWidth="sm">Every tier is built by the same designers and engineers, with hosting and maintenance included.</al-text-passage>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {tiers.map((tier) => (
+        <div class="al-u-grid__item col:12 col:4@md">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header">
+              <al-chip variant="secondary">{tier.name}</al-chip>
+              <al-heading tagName="p" variant="md" isBold={true} style="margin-top: var(--al-theme-space-xs);">{tier.price}</al-heading>
+              <p class="al-u-theme-typography-body-xs">{tier.priceNote}</p>
+            </div>
+            <al-text-passage><strong>{tier.pages}</strong></al-text-passage>
+            <al-text-passage>{tier.who}</al-text-passage>
+          </al-card>
+        </div>
+      ))}
+    </div>
+    <al-card style="margin-top: var(--al-theme-space-lg);">
+      <p class="al-u-theme-typography-body-xs">All tiers include</p>
+      <al-list>
+        {allTiers.map((item) => <al-list-item>{item}</al-list-item>)}
+      </al-list>
+    </al-card>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>Need a system, not a site?</al-heading>
+    <al-text-passage maxWidth="md">
+      Northright sits alongside our main practice — AI-powered design systems for product
+      organizations. If your project is a component library, token architecture, or an AI-ready
+      system rather than a website, start there instead.
+    </al-text-passage>
+    <al-link href={withBase('/services')} style="margin-top: var(--al-theme-space-sm); display: inline-block;">Explore our services →</al-link>
+  </div>
+
+  <div class="sl-container sl-section">
+    <CTABand heading="Tell us about your site." dek={`Email ${SITE.email} or book a call — we'll tell you honestly whether Northright is the right fit.`} />
+  </div>
+</Base>

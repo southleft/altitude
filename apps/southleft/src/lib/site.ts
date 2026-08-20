@@ -18,6 +18,7 @@ export const SITE = {
 /** Primary nav — Services · Work · Insights · Tools · About + Calendly CTA
  * (spec R-requirement, T3/T4-1). */
 export const NAV = [
+  { label: 'AI + Design Systems', href: '/ai-design-systems' },
   { label: 'Services', href: '/services' },
   { label: 'Work', href: '/work' },
   { label: 'Insights', href: '/insights' },

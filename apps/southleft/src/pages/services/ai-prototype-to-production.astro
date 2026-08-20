@@ -1,0 +1,155 @@
+---
+// AI Prototype to Production — spec 2026-08-20-southleft-example-app, T10.
+// Content migrated verbatim from southleft-v5's src/pages/services/ai-prototype-to-production.astro.
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import CTABand from '../../components/CTABand.astro';
+import { CTA } from '../../lib/site';
+import { withBase } from '../../lib/url';
+
+const allWork = await getCollection('work');
+const workBySlug = (slug: string) => allWork.find((w) => w.id.replace(/\.md$/, '') === slug);
+const caseStudies = ['liquor-com', 'creole-cuisine', 'better-com-real-estate'].map(workBySlug).filter((w) => w !== undefined);
+
+const allPosts = await getCollection('insights');
+const postBySlug = (slug: string) => allPosts.find((p) => p.id.replace(/\.md$/, '') === slug);
+const relatedPosts = [
+  'in-defense-of-vibe-coding',
+  'you-can-vibe-almost-anything-now-thats-the-good-part-and-the-risk',
+  'vibe-coding-vs-context-engineering',
+]
+  .map(postBySlug)
+  .filter((p) => p !== undefined);
+
+const audiences = [
+  { title: 'Solo founders', body: 'Building MVPs with AI and now facing real users, real data, and real uptime expectations.' },
+  { title: 'Designers', body: 'Creating proofs-of-concept without a dev team — and needing one for the last mile.' },
+  { title: 'Product & innovation teams', body: 'Validating internal ideas fast, then needing them to survive contact with IT and security review.' },
+  { title: 'Agencies', body: 'Prototyping client concepts at speed, with production hardening handled by a partner.' },
+];
+
+const deliverables = [
+  { name: 'Codebase review & audit', desc: 'Framework alignment, maintainability, performance, and best practices — a clear picture of what you actually have.' },
+  { name: 'Component refactoring & architecture alignment', desc: 'Restructuring AI-generated code into components and patterns a team can maintain and extend.' },
+  { name: 'UI polish & accessibility', desc: 'Responsiveness across devices and WCAG compliance — the details AI tools consistently skip.' },
+  { name: 'Security & DevOps readiness', desc: 'Stabilization, vulnerability hardening, and a deployment pipeline you can trust.' },
+  { name: 'Scalability & extendability consulting', desc: 'What to keep, what to replace, and how the codebase grows past version one.' },
+];
+
+const steps = [
+  { step: 'Fixed-scope audit', body: 'A fixed-scope review of the codebase end to end and produce a findings report with a concrete estimate — no open-ended discovery.' },
+  { step: 'Findings & plan', body: 'You see exactly what\'s solid, what\'s fragile, and what production requires — prioritized, with costs attached. Scoped and priced from the audit.' },
+  { step: 'Production hardening', body: 'Scoped from the audit: refactoring, accessibility, security, and deployment — until it\'s genuinely launch-ready.' },
+];
+---
+
+<Base
+  title="AI Prototype to Production"
+  description="You vibe-coded a working prototype with Cursor, Lovable, or Bolt.new. Southleft makes it production-ready: codebase audits, refactoring, accessibility, security, and DevOps hardening."
+>
+  <div class="sl-container sl-section--tight">
+    <PageHero
+      label="ai-prototype-to-production"
+      heading="You vibe-coded a working prototype. We make it production-ready."
+      dek="AI-assisted coding tools are empowering a new wave of makers — founders, designers, and marketers who are building apps faster than ever before. But these tools often stop short of the finish line. Whether you used Cursor, Lovable, Bolt.new, or another AI platform to kickstart your project, the jump from working prototype to production-ready application can be a steep one. We help you make that leap."
+    >
+      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
+        <al-button href={withBase(CTA.href)}>Let's finish what you started</al-button>
+        <al-button variant="tertiary" href={withBase('/contact')}>Ask about an audit</al-button>
+      </div>
+    </PageHero>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-testimonial attribution="Southleft" data-testimonial-role="No judgment">
+      Where some teams see an unstructured AI-generated codebase, we see a starting point. We know
+      how to clean it up, strengthen it, and get it launch-ready.
+    </al-testimonial>
+    <al-text-passage maxWidth="md" style="margin-top: var(--al-theme-space-lg);">
+      The prototype already proved the idea. What's left is the unglamorous part — structure,
+      accessibility, security, deployment — and it's the part we've been shipping for production
+      clients for over a decade.
+    </al-text-passage>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>Built something? You're who this is for.</al-heading>
+    <al-text-passage maxWidth="sm">AI coding tools put working software in more hands than ever. We meet you wherever the prototype stopped.</al-text-passage>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {audiences.map((a) => (
+        <div class="al-u-grid__item col:12 col:6@md col:3@lg">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>{a.title}</al-heading></div>
+            <al-text-passage>{a.body}</al-text-passage>
+          </al-card>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>Everything between demo and launch</al-heading>
+    <al-text-passage maxWidth="sm">Five workstreams, scoped from the audit — you buy what the codebase actually needs, not a fixed menu.</al-text-passage>
+    <al-list style="margin-top: var(--al-theme-space-xl);">
+      {deliverables.map((d) => <al-list-item><strong>{d.name}</strong> — {d.desc}</al-list-item>)}
+    </al-list>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>Audit first, so the estimate is real</al-heading>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {steps.map((s, i) => (
+        <div class="al-u-grid__item col:12 col:4@md">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header">
+              <p class="al-u-theme-typography-body-xs">step {String(i + 1).padStart(2, '0')}</p>
+              <al-heading tagName="h3" variant="sm" isBold={true}>{s.step}</al-heading>
+            </div>
+            <al-text-passage>{s.body}</al-text-passage>
+          </al-card>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  {caseStudies.length > 0 && (
+    <div class="sl-container sl-section">
+      <div class="sl-section-header">
+        <div class="sl-stack sl-stack--sm">
+          <al-heading tagName="h2" variant="lg" isBold={true}>Production is our home turf</al-heading>
+          <al-text-passage maxWidth="sm">Liquor.com's fast-tracked e-commerce launch, thirty-plus Creole Cuisine venue sites, and Better.com's multi-faceted platform work.</al-text-passage>
+        </div>
+      </div>
+      <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+        {caseStudies.map((w) => <div class="al-u-grid__item col:12 col:4@md"><WorkCard project={w} /></div>)}
+      </div>
+    </div>
+  )}
+
+  {relatedPosts.length > 0 && (
+    <div class="sl-container sl-section">
+      <div class="sl-section-header">
+        <div class="sl-stack sl-stack--sm">
+          <al-heading tagName="h2" variant="lg" isBold={true}>We take vibe coding seriously</al-heading>
+          <al-text-passage maxWidth="sm">We've written at length about exactly where AI-built software shines — and exactly where it breaks.</al-text-passage>
+        </div>
+        <al-link href={withBase('/insights')}>All insights →</al-link>
+      </div>
+      <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+        {relatedPosts.map((p) => <div class="al-u-grid__item col:12 col:4@md"><ArticleCard post={p} /></div>)}
+      </div>
+    </div>
+  )}
+
+  <div class="sl-container sl-section">
+    <CTABand
+      heading="Let's finish what you started."
+      dek="A fixed-scope audit tells you exactly what stands between your prototype and production — findings report and estimate included."
+      secondaryLabel="Contact us"
+      secondaryHref="/contact"
+    />
+  </div>
+</Base>

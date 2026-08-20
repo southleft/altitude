@@ -8,6 +8,9 @@ import sitemap from '@astrojs/sitemap';
 // across the package boundary — see that plugin's own header comment for why
 // a relative import (not a workspace package specifier) is deliberate here.
 import { themeApiPlugin } from '../../libs/al-web-components/.storybook/ai-theme/vite-plugin-theme-api.ts';
+// T11 — dev-only local media middleware (serves southleft-v5's real
+// public/media/ at /media when present; see src/lib/vite-plugin-local-media.mjs).
+import { localMediaPlugin } from './src/lib/vite-plugin-local-media.mjs';
 
 // Served under /southleft on Cloudflare Pages, same convention as the other
 // example apps (apps/astro/astro.config.mjs) — the monorepo publishes dist/
@@ -30,7 +33,7 @@ export default defineConfig({
   // full-page screenshots (T8 verification), overlapping page content.
   devToolbar: { enabled: false },
   vite: {
-    plugins: [themeApiPlugin()],
+    plugins: [themeApiPlugin(), localMediaPlugin()],
   },
   // Media references (`/media/<file>`) were rewritten once, directly in the
   // migrated markdown, by scripts/rewrite-media-base.mjs — see that file and

@@ -1,8 +1,11 @@
 ---
-// Home page — spec 2026-08-20-southleft-example-app, T3 + T5/T6/T8.
-// Rebuilt purely from al-* organisms: al-hero, client logo wall, services
-// grid, featured work, testimonials, insights teasers, CTA band.
-// Default theme: southleft · dark ("ink") — set on <al-theme> in Base.astro.
+// Home page — spec 2026-08-20-southleft-example-app, T3 + T5/T6/T8, REBUILT
+// T9 round 2 for section-by-section structural parity with v5's real
+// src/pages/index.astro: same section order, same copy/data, same defaults.
+// Not reproduced (bespoke, no al-* equivalent — see verification notes):
+// GenerativeCanvas (hero background canvas), TokenPlayground, Marquee, the
+// draggable hero token chips, and the terminal panel. Everything else —
+// content, IA, section order, section designs — is transcribed.
 //
 // `data-section-id` on each top-level <section> is the layout resolver's
 // (src/lib/layout-resolver.ts, T5) reorder target — the AI direction panel
@@ -19,16 +22,11 @@ import AIDirectionPanel from '../components/AIDirectionPanel.astro';
 import { CTA } from '../lib/site';
 import { withBase } from '../lib/url';
 
-const insightsCount = (await getCollection('insights')).length;
-const work = await getCollection('work');
-const workCount = work.length;
-
 const posts = (await getCollection('insights')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 3);
 
+const allWork = await getCollection('work');
 const featuredSlugs = ['petsmart', 'stanford-d-school', 'ibm-investor-relations'];
-const featuredWork = featuredSlugs
-  .map((s) => work.find((w) => w.id.replace(/\.md$/, '') === s))
-  .filter((w) => w !== undefined);
+const featuredWork = featuredSlugs.map((s) => allWork.find((w) => w.id.replace(/\.md$/, '') === s)).filter((w) => w !== undefined);
 
 const logos = [
   { file: 'ibm.webp', name: 'IBM' },
@@ -48,76 +46,99 @@ const logos = [
 // Real copy migrated verbatim from southleft-v5's src/pages/index.astro.
 const services = [
   {
-    href: '/services',
+    href: '/ai-design-systems',
     name: 'AI + Design Systems',
     body: 'Your design system is about to become the most important API your company owns. AI-readiness audits, MCP integrations, discovery and research at the edge of what agents and generative UI make possible.',
+    items: ['AI-readiness audits', 'MCP integrations', 'Discovery & research'],
   },
   {
     href: '/services/design-systems',
     name: 'Design System Engineering',
     body: 'Build, scale, and govern systems from Figma to production. Component libraries, token architecture, Storybook and docs — everything typed, tokenized, tested.',
+    items: ['Component libraries', 'Token architecture', 'Storybook & docs'],
   },
   {
     href: '/services/workshops-training',
     name: 'Workshops & Training',
     body: 'We teach what we practice — hands-on team workshops, conference talks, and the AI & Design Systems course with Brad Frost. No slideware theory; live demos from real client work.',
+    items: ['Team workshops', 'Speaking engagements', 'AI & DS course with Brad Frost'],
   },
   {
     href: '/services/team-augmentation',
     name: 'Team Augmentation',
     body: 'Senior design-system and front-end engineers embedded with your team. They slot into your codebase and ship — direct access to the people writing the code, no hand-offs to a B-team.',
+    items: ['Embedded engineers', 'Front-end architecture', 'Training & mentorship'],
   },
 ];
 
-// Real, verbatim client quotes migrated from southleft-v5.
+const tools = [
+  { name: 'figma-console-mcp', cmd: 'npx figma-console-mcp', desc: 'AI-powered design system management inside Figma', href: 'https://github.com/southleft/figma-console-mcp' },
+  { name: 'story-ui', cmd: 'npx story-ui init', desc: 'AI layout generation for Storybook via MCP', href: 'https://github.com/southleft/story-ui' },
+  { name: 'figmalint', cmd: 'figma → plugins → FigmaLint', desc: 'Design linting for developer-ready Figma files', href: 'https://github.com/southleft/figmalint' },
+  { name: 'design-systems-mcp', cmd: 'npx design-systems-mcp', desc: 'A design systems knowledge base your AI can query', href: 'https://github.com/southleft/design-systems-mcp' },
+  { name: 'altitude', cmd: 'open /tools/altitude', desc: 'Our in-house design system — and our AI testbed', href: '/tools/altitude' },
+];
+
+// Real, verbatim client quotes migrated from southleft-v5 (all four home-page quotes).
 const testimonials = [
-  {
-    quote: 'They’re excellent! They make work seem easy — always on time and they communicate clearly along the way.',
-    name: 'Jessi Hall',
-    role: 'Producer, Big Medium',
-  },
-  {
-    quote: 'Southleft was instrumental in helping us improve our user experience while simultaneously increasing traffic and revenue.',
-    name: 'Todd Hodgson',
-    role: 'Director of Product Management, Outside Inc.',
-  },
+  { quote: 'They’re excellent! They make work seem easy — always on time and they communicate clearly along the way.', name: 'Jessi Hall', role: 'Producer, Big Medium' },
+  { quote: 'The team was very timely, often delivering even before the deadline and always being responsive.', name: 'Sara Soueidan', role: 'Inclusive Web Design Engineer & Educator' },
+  { quote: 'Southleft was instrumental in helping us improve our user experience while simultaneously increasing traffic and revenue.', name: 'Todd Hodgson', role: 'Director of Product Management, Outside Inc.' },
+  { quote: 'They go through a high level of detail to understand our needs and follow up to ensure their solutions meet them.', name: 'David Baucum', role: 'CTO, CURA Freight' },
 ];
 ---
 
 <Base title="Southleft">
-  <!-- Hero -->
+  <!-- Announcement banner -->
+  <al-banner>
+    <al-link href={withBase('/insights/business/better-together-southleft-x-baseline-and-a-new-ceo')} slot="link">
+      <span class="al-u-theme-typography-body-xs-bold">new →</span> Better together: Southleft × Baseline, and a new CEO
+    </al-link>
+  </al-banner>
+
+  <!-- Hero — v5's exact composition: kicker, single huge display headline,
+       intro paragraph, two pill CTAs. No stats row, no meta panel (both were
+       this app's own invention, not in v5 — removed per T9 round-2 review). -->
   <section class="sl-container sl-section" data-section-id="hero">
-    <al-hero contentAlignment="start">
+    <al-hero layout="stacked" contentAlignment="start">
       <al-chip slot="eyebrow" variant="secondary">&lt;southleft&gt;</al-chip>
-      <al-heading slot="heading" tagName="h1" variant="display-lg" isBold={true}>
+      <al-heading slot="heading" tagName="h1" variant="display-lg" isBold={true} style="max-width: 56rem;">
         AI-powered design systems. Built by the people building the tools.
       </al-heading>
-      <al-text-passage>
+      <al-text-passage maxWidth="md">
         We audit, build, and evolve design systems for teams at Caterpillar, Novartis, UPS, and
         NASDAQ — and we build the open-source AI tooling the design systems community actually
-        uses. We don’t just talk about this stuff. We build it.
+        uses. We don't just talk about this stuff. We build it.
       </al-text-passage>
       <al-button slot="actions" href={withBase(CTA.href)}>{CTA.label}</al-button>
       <al-button slot="actions" variant="tertiary" href={withBase('/services')}>See how we work</al-button>
-      <div slot="media" class="sl-stack">
-        <al-testimonial attribution="Southleft" data-testimonial-role="Design systems, engineered">
-          Every component on this page — hero, logo wall, cards, testimonial — is an unmodified
-          Altitude organism. The Southleft brand recipe is tokens, not custom CSS.
-        </al-testimonial>
-      </div>
-      <div slot="meta" class="al-u-grid" style="--al-grid-cols: 3; grid-template-columns: repeat(3, 1fr);">
-        <al-stat value={String(insightsCount)} label="Insights published" />
-        <al-stat value={String(workCount)} label="Case studies shipped" />
-        <al-stat value="2012" label="Building design systems since" />
-      </div>
     </al-hero>
   </section>
 
-  <!-- Client logo wall -->
+  <!-- Proof strip -->
   <section class="sl-container sl-section--tight" data-section-id="logos">
-    <al-text-passage maxWidth="sm">Trusted since 2012 by teams who care what’s under the hood.</al-text-passage>
+    <al-text-passage maxWidth="sm">Trusted since 2012 by teams who care what's under the hood.</al-text-passage>
     <div class="sl-logo-wall" style="margin-top: var(--al-theme-space-lg);">
       {logos.map((logo) => <img src={withBase(`/logos/${logo.file}`)} alt={logo.name} loading="lazy" />)}
+    </div>
+  </section>
+
+  <!-- The shift (POV) -->
+  <section class="sl-container sl-section">
+    <div class="al-u-grid">
+      <div class="al-u-grid__item col:12 col:5@lg">
+        <al-heading tagName="h2" variant="lg" isBold={true}>AI doesn't replace your design system. It exposes it.</al-heading>
+      </div>
+      <div class="al-u-grid__item col:12 col:7@lg">
+        <al-text-passage maxWidth="md">
+          Systems built with structured context — clean tokens, typed components, real
+          documentation — become force multipliers for AI-assisted teams. Systems without it
+          become bottlenecks. We published a framework for getting from one to the other.
+        </al-text-passage>
+        <al-link href={withBase('/insights/design-systems/context-based-design-systems-a-new-model-for-the-ai-driven-product-lifecycle')} style="margin-top: var(--al-theme-space-sm); display: inline-block;">
+          Read: Context-Based Design Systems →
+        </al-link>
+      </div>
     </div>
   </section>
 
@@ -132,19 +153,51 @@ const testimonials = [
         </al-text-passage>
       </div>
     </div>
-    <div class="al-u-grid" data-emphasis-grid style="margin-top: var(--al-theme-space-xl);">
-      {services.map((s, i) => (
-        <div
-          class="al-u-grid__item col:12 col:6@md"
-          data-col-regular="col:6@md"
-          data-col-flagship={i === 0 ? 'col:8@md' : 'col:4@md'}
-        >
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {services.map((s) => (
+        <div class="al-u-grid__item col:12 col:6@md">
           <al-card style="height:100%; box-sizing:border-box;">
-            <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}><a href={withBase(s.href)}>{s.name}</a></al-heading></div>
+            <div slot="header"><al-heading tagName="h3" variant="md" isBold={true}><a href={withBase(s.href)}>{s.name}</a></al-heading></div>
             <al-text-passage>{s.body}</al-text-passage>
+            <al-list>
+              {s.items.map((item) => <al-list-item>{item}</al-list-item>)}
+            </al-list>
           </al-card>
         </div>
       ))}
+    </div>
+  </section>
+
+  <!-- Open-source tools -->
+  <section class="sl-container sl-section" data-section-id="tools">
+    <div class="sl-section-header">
+      <div class="sl-stack sl-stack--sm">
+        <al-heading tagName="h2" variant="lg" isBold={true}>We publish our homework</al-heading>
+        <al-text-passage maxWidth="sm">
+          If we recommend a workflow, it's because we've already built and shipped it. Open-source,
+          in production, used by real teams.
+        </al-text-passage>
+      </div>
+    </div>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {tools.map((t) => (
+        <div class="al-u-grid__item col:12 col:6@md col:4@lg">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header"><p class="al-u-theme-typography-body-sm">$ {t.cmd}</p></div>
+            <al-text-passage>{t.desc}</al-text-passage>
+            <al-link href={t.href.startsWith('http') ? t.href : withBase(t.href)} target={t.href.startsWith('http') ? '_blank' : undefined}>
+              {t.href.startsWith('http') ? 'github →' : 'explore →'}
+            </al-link>
+          </al-card>
+        </div>
+      ))}
+      <div class="al-u-grid__item col:12 col:6@md col:4@lg">
+        <al-card style="height:100%; box-sizing:border-box;">
+          <div slot="header"><p class="al-u-theme-typography-body-sm">and the course</p></div>
+          <al-text-passage><strong>AI &amp; Design Systems</strong> — a new online course from Brad Frost and Southleft. Grounded, practical, shaped by real work with large-scale teams.</al-text-passage>
+          <al-link href={withBase('/services/workshops-training')}>Get early access →</al-link>
+        </al-card>
+      </div>
     </div>
   </section>
 
@@ -157,13 +210,9 @@ const testimonials = [
       </div>
       <al-link href={withBase('/work')}>All case studies →</al-link>
     </div>
-    <div class="al-u-grid" data-emphasis-grid style="margin-top: var(--al-theme-space-xl);">
-      {featuredWork.map((w, i) => (
-        <div
-          class="al-u-grid__item col:12 col:4@md"
-          data-col-regular="col:4@md"
-          data-col-flagship={i === 0 ? 'col:6@md' : 'col:3@md'}
-        >
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {featuredWork.map((w) => (
+        <div class="al-u-grid__item col:12 col:4@md">
           <WorkCard project={w} />
         </div>
       ))}

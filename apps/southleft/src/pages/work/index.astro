@@ -1,26 +1,119 @@
 ---
-// Work / case-study grid — spec 2026-08-20-southleft-example-app, T4.
+// Work / case-study grid — spec 2026-08-20-southleft-example-app, T4, REBUILT
+// T9 round 3 to match v5's real src/pages/work/index.astro section-by-section:
+// real headline/dek copy, a flagship case study treatment, the "work we
+// can't show" NDA-client section, and the filterable full ledger — instead
+// of the single generic grid this page carried before.
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import WorkCard from '../../components/WorkCard.astro';
 import CTABand from '../../components/CTABand.astro';
+import { withBase } from '../../lib/url';
 
-const projects = (await getCollection('work')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const allWork = await getCollection('work');
+const slugOf = (p: (typeof allWork)[number]) => p.id.replace(/\.md$/, '');
+
+// Editorial order transcribed from v5: AI + design systems first, then
+// enterprise systems, then long-arc partnerships.
+const featuredOrder = [
+  'petsmart',
+  'ibm-investor-relations',
+  'campusiq-building-an-ai-ready-design-system-for-hi',
+  'alps',
+  'outside-inc',
+  'better-com-real-estate',
+  'stanford-d-school',
+  'point72',
+  'liquor-com',
+  'wodify-building-a-marketing-platform-for-the-fitness-industry',
+];
+const featured = [
+  ...featuredOrder.map((s) => allWork.find((p) => slugOf(p) === s)).filter((p) => p !== undefined),
+  ...allWork.filter((p) => p.data.featured && !featuredOrder.includes(slugOf(p))),
+];
+const [flagship, ...featuredRest] = featured;
+
+const allProjects = [...allWork].sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const PRODUCT_SLUGS = new Set(['campusiq-building-an-ai-ready-design-system-for-hi', 'better-com-real-estate', 'cura-freight']);
+const CMS_CAPS = ['WordPress', 'Drupal Theming', 'Craft CMS'];
+
+function groupsFor(p: (typeof allWork)[number]): string {
+  const caps = p.data.capabilities;
+  const groups = ['all'];
+  if (caps.includes('AI + Design Systems')) groups.push('ai');
+  if (caps.includes('Design Systems') || caps.includes('Component Library')) groups.push('systems');
+  if (PRODUCT_SLUGS.has(slugOf(p))) groups.push('product');
+  if (caps.some((c) => CMS_CAPS.includes(c))) groups.push('cms');
+  if (caps.includes('Shopify')) groups.push('ecommerce');
+  return groups.join(' ');
+}
+
+const filters = [
+  { key: 'all', label: 'All work' },
+  { key: 'ai', label: 'AI + Design Systems' },
+  { key: 'systems', label: 'Design Systems & Component Libraries' },
+  { key: 'product', label: 'Product & Application Development' },
+  { key: 'cms', label: 'Web Platforms & CMS' },
+  { key: 'ecommerce', label: 'E-commerce' },
+];
+
+const ndaClients = ['Caterpillar', 'NASDAQ', 'Novartis', 'Indeed', 'TaxAct', 'Workiva', 'Grammarly', 'Stanford', 'VIA', 'Acuity', 'Cigna', 'Figma'];
 ---
 
-<Base title="Work" description="Design systems and front ends shipped for enterprises, startups, and everything between.">
+<Base
+  title="Work — Design System & Front-End Case Studies"
+  description="Case studies from a decade of design-system and front-end work: IBM's Carbon integration, PetSmart's Sparky, CampusIQ's AI-ready system, and web platforms for Outside Inc, Point72, Better.com, and more."
+>
   <div class="sl-container sl-section--tight">
     <PageHero
       label="work"
-      heading="Proof, not promises"
-      dek={`${projects.length} case studies — design systems and front ends shipped for enterprises, startups, and everything between.`}
-    />
+      heading="Design systems that hold up — for teams, and now for AI."
+      dek="For over a decade we've helped product organizations build design systems that scale — from enterprise systems like IBM's Carbon integration and PetSmart's Sparky to AI-ready systems like CampusIQ's, where our own open-source tools give AI coding agents full awareness of the design system."
+    >
+      <al-text-passage maxWidth="md" style="margin-top: var(--al-theme-space);">
+        Today our practice centers on AI and design systems: discovery and research, token
+        architecture, component engineering, workshops, and team augmentation — backed by the deep
+        front-end craft built across years of web platform work for brands like Outside Inc,
+        Point72, Better.com, and Stanford's d.school.
+      </al-text-passage>
+    </PageHero>
   </div>
 
+  <!-- Featured case studies -->
   <div class="sl-container sl-section">
-    <div class="al-u-grid">
-      {projects.map((p) => (
+    <div class="sl-section-header">
+      <div class="sl-stack sl-stack--sm">
+        <al-heading tagName="h2" variant="lg" isBold={true}>Case studies</al-heading>
+        <al-text-passage maxWidth="sm">AI + design systems first, then the enterprise systems and long-arc partnerships that make it credible.</al-text-passage>
+      </div>
+    </div>
+
+    {flagship && (
+      <a href={withBase(`/projects/${slugOf(flagship)}`)} class="sl-flagship-card" style="margin-top: var(--al-theme-space-xl); display: block;">
+        <al-card>
+          <div class="al-u-grid" style="align-items: center;">
+            {flagship.data.hero && (
+              <div class="al-u-grid__item col:12 col:5@lg">
+                <img src={flagship.data.hero} alt="" loading="lazy" style="width: 100%; height: auto; display: block; border-radius: var(--al-theme-border-radius);" />
+              </div>
+            )}
+            <div class="al-u-grid__item col:12 col:7@lg">
+              <al-chip variant="secondary">flagship — {flagship.data.industry}</al-chip>
+              <al-heading tagName="h3" variant="md" isBold={true} style="margin-top: var(--al-theme-space-sm);">{flagship.data.client}</al-heading>
+              <al-text-passage>{flagship.data.oneLiner}</al-text-passage>
+              <div class="sl-header__nav" style="margin-top: var(--al-theme-space-sm);">
+                {flagship.data.capabilities.map((c) => <al-chip>{c}</al-chip>)}
+              </div>
+            </div>
+          </div>
+        </al-card>
+      </a>
+    )}
+
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space);">
+      {featuredRest.map((p) => (
         <div class="al-u-grid__item col:12 col:6@md col:4@lg">
           <WorkCard project={p} />
         </div>
@@ -28,7 +121,102 @@ const projects = (await getCollection('work')).sort((a, b) => b.data.date.valueO
     </div>
   </div>
 
+  <!-- The work we can't show -->
   <div class="sl-container sl-section">
-    <CTABand />
+    <div class="al-u-grid">
+      <div class="al-u-grid__item col:12 col:5@lg">
+        <al-chip variant="secondary">the quiet work</al-chip>
+        <al-heading tagName="h2" variant="lg" isBold={true} style="margin-top: var(--al-theme-space-sm);">Some of our biggest work never gets a case study.</al-heading>
+        <al-text-passage maxWidth="md" style="margin-top: var(--al-theme-space);">
+          A large share of Southleft's practice is enterprise design systems built under NDA — we
+          can tell you who we've worked with, but not show you what we built. The case studies
+          above are the visible tip.
+        </al-text-passage>
+        <p class="al-u-theme-typography-body-xs" style="margin-top: var(--al-theme-space);">The redacted portfolio — ask us about it on a call.</p>
+      </div>
+      <div class="al-u-grid__item col:12 col:7@lg">
+        <div class="sl-header__nav" aria-label="Enterprise clients under NDA">
+          {ndaClients.map((name) => <al-chip>{name} · redacted</al-chip>)}
+        </div>
+        <al-text-passage maxWidth="md" style="margin-top: var(--al-theme-space-lg);">
+          Enterprise-scale systems: multi-brand token architectures, component libraries,
+          governance, and AI enablement. We can say a lot more in private than we can in public —
+          <a href={withBase('/contact')}>start a conversation</a>.
+        </al-text-passage>
+      </div>
+    </div>
+  </div>
+
+  <!-- The full ledger -->
+  <div class="sl-container sl-section">
+    <div class="sl-section-header">
+      <div class="sl-stack sl-stack--sm">
+        <al-heading tagName="h2" variant="lg" isBold={true}>The full ledger</al-heading>
+        <al-text-passage maxWidth="sm">Every engagement in the archive, newest first. Filter by the kind of work.</al-text-passage>
+      </div>
+    </div>
+
+    <div class="sl-header__nav" role="group" aria-label="Filter projects by capability" style="margin-top: var(--al-theme-space-lg);">
+      {filters.map((f) => (
+        <button type="button" class="sl-filter-chip" data-filter={f.key} aria-pressed={f.key === 'all' ? 'true' : 'false'}>
+          <al-chip>{f.label}</al-chip>
+        </button>
+      ))}
+    </div>
+
+    <ul id="sl-ledger" style="margin-top: var(--al-theme-space-lg); list-style: none; padding: 0; border-top: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);">
+      {allProjects.map((p, i) => (
+        <li
+          data-groups={groupsFor(p)}
+          style={`border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak); padding-block: var(--al-theme-space-sm);`}
+        >
+          <a href={withBase(`/projects/${slugOf(p)}`)} class="al-u-grid" style="align-items: center; text-decoration: none;">
+            <span class="al-u-grid__item col:1" aria-hidden="true">
+              <span class="al-u-theme-typography-body-xs">{String(i + 1).padStart(2, '0')}</span>
+            </span>
+            <span class="al-u-grid__item col:7@md col:5@lg">
+              <span class="al-u-theme-typography-heading-sm" style="display: block;">{p.data.client}</span>
+              <span class="al-u-theme-typography-body-xs" style="display: block;">{p.data.oneLiner}</span>
+            </span>
+            <span class="al-u-grid__item col:12 col:3@lg">
+              <span class="sl-header__nav">{p.data.capabilities.slice(0, 2).map((c) => <al-chip>{c}</al-chip>)}</span>
+            </span>
+            <span class="al-u-grid__item col:2@md">
+              <span class="al-u-theme-typography-body-xs">{p.data.date.getFullYear()}</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p id="sl-ledger-empty" class="al-u-theme-typography-body-xs" hidden style="margin-top: var(--al-theme-space);">No projects match this filter.</p>
+  </div>
+
+  <div class="sl-container sl-section">
+    <CTABand
+      heading="Your system could be the next case study."
+      dek="A 30-minute discovery call is the fastest way to find out where your leverage is."
+    />
   </div>
 </Base>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+    const rows = document.querySelectorAll<HTMLElement>('#sl-ledger [data-groups]');
+    const empty = document.getElementById('sl-ledger-empty');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter ?? 'all';
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        let visible = 0;
+        rows.forEach((row) => {
+          const show = (row.dataset.groups ?? '').split(' ').includes(filter);
+          row.hidden = !show;
+          if (show) visible++;
+        });
+        if (empty) empty.hidden = visible > 0;
+      });
+    });
+  });
+</script>

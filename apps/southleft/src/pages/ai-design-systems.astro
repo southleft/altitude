@@ -1,0 +1,207 @@
+---
+// AI + Design Systems — spec 2026-08-20-southleft-example-app, T10.
+// Southleft's flagship practice page. Content (thesis, offers, open-source
+// tools, sessions, interviews, lab posts) migrated verbatim from
+// southleft-v5's src/pages/ai-design-systems.astro + src/lib/engagements.ts.
+// v5's grid-texture hero background, Terminal panel, and FrameworkScroller
+// scroll-story are not reproduced — see T9 verification notes.
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import CTABand from '../components/CTABand.astro';
+import { CTA } from '../lib/site';
+import { withBase } from '../lib/url';
+
+const all = await getCollection('insights');
+const bySlug = (slug: string) => all.find((p) => p.id.replace(/\.md$/, '') === slug);
+const labPosts = [
+  'what-happens-when-ai-actually-understands-your-design-system',
+  'a2ui-how-ai-agents-build-real-user-interfaces',
+  'figma-mcp-design-systems-and-generative-ui',
+]
+  .map(bySlug)
+  .filter((p) => p !== undefined);
+
+const offers = [
+  { name: 'AI-readiness audits', body: 'Most enterprise design systems weren\'t built with AI in mind, and the gap shows up fast once you start integrating these tools. We audit your tokens, component structure, metadata, and documentation — and hand you a prioritized path to leverage.' },
+  { name: 'Discovery & research', body: 'Ongoing research at the edge of MCP, agents, and generative UI — scoped to your stack. We prototype against your real system, not a demo repo, so you see exactly what these workflows do for your team before you commit.' },
+  { name: 'Workshops & training', body: 'We teach what we practice — hands-on team workshops, conference talks, and the AI & Design Systems course with Brad Frost. No slideware theory; live demos from real client work.' },
+  { name: 'MCP & AI integration', body: 'We connect your design system to the AI tools your team already uses — MCP servers, Figma tooling, Storybook workflows — built by the people who wrote the open-source tools below.' },
+];
+
+const tools = [
+  { name: 'figma-console-mcp', desc: 'An MCP server that gives AI assistants full read and write access to your Figma design system. Extract variables, components, and styles as structured data — or create and update tokens and layouts through natural language.', href: 'https://github.com/southleft/figma-console-mcp' },
+  { name: 'story-ui', desc: 'Connects your design system to AI workflows: generate real, working UI layouts from plain-language prompts, straight into Storybook.', href: 'https://github.com/southleft/story-ui' },
+  { name: 'figmalint', desc: 'An AI-powered Figma plugin that audits your files for component consistency, accessibility compliance, and token usage — with auto-fix suggestions and developer handoff exports.', href: 'https://github.com/southleft/figmalint' },
+  { name: 'design-systems-mcp', desc: 'A dedicated MCP server that gives AI tools structured, reliable context about your design system — a knowledge base your AI can query.', href: 'https://github.com/southleft/design-systems-mcp' },
+  { name: 'company-docs-mcp', desc: 'Turns any documentation — markdown, HTML, PDFs, web pages — into an AI-searchable knowledge base your team can query through Claude, Cursor, or Slack.', href: 'https://github.com/southleft/company-docs-mcp' },
+  { name: 'dsaudit', desc: 'A CLI that audits the health of code-based design systems: components, tokens, docs, tooling, performance, and accessibility, scored across six weighted categories.', href: 'https://github.com/southleft/ds-audit' },
+  { name: 'altitude', desc: 'Our in-house design system and AI testbed. It powers Story UI, FigmaLint demos, and our MCP research — and it can be the foundation your system starts from.', href: '/tools/altitude' },
+];
+
+// Mirrors southleft-v5's src/lib/engagements.ts (also rendered on /speaking).
+const sessions = [
+  { tag: 'podcast', title: 'Code & Pixels: AI & Design Systems', body: 'Episode 31 with Adekunle Oduye and Kelly Harrop — thirty-five minutes on AI and design systems in the hybrid design-technology space.', href: 'https://www.buzzsprout.com/1958356/episodes/19431662' },
+  { tag: 'session', title: 'Into Design Systems: AI Without the Chaos', body: 'Context-Based Design Systems to the rescue — with Brad Frost and Ian Frost at the March 2026 conference: your organization\'s hard-earned best practices as guardrails for shipping with AI.', href: 'https://www.intodesignsystems.com/agenda' },
+  { tag: 'webinar', title: 'zeroheight DS Live: Context-Based Design Systems', body: 'Preparing design systems for an AI-driven future — the framework, live for the zeroheight community.', href: 'https://webinars.zeroheight.com/register/zeroheight-ds-live-tj-pitre-context-based-design-systems-preparing-for-an-ai-driven-future' },
+  { tag: 'course', title: 'AI & Design Systems — with Brad Frost', body: 'A co-created online course on applying AI to design systems — 16+ hours of lessons, community jam sessions, and demonstrations, grounded in real work with large-scale teams.', href: 'https://aianddesign.systems/' },
+  { tag: 'webinar', title: 'Storybook: When AI Meets Design Systems', body: 'Why design systems give AI the context it needs to be genuinely useful — for the Storybook community.', href: '/insights/ai/when-ai-meets-design-systems-my-storybook-webinar-recap' },
+  { tag: 'workshop', title: 'Maven: Doing More With Your Design System in Figma', body: 'Hosted with Joey Banks (Baseline Design) — flexible components and libraries, Figma MCP, Figma Make, and Storybook.', href: 'https://maven.com/p/d221a3/doing-more-with-your-design-system-in-figma' },
+];
+
+const interviews = [
+  { quote: 'AI just turns the lights on.', title: 'TJ Pitre on Design Systems and AI', outlet: 'Design Systems Collective', href: 'https://www.designsystemscollective.com/ai-just-turns-the-lights-on-tj-pitre-on-design-systems-and-ai-d57b095e9a90' },
+  { quote: 'AI-ready design systems.', title: 'AI-Ready Design Systems w/ TJ Pitre', outlet: 'Product Craft', href: 'https://arseniharkunou.substack.com/p/ai-ready-design-systems-w-tj-pitre' },
+];
+---
+
+<Base
+  title="AI + Design Systems"
+  description="Southleft's flagship practice: AI-readiness audits, MCP integrations, workshops, and open-source tooling at the intersection of AI and design systems. Every recommendation we make, we've shipped first."
+>
+  <div class="sl-container sl-section--tight">
+    <PageHero
+      label="ai-design-systems"
+      heading="Our main practice — and our public lab."
+      dek="Open-source MCP servers, Figma tooling, workshops, talks, and research at the intersection of AI and design systems. Every tool below came out of real client work. Every recommendation we make, we've shipped first."
+    >
+      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
+        <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
+        <al-button variant="tertiary" href={withBase('/scorecard')}>Is your system AI-ready?</al-button>
+      </div>
+    </PageHero>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="md" isBold={true}>AI doesn't replace design systems. It makes them more essential.</al-heading>
+    <al-text-passage maxWidth="md" style="margin-top: var(--al-theme-space);">
+      An AI agent is only as good as the structured context it can reach: tokens, components,
+      metadata, behavioral intent. Our Context-Based Design Systems framework describes how that
+      context should flow between design and engineering — and it shapes everything we build.
+    </al-text-passage>
+    <al-list style="margin-top: var(--al-theme-space);">
+      <al-list-item><al-link href={withBase('/insights/design-systems/context-based-design-systems-a-new-model-for-the-ai-driven-product-lifecycle')}>Read: Context-Based Design Systems →</al-link></al-list-item>
+      <al-list-item><al-link href={withBase('/insights/design-systems/context-based-design-systems-revisited')}>Read: Context-Based Design Systems, Revisited →</al-link></al-list-item>
+    </al-list>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>Want this inside your organization?</al-heading>
+    <al-text-passage maxWidth="sm">Audits, discovery, workshops, and integration — the four ways teams work with us on AI and design systems.</al-text-passage>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {offers.map((o) => (
+        <div class="al-u-grid__item col:12 col:6@md">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>{o.name}</al-heading></div>
+            <al-text-passage>{o.body}</al-text-passage>
+          </al-card>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="sl-container sl-section" id="scorecard">
+    <al-card>
+      <div slot="header">
+        <al-chip variant="secondary">start here</al-chip>
+        <al-heading tagName="h2" variant="md" isBold={true} style="margin-top: var(--al-theme-space-xs);">Is your design system AI-ready?</al-heading>
+      </div>
+      <al-text-passage maxWidth="md">
+        Our scorecard covers the six dimensions that determine how well a design system can support
+        AI workflows. Score yourself in 10 minutes and find out where your leverage is.
+      </al-text-passage>
+      <div class="al-u-grid" style="margin-top: var(--al-theme-space-lg);">
+        <div class="al-u-grid__item col:6@md"><al-stat value="06" label="dimensions scored" /></div>
+        <div class="al-u-grid__item col:6@md"><al-stat value="10 min" label="to score yourself" /></div>
+      </div>
+      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
+        <al-button href={withBase('/scorecard')}>Take the scorecard</al-button>
+        <al-button variant="tertiary" href={withBase(CTA.href)}>{CTA.label}</al-button>
+      </div>
+    </al-card>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>The tools we build in public</al-heading>
+    <al-text-passage maxWidth="sm">Open-source, in production, used by real teams. We don't just talk about this stuff — we build it.</al-text-passage>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {tools.map((t) => (
+        <div class="al-u-grid__item col:12 col:6@md col:4@lg">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}><al-link href={t.href.startsWith('http') ? t.href : withBase(t.href)} target={t.href.startsWith('http') ? '_blank' : undefined}>{t.name}</al-link></al-heading></div>
+            <al-text-passage>{t.desc}</al-text-passage>
+          </al-card>
+        </div>
+      ))}
+      <div class="al-u-grid__item col:12 col:6@md col:4@lg">
+        <al-card style="height:100%; box-sizing:border-box;">
+          <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>All open-source tools</al-heading></div>
+          <al-text-passage>Including the five-part Figma Console MCP series and the story behind each project.</al-text-passage>
+          <al-link href={withBase('/tools')}>Visit /tools →</al-link>
+        </al-card>
+      </div>
+    </div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>Workshops, talks, and the course</al-heading>
+    <al-text-passage maxWidth="sm">We teach the same workflows we run with clients — live demos, real systems, no vaporware.</al-text-passage>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {sessions.map((s) => (
+        <div class="al-u-grid__item col:12 col:6@md">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header">
+              <al-chip variant="secondary">{s.tag}</al-chip>
+              <al-heading tagName="h3" variant="sm" isBold={true} style="margin-top: var(--al-theme-space-xs);">{s.title}</al-heading>
+            </div>
+            <al-text-passage>{s.body}</al-text-passage>
+            <al-link href={s.href.startsWith('http') ? s.href : withBase(s.href)} target={s.href.startsWith('http') ? '_blank' : undefined}>Learn more →</al-link>
+          </al-card>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>In conversation</al-heading>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {interviews.map((iv) => (
+        <div class="al-u-grid__item col:12 col:6@md">
+          <al-testimonial attribution={iv.title} data-testimonial-role={iv.outlet}>{iv.quote}</al-testimonial>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  {labPosts.length > 0 && (
+    <div class="sl-container sl-section">
+      <div class="sl-section-header">
+        <div class="sl-stack sl-stack--sm">
+          <al-heading tagName="h2" variant="sm" isBold={true}>Workflow demos & field notes</al-heading>
+          <al-text-passage maxWidth="sm">What happens when AI actually understands your design system — documented as we build it.</al-text-passage>
+        </div>
+        <al-link href={withBase('/insights')}>All insights →</al-link>
+      </div>
+      <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+        {labPosts.map((p) => <div class="al-u-grid__item col:12 col:4@md"><ArticleCard post={p} /></div>)}
+      </div>
+    </div>
+  )}
+
+  <div class="sl-container sl-section">
+    <CTABand
+      heading="Want this inside your organization?"
+      dek="We run AI-readiness audits, workshops, and embedded engagements. A 30-minute discovery call is the fastest way to start."
+    />
+  </div>
+</Base>
+
+<script>
+  // The `role` HTML-attribute collision — see index.astro's identical fix.
+  customElements.whenDefined('al-testimonial').then(() => {
+    document.querySelectorAll('al-testimonial[data-testimonial-role]').forEach((el) => {
+      (el as HTMLElement & { role?: string }).role = el.dataset.testimonialRole;
+    });
+  });
+</script>
