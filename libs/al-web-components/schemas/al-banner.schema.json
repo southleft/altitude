@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-banner.schema.json",
+  "title": "ALBanner (al-banner)",
+  "description": "Component: al-banner\n\nA page-level, full-width announcement bar — distinct from `<al-alert>`\n(which is a card-surfaced, contextual message). Reuses the same tone\nvocabulary as `<al-alert>`/`<al-toast>` (icon color by `variant`) so the\ntwo read as siblings.",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-banner",
+    "className": "ALBanner",
+    "module": "components/banner/banner.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The banner's message content.",
+        "name": ""
+      },
+      {
+        "description": "Optional trailing link/CTA (typically an `<al-link>`).",
+        "name": "link"
+      },
+      {
+        "description": "Slot in an icon to override the tone-default one.",
+        "name": "icon"
+      }
+    ],
+    "events": [
+      {
+        "name": "onBannerClose",
+        "description": "Fired when the banner is dismissed. Detail: `{ isDismissed }`."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-banner"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "description": "Variant\n- **default** renders a banner that represents an informative announcement\n- **success** renders a banner that represents a success state\n- **warning** renders a banner that represents a warning state\n- **danger** renders a banner that represents a danger/incident state",
+          "type": "string",
+          "enum": [
+            "success",
+            "warning",
+            "danger"
+          ]
+        },
+        "isDismissible": {
+          "description": "Whether the banner shows a dismiss control.",
+          "type": "boolean"
+        },
+        "isDismissed": {
+          "description": "Whether the banner has been dismissed. Owned state, toggled by `close()`.",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-footer.schema.json",
+  "title": "ALFooter (al-footer)",
+  "description": "Component: al-footer\n\nA site-wide footer organism for marketing pages. Purely compositional —\nlink columns compose with the existing `<al-list>`/`<al-link>`/`<al-menu>`\nprimitives, and every spacing decision comes from the active theme's\n`--al-theme-space-*` ramp, so the footer is automatically density-aware\nwherever it renders inside a `<al-theme density=\"...\">` scope.",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-footer",
+    "className": "ALFooter",
+    "module": "components/footer/footer.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "Brand mark, rendered top-left of the link-columns row.",
+        "name": "logo"
+      },
+      {
+        "description": "Link columns — arbitrary column blocks (e.g. a heading + `<al-list>` per column).",
+        "name": ""
+      },
+      {
+        "description": "Bottom-row legal copy (copyright, small print, legal links). Leading edge.",
+        "name": "legal"
+      },
+      {
+        "description": "Bottom-row social links/icons. Trailing edge.",
+        "name": "social"
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-footer"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

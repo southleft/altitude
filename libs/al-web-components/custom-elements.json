@@ -818,6 +818,340 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/banner/banner.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-banner\n\nA page-level, full-width announcement bar — distinct from `<al-alert>`\n(which is a card-surfaced, contextual message). Reuses the same tone\nvocabulary as `<al-alert>`/`<al-toast>` (icon color by `variant`) so the\ntwo read as siblings.",
+          "name": "ALBanner",
+          "slots": [
+            {
+              "description": "The banner's message content.",
+              "name": ""
+            },
+            {
+              "description": "Optional trailing link/CTA (typically an `<al-link>`).",
+              "name": "link"
+            },
+            {
+              "description": "Slot in an icon to override the tone-default one.",
+              "name": "icon"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-banner'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "buttonEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'success' | 'warning' | 'danger'"
+              },
+              "description": "Variant\n- **default** renders a banner that represents an informative announcement\n- **success** renders a banner that represents a success state\n- **warning** renders a banner that represents a warning state\n- **danger** renders a banner that represents a danger/incident state",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "isDismissible",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the banner shows a dismiss control.",
+              "attribute": "isDismissible"
+            },
+            {
+              "kind": "field",
+              "name": "isDismissed",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the banner has been dismissed. Owned state, toggled by `close()`.",
+              "attribute": "isDismissed"
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "privacy": "public",
+              "description": "Dismiss the banner.\n1. Set isDismissed to true so the `.al-is-dismissed` rule hides it.\n2. Dispatch onBannerClose."
+            },
+            {
+              "kind": "field",
+              "name": "bannerIconName",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "readonly": true
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired when the banner is dismissed. Detail: `{ isDismissed }`.",
+              "name": "onBannerClose"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'success' | 'warning' | 'danger'"
+              },
+              "description": "Variant\n- **default** renders a banner that represents an informative announcement\n- **success** renders a banner that represents a success state\n- **warning** renders a banner that represents a warning state\n- **danger** renders a banner that represents a danger/incident state",
+              "fieldName": "variant"
+            },
+            {
+              "name": "isDismissible",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the banner shows a dismiss control.",
+              "fieldName": "isDismissible"
+            },
+            {
+              "name": "isDismissed",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the banner has been dismissed. Owned state, toggled by `close()`.",
+              "fieldName": "isDismissed"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-banner",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALBanner",
+          "declaration": {
+            "name": "ALBanner",
+            "module": "components/banner/banner.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-banner",
+          "declaration": {
+            "name": "ALBanner",
+            "module": "components/banner/banner.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALBanner",
+            "module": "components/banner/banner.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/bento-grid/bento-grid.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-bento-grid\n\nAn asymmetric feature-grid organism for marketing pages — a 12-column,\nauto-row CSS grid container. Compose it with `<al-bento-item>` children\n(each declaring `colSpan`/`rowSpan`) for the classic \"bento box\" layout,\nor drop in arbitrary content directly. Collapses to a single column below\nthe medium breakpoint so an asymmetric desktop layout never produces\nunreadably narrow tiles on small screens.",
+          "name": "ALBentoGrid",
+          "cssProperties": [
+            {
+              "description": "Gap between grid cells. Defaults to the theme space ramp.",
+              "name": "--al-bento-grid-gap"
+            },
+            {
+              "description": "Height of one implicit grid row. Defaults to the theme space ramp.",
+              "name": "--al-bento-grid-row-height"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Grid items — typically `<al-bento-item>`, but any content is accepted.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-bento-grid'"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-bento-grid",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALBentoGrid",
+          "declaration": {
+            "name": "ALBentoGrid",
+            "module": "components/bento-grid/bento-grid.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-bento-grid",
+          "declaration": {
+            "name": "ALBentoGrid",
+            "module": "components/bento-grid/bento-grid.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALBentoGrid",
+            "module": "components/bento-grid/bento-grid.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/bento-item/bento-item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-bento-item\n\nA single tile inside `<al-bento-grid>`. Purely a grid-placement primitive —\nit owns no visual surface (no border/background/padding) so any content\n(a card, a stat, an image, a stack of copy) can be slotted in and supply\nits own chrome. `colSpan`/`rowSpan` are reflected onto the host as CSS\ncustom properties, so they can also be overridden per breakpoint from\nconsumer CSS without touching the attribute.",
+          "name": "ALBentoItem",
+          "cssProperties": [
+            {
+              "description": "Number of the 12 grid columns this tile spans. Defaults to 4.",
+              "name": "--al-bento-item-col-span"
+            },
+            {
+              "description": "Number of implicit grid rows this tile spans. Defaults to 1.",
+              "name": "--al-bento-item-row-span"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The tile's content (card, stat, image, or arbitrary markup).",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-bento-item'"
+            },
+            {
+              "kind": "field",
+              "name": "colSpan",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "description": "Number of the grid's 12 columns this tile spans (1-12).",
+              "attribute": "colSpan"
+            },
+            {
+              "kind": "field",
+              "name": "rowSpan",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of implicit grid rows this tile spans.",
+              "attribute": "rowSpan"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "colSpan",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "description": "Number of the grid's 12 columns this tile spans (1-12).",
+              "fieldName": "colSpan"
+            },
+            {
+              "name": "rowSpan",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of implicit grid rows this tile spans.",
+              "fieldName": "rowSpan"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-bento-item",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALBentoItem",
+          "declaration": {
+            "name": "ALBentoItem",
+            "module": "components/bento-item/bento-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-bento-item",
+          "declaration": {
+            "name": "ALBentoItem",
+            "module": "components/bento-item/bento-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALBentoItem",
+            "module": "components/bento-item/bento-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/breadcrumbs-item/breadcrumbs-item.ts",
       "declarations": [
         {
@@ -3163,6 +3497,1029 @@
           "declaration": {
             "name": "ALChip",
             "module": "components/chip/chip.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/combobox/combobox.model.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/combobox/combobox.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-combobox\n\nA text input with a filtered listbox popup, following the WAI-ARIA\ncombobox/listbox/option pattern. Reuses `al-dropdown-panel` for the popup\nsurface, `al-list`/`al-list-item` for options, and `al-input` for the\nfield — the same primitives `al-select` and `al-search` are built on —\nrather than reinventing popover positioning or option rendering.\n\nFiltering is either automatic (`filterMode=\"auto\"`, the default —\n`items` is filtered client-side by a case-insensitive substring match on\n`label`) or manual (`filterMode=\"manual\"` — the consumer listens for\n`onComboboxFilter` and reassigns `items` themselves, e.g. from an async\nAPI call).",
+          "name": "ALCombobox",
+          "slots": [
+            {
+              "description": "If content is slotted, it will display in place of the fieldNote property",
+              "name": "field-note"
+            },
+            {
+              "description": "If content is slotted, it will display in place of the errorNote property",
+              "name": "error"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-combobox'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "buttonEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "dropdownPanelEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "fieldNoteEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "inputEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "listEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "listItemEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "Array<ALComboboxItem>"
+              },
+              "default": "[]",
+              "description": "The options offered by the combobox."
+            },
+            {
+              "kind": "field",
+              "name": "filterMode",
+              "type": {
+                "text": "'auto' | 'manual'"
+              },
+              "default": "'auto'",
+              "description": "How `items` is filtered as the user types.\n- **auto** filters `items` client-side by a case-insensitive substring match on `label`\n- **manual** performs no client-side filtering — listen for `onComboboxFilter` and\n  reassign `items` yourself (e.g. after an async request)",
+              "attribute": "filterMode"
+            },
+            {
+              "kind": "field",
+              "name": "fieldId",
+              "type": {
+                "text": "string"
+              },
+              "description": "The unique id of the field",
+              "attribute": "fieldId"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Label'",
+              "description": "The combobox's label",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Hide the label?",
+              "attribute": "hideLabel"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The current text in the input. Reflects the selected option's label once\nan option has been chosen.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "selectedValue",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `value` of the currently selected option, if any. `undefined` while\nthe user is typing a query that doesn't match a committed selection.",
+              "attribute": "selectedValue"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "description": "Placeholder attribute",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "noResultsText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'No results found'",
+              "description": "Text shown in the popup when no options match the current query.",
+              "attribute": "noResultsText"
+            },
+            {
+              "kind": "field",
+              "name": "isActiveDropdown",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Is the listbox popup open?",
+              "attribute": "isActiveDropdown"
+            },
+            {
+              "kind": "field",
+              "name": "align",
+              "type": {
+                "text": "'bottom' | 'top'"
+              },
+              "default": "'bottom'",
+              "description": "**Combobox alignment**\n- **bottom** Popup appears below the field\n- **top** Popup appears above the field",
+              "attribute": "align"
+            },
+            {
+              "kind": "field",
+              "name": "fieldNote",
+              "type": {
+                "text": "string"
+              },
+              "description": "The combobox field note",
+              "attribute": "fieldNote"
+            },
+            {
+              "kind": "field",
+              "name": "errorNote",
+              "type": {
+                "text": "string"
+              },
+              "description": "The combobox error note",
+              "attribute": "errorNote"
+            },
+            {
+              "kind": "field",
+              "name": "ariaDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria describedby",
+              "attribute": "ariaDescribedBy"
+            },
+            {
+              "kind": "field",
+              "name": "isRequired",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "The combobox's required attribute",
+              "attribute": "isRequired"
+            },
+            {
+              "kind": "field",
+              "name": "isOptional",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Optional state",
+              "attribute": "isOptional"
+            },
+            {
+              "kind": "field",
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "The combobox's disabled attribute",
+              "attribute": "isDisabled"
+            },
+            {
+              "kind": "field",
+              "name": "isError",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Error state",
+              "attribute": "isError"
+            },
+            {
+              "kind": "field",
+              "name": "activeIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "-1",
+              "description": "Index of the keyboard-highlighted option within `filteredItems`, or `-1` when none."
+            },
+            {
+              "kind": "field",
+              "name": "listboxId",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "filteredItems",
+              "type": {
+                "text": "Array<ALComboboxItem>"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "handleOnClickOutside",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ],
+              "description": "Handle click outside the component\nMirrors al-select's click-outside handling."
+            },
+            {
+              "kind": "method",
+              "name": "openDropdown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "closeDropdown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleInput",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleClear",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "selectItem",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "ALComboboxItem | undefined"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "firstEnabledIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "items",
+                  "type": {
+                    "text": "Array<ALComboboxItem>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "lastEnabledIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "items",
+                  "type": {
+                    "text": "Array<ALComboboxItem>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "moveActive",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "delta",
+                  "type": {
+                    "text": "1 | -1"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleKeyDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "optionId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired as the input text changes, before filtering is applied. Detail: `{ query }`.",
+              "name": "onComboboxFilter"
+            },
+            {
+              "description": "Fired when an option is selected. Detail: `{ value, label, item }`.",
+              "name": "onComboboxChange"
+            },
+            {
+              "description": "Fired when the listbox opens. Detail: `{ active }` — always `true`.",
+              "name": "onComboboxOpen"
+            },
+            {
+              "description": "Fired when the listbox closes. Detail: `{ active }` — always `false`.",
+              "name": "onComboboxClose"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "filterMode",
+              "type": {
+                "text": "'auto' | 'manual'"
+              },
+              "default": "'auto'",
+              "description": "How `items` is filtered as the user types.\n- **auto** filters `items` client-side by a case-insensitive substring match on `label`\n- **manual** performs no client-side filtering — listen for `onComboboxFilter` and\n  reassign `items` yourself (e.g. after an async request)",
+              "fieldName": "filterMode"
+            },
+            {
+              "name": "fieldId",
+              "type": {
+                "text": "string"
+              },
+              "description": "The unique id of the field",
+              "fieldName": "fieldId"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Label'",
+              "description": "The combobox's label",
+              "fieldName": "label"
+            },
+            {
+              "name": "hideLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Hide the label?",
+              "fieldName": "hideLabel"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The current text in the input. Reflects the selected option's label once\nan option has been chosen.",
+              "fieldName": "value"
+            },
+            {
+              "name": "selectedValue",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `value` of the currently selected option, if any. `undefined` while\nthe user is typing a query that doesn't match a committed selection.",
+              "fieldName": "selectedValue"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "description": "Placeholder attribute",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "noResultsText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'No results found'",
+              "description": "Text shown in the popup when no options match the current query.",
+              "fieldName": "noResultsText"
+            },
+            {
+              "name": "isActiveDropdown",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Is the listbox popup open?",
+              "fieldName": "isActiveDropdown"
+            },
+            {
+              "name": "align",
+              "type": {
+                "text": "'bottom' | 'top'"
+              },
+              "default": "'bottom'",
+              "description": "**Combobox alignment**\n- **bottom** Popup appears below the field\n- **top** Popup appears above the field",
+              "fieldName": "align"
+            },
+            {
+              "name": "fieldNote",
+              "type": {
+                "text": "string"
+              },
+              "description": "The combobox field note",
+              "fieldName": "fieldNote"
+            },
+            {
+              "name": "errorNote",
+              "type": {
+                "text": "string"
+              },
+              "description": "The combobox error note",
+              "fieldName": "errorNote"
+            },
+            {
+              "name": "ariaDescribedBy",
+              "type": {
+                "text": "string"
+              },
+              "description": "Aria describedby",
+              "fieldName": "ariaDescribedBy"
+            },
+            {
+              "name": "isRequired",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "The combobox's required attribute",
+              "fieldName": "isRequired"
+            },
+            {
+              "name": "isOptional",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Optional state",
+              "fieldName": "isOptional"
+            },
+            {
+              "name": "isDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "The combobox's disabled attribute",
+              "fieldName": "isDisabled"
+            },
+            {
+              "name": "isError",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Error state",
+              "fieldName": "isError"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-combobox",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALCombobox",
+          "declaration": {
+            "name": "ALCombobox",
+            "module": "components/combobox/combobox.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-combobox",
+          "declaration": {
+            "name": "ALCombobox",
+            "module": "components/combobox/combobox.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALCombobox",
+            "module": "components/combobox/combobox.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/command-palette/command-palette.model.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "fuzzyScore",
+          "return": {
+            "type": {
+              "text": "number | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "query",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Subsequence fuzzy match: every character of `query` must appear in `text`,\nin order, though not necessarily contiguously. Returns `null` on no match,\notherwise a score where lower is better (fewer/tighter gaps between\nmatched characters, and an earlier match start, score best)."
+        },
+        {
+          "kind": "function",
+          "name": "fuzzySearchActions",
+          "return": {
+            "type": {
+              "text": "Array<ALCommandAction>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "actions",
+              "type": {
+                "text": "Array<ALCommandAction>"
+              }
+            },
+            {
+              "name": "query",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Fuzzy-searches `actions` by `query` against each action's `label`,\n`group`, and `keywords`. Returns all actions (in their original order)\nwhen `query` is empty, otherwise the matching subset sorted best-match-first."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "fuzzyScore",
+          "declaration": {
+            "name": "fuzzyScore",
+            "module": "components/command-palette/command-palette.model.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "fuzzySearchActions",
+          "declaration": {
+            "name": "fuzzySearchActions",
+            "module": "components/command-palette/command-palette.model.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/command-palette/command-palette.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-command-palette\n\nA cmd/ctrl+k overlay with fuzzy search over a provided action list.\nReuses `al-focus-trap` for the same focus-containment behavior as\n`al-dialog`/`al-popover`, and the same \"always-rendered, opacity/visibility\ntoggled\" overlay shape as `al-dialog` for its backdrop + transition.\n\nThe `actions` array is the entire action-provider API: `{ id, label, group?,\nkeywords?, icon? }`. `icon` names must already be registered (see the icon\nsystem section of AGENTS.md) — the palette does not register glyphs on your behalf.",
+          "name": "ALCommandPalette",
+          "slots": [
+            {
+              "description": "Optional content rendered above the results list (e.g. recent-searches).",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-command-palette'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "focusTrapEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "actions",
+              "type": {
+                "text": "Array<ALCommandAction>"
+              },
+              "default": "[]",
+              "description": "The action list to search over. The entire action-provider API."
+            },
+            {
+              "kind": "field",
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Is the palette open?",
+              "attribute": "isActive"
+            },
+            {
+              "kind": "field",
+              "name": "enableShortcut",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Opt-in: when true, a document-level Cmd/Ctrl+K listener toggles the palette open.",
+              "attribute": "enableShortcut"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Type a command or search…'",
+              "description": "Input placeholder text.",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "emptyText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'No matching commands'",
+              "description": "Text shown when no action matches the query.",
+              "attribute": "emptyText"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Command palette'",
+              "description": "Accessible label for the dialog surface.",
+              "attribute": "ariaLabel"
+            },
+            {
+              "kind": "field",
+              "name": "transitionDelay",
+              "type": {
+                "text": "number"
+              },
+              "default": "200",
+              "description": "Number of ms of the palette's open/close CSS transition delay, used to delay\nfocus trap activation. Mirrors al-dialog's `transitionDelay`.",
+              "attribute": "transitionDelay"
+            },
+            {
+              "kind": "field",
+              "name": "query",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''",
+              "description": "The current search query."
+            },
+            {
+              "kind": "field",
+              "name": "activeIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "-1",
+              "description": "Index of the keyboard-highlighted result, or `-1` when none."
+            },
+            {
+              "kind": "field",
+              "name": "listboxId",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "results",
+              "type": {
+                "text": "Array<ALCommandAction>"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "setBodyOverflow",
+              "privacy": "private",
+              "description": "Prevent the page from scrolling behind the overlay while it's open,\nmirroring al-dialog's setBodyOverflow."
+            },
+            {
+              "kind": "method",
+              "name": "handleGlobalShortcut",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Document-level Cmd/Ctrl+K listener, opt-in via `enableShortcut`."
+            },
+            {
+              "kind": "method",
+              "name": "handleOnClickOutside",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "toggle",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "open",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "handleInput",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "chooseAction",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "action",
+                  "type": {
+                    "text": "ALCommandAction | undefined"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleKeyDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "optionId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderResults",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired when the palette opens. Detail: `{ active }` — always `true`.",
+              "name": "onCommandPaletteOpen"
+            },
+            {
+              "description": "Fired when the palette closes by any means (Escape, backdrop click, or an action being chosen). Detail: `{ active }` — always `false`.",
+              "name": "onCommandPaletteClose"
+            },
+            {
+              "description": "Fired when an action is chosen (click or Enter). Detail: `{ action }` — the selected `ALCommandAction`.",
+              "name": "onCommandPaletteAction"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "isActive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Is the palette open?",
+              "fieldName": "isActive"
+            },
+            {
+              "name": "enableShortcut",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Opt-in: when true, a document-level Cmd/Ctrl+K listener toggles the palette open.",
+              "fieldName": "enableShortcut"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Type a command or search…'",
+              "description": "Input placeholder text.",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "emptyText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'No matching commands'",
+              "description": "Text shown when no action matches the query.",
+              "fieldName": "emptyText"
+            },
+            {
+              "name": "ariaLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Command palette'",
+              "description": "Accessible label for the dialog surface.",
+              "fieldName": "ariaLabel"
+            },
+            {
+              "name": "transitionDelay",
+              "type": {
+                "text": "number"
+              },
+              "default": "200",
+              "description": "Number of ms of the palette's open/close CSS transition delay, used to delay\nfocus trap activation. Mirrors al-dialog's `transitionDelay`.",
+              "fieldName": "transitionDelay"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-command-palette",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALCommandPalette",
+          "declaration": {
+            "name": "ALCommandPalette",
+            "module": "components/command-palette/command-palette.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-command-palette",
+          "declaration": {
+            "name": "ALCommandPalette",
+            "module": "components/command-palette/command-palette.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALCommandPalette",
+            "module": "components/command-palette/command-palette.ts"
           }
         }
       ]
@@ -5534,6 +6891,111 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/empty-state/empty-state.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-empty-state\n\nA centered \"nothing here yet\" placeholder — empty search results, empty\ntables/lists, zero-data dashboard states.",
+          "name": "ALEmptyState",
+          "cssParts": [
+            {
+              "name": "container",
+              "description": ""
+            }
+          ],
+          "slots": [
+            {
+              "description": "Optional icon or illustration, rendered above the heading.",
+              "name": "icon"
+            },
+            {
+              "description": "Optional action row (buttons/links), rendered below the description.",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-empty-state'"
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "The empty-state heading.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Supporting description text.",
+              "attribute": "description"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "The empty-state heading.",
+              "fieldName": "heading"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Supporting description text.",
+              "fieldName": "description"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-empty-state",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALEmptyState",
+          "declaration": {
+            "name": "ALEmptyState",
+            "module": "components/empty-state/empty-state.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-empty-state",
+          "declaration": {
+            "name": "ALEmptyState",
+            "module": "components/empty-state/empty-state.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALEmptyState",
+            "module": "components/empty-state/empty-state.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/field-note/field-note.ts",
       "declarations": [
         {
@@ -6311,6 +7773,77 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/footer/footer.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-footer\n\nA site-wide footer organism for marketing pages. Purely compositional —\nlink columns compose with the existing `<al-list>`/`<al-link>`/`<al-menu>`\nprimitives, and every spacing decision comes from the active theme's\n`--al-theme-space-*` ramp, so the footer is automatically density-aware\nwherever it renders inside a `<al-theme density=\"...\">` scope.",
+          "name": "ALFooter",
+          "slots": [
+            {
+              "description": "Brand mark, rendered top-left of the link-columns row.",
+              "name": "logo"
+            },
+            {
+              "description": "Link columns — arbitrary column blocks (e.g. a heading + `<al-list>` per column).",
+              "name": ""
+            },
+            {
+              "description": "Bottom-row legal copy (copyright, small print, legal links). Leading edge.",
+              "name": "legal"
+            },
+            {
+              "description": "Bottom-row social links/icons. Trailing edge.",
+              "name": "social"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-footer'"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-footer",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALFooter",
+          "declaration": {
+            "name": "ALFooter",
+            "module": "components/footer/footer.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-footer",
+          "declaration": {
+            "name": "ALFooter",
+            "module": "components/footer/footer.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALFooter",
+            "module": "components/footer/footer.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/header/header.ts",
       "declarations": [
         {
@@ -6504,7 +8037,7 @@
               "name": "--al-hero-gap"
             },
             {
-              "description": "Vertical padding of the band. Defaults to the theme space ramp.",
+              "description": "Vertical padding of the band. Defaults to the theme space ramp. Marketing-organism additions (additive, zero visual change when unset): `contentAlignment` gives the content column an explicit cross-axis alignment instead of the implicit centered default, and `overlay` adds a scrim behind poster media so text stays legible over busy imagery.",
               "name": "--al-hero-padding-block"
             }
           ],
@@ -6570,6 +8103,24 @@
               },
               "description": "When true, constrains content to `--al-hero-max-width` and centers it.",
               "attribute": "contained"
+            },
+            {
+              "kind": "field",
+              "name": "contentAlignment",
+              "type": {
+                "text": "'start' | 'end'"
+              },
+              "description": "Content alignment (split/centered/stacked layouts). Unset preserves the\nexisting centered-by-default behavior — set this only to opt into an\nexplicit start/end alignment.\n- **start** Aligns the content column to the block-start edge\n- **end** Aligns the content column to the block-end edge",
+              "attribute": "contentAlignment"
+            },
+            {
+              "kind": "field",
+              "name": "overlay",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "When true (poster layout only), renders a gradient scrim behind the\nbackground media so overlaid text stays legible. No-op on other layouts.\nDefaults to false — no visual change unless explicitly opted in.",
+              "attribute": "overlay"
             }
           ],
           "attributes": [
@@ -6596,6 +8147,22 @@
               },
               "description": "When true, constrains content to `--al-hero-max-width` and centers it.",
               "fieldName": "contained"
+            },
+            {
+              "name": "contentAlignment",
+              "type": {
+                "text": "'start' | 'end'"
+              },
+              "description": "Content alignment (split/centered/stacked layouts). Unset preserves the\nexisting centered-by-default behavior — set this only to opt into an\nexplicit start/end alignment.\n- **start** Aligns the content column to the block-start edge\n- **end** Aligns the content column to the block-end edge",
+              "fieldName": "contentAlignment"
+            },
+            {
+              "name": "overlay",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "When true (poster layout only), renders a gradient scrim behind the\nbackground media so overlaid text stays legible. No-op on other layouts.\nDefaults to false — no visual change unless explicitly opted in.",
+              "fieldName": "overlay"
             }
           ],
           "superclass": {
@@ -14804,9 +16371,9 @@
               "kind": "field",
               "name": "variant",
               "type": {
-                "text": "'northright' | 'odyssey' | 'southleft'"
+                "text": "'southleft'"
               },
-              "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **odyssey** displays the Odyssey logo\n- **southleft** displays the Southleft logo",
+              "description": "The logo variant\n- **default** displays the Altitude logo\n- **southleft** displays the Southleft logo",
               "attribute": "variant"
             },
             {
@@ -14824,9 +16391,9 @@
             {
               "name": "variant",
               "type": {
-                "text": "'northright' | 'odyssey' | 'southleft'"
+                "text": "'southleft'"
               },
-              "description": "The logo variant\n- **default** displays the Altitude logo\n- **northright** displays the Northright logo\n- **odyssey** displays the Odyssey logo\n- **southleft** displays the Southleft logo",
+              "description": "The logo variant\n- **default** displays the Altitude logo\n- **southleft** displays the Southleft logo",
               "fieldName": "variant"
             },
             {
@@ -19674,6 +21241,315 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/split-content/split-content.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-split-content\n\nA two-column media/content organism for marketing pages — feature call-outs,\n\"why us\" sections, alternating benefit rows. Purely compositional, like\nal-hero: all visual decisions come from theme tokens, and the two columns\nnaturally stack below their combined minimum widths (no fixed breakpoint\nis hardcoded so the collapse point tracks whatever content is slotted in).",
+          "name": "ALSplitContent",
+          "cssProperties": [
+            {
+              "description": "Gap between the media and content columns. Defaults to the theme space ramp.",
+              "name": "--al-split-content-gap"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The media column (image, illustration, embed, or composed cards).",
+              "name": "media"
+            },
+            {
+              "description": "The content column (heading, copy, actions).",
+              "name": "content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-split-content'"
+            },
+            {
+              "kind": "field",
+              "name": "mediaPosition",
+              "type": {
+                "text": "'start' | 'end'"
+              },
+              "description": "Media position\n- **end** (default) Media renders after the content\n- **start** Media renders before the content",
+              "attribute": "mediaPosition"
+            },
+            {
+              "kind": "field",
+              "name": "verticalAlignment",
+              "type": {
+                "text": "'start' | 'center' | 'end'"
+              },
+              "description": "Vertical alignment of the two columns relative to one another\n- **center** (default) Columns are vertically centered\n- **start** Columns align to the block-start edge\n- **end** Columns align to the block-end edge",
+              "attribute": "verticalAlignment"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "mediaPosition",
+              "type": {
+                "text": "'start' | 'end'"
+              },
+              "description": "Media position\n- **end** (default) Media renders after the content\n- **start** Media renders before the content",
+              "fieldName": "mediaPosition"
+            },
+            {
+              "name": "verticalAlignment",
+              "type": {
+                "text": "'start' | 'center' | 'end'"
+              },
+              "description": "Vertical alignment of the two columns relative to one another\n- **center** (default) Columns are vertically centered\n- **start** Columns align to the block-start edge\n- **end** Columns align to the block-end edge",
+              "fieldName": "verticalAlignment"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-split-content",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALSplitContent",
+          "declaration": {
+            "name": "ALSplitContent",
+            "module": "components/split-content/split-content.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-split-content",
+          "declaration": {
+            "name": "ALSplitContent",
+            "module": "components/split-content/split-content.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALSplitContent",
+            "module": "components/split-content/split-content.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/stat/stat.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-stat\n\nA single KPI tile — value, label, and an optional trend delta with a\ndirectional chevron. Follows the design system's canonical stat-card\ncontract (value/label/trend/delta/invertPolarity). Composes into a \"KPI\nband\" by placing several `<al-stat>` inside a grid (see the KPI Band\nstory) or an `<al-bento-grid>`.",
+          "name": "ALStat",
+          "cssProperties": [
+            {
+              "description": "Text color of the value. Defaults to `--al-theme-color-content-default`.",
+              "name": "--al-stat-value-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "container",
+              "description": ""
+            },
+            {
+              "name": "value",
+              "description": ""
+            },
+            {
+              "name": "trend",
+              "description": ""
+            }
+          ],
+          "slots": [
+            {
+              "description": "Optional leading icon, rendered above the value.",
+              "name": "icon"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-stat'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "The display value, e.g. \"1,234\" or \"$4.2M\". Typed as a string — the\nconsumer owns locale formatting, digit grouping, and unit suffixes.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The metric's label, e.g. \"Active users\".",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Optional supporting description rendered below the trend row.",
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
+              "name": "trend",
+              "type": {
+                "text": "'up' | 'down' | 'none'"
+              },
+              "default": "'none'",
+              "description": "Trend direction.\n- **none** (default) No trend indicator is rendered\n- **up** Renders an up chevron\n- **down** Renders a down chevron",
+              "attribute": "trend"
+            },
+            {
+              "kind": "field",
+              "name": "delta",
+              "type": {
+                "text": "string"
+              },
+              "description": "The delta text, e.g. \"+12%\". Renders next to the trend chevron. The\ntrend row only renders when this is a non-empty string.",
+              "attribute": "delta"
+            },
+            {
+              "kind": "field",
+              "name": "invertPolarity",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Flips ONLY the success/danger color mapping for metrics where a lower\nnumber is better (cost, latency, churn). The chevron direction and the\naccessible \"Trending up/down\" text always reflect the literal `trend`\nvalue — only the color changes.",
+              "attribute": "invertPolarity"
+            },
+            {
+              "kind": "field",
+              "name": "hasIcon",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "The display value, e.g. \"1,234\" or \"$4.2M\". Typed as a string — the\nconsumer owns locale formatting, digit grouping, and unit suffixes.",
+              "fieldName": "value"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The metric's label, e.g. \"Active users\".",
+              "fieldName": "label"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Optional supporting description rendered below the trend row.",
+              "fieldName": "description"
+            },
+            {
+              "name": "trend",
+              "type": {
+                "text": "'up' | 'down' | 'none'"
+              },
+              "default": "'none'",
+              "description": "Trend direction.\n- **none** (default) No trend indicator is rendered\n- **up** Renders an up chevron\n- **down** Renders a down chevron",
+              "fieldName": "trend"
+            },
+            {
+              "name": "delta",
+              "type": {
+                "text": "string"
+              },
+              "description": "The delta text, e.g. \"+12%\". Renders next to the trend chevron. The\ntrend row only renders when this is a non-empty string.",
+              "fieldName": "delta"
+            },
+            {
+              "name": "invertPolarity",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Flips ONLY the success/danger color mapping for metrics where a lower\nnumber is better (cost, latency, churn). The chevron direction and the\naccessible \"Trending up/down\" text always reflect the literal `trend`\nvalue — only the color changes.",
+              "fieldName": "invertPolarity"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-stat",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALStat",
+          "declaration": {
+            "name": "ALStat",
+            "module": "components/stat/stat.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-stat",
+          "declaration": {
+            "name": "ALStat",
+            "module": "components/stat/stat.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALStat",
+            "module": "components/stat/stat.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/stepper-item/stepper-item.ts",
       "declarations": [
         {
@@ -20242,6 +22118,334 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/table/table.model.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/table/table.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-table\n\nRenders a semantic `<table>` either from the `columns` + `data` properties\n(data-driven mode) or from slotted `<thead>` / `<tbody>` markup (slotted\nmode, used when `columns`/`data` are not both set). The horizontal scroll\ncontainer lives INSIDE the component so a wide table scrolls itself —\nthe page never scrolls. Cell/header padding uses the theme's `--al-theme-space-*`\ntokens, so the table is automatically density-aware wherever it is rendered\ninside a `<al-theme density=\"...\">` scope.",
+          "name": "ALTable",
+          "cssParts": [
+            {
+              "description": "The horizontal scroll container.",
+              "name": "scroll"
+            },
+            {
+              "description": "The `<table>` element (data-driven mode only).",
+              "name": "table"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Slotted `<table>`-internal markup (e.g. `<thead>`/`<tbody>`), used only when `columns` and `data` are not both provided.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-table'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "checkboxEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "iconEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "columns",
+              "type": {
+                "text": "Array<ALTableColumn>"
+              },
+              "description": "Column definitions for data-driven rendering. Must be paired with `data`."
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "Array<ALTableRow>"
+              },
+              "description": "Row data for data-driven rendering. Must be paired with `columns`.\nWhen either `columns` or `data` is not provided, the default slot is\nrendered instead so a consumer may supply their own `<thead>`/`<tbody>`."
+            },
+            {
+              "kind": "field",
+              "name": "rowKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "'id'",
+              "description": "The property on each row object used to derive a stable row identifier\n(used for selection tracking and the `key` attribute).",
+              "attribute": "rowKey"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "description": "Visible table caption. Also used as the accessible name of the scroll\ncontainer so keyboard users know what they're scrolling.",
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "hideCaption",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Visually hides the caption while keeping it in the accessibility tree.",
+              "attribute": "hideCaption"
+            },
+            {
+              "kind": "field",
+              "name": "isSelectable",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Shows a leading checkbox column for row selection.",
+              "attribute": "isSelectable"
+            },
+            {
+              "kind": "field",
+              "name": "selectedRowKeys",
+              "type": {
+                "text": "Array<string>"
+              },
+              "default": "[]",
+              "description": "The currently selected row keys (data-driven mode). Toggled internally\nas checkboxes are activated; read this back to persist a selection."
+            },
+            {
+              "kind": "field",
+              "name": "sortKey",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `key` of the column currently sorted, if any.",
+              "attribute": "sortKey"
+            },
+            {
+              "kind": "field",
+              "name": "sortDirection",
+              "type": {
+                "text": "ALTableSortDirection"
+              },
+              "default": "'none'",
+              "description": "The sort direction of `sortKey`. Mirrors the `aria-sort` vocabulary.",
+              "attribute": "sortDirection"
+            },
+            {
+              "kind": "field",
+              "name": "isDataDriven",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "description": "Query the generated column definitions",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "handleSort",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Handle activating a sortable column header.\n1. A different column was clicked — start it at ascending.\n2. The same column cycles ascending -> descending -> none (unsorted)."
+            },
+            {
+              "kind": "method",
+              "name": "rowKeyFor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "ALTableRow"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleSelectAll",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleRowSelect",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "rowKey",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderHeaderCell",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "ALTableColumn"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderRow",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "ALTableRow"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderGeneratedTable",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired when a sortable header is activated. Detail: `{ key, direction }`. `al-table` does not re-sort `data` itself — it tracks and displays the active sort state (`sortKey`/`sortDirection`, reflected via `aria-sort`); re-render with sorted `data` in response to this event.",
+              "name": "onTableSort"
+            },
+            {
+              "description": "Fired when a row's selection checkbox is toggled. Detail: `{ rowKey, isSelected, selectedRowKeys }`.",
+              "name": "onTableRowSelect"
+            },
+            {
+              "description": "Fired when the header's select-all checkbox is toggled. Detail: `{ isSelected, selectedRowKeys }`.",
+              "name": "onTableSelectAll"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "rowKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "'id'",
+              "description": "The property on each row object used to derive a stable row identifier\n(used for selection tracking and the `key` attribute).",
+              "fieldName": "rowKey"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "description": "Visible table caption. Also used as the accessible name of the scroll\ncontainer so keyboard users know what they're scrolling.",
+              "fieldName": "caption"
+            },
+            {
+              "name": "hideCaption",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Visually hides the caption while keeping it in the accessibility tree.",
+              "fieldName": "hideCaption"
+            },
+            {
+              "name": "isSelectable",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Shows a leading checkbox column for row selection.",
+              "fieldName": "isSelectable"
+            },
+            {
+              "name": "sortKey",
+              "type": {
+                "text": "string"
+              },
+              "description": "The `key` of the column currently sorted, if any.",
+              "fieldName": "sortKey"
+            },
+            {
+              "name": "sortDirection",
+              "type": {
+                "text": "ALTableSortDirection"
+              },
+              "default": "'none'",
+              "description": "The sort direction of `sortKey`. Mirrors the `aria-sort` vocabulary.",
+              "fieldName": "sortDirection"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-table",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALTable",
+          "declaration": {
+            "name": "ALTable",
+            "module": "components/table/table.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-table",
+          "declaration": {
+            "name": "ALTable",
+            "module": "components/table/table.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALTable",
+            "module": "components/table/table.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/tabs/tabs.ts",
       "declarations": [
         {
@@ -20503,6 +22707,131 @@
           "declaration": {
             "name": "ALTabs",
             "module": "components/tabs/tabs.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/testimonial/testimonial.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-testimonial\n\nA single customer quote with attribution — for marketing pages (social\nproof rows, case-study pull-quotes). Composes `<al-avatar>` via the\n`avatar` slot for a headshot.",
+          "name": "ALTestimonial",
+          "slots": [
+            {
+              "description": "The quote text.",
+              "name": ""
+            },
+            {
+              "description": "Optional avatar (typically an `<al-avatar>`).",
+              "name": "avatar"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-testimonial'"
+            },
+            {
+              "kind": "field",
+              "name": "attribution",
+              "type": {
+                "text": "string"
+              },
+              "description": "The name of the person being quoted.",
+              "attribute": "attribution"
+            },
+            {
+              "kind": "field",
+              "name": "role",
+              "type": {
+                "text": "string"
+              },
+              "description": "Job title of the person being quoted, e.g. \"VP of Engineering\".",
+              "attribute": "role"
+            },
+            {
+              "kind": "field",
+              "name": "company",
+              "type": {
+                "text": "string"
+              },
+              "description": "Company/organization of the person being quoted.",
+              "attribute": "company"
+            },
+            {
+              "kind": "field",
+              "name": "roleAndCompany",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "readonly": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "attribution",
+              "type": {
+                "text": "string"
+              },
+              "description": "The name of the person being quoted.",
+              "fieldName": "attribution"
+            },
+            {
+              "name": "role",
+              "type": {
+                "text": "string"
+              },
+              "description": "Job title of the person being quoted, e.g. \"VP of Engineering\".",
+              "fieldName": "role"
+            },
+            {
+              "name": "company",
+              "type": {
+                "text": "string"
+              },
+              "description": "Company/organization of the person being quoted.",
+              "fieldName": "company"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/components/ALElement"
+          },
+          "tagName": "al-testimonial",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ALTestimonial",
+          "declaration": {
+            "name": "ALTestimonial",
+            "module": "components/testimonial/testimonial.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-testimonial",
+          "declaration": {
+            "name": "ALTestimonial",
+            "module": "components/testimonial/testimonial.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "ALTestimonial",
+            "module": "components/testimonial/testimonial.ts"
           }
         }
       ]
@@ -21212,10 +23541,10 @@
               "kind": "field",
               "name": "brand",
               "type": {
-                "text": "| 'altitude'\n    | 'northright'\n    | 'odyssey'\n    | 'southleft'\n    | 'meridian'\n    | 'voltage'\n    | 'solstice'\n    | 'nocturne'"
+                "text": "'altitude' | 'southleft'"
               },
               "default": "'altitude'",
-              "description": "Brand identifier. Currently shipped: 'altitude' | 'northright' | 'odyssey' | 'southleft' | 'meridian' | 'voltage' | 'solstice' | 'nocturne'.",
+              "description": "Brand identifier. Currently shipped: 'altitude' | 'southleft'.",
               "attribute": "brand"
             },
             {
@@ -21252,20 +23581,29 @@
               "kind": "field",
               "name": "motion",
               "type": {
-                "text": "'full' | 'reduced' | undefined"
+                "text": "'full' | 'reduced' | 'expressive' | undefined"
               },
-              "description": "Motion axis. Falls back to `prefers-reduced-motion` when unset.",
+              "description": "Motion axis. Falls back to `prefers-reduced-motion` when unset.\n`expressive` lengthens durations and swaps in springier easing on the\n`theme.animation.{duration,timing}.role.*` tokens; `reduced` still wins\nunder `prefers-reduced-motion` unless `full` is set (accessibility-first\n— `expressive` is a decorative upgrade, not an override of the OS\npreference).",
               "attribute": "motion"
+            },
+            {
+              "kind": "field",
+              "name": "shape",
+              "type": {
+                "text": "'default' | 'sharp' | 'pill' | undefined"
+              },
+              "description": "Shape axis. Repoints the `theme.border.radius.role.*` tokens\n(action/control/surface/indicator) that components map their\nborder-radius usage to. `default` (unset) reproduces today's per-brand\nradii exactly — the role tokens resolve through the existing\n`--al-theme-border-radius{,-lg,-round}` chain, so a brand's own radius\nidentity still shows through until `sharp`/`pill` overrides it.",
+              "attribute": "shape"
             }
           ],
           "attributes": [
             {
               "name": "brand",
               "type": {
-                "text": "| 'altitude'\n    | 'northright'\n    | 'odyssey'\n    | 'southleft'\n    | 'meridian'\n    | 'voltage'\n    | 'solstice'\n    | 'nocturne'"
+                "text": "'altitude' | 'southleft'"
               },
               "default": "'altitude'",
-              "description": "Brand identifier. Currently shipped: 'altitude' | 'northright' | 'odyssey' | 'southleft' | 'meridian' | 'voltage' | 'solstice' | 'nocturne'.",
+              "description": "Brand identifier. Currently shipped: 'altitude' | 'southleft'.",
               "fieldName": "brand"
             },
             {
@@ -21298,10 +23636,18 @@
             {
               "name": "motion",
               "type": {
-                "text": "'full' | 'reduced' | undefined"
+                "text": "'full' | 'reduced' | 'expressive' | undefined"
               },
-              "description": "Motion axis. Falls back to `prefers-reduced-motion` when unset.",
+              "description": "Motion axis. Falls back to `prefers-reduced-motion` when unset.\n`expressive` lengthens durations and swaps in springier easing on the\n`theme.animation.{duration,timing}.role.*` tokens; `reduced` still wins\nunder `prefers-reduced-motion` unless `full` is set (accessibility-first\n— `expressive` is a decorative upgrade, not an override of the OS\npreference).",
               "fieldName": "motion"
+            },
+            {
+              "name": "shape",
+              "type": {
+                "text": "'default' | 'sharp' | 'pill' | undefined"
+              },
+              "description": "Shape axis. Repoints the `theme.border.radius.role.*` tokens\n(action/control/surface/indicator) that components map their\nborder-radius usage to. `default` (unset) reproduces today's per-brand\nradii exactly — the role tokens resolve through the existing\n`--al-theme-border-radius{,-lg,-round}` chain, so a brand's own radius\nidentity still shows through until `sharp`/`pill` overrides it.",
+              "fieldName": "shape"
             }
           ],
           "superclass": {

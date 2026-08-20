@@ -110,6 +110,19 @@
   }
 
   /**
+   * Content alignment overrides — additive, only apply when the consumer
+   * sets `contentAlignment`. The base `.al-c-hero__inner` rule above stays
+   * the default (centered) when unset.
+   */
+  .al-c-hero--align-start .al-c-hero__inner {
+    align-items: flex-start;
+  }
+
+  .al-c-hero--align-end .al-c-hero__inner {
+    align-items: flex-end;
+  }
+
+  /**
    * Centered layout — content centered, media below
    */
   .al-c-hero--centered {
@@ -175,5 +188,22 @@
       z-index: 1;
       padding: calc(var(--al-theme-space) * 2);
     }
+  }
+
+  /**
+   * Poster overlay — opt-in gradient scrim behind background media so
+   * text stays legible. Only rendered when `overlay` is set on a poster
+   * layout; the ::after pseudo shares the media's absolute box.
+   */
+  .al-c-hero--poster.al-c-hero--overlay .al-c-hero__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--al-theme-color-background-inverse-default) 70%, transparent) 0%,
+      transparent 65%
+    );
+    pointer-events: none;
   }
 }

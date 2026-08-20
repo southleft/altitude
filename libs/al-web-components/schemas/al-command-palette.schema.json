@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-command-palette.schema.json",
+  "title": "ALCommandPalette (al-command-palette)",
+  "description": "Component: al-command-palette\n\nA cmd/ctrl+k overlay with fuzzy search over a provided action list.\nReuses `al-focus-trap` for the same focus-containment behavior as\n`al-dialog`/`al-popover`, and the same \"always-rendered, opacity/visibility\ntoggled\" overlay shape as `al-dialog` for its backdrop + transition.\n\nThe `actions` array is the entire action-provider API: `{ id, label, group?,\nkeywords?, icon? }`. `icon` names must already be registered (see the icon\nsystem section of AGENTS.md) — the palette does not register glyphs on your behalf.",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-command-palette",
+    "className": "ALCommandPalette",
+    "module": "components/command-palette/command-palette.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "Optional content rendered above the results list (e.g. recent-searches).",
+        "name": ""
+      }
+    ],
+    "events": [
+      {
+        "name": "onCommandPaletteOpen",
+        "description": "Fired when the palette opens. Detail: `{ active }` — always `true`."
+      },
+      {
+        "name": "onCommandPaletteClose",
+        "description": "Fired when the palette closes by any means (Escape, backdrop click, or an action being chosen). Detail: `{ active }` — always `false`."
+      },
+      {
+        "name": "onCommandPaletteAction",
+        "description": "Fired when an action is chosen (click or Enter). Detail: `{ action }` — the selected `ALCommandAction`."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-command-palette"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "isActive": {
+          "description": "Is the palette open?",
+          "type": "boolean"
+        },
+        "enableShortcut": {
+          "description": "Opt-in: when true, a document-level Cmd/Ctrl+K listener toggles the palette open.",
+          "type": "boolean"
+        },
+        "placeholder": {
+          "description": "Input placeholder text.",
+          "type": "string"
+        },
+        "emptyText": {
+          "description": "Text shown when no action matches the query.",
+          "type": "string"
+        },
+        "ariaLabel": {
+          "description": "Accessible label for the dialog surface.",
+          "type": "string"
+        },
+        "transitionDelay": {
+          "description": "Number of ms of the palette's open/close CSS transition delay, used to delay\nfocus trap activation. Mirrors al-dialog's `transitionDelay`.",
+          "type": "number"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

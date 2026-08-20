@@ -1,0 +1,78 @@
+@use '../../styles/component' as *;
+/* ------------------------------------*\
+  #BANNER
+\*------------------------------------ */
+
+@layer al.component {
+  :host {
+    display: block;
+  }
+
+  /**
+   * Full-width, edge-to-edge announcement bar. Neutral surface with a
+   * tone-colored icon — mirrors al-alert/al-toast's tone treatment
+   * ("reusing alert-tone tokens") rather than inventing a new palette.
+   * No radius/shadow: this is a page-level bar, not a card.
+   */
+  .al-c-banner {
+    display: flex;
+    align-items: center;
+    gap: var(--al-theme-space);
+    inline-size: 100%;
+    box-sizing: border-box;
+    padding: var(--al-theme-space-sm) var(--al-theme-space);
+    background-color: var(--al-theme-color-background-default);
+    border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+
+    &.al-is-dismissed {
+      display: none;
+    }
+  }
+
+  .al-c-banner__icon {
+    --al-icon-width: #{var(--al-theme-icon)};
+    --al-icon-height: #{var(--al-theme-icon)};
+    --al-icon-fill: var(--al-theme-color-content-info-default);
+
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+
+    .al-c-banner--success & {
+      --al-icon-fill: var(--al-theme-color-content-success-default);
+    }
+
+    .al-c-banner--warning & {
+      --al-icon-fill: var(--al-theme-color-content-warning-default);
+    }
+
+    .al-c-banner--danger & {
+      --al-icon-fill: var(--al-theme-color-content-danger-default);
+    }
+  }
+
+  .al-c-banner__body {
+    display: flex;
+    flex: 1 1 auto;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: var(--al-theme-space-sm);
+    min-inline-size: 0;
+  }
+
+  .al-c-banner__content {
+    @include al-theme-typography-body-sm;
+    color: var(--al-theme-color-content-default);
+  }
+
+  .al-c-banner__link {
+    flex: 0 0 auto;
+  }
+
+  .al-c-banner__close {
+    flex: 0 0 auto;
+
+    --al-icon-width: #{var(--al-theme-icon)};
+    --al-icon-height: #{var(--al-theme-icon)};
+  }
+}

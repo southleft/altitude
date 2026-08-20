@@ -22,6 +22,11 @@ import styles from './hero.scss';
  * @cssproperty --al-hero-min-height - Minimum block size of the main area. Default none.
  * @cssproperty --al-hero-gap - Gap between content and media. Defaults to the theme space ramp.
  * @cssproperty --al-hero-padding-block - Vertical padding of the band. Defaults to the theme space ramp.
+ *
+ * Marketing-organism additions (additive, zero visual change when unset):
+ * `contentAlignment` gives the content column an explicit cross-axis
+ * alignment instead of the implicit centered default, and `overlay` adds a
+ * scrim behind poster media so text stays legible over busy imagery.
  */
 export class ALHero extends ALElement {
   static el = 'al-hero';
@@ -54,13 +59,34 @@ export class ALHero extends ALElement {
   @property({ type: Boolean })
   accessor contained: boolean;
 
+  /**
+   * Content alignment (split/centered/stacked layouts). Unset preserves the
+   * existing centered-by-default behavior — set this only to opt into an
+   * explicit start/end alignment.
+   * - **start** Aligns the content column to the block-start edge
+   * - **end** Aligns the content column to the block-end edge
+   */
+  @property()
+  accessor contentAlignment: 'start' | 'end';
+
+  /**
+   * When true (poster layout only), renders a gradient scrim behind the
+   * background media so overlaid text stays legible. No-op on other layouts.
+   * Defaults to false — no visual change unless explicitly opted in.
+   */
+  @property({ type: Boolean })
+  accessor overlay: boolean;
+
   render() {
     const componentClassNames = this.componentClassNames('al-c-hero', {
       'al-c-hero--centered': this.layout === 'centered',
       'al-c-hero--stacked': this.layout === 'stacked',
       'al-c-hero--poster': this.layout === 'poster',
       'al-c-hero--media-start': this.mediaPosition === 'start',
-      'al-c-hero--contained': this.contained === true
+      'al-c-hero--contained': this.contained === true,
+      'al-c-hero--align-start': this.contentAlignment === 'start',
+      'al-c-hero--align-end': this.contentAlignment === 'end',
+      'al-c-hero--overlay': this.overlay === true
     });
 
     return html`

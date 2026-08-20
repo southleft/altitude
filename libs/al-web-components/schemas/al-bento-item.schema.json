@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-bento-item.schema.json",
+  "title": "ALBentoItem (al-bento-item)",
+  "description": "Component: al-bento-item\n\nA single tile inside `<al-bento-grid>`. Purely a grid-placement primitive —\nit owns no visual surface (no border/background/padding) so any content\n(a card, a stat, an image, a stack of copy) can be slotted in and supply\nits own chrome. `colSpan`/`rowSpan` are reflected onto the host as CSS\ncustom properties, so they can also be overridden per breakpoint from\nconsumer CSS without touching the attribute.",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-bento-item",
+    "className": "ALBentoItem",
+    "module": "components/bento-item/bento-item.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The tile's content (card, stat, image, or arbitrary markup).",
+        "name": ""
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": [
+      {
+        "description": "Number of the 12 grid columns this tile spans. Defaults to 4.",
+        "name": "--al-bento-item-col-span"
+      },
+      {
+        "description": "Number of implicit grid rows this tile spans. Defaults to 1.",
+        "name": "--al-bento-item-row-span"
+      }
+    ]
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-bento-item"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "colSpan": {
+          "description": "Number of the grid's 12 columns this tile spans (1-12).",
+          "type": "number"
+        },
+        "rowSpan": {
+          "description": "Number of implicit grid rows this tile spans.",
+          "type": "number"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

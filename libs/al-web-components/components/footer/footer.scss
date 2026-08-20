@@ -1,0 +1,73 @@
+@use '../../styles/component' as *;
+/* ------------------------------------*\
+  #FOOTER
+\*------------------------------------ */
+
+@layer al.component {
+  :host {
+    display: contents;
+  }
+
+  /**
+   * Site footer. All spacing comes from theme space tokens, so the footer
+   * is automatically density-aware wherever it renders.
+   */
+  .al-c-footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--al-theme-space-lg);
+    inline-size: 100%;
+    box-sizing: border-box;
+    padding-block: calc(var(--al-theme-space) * 3);
+    color: var(--al-theme-color-content-default);
+  }
+
+  /**
+   * Top area: logo + link columns
+   */
+  .al-c-footer__top {
+    display: flex;
+    flex-flow: row wrap;
+    gap: var(--al-theme-space-xxl);
+  }
+
+  .al-c-footer__logo {
+    flex: 0 0 auto;
+  }
+
+  .al-c-footer__columns {
+    display: flex;
+    flex: 1 1 auto;
+    flex-flow: row wrap;
+    gap: var(--al-theme-space-xxl);
+  }
+
+  /**
+   * Bottom row: legal (leading) + social (trailing)
+   */
+  .al-c-footer__bottom {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--al-theme-space);
+    padding-block-start: var(--al-theme-space-lg);
+    border-block-start: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+  }
+
+  .al-c-footer__legal {
+    @include al-theme-typography-body-sm;
+    color: var(--al-theme-color-content-default-weak);
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: var(--al-theme-space-sm);
+  }
+
+  .al-c-footer__social {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: var(--al-theme-space-sm);
+  }
+}

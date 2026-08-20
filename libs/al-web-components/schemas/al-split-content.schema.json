@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-split-content.schema.json",
+  "title": "ALSplitContent (al-split-content)",
+  "description": "Component: al-split-content\n\nA two-column media/content organism for marketing pages — feature call-outs,\n\"why us\" sections, alternating benefit rows. Purely compositional, like\nal-hero: all visual decisions come from theme tokens, and the two columns\nnaturally stack below their combined minimum widths (no fixed breakpoint\nis hardcoded so the collapse point tracks whatever content is slotted in).",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-split-content",
+    "className": "ALSplitContent",
+    "module": "components/split-content/split-content.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The media column (image, illustration, embed, or composed cards).",
+        "name": "media"
+      },
+      {
+        "description": "The content column (heading, copy, actions).",
+        "name": "content"
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": [
+      {
+        "description": "Gap between the media and content columns. Defaults to the theme space ramp.",
+        "name": "--al-split-content-gap"
+      }
+    ]
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-split-content"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mediaPosition": {
+          "description": "Media position\n- **end** (default) Media renders after the content\n- **start** Media renders before the content",
+          "type": "string",
+          "enum": [
+            "start",
+            "end"
+          ]
+        },
+        "verticalAlignment": {
+          "description": "Vertical alignment of the two columns relative to one another\n- **center** (default) Columns are vertically centered\n- **start** Columns align to the block-start edge\n- **end** Columns align to the block-end edge",
+          "type": "string",
+          "enum": [
+            "start",
+            "center",
+            "end"
+          ]
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

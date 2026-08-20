@@ -26,6 +26,13 @@ export default {
     },
     contained: {
       control: 'boolean'
+    },
+    contentAlignment: {
+      control: 'radio',
+      options: ['default', 'start', 'end']
+    },
+    overlay: {
+      control: 'boolean'
     }
   }
 };
@@ -55,6 +62,20 @@ Poster.args = { layout: 'poster' };
 
 export const MediaStart = Template.bind({});
 MediaStart.args = { mediaPosition: 'start' };
+
+export const ContentAlignedStart = Template.bind({});
+ContentAlignedStart.args = { contentAlignment: 'start' };
+
+export const PosterWithOverlay = (args) => html`
+  <al-hero ${spread(args)}>
+    <al-chip slot="eyebrow" variant="secondary">New release</al-chip>
+    <al-heading slot="heading" tagName="h1" variant="display-md" ?isBold=${true}>Legible over any backdrop</al-heading>
+    <al-text-passage>The optional overlay adds a gradient scrim behind poster media so this copy stays readable.</al-text-passage>
+    <al-button slot="actions">Get started</al-button>
+    <f-po slot="media" style="min-height: 24rem;">Hero Media</f-po>
+  </al-hero>
+`;
+PosterWithOverlay.args = { layout: 'poster', overlay: true };
 
 export const WithMeta = (args) => html`
   <al-hero ${spread(args)}>

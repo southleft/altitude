@@ -1,0 +1,36 @@
+@use '../../styles/component' as *;
+/* ------------------------------------*\
+  #BENTO ITEM
+\*------------------------------------ */
+
+@layer al.component {
+  /**
+   * The host itself is the grid item — colSpan/rowSpan are set as CSS
+   * custom properties by the component (bento-item.ts `updated()`), with
+   * safe fallbacks here for the (unlikely) case markup sets the properties
+   * before upgrade.
+   */
+  :host {
+    display: block;
+    grid-column: span var(--al-bento-item-col-span, 4);
+    grid-row: span var(--al-bento-item-row-span, 1);
+    block-size: 100%;
+    min-inline-size: 0;
+  }
+
+  /**
+   * Collapse every tile to full-width below the medium breakpoint, matching
+   * al-bento-grid's single-column collapse.
+   */
+  @media all and (max-width: #{$al-breakpoint-md - 1px}) {
+    :host {
+      grid-column: 1 / -1;
+    }
+  }
+
+  ::slotted(*) {
+    inline-size: 100%;
+    block-size: 100%;
+    box-sizing: border-box;
+  }
+}

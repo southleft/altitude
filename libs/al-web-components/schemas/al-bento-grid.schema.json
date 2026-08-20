@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-bento-grid.schema.json",
+  "title": "ALBentoGrid (al-bento-grid)",
+  "description": "Component: al-bento-grid\n\nAn asymmetric feature-grid organism for marketing pages — a 12-column,\nauto-row CSS grid container. Compose it with `<al-bento-item>` children\n(each declaring `colSpan`/`rowSpan`) for the classic \"bento box\" layout,\nor drop in arbitrary content directly. Collapses to a single column below\nthe medium breakpoint so an asymmetric desktop layout never produces\nunreadably narrow tiles on small screens.",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-bento-grid",
+    "className": "ALBentoGrid",
+    "module": "components/bento-grid/bento-grid.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "Grid items — typically `<al-bento-item>`, but any content is accepted.",
+        "name": ""
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": [
+      {
+        "description": "Gap between grid cells. Defaults to the theme space ramp.",
+        "name": "--al-bento-grid-gap"
+      },
+      {
+        "description": "Height of one implicit grid row. Defaults to the theme space ramp.",
+        "name": "--al-bento-grid-row-height"
+      }
+    ]
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-bento-grid"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}
