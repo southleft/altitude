@@ -1,5 +1,12 @@
 ---
-// Insights post card — spec 2026-08-20-southleft-example-app, T4.
+// Insights post card — spec 2026-08-20-southleft-example-app, T4, REBUILT
+// T12 audit-2 round (D): v5's real card anatomy (ArticleCard.astro) is a
+// flush-top image, a mono "CATEGORY · DATE" meta row (category in accent),
+// a bold sans title, a clamped excerpt, and a "read →" mono footer link —
+// not achievable through `al-card` (its single outer `padding` wraps the
+// image too, so it can never render flush-to-edge media; same "stop
+// fighting the component" call as the header/hero). Bespoke markup + the
+// shared `.sl-media-card` treatment in src/styles/layout.css.
 import type { CollectionEntry } from 'astro:content';
 import { withBase } from '../lib/url';
 
@@ -13,14 +20,28 @@ const href = withBase(`/insights/${post.data.category}/${slug}`);
 const dateLabel = post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 ---
 
-<al-card layout={featured ? 'inline' : undefined}>
-  {post.data.hero && <img slot="image" src={post.data.hero} alt="" loading="lazy" />}
-  <div slot="header" class="sl-stack sl-stack--sm">
-    <al-chip variant="secondary">{post.data.categoryName}</al-chip>
-    <al-heading tagName="h3" variant={featured ? 'md' : 'sm'} isBold={true}>
-      <a href={href}>{post.data.title}</a>
-    </al-heading>
+<a href={href} class:list={['sl-media-card', featured && 'sl-media-card--featured']}>
+  {post.data.hero && (
+    <div class="sl-media-card__image">
+      <img src={withBase(post.data.hero)} alt="" loading="lazy" />
+    </div>
+  )}
+  <div class="sl-media-card__body">
+    <p class="sl-media-card__meta">
+      <span class="sl-media-card__meta-accent">{post.data.categoryName}</span>
+      <span aria-hidden="true">·</span>
+      <time datetime={post.data.date.toISOString().slice(0, 10)}>{dateLabel}</time>
+    </p>
+    {/* T12 audit-3 (height closure) — v5's card title is 32px (`.text-h3`);
+        al-heading's SCOPED (southleft-brand) steps are 24px (`md`) / 48px
+        (`lg`) with no step between, confirmed live inside `#sl-theme`
+        (an earlier unscoped measurement wrongly read `lg` as 28px and
+        caused a round-6 overshoot, reverted here). `md` is the closer
+        approximation (-8px vs `lg`'s +16px) — a real al-heading scale
+        gap, documented not fixed. `featured` (2-col span, /insights only)
+        keeps `lg` for its intentionally larger treatment. */}
+    <al-heading tagName="h3" variant={featured ? 'lg' : 'md'} isBold={true} class="sl-media-card__title">{post.data.title}</al-heading>
+    {post.data.excerpt && <p class="sl-media-card__excerpt al-u-theme-typography-body-sm">{post.data.excerpt}</p>}
+    <span class="sl-media-card__footer al-u-theme-typography-body-sm" aria-hidden="true">read →</span>
   </div>
-  {post.data.excerpt && <al-text-passage>{post.data.excerpt}</al-text-passage>}
-  <span slot="actions-end" class="al-u-theme-typography-body-xs">{dateLabel}</span>
-</al-card>
+</a>

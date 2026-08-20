@@ -1,10 +1,11 @@
 ---
-// Closing CTA band — spec 2026-08-20-southleft-example-app, T3/T4-1, revised
-// T9 round 2 to match v5's real CTABand.astro contract and defaults exactly
-// (props + default copy were previously invented, not transcribed).
-// al-hero, centered layout, no media — the same organism used for the page
-// hero, reused as a closing CTA band (a hero is compositionally exactly
-// that: eyebrow + heading + body + actions, no media required).
+// Closing CTA band — spec 2026-08-20-southleft-example-app, T3/T4-1, T9
+// round 2 (real copy defaults), REBUILT T12 audit-2 round (F): v5's real
+// CTABand.astro is NOT `<al-hero>` — it has its own grid-texture
+// background, a `<cta>` kicker, `py-24/md:py-32` padding, and a centered
+// `.text-h1`/`.text-lead` stack (`al-hero`'s centered layout omits the
+// texture and kicker, and under-pads relative to v5 — same rationale as
+// the header/hero/media-card rebuilds).
 import { CTA } from '../lib/site';
 import { withBase } from '../lib/url';
 
@@ -22,9 +23,22 @@ const {
 } = Astro.props;
 ---
 
-<al-hero layout="centered" contained>
-  <al-heading slot="heading" tagName="h2" variant="display-md" isBold={true}>{heading}</al-heading>
-  <al-text-passage>{dek}</al-text-passage>
-  <al-button slot="actions" href={withBase(CTA.href)}>{CTA.label}</al-button>
-  <al-button slot="actions" variant="tertiary" href={secondaryHref.startsWith('http') ? secondaryHref : withBase(secondaryHref)}>{secondaryLabel}</al-button>
-</al-hero>
+<div class="sl-cta-band">
+  <div class="sl-hero__texture" aria-hidden="true"></div>
+  <div class="sl-container sl-cta-band__inner">
+    <p class="sl-kicker sl-kicker--accent">&lt;cta&gt;</p>
+    {/* T12 audit-3 (height closure) — `display-md`, scoped to the
+        `southleft` brand, resolves to 72px/72px line-height — an exact
+        match for v5's `.text-h1` (72px/73.44px) here. (An isolated,
+        unscoped measurement outside `<al-theme>` misleadingly read 36px
+        for this variant and 48px for `display-lg`; scoped, `display-lg`
+        is actually ~112px, hero scale — confirmed live before reverting
+        an earlier wrong bump to it.) */}
+    <al-heading tagName="h2" variant="display-md" isBold={true} class="sl-cta-band__heading">{heading}</al-heading>
+    <p class="sl-cta-band__dek">{dek}</p>
+    <div class="sl-cta-band__actions">
+      <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
+      <al-button variant="tertiary" href={secondaryHref.startsWith('http') ? secondaryHref : withBase(secondaryHref)}>{secondaryLabel}</al-button>
+    </div>
+  </div>
+</div>

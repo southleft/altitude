@@ -1,5 +1,10 @@
 ---
-// Case-study card — spec 2026-08-20-southleft-example-app, T4.
+// Case-study card — spec 2026-08-20-southleft-example-app, T4, REBUILT T12
+// audit-2 round (D): v5's real anatomy (WorkCard.astro) — flush-top image,
+// CLIENT NAME as the heading (not the full case-study title), a 2-line-
+// clamped excerpt, up to 3 square-cornered bordered tag chips from
+// `capabilities`, and a "case study →" mono footer link. Bespoke markup,
+// same rationale/shared treatment as ArticleCard.astro.
 import type { CollectionEntry } from 'astro:content';
 import { withBase } from '../lib/url';
 
@@ -9,15 +14,33 @@ interface Props {
 const { project } = Astro.props;
 const slug = project.id.replace(/\.md$/, '');
 const href = withBase(`/projects/${slug}`);
+const tags = (project.data.capabilities ?? []).slice(0, 3);
 ---
 
-<al-card>
-  {project.data.hero && project.data.showHero && <img slot="image" src={project.data.hero} alt="" loading="lazy" />}
-  <div slot="header" class="sl-stack sl-stack--sm">
-    <al-chip variant="secondary">{project.data.client}</al-chip>
-    <al-heading tagName="h3" variant="sm" isBold={true}>
-      <a href={href}>{project.data.title}</a>
-    </al-heading>
+<a href={href} class="sl-media-card sl-media-card--work">
+  <div class="sl-media-card__image">
+    {project.data.hero && project.data.showHero ? (
+      <img src={withBase(project.data.hero)} alt="" loading="lazy" />
+    ) : (
+      <span class="sl-media-card__image-fallback" aria-hidden="true">&lt;{project.data.client.slice(0, 1)}&gt;</span>
+    )}
   </div>
-  {project.data.oneLiner && <al-text-passage>{project.data.oneLiner}</al-text-passage>}
-</al-card>
+  <div class="sl-media-card__body">
+    {/* T12 audit-3 (height closure) — v5's 32px card title sits between
+        al-heading's scoped 24px (`md`) and 48px (`lg`) steps with nothing
+        between (see ArticleCard.astro's fuller comment). Work-card client
+        names are short (1-2 words: "PetSmart", "IBM") so they don't
+        overwrap at `lg`, and `lg` closes this section's height to within
+        ~0.1% of v5 (measured) — the opposite tradeoff from ArticleCard's
+        long-sentence titles, which overwrap badly at `lg` and overshoot
+        their section. Per-family judgment call, not a rule. */}
+    <al-heading tagName="h3" variant="lg" isBold={true} class="sl-media-card__title">{project.data.client}</al-heading>
+    {project.data.oneLiner && <p class="sl-media-card__excerpt sl-media-card__excerpt--clamp-2 al-u-theme-typography-body-sm">{project.data.oneLiner}</p>}
+    {tags.length > 0 && (
+      <p class="sl-media-card__tags">
+        {tags.map((t) => <span class="sl-tag-chip al-u-theme-typography-body-xs">{t}</span>)}
+      </p>
+    )}
+    <span class="sl-media-card__footer al-u-theme-typography-body-sm" aria-hidden="true">case study →</span>
+  </div>
+</a>

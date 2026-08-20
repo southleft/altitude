@@ -10,15 +10,27 @@
 
 .sl-container {
   width: 100%;
-  max-width: 84rem; /* 1344px — close to v5's 1360px container-sl */
+  /* T12 audit-2 round (A2): exact v5 `container-sl` metrics — 1360px max,
+   * `clamp(1.25rem, 4vw, 3rem)` side gutters (resolves to 48px at 1440,
+   * matching the orchestrator's live measurement). Previously 84rem/1344px
+   * with a flat 24px gutter — a round-3-era approximation. */
+  max-width: 85rem;
   margin-inline: auto;
-  padding-inline: var(--al-theme-space-lg);
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
   box-sizing: border-box;
 }
 
 .sl-container--prose {
   max-width: 45rem; /* ~720px, mirrors v5's container-prose */
   margin-inline: auto;
+}
+
+/* v5's `max-w-md` (28rem/448px) width cap — `al-text-passage`'s `maxWidth`
+ * prop only exposes a binary `sm` step, not a scale, so it can't reproduce
+ * this cap (T12 audit-3 round). Used on plain `<p>` elements where the
+ * component's own typography isn't otherwise needed. */
+.sl-measure-md {
+  max-width: 28rem;
 }
 
 /* `<al-theme>` is `display: contents` (theme.scss) — it never paints a box
@@ -60,6 +72,17 @@
    * hairline in this app expressed as a token formula, never a raw hex. */
   --sl-border-faint: color-mix(in srgb, var(--al-theme-color-border-default-weak) 55%, transparent);
   --sl-grid-line: color-mix(in srgb, var(--al-theme-color-border-default-weak) 45%, transparent);
+  /* T12 audit-2 (A4) — self-hosted IBM Plex Mono (public/fonts/, @font-face
+   * in fonts.css), NOT the generic Altitude `--al-font-family-mono` token
+   * (`ui-monospace, SFMono-Regular, Menlo, Consolas, monospace` — the
+   * `southleft` brand recipe doesn't override it with IBM Plex Mono, a
+   * token-authoring gap documented not fixed here). Every mono surface in
+   * this app reads `--sl-font-mono`, not the Altitude token directly. */
+  --sl-font-mono: 'IBM Plex Mono', Menlo, Consolas, monospace;
+  /* v5's `.text-lead` (`--sl-text-lead`, global.css) — fluid 18px→22px,
+   * reaching 22px at wide desktop viewports (T12 audit-3 height closure —
+   * live-measured 22px at 1440, not the flat 18px round-6 approximated). */
+  --sl-text-lead: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
 }
 
 /* ------------------------------------------------------------------------
@@ -80,7 +103,7 @@
   background: var(--al-color-brand-ink-950);
   padding-block: 0.625rem;
   text-align: center;
-  font-family: var(--al-font-family-mono);
+  font-family: var(--sl-font-mono);
   color: var(--al-theme-color-content-default-weak);
   text-decoration: none;
   transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
@@ -119,7 +142,7 @@ al-theme[mode='light'] .sl-announcement {
   display: flex;
   align-items: center;
   gap: var(--al-theme-space-lg);
-  max-width: 84rem;
+  max-width: 85rem; /* T12 audit-2 (A2) — matches .sl-container's 1360px */
   margin-inline: auto;
   padding-inline: clamp(1.25rem, 4vw, 3rem);
   block-size: 4rem; /* 64px — mobile */
@@ -269,7 +292,7 @@ al-theme[mode='light'] .sl-announcement {
   display: flex;
   flex-direction: column;
   gap: var(--al-theme-space-xxs);
-  max-width: 84rem;
+  max-width: 85rem; /* T12 audit-2 (A2) — matches .sl-container's 1360px */
   margin-inline: auto;
   padding: var(--al-theme-space) clamp(1.25rem, 4vw, 3rem);
 }
@@ -289,7 +312,7 @@ al-theme[mode='light'] .sl-announcement {
 }
 
 .sl-header__mobile-nav-index {
-  font-family: var(--al-font-family-mono);
+  font-family: var(--sl-font-mono);
   color: var(--al-theme-color-content-default-weak);
 }
 
@@ -350,12 +373,18 @@ al-theme[mode='light'] {
   border-radius: var(--al-theme-border-radius-xs);
 }
 
+/* T12 audit-2 (A1) — v5's real `.section-gap` (global.css) is
+ * `padding-block: calc(clamp(6rem, 8vw, 10rem) / 2)`, resolving to 57.6px
+ * top+bottom at 1440 (the orchestrator's live measurement). The previous
+ * `--al-theme-space-xxl` (32px) was a flat token approximation, 44% short.
+ * Reproduced as the literal formula (not a fixed px) so it stays fluid at
+ * other viewports the same way v5's does. */
 .sl-section {
-  padding-block: var(--al-theme-space-xxl);
+  padding-block: calc(clamp(6rem, 8vw, 10rem) / 2);
 }
 
 .sl-section--tight {
-  padding-block: var(--al-theme-space-xl);
+  padding-block: calc(clamp(6rem, 8vw, 10rem) / 4);
 }
 
 .sl-stack {
@@ -376,13 +405,23 @@ al-theme[mode='light'] {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--al-theme-space-xl);
+  /* T12 audit-2 (F, 01/trusted-by) — v5's `gap-x-14 gap-y-12` (56px/48px);
+   * was a flat `--al-theme-space-xl` (28px). */
+  column-gap: 3.5rem;
+  row-gap: 3rem;
 }
 
 .sl-logo-wall img {
+  /* T12 audit-2 (F, 01/trusted-by) — v5's `h-7 md:h-8` (28px → 32px). */
   height: 1.75rem;
   width: auto;
   display: block;
+}
+
+@media (min-width: 48rem) {
+  .sl-logo-wall img {
+    height: 2rem;
+  }
 }
 
 .sl-footer-columns {
@@ -424,6 +463,927 @@ al-text-passage {
   min-inline-size: 0;
 }
 
+/* T12 audit-2 (A5) — v5's section dek is an 18px "lead" paragraph
+ * (`.text-lead`, 2-3 lines, no hard width cap in the markup itself — the
+ * `flex: 1 1 28rem` on the stack above already caps it in practice) — was
+ * unstyled inherited body text (~14-16px). */
+.sl-section-header__dek {
+  margin: 0;
+  font-size: var(--sl-text-lead);
+  line-height: 1.55;
+  color: var(--al-theme-color-content-default-weak);
+}
+
+/* Mono "view all" / inline prose links (v5's `.section-rule`-adjacent "all
+ * insights →" / "all case studies →" and prose links like "Read: ... →") —
+ * lowercase mono, underlined at 40% opacity, full opacity + accent on
+ * hover. Reused by SectionHeader.astro and the POV section. */
+.sl-mono-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--al-theme-space-xxs);
+  font-family: var(--sl-font-mono);
+  color: var(--al-theme-color-content-info-default);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 4px;
+  transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-mono-link:hover {
+  text-decoration-color: currentColor;
+}
+
+.sl-section-header__link {
+  align-self: flex-end;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------------
+ * Media card (v5's ArticleCard.astro / WorkCard.astro anatomy) — spec
+ * 2026-08-20-southleft-example-app, T12 audit-2 round (B/C). Flush-top
+ * image, hairline border, well bg, ~24px content padding, no radius beyond
+ * the brand default. Bespoke markup (`al-card`'s single outer `padding`
+ * can't render an edge-to-edge image) shared by both insights and work
+ * cards; `--work` / `--featured` modifiers cover their small anatomy
+ * differences (aspect ratio, tags row, 2-col span).
+ * -------------------------------------------------------------------- */
+.sl-media-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  border: var(--al-theme-border-width) solid var(--sl-border-faint);
+  background: var(--al-theme-color-background-default-strong);
+  border-radius: var(--al-theme-border-radius);
+  transition: border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-media-card:hover {
+  border-color: var(--al-theme-color-border-default-weak);
+}
+
+.sl-media-card__image {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-block-end: var(--al-theme-border-width) solid var(--sl-border-faint);
+  background: var(--al-theme-color-background-default-strong);
+  display: grid;
+  place-items: center;
+}
+
+.sl-media-card--work .sl-media-card__image {
+  aspect-ratio: 16 / 10;
+}
+
+.sl-media-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+.sl-media-card__image-fallback {
+  font-family: var(--sl-font-mono);
+  color: var(--al-theme-color-content-default-weak);
+}
+
+.sl-media-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  /* T12 audit-3 (height closure) — v5's real `mt-3` rhythm between meta →
+   * title → excerpt is 12px (`--al-theme-space-sm`), not 8px
+   * (`--al-theme-space-xs`, the round-6 value — measured too tight). */
+  gap: var(--al-theme-space-sm);
+  padding: var(--al-theme-space-lg);
+}
+
+.sl-media-card--featured .sl-media-card__body {
+  padding: var(--al-theme-space-xl);
+}
+
+.sl-media-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-sm);
+  margin: 0;
+  font-family: var(--sl-font-mono);
+  /* v5's meta row is the `.kicker` preset (13px), measured at 12px here
+   * (T12 audit-3 height closure) because the markup carried the 12px
+   * `al-u-theme-typography-body-xs` utility class instead. */
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--al-color-brand-paper-450);
+}
+
+al-theme[mode='light'] .sl-media-card__meta {
+  color: var(--al-color-brand-paper-600);
+}
+
+.sl-media-card__meta-accent {
+  color: var(--al-theme-color-content-primary-default);
+}
+
+.sl-media-card__title {
+  /* Spacing to neighbors comes from `.sl-media-card__body`'s flex `gap` —
+   * an explicit margin here double-counted it (T12 audit-3 height
+   * closure). */
+  margin-block-start: 0;
+}
+
+.sl-media-card__excerpt {
+  margin: 0;
+  color: var(--al-theme-color-content-default-weak);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.sl-media-card__excerpt--clamp-2 {
+  -webkit-line-clamp: 2;
+}
+
+.sl-media-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--al-theme-space-xs);
+  margin: 0;
+}
+
+/* v5's WorkCard uses asymmetric gaps (excerpt `mt-2`=8px, tags `mt-4`=16px)
+ * where ArticleCard uses a uniform `mt-3`=12px rhythm — T12 audit-3 height
+ * closure. `.sl-media-card__body`'s shared gap already supplies the first
+ * 8px between every pair; this adds the extra 8px WorkCard's tags row
+ * needs on top, giving 16px total between excerpt and tags without
+ * touching the ArticleCard-shared 12px `.sl-media-card__body` gap. */
+.sl-media-card--work .sl-media-card__body {
+  gap: var(--al-theme-space-xs);
+}
+
+.sl-media-card--work .sl-media-card__tags {
+  margin-block-start: var(--al-theme-space-xs);
+}
+
+.sl-tag-chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--sl-font-mono);
+  color: var(--al-theme-color-content-default-weak);
+  border: var(--al-theme-border-width) solid var(--sl-border-faint);
+  border-radius: var(--al-theme-border-radius-xs);
+  padding: 0.125rem var(--al-theme-space-xs);
+}
+
+.sl-media-card__footer {
+  margin-block-start: auto;
+  padding-block-start: var(--al-theme-space-lg);
+  font-family: var(--sl-font-mono);
+  color: var(--al-theme-color-content-primary-default);
+}
+
+/* ------------------------------------------------------------------------
+ * Service card (v5's index.astro `.card` usage in the "04/services" —
+ * really "03/services" — grid) — spec 2026-08-20-southleft-example-app,
+ * T12 audit-2 round (D). Well-bg bordered card, ~40px padding, 32px
+ * Agrandir heading with a top-right accent arrow glyph, mono 13px list
+ * items with an accent "›" chevron bullet. Whole card is a link. Bespoke
+ * markup — `al-card` + `al-list` can't place an absolutely-positioned
+ * corner glyph or a chevron-bulleted mono list without fighting their
+ * shadow DOM, same rationale as the media cards above.
+ * -------------------------------------------------------------------- */
+.sl-service-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  /* v5's real card padding is 40px (`p-10`) — `--al-theme-space-xxl` tops
+   * out at 32px (T12 audit-3 height closure: measured 32px, not the 40px
+   * assumed in round 4), so this reaches one step further via `calc()`. */
+  padding: calc(var(--al-theme-space-xxl) + var(--al-theme-space-xs));
+  border: var(--al-theme-border-width) solid var(--sl-border-faint);
+  background: var(--al-theme-color-background-default-strong);
+  border-radius: var(--al-theme-border-radius);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-service-card:hover {
+  border-color: var(--al-theme-color-border-default-weak);
+}
+
+.sl-service-card:hover .sl-service-card__arrow {
+  transform: translate(2px, -2px);
+}
+
+.sl-service-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--al-theme-space-lg);
+}
+
+.sl-service-card__heading {
+  font-family: var(--al-font-family-secondary, Agrandir, sans-serif);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0;
+  color: var(--al-theme-color-content-default);
+}
+
+.sl-service-card__arrow {
+  flex: 0 0 auto;
+  font-family: var(--sl-font-mono);
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--al-theme-color-content-primary-default);
+  transition: transform var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-service-card__body {
+  margin: var(--al-theme-space) 0 0;
+  color: var(--al-theme-color-content-default-weak);
+  line-height: 1.6;
+}
+
+.sl-service-card__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin: var(--al-theme-space-lg) 0 0;
+  padding: 0;
+  font-family: var(--sl-font-mono);
+  /* T12 audit-3 (height closure) — live-measured v5 list is 12px/16px
+   * line-height (`text-xs`/`leading-4`), not 13px. */
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--al-theme-color-content-default-weak);
+}
+
+.sl-service-card__list li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--al-theme-space-xs);
+}
+
+.sl-service-card__list li::before {
+  content: '›';
+  color: var(--al-theme-color-content-primary-default);
+}
+
+/* ------------------------------------------------------------------------
+ * Try-the-system ("04/try-the-system") — spec
+ * 2026-08-20-southleft-example-app, T12 audit-2 round (E). Transcribed
+ * from v5's TokenPlayground.astro `<style>` block. `--pg-*` custom
+ * properties are the LOCAL preview's own self-contained demo state (set by
+ * TrySystem.astro's script) — not design tokens, so raw px sizing here
+ * mirrors v5's own local-only `<style>` block exactly. Editor chrome
+ * (fieldset/legend/pills/swatches) reads real `--al-theme-*` tokens.
+ * -------------------------------------------------------------------- */
+.sl-pg-grid {
+  display: grid;
+  gap: var(--al-theme-space-lg);
+  margin-block-start: var(--al-theme-space-xl);
+}
+
+@media (min-width: 64rem) {
+  .sl-pg-grid {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+}
+
+.sl-pg-editor {
+  border-radius: var(--al-theme-border-radius-md);
+}
+
+.sl-pg-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-lg);
+  padding: var(--al-theme-space-lg);
+}
+
+.sl-pg-fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.sl-pg-legend {
+  display: block;
+  font-family: var(--sl-font-mono);
+  font-size: 0.75rem;
+  color: var(--al-color-brand-paper-400);
+  margin-block-end: var(--al-theme-space-xs);
+}
+
+.sl-pg-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--al-theme-space-xs);
+}
+
+.sl-pg-swatch,
+.sl-pg-pill {
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+}
+
+.sl-pg-swatch input,
+.sl-pg-pill input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sl-pg-swatch {
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: var(--al-theme-border-radius-role-action);
+  background: var(--sw);
+  border: 2px solid transparent;
+  transition: transform var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-swatch:hover {
+  transform: translateY(-2px);
+}
+
+.sl-pg-swatch:has(input:checked) {
+  border-color: var(--al-color-brand-paper-50);
+  outline: 2px solid var(--al-color-brand-ink-950);
+  outline-offset: 2px;
+}
+
+.sl-pg-swatch:has(input:focus-visible) {
+  outline: 2px solid var(--al-theme-color-content-info-default);
+  outline-offset: 3px;
+}
+
+.sl-pg-pill span {
+  display: inline-block;
+  font-family: var(--sl-font-mono);
+  font-size: 0.75rem;
+  color: var(--al-color-brand-paper-400);
+  border: 1px solid var(--al-color-brand-ink-600);
+  border-radius: var(--al-theme-border-radius-role-action);
+  padding: 0.35rem 0.8rem;
+  transition:
+    color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-pill:hover span {
+  color: var(--al-color-brand-paper-50);
+}
+
+.sl-pg-pill:has(input:checked) span {
+  color: var(--al-color-brand-ink-950);
+  background: var(--al-color-brand-paper-50);
+  border-color: var(--al-color-brand-paper-50);
+}
+
+.sl-pg-pill:has(input:focus-visible) span {
+  outline: 2px solid var(--al-theme-color-content-info-default);
+  outline-offset: 2px;
+}
+
+.sl-pg-slider input[type='range'] {
+  width: 100%;
+  accent-color: var(--al-color-brand-red-500);
+}
+
+.sl-pg-note {
+  margin: 0;
+  font-family: var(--sl-font-mono);
+  color: var(--al-color-brand-paper-500);
+}
+
+.sl-pg-reset {
+  align-self: flex-start;
+  font-family: var(--sl-font-mono);
+  color: var(--al-color-brand-paper-500);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-reset:hover {
+  color: var(--al-color-brand-paper-50);
+}
+
+.sl-pg-apply {
+  border-block-start: 1px solid var(--al-color-brand-ink-700);
+  padding-block-start: var(--al-theme-space);
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-xs);
+}
+
+.sl-pg-apply p {
+  margin: 0;
+  font-family: var(--sl-font-mono);
+  color: var(--al-color-brand-paper-500);
+}
+
+.sl-pg-apply-btn {
+  align-self: flex-start;
+  font-family: var(--sl-font-mono);
+  font-weight: 500;
+  color: var(--al-color-brand-ink-950);
+  background: var(--al-color-brand-paper-50);
+  border: 0;
+  border-radius: var(--al-theme-border-radius-role-action);
+  padding: 0.55rem 1.2rem;
+  cursor: pointer;
+  transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-apply-btn:hover {
+  background: var(--al-color-brand-paper-200);
+}
+
+/* ---- Stage (local preview) ---- */
+.sl-pg-stage {
+  --pg-accent: var(--al-color-brand-red-500);
+  --pg-radius: 4px;
+  --pg-space: 1;
+  --pg-wdth: 125;
+  --pg-bg: var(--al-color-brand-ink-950);
+  --pg-surface: var(--al-color-brand-ink-800);
+  --pg-fg: var(--al-color-brand-paper-50);
+  --pg-fg-muted: var(--al-color-brand-paper-400);
+  --pg-border: var(--al-color-brand-ink-600);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-sm);
+  background: var(--pg-bg);
+  border: var(--al-theme-border-width) solid var(--sl-border-faint);
+  border-radius: var(--al-theme-border-radius-md);
+  padding: clamp(1rem, 3vw, 2rem);
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--pg-border) 30%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--pg-border) 30%, transparent) 1px, transparent 1px);
+  background-size: 40px 40px;
+  transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-stage[data-pg-mode='light'] {
+  --pg-bg: var(--al-color-brand-paper-100);
+  --pg-surface: var(--al-color-brand-paper-0);
+  --pg-fg: var(--al-color-brand-ink-900);
+  --pg-fg-muted: var(--al-color-brand-paper-600);
+  --pg-border: var(--al-color-brand-paper-300);
+}
+
+.sl-pg-app {
+  background: var(--pg-surface);
+  color: var(--pg-fg);
+  border: 1px solid var(--pg-border);
+  border-radius: var(--pg-radius);
+  overflow: hidden;
+  transition:
+    background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    border-radius var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-app-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1rem;
+  border-block-end: 1px solid var(--pg-border);
+  font-family: var(--sl-font-mono);
+  font-size: 0.6875rem;
+  color: var(--pg-fg-muted);
+}
+
+.sl-pg-dot {
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: var(--al-theme-border-radius-role-action);
+  background: var(--pg-accent);
+  transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-badge {
+  margin-inline-start: auto;
+  border: 1px solid var(--pg-border);
+  border-radius: calc(var(--pg-radius) / 2);
+  padding: 2px 7px;
+  transition: border-radius var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-app-body {
+  padding: calc(1.6rem * var(--pg-space)) calc(1.6rem * var(--pg-space)) calc(1.8rem * var(--pg-space));
+  display: flex;
+  flex-direction: column;
+  gap: calc(0.9rem * var(--pg-space));
+  transition:
+    padding var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    gap var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-kicker {
+  margin: 0;
+  font-family: var(--sl-font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--pg-accent);
+  transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-heading {
+  margin: 0;
+  font-family: var(--al-font-family-secondary, Agrandir, sans-serif);
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  line-height: 1.1;
+  font-variation-settings: 'wght' 600, 'wdth' var(--pg-wdth);
+  transition: font-variation-settings var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-copy {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--pg-fg-muted);
+  max-width: 46ch;
+}
+
+.sl-pg-stats {
+  display: flex;
+  gap: calc(1.5rem * var(--pg-space));
+  transition: gap var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.sl-pg-stat strong {
+  font-family: var(--al-font-family-secondary, Agrandir, sans-serif);
+  font-size: 1.5rem;
+  font-variation-settings: 'wght' 600, 'wdth' var(--pg-wdth);
+  color: var(--pg-accent);
+  transition:
+    color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    font-variation-settings var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-stat span {
+  font-family: var(--sl-font-mono);
+  font-size: 0.6875rem;
+  color: var(--pg-fg-muted);
+}
+
+.sl-pg-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(0.6rem * var(--pg-space));
+  align-items: center;
+}
+
+.sl-pg-input {
+  flex: 1 1 160px;
+  background: transparent;
+  border: 1px solid var(--pg-border);
+  border-radius: calc(var(--pg-radius) * 0.75);
+  color: var(--pg-fg);
+  font-size: 0.875rem;
+  padding: calc(0.55rem * var(--pg-space)) 0.9rem;
+  transition:
+    border-radius var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    padding var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-input:focus-visible {
+  outline: 2px solid var(--pg-accent);
+  outline-offset: 1px;
+}
+
+.sl-pg-btn {
+  font-weight: 500;
+  font-size: 0.875rem;
+  border-radius: var(--pg-radius);
+  padding: calc(0.55rem * var(--pg-space)) calc(1.1rem * var(--pg-space));
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition:
+    border-radius var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    padding var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-btn-primary {
+  background: var(--pg-accent);
+  color: var(--al-color-brand-ink-950);
+}
+
+.sl-pg-btn-ghost {
+  background: transparent;
+  color: var(--pg-fg);
+  border-color: var(--pg-border);
+}
+
+.sl-pg-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.sl-pg-tag {
+  font-family: var(--sl-font-mono);
+  font-size: 0.6875rem;
+  color: var(--pg-fg-muted);
+  border: 1px solid var(--pg-border);
+  border-radius: calc(var(--pg-radius) / 2);
+  padding: 2px 8px;
+  transition: border-radius var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-readout {
+  margin: 0;
+  font-family: var(--sl-font-mono);
+  color: var(--al-color-brand-paper-450);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+al-theme[mode='light'] .sl-pg-readout {
+  color: var(--al-color-brand-paper-600);
+}
+
+.sl-pg-act2 {
+  margin-block-start: var(--al-theme-space-xxl);
+}
+
+.sl-pg-act2-grid {
+  display: grid;
+  gap: var(--al-theme-space-xl);
+  align-items: center;
+  margin-block-start: var(--al-theme-space-lg);
+}
+
+@media (min-width: 64rem) {
+  .sl-pg-act2-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  }
+}
+
+.sl-pg-act2-copy {
+  margin: var(--al-theme-space-xs) 0 0;
+  line-height: 1.6;
+  color: var(--al-theme-color-content-default-weak);
+}
+
+.sl-pg-act2-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--al-theme-space-sm);
+}
+
+.sl-pg-act2-input {
+  flex: 1 1 14rem;
+  min-inline-size: 0;
+  border-radius: var(--al-theme-border-radius-sm);
+  border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+  background: var(--al-theme-color-background-default);
+  padding: var(--al-theme-space-sm) var(--al-theme-space);
+  font-family: var(--sl-font-mono);
+  color: var(--al-theme-color-content-default);
+}
+
+.sl-pg-act2-input::placeholder {
+  color: var(--al-theme-color-content-default-weak);
+}
+
+.sl-pg-act2-input:focus-visible {
+  outline: 2px solid var(--al-theme-color-content-primary-default);
+  outline-offset: 2px;
+}
+
+.sl-pg-act2-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--al-theme-space-xs);
+  margin-block-start: var(--al-theme-space);
+}
+
+.sl-pg-act2-chip {
+  cursor: pointer;
+  border: none;
+  transition:
+    border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-act2-chip:hover {
+  color: var(--al-theme-color-content-default);
+  border-color: var(--al-theme-color-content-primary-default);
+}
+
+.sl-pg-closing {
+  max-width: 42rem;
+  margin: var(--al-theme-space-xxl) 0 0;
+  line-height: 1.6;
+  color: var(--al-theme-color-content-default-weak);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sl-pg-app,
+  .sl-pg-app *,
+  .sl-pg-stage {
+    transition: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------------
+ * CTA band — spec 2026-08-20-southleft-example-app, T12 audit-2 round (F).
+ * v5's real CTABand.astro: its own grid-texture background, a `<cta>`
+ * kicker, and `py-24/md:py-32` padding — none of which `<al-hero>`'s
+ * centered layout provides (no texture, no kicker, less padding). Full-
+ * bleed (own `.sl-container`, not nested in one — every call site's
+ * previous `.sl-container.sl-section` wrapper was removed to match).
+ * -------------------------------------------------------------------- */
+.sl-cta-band {
+  position: relative;
+  overflow: hidden;
+  border-block-start: var(--al-theme-border-width) solid var(--sl-border-faint);
+}
+
+.sl-cta-band__inner {
+  position: relative;
+  padding-block: 6rem;
+  text-align: center;
+}
+
+@media (min-width: 48rem) {
+  .sl-cta-band__inner {
+    padding-block: 8rem;
+  }
+}
+
+.sl-cta-band__heading {
+  margin-inline: auto;
+  margin-block-start: var(--al-theme-space);
+  max-width: 48rem;
+}
+
+.sl-cta-band__dek {
+  margin-inline: auto;
+  /* v5's real `mt-5` (20px) — closest single token is `--al-theme-space`
+   * (16px, T12 audit-3 height closure; was `-sm`/12px). */
+  margin-block-start: var(--al-theme-space);
+  max-width: 32rem;
+  font-size: var(--sl-text-lead);
+  line-height: 1.55;
+  color: var(--al-theme-color-content-default-weak);
+}
+
+.sl-cta-band__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--al-theme-space);
+  margin-block-start: var(--al-theme-space-xl);
+}
+
+/* ------------------------------------------------------------------------
+ * Tool card ("05/open-source") — spec 2026-08-20-southleft-example-app,
+ * T12 audit-2 round (F). v5's real anatomy: a mono `$ cmd` line in accent
+ * (the `$`/`//` prefix muted), a description, and a mono footer link — no
+ * image, no chip. Bespoke markup, same rationale as the other card
+ * rebuilds.
+ * -------------------------------------------------------------------- */
+.sl-tool-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-sm);
+  height: 100%;
+  box-sizing: border-box;
+  padding: var(--al-theme-space-xl);
+  border: var(--al-theme-border-width) solid var(--sl-border-faint);
+  background: var(--al-theme-color-background-default-strong);
+  border-radius: var(--al-theme-border-radius);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-tool-card:hover {
+  border-color: var(--al-theme-color-border-default-weak);
+}
+
+.sl-tool-card--dashed {
+  border-style: dashed;
+  justify-content: center;
+}
+
+.sl-tool-card__cmd {
+  margin: 0;
+  font-family: var(--sl-font-mono);
+  /* v5's real 14px (`text-sm`, T12 audit-3 height closure — was
+   * unset/inheriting the 16px body size). */
+  font-size: 0.875rem;
+  color: var(--al-theme-color-content-primary-default);
+}
+
+.sl-tool-card__cmd-prefix {
+  color: var(--al-color-brand-paper-450);
+}
+
+al-theme[mode='light'] .sl-tool-card__cmd-prefix {
+  color: var(--al-color-brand-paper-600);
+}
+
+.sl-tool-card__desc {
+  margin: 0;
+  color: var(--al-theme-color-content-default-weak);
+  /* v5's real 14px/22.75px (`text-sm`, T12 audit-3 height closure — was
+   * unset/inheriting the 16px body size). */
+  font-size: 0.875rem;
+  line-height: 1.625;
+}
+
+.sl-tool-card__footer {
+  margin-block-start: auto;
+  /* v5's real `pt-2` (8px, T12 audit-3 height closure — measured, was
+   * `--al-theme-space`/16px). */
+  padding-block-start: var(--al-theme-space-xs);
+  font-family: var(--sl-font-mono);
+  color: var(--al-theme-color-content-primary-default);
+  text-decoration: none;
+}
+
+/* ------------------------------------------------------------------------
+ * Quote card ("07/quotes-from-folks") — spec 2026-08-20-southleft-example-
+ * app, T12 audit-3 (final polish round). v5's real anatomy: a well-bg
+ * hairline-bordered card, ~40px padding, a large accent display-font
+ * opening-quote glyph, a 20px display-font quote (a lighter/wider
+ * Agrandir instance via `font-variation-settings`), and a single mono
+ * "Name — Role" attribution line. `al-testimonial`'s left-border-accent
+ * anatomy can't express this — bespoke markup, component left untouched
+ * for its other consumers (ai-design-systems.astro etc).
+ * -------------------------------------------------------------------- */
+.sl-quote-card {
+  margin: 0;
+  height: 100%;
+  box-sizing: border-box;
+  padding: var(--al-theme-space-xxl);
+  border: var(--al-theme-border-width) solid var(--sl-border-faint);
+  background: var(--al-theme-color-background-default-strong);
+  border-radius: var(--al-theme-border-radius);
+}
+
+.sl-quote-card__glyph {
+  font-family: var(--al-font-family-secondary, Agrandir, sans-serif);
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--al-theme-color-content-primary-default);
+}
+
+.sl-quote-card__quote {
+  margin: var(--al-theme-space-xs) 0 0;
+  font-family: var(--al-font-family-secondary, Agrandir, sans-serif);
+  font-size: 1.25rem;
+  line-height: 1.35;
+  font-variation-settings: 'wght' 450, 'wdth' 105;
+  color: var(--al-theme-color-content-default);
+}
+
+.sl-quote-card__attribution {
+  margin: var(--al-theme-space-lg) 0 0;
+  font-family: var(--sl-font-mono);
+  font-size: 0.75rem;
+  color: var(--al-color-brand-paper-450);
+}
+
+al-theme[mode='light'] .sl-quote-card__attribution {
+  color: var(--al-color-brand-paper-600);
+}
+
+.sl-quote-card__name {
+  color: var(--al-theme-color-content-default-weak);
+}
+
 /* ------------------------------------------------------------------------
  * Section rule + kicker (v5's motifs M5 / M2) — spec
  * 2026-08-20-southleft-example-app, T12 (round 4). v5 opens every home-page
@@ -437,11 +1397,27 @@ al-text-passage {
   display: flex;
   align-items: center;
   gap: var(--al-theme-space);
-  font-family: var(--al-font-family-mono);
+  font-family: var(--sl-font-mono);
+  /* T12 audit-2 (A3) — v5's rule label is 12px (its own `--sl-text-caption`
+   * preset, not the inherited 16px body size this rule previously left
+   * unset) at `letter-spacing: 0.08em` (already correct — 0.08em resolves
+   * to 0.96px at 12px, matching the live measurement; the previous 1.28px
+   * reading was 0.08em of the WRONG 16px base, not a tracking bug). Color
+   * is v5's "subtle" step (`--sl-fg-subtle`, paper-450 dark / paper-600
+   * light) — one step past `--al-theme-color-content-default-weak`
+   * (paper-400/600), which has no distinct "subtle" rung of its own in
+   * dark mode, so this reaches for the brand primitive directly per mode,
+   * the same escape hatch already used for `.sl-terminal`/
+   * `.sl-announcement`. */
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-color-brand-paper-450);
   margin-block-end: var(--al-theme-space-xl);
+}
+
+al-theme[mode='light'] .sl-section-rule {
+  color: var(--al-color-brand-paper-600);
 }
 
 .sl-section-rule::before,
@@ -457,7 +1433,12 @@ al-text-passage {
 }
 
 .sl-kicker {
-  font-family: var(--al-font-family-mono);
+  font-family: var(--sl-font-mono);
+  /* v5's `.kicker` preset is 13px (`--sl-text-kicker`), one step up from
+   * `.section-rule`'s 12px (`--sl-text-caption`) — was previously unset
+   * (inheriting the 16px body size, same bug as `.sl-section-rule`). */
+  font-size: 0.8125rem;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--al-theme-color-content-default-weak);
@@ -603,7 +1584,7 @@ al-text-passage {
 .sl-hero__chip-note {
   margin-block-start: var(--al-theme-space-sm);
   margin-block-end: 0;
-  font-family: var(--al-font-family-mono);
+  font-family: var(--sl-font-mono);
   color: var(--al-theme-color-content-default-weak);
 }
 
@@ -630,7 +1611,7 @@ al-text-passage {
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
-  font-family: var(--al-font-family-mono);
+  font-family: var(--sl-font-mono);
   color: var(--al-theme-color-content-default-weak);
   border: var(--al-theme-border-width) solid var(--sl-border-faint);
   border-radius: var(--al-theme-border-radius-xs);
@@ -662,7 +1643,7 @@ al-text-passage {
   color: var(--al-color-brand-paper-100);
   border: var(--al-theme-border-width) solid var(--al-color-brand-ink-600);
   border-radius: var(--al-theme-border-radius-md);
-  font-family: var(--al-font-family-mono);
+  font-family: var(--sl-font-mono);
   line-height: 1.7;
   overflow: hidden;
 }

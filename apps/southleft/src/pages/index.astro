@@ -6,12 +6,14 @@
 // token-chip row, and static terminal panel are now transcribed too (see
 // src/styles/layout.css `.sl-hero*` / `.sl-token-chip` / `.sl-terminal*`),
 // and every section opens with v5's `.section-rule` (index/label), matching
-// v5's own numbering exactly. Still NOT reproduced (bespoke, animation-
+// v5's own numbering exactly. T12 audit-2 round (E): "04 / try-the-system"
+// (TokenPlayground.astro) is now built and wired too — see
+// components/TrySystem.astro. Still NOT reproduced (bespoke, animation-
 // driven, no al-* equivalent — deferred to a follow-up animations session):
 // the `#hero-murmur` generative canvas, `GenerativeCanvas` ("00 / the
-// canvas"), `TokenPlayground` ("04 / ..."), `Marquee`, the token chips'
-// drag interaction, and the terminal's typing animation. Everything else —
-// content, IA, section order, section designs — is transcribed.
+// canvas"), `Marquee`, the token chips' drag interaction, and the
+// terminal's typing animation. Everything else — content, IA, section
+// order, section designs — is transcribed.
 //
 // `data-section-id` on each top-level <section> is the layout resolver's
 // (src/lib/layout-resolver.ts, T5) reorder target — the AI direction panel
@@ -26,6 +28,7 @@ import WorkCard from '../components/WorkCard.astro';
 import CTABand from '../components/CTABand.astro';
 import AIDirectionPanel from '../components/AIDirectionPanel.astro';
 import SectionHeader from '../components/SectionHeader.astro';
+import TrySystem from '../components/TrySystem.astro';
 import { CTA } from '../lib/site';
 import { withBase } from '../lib/url';
 
@@ -167,10 +170,10 @@ const testimonials = [
        session (spec 2026-08-20-southleft-example-app, T12). -->
 
   <!-- 01 / Proof strip -->
-  <section class="sl-container sl-section--tight" data-section-id="logos">
+  <section class="sl-container sl-section" data-section-id="logos">
     <div class="sl-section-rule" aria-hidden="true"><span>01 / trusted-by</span></div>
-    <al-text-passage maxWidth="sm">Trusted since 2012 by teams who care what's under the hood.</al-text-passage>
-    <div class="sl-logo-wall" style="margin-top: var(--al-theme-space-lg);">
+    <p class="sl-measure-md al-u-theme-typography-body-sm" style="margin-top: 2rem; color: var(--al-theme-color-content-default-weak);">Trusted since 2012 by teams who care what's under the hood.</p>
+    <div class="sl-logo-wall" style="margin-top: 3rem;">
       {logos.map((logo) => <img src={withBase(`/logos/${logo.file}`)} alt={logo.name} loading="lazy" />)}
     </div>
   </section>
@@ -178,20 +181,20 @@ const testimonials = [
   <!-- 02 / The shift (POV) -->
   <section class="sl-container sl-section">
     <div class="al-u-grid">
-      <div class="al-u-grid__item col:12 col:5@lg">
-        <div class="sl-section-rule" aria-hidden="true"><span>02 / the-shift</span></div>
-        <p class="sl-kicker sl-kicker--accent al-u-theme-typography-body-xs">&lt;why-now&gt;</p>
-        <al-heading tagName="h2" variant="lg" isBold={true} style="margin-top: var(--al-theme-space-xs);">AI doesn't replace your design system. It exposes it.</al-heading>
-      </div>
       <div class="al-u-grid__item col:12 col:7@lg">
-        <al-text-passage maxWidth="md">
+        <div class="sl-section-rule" aria-hidden="true"><span>02 / the-shift</span></div>
+        <p class="sl-kicker sl-kicker--accent" style="margin-top: 2rem;">&lt;why-now&gt;</p>
+        <al-heading tagName="h2" variant="lg" isBold={true} style="margin-top: var(--al-theme-space-sm);">AI doesn't replace your design system. It exposes it.</al-heading>
+      </div>
+      <div class="al-u-grid__item col:12 col:5@lg">
+        <p class="sl-section-header__dek" style="max-width: 42rem;">
           Systems built with structured context — clean tokens, typed components, real
           documentation — become force multipliers for AI-assisted teams. Systems without it
           become bottlenecks. We published a framework for getting from one to the other.
-        </al-text-passage>
-        <al-link href={withBase('/insights/design-systems/context-based-design-systems-a-new-model-for-the-ai-driven-product-lifecycle')} style="margin-top: var(--al-theme-space-sm); display: inline-block;">
+        </p>
+        <a href={withBase('/insights/design-systems/context-based-design-systems-a-new-model-for-the-ai-driven-product-lifecycle')} class="sl-mono-link" style="margin-top: var(--al-theme-space-lg);">
           Read: Context-Based Design Systems →
-        </al-link>
+        </a>
       </div>
     </div>
   </section>
@@ -204,24 +207,27 @@ const testimonials = [
       heading="What we do"
       dek="AI + design systems is our main practice — audits, workshops, embedded engineering, and ongoing research at the edge of MCP, agents, and generative UI."
     />
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <div class="al-u-grid" style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);">
       {services.map((s) => (
         <div class="al-u-grid__item col:12 col:6@md">
-          <al-card style="height:100%; box-sizing:border-box;">
-            <div slot="header"><al-heading tagName="h3" variant="md" isBold={true}><a href={withBase(s.href)}>{s.name}</a></al-heading></div>
-            <al-text-passage>{s.body}</al-text-passage>
-            <al-list>
-              {s.items.map((item) => <al-list-item>{item}</al-list-item>)}
-            </al-list>
-          </al-card>
+          <a href={withBase(s.href)} class="sl-service-card">
+            <div class="sl-service-card__head">
+              <h3 class="sl-service-card__heading">{s.name}</h3>
+              <span class="sl-service-card__arrow" aria-hidden="true">↗</span>
+            </div>
+            <p class="sl-service-card__body">{s.body}</p>
+            <ul class="sl-service-card__list">
+              {s.items.map((item) => <li>{item}</li>)}
+            </ul>
+          </a>
         </div>
       ))}
     </div>
   </section>
 
-  <!-- 04 / Token playground — TokenPlayground is bespoke, no al-* equivalent
-       and not part of this round's scope. Deferred alongside the other
-       animation-driven pieces (spec 2026-08-20-southleft-example-app, T12). -->
+  <!-- 04 / Try the system — v5's TokenPlayground.astro, transcribed +
+       wired (spec 2026-08-20-southleft-example-app, T12 audit-2 round E). -->
+  <TrySystem />
 
   <!-- 05 / Open-source tools -->
   <section class="sl-container sl-section" data-section-id="tools">
@@ -231,24 +237,22 @@ const testimonials = [
       heading="We publish our homework"
       dek="If we recommend a workflow, it's because we've already built and shipped it. Open-source, in production, used by real teams."
     />
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <div class="al-u-grid" style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);">
       {tools.map((t) => (
         <div class="al-u-grid__item col:12 col:6@md col:4@lg">
-          <al-card style="height:100%; box-sizing:border-box;">
-            <div slot="header"><p class="al-u-theme-typography-body-sm">$ {t.cmd}</p></div>
-            <al-text-passage>{t.desc}</al-text-passage>
-            <al-link href={t.href.startsWith('http') ? t.href : withBase(t.href)} target={t.href.startsWith('http') ? '_blank' : undefined}>
-              {t.href.startsWith('http') ? 'github →' : 'explore →'}
-            </al-link>
-          </al-card>
+          <a href={t.href.startsWith('http') ? t.href : withBase(t.href)} target={t.href.startsWith('http') ? '_blank' : undefined} class="sl-tool-card">
+            <p class="sl-tool-card__cmd"><span class="sl-tool-card__cmd-prefix">$</span> {t.cmd}</p>
+            <p class="sl-tool-card__desc">{t.desc}</p>
+            <span class="sl-tool-card__footer" aria-hidden="true">{t.href.startsWith('http') ? 'github →' : 'explore →'}</span>
+          </a>
         </div>
       ))}
       <div class="al-u-grid__item col:12 col:6@md col:4@lg">
-        <al-card style="height:100%; box-sizing:border-box;">
-          <div slot="header"><p class="al-u-theme-typography-body-sm">and the course</p></div>
-          <al-text-passage><strong>AI &amp; Design Systems</strong> — a new online course from Brad Frost and Southleft. Grounded, practical, shaped by real work with large-scale teams.</al-text-passage>
-          <al-link href={withBase('/services/workshops-training')}>Get early access →</al-link>
-        </al-card>
+        <div class="sl-tool-card sl-tool-card--dashed">
+          <p class="sl-tool-card__cmd"><span class="sl-tool-card__cmd-prefix">//</span> and the course</p>
+          <p class="sl-tool-card__desc"><strong>AI &amp; Design Systems</strong> — a new online course from Brad Frost and Southleft. Grounded, practical, shaped by real work with large-scale teams.</p>
+          <a href={withBase('/services/workshops-training')} class="sl-tool-card__footer">get early access →</a>
+        </div>
       </div>
     </div>
   </section>
@@ -261,9 +265,9 @@ const testimonials = [
       heading="Proof, not promises"
       dek="Design systems and front ends shipped for enterprises, startups, and everything between."
       linkHref="/work"
-      linkLabel="All case studies →"
+      linkLabel="all case studies →"
     />
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <div class="al-u-grid" style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);">
       {featuredWork.map((w) => (
         <div class="al-u-grid__item col:12 col:4@md">
           <WorkCard project={w} />
@@ -272,13 +276,24 @@ const testimonials = [
     </div>
   </section>
 
-  <!-- 07 / Testimonials -->
+  <!-- 07 / Testimonials — rebuilt as bespoke `.sl-quote-card` markup, T12
+       audit-3 (final polish round): `al-testimonial`'s left-border-accent
+       anatomy can't express v5's real card (a large display-font opening
+       quote glyph, a well-bg hairline border, a single mono attribution
+       line) — same rationale as the other card rebuilds. `al-testimonial`
+       itself is untouched for any other consumer. -->
   <section class="sl-container sl-section" data-section-id="testimonials">
     <div class="sl-section-rule" aria-hidden="true"><span>07 / quotes-from-folks</span></div>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <div class="al-u-grid" style="margin-top: calc(var(--al-theme-space-xxl) * 1.5);">
       {testimonials.map((t) => (
         <div class="al-u-grid__item col:12 col:6@md">
-          <al-testimonial attribution={t.name} data-testimonial-role={t.role}>{t.quote}</al-testimonial>
+          <figure class="sl-quote-card">
+            <div class="sl-quote-card__glyph" aria-hidden="true">&ldquo;</div>
+            <blockquote class="sl-quote-card__quote">{t.quote}</blockquote>
+            <figcaption class="sl-quote-card__attribution">
+              <span class="sl-quote-card__name">{t.name}</span> — {t.role}
+            </figcaption>
+          </figure>
         </div>
       ))}
     </div>
@@ -292,9 +307,9 @@ const testimonials = [
       heading="Latest thinking"
       dek="Design systems, AI, and the craft of building for the web — published as we learn it."
       linkHref="/insights"
-      linkLabel="All insights →"
+      linkLabel="all insights →"
     />
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <div class="al-u-grid" style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);">
       {posts.map((p) => (
         <div class="al-u-grid__item col:12 col:4@md">
           <ArticleCard post={p} />
@@ -303,34 +318,9 @@ const testimonials = [
     </div>
   </section>
 
-  <section class="sl-container sl-section" data-section-id="cta">
+  <section data-section-id="cta">
     <CTABand />
   </section>
 
   <AIDirectionPanel />
 </Base>
-
-<script>
-  // T8 a11y fix. `al-testimonial`'s `role` property (the person's JOB TITLE)
-  // shares its name with the global ARIA `role` attribute — setting it as a
-  // plain HTML attribute (the only way to set it from static markup) makes
-  // the browser treat "Producer, Big Medium" etc. as the element's ARIA
-  // role, an axe `aria-roles` CRITICAL violation. This is a library API
-  // naming collision (documented, not fixed, in T8's verification notes —
-  // out of scope to rename a shipped component property here); the
-  // mitigation below stays entirely in this page: read the value from a
-  // harmless `data-testimonial-role` attribute instead and set it as a JS
-  // PROPERTY, which Lit's reactive accessor honors without ever touching
-  // the native `role=` attribute — but ONLY once `al-testimonial` is
-  // actually defined. Until then, `role` resolves to the built-in
-  // `HTMLElement`/ARIAMixin accessor (every element has one), which DOES
-  // reflect to the attribute — the exact bug this works around — so this
-  // must not run before `customElements.whenDefined` resolves, regardless
-  // of this script's position relative to Base.astro's own registration
-  // script in document order.
-  customElements.whenDefined('al-testimonial').then(() => {
-    document.querySelectorAll<HTMLElement>('al-testimonial[data-testimonial-role]').forEach((el) => {
-      (el as HTMLElement & { role?: string }).role = el.dataset.testimonialRole;
-    });
-  });
-</script>

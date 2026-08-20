@@ -24,3 +24,24 @@
   font-weight: 100 900;
   font-display: swap;
 }
+
+/* IBM Plex Mono — self-hosted, T12 audit-2 round (A4). See
+ * public/fonts/README.md for provenance (OFL, IBM Corp., copied unmodified
+ * from the `@fontsource/ibm-plex-mono` package v5 itself loads). Wired
+ * through `--sl-font-mono` (src/styles/layout.css `.sl-page`), NOT a raw
+ * `font-family: 'IBM Plex Mono'` anywhere in page/component CSS. */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/southleft/fonts/ibm-plex-mono-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/southleft/fonts/ibm-plex-mono-latin-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
