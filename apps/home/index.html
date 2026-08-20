@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Altitude</title>
+    <title>Altitude — an AI-integrated design system</title>
+    <meta name="description" content="Altitude is a design system by Southleft: 77 components, a scoped multi-brand token pipeline, and an MCP server built for humans and AI agents to share one source of truth." />
     <link rel="icon" href="/favicon.ico">
     <!-- Opt the imported component modules into self-registration. Must run
          (inline) before the bundled module below imports them. -->
@@ -17,110 +18,273 @@
       }
       body {
         margin: 0;
-        overflow: hidden;
       }
     </style>
 </head>
 <body>
+  <a class="al-l-home__skip-link" href="#main-content">Skip to content</a>
   <al-theme brand="altitude" mode="dark">
-  <main>
-    <al-layout style="--al-layout-min-height: auto;" gap="lg">
-      <al-header>
-        <al-layout-container styleModifier="al-u-gap-lg">
-          <al-logo>By Southleft</al-logo>
-        </al-layout-container>
+    <div class="al-l-home">
+      <al-header class="al-l-home__header">
+        <span slot="before" class="al-l-home__wordmark">
+          <span class="al-l-home__glyph" aria-hidden="true">▲</span>
+          Altitude
+        </span>
+        <nav class="al-l-home__nav" aria-label="Site">
+          <al-link href="#under-the-hood">Under the hood</al-link>
+          <al-link href="#resources">Resources</al-link>
+          <al-link href="/southleft">southleft.com</al-link>
+        </nav>
+        <span slot="after">
+          <al-button href="/storybook/web-components" target="_blank">Browse components</al-button>
+        </span>
       </al-header>
-      <al-layout-container styleModifier="al-u-gap-lg">
-        <div class="al-u-gap-xs al-u-flex-direction-row">
-          <al-icon-document size="xxl"></al-icon-document>
-          <al-heading variant="lg" tagName="h1" isBold="true">Resource Hub</al-heading>
+
+      <main id="main-content">
+        <div class="al-l-home__frame">
+          <al-hero class="al-l-home__hero">
+            <al-chip slot="eyebrow" variant="secondary">Design system</al-chip>
+            <al-heading slot="heading" tagName="h1" variant="display-lg" isBold="true">
+              AI-integrated design system: deterministic contracts, agent-ready.
+            </al-heading>
+            <al-text-passage>
+              <p>
+                Altitude ships tokens, components, and an MCP server that let humans and AI
+                agents build from the same source of truth. Every color pairing is solved and
+                checked against WCAG&nbsp;AA before it ever reaches the screen — by construction,
+                not by review.
+              </p>
+            </al-text-passage>
+            <al-button slot="actions" href="/storybook/web-components" target="_blank">Browse components</al-button>
+            <al-button slot="actions" variant="secondary" href="https://github.com/southleft/altitude/" target="_blank">View on GitHub</al-button>
+            <div slot="media" class="al-l-home__hero-media">
+              <al-card>
+                <div slot="header" class="al-l-home__contract-head">
+                  <span class="al-l-home__contract-title">The contract</span>
+                  <al-chip variant="success">Enforced</al-chip>
+                </div>
+                <div class="al-l-home__contract-row">
+                  <al-icon-success size="md" aria-hidden="true"></al-icon-success>
+                  <span>Every token resolves through 3 tiers — base, semantic, brand.</span>
+                </div>
+                <div class="al-l-home__contract-row">
+                  <al-icon-success size="md" aria-hidden="true"></al-icon-success>
+                  <span>Every color pair is solved for WCAG&nbsp;AA before it ships.</span>
+                </div>
+                <div class="al-l-home__contract-row">
+                  <al-icon-success size="md" aria-hidden="true"></al-icon-success>
+                  <span>Every brand exposes an MCP-readable manifest for agents.</span>
+                </div>
+              </al-card>
+            </div>
+          </al-hero>
+
+          <section id="under-the-hood" class="al-l-home__section" aria-labelledby="under-the-hood-heading">
+            <p class="al-l-home__kicker">Under the hood</p>
+            <al-heading id="under-the-hood-heading" tagName="h2" variant="display-sm" isBold="true">
+              The contract behind every screen
+            </al-heading>
+            <al-text-passage class="al-l-home__section-sub">
+              <p>Numbers computed from this repository at build time — not marketing copy.</p>
+            </al-text-passage>
+
+            <div class="al-l-home__stats" role="list" aria-label="Altitude by the numbers">
+              <div class="al-l-home__stat" role="listitem">
+                <al-stat data-stat="components" label="Components"></al-stat>
+              </div>
+              <div class="al-l-home__stat" role="listitem">
+                <al-stat data-stat="presets" label="Theme presets"></al-stat>
+              </div>
+              <div class="al-l-home__stat" role="listitem">
+                <al-stat data-stat="icons" label="Icons"></al-stat>
+              </div>
+              <div class="al-l-home__stat" role="listitem">
+                <al-stat data-stat="tokens" label="Design tokens"></al-stat>
+              </div>
+            </div>
+
+            <al-bento-grid class="al-l-home__bento">
+              <al-bento-item colSpan="8">
+                <al-card class="al-l-home__bento-card">
+                  <div slot="header"><al-heading tagName="h3" variant="md" isBold="true">Built for agents</al-heading></div>
+                  <al-text-passage>
+                    <p>An MCP server exposes every token, component, and usage pattern as structured
+                    data — so an AI agent and a developer pull component APIs from the exact same
+                    source of truth, not a stale doc someone forgot to update.</p>
+                  </al-text-passage>
+                </al-card>
+              </al-bento-item>
+              <al-bento-item colSpan="4">
+                <al-card class="al-l-home__bento-card">
+                  <div slot="header"><al-heading tagName="h3" variant="sm" isBold="true">AI theming, provably accessible</al-heading></div>
+                  <al-text-passage>
+                    <p>A deterministic OKLCH engine derives a full theme from a prompt and enforces
+                    WCAG&nbsp;AA contrast on every pairing before it applies — the model directs, the
+                    solver guarantees.</p>
+                  </al-text-passage>
+                </al-card>
+              </al-bento-item>
+              <al-bento-item colSpan="4">
+                <al-card class="al-l-home__bento-card">
+                  <div slot="header"><al-heading tagName="h3" variant="sm" isBold="true">Scoped multi-brand theming</al-heading></div>
+                  <al-text-passage>
+                    <p><code>&lt;al-theme&gt;</code> scopes brand, mode, density, and contrast per
+                    subtree — multiple brands can coexist on a single page, each rendering its own
+                    tokens.</p>
+                  </al-text-passage>
+                </al-card>
+              </al-bento-item>
+              <al-bento-item colSpan="4">
+                <al-card class="al-l-home__bento-card">
+                  <div slot="header"><al-heading tagName="h3" variant="sm" isBold="true">SSR &amp; Declarative Shadow DOM</al-heading></div>
+                  <al-text-passage>
+                    <p>Components render real HTML on the first response via <code>@lit-labs/ssr</code>
+                    and Declarative Shadow DOM — no client-side flash of unstyled content.</p>
+                  </al-text-passage>
+                </al-card>
+              </al-bento-item>
+              <al-bento-item colSpan="4">
+                <al-card class="al-l-home__bento-card">
+                  <div slot="header"><al-heading tagName="h3" variant="sm" isBold="true">Versioned registry &amp; Figma sync</al-heading></div>
+                  <al-text-passage>
+                    <p>Stable, versioned, or manual registration lets multiple Altitude versions
+                    coexist in one app, while tokens round-trip with the Figma source file.</p>
+                  </al-text-passage>
+                </al-card>
+              </al-bento-item>
+            </al-bento-grid>
+          </section>
+
+          <section class="al-l-home__section al-l-home__section--teaser" aria-labelledby="southleft-teaser-heading">
+            <p class="al-l-home__kicker">Coming soon</p>
+            <al-heading id="southleft-teaser-heading" tagName="h2" variant="display-sm" isBold="true">
+              southleft.com, rebuilt on Altitude
+            </al-heading>
+            <al-text-passage class="al-l-home__section-sub">
+              <p>
+                We're rebuilding Southleft's own marketing site entirely on Altitude components and
+                tokens — a real-world proof, not a synthetic demo. Follow along as it goes up.
+              </p>
+            </al-text-passage>
+            <al-button variant="secondary" href="/southleft">Preview the build</al-button>
+          </section>
+
+          <section id="resources" class="al-l-home__section" aria-labelledby="resources-heading">
+            <p class="al-l-home__kicker">Resource Hub</p>
+            <al-heading id="resources-heading" tagName="h2" variant="display-sm" isBold="true">Dig deeper</al-heading>
+            <div class="al-l-home__grid">
+              <al-card>
+                <al-heading variant="sm" tagName="h3" isBold="true">
+                  <a href="https://zeroheight.com/809ab055e" target="_blank">ZeroHeight</a>
+                </al-heading>
+                <al-text-passage>All the documentation for best practices, implementation, usage guidelines and more.</al-text-passage>
+                <al-button href="https://zeroheight.com/809ab055e" target="_blank">View</al-button>
+              </al-card>
+              <al-card>
+                <al-heading variant="sm" tagName="h3" isBold="true">
+                  <a href="https://www.figma.com/file/y83n4o9LOGs74oAoguFcGS/Altitude-Design-System?type=design&node-id=11684%3A83797&mode=design&t=dKiaHNT3K97X2KBv-1" target="_blank">Figma</a>
+                </al-heading>
+                <al-text-passage>The design file for the Altitude design system and source for all tokens.</al-text-passage>
+                <al-button href="https://www.figma.com/file/y83n4o9LOGs74oAoguFcGS/Altitude-Design-System?type=design&node-id=11684%3A83797&mode=design&t=dKiaHNT3K97X2KBv-1" target="_blank">View</al-button>
+              </al-card>
+              <al-card>
+                <al-heading variant="sm" tagName="h3" isBold="true">
+                  <a href="https://github.com/southleft/altitude/" target="_blank">Git Repository</a>
+                </al-heading>
+                <al-text-passage>The repository that contains the entire codebase for the design system, Storybook, and web applications.</al-text-passage>
+                <al-button href="https://github.com/southleft/altitude/" target="_blank">View</al-button>
+              </al-card>
+            </div>
+
+            <al-heading tagName="h3" variant="md" isBold="true" class="al-l-home__demos-heading">Demos</al-heading>
+            <al-tabs>
+              <al-tab>Storybook</al-tab>
+              <al-tab>Web Applications</al-tab>
+              <al-tab-panel slot="panel">
+                <div class="al-l-home__grid">
+                  <al-card>
+                    <al-heading variant="sm" tagName="h3" isBold="true">
+                      <a href="/storybook/web-components" target="_blank">Web Components</a>
+                    </al-heading>
+                    <al-text-passage>Storybook component library using native web components.</al-text-passage>
+                    <al-button href="/storybook/web-components" target="_blank">View</al-button>
+                  </al-card>
+                  <al-card>
+                    <al-heading variant="sm" tagName="h3" isBold="true">
+                      <a href="/storybook/react" target="_blank">React</a>
+                    </al-heading>
+                    <al-text-passage>Storybook component library using react wrappers of the native web components.</al-text-passage>
+                    <al-button href="/storybook/react" target="_blank">View</al-button>
+                  </al-card>
+                </div>
+              </al-tab-panel>
+              <al-tab-panel slot="panel">
+                <div class="al-l-home__grid">
+                  <al-card>
+                    <al-heading variant="sm" tagName="h3" isBold="true">
+                      <a href="/angular/browser" target="_blank">Angular</a>
+                    </al-heading>
+                    <al-text-passage>Web application leveraging Angular framework with seamless integration of Web Components.</al-text-passage>
+                    <al-button href="/angular/browser" target="_blank">View</al-button>
+                  </al-card>
+                  <al-card>
+                    <al-heading variant="sm" tagName="h3" isBold="true">
+                      <a href="/react" target="_blank">React</a>
+                    </al-heading>
+                    <al-text-passage>Web application leveraging React framework with seamless integration of Web Components.</al-text-passage>
+                    <al-button href="/react" target="_blank">View</al-button>
+                  </al-card>
+                  <al-card>
+                    <al-heading variant="sm" tagName="h3" isBold="true">
+                      <a href="/svelte" target="_blank">Svelte</a>
+                    </al-heading>
+                    <al-text-passage>Web application leveraging Svelte framework with seamless integration of Web Components.</al-text-passage>
+                    <al-button href="/svelte" target="_blank">View</al-button>
+                  </al-card>
+                  <al-card>
+                    <al-heading variant="sm" tagName="h3" isBold="true">
+                      <a href="/astro" target="_blank">Astro</a>
+                    </al-heading>
+                    <al-text-passage>Web application leveraging Astro framework with seamless integration of Web Components.</al-text-passage>
+                    <al-button href="/astro" target="_blank">View</al-button>
+                  </al-card>
+                </div>
+              </al-tab-panel>
+            </al-tabs>
+          </section>
         </div>
-        <al-divider></al-divider>
-        <al-layout-section styleModifier="al-u-gap">
-          <div class="al-u-grid cols:12@sm cols:6@md cols:4@lg">
-            <al-card>
-              <al-heading variant="sm" tagName="h3" isBold="true">
-                <a href="https://zeroheight.com/809ab055e" target="_blank">ZeroHeight</a>
-              </al-heading>
-              <al-text-passage>All the documenation for best practices, implementation, usage guidelines and more.</al-text-passage>
-              <al-button href="https://zeroheight.com/809ab055e" target="_blank">View</al-button>
-            </al-card>
-            <al-card>
-              <al-heading variant="sm" tagName="h3" isBold="true">
-                <a href="https://www.figma.com/file/y83n4o9LOGs74oAoguFcGS/Altitude-Design-System?type=design&node-id=11684%3A83797&mode=design&t=dKiaHNT3K97X2KBv-1" target="_blank">Figma</a>
-              </al-heading>
-              <al-text-passage>The design file for the Altitude design system and source for all tokens.</al-text-passage>
-              <al-button href="https://www.figma.com/file/y83n4o9LOGs74oAoguFcGS/Altitude-Design-System?type=design&node-id=11684%3A83797&mode=design&t=dKiaHNT3K97X2KBv-1" target="_blank">View</al-button>
-            </al-card>
-            <al-card>
-              <al-heading variant="sm" tagName="h3" isBold="true">
-                <a href="https://github.com/southleft/altitude/" target="_blank">Git Repository</a>
-              </al-heading>
-              <al-text-passage>The repository that contains the entire codebase for the design system, Storybook, and web applications.</al-text-passage>
-              <al-button href="https://github.com/southleft/altitude/" target="_blank">View</al-button>
-            </al-card>
-          </div>
-        </al-layout-section>
-        <al-layout-section styleModifier="al-u-gap">
-          <al-heading variant="md" tagName="h2" isBold="true">Demos</al-heading>
-          <al-tabs>
-            <al-tab>Storybook</al-tab>
-            <al-tab>Web Applications</al-tab>
-            <al-tab-panel slot="panel">
-              <div class="al-u-grid cols:12@sm cols:6@md cols:4@lg">
-                <al-card>
-                  <al-heading variant="sm" tagName="h3" isBold="true">
-                    <a href="/storybook/web-components" target="_blank">Web Components</a>
-                  </al-heading>
-                  <al-text-passage>Storybook component library using native web components.</al-text-passage>
-                  <al-button href="/storybook/web-components" target="_blank">View</al-button>
-                </al-card>
-                <al-card>
-                  <al-heading variant="sm" tagName="h3" isBold="true">
-                    <a href="/storybook/react" target="_blank">React</a>
-                  </al-heading>
-                  <al-text-passage>Storybook component library using react wrappers of the native web components.</al-text-passage>
-                  <al-button href="/storybook/react" target="_blank">View</al-button>
-                </al-card>
-              </div>
-            </al-tab-panel>
-            <al-tab-panel slot="panel">
-              <div class="al-u-grid cols:12@sm cols:6@md cols:4@lg">
-                <al-card>
-                  <al-heading variant="sm" tagName="h3" isBold="true">
-                    <a href="/angular/browser" target="_blank">Angular</a>
-                  </al-heading>
-                  <al-text-passage>Web application leveraging Angular framework with seamless integration of Web Components.</al-text-passage>
-                  <al-button href="/angular/browser" target="_blank">View</al-button>
-                </al-card>
-                <al-card>
-                  <al-heading variant="sm" tagName="h3" isBold="true">
-                    <a href="/react" target="_blank">React</a>
-                  </al-heading>
-                  <al-text-passage>Web application leveraging React framework with seamless integration of Web Components.</al-text-passage>
-                  <al-button href="/react" target="_blank">View</al-button>
-                </al-card>
-                <al-card>
-                  <al-heading variant="sm" tagName="h3" isBold="true">
-                    <a href="/svelte" target="_blank">Svelte</a>
-                  </al-heading>
-                  <al-text-passage>Web application leveraging Svelte framework with seamless integration of Web Components.</al-text-passage>
-                  <al-button href="/svelte" target="_blank">View</al-button>
-                </al-card>
-                <al-card>
-                  <al-heading variant="sm" tagName="h3" isBold="true">
-                    <a href="/astro" target="_blank">Astro</a>
-                  </al-heading>
-                  <al-text-passage>Web application leveraging Astro framework with seamless integration of Web Components.</al-text-passage>
-                  <al-button href="/astro" target="_blank">View</al-button>
-                </al-card>
-              </div>
-            </al-tab-panel>
-          </al-tabs>
-        </al-layout-section>
-      </al-layout-container>
-    </al-layout>
-  </main>
+      </main>
+
+      <al-footer>
+        <al-logo slot="logo">By Southleft</al-logo>
+        <div class="al-l-home__footer-col">
+          <al-heading tagName="h3" variant="sm" isBold="true">Library</al-heading>
+          <al-list>
+            <al-list-item href="/storybook/web-components" target="_blank">Components</al-list-item>
+            <al-list-item href="https://zeroheight.com/809ab055e" target="_blank">Tokens</al-list-item>
+            <al-list-item href="https://github.com/southleft/altitude/" target="_blank">Changelog</al-list-item>
+          </al-list>
+        </div>
+        <div class="al-l-home__footer-col">
+          <al-heading tagName="h3" variant="sm" isBold="true">Resources</al-heading>
+          <al-list>
+            <al-list-item href="#resources">Resource Hub</al-list-item>
+            <al-list-item href="https://www.figma.com/file/y83n4o9LOGs74oAoguFcGS/Altitude-Design-System" target="_blank">Figma</al-list-item>
+            <al-list-item href="/southleft">southleft.com preview</al-list-item>
+          </al-list>
+        </div>
+        <div class="al-l-home__footer-col">
+          <al-heading tagName="h3" variant="sm" isBold="true">Community</al-heading>
+          <al-list>
+            <al-list-item href="https://github.com/southleft/altitude/" target="_blank">GitHub</al-list-item>
+            <al-list-item href="/storybook/react" target="_blank">React Storybook</al-list-item>
+          </al-list>
+        </div>
+        <div slot="legal">
+          <span>&copy; 2026 Southleft · Built with Altitude</span>
+        </div>
+      </al-footer>
+    </div>
   </al-theme>
 </body>
 </html>

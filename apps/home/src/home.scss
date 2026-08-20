@@ -1,0 +1,246 @@
+/* AI Showcase Homepage (2026-08-20-ai-showcase-homepage) — page-level layout.
+ *
+ * This stylesheet is NOT shadow-scoped (there is no wrapping shadow-DOM
+ * component around the page — see main.js): the homepage is hand-authored
+ * `<al-*>` markup in index.html, exactly like the app it replaces. Every
+ * color/radius/shadow/space/font below resolves from the active theme's
+ * tier-2 tokens (`--al-theme-*`), set on `<al-theme>` in index.html and
+ * inherited by everything under it (custom properties pierce shadow
+ * boundaries, so this reaches into every `<al-*>` component's shadow root
+ * too) — zero hardcoded colors, per R8 (WCAG AA via tier-2 tokens only).
+ *
+ * Class names loosely follow the BEM-ish `al-l-home__*` convention used by
+ * the "one page, eight sites" Storybook page
+ * (libs/al-web-components/.storybook/pages/showcase-home/showcase-home.scss)
+ * this app's original scope was going to promote — kept for a consistent
+ * look even though that page's persona-swap machinery itself was descoped
+ * (spec.md R2/R3).
+ */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--al-theme-color-body-background, var(--al-theme-color-background-default));
+  font: var(--al-typography-preset-16);
+}
+
+al-theme {
+  display: block;
+}
+
+/* ---------------------------------------------------------------------
+   Skip link
+--------------------------------------------------------------------- */
+
+.al-l-home__skip-link {
+  position: absolute;
+  inset-block-start: -3rem;
+  inset-inline-start: 0.5rem;
+  /* al-header sits at --al-z-index-400 (a real token value of 400, well
+   * above a plain "100") — the skip link needs to out-rank it to be visible
+   * over the sticky header once focused, not just be positioned correctly
+   * underneath it. */
+  z-index: calc(var(--al-z-index-400, 400) + 1);
+  padding: var(--al-theme-space-xs) var(--al-theme-space);
+  background-color: var(--al-theme-color-background-inverse-default);
+  color: var(--al-theme-color-content-inverse-default);
+  border-radius: var(--al-theme-border-radius);
+  text-decoration: none;
+  transition: inset-block-start 0.15s ease;
+}
+
+.al-l-home__skip-link:focus {
+  inset-block-start: 0.5rem;
+}
+
+/* ---------------------------------------------------------------------
+   Page frame
+--------------------------------------------------------------------- */
+
+.al-l-home {
+  min-block-size: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--al-theme-color-body-background, var(--al-theme-color-background-default));
+  color: var(--al-theme-color-content-default);
+}
+
+.al-l-home__frame {
+  inline-size: 100%;
+  max-inline-size: 80rem;
+  margin-inline: auto;
+  padding-inline: calc(var(--al-theme-space) * 1.5);
+  box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------------------
+   Header
+--------------------------------------------------------------------- */
+
+.al-l-home__header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 10;
+}
+
+.al-l-home__wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--al-theme-space-xs);
+  font: var(--al-typography-preset-20-bold);
+  white-space: nowrap;
+}
+
+.al-l-home__glyph {
+  color: var(--al-theme-color-content-primary-default);
+}
+
+.al-l-home__nav {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: var(--al-theme-space);
+
+  /* `al-link`'s default color reads `--al-theme-color-content-primary-default`
+   * (the accent-blue token) — on `al-header`'s `--al-theme-color-background-default`
+   * surface in altitude/dark that measures ~4.42:1, just under the 4.5:1 AA
+   * floor for normal text. Custom properties pierce shadow boundaries, so
+   * overriding it here (scoped to just the nav, not the whole page) reaches
+   * into `al-link`'s shadow root without touching the shared token or the
+   * component. `content-default` measures >16:1 on the same background —
+   * the underline `al-link` already renders by default is what marks these
+   * as links, not the color. */
+  --al-theme-color-content-primary-default: var(--al-theme-color-content-default);
+}
+
+/* ---------------------------------------------------------------------
+   Hero
+--------------------------------------------------------------------- */
+
+.al-l-home__hero {
+  --al-hero-min-height: 22rem;
+  padding-block-start: calc(var(--al-theme-space) * 2);
+}
+
+.al-l-home__hero-media {
+  inline-size: 100%;
+  block-size: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.al-l-home__contract-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  inline-size: 100%;
+  gap: var(--al-theme-space-xs);
+}
+
+.al-l-home__contract-title {
+  font: var(--al-typography-preset-16-bold);
+}
+
+.al-l-home__contract-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--al-theme-space-xs);
+  font: var(--al-typography-preset-14);
+  padding-block: var(--al-theme-space-xxs);
+
+  al-icon-success {
+    flex: none;
+    color: var(--al-theme-color-content-success-default, var(--al-theme-color-content-primary-default));
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Sections
+--------------------------------------------------------------------- */
+
+.al-l-home__section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--al-theme-space);
+  padding-block: calc(var(--al-theme-space) * 3);
+  scroll-margin-block-start: calc(var(--al-theme-space) * 4);
+}
+
+.al-l-home__section--teaser {
+  align-items: flex-start;
+  padding-block: calc(var(--al-theme-space) * 2);
+  margin-block: calc(var(--al-theme-space) * 1.5);
+  padding-inline: calc(var(--al-theme-space) * 1.5);
+  border-radius: var(--al-theme-border-radius-lg);
+  border: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+  background-color: var(--al-theme-color-background-default-weak);
+}
+
+.al-l-home__section-sub {
+  max-inline-size: 42rem;
+  color: var(--al-theme-color-content-default-weak);
+}
+
+.al-l-home__kicker {
+  margin: 0;
+  font: var(--al-typography-preset-12-bold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--al-theme-color-content-default-weak);
+}
+
+.al-l-home__demos-heading {
+  margin-block-start: var(--al-theme-space);
+}
+
+/* Grids */
+
+.al-l-home__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--al-theme-space);
+  inline-size: 100%;
+  text-align: start;
+}
+
+/* KPI band */
+
+.al-l-home__stats {
+  display: flex;
+  flex-flow: row wrap;
+  gap: var(--al-theme-space-lg);
+  inline-size: 100%;
+  padding-block: var(--al-theme-space);
+  border-block: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+}
+
+.al-l-home__stat {
+  flex: 1 1 10rem;
+}
+
+/* Bento grid */
+
+.al-l-home__bento {
+  inline-size: 100%;
+}
+
+.al-l-home__bento-card {
+  block-size: 100%;
+  box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------------------
+   Footer columns (composed directly into <al-footer>)
+--------------------------------------------------------------------- */
+
+.al-l-home__footer-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--al-theme-space-sm);
+}
