@@ -1,0 +1,59 @@
+---
+// Insights listing — spec 2026-08-20-southleft-example-app, T4-1.
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import CTABand from '../../components/CTABand.astro';
+import { withBase } from '../../lib/url';
+
+const posts = (await getCollection('insights')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const [featured, ...rest] = posts;
+
+const categories = [...new Map(posts.map((p) => [p.data.category, p.data.categoryName])).entries()]
+  .map(([slug, name]) => ({ slug, name, count: posts.filter((p) => p.data.category === slug).length }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+---
+
+<Base
+  title="Insights"
+  description="Essays on design systems, AI, and front-end craft from the Southleft team."
+>
+  <div class="sl-container sl-section--tight">
+    <PageHero
+      label="insights"
+      heading="Insights"
+      dek="Design systems, AI, and the craft of building for the web — published as we learn it, from real client work and our own open-source tooling."
+    >
+      <nav class="sl-header__nav" aria-label="Browse by category" style="margin-top: var(--al-theme-space-lg);">
+        {categories.map((c) => (
+          <al-link href={withBase(`/insights/${c.slug}`)}>{c.name} ({c.count})</al-link>
+        ))}
+      </nav>
+    </PageHero>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>Latest</al-heading>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-lg);">
+      <div class="al-u-grid__item col:12">
+        <ArticleCard post={featured} featured />
+      </div>
+    </div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>The archive — {rest.length} more posts</al-heading>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-lg);">
+      {rest.map((p) => (
+        <div class="al-u-grid__item col:12 col:6@md col:4@lg">
+          <ArticleCard post={p} />
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <CTABand />
+  </div>
+</Base>

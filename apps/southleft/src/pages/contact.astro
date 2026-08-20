@@ -1,0 +1,33 @@
+---
+// Contact — spec 2026-08-20-southleft-example-app, T4-1.
+// Minimal: a Calendly link + email, matching v5's CTA destination. The full
+// Formspree contact form is left for a follow-up pass (out of scope here).
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { SITE } from '../lib/site';
+---
+
+<Base title="Contact" description={`Book a discovery call or reach the team directly at ${SITE.email}.`}>
+  <div class="sl-container sl-section--tight">
+    <PageHero label="contact" heading="Start a conversation" dek="Thirty minutes with the people who’ll actually do the work." />
+  </div>
+
+  <div class="sl-container sl-section">
+    <div class="al-u-grid">
+      <div class="al-u-grid__item col:12 col:6@md">
+        <al-card style="height:100%; box-sizing:border-box;">
+          <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>Book a discovery call</al-heading></div>
+          <al-text-passage>Thirty minutes on Calendly — no forms, no gatekeeping.</al-text-passage>
+          <al-button slot="actions-start" href={SITE.calendly} target="_blank">Open Calendly</al-button>
+        </al-card>
+      </div>
+      <div class="al-u-grid__item col:12 col:6@md">
+        <al-card style="height:100%; box-sizing:border-box;">
+          <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>Email us</al-heading></div>
+          <al-text-passage>Prefer email? We read every message ourselves.</al-text-passage>
+          <al-button slot="actions-start" variant="tertiary" href={`mailto:${SITE.email}`}>{SITE.email}</al-button>
+        </al-card>
+      </div>
+    </div>
+  </div>
+</Base>

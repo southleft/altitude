@@ -1,0 +1,34 @@
+---
+// Work / case-study grid — spec 2026-08-20-southleft-example-app, T4.
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import CTABand from '../../components/CTABand.astro';
+
+const projects = (await getCollection('work')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<Base title="Work" description="Design systems and front ends shipped for enterprises, startups, and everything between.">
+  <div class="sl-container sl-section--tight">
+    <PageHero
+      label="work"
+      heading="Proof, not promises"
+      dek={`${projects.length} case studies — design systems and front ends shipped for enterprises, startups, and everything between.`}
+    />
+  </div>
+
+  <div class="sl-container sl-section">
+    <div class="al-u-grid">
+      {projects.map((p) => (
+        <div class="al-u-grid__item col:12 col:6@md col:4@lg">
+          <WorkCard project={p} />
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <CTABand />
+  </div>
+</Base>

@@ -1,0 +1,163 @@
+---
+// AI direction panel — spec 2026-08-20-southleft-example-app, T6.
+//
+// Same principle as the Storybook token console (.altitude/AI-THEME.md): the
+// AI never returns colors, CSS, or layout markup — only small structured
+// intent (functions/api/theme.js SCHEMA). A deterministic client-side engine
+// (libs/al-web-components/.storybook/ai-theme/engine.ts, imported here by
+// relative path — ONE copy, not forked) derives every token and enforces
+// WCAG AA; src/lib/layout-resolver.ts derives the home page's layout and
+// enforces its own structural invariants. Home page only.
+//
+// al-drawer already gives this Escape-to-close, click-outside-to-close,
+// aria-expanded sync, and focus return to the trigger on close — the
+// keyboard/focus-management requirement is mostly the component's own job.
+---
+
+<al-drawer id="sl-ai-drawer" alignment="right" hasBackdrop ariaLabelledBy="sl-ai-drawer-heading" class="sl-ai-drawer">
+  <al-button slot="trigger" class="sl-ai-fab" label="Try AI art direction">
+    <al-icon-star slot="before" iconTitle="AI art direction"></al-icon-star>
+    AI direction
+  </al-button>
+
+  <div slot="header">
+    <al-heading tagName="h2" id="sl-ai-drawer-heading" variant="sm" isBold={true}>AI art direction</al-heading>
+  </div>
+
+  <div class="sl-ai-panel sl-stack">
+    <al-text-passage maxWidth="sm">
+      Describe a vibe — the model returns hue, shape, and layout dials, never colors or markup. A
+      deterministic engine derives every token and page-layout change from that, and enforces WCAG
+      AA structurally, so nothing it says can ship an inaccessible palette or a broken page.
+    </al-text-passage>
+
+    <al-input id="sl-ai-prompt" label="Prompt" placeholder="e.g. brutalist night" maxLengthValue={80}></al-input>
+
+    <div class="sl-ai-chips" role="group" aria-label="Example prompts">
+      <al-chip data-sl-ai-example="swiss studio">swiss studio</al-chip>
+      <al-chip data-sl-ai-example="warm editorial">warm editorial</al-chip>
+      <al-chip data-sl-ai-example="brutalist night">brutalist night</al-chip>
+      <al-chip data-sl-ai-example="calm enterprise">calm enterprise</al-chip>
+    </div>
+
+    <div class="sl-ai-actions">
+      <al-button id="sl-ai-generate">Generate</al-button>
+      <al-button id="sl-ai-reset" variant="tertiary">Reset to Southleft</al-button>
+    </div>
+
+    <p id="sl-ai-status" class="sl-ai-status al-u-theme-typography-body-xs" role="status" aria-live="polite">
+      Southleft default.
+    </p>
+  </div>
+</al-drawer>
+
+<script>
+  // T6 client wiring. Relative imports cross the app/library package
+  // boundary on purpose — see this file's frontmatter comment and
+  // `.altitude/AI-THEME.md` "Files" table for why there is exactly one copy
+  // of this engine, reused (not forked) from Storybook's implementation.
+  import { buildTheme } from '../../../../libs/al-web-components/.storybook/ai-theme/engine';
+  import { applyTheme, resetTheme } from '../../../../libs/al-web-components/.storybook/ai-theme/apply';
+  import { THEME_API } from '../../../../libs/al-web-components/.storybook/ai-theme/constants';
+  import type { Theme } from '../../../../libs/al-web-components/.storybook/ai-theme/types';
+  import { applyLayout, resetLayout } from '../lib/layout-resolver';
+
+  import 'al-web-components/components/drawer';
+  import 'al-web-components/components/input';
+  import 'al-web-components/components/chip';
+  import 'al-web-components/components/icon/icons/star';
+
+  const drawer = document.getElementById('sl-ai-drawer') as (HTMLElement & { isActive?: boolean }) | null;
+  const promptInput = document.getElementById('sl-ai-prompt') as (HTMLElement & { value?: string }) | null;
+  const generateBtn = document.getElementById('sl-ai-generate');
+  const resetBtn = document.getElementById('sl-ai-reset');
+  const chipsWrap = document.querySelector('.sl-ai-chips');
+  const status = document.getElementById('sl-ai-status');
+
+  /** Guards against a slower earlier request resolving after a newer one. */
+  let requestId = 0;
+
+  function setStatus(text: string): void {
+    if (status) status.textContent = text;
+  }
+
+  function describe(theme: Theme, badge: string): string {
+    const name = theme.name || 'untitled';
+    return theme.quip ? `${badge} — "${name}" — ${theme.quip}` : `${badge} — "${name}"`;
+  }
+
+  async function generate(prompt: string): Promise<void> {
+    const trimmed = prompt.trim();
+    if (!trimmed) {
+      setStatus('Type a prompt first.');
+      return;
+    }
+
+    const thisRequest = ++requestId;
+    setStatus('Deriving…');
+
+    // 1. Instant, local, deterministic — identical shape to the Storybook
+    //    console's flow (.altitude/AI-THEME.md).
+    const local = buildTheme({ prompt: trimmed });
+    applyTheme({ palette: local.palette, mode: local.mode });
+    applyLayout(local.layout);
+    setStatus(describe(local, 'Deterministic preview'));
+
+    // 2. Upgrade with the AI's direction, if reachable. Same endpoint the
+    //    Pages deploy and the Storybook dev server both mount.
+    try {
+      const res = await fetch(THEME_API, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ prompt: trimmed }),
+      });
+      if (thisRequest !== requestId) return; // a newer prompt is already in flight
+
+      if (!res.ok) {
+        // 503 (no ANTHROPIC_API_KEY), 502/422/400 — every failure path keeps
+        // the local deterministic theme already applied above.
+        setStatus(describe(local, 'Deterministic preview (AI unavailable)'));
+        return;
+      }
+
+      const direction = await res.json();
+      const aiTheme = buildTheme({ prompt: trimmed, direction });
+      if (thisRequest !== requestId) return;
+
+      applyTheme({ palette: aiTheme.palette, mode: aiTheme.mode });
+      applyLayout(aiTheme.layout);
+      setStatus(describe(aiTheme, 'AI-derived'));
+    } catch {
+      if (thisRequest !== requestId) return;
+      setStatus(describe(local, 'Deterministic preview (AI unreachable)'));
+    }
+  }
+
+  generateBtn?.addEventListener('click', () => {
+    generate(promptInput?.value ?? '');
+  });
+
+  chipsWrap?.addEventListener('click', (event) => {
+    const target = event.target;
+    const chip = target instanceof Element ? target.closest<HTMLElement>('[data-sl-ai-example]') : null;
+    if (!chip) return;
+    const example = chip.dataset.slAiExample ?? '';
+    if (promptInput) promptInput.value = example;
+    generate(example);
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    resetTheme();
+    resetLayout();
+    setStatus('Southleft default.');
+    if (promptInput) promptInput.value = '';
+  });
+
+  // Enter in the prompt field submits, matching the Storybook console.
+  promptInput?.addEventListener('keydown', (event) => {
+    if ((event as KeyboardEvent).key === 'Enter') {
+      event.preventDefault();
+      generate(promptInput.value ?? '');
+    }
+  });
+</script>

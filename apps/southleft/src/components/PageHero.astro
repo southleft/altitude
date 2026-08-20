@@ -1,0 +1,17 @@
+---
+// Interior-page hero — spec 2026-08-20-southleft-example-app, T4-1.
+// Thin al-hero wrapper (stacked, no media) for section/listing/detail pages.
+interface Props {
+  label: string;
+  heading: string;
+  dek?: string;
+}
+const { label, heading, dek } = Astro.props;
+---
+
+<al-hero layout="stacked" contentAlignment="start">
+  <al-chip slot="eyebrow" variant="secondary">{label}</al-chip>
+  <al-heading slot="heading" tagName="h1" variant="display-md" isBold={true}>{heading}</al-heading>
+  {dek && <al-text-passage>{dek}</al-text-passage>}
+  <slot />
+</al-hero>

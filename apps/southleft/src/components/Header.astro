@@ -1,0 +1,17 @@
+---
+// Sticky primary nav — spec 2026-08-20-southleft-example-app, T3.
+// Services · Work · Insights · Tools · About + Calendly CTA + ink/paper toggle.
+import { NAV, SITE } from '../lib/site';
+import { withBase } from '../lib/url';
+---
+
+<al-header class="sl-header">
+  <al-logo slot="before" variant="southleft" href={withBase('/')}>By Southleft</al-logo>
+  <nav class="sl-header__nav" aria-label="Primary">
+    {NAV.map((item) => <al-link href={withBase(item.href)}>{item.label}</al-link>)}
+  </nav>
+  <div slot="after" class="sl-header__actions">
+    <al-button variant="tertiary" data-sl-mode-toggle>Paper</al-button>
+    <al-button href={SITE.calendly} target="_blank">Book a call</al-button>
+  </div>
+</al-header>

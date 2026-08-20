@@ -1,0 +1,24 @@
+---
+// Closing CTA band — spec 2026-08-20-southleft-example-app, T3/T4-1.
+// al-hero, centered layout, no media — the same organism used for the page
+// hero, reused as a closing CTA band (a hero is compositionally exactly
+// that: eyebrow + heading + body + actions, no media required).
+import { SITE } from '../lib/site';
+import { withBase } from '../lib/url';
+
+interface Props {
+  heading?: string;
+  dek?: string;
+}
+const {
+  heading = 'Let’s build something that lasts.',
+  dek = 'A discovery call is the fastest way to find out whether Altitude — and Southleft — is the right fit for your team.',
+} = Astro.props;
+---
+
+<al-hero layout="centered" contained>
+  <al-heading slot="heading" tagName="h2" variant="lg" isBold={true}>{heading}</al-heading>
+  <al-text-passage>{dek}</al-text-passage>
+  <al-button slot="actions" href={SITE.calendly} target="_blank">Book a call</al-button>
+  <al-button slot="actions" variant="tertiary" href={withBase('/contact')}>Contact us</al-button>
+</al-hero>

@@ -1,0 +1,158 @@
+---
+// Base layout — spec 2026-08-20-southleft-example-app, T1/T3.
+//
+// Mirrors southleft-v5's Base.astro contract (`theme` prop: 'dark' default |
+// 'light'), rebuilt on the Altitude Astro fixture pattern (apps/astro):
+// alAutoRegistry inline in <head>, al-web-components/css/main.css imported
+// once, deep component imports as a bundled <script> at the end of <body>.
+import 'al-web-components/css/main.css';
+import '../styles/fonts.css';
+import '../styles/layout.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../lib/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Marketing pages = dark ("ink"). Article/case-study/legal pages = light
+   * ("paper"), matching v5. */
+  theme?: 'dark' | 'light';
+  ogImage?: string;
+  /** JSON-LD graph node(s) — Organization sitewide, BlogPosting on articles. */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { title, description = SITE.description, theme = 'dark', ogImage, jsonLd } = Astro.props;
+
+const pageTitle = title === SITE.name ? SITE.title : `${title} · ${SITE.name}`;
+const canonical = new URL(Astro.url.pathname, SITE.url).toString();
+const resolvedOgImage = ogImage ? new URL(ogImage, SITE.url).toString() : undefined;
+
+// Organization JSON-LD is sitewide (T4-1 requirement); page-specific nodes
+// (BlogPosting, CreativeWork) are appended alongside it, not in place of it.
+const organizationLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE.name,
+  url: SITE.url,
+  email: SITE.email,
+  sameAs: [SITE.linkedin, SITE.github, SITE.substack],
+};
+const ldNodes = [organizationLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [])];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.svg`} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={`${import.meta.env.BASE_URL}apple-touch-icon.png`} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {resolvedOgImage && <meta property="og:image" content={resolvedOgImage} />}
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — Insights`} href={`${SITE.url}/rss.xml`} />
+
+    {ldNodes.map((node) => <script type="application/ld+json" set:html={JSON.stringify(node)} />)}
+
+    <!-- Opt the deep component imports into self-registration. Must run
+         (inline) before the bundled module script below. -->
+    <script is:inline>window.alAutoRegistry = true;</script>
+  </head>
+  <body>
+    <al-theme id="sl-theme" brand="southleft" mode={theme} contrast="more">
+      <script is:inline>
+        // Persisted ink/paper preference (localStorage) wins over the
+        // per-page default set above — runs before the theme host upgrades,
+        // so there is no flash of the wrong mode.
+        (function () {
+          try {
+            var stored = localStorage.getItem('sl-mode');
+            if (stored === 'light' || stored === 'dark') {
+              document.getElementById('sl-theme').setAttribute('mode', stored);
+            }
+          } catch (e) {
+            /* localStorage unavailable (privacy mode, SSR preview) — page default stands. */
+          }
+        })();
+      </script>
+      <div class="sl-page">
+        <Header />
+        <main>
+          <slot />
+        </main>
+        <Footer />
+      </div>
+    </al-theme>
+
+    <script>
+      // Ink/paper toggle — event-delegated so it works for any
+      // `[data-sl-mode-toggle]` control the header renders (T3).
+      document.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const trigger = target.closest('[data-sl-mode-toggle]');
+        if (!trigger) return;
+        const themeHost = document.getElementById('sl-theme');
+        if (!themeHost) return;
+        const next = themeHost.getAttribute('mode') === 'dark' ? 'light' : 'dark';
+        themeHost.setAttribute('mode', next);
+        trigger.setAttribute('data-sl-mode', next);
+        trigger.textContent = next === 'dark' ? 'Paper' : 'Ink';
+        try {
+          localStorage.setItem('sl-mode', next);
+        } catch (e) {
+          /* ignore */
+        }
+      });
+
+      // Reflect the resolved (possibly localStorage-restored) mode onto the
+      // toggle's label on first paint.
+      const themeHost = document.getElementById('sl-theme');
+      const toggle = document.querySelector('[data-sl-mode-toggle]');
+      if (themeHost && toggle) {
+        const current = themeHost.getAttribute('mode') === 'dark' ? 'dark' : 'light';
+        toggle.setAttribute('data-sl-mode', current);
+        toggle.textContent = current === 'dark' ? 'Paper' : 'Ink';
+      }
+    </script>
+
+    <script>
+      import 'al-web-components/components/avatar';
+      import 'al-web-components/components/badge';
+      import 'al-web-components/components/banner';
+      import 'al-web-components/components/breadcrumbs-item';
+      import 'al-web-components/components/breadcrumbs';
+      import 'al-web-components/components/button';
+      import 'al-web-components/components/card';
+      import 'al-web-components/components/chip';
+      import 'al-web-components/components/divider';
+      import 'al-web-components/components/footer';
+      import 'al-web-components/components/header';
+      import 'al-web-components/components/heading';
+      import 'al-web-components/components/hero';
+      import 'al-web-components/components/link';
+      import 'al-web-components/components/list-item';
+      import 'al-web-components/components/list';
+      import 'al-web-components/components/logo';
+      import 'al-web-components/components/split-content';
+      import 'al-web-components/components/stat';
+      import 'al-web-components/components/tab-panel';
+      import 'al-web-components/components/tab';
+      import 'al-web-components/components/tabs';
+      import 'al-web-components/components/testimonial';
+      import 'al-web-components/components/text-passage';
+      import 'al-web-components/components/theme';
+    </script>
+  </body>
+</html>

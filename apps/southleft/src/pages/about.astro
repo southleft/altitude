@@ -1,0 +1,144 @@
+---
+// About — spec 2026-08-20-southleft-example-app, T4-1.
+// Real copy migrated verbatim from southleft-v5's src/pages/about.astro.
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import { withBase } from '../lib/url';
+
+const values = [
+  { token: '--sl-value-01: innovation', name: 'Creative innovation', body: 'We push design and technical problem-solving past the obvious answer.' },
+  { token: '--sl-value-02: people-first', name: 'People first', body: 'The well-being of our clients and collaborators comes before everything. Healthy people, healthy projects.' },
+  { token: '--sl-value-03: truth-respect', name: 'Truth & respect', body: 'Southlefters are loyal, honest, open, respectful, and kind.' },
+  { token: '--sl-value-04: learning', name: 'Always learning', body: 'In this industry, curiosity isn’t optional. We’re on the cutting edge because we genuinely want to be.' },
+  { token: '--sl-value-05: evergreen', name: 'Evergreen', body: 'We build things that outlast us — systems that future-proof your organization and empower your team.' },
+];
+
+const leaders = [
+  { name: 'Nicole Hampton', role: 'CEO', bio: 'Twenty-plus years leading the business side of creative and technical agencies, and a longtime collaborator of TJ’s going back to SuperFriendly. Nicole stepped in as CEO in 2026 to lead Southleft’s next chapter.' },
+  { name: 'TJ Pitre', role: 'Founder & Chairman', bio: 'Founded Southleft in 2012 on a rule that still holds: the people selling the work are the people doing the work. TJ has joined Figma and remains Southleft’s founder and chairman.' },
+];
+
+const howWeWork = [
+  { name: 'The right people, fast', body: 'Whatever your stack or situation, someone at Southleft is an expert in it — or knows the person who is. We assemble the team around your problem, not the other way around.' },
+  { name: 'Direct access, always', body: 'You get a shared Slack channel with the actual engineers and designers on your project, plus a weekly 30-minute sync. No account-manager filter.' },
+  { name: 'Kickoff in 2–3 weeks', body: 'That’s our standard runway after signing. On a deadline? Ask about rush scheduling.' },
+];
+---
+
+<Base
+  title="About"
+  description="Founded in 2012 by TJ Pitre and rooted in New Orleans, Southleft is a senior team of design systems engineers — grown by word of mouth, now partnered with Baseline and led by CEO Nicole Hampton."
+>
+  <div class="sl-container sl-section--tight">
+    <PageHero
+      label="about"
+      heading="Built by practitioners. Run that way since 2012."
+      dek="TJ Pitre founded Southleft in 2012 as a front-end studio. One rule has held ever since: the people selling the work are the people doing the work. Fourteen years later, that rule still holds — and the work is design systems and AI."
+    />
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-split-content mediaPosition="start">
+      <div slot="media" class="sl-stack">
+        <al-heading tagName="h2" variant="md" isBold={true}>No sales team. No marketing department. Our work is our pipeline.</al-heading>
+      </div>
+      <div slot="content" class="sl-stack">
+        <al-text-passage>
+          We’re a small, senior team of design systems engineers, founded in 2012 and rooted in New
+          Orleans. We’ve never had a sales, advertising, or marketing department; word of mouth
+          built this company, project by project, from a one-person shop into a multi-million
+          dollar studio. Our portfolio runs from IBM, Google, Caterpillar, and PetSmart to
+          nonprofits and community organizations — the same care either way.
+        </al-text-passage>
+        <al-text-passage>
+          Through collaboration, education, and guidance, we build design systems — and the AI
+          workflows around them — that are made to last.
+        </al-text-passage>
+        <al-link href={withBase('/work')}>See the work →</al-link>
+      </div>
+    </al-split-content>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>Where we are now</al-heading>
+    <al-text-passage>
+      In 2026, Southleft opened its next chapter — a formalized partnership with Baseline, and new
+      leadership at the top. The team is the same. The clients are the same. The standards are the same.
+    </al-text-passage>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      <div class="al-u-grid__item col:12 col:6@md">
+        <al-card style="height:100%; box-sizing:border-box;">
+          <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>One path from strategy to shipped system</al-heading></div>
+          <al-text-passage>
+            We formalized a partnership with Baseline, Joey Banks’s design systems studio. Baseline
+            covers strategy, discovery, architecture, and visual design; Southleft covers design
+            systems engineering, front end, and AI integration.
+          </al-text-passage>
+        </al-card>
+      </div>
+      <div class="al-u-grid__item col:12 col:6@md">
+        <al-card style="height:100%; box-sizing:border-box;">
+          <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>Nicole Hampton, CEO</al-heading></div>
+          <al-text-passage>
+            Nicole Hampton — twenty-plus years leading the business side of creative and technical
+            agencies, and a longtime collaborator of TJ’s going back to SuperFriendly — stepped in
+            as CEO. TJ, who has joined Figma, remains founder and chairman.
+          </al-text-passage>
+          <al-link href={withBase('/insights/business/better-together-southleft-x-baseline-and-a-new-ceo')}>Read the announcement →</al-link>
+        </al-card>
+      </div>
+    </div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>Five things we won’t compromise on</al-heading>
+    <al-text-passage>The same values since 2012 — tightened for the work we do now.</al-text-passage>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {values.map((v) => (
+        <div class="al-u-grid__item col:12 col:6@md col:4@lg">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>{v.name}</al-heading></div>
+            <al-text-passage>{v.body}</al-text-passage>
+          </al-card>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>Who’s at the wheel</al-heading>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {leaders.map((person) => (
+        <div class="al-u-grid__item col:12 col:6@md">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header">
+              <al-heading tagName="h3" variant="sm" isBold={true}>{person.name}</al-heading>
+              <p class="al-u-theme-typography-body-xs">{person.role}</p>
+            </div>
+            <al-text-passage>{person.bio}</al-text-passage>
+          </al-card>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>What working with us feels like</al-heading>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {howWeWork.map((item) => (
+        <div class="al-u-grid__item col:12 col:4@md">
+          <al-heading tagName="h3" variant="sm" isBold={true}>{item.name}</al-heading>
+          <al-text-passage>{item.body}</al-text-passage>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <CTABand
+      heading="Let’s talk about your design system."
+      dek="You’ll hear back from a practitioner, not a pipeline."
+    />
+  </div>
+</Base>

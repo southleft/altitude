@@ -1,0 +1,42 @@
+---
+// Site footer — spec 2026-08-20-southleft-example-app, T3.
+import { NAV, SITE } from '../lib/site';
+import { withBase } from '../lib/url';
+
+const year = new Date().getFullYear();
+---
+
+<al-footer>
+  <al-logo slot="logo" variant="southleft" href={withBase('/')}>By Southleft</al-logo>
+  <!-- al-list-item takes `href`/`target` directly and renders its OWN <a> —
+       slotting a separately-interactive <al-link> inside it (the previous
+       markup here) nests an <a> inside al-list-item's own <button>, an
+       axe `nested-interactive` violation (T8 a11y pass, real app-markup
+       bug, not a library one: the component already provides the correct
+       API, this just wasn't using it). -->
+  <div class="sl-stack sl-stack--sm">
+    <al-heading tagName="h3" variant="sm" isBold={true}>Site</al-heading>
+    <al-list>
+      {NAV.map((item) => <al-list-item href={withBase(item.href)}>{item.label}</al-list-item>)}
+    </al-list>
+  </div>
+  <div class="sl-stack sl-stack--sm">
+    <al-heading tagName="h3" variant="sm" isBold={true}>Connect</al-heading>
+    <al-list>
+      <al-list-item href={SITE.calendly} target="_blank">Book a call</al-list-item>
+      <al-list-item href={`mailto:${SITE.email}`}>{SITE.email}</al-list-item>
+      <al-list-item href={withBase('/contact')}>Contact</al-list-item>
+    </al-list>
+  </div>
+  <div class="sl-stack sl-stack--sm">
+    <al-heading tagName="h3" variant="sm" isBold={true}>Elsewhere</al-heading>
+    <al-list>
+      <al-list-item href={SITE.linkedin} target="_blank">LinkedIn</al-list-item>
+      <al-list-item href={SITE.github} target="_blank">GitHub</al-list-item>
+      <al-list-item href={SITE.substack} target="_blank">Substack</al-list-item>
+    </al-list>
+  </div>
+  <div slot="legal">
+    <span>&copy; {year} Southleft. Built exclusively on Altitude.</span>
+  </div>
+</al-footer>

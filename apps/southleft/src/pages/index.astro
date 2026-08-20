@@ -1,0 +1,232 @@
+---
+// Home page — spec 2026-08-20-southleft-example-app, T3 + T5/T6/T8.
+// Rebuilt purely from al-* organisms: al-hero, client logo wall, services
+// grid, featured work, testimonials, insights teasers, CTA band.
+// Default theme: southleft · dark ("ink") — set on <al-theme> in Base.astro.
+//
+// `data-section-id` on each top-level <section> is the layout resolver's
+// (src/lib/layout-resolver.ts, T5) reorder target — the AI direction panel
+// (T6) can permute logos/services/work/testimonials/insights/cta live. The
+// hero is deliberately NOT one of them (always first, by construction — see
+// that module's doc comment), and the footer lives outside <main> entirely
+// (Base.astro), so it is always last regardless of what a layout carries.
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import WorkCard from '../components/WorkCard.astro';
+import CTABand from '../components/CTABand.astro';
+import AIDirectionPanel from '../components/AIDirectionPanel.astro';
+import { CTA } from '../lib/site';
+import { withBase } from '../lib/url';
+
+const insightsCount = (await getCollection('insights')).length;
+const work = await getCollection('work');
+const workCount = work.length;
+
+const posts = (await getCollection('insights')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 3);
+
+const featuredSlugs = ['petsmart', 'stanford-d-school', 'ibm-investor-relations'];
+const featuredWork = featuredSlugs
+  .map((s) => work.find((w) => w.id.replace(/\.md$/, '') === s))
+  .filter((w) => w !== undefined);
+
+const logos = [
+  { file: 'ibm.webp', name: 'IBM' },
+  { file: 'google.webp', name: 'Google' },
+  { file: 'petsmart.webp', name: 'PetSmart' },
+  { file: 'toast.webp', name: 'Toast' },
+  { file: 'caterpillar.webp', name: 'Caterpillar' },
+  { file: 'cigna-health.webp', name: 'Cigna Health' },
+  { file: 'conde-nast.webp', name: 'Condé Nast' },
+  { file: 'docusign.webp', name: 'DocuSign' },
+  { file: 'state-farm.webp', name: 'State Farm' },
+  { file: 'ulta-beauty.webp', name: 'Ulta Beauty' },
+  { file: 'chubb.webp', name: 'CHUBB' },
+  { file: 'better-com.svg', name: 'Better.com' },
+];
+
+// Real copy migrated verbatim from southleft-v5's src/pages/index.astro.
+const services = [
+  {
+    href: '/services',
+    name: 'AI + Design Systems',
+    body: 'Your design system is about to become the most important API your company owns. AI-readiness audits, MCP integrations, discovery and research at the edge of what agents and generative UI make possible.',
+  },
+  {
+    href: '/services/design-systems',
+    name: 'Design System Engineering',
+    body: 'Build, scale, and govern systems from Figma to production. Component libraries, token architecture, Storybook and docs — everything typed, tokenized, tested.',
+  },
+  {
+    href: '/services/workshops-training',
+    name: 'Workshops & Training',
+    body: 'We teach what we practice — hands-on team workshops, conference talks, and the AI & Design Systems course with Brad Frost. No slideware theory; live demos from real client work.',
+  },
+  {
+    href: '/services/team-augmentation',
+    name: 'Team Augmentation',
+    body: 'Senior design-system and front-end engineers embedded with your team. They slot into your codebase and ship — direct access to the people writing the code, no hand-offs to a B-team.',
+  },
+];
+
+// Real, verbatim client quotes migrated from southleft-v5.
+const testimonials = [
+  {
+    quote: 'They’re excellent! They make work seem easy — always on time and they communicate clearly along the way.',
+    name: 'Jessi Hall',
+    role: 'Producer, Big Medium',
+  },
+  {
+    quote: 'Southleft was instrumental in helping us improve our user experience while simultaneously increasing traffic and revenue.',
+    name: 'Todd Hodgson',
+    role: 'Director of Product Management, Outside Inc.',
+  },
+];
+---
+
+<Base title="Southleft">
+  <!-- Hero -->
+  <section class="sl-container sl-section" data-section-id="hero">
+    <al-hero contentAlignment="start">
+      <al-chip slot="eyebrow" variant="secondary">&lt;southleft&gt;</al-chip>
+      <al-heading slot="heading" tagName="h1" variant="display-lg" isBold={true}>
+        AI-powered design systems. Built by the people building the tools.
+      </al-heading>
+      <al-text-passage>
+        We audit, build, and evolve design systems for teams at Caterpillar, Novartis, UPS, and
+        NASDAQ — and we build the open-source AI tooling the design systems community actually
+        uses. We don’t just talk about this stuff. We build it.
+      </al-text-passage>
+      <al-button slot="actions" href={withBase(CTA.href)}>{CTA.label}</al-button>
+      <al-button slot="actions" variant="tertiary" href={withBase('/services')}>See how we work</al-button>
+      <div slot="media" class="sl-stack">
+        <al-testimonial attribution="Southleft" data-testimonial-role="Design systems, engineered">
+          Every component on this page — hero, logo wall, cards, testimonial — is an unmodified
+          Altitude organism. The Southleft brand recipe is tokens, not custom CSS.
+        </al-testimonial>
+      </div>
+      <div slot="meta" class="al-u-grid" style="--al-grid-cols: 3; grid-template-columns: repeat(3, 1fr);">
+        <al-stat value={String(insightsCount)} label="Insights published" />
+        <al-stat value={String(workCount)} label="Case studies shipped" />
+        <al-stat value="2012" label="Building design systems since" />
+      </div>
+    </al-hero>
+  </section>
+
+  <!-- Client logo wall -->
+  <section class="sl-container sl-section--tight" data-section-id="logos">
+    <al-text-passage maxWidth="sm">Trusted since 2012 by teams who care what’s under the hood.</al-text-passage>
+    <div class="sl-logo-wall" style="margin-top: var(--al-theme-space-lg);">
+      {logos.map((logo) => <img src={withBase(`/logos/${logo.file}`)} alt={logo.name} loading="lazy" />)}
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="sl-container sl-section" data-section-id="services">
+    <div class="sl-section-header">
+      <div class="sl-stack sl-stack--sm">
+        <al-heading tagName="h2" variant="lg" isBold={true}>What we do</al-heading>
+        <al-text-passage maxWidth="sm">
+          AI + design systems is our main practice — audits, workshops, embedded engineering, and
+          ongoing research at the edge of MCP, agents, and generative UI.
+        </al-text-passage>
+      </div>
+    </div>
+    <div class="al-u-grid" data-emphasis-grid style="margin-top: var(--al-theme-space-xl);">
+      {services.map((s, i) => (
+        <div
+          class="al-u-grid__item col:12 col:6@md"
+          data-col-regular="col:6@md"
+          data-col-flagship={i === 0 ? 'col:8@md' : 'col:4@md'}
+        >
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}><a href={withBase(s.href)}>{s.name}</a></al-heading></div>
+            <al-text-passage>{s.body}</al-text-passage>
+          </al-card>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Featured work -->
+  <section class="sl-container sl-section" data-section-id="work">
+    <div class="sl-section-header">
+      <div class="sl-stack sl-stack--sm">
+        <al-heading tagName="h2" variant="lg" isBold={true}>Proof, not promises</al-heading>
+        <al-text-passage maxWidth="sm">Design systems and front ends shipped for enterprises, startups, and everything between.</al-text-passage>
+      </div>
+      <al-link href={withBase('/work')}>All case studies →</al-link>
+    </div>
+    <div class="al-u-grid" data-emphasis-grid style="margin-top: var(--al-theme-space-xl);">
+      {featuredWork.map((w, i) => (
+        <div
+          class="al-u-grid__item col:12 col:4@md"
+          data-col-regular="col:4@md"
+          data-col-flagship={i === 0 ? 'col:6@md' : 'col:3@md'}
+        >
+          <WorkCard project={w} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="sl-container sl-section" data-section-id="testimonials">
+    <div class="al-u-grid">
+      {testimonials.map((t) => (
+        <div class="al-u-grid__item col:12 col:6@md">
+          <al-testimonial attribution={t.name} data-testimonial-role={t.role}>{t.quote}</al-testimonial>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Insights teasers -->
+  <section class="sl-container sl-section" data-section-id="insights">
+    <div class="sl-section-header">
+      <div class="sl-stack sl-stack--sm">
+        <al-heading tagName="h2" variant="lg" isBold={true}>Latest thinking</al-heading>
+        <al-text-passage maxWidth="sm">Design systems, AI, and the craft of building for the web — published as we learn it.</al-text-passage>
+      </div>
+      <al-link href={withBase('/insights')}>All insights →</al-link>
+    </div>
+    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      {posts.map((p) => (
+        <div class="al-u-grid__item col:12 col:4@md">
+          <ArticleCard post={p} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="sl-container sl-section" data-section-id="cta">
+    <CTABand />
+  </section>
+
+  <AIDirectionPanel />
+</Base>
+
+<script>
+  // T8 a11y fix. `al-testimonial`'s `role` property (the person's JOB TITLE)
+  // shares its name with the global ARIA `role` attribute — setting it as a
+  // plain HTML attribute (the only way to set it from static markup) makes
+  // the browser treat "Producer, Big Medium" etc. as the element's ARIA
+  // role, an axe `aria-roles` CRITICAL violation. This is a library API
+  // naming collision (documented, not fixed, in T8's verification notes —
+  // out of scope to rename a shipped component property here); the
+  // mitigation below stays entirely in this page: read the value from a
+  // harmless `data-testimonial-role` attribute instead and set it as a JS
+  // PROPERTY, which Lit's reactive accessor honors without ever touching
+  // the native `role=` attribute — but ONLY once `al-testimonial` is
+  // actually defined. Until then, `role` resolves to the built-in
+  // `HTMLElement`/ARIAMixin accessor (every element has one), which DOES
+  // reflect to the attribute — the exact bug this works around — so this
+  // must not run before `customElements.whenDefined` resolves, regardless
+  // of this script's position relative to Base.astro's own registration
+  // script in document order.
+  customElements.whenDefined('al-testimonial').then(() => {
+    document.querySelectorAll<HTMLElement>('al-testimonial[data-testimonial-role]').forEach((el) => {
+      (el as HTMLElement & { role?: string }).role = el.dataset.testimonialRole;
+    });
+  });
+</script>

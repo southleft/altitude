@@ -1,0 +1,26 @@
+/* Self-hosted Agrandir Variable — spec 2026-08-20-southleft-example-app, T4-2.
+ *
+ * Southleft owns the license for its own site's display face; the ACTUAL
+ * font file is self-hosted here (apps/southleft/public/fonts/, copied from
+ * the frozen southleft-v5 checkout — see public/fonts/README.md for
+ * provenance) rather than by the Altitude library, so `altitude`-brand-only
+ * consumers pay zero bundle cost for a font they never use.
+ *
+ * This is infrastructure (registering the asset the `southleft` brand's
+ * `font-family.secondary` token already points at — see
+ * styles/tokens/tier-2/brand/southleft/typography-primitives.json), not page
+ * styling: no element anywhere sets `font-family` directly against this
+ * name. `al-heading`/`al-text-passage` reach it purely through the token.
+ *
+ * IBM Plex Sans (body/heading) is already fetched by
+ * `al-web-components/css/main.css` (styles/main.scss:11) — no additional
+ * webfont import needed here.
+ */
+@font-face {
+  font-family: 'Agrandir';
+  src:
+    url('/southleft/fonts/Agrandir-Variable.woff2') format('woff2-variations'),
+    url('/southleft/fonts/Agrandir-Variable.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-display: swap;
+}

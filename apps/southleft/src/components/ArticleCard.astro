@@ -1,0 +1,26 @@
+---
+// Insights post card — spec 2026-08-20-southleft-example-app, T4.
+import type { CollectionEntry } from 'astro:content';
+import { withBase } from '../lib/url';
+
+interface Props {
+  post: CollectionEntry<'insights'>;
+  featured?: boolean;
+}
+const { post, featured = false } = Astro.props;
+const slug = post.id.replace(/\.md$/, '');
+const href = withBase(`/insights/${post.data.category}/${slug}`);
+const dateLabel = post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+
+<al-card layout={featured ? 'inline' : undefined}>
+  {post.data.hero && <img slot="image" src={post.data.hero} alt="" loading="lazy" />}
+  <div slot="header" class="sl-stack sl-stack--sm">
+    <al-chip variant="secondary">{post.data.categoryName}</al-chip>
+    <al-heading tagName="h3" variant={featured ? 'md' : 'sm'} isBold={true}>
+      <a href={href}>{post.data.title}</a>
+    </al-heading>
+  </div>
+  {post.data.excerpt && <al-text-passage>{post.data.excerpt}</al-text-passage>}
+  <span slot="actions-end" class="al-u-theme-typography-body-xs">{dateLabel}</span>
+</al-card>

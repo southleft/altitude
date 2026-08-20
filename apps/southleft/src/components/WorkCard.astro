@@ -1,0 +1,23 @@
+---
+// Case-study card — spec 2026-08-20-southleft-example-app, T4.
+import type { CollectionEntry } from 'astro:content';
+import { withBase } from '../lib/url';
+
+interface Props {
+  project: CollectionEntry<'work'>;
+}
+const { project } = Astro.props;
+const slug = project.id.replace(/\.md$/, '');
+const href = withBase(`/projects/${slug}`);
+---
+
+<al-card>
+  {project.data.hero && project.data.showHero && <img slot="image" src={project.data.hero} alt="" loading="lazy" />}
+  <div slot="header" class="sl-stack sl-stack--sm">
+    <al-chip variant="secondary">{project.data.client}</al-chip>
+    <al-heading tagName="h3" variant="sm" isBold={true}>
+      <a href={href}>{project.data.title}</a>
+    </al-heading>
+  </div>
+  {project.data.oneLiner && <al-text-passage>{project.data.oneLiner}</al-text-passage>}
+</al-card>

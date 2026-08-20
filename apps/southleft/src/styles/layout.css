@@ -1,0 +1,370 @@
+/* App-layout CSS — spec 2026-08-20-southleft-example-app, T1.
+ *
+ * ALTITUDE-ONLY RULE: this file may only declare GRID / POSITIONING rules
+ * (container widths, sticky header, section rhythm via `--al-theme-space-*`).
+ * No hardcoded colors, radii, fonts or shadows — those all come from the
+ * `southleft` brand tokens through the `.al-u-*` utility classes and the
+ * al-* components themselves. `scripts/check-altitude-only.mjs` greps this
+ * file (and the build output) for violations.
+ */
+
+.sl-container {
+  width: 100%;
+  max-width: 84rem; /* 1344px — close to v5's 1360px container-sl */
+  margin-inline: auto;
+  padding-inline: var(--al-theme-space-lg);
+  box-sizing: border-box;
+}
+
+.sl-container--prose {
+  max-width: 45rem; /* ~720px, mirrors v5's container-prose */
+  margin-inline: auto;
+}
+
+/* `<al-theme>` is `display: contents` (theme.scss) — it never paints a box
+ * of its own, only its `:host([mode]/[brand])` custom properties. Without a
+ * painted canvas somewhere INSIDE it, the ink/paper toggle only recolors
+ * individual components (each paints its own shadow-DOM background) and
+ * leaves the page's own background showing through between them. `.sl-page`
+ * is that canvas — a plain DOM child of `<al-theme>`, so it inherits the
+ * scoped token normally (display:contents does not break custom-property
+ * inheritance), sized to at least the viewport so there's no gap below a
+ * short page. */
+.sl-page {
+  min-height: 100vh;
+  /* `--al-theme-color-background-default-weak` directly (not the
+   * `--al-theme-color-body-background` alias `styles/core/base.scss` uses
+   * for `body`): the alias is declared once in the unscoped `:root` bundle
+   * and never restated in `<al-theme>`'s `:host([mode])` partial, so on a
+   * page with a runtime mode TOGGLE (not just a fixed brand/mode at load)
+   * it does not reliably re-resolve when `mode` changes at runtime. The
+   * `-weak` leaf IS restated per mode (dist-v5/scss/host/tokens-mode-*.scss)
+   * and is what the alias points at in the first place. */
+  background: var(--al-theme-color-background-default-weak);
+  /* Same fix, for TEXT color. `styles/core/base.scss` sets `body { color:
+   * var(--al-theme-color-content-default); }` — a regular (non-custom) CSS
+   * property, so what INHERITS down from `body` is the value already
+   * resolved there (against the unscoped `:root` bundle), not a live
+   * formula. Un-slotted content inside `<al-text-passage>` etc. (this app's
+   * migrated markdown bodies — plain `<p>`/`<h2>` with no component of
+   * their own) inherits that frozen value straight through al-theme's
+   * `display: contents`, so a runtime mode toggle silently left body copy
+   * unreadable (near-white on the paper background) until this
+   * re-declaration gives it a fresh, correctly-scoped resolution. */
+  color: var(--al-theme-color-content-default);
+}
+
+.sl-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.sl-header__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-lg);
+  flex-wrap: wrap;
+}
+
+.sl-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-sm);
+}
+
+/* T8 a11y pass — real finding, app-scoped fix. `al-link` (and any plain <a>
+ * slotted into `al-text-passage`, which applies the same `@include al-link`
+ * mixin) colors its text with `--al-theme-color-content-primary-default`,
+ * which resolves to the southleft brand's FIXED red-500 in EVERY mode (the
+ * brand's sparse override has no light/dark split — a token-level gap in
+ * `tier-2/brand/southleft/colors.json`, documented here rather than
+ * touched: that file is a shared brand recipe, not something this app
+ * owns, and re-splitting it by mode is a bigger change than this app's
+ * scope). Against the paper (light) canvas that red measures 2.77:1, well
+ * under the 4.5:1 axe/WCAG AA requires — reproduced on the header nav AND
+ * on plain-text-passage links (Figma/MCP prose on /tools), so this is
+ * scoped to the WHOLE light-mode page, not just one section. On ink (dark)
+ * the same pairing already passes, so it's untouched there. Re-pointing
+ * the CUSTOM PROPERTY (which pierces the shadow boundary — the same
+ * mechanism `.altitude/AI-THEME.md` documents) fixes every current and
+ * future light-mode text link without touching the shared token file or
+ * any component. Filled PRIMARY buttons are unaffected — those read
+ * `--al-theme-color-background-primary-default` (a different token) with
+ * their own separately-chosen ink color, not this one. */
+al-theme[mode='light'] {
+  --al-theme-color-content-primary-default: var(--al-theme-color-content-default);
+  --al-theme-color-content-primary-strong: var(--al-theme-color-content-default-weak);
+}
+
+/* `al-text-passage`'s `::slotted(a)` / `::slotted(code)` styling (its
+ * shadow root's link color + code treatment) only ever matches DIRECT
+ * slotted children — a fundamental `::slotted()` limitation, not
+ * something either side did wrong. `.sl-prose` marks the `<p>` wrappers
+ * this app uses for prose that mixes inline links/code with running text
+ * (needed so the flex-column layout above treats the WHOLE sentence as
+ * one item — see the `<p>` comment at each usage site), so their nested
+ * `<a>`/`<code>` need their own light-DOM styling instead of inheriting
+ * the component's. Same tokens the component itself would have used. */
+.sl-prose a {
+  color: var(--al-theme-color-content-primary-default);
+  text-decoration: underline;
+  transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-prose a:hover {
+  color: var(--al-theme-color-content-primary-strong);
+}
+
+.sl-prose code {
+  background: var(--al-theme-color-background-default-weak);
+  padding-inline: var(--al-theme-space-xs);
+  border-radius: var(--al-theme-border-radius-xs);
+}
+
+.sl-section {
+  padding-block: var(--al-theme-space-xxl);
+}
+
+.sl-section--tight {
+  padding-block: var(--al-theme-space-xl);
+}
+
+.sl-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space);
+}
+
+.sl-stack--sm {
+  gap: var(--al-theme-space-sm);
+}
+
+.sl-stack--lg {
+  gap: var(--al-theme-space-lg);
+}
+
+.sl-logo-wall {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--al-theme-space-xl);
+}
+
+.sl-logo-wall img {
+  height: 1.75rem;
+  width: auto;
+  display: block;
+}
+
+.sl-footer-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--al-theme-space-lg);
+}
+
+/* `al-heading` / `al-text-passage` carry no `:host` display rule of their
+ * own (library gap, not touched here — see T8 verification notes), so the
+ * UA default (`display: inline`) applies whenever this app places them as
+ * direct page content rather than inside a component's flex/grid-managed
+ * slot. Left unfixed, two of them as siblings lay out on the same inline
+ * line (heading text running straight into the paragraph that follows).
+ * Safe app-wide: any flex/grid item still blockifies per spec regardless of
+ * its own `display`, so this changes nothing for the many places these tags
+ * already sit inside a component's managed slot (al-hero, al-card, …). */
+al-heading,
+al-text-passage {
+  display: block;
+}
+
+/* Section header — heading + description, optionally with a trailing
+ * "view all" link. One consistent arrangement for every section that needs
+ * it (home page: What we do / Proof, not promises / Latest thinking) rather
+ * than three ad hoc `.al-u-grid` compositions. Wraps to a stacked layout
+ * below the width a heading + description + link can share a line. */
+.sl-section-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--al-theme-space-lg);
+  margin-block-end: var(--al-theme-space-xl);
+}
+
+.sl-section-header > .sl-stack {
+  flex: 1 1 28rem;
+  min-inline-size: 0;
+}
+
+/* Logo wall — a consistent monochrome band in both ink and paper modes
+ * regardless of each source logo's native colors, matching v5. Grayscale
+ * alone can still wash out a dark-on-transparent mark against the ink
+ * (dark) canvas, so the ink sheet also inverts; full color returns on
+ * hover/focus as a light interactive affordance. */
+.sl-logo-wall img {
+  filter: grayscale(1) contrast(1.1);
+  opacity: 0.65;
+  transition:
+    opacity var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    filter var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-logo-wall img:hover,
+.sl-logo-wall img:focus-visible {
+  filter: grayscale(0) contrast(1);
+  opacity: 1;
+}
+
+al-theme[mode='dark'] .sl-logo-wall img {
+  filter: grayscale(1) invert(1) contrast(1.1);
+}
+
+al-theme[mode='dark'] .sl-logo-wall img:hover,
+al-theme[mode='dark'] .sl-logo-wall img:focus-visible {
+  filter: grayscale(0) invert(0) contrast(1);
+}
+
+/* ------------------------------------------------------------------------
+ * AI layout resolver (T5/T6, spec 2026-08-20-southleft-example-app) — the
+ * app-side half of `src/lib/layout-resolver.ts`. `data-sl-content-width` /
+ * `data-sl-grid-density` are written to `.sl-page` only once a theme has
+ * been generated (default/unset renders exactly as before). Unlayered on
+ * purpose, same reasoning as `.sl-page` above: outranks the layered
+ * `.al-u-grid` utility rule without needing `!important`.
+ * -------------------------------------------------------------------- */
+[data-sl-content-width='narrow'] .sl-container {
+  max-width: 60rem;
+}
+
+[data-sl-content-width='wide'] .sl-container {
+  max-width: 100rem;
+}
+
+[data-sl-grid-density='airy'] .al-u-grid {
+  grid-gap: var(--al-theme-space-xl);
+}
+
+[data-sl-grid-density='dense'] .al-u-grid {
+  grid-gap: var(--al-theme-space-xs);
+}
+
+/* AI direction panel (T6) — al-drawer's own host is `display: contents`
+ * (theme.scss), so it paints no box of its own to position; the floating
+ * trigger is the slotted `<al-button>` itself. `position: fixed` blockifies
+ * it regardless of the button's own inline default (CSS Display §2.7), so
+ * this is safe without any library change. */
+.sl-ai-fab {
+  position: fixed;
+  inset-block-end: var(--al-theme-space-lg);
+  inset-inline-end: var(--al-theme-space-lg);
+  z-index: var(--al-z-index-top, 999);
+}
+
+.sl-ai-panel {
+  min-inline-size: 20rem;
+}
+
+.sl-ai-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--al-theme-space-xs);
+}
+
+.sl-ai-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--al-theme-space-sm);
+}
+
+.sl-ai-status {
+  color: var(--al-theme-color-content-default-weak);
+}
+
+/* Live token tree (T7 tools page) */
+.sl-token-search {
+  max-width: 28rem;
+  margin-block-end: var(--al-theme-space-lg);
+}
+
+.sl-token-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: var(--al-theme-space-xl);
+  align-items: start;
+}
+
+.sl-token-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-block-start: var(--al-theme-space-sm);
+  max-block-size: 28rem;
+  overflow-y: auto;
+  border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+  border-radius: var(--al-theme-border-radius);
+}
+
+.sl-token-row {
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-sm);
+  padding: var(--al-theme-space-xs) var(--al-theme-space-sm);
+  border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+}
+
+.sl-token-row:last-child {
+  border-block-end: none;
+}
+
+.sl-token-swatch {
+  inline-size: 1rem;
+  block-size: 1rem;
+  flex: 0 0 auto;
+  border-radius: var(--al-theme-border-radius-sm);
+  border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+}
+
+.sl-token-name {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.sl-token-value {
+  color: var(--al-theme-color-content-default-weak);
+  white-space: nowrap;
+}
+
+/* Drift-check demo (T7 tools page) */
+.sl-drift-demo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--al-theme-space-sm);
+  flex-wrap: wrap;
+}
+
+.sl-drift-report {
+  max-block-size: 24rem;
+  overflow: auto;
+  padding: var(--al-theme-space-sm);
+  background: var(--al-theme-color-background-default-weak);
+  border-radius: var(--al-theme-border-radius);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Motion-respecting transition for live token/layout changes (T6) — only
+ * the properties the AI panel actually touches, and only when the visitor
+ * hasn't asked for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .sl-page {
+    transition:
+      background-color var(--al-theme-animation-duration-long, 0.4s) var(--al-theme-animation-timing),
+      color var(--al-theme-animation-duration-long, 0.4s) var(--al-theme-animation-timing);
+  }
+
+  .sl-container {
+    transition: max-width var(--al-theme-animation-duration-long, 0.4s) var(--al-theme-animation-timing);
+  }
+}

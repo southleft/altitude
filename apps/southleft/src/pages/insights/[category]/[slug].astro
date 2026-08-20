@@ -1,0 +1,67 @@
+---
+// Insights detail — spec 2026-08-20-southleft-example-app, T4.
+// URL preserved exactly: /insights/<category>/<slug>
+// Paper (light) mode by default, matching v5's article/case-study convention.
+import { getCollection, render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import { SITE } from '../../../lib/site';
+import { withBase } from '../../../lib/url';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('insights');
+  return posts.map((post) => ({
+    params: { category: post.data.category, slug: post.id.replace(/\.md$/, '') },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const dateLabel = post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  datePublished: post.data.date.toISOString(),
+  description: post.data.excerpt,
+  image: post.data.hero,
+  author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+  publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+};
+---
+
+<Base title={post.data.title} description={post.data.excerpt} theme="light" ogImage={post.data.hero} jsonLd={jsonLd}>
+  <div class="sl-container sl-section--tight">
+    <!-- al-breadcrumbs-item takes `href` directly and renders its OWN <a>
+         (or a non-focusable <button> for the current, unlinked crumb when
+         `isCurrent` is set) — slotting a raw <a> inside it nests an
+         interactive element inside another, an axe `nested-interactive`
+         violation (T8 a11y pass; real app-markup bug, component already
+         provides the correct API). -->
+    <al-breadcrumbs>
+      <al-breadcrumbs-item href={withBase('/insights')}>Insights</al-breadcrumbs-item>
+      <al-breadcrumbs-item href={withBase(`/insights/${post.data.category}`)}>{post.data.categoryName}</al-breadcrumbs-item>
+      <al-breadcrumbs-item isCurrent>{post.data.title}</al-breadcrumbs-item>
+    </al-breadcrumbs>
+    <div class="sl-container--prose" style="margin-top: var(--al-theme-space-xl);">
+      <al-chip variant="secondary">{post.data.categoryName}</al-chip>
+      <al-heading tagName="h1" variant="display-sm" isBold={true} style="margin-top: var(--al-theme-space-sm);">{post.data.title}</al-heading>
+      <p class="al-u-theme-typography-body-sm" style="margin-top: var(--al-theme-space-sm);">{dateLabel}</p>
+    </div>
+  </div>
+
+  {post.data.hero && (
+    <div class="sl-container sl-section--tight">
+      <img src={post.data.hero} alt="" style="width: 100%; height: auto; display: block;" />
+    </div>
+  )}
+
+  <div class="sl-container sl-section">
+    <div class="sl-container--prose">
+      <al-text-passage>
+        <Content />
+      </al-text-passage>
+    </div>
+  </div>
+</Base>
