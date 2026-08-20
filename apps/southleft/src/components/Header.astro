@@ -1,41 +1,111 @@
 ---
-// Sticky primary nav — spec 2026-08-20-southleft-example-app, T3, revised T9
-// round 2 for exact v5 parity: full 6-item nav (incl. "AI + Design Systems"),
-// two circular icon buttons (theme/AI-direction trigger, ink/paper toggle),
-// and a pill "Start a conversation" CTA — matching v5's Header.astro exactly.
+// Sticky primary nav — spec 2026-08-20-southleft-example-app, T3, revised T9,
+// REBUILT T12 (round 4, visual-fidelity) for structural parity with v5's
+// real Header.astro. `al-header`'s shadow DOM forces its default/before/
+// after slots into three EQUAL flex:1 thirds (header.ts/header.scss) —
+// there is no prop to opt out, so a six-item nav plus a wordmark logo and
+// an action cluster can never share one row through that component. Per
+// this round's brief: stop fighting it. This is a plain semantic <header>
+// composing al-logo / al-button as primitives; the nav pills, the two
+// circular icon buttons, and the mobile panel have no al-* equivalent (v5
+// itself hand-styles them too, not via a shared component) so they're app
+// markup styled entirely through src/styles/layout.css tokens.
 import { NAV, CTA } from '../lib/site';
 import { withBase } from '../lib/url';
+
+// `Astro.url.pathname` includes the `/southleft` base (astro.config.mjs) in
+// both dev and build — strip it before comparing against NAV's unprefixed
+// hrefs, mirroring v5's own path-based `isActive`.
+const BASE = (import.meta.env.BASE_URL ?? '/').replace(/\/$/, '');
+const rawPath = Astro.url.pathname.startsWith(BASE) ? Astro.url.pathname.slice(BASE.length) : Astro.url.pathname;
+const path = rawPath.replace(/\/$/, '') || '/';
+const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href));
 ---
 
-<al-header class="sl-header">
-  <al-logo slot="before" variant="southleft" href={withBase('/')}>By Southleft</al-logo>
-  <nav class="sl-header__nav" aria-label="Primary">
-    {NAV.map((item) => <al-link variant="sm" href={withBase(item.href)}>{item.label}</al-link>)}
-  </nav>
-  <div slot="after" class="sl-header__actions">
-    <al-button
-      variant="tertiary"
-      hideText
-      label="Open AI direction — derive your own theme"
-      title="Derive your own theme"
-      data-sl-ai-trigger
-    >
-      <svg slot="before" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-        <path d="M12 21a9 9 0 1 1 9-9c0 2.5-2 3-3.5 3H15a2 2 0 0 0-1.5 3.3c.6.7.2 1.7-.7 1.7Z"></path>
-        <circle cx="8" cy="10.5" r="0.6" fill="currentColor"></circle>
-        <circle cx="12" cy="7.5" r="0.6" fill="currentColor"></circle>
-        <circle cx="16" cy="10.5" r="0.6" fill="currentColor"></circle>
-      </svg>
-    </al-button>
-    <al-button variant="tertiary" hideText label="Switch to paper (light) mode" title="Ink / paper" data-sl-mode-toggle>
-      <svg slot="before" data-sl-mode-icon viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="4"></circle>
-        <path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path>
-      </svg>
-    </al-button>
-    <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
+<header class="sl-header" data-header>
+  <div class="sl-header__bar">
+    <a href={withBase('/')} class="sl-header__logo" aria-label="Southleft home">
+      <al-logo variant="southleft" href={withBase('/')}></al-logo>
+    </a>
+
+    <nav class="sl-header__nav" aria-label="Primary">
+      {NAV.map((item) => (
+        <a
+          href={withBase(item.href)}
+          aria-current={isActive(item.href) ? 'page' : undefined}
+          class:list={[
+            'sl-header__nav-link al-u-theme-typography-body-sm',
+            isActive(item.href) && 'sl-header__nav-link--active',
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="sl-header__actions">
+      <button
+        type="button"
+        id="theme-console-open"
+        class="sl-header__icon-btn sl-header__icon-btn--accent-hover"
+        aria-label="Open theme console — derive your own site theme"
+        title="Derive your own theme"
+        data-sl-ai-trigger
+      >
+        <!-- palette: three token dots + a brush stroke of a ring — copied
+             verbatim from southleft-v5 src/components/Header.astro:48-53 -->
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M12 21a9 9 0 1 1 9-9c0 2.5-2 3-3.5 3H15a2 2 0 0 0-1.5 3.3c.6.7.2 1.7-.7 1.7Z"></path>
+          <circle cx="8" cy="10.5" r="0.6" fill="currentColor"></circle>
+          <circle cx="12" cy="7.5" r="0.6" fill="currentColor"></circle>
+          <circle cx="16" cy="10.5" r="0.6" fill="currentColor"></circle>
+        </svg>
+      </button>
+      <button
+        type="button"
+        class="sl-header__icon-btn"
+        aria-label="Switch to paper (light) mode"
+        title="Ink / paper"
+        data-sl-mode-toggle
+      >
+        <svg data-sl-mode-icon viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path>
+        </svg>
+      </button>
+      <span class="sl-header__cta">
+        <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
+      </span>
+      <button
+        type="button"
+        class="sl-header__icon-btn sl-header__menu-btn"
+        aria-label="Menu"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        data-menu-button
+      >
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18" class="icon-open"></path>
+          <path d="M6 6l12 12M18 6L6 18" class="icon-close" style="display:none"></path>
+        </svg>
+      </button>
+    </div>
   </div>
-</al-header>
+
+  <nav id="mobile-nav" class="sl-header__mobile-nav" aria-label="Primary mobile" hidden>
+    <div class="sl-header__mobile-nav-inner">
+      {NAV.map((item, i) => (
+        <a href={withBase(item.href)} class="sl-header__mobile-nav-link al-u-theme-typography-body-md">
+          <span>{item.label}</span>
+          <span class="sl-header__mobile-nav-index al-u-theme-typography-body-xs">0{i + 1}</span>
+        </a>
+      ))}
+      <div class="sl-header__mobile-cta">
+        <al-button href={withBase(CTA.href)} fullWidth>{CTA.label}</al-button>
+      </div>
+    </div>
+  </nav>
+</header>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -47,6 +117,24 @@ import { withBase } from '../lib/url';
       // on pages without the panel is the correct degrade.
       const fab = document.querySelector<HTMLElement>('.sl-ai-fab');
       fab?.click();
+    });
+
+    const menuBtn = document.querySelector<HTMLElement>('[data-menu-button]');
+    const mobileNav = document.getElementById('mobile-nav');
+    menuBtn?.addEventListener('click', () => {
+      const willOpen = mobileNav?.hasAttribute('hidden');
+      if (willOpen) {
+        mobileNav?.removeAttribute('hidden');
+      } else {
+        mobileNav?.setAttribute('hidden', '');
+      }
+      menuBtn.setAttribute('aria-expanded', String(!!willOpen));
+      const iconOpen = menuBtn.querySelector<SVGPathElement>('.icon-open');
+      const iconClose = menuBtn.querySelector<SVGPathElement>('.icon-close');
+      if (iconOpen && iconClose) {
+        iconOpen.style.display = willOpen ? 'none' : '';
+        iconClose.style.display = willOpen ? '' : 'none';
+      }
     });
   });
 </script>

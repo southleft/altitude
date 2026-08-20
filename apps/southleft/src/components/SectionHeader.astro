@@ -1,0 +1,34 @@
+---
+// Section header — spec 2026-08-20-southleft-example-app, T12 (round 4).
+// Mirrors v5's src/components/SectionHeader.astro: a mono `.section-rule`
+// (index / label) above an accent `.kicker` + heading + optional dek, with
+// an optional trailing "view all" link. See src/styles/layout.css for the
+// `.sl-section-rule` / `.sl-kicker` treatment this composes.
+import { withBase } from '../lib/url';
+
+interface Props {
+  index?: string;
+  label: string;
+  heading: string;
+  dek?: string;
+  linkHref?: string;
+  linkLabel?: string;
+}
+
+const { index, label, heading, dek, linkHref, linkLabel } = Astro.props;
+const kickerSlug = label.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+---
+
+<div class="sl-section-rule" aria-hidden="true">
+  <span>{index ? `${index} / ` : ''}{label}</span>
+</div>
+<div class="sl-section-header">
+  <div class="sl-stack sl-stack--sm">
+    <p class="sl-kicker sl-kicker--accent al-u-theme-typography-body-xs">&lt;{kickerSlug}&gt;</p>
+    <al-heading tagName="h2" variant="lg" isBold={true}>{heading}</al-heading>
+    {dek && <al-text-passage maxWidth="sm">{dek}</al-text-passage>}
+  </div>
+  {linkHref && (
+    <al-link href={withBase(linkHref)}>{linkLabel}</al-link>
+  )}
+</div>
