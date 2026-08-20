@@ -7,6 +7,11 @@ dist-vite
 dist-vite-spike
 storybook
 
+# AI Showcase Homepage (2026-08-20-ai-showcase-homepage) — computed KPI
+# numbers (component/brand/icon/token counts), written by
+# apps/home/scripts/generate-stats.js before every start/build.
+apps/home/src/generated/
+
 # Phase 1: DTCG tree is mechanically generated from styles/tokens/ by
 # scripts/convert-tokens-to-dtcg.js during build:tokens:v5. T6.2 deletes
 # the legacy source and unflips this — then tokens-dtcg/ becomes editable.
@@ -73,3 +78,6 @@ playwright-report
 .env.*
 !.env.example
 .dev.vars
+
+# Figma sync exports (agent-mediated loop — see .altitude/FIGMA-SYNC.md)
+.altitude/figma-sync/

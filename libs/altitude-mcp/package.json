@@ -1,0 +1,20 @@
+{
+  "name": "altitude-mcp",
+  "description": "Stdio MCP server exposing Altitude's generated token/component graph (CEM, schemas, tokens, icons, deterministic theme engine) to AI agents",
+  "version": "1.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "packageManager": "pnpm@9.15.0",
+  "bin": {
+    "altitude-mcp": "./src/server.mjs"
+  },
+  "scripts": {
+    "start": "node --experimental-strip-types --no-warnings ./src/server.mjs",
+    "test": "node --experimental-strip-types --no-warnings ./test/smoke.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^4.4.3"
+  }
+}

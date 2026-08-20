@@ -52,3 +52,10 @@
 - select (`libs/al-web-components/components/select/`)
 - dialog (`libs/al-web-components/components/dialog/`)
 - theme-switcher (`libs/al-web-components/components/theme-switcher/`)
+
+## MCP server (T7.2)
+
+- [`libs/altitude-mcp`](/libs/altitude-mcp/README.md): a stdio MCP server over the same
+  generated contract surface listed above — `altitude_list_components`, `altitude_get_component`,
+  `altitude_validate`, `altitude_get_tokens`, `altitude_search_icons`, `altitude_generate_theme`
+  (deterministic OKLCH, never an LLM call). Read-only; registered in `.mcp.json` as `altitude`.

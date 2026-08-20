@@ -91,6 +91,18 @@ violation apply its `fix` (full recipe in [`libs/al-web-components/cli/REPAIR.md
 keyed by `code`) → re-run until exit 0. If a fix would require inventing an element, attribute, or
 value that doesn't exist, **stop and report the gap** — don't fake it past the design system.
 
+### MCP server (T7.2)
+
+For an agent connected over MCP rather than shelling out, [`libs/altitude-mcp`](./libs/altitude-mcp)
+is a stdio server exposing the same contract surface as six tools: `altitude_list_components`,
+`altitude_get_component`, `altitude_validate` (wraps the CLI above, same codes), `altitude_get_tokens`
+(tier/brand/mode-filtered), `altitude_search_icons` (the 1,512-glyph Phosphor catalog), and
+`altitude_generate_theme` (the deterministic OKLCH solver — never calls an LLM). It is a reader
+of the same generated artifacts as everything else on this page, never a second source of truth.
+Registered in [`.mcp.json`](./.mcp.json) as `altitude`. See
+[`libs/altitude-mcp/README.md`](./libs/altitude-mcp/README.md) for the full tool contract and
+example calls.
+
 ## Component authoring rules (per pilot pattern)
 
 For a web component (`libs/al-web-components/components/<name>/`):
