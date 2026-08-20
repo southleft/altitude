@@ -1,7 +1,11 @@
 // T2.4 — Storybook 10 preview for al-react.
 
 import type { Preview } from '@storybook/react-vite';
-import mainStyles from '../../al-web-components/css/main.css?inline';
+// Package specifier on purpose: a518945 gave al-web-components a real exports
+// map (`./css/main.css` → `dist/css/main.css`), and the raw filesystem path
+// (`../../al-web-components/css/main.css`) does not exist — requires
+// `pnpm --filter al-web-components build` first, same as the WC Storybook.
+import mainStyles from 'al-web-components/css/main.css?inline';
 import { DEFAULT_PRESET_ID, PRESET_TOOLBAR_ITEMS } from '../../al-web-components/.storybook/presets';
 import { withPreset } from './with-preset';
 

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Altitude is a design system created by Southleft.com. The documentation is available at [ZeroHeight](https://zeroheight.com/809ab055e).
 
-This is a monorepo using **pnpm workspaces** (pnpm 9, Node 22 LTS) with two main library packages (`al-web-components` and `al-react`) and multiple example apps (Angular, React, Svelte, Enhance, Knapsack).
+This is a monorepo using **pnpm workspaces** (pnpm 9, Node 22 LTS) with two main library packages (`al-web-components` and `al-react`) and the example apps in `apps/`: `angular`, `astro` (replaced the retired Enhance fixture), `home` (the public homepage), `knapsack`, `mfe` (micro-frontend/versioned-registry fixture), `react`, `ssr`, `svelte`, and `web-components` (vanilla). Workspace filter names are `al-app-*` (e.g. `pnpm --filter al-app-astro`), except `knapsack`.
 
 The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with the modern compiler API and the modern `@use`/`@forward` module system, **Lit 3.3** for the web components, **React 19** for the React wrappers, and **ESLint 9** flat config + typescript-eslint 8 for linting.
 
@@ -67,7 +67,8 @@ The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with 
 - Those partials are **deltas** over the base `:root` bundle — `<al-theme>` composes on top of
   `dist/css/main.css`, it does not replace it
 - Multiple brands can coexist in the same page. Proof: `pnpm test:scoped-theming` +
-  `.altitude/visual-compare/brands.scoped.png` (four brands, one document, one `:root`)
+  `.altitude/visual-compare/brands.scoped.png` (two brands — altitude, southleft — one document,
+  one `:root`)
 - See `MIGRATION.md` for the v1→v2 theming migration and `.altitude/BRANDS.md` for what a brand
   may override
 
@@ -85,11 +86,21 @@ All components follow consistent patterns:
 - `stable` — plain tags (`al-button`); default for new apps
 - `versioned` — suffixed tags (`al-button-1-2-3`); for micro-frontends / multi-version coexistence
 - `manual` — caller owns `customElements.define`; for tests / SSR
+- Three consumer registration paths (see `.altitude/REGISTRATION.md` for the full model):
+  template frameworks set `window.alAutoRegistry = true` **inline in `<head>`** so deep imports
+  self-register; React apps skip the flag (every `al-react` wrapper registers its element with a
+  version suffix); micro-frontends skip it and call `registerAltitude({ mode: 'versioned' })`.
+  Composites read the flag at module-eval time to pick their sub-component suffix — it is
+  load-bearing, not a boot convenience
 
 ### SSR (T5.2)
 - `@lit-labs/ssr` with Declarative Shadow DOM
 - `apps/ssr/` is the reference fixture
-- See `.altitude/SSR.md` for the browser matrix
+- See `.altitude/SSR.md` for the browser matrix and the four-step DSD hydration sequence
+  (template parse → inline registry flag → `customElements.define` upgrade → `data-hydration` flip)
+- Known cost (`.altitude/SSR.md`): `<al-theme>` serializes every scoped brand/mode block into each
+  host's DSD template (~19.6KB per element) — acceptable with a single root `<al-theme>`, a real
+  cost if rendering many themed islands server-side
 
 ### Deployments
 - Automatic deployments to Cloudflare Pages on PR/merge to main
@@ -103,6 +114,14 @@ All components follow consistent patterns:
 - `ALElement.getSharedThemeSheet()` adopts the shared utility CSS (`styles/shadow-utilities.scss` → `.al-u-*` classes) into every component's shadow root, so components that accept utility classes via `styleModifier` work without needing the entire main.scss
 - The React components are auto-generated wrappers that forward props and events to the underlying web components
 - Use the plop generators when creating new components to ensure consistency
+
+## Repo hygiene — search scoping
+
+`.claude/worktrees/` contains full session worktrees and stale directory snapshots of the entire
+repo. **Scope all searches to `apps/`, `libs/`, `scripts/`, `functions/`, and `.altitude/`** —
+an unscoped grep returns duplicated hits from those mirrors and makes findings look like new code.
+Do not delete worktrees without checking `git worktree list` and dirty state first; some belong to
+live sessions.
 
 ## Plan + status
 

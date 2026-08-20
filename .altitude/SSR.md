@@ -65,14 +65,16 @@ brand×mode (a public API of 12 classes to save 16 KB) or a runtime
 branded with JS disabled, and 19 KB of custom-property text gzips to ~1.5 KB.
 
 Verified 2026-07-28 on `apps/ssr/dist/al-theme.html`, Chromium with
-`javaScriptEnabled: false`:
+`javaScriptEnabled: false` (the pilot used `brand="odyssey"` at the time; spec
+2026-08-20-brand-pruning-and-storybook-de-bloat cut odyssey and repointed the
+pilot at `brand="southleft"` — mechanism unchanged, only the brand under test):
 
 | | value |
 |---|---|
 | `<al-theme>` has a shadow root | `true` (from the DSD template, no JS) |
 | `customElements.get('al-theme')` | `undefined` — nothing upgraded |
-| probe `font` | `18px/32px Georgia, Cambria, serif` — odyssey's type ramp |
-| probe `color` | `rgb(164, 153, 129)` — odyssey's taupe accent |
+| probe `font` (southleft) | `16px/20px ui-monospace, …` — southleft's mono type ramp (`--al-typography-preset-16`, `tokens-southleft-dark.css`) |
+| probe `color` (southleft) | `#f05735` — southleft's red accent (`--al-theme-color-background-primary-default`) |
 
 Two things this exposed, both fixed in the same change:
 
