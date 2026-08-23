@@ -82,8 +82,10 @@ brand, state its recipe explicitly.
 1. **Read** — `figma_export_tokens` (DTCG format) / `figma_get_variables`
    against the live file. Save the export to
    `.altitude/figma-sync/last-export.json` (gitignored).
-2. **Diff** — run `node scripts/check-figma-drift.mjs .altitude/figma-sync/last-export.json`
-   for the deterministic name/value comparison; read its report.
+2. **Diff** — run `pnpm run parity:tokens-drift -- .altitude/figma-sync/last-export.json`
+   (v1: value comparison with color/dimension/shadow canonicalization,
+   brand/mode-aware bucketing, rename detection; `--project <id>` scopes the
+   brand data symmetrically; `--json` for machine output; exit 1 on drift).
 3. **Reconcile** — direction depends on which side moved:
    - *Design change (Figma → code):* edit `styles/tokens/**` to match the
      export (respecting fidelity rules), then
@@ -109,9 +111,13 @@ brand, state its recipe explicitly.
 
 ## What is deliberately missing
 
-Automation. The queued verification work is a **stable per-token identity and
-a differ that proves the two sides still agree** after either moves — that is
-`scripts/check-figma-drift.mjs`'s job to grow into. More automation
+Automation of the *loop itself*. The differ half of the queued verification
+work landed 2026-08-23: `scripts/check-figma-drift.mjs` v1
+(`pnpm run parity:tokens-drift`) compares values, not just names —
+canonicalized per type, bucketed per brand/mode, with rename detection. Its
+parser was validated against a real `figma_export_tokens` capture on
+2026-08-23 (see the script header for the confirmed shape and the
+first-contact findings, tracked as an `.mm` issue). More automation
 (scheduled sync, write pipelines) is explicitly not the goal.
 
 ---
@@ -167,7 +173,7 @@ The component CSS names its token in the declaration; read that.
 | History and rationale | `.mm/specs/2026-08-20-altitude-figma-atoms/spec.md` (local-only — `.mm/` is not in git) |
 
 An earlier version of this section said `.claude/` was gitignored and the skill would not
-survive a clone. That is wrong, and `.gitignore:71` says the opposite in as many words:
+survive a clone. That is wrong, and the `.gitignore` comment above its `.claude/` rules says the opposite in as many words:
 `.claude/` is **tracked** so skills, agents, commands and `CLAUDE.md` survive a clone —
 only `/.claude/worktrees/`, `/.claude/settings.local.json` and `/.claude/.mm-manifest.json`
 are ignored. Confirm with `git ls-files .claude/skills/altitude-figma-sync/`.
