@@ -57,6 +57,77 @@ function getSharedThemeSheet(): CSSStyleSheet {
   return themeSheet;
 }
 
+
+/**
+ * The element's parent in the **flattened (composed) tree** — through slot
+ * assignment and shadow boundaries. This is the tree the accessibility tree and
+ * axe-core walk, and it is not the same as `parentElement`: an
+ * `<al-list-item>` is a light DOM child of `<al-list>`, while the
+ * `<ul role="list">` that owns it lives inside `<al-list>`'s shadow root, so
+ * the only path between them runs through `assignedSlot`.
+ */
+function flattenedParent(node: Element): Element | null {
+  const assignedSlot = (node as HTMLElement).assignedSlot;
+  if (assignedSlot) {
+    return assignedSlot.parentElement ?? (assignedSlot.getRootNode() as ShadowRoot)?.host ?? null;
+  }
+
+  const parent = node.parentNode;
+  return parent instanceof ShadowRoot ? parent.host : node.parentElement;
+}
+
+/**
+ * Does any flattened ancestor of `start` expose one of `roles` (explicit
+ * `role` attribute) or one of `tagNames` (implicit role)?
+ *
+ * Components like `al-list-item` / `al-stepper-item` / `al-tab` render
+ * `role="listitem"` / `role="tab"` inside their own shadow root. Rendered
+ * standalone — as every "Atoms/…" story does — that role has no required
+ * parent and axe reports `aria-required-parent`. Callers use this to emit the
+ * role only when the required context actually exists.
+ */
+function ancestorHasRole(start: Element, roles: string[], tagNames: string[]): boolean {
+  let node: Element | null = flattenedParent(start);
+
+  // Bounded so a malformed tree can never spin.
+  for (let i = 0; i < 64 && node; i++) {
+    const role = node.getAttribute?.('role');
+    if (role && roles.includes(role)) return true;
+    if (!role && tagNames.includes(node.tagName.toLowerCase())) return true;
+    node = flattenedParent(node);
+  }
+
+  return false;
+}
+
+/**
+ * Every element that should be made `inert` while `modal` is an open modal
+ * surface: each flattened ancestor's *other* children, up to `<body>`. Never an
+ * ancestor of the modal itself.
+ */
+function collectOutsideInert(modal: Element): Element[] {
+  const inerted: Element[] = [];
+  let node: Element | null = modal;
+
+  while (node && node !== document.body) {
+    const parent = flattenedParent(node);
+    if (!parent) break;
+
+    // Only walk same-root siblings; content inside another shadow root is not
+    // ours to freeze.
+    if (!(node.parentNode instanceof ShadowRoot)) {
+      Array.from(parent.children).forEach((sibling) => {
+        if (sibling === node || sibling.hasAttribute('inert')) return;
+        inerted.push(sibling);
+      });
+    }
+
+    node = parent;
+  }
+
+  return inerted;
+}
+
 /**
  * A base element.
  */
@@ -104,6 +175,58 @@ export class ALElement extends LitElement {
     } else {
       return;
     }
+  }
+
+  /**
+   * A11y — does this element sit inside a container that supplies the ARIA
+   * context its own internal role requires?
+   *
+   * Walks the **flattened (composed) tree** — through `<slot>` assignments and
+   * shadow boundaries — which is the same tree the accessibility tree and
+   * axe-core walk. A plain `parentElement` walk is not equivalent: an
+   * `<al-list-item>` is a *light DOM* child of `<al-list>`, while the
+   * `<ul role="list">` that owns it lives inside `<al-list>`'s shadow root, so
+   * the only path between them runs through `assignedSlot`.
+   *
+   * Why it exists: components like `al-list-item` / `al-stepper-item` /
+   * `al-tab` render `role="listitem"` / `role="tab"` inside their own shadow
+   * root. Rendered standalone (as every "Atoms/…" story does) that role has no
+   * required parent and axe reports `aria-required-parent`. Callers use this to
+   * emit the role only when the required context actually exists.
+   *
+   * @param roles explicit `role` attribute values that satisfy the context
+   * @param tagNames tag names whose *implicit* role satisfies it (e.g. `ul`)
+   */
+  protected hasAncestorRole(roles: string[], tagNames: string[] = []): boolean {
+    return ancestorHasRole(this, roles, tagNames);
+  }
+
+  /**
+   * A11y — make everything outside this element `inert` while a modal surface
+   * is open, and undo it exactly.
+   *
+   * `inert` was used zero times in the library before this: a focus trap only
+   * catches Tab *inside* itself, so a screen-reader user could still arrow into
+   * the page behind an open dialog or drawer, and a pointer/AT user could reach
+   * background controls. This walks from the host up to `<body>` and marks each
+   * ancestor's *other* children inert, never an ancestor of the modal itself.
+   *
+   * Only elements this call actually changed are restored, so a page that
+   * already had its own `inert` elements keeps them.
+   */
+  private _inerted: Element[] = [];
+
+  protected setOutsideInert(enabled: boolean): void {
+    if (!enabled) {
+      this._inerted.forEach((el) => el.removeAttribute('inert'));
+      this._inerted = [];
+      return;
+    }
+
+    if (this._inerted.length || typeof document === 'undefined') return;
+
+    this._inerted = collectOutsideInert(this);
+    this._inerted.forEach((el) => el.setAttribute('inert', ''));
   }
 
   /**

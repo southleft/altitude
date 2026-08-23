@@ -50,7 +50,7 @@
           "type": "string"
         },
         "ariaControls": {
-          "description": "Aria controls attribute\n- Sets to the id used to connect the tab trigger to the tab panel",
+          "description": "Aria controls attribute\n- Set by `<al-tabs>` to the id of the matching `<al-tab-panel>`\n- **Not rendered as an attribute.** The panel's id lives inside\n  `<al-tab-panel>`'s shadow root while this tab's `<button>` lives inside\n  `<al-tab>`'s, and an IDREF cannot cross a shadow boundary — axe reported\n  every value as `aria-valid-attr-value`. `aria-controls` is a SHOULD for\n  `role=\"tab\"`, not a MUST; the selected state still comes through\n  `aria-selected`.",
           "type": "string"
         },
         "idx": {

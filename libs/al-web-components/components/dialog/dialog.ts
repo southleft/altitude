@@ -131,6 +131,12 @@ export class ALDialog extends ALElement {
   accessor dialogTrigger: any;
 
   /**
+   * The element that had focus when the dialog was opened.
+   * - Used as the last-resort focus-restore target on close (WCAG 2.4.3)
+   */
+  private previouslyFocused: HTMLElement | null = null;
+
+  /**
    * Query the dialog trigger inner element
    */
   get dialogTriggerButton(): any {
@@ -163,6 +169,7 @@ export class ALDialog extends ALElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     globalThis.removeEventListener('mousedown', this.handleOnClickOutside, false); /* 1 */
+    this.setOutsideInert(false); /* 2 — never leave the page inert */
   }
 
   /**
@@ -280,9 +287,15 @@ export class ALDialog extends ALElement {
   * 3. Dispatch a custom event on open
   */
  public open(e?: MouseEvent) {
+  /* 2a — capture what had focus *before* the dialog steals it, so close() can
+     always put it back even when the dialog was opened programmatically with
+     no event and no slotted trigger. */
+  this.previouslyFocused = this.getActiveElement();
   this.isActive = true; /* 1 */
   /* 2 */
-  this.dialogTrigger = e?.target || this.slottedTrigger[0] || null;
+  this.dialogTrigger = e?.target || this.slottedTrigger?.[0] || null;
+  /* 2b — the rest of the page is inert for as long as the dialog is open. */
+  this.setOutsideInert(true);
   /* 3 */
   this.dispatch({
     eventName: 'onDialogOpen',
@@ -299,14 +312,15 @@ export class ALDialog extends ALElement {
    * 2. If the close event was a keyboard event, send focus to the trigger button
    * 3. Dispatch a custom event on close
    */
-  public close(e?: MouseEvent | KeyboardEvent) {
+  public close(_e?: MouseEvent | KeyboardEvent) {
     this.isActive = false; /* 1 */
+    this.setOutsideInert(false);
 
-    /* 2 */
-    const isKeyboardEvent = e?.detail === 0; /* 1 */
-    if (isKeyboardEvent) {
-      this.sendFocusToTrigger();
-    }
+    /* 2 — WCAG 2.4.3: focus must return to the invoking control on *every*
+       close path. This used to be gated on `e?.detail === 0` (a "was this a
+       keyboard event?" heuristic), so closing by click, by backdrop, or by
+       calling close() programmatically dropped focus to <body>. */
+    this.sendFocusToTrigger();
     /* 3 */
     this.dispatch({
       eventName: 'onDialogClose',
@@ -324,11 +338,31 @@ export class ALDialog extends ALElement {
    * 3. Focus the focusable element inside the trigger
    */
   sendFocusToTrigger() {
-    if (this.dialogTriggerButton) { /* 1 */
+    /* 1 — prefer the focusable element inside the trigger component, then the
+       trigger element itself (a plain <button> has no shadow root, so the old
+       `dialogTriggerButton` getter returned undefined and focus was dropped),
+       then whatever had focus before the dialog opened. */
+    const target: HTMLElement =
+      this.dialogTriggerButton ||
+      (this.dialogTrigger as HTMLElement) ||
+      this.previouslyFocused;
+
+    if (target && typeof target.focus === 'function') {
       setTimeout(() => { /* 2 */
-        this.dialogTriggerButton.focus(); /* 3 */
+        target.focus(); /* 3 */
       }, 1);
     }
+  }
+
+  /**
+   * The deepest active element, following shadow roots.
+   */
+  private getActiveElement(): HTMLElement | null {
+    let active = document.activeElement as HTMLElement | null;
+    while (active?.shadowRoot?.activeElement) {
+      active = active.shadowRoot.activeElement as HTMLElement;
+    }
+    return active;
   }
 
   render() {
@@ -351,7 +385,8 @@ export class ALDialog extends ALElement {
             class="al-c-dialog__container"
             role="dialog"
             aria-labelledby=${this.ariaLabelledBy}
-            aria-modal=${this.isActive ? false : true}
+            aria-modal=${this.isActive ? 'true' : 'false'}
+            ?inert=${!this.isActive}
           >
             <div class="al-c-dialog__header">
               ${

@@ -150,6 +150,32 @@ export class ALRange extends ALElement {
   accessor fieldId: string;
 
   /**
+   * Name attribute forwarded to the underlying `<input type="range">`.
+   * - Previously hardcoded to `"range"`, which silently overrode whatever the
+   *   consumer submitted the field as.
+   */
+  @property()
+  accessor name: string;
+
+  /**
+   * A11y — the accessible name for the slider.
+   *
+   * Returns `undefined` when a real `<label for>` (or slotted label) already
+   * names the input, so the consumer's label wins. The component used to
+   * hardcode `aria-label="range"`, which overrode it. Only when there is no
+   * label at all does this fall back to a generic name, so the input is never
+   * nameless (axe `label`).
+   */
+  get accessibleName(): string | undefined {
+    // `this.label` renders the fallback `<label for>` in the shadow root, so
+    // the association is real and aria-label must not shadow it. A *slotted*
+    // label lives in the light DOM and `for` cannot cross the shadow boundary,
+    // so there the input would otherwise have no name at all.
+    if (this.label) return undefined;
+    return 'Range';
+  }
+
+  /**
    * Displays value label above range
    */
   @property({ type: Boolean })
@@ -684,7 +710,7 @@ export class ALRange extends ALElement {
             @input=${this.lowerRangeOnInput}
             .value=${live(`${this.lowerRangeValue}`)}
             step=${ifDefined(this.step)}
-            aria-label="lowerRange"
+            aria-label=${this.label ? `${this.label} minimum` : 'Minimum'}
             ?disabled="${this.isDisabled}"
             @mouseup=${this.toggleZIndexonLowerRange}
           />
@@ -698,7 +724,7 @@ export class ALRange extends ALElement {
             .value=${live(`${this.upperRangeValue}`)}
             step=${ifDefined(this.step)}
             ?disabled="${this.isDisabled}"
-            aria-label="upperRange"
+            aria-label=${this.label ? `${this.label} maximum` : 'Maximum'}
             @mouseup=${this.toggleZIndexonUppserRange}
           />
           <div>
@@ -717,6 +743,7 @@ export class ALRange extends ALElement {
                   step=${ifDefined(this.step)}
                   .value=${this.outputValueLowerRange}
                   class="al-c-range__output-range-one"
+                  aria-label=${this.label ? `${this.label} minimum value` : 'Minimum value'}
                   @input=${this.syncOutFieldToLowerRange}
                   ?disabled="${this.isDisabled}"
                 />
@@ -734,6 +761,7 @@ export class ALRange extends ALElement {
                   step=${ifDefined(this.step)}
                   .value=${this.outputValueUpperRange}
                   class="al-c-range__output-range-two"
+                  aria-label=${this.label ? `${this.label} maximum value` : 'Maximum value'}
                   @input=${this.syncOutFieldToUpperRange}
                   ?disabled="${this.isDisabled}"
                 />
@@ -775,7 +803,7 @@ export class ALRange extends ALElement {
           ? this.renderRangeRange()
           : html`
               ${this.label || this.slotNotEmpty('label')
-                ? html`<slot name="label"><label class="al-c-range__label">${this.label}</label></slot>`
+                ? html`<slot name="label"><label class="al-c-range__label" for="${this.fieldId}">${this.label}</label></slot>`
                 : html``}
               <div class="al-c-range__output-container">
                 <slot name="before"><span class="al-c-range-prefix-text">${this.min}</span></slot>
@@ -794,9 +822,9 @@ export class ALRange extends ALElement {
                     @input=${(e: Event) => this.handleDefaulRangeChange(e)}
                     @change=${(e: Event) => this.handleDefaulRangeChange(e)}
                     id="${this.fieldId}"
-                    role="range"
-                    aria-label="range"
-                    name="range"
+                    name=${ifDefined(this.name)}
+                    aria-label=${ifDefined(this.accessibleName)}
+                    aria-describedby=${ifDefined(this.fieldNote || this.slotNotEmpty('field-note') ? this.ariaDescribedBy : undefined)}
                   />
                 </div>
                 <slot name="after"><span class="al-c-range-suffix-text">${this.max}</span></slot>
@@ -810,6 +838,7 @@ export class ALRange extends ALElement {
                         step=${ifDefined(this.step)}
                         .value=${this.outputValue}
                         class="al-c-range__output"
+                        aria-label=${this.label ? `${this.label} value` : 'Value'}
                         ?disabled="${this.isDisabled}"
                       />
                     `

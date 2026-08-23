@@ -20,7 +20,7 @@ const Template = (args) => html`
 export const Default = Template.bind({});
 Default.args = {
   attribution: 'Jane Doe',
-  role: 'VP of Engineering',
+  'attribution-role': 'VP of Engineering',
   company: 'Acme Corp'
 };
 
@@ -32,12 +32,12 @@ export const WithAvatar = (args) => html`
 `;
 WithAvatar.args = {
   attribution: 'Jane Doe',
-  role: 'VP of Engineering',
+  'attribution-role': 'VP of Engineering',
   company: 'Acme Corp'
 };
 
 export const RoleOnly = Template.bind({});
 RoleOnly.args = {
   attribution: 'Jane Doe',
-  role: 'VP of Engineering'
+  'attribution-role': 'VP of Engineering'
 };

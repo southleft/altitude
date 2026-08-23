@@ -644,7 +644,13 @@
         "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y"
       }
     ],
-    "events": [],
+    "events": [
+      {
+        "name": "onCheckboxGroupChange",
+        "type": "CustomEvent",
+        "description": "Fired when any checkbox in the group changes. Detail: `{ checked, value, checkedValues }` — the state and value of the checkbox that changed, plus the values of every currently-checked checkbox in the group."
+      }
+    ],
     "slots": [
       {
         "name": "(default)",
@@ -3196,6 +3202,11 @@
         "name": "href",
         "type": "string",
         "description": "The logo link URL"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "A11y — the accessible name of the logo mark.\n\nThe logo renders an inline `<svg>` inside an `<a>`; an `<svg>` with no\n`role`/name contributes nothing to name-from-content, so the link was\nnameless (axe `link-name`). Defaults to the wordmark the variant draws."
       }
     ],
     "events": [],
@@ -3290,7 +3301,7 @@
       {
         "name": "ariaControls",
         "type": "string",
-        "description": "Aria controls\n- Associates a Expandable Header's control with the items in that group"
+        "description": "Aria controls\n- Associates an Expandable Header's control with the items in that group\n- **Not rendered as an attribute.** The ids `<al-menu>` collects here belong\n  to `<al-menu-item>` hosts in the *document*, while the expand control\n  lives inside this component's shadow root, and an IDREF cannot cross a\n  shadow boundary — every value was reported invalid\n  (axe `aria-valid-attr-value`). The disclosure relationship is carried by\n  `aria-expanded` on the control, which needs no IDREF. The property is\n  kept because it is public API and records the grouping.\n- Defaults to `''`: it used to be `undefined`, and `undefined += ' id'`\n  produced the literal id list `\"undefined group-x-item-1\"`."
       }
     ],
     "events": [
@@ -3870,6 +3881,11 @@
         "description": "The unique id of the field"
       },
       {
+        "name": "name",
+        "type": "string",
+        "description": "Name attribute forwarded to the underlying `<input type=\"range\">`.\n- Previously hardcoded to `\"range\"`, which silently overrode whatever the\n  consumer submitted the field as."
+      },
+      {
         "name": "hasTooltip",
         "type": "boolean",
         "description": "Displays value label above range"
@@ -4393,7 +4409,7 @@
       {
         "name": "ariaControls",
         "type": "string",
-        "description": "Aria controls attribute\n- Sets to the id used to connect the tab trigger to the tab panel"
+        "description": "Aria controls attribute\n- Set by `<al-tabs>` to the id of the matching `<al-tab-panel>`\n- **Not rendered as an attribute.** The panel's id lives inside\n  `<al-tab-panel>`'s shadow root while this tab's `<button>` lives inside\n  `<al-tab>`'s, and an IDREF cannot cross a shadow boundary — axe reported\n  every value as `aria-valid-attr-value`. `aria-controls` is a SHOULD for\n  `role=\"tab\"`, not a MUST; the selected state still comes through\n  `aria-selected`."
       },
       {
         "name": "idx",
@@ -4526,9 +4542,9 @@
         "description": "The name of the person being quoted."
       },
       {
-        "name": "role",
+        "name": "attribution-role",
         "type": "string",
-        "description": "Job title of the person being quoted, e.g. \"VP of Engineering\"."
+        "description": "Job title of the person being quoted, e.g. \"VP of Engineering\".\n\nThe attribute is `attribution-role`, **not** `role`. `role` is the ARIA\nrole attribute: `<al-testimonial role=\"VP of Engineering\">` put a job title\nwhere the accessibility tree expects a role name, and axe reported\n`aria-roles` (\"role attribute must use a valid value\") on every\nTestimonial story. `apps/southleft` had already worked around it by\nwriting the *property* from a `data-testimonial-role` attribute."
       },
       {
         "name": "company",

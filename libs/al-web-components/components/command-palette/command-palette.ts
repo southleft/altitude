@@ -192,15 +192,40 @@ export class ALCommandPalette extends ALElement {
     }
   }
 
+  /**
+   * The element that had focus when the palette opened, so close() can put it
+   * back (WCAG 2.4.3). The palette is opened from anywhere by a shortcut, so
+   * there is no "trigger" element to fall back to.
+   */
+  private previouslyFocused: HTMLElement | null = null;
+
+  private getActiveElement(): HTMLElement | null {
+    let active = document.activeElement as HTMLElement | null;
+    while (active?.shadowRoot?.activeElement) {
+      active = active.shadowRoot.activeElement as HTMLElement;
+    }
+    return active;
+  }
+
   public open() {
+    this.previouslyFocused = this.getActiveElement();
     this.isActive = true;
     this.query = '';
     this.activeIndex = -1;
+    this.setOutsideInert(true);
     this.dispatch({ eventName: 'onCommandPaletteOpen', detailObj: { active: true } });
   }
 
   public close() {
     this.isActive = false;
+    this.setOutsideInert(false);
+    /* Focus went into the palette's own input; hand it back to whatever the
+       user was on before, or it lands on <body>. */
+    const restoreTo = this.previouslyFocused;
+    this.previouslyFocused = null;
+    if (restoreTo && typeof restoreTo.focus === 'function' && restoreTo.isConnected) {
+      setTimeout(() => restoreTo.focus(), 1);
+    }
     this.dispatch({ eventName: 'onCommandPaletteClose', detailObj: { active: false } });
   }
 
@@ -262,12 +287,15 @@ export class ALCommandPalette extends ALElement {
     return `${this.listboxId}-option-${index}`;
   }
 
+  /**
+   * A11y note for `render()`: when there are no results the `<ul
+   * role="listbox">` is not rendered at all. An empty listbox has no `option`
+   * children (axe `aria-required-children`) and the "no matches" message used
+   * to be an `<li>` whose only list context was that listbox (axe `listitem`).
+   * With nothing to choose from there is no listbox — just a status message.
+   */
   private renderResults() {
     const results = this.results;
-
-    if (!results.length) {
-      return html`<li class="al-c-command-palette__empty">${this.emptyText}</li>`;
-    }
 
     let lastGroup: string | undefined;
 
@@ -320,9 +348,17 @@ export class ALCommandPalette extends ALElement {
               />
             </div>
             <slot></slot>
-            <ul class="al-c-command-palette__list" role="listbox" id=${this.listboxId} aria-label="Commands">
-              ${this.renderResults()}
-            </ul>
+            ${this.results.length
+              ? html`
+                  <ul class="al-c-command-palette__list" role="listbox" id=${this.listboxId} aria-label="Commands">
+                    ${this.renderResults()}
+                  </ul>
+                `
+              : html`
+                  <div class="al-c-command-palette__list al-c-command-palette__empty" id=${this.listboxId} role="status">
+                    ${this.emptyText}
+                  </div>
+                `}
             <div class="al-c-command-palette__footer">
               <span><kbd>&uarr;</kbd><kbd>&darr;</kbd> to navigate</span>
               <span><kbd>&crarr;</kbd> to select</span>

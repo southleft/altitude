@@ -238,7 +238,6 @@ export class ALInputStepper extends ALElement {
             variant="bare"
             ?hideText=${true}
             @click=${(e: MouseEvent) => this.onDecrease(e)}
-            role="spinbutton"
             ?isDisabled=${this.isDisabled}
           >
             Decrease
@@ -258,7 +257,7 @@ export class ALInputStepper extends ALElement {
             ?required=${this.isRequired}
             ?readonly=${this.isReadonly || this.isDisabled}
             ?disabled=${this.isDisabled}
-            aria-describedby="${ifDefined(this.ariaDescribedBy)}"
+            aria-describedby=${ifDefined(this.fieldNote || this.slotNotEmpty('field-note') ? this.ariaDescribedBy : undefined)}
             placeholder="${ifDefined(this.placeholder)}"
           />
           <${this.buttonEl}
@@ -266,7 +265,6 @@ export class ALInputStepper extends ALElement {
             variant="bare"
             ?hideText=${true}
             @click=${(e: MouseEvent) => this.onIncrease(e)}
-            role="spinbutton"
             ?isDisabled=${this.isDisabled}
           >
             Increase

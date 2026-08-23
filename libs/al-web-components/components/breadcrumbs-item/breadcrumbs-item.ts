@@ -1,5 +1,5 @@
 import { html, unsafeCSS } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { ALElement } from '../ALElement';
 import styles from './breadcrumbs-item.scss';
@@ -50,6 +50,37 @@ export class ALBreadcrumbsItem extends ALElement {
   @property({ type: Boolean })
   accessor hasSeparator: boolean;
 
+  /**
+   * A11y — the role rendered on the internal `<li>`.
+   *
+   * `listitem` is only legal inside a `list`, and the owning `<ul role="list">`
+   * lives in the *parent* component's shadow root. Rendered standalone the
+   * hardcoded role has no required parent (axe `aria-required-parent`), while
+   * dropping the role leaves a bare `<li>` outside a list (axe `listitem`).
+   * `none` is the honest answer for an orphan; `hasAncestorRole` walks the
+   * flattened tree, so the slot/shadow hop to the real `<ul>` is followed.
+   */
+  @state()
+  accessor _listRole: 'listitem' | 'none' = 'none';
+
+  /**
+   * A11y — recompute the internal `<li>`'s role from the flattened tree.
+   * Also runs once on the next frame, because the owning list component may
+   * not have rendered its `<ul>` yet when this item first updates.
+   */
+  private syncListRole() {
+    this._listRole = this.hasAncestorRole(['list', 'group'], ['ul', 'ol', 'menu']) ? 'listitem' : 'none';
+  }
+
+  async firstUpdated() {
+    await this.updateComplete;
+    requestAnimationFrame(() => this.syncListRole());
+  }
+
+  updated() {
+    this.syncListRole();
+  }
+
   render() {
     const componentClassNames = this.componentClassNames('al-c-breadcrumbs-item', {
       'al-is-current': this.isCurrent,
@@ -57,7 +88,7 @@ export class ALBreadcrumbsItem extends ALElement {
     });
 
     return html`
-      <li class="${componentClassNames}" role="listitem">
+      <li class="${componentClassNames}" role=${this._listRole}>
         ${this.isTruncated
           ? html` <slot></slot> `
           : html`

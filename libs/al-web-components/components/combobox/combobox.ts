@@ -414,6 +414,7 @@ export class ALCombobox extends ALElement {
             aria-expanded=${this.isActiveDropdown === true}
             aria-controls=${this.listboxId}
             aria-autocomplete="list"
+            aria-haspopup="listbox"
             aria-activedescendant=${ifDefined(activeId)}
             placeholder="${ifDefined(this.placeholder)}"
             @click=${this.openDropdown}

@@ -121,6 +121,10 @@
           "description": "The unique id of the field",
           "type": "string"
         },
+        "name": {
+          "description": "Name attribute forwarded to the underlying `<input type=\"range\">`.\n- Previously hardcoded to `\"range\"`, which silently overrode whatever the\n  consumer submitted the field as.",
+          "type": "string"
+        },
         "hasTooltip": {
           "description": "Displays value label above range",
           "type": "boolean"

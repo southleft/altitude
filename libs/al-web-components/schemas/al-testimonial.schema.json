@@ -40,8 +40,8 @@
           "description": "The name of the person being quoted.",
           "type": "string"
         },
-        "role": {
-          "description": "Job title of the person being quoted, e.g. \"VP of Engineering\".",
+        "attribution-role": {
+          "description": "Job title of the person being quoted, e.g. \"VP of Engineering\".\n\nThe attribute is `attribution-role`, **not** `role`. `role` is the ARIA\nrole attribute: `<al-testimonial role=\"VP of Engineering\">` put a job title\nwhere the accessibility tree expects a role name, and axe reported\n`aria-roles` (\"role attribute must use a valid value\") on every\nTestimonial story. `apps/southleft` had already worked around it by\nwriting the *property* from a `data-testimonial-role` attribute.",
           "type": "string"
         },
         "company": {

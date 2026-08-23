@@ -143,7 +143,7 @@ export class ALAccordionPanel extends ALElement {
 
     return html`
       <div class="${componentClassNames}">
-        <dt class="al-c-accordion-panel__header">
+        <div class="al-c-accordion-panel__header">
           <button
             class="al-c-accordion-panel__button"
             aria-expanded=${ifDefined(this.isActive)}
@@ -159,12 +159,12 @@ export class ALAccordionPanel extends ALElement {
               <${this.iconChevronDownEl} class="al-c-accordion-panel__icon" size="lg"></${this.iconChevronDownEl}>
             </div>
           </button>
-        </dt>
-        <dd class="al-c-accordion-panel__body" aria-labelledby="${this.ariaLabelledBy}" id=${this.ariaControls}>
+        </div>
+        <div class="al-c-accordion-panel__body" role="region" aria-labelledby="${this.ariaLabelledBy}" id=${this.ariaControls}>
           <div class="al-c-accordion-panel__body-inner">
             <slot></slot>
           </div>
-        </dd>
+        </div>
       </div>
     ` as TemplateResult<1>;
   }

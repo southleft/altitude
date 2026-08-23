@@ -112,7 +112,7 @@
           "type": "string"
         },
         "ariaControls": {
-          "description": "Aria controls\n- Associates a Expandable Header's control with the items in that group",
+          "description": "Aria controls\n- Associates an Expandable Header's control with the items in that group\n- **Not rendered as an attribute.** The ids `<al-menu>` collects here belong\n  to `<al-menu-item>` hosts in the *document*, while the expand control\n  lives inside this component's shadow root, and an IDREF cannot cross a\n  shadow boundary — every value was reported invalid\n  (axe `aria-valid-attr-value`). The disclosure relationship is carried by\n  `aria-expanded` on the control, which needs no IDREF. The property is\n  kept because it is public API and records the grouping.\n- Defaults to `''`: it used to be `undefined`, and `undefined += ' id'`\n  produced the literal id list `\"undefined group-x-item-1\"`.",
           "type": "string"
         }
       }

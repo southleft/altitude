@@ -71,6 +71,23 @@ export class ALSelect extends ALElement {
   accessor fieldId: string;
 
   /**
+   * A11y — id of the dropdown panel, referenced by the input's `aria-controls`.
+   *
+   * `<al-select>` had no combobox semantics at all: no `role="combobox"`, no
+   * `aria-expanded`, no `aria-haspopup`, no `aria-controls`, so a screen-reader
+   * user was told "edit text" and never that a list opens. `<al-combobox>`
+   * already does this correctly and this mirrors it rather than inventing a
+   * third pattern.
+   *
+   * The options themselves stay un-roled: they are consumer-supplied light-DOM
+   * `<al-list-item>`s that render their own `<button>`, so stamping
+   * `role="option"` on them would nest an interactive control inside an
+   * interactive role. `aria-haspopup="listbox"` states the intent without
+   * lying about the tree.
+   */
+  private panelId = nanoid();
+
+  /**
    * The select's title
    */
   @property()
@@ -430,6 +447,7 @@ export class ALSelect extends ALElement {
           <${this.inputEl}
             class="al-c-select__input"
             type="text"
+            role="combobox"
             label="${this.label}"
             id="${this.fieldId}"
             name="${ifDefined(this.name)}"
@@ -441,6 +459,9 @@ export class ALSelect extends ALElement {
             ?isDisabled="${this.isDisabled}"
             ?isError="${this.isError}"
             aria-describedby="${ifDefined(this.ariaDescribedBy)}"
+            aria-expanded=${this.isActiveDropdown === true}
+            aria-haspopup="listbox"
+            aria-controls=${ifDefined(this.isActiveDropdown ? this.panelId : undefined)}
             placeholder="${ifDefined(this.placeholder)}"
             @click=${this.toggleActive}
             @keydown=${this.handleOnKeydown}
@@ -453,7 +474,7 @@ export class ALSelect extends ALElement {
           ${
             this.isActiveDropdown
               ? html`
-                <${this.dropdownPanelEl} @keydown=${this.handleOnKeydownDropdownPanel} class="al-c-select__panel" ?hasHeader=${this.hasSearch} ?hasScroll=${true}>
+                <${this.dropdownPanelEl} id=${this.panelId} @keydown=${this.handleOnKeydownDropdownPanel} class="al-c-select__panel" ?hasHeader=${this.hasSearch} ?hasScroll=${true}>
                   ${this.hasSearch ? html` <${this.searchEl} slot="header" .value=${''} ?isEmpty=${true}> </${this.searchEl}> ` : html``}
                   <slot @select=${this.toggleActive}></slot>
                 </${this.dropdownPanelEl}>

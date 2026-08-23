@@ -135,13 +135,18 @@ export class ALTabs extends ALElement {
       tab.ariaId = tabAriaId;
       /* 4 */
       const tabPanelAriaId = `al-c-tab-panel__` + nanoid();
-      tab.ariaControls = tabPanelAriaId;
       /* 5 */
       const tabPanel = this.tabPanels[index];
       if (tabPanel) {
         tabPanel.idx = index;
         tabPanel.ariaLabelledBy = tabAriaId;
         tabPanel.ariaId = tabPanelAriaId;
+        /* 4 — only point aria-controls at a panel that actually exists. A tab
+           with more tabs than panels used to reference a generated id that was
+           never rendered (axe `aria-valid-attr-value`). */
+        tab.ariaControls = tabPanelAriaId;
+      } else {
+        tab.ariaControls = undefined;
       }
     });
   }

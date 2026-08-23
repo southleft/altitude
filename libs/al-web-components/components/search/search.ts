@@ -648,6 +648,7 @@ export class ALSearch extends ALElement {
             aria-autocomplete="list"
             aria-activedescendant="${this.ariaActiveDescendantId}"
             aria-controls=${this.ariaControlsId}
+            aria-haspopup="listbox"
             role="combobox"
             @keydown=${this.handleKeyDown}
             @keyup=${this.handleKeyUp}

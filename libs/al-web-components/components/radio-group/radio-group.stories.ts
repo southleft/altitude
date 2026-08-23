@@ -139,7 +139,10 @@ SlottedErrorNote.args = {
 Default.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement);
   const radioGroup = canvas.getByTestId('radio-group') as any;
-  const radioItems = canvas.queryAllByTestId(/^radio-/) as any;
+  // `/^radio-/` also matched the group itself (`data-testid="radio-group"`),
+  // so radioItems[0] was `<al-radio-group>` — which has no `<input>` — and the
+  // four assertions below were checking the wrong four elements.
+  const radioItems = canvas.queryAllByTestId(/^radio-\d/) as any;
   const radioItemInput1 = radioItems[0]?.shadowRoot?.querySelector('input') as HTMLInputElement;
   const radioItemInput2 = radioItems[1]?.shadowRoot?.querySelector('input') as HTMLInputElement;
   const radioItemInput3 = radioItems[2]?.shadowRoot?.querySelector('input') as HTMLInputElement;

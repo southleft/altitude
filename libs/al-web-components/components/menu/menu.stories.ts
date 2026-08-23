@@ -161,6 +161,19 @@ SimpleWithGroups.parameters= {
   #STORYBOOK TESTS
 \*------------------------------------*/
 
+/**
+ * The element inside an `<al-menu-item>` that actually takes focus.
+ *
+ * Most items render an `<al-link>` and the focusable control lives in *its*
+ * shadow root. A header with no `href` renders a plain
+ * `<div class="al-c-menu-item__link" tabindex="-1">` and has no nested shadow
+ * root — reaching blindly for `.shadowRoot.querySelector('*')` threw on those.
+ */
+const focusTarget = (item: any): HTMLElement => {
+  const link = item.shadowRoot.querySelector('.al-c-menu-item__link');
+  return (link.shadowRoot ? link.shadowRoot.querySelector('*') : link) as HTMLElement;
+};
+
 Default.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement);
   const menu = canvas.queryByTestId('menu') as any;
@@ -171,7 +184,7 @@ Default.play = async ({ canvasElement }) => {
   expect(menu).toBeInTheDocument();
 
   // Simulate a focus event on the menu's first item
-  await menuItems[0].shadowRoot.querySelector('.al-c-menu-item__link').shadowRoot.querySelector('*').focus();
+  await focusTarget(menuItems[0]).focus();
   await waitFor(() => expect(menu.focusedItem).toBe(undefined), {
     timeout: 6000
   });
@@ -207,16 +220,16 @@ Default.play = async ({ canvasElement }) => {
   });
 
   // Simulate a click event on a disabled menu item
-  await userEvent.click(menuItems[4].shadowRoot.querySelector('.al-c-menu-item__link').shadowRoot.querySelector('*'));
+  await userEvent.click(focusTarget(menuItems[4]));
   expect(menu.selectedItem).toBe(undefined);
   expect(menuItems[4].isSelected).toBe(undefined);
 
   // Simulate a click event on the first menu item
-  await userEvent.click(menuItems[0].shadowRoot.querySelector('.al-c-menu-item__link').shadowRoot.querySelector('*'));
+  await userEvent.click(focusTarget(menuItems[0]));
   expect(menu.selectedItem).toBe(menuItems[0]);
 
   // Simulate a click event on the second menu item
-  await userEvent.click(menuItems[1].shadowRoot.querySelector('.al-c-menu-item__link').shadowRoot.querySelector('*'));
+  await userEvent.click(focusTarget(menuItems[1]));
   expect(menu.selectedItem).toBe(menuItems[1]);
   expect(menuItems[0].isSelected).toBe(false);
 

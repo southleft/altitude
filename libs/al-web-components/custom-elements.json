@@ -1040,6 +1040,21 @@
               },
               "description": "Indicates whether or not to add a separator icon after the breadcrumb item",
               "attribute": "hasSeparator"
+            },
+            {
+              "kind": "field",
+              "name": "_listRole",
+              "type": {
+                "text": "'listitem' | 'none'"
+              },
+              "default": "'none'",
+              "description": "A11y — the role rendered on the internal `<li>`.\n\n`listitem` is only legal inside a `list`, and the owning `<ul role=\"list\">`\nlives in the *parent* component's shadow root. Rendered standalone the\nhardcoded role has no required parent (axe `aria-required-parent`), while\ndropping the role leaves a bare `<li>` outside a list (axe `listitem`).\n`none` is the honest answer for an orphan; `hasAncestorRole` walks the\nflattened tree, so the slot/shadow hop to the real `<ul>` is followed."
+            },
+            {
+              "kind": "method",
+              "name": "syncListRole",
+              "privacy": "private",
+              "description": "A11y — recompute the internal `<li>`'s role from the flattened tree.\nAlso runs once on the next frame, because the owning list component may\nnot have rendered its `<ul>` yet when this item first updates."
             }
           ],
           "attributes": [
@@ -2049,6 +2064,60 @@
               "description": "Change output binding"
             },
             {
+              "kind": "field",
+              "name": "focusedDate",
+              "type": {
+                "text": "Date | null"
+              },
+              "default": "null",
+              "description": "A11y — the date the day grid currently exposes as its single tab stop.\n\nThe grid used to render ~30 day `<button>`s all in the tab order, on a\n`role=\"presentation\"` table with no arrow-key handling at all: reaching the\nend of a month took 30+ Tab presses and there was no way to move by week or\nmonth. It is now one tab stop with the WAI-ARIA grid keyboard model\n(arrows, Home/End, PageUp/PageDown), which is what\n`<al-date-picker>` and `<al-date-time-picker>` embed."
+            },
+            {
+              "kind": "method",
+              "name": "isRovingDay",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "day",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ],
+              "description": "Is this the day that carries `tabindex=\"0\"`?\nFalls back — in order — to the explicitly focused day, the selected day,\ntoday, then the first day of the displayed month, so the grid always has\nexactly one tab stop."
+            },
+            {
+              "kind": "method",
+              "name": "moveFocusTo",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "date",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ],
+              "description": "Move the roving focus to `date`, paging the displayed month if the target\nfalls outside it, then focus the matching button once it has rendered."
+            },
+            {
+              "kind": "method",
+              "name": "handleOnGridKeydown",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Handle keydown inside the day grid (WAI-ARIA grid keyboard model).\n1. Left/Right move a day, Up/Down move a week\n2. Home/End move to the start/end of the week\n3. PageUp/PageDown move a month"
+            },
+            {
               "kind": "method",
               "name": "handleOnKeydown",
               "parameters": [
@@ -2525,6 +2594,25 @@
               },
               "privacy": "private",
               "description": "Query all the checkbox's"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnCheckboxChange",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "CustomEvent"
+                  }
+                }
+              ],
+              "description": "Handle a change coming from any slotted checkbox\n1. Collect the value of every currently-checked checkbox in the group\n2. Dispatch the group-level event"
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired when any checkbox in the group changes. Detail: `{ checked, value, checkedValues }` — the state and value of the checkbox that changed, plus the values of every currently-checked checkbox in the group.",
+              "name": "onCheckboxGroupChange"
             }
           ],
           "attributes": [
@@ -3955,6 +4043,26 @@
               "privacy": "public"
             },
             {
+              "kind": "field",
+              "name": "previouslyFocused",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The element that had focus when the palette opened, so close() can put it\nback (WCAG 2.4.3). The palette is opened from anywhere by a shortcut, so\nthere is no \"trigger\" element to fall back to."
+            },
+            {
+              "kind": "method",
+              "name": "getActiveElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
               "kind": "method",
               "name": "open",
               "privacy": "public"
@@ -4024,7 +4132,8 @@
             {
               "kind": "method",
               "name": "renderResults",
-              "privacy": "private"
+              "privacy": "private",
+              "description": "A11y note for `render()`: when there are no results the `<ul\nrole=\"listbox\">` is not rendered at all. An empty listbox has no `option`\nchildren (axe `aria-required-children`) and the \"no matches\" message used\nto be an `<li>` whose only list context was that listbox (axe `listitem`).\nWith nothing to choose from there is no listbox — just a status message."
             }
           ],
           "events": [
@@ -4166,6 +4275,12 @@
               "kind": "field",
               "name": "inputEl",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "popupId",
+              "privacy": "private",
+              "description": "A11y — id of the calendar popup, referenced by the field's\n`aria-controls`. The field is the combobox that opens a `dialog`\n(WAI-ARIA \"date picker combobox\"): it previously announced as a plain\nread-only text field, with no `aria-expanded` and no `aria-haspopup`, so\nnothing told a screen-reader user that a calendar opens."
             },
             {
               "kind": "field",
@@ -5821,6 +5936,16 @@
             },
             {
               "kind": "field",
+              "name": "previouslyFocused",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The element that had focus when the dialog was opened.\n- Used as the last-resort focus-restore target on close (WCAG 2.4.3)"
+            },
+            {
+              "kind": "field",
               "name": "dialogTriggerButton",
               "type": {
                 "text": "any"
@@ -5903,7 +6028,7 @@
               "privacy": "public",
               "parameters": [
                 {
-                  "name": "e",
+                  "name": "_e",
                   "optional": true,
                   "type": {
                     "text": "MouseEvent | KeyboardEvent"
@@ -5916,6 +6041,17 @@
               "kind": "method",
               "name": "sendFocusToTrigger",
               "description": "Send focus to the trigger button that opened the modal\n1. Get the trigger that is either an external or slotted element\n2. Allow a short timeout for the modal to close\n3. Focus the focusable element inside the trigger"
+            },
+            {
+              "kind": "method",
+              "name": "getActiveElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "description": "The deepest active element, following shadow roots."
             }
           ],
           "events": [
@@ -6134,6 +6270,11 @@
             {
               "kind": "field",
               "name": "iconCloseEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "focusTrapEl",
               "privacy": "private"
             },
             {
@@ -7288,20 +7429,18 @@
             },
             {
               "kind": "method",
-              "name": "trapFocusEnd",
-              "parameters": [
-                {
-                  "name": "evt",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
+              "name": "getActiveElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
                 }
-              ],
-              "description": "Trap focus at the end of the focus trap\n- Applied to the keydown listener on the last focusable element in the focus trap.\n- When the user presses \"Tab\", send focus to the first element in the focus trap."
+              },
+              "description": "The deepest active element, following shadow roots."
             },
             {
               "kind": "method",
-              "name": "trapFocusStart",
+              "name": "handleOnKeydown",
               "parameters": [
                 {
                   "name": "evt",
@@ -7310,17 +7449,17 @@
                   }
                 }
               ],
-              "description": "Trap focus at the beginning of the focus trap\n- Applied to the keydown listener on the first focusable element in the focus trap.\n- When the user presses \"Tab + Shift\", send focus to the last element in the focus trap."
+              "description": "Wrap Tab / Shift+Tab at the live edges of the trap.\n1. Recompute the focusable set on *every* Tab, so it is never stale\n2. Keep the public first/last properties in sync for consumers\n3. Wrap when focus is at (or has somehow left) an edge"
             },
             {
               "kind": "method",
               "name": "applyFocusTrap",
-              "description": "Apply the focus trap\n1. Query all focusable elements within the focus trap, including those nested within the shadow DOM.\n2. If there are no focusable elements, set the sloted content as the initial focus. and first and last focusable, element.\n3. Store the first and last focusable elements on state.\n4. Set the initial focus element as either the selected item, or the first focusable element.\n5. Send focus to the initial focus element.\n6. Apply keydown listeners to the first and last focusable elements to enable the focus trap functionality."
+              "description": "Place initial focus when the trap opens.\n1. Query all focusable elements within the focus trap, including those nested within the shadow DOM.\n2. If there are no focusable elements, make the slotted content itself focusable and use it.\n3. Record the current edges (Tab recomputes them; these are for consumers).\n4. Prefer the selected item, then the first focusable element.\n5. Send focus to the initial focus element."
             },
             {
               "kind": "method",
               "name": "removeFocusTrap",
-              "description": "Remove the focus trap\n- Remove the keydown listeners on the first and last focusable elements."
+              "description": "Release the trap.\n- The keydown listener lives on this element for its whole lifetime, so\n  there is nothing to detach; `isActive` gates it."
             }
           ],
           "attributes": [
@@ -15572,6 +15711,24 @@
             },
             {
               "kind": "field",
+              "name": "_listRole",
+              "type": {
+                "text": "'listitem' | 'none'"
+              },
+              "default": "'none'",
+              "description": "A11y — the role rendered on the internal `<li>`.\n\n`listitem` is only legal inside a `list`. `<al-list>` renders its\n`<ul role=\"list\">` in *its* shadow root, so the relationship only exists\nonce this item has been assigned to that slot. Rendered standalone (as the\n\"Atoms/Text/List Item\" stories do) a hardcoded `role=\"listitem\"` has no\nrequired parent and axe reports `aria-required-parent`; dropping the role\nentirely instead trips the `listitem` rule, because a bare `<li>` outside a\nlist is not semantic either. `none` is the honest answer for an orphan."
+            },
+            {
+              "kind": "field",
+              "name": "_slotHasOwnControl",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "A11y — true when the consumer slotted a control of their own\n(`<al-list-item><al-link href=\"#\">…</al-link></al-list-item>`, a checkbox,\n…).\n\nThe default variant wraps everything in a `<button>`, so slotting a link\nor a checkbox produced a control inside a control: axe `nested-interactive`\n(\"interactive controls must not be nested\"), and screen readers announce\nonly the outer one. When the slotted content is already operable the\nwrapper becomes a plain `<div>` — the same element `variant=\"static\"`\nrenders — and the slotted control owns the interaction."
+            },
+            {
+              "kind": "field",
               "name": "_enListItem",
               "type": {
                 "text": "HTMLElement"
@@ -15585,6 +15742,18 @@
                 "text": "HTMLElement"
               },
               "description": "Query the .al-c-tooltip"
+            },
+            {
+              "kind": "method",
+              "name": "syncListRole",
+              "privacy": "private",
+              "description": "A11y — recompute the internal `<li>`'s role from the *flattened* tree.\nRuns on every update (cheap: a handful of pointer hops) plus once on the\nnext frame, because the owning `<al-list>` may not have rendered its\n`<ul role=\"list\">` at the time this item first updates."
+            },
+            {
+              "kind": "method",
+              "name": "syncSlotHasOwnControl",
+              "privacy": "private",
+              "description": "A11y — does the default slot already contain something focusable?"
             },
             {
               "kind": "method",
@@ -15678,6 +15847,12 @@
               "kind": "method",
               "name": "dynamicActive",
               "description": "Handle all dynamic placement on mouseover"
+            },
+            {
+              "kind": "method",
+              "name": "renderItemBody",
+              "privacy": "private",
+              "description": "The interactive item's inner content — shared by the `<button>` and the\nplain `<div>` wrapper so the two stay identical."
             }
           ],
           "attributes": [
@@ -15984,6 +16159,15 @@
               "default": "'/'",
               "description": "The logo link URL",
               "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "A11y — the accessible name of the logo mark.\n\nThe logo renders an inline `<svg>` inside an `<a>`; an `<svg>` with no\n`role`/name contributes nothing to name-from-content, so the link was\nnameless (axe `link-name`). Defaults to the wordmark the variant draws.",
+              "attribute": "label"
             }
           ],
           "attributes": [
@@ -16003,6 +16187,14 @@
               "default": "'/'",
               "description": "The logo link URL",
               "fieldName": "href"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "A11y — the accessible name of the logo mark.\n\nThe logo renders an inline `<svg>` inside an `<a>`; an `<svg>` with no\n`role`/name contributes nothing to name-from-content, so the link was\nnameless (axe `link-name`). Defaults to the wordmark the variant draws.",
+              "fieldName": "label"
             }
           ],
           "superclass": {
@@ -16230,8 +16422,18 @@
               "type": {
                 "text": "string"
               },
-              "description": "Aria controls\n- Associates a Expandable Header's control with the items in that group",
+              "default": "''",
+              "description": "Aria controls\n- Associates an Expandable Header's control with the items in that group\n- **Not rendered as an attribute.** The ids `<al-menu>` collects here belong\n  to `<al-menu-item>` hosts in the *document*, while the expand control\n  lives inside this component's shadow root, and an IDREF cannot cross a\n  shadow boundary — every value was reported invalid\n  (axe `aria-valid-attr-value`). The disclosure relationship is carried by\n  `aria-expanded` on the control, which needs no IDREF. The property is\n  kept because it is public API and records the grouping.\n- Defaults to `''`: it used to be `undefined`, and `undefined += ' id'`\n  produced the literal id list `\"undefined group-x-item-1\"`.",
               "attribute": "ariaControls"
+            },
+            {
+              "kind": "field",
+              "name": "_listRole",
+              "type": {
+                "text": "'listitem' | 'none'"
+              },
+              "default": "'none'",
+              "description": "A11y — the role rendered on the internal `<li>`.\n\n`<al-menu>` renders the owning `<ul>` in *its* shadow root, so the\nlist/listitem relationship only exists once this item is assigned to that\nslot. A bare `<li>` outside a list is not semantic (axe `listitem`), and a\nhardcoded `role=\"listitem\"` on an orphan has no required parent\n(`aria-required-parent`). `none` is the honest answer for a standalone item."
             },
             {
               "kind": "field",
@@ -16260,12 +16462,27 @@
             },
             {
               "kind": "field",
+              "name": "menuItemFocusable",
+              "type": {
+                "text": "HTMLElement | undefined"
+              },
+              "description": "The element inside this item that actually receives focus.\n\n`menuItemLinkEl` reaches into `<al-link>`'s shadow root, but a header with\nno `href` renders a plain `<div class=\"al-c-menu-item__link\">` with no\nshadow root at all — so for those items it is `undefined` and `<al-menu>`'s\narrow-key navigation had nothing to focus. The div now carries\n`tabindex=\"-1\"` and this getter falls back to it, so Home/End/arrows can\nland on a group header like every other item.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "menuItemControlEl",
               "type": {
                 "text": "HTMLButtonElement"
               },
               "description": "Query the button element inside the ALButton",
               "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "syncListRole",
+              "privacy": "private",
+              "description": "A11y — recompute the internal `<li>`'s role from the flattened tree, which\nis the only path that crosses the slot/shadow hop to `<al-menu>`'s `<ul>`."
             },
             {
               "kind": "method",
@@ -16441,7 +16658,8 @@
               "type": {
                 "text": "string"
               },
-              "description": "Aria controls\n- Associates a Expandable Header's control with the items in that group",
+              "default": "''",
+              "description": "Aria controls\n- Associates an Expandable Header's control with the items in that group\n- **Not rendered as an attribute.** The ids `<al-menu>` collects here belong\n  to `<al-menu-item>` hosts in the *document*, while the expand control\n  lives inside this component's shadow root, and an IDREF cannot cross a\n  shadow boundary — every value was reported invalid\n  (axe `aria-valid-attr-value`). The disclosure relationship is carried by\n  `aria-expanded` on the control, which needs no IDREF. The property is\n  kept because it is public API and records the grouping.\n- Defaults to `''`: it used to be `undefined`, and `undefined += ' id'`\n  produced the literal id list `\"undefined group-x-item-1\"`.",
               "fieldName": "ariaControls"
             }
           ],
@@ -16616,6 +16834,12 @@
               },
               "description": "The last index of menu items, used to control keyboard focus",
               "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "syncRovingTabindex",
+              "privacy": "private",
+              "description": "A11y — roving tabindex across the menu items.\n\nTab and the arrow handler used to disagree: every item was its own tab\nstop, so Tab walked through all of them one at a time while ArrowUp/Down\n*also* moved between them — two competing models for the same list, and a\n20-item menu meant 20 Tab presses to get past it. The menu is now a single\ntab stop: Tab enters at the current item and leaves the menu, arrows move\nwithin it.\n\n1. Only items that keyboard navigation can reach are candidates (a\n   collapsed group's items have `idx === null` and are hidden)\n2. The tab stop follows focus, then selection, then the first item\n3. `menuItemLinkEl` is the `<a>`/`<button>` inside `<al-link>`'s shadow\n   root — the element that actually takes focus"
             },
             {
               "kind": "method",
@@ -16902,6 +17126,21 @@
               },
               "description": "Aria label for the link for accessibility",
               "attribute": "ariaLabel"
+            },
+            {
+              "kind": "field",
+              "name": "_listRole",
+              "type": {
+                "text": "'listitem' | 'none'"
+              },
+              "default": "'none'",
+              "description": "A11y — the role rendered on the internal `<li>`.\n\n`listitem` is only legal inside a `list`, and the owning `<ul role=\"list\">`\nlives in the *parent* component's shadow root. Rendered standalone the\nhardcoded role has no required parent (axe `aria-required-parent`), while\ndropping the role leaves a bare `<li>` outside a list (axe `listitem`).\n`none` is the honest answer for an orphan; `hasAncestorRole` walks the\nflattened tree, so the slot/shadow hop to the real `<ul>` is followed."
+            },
+            {
+              "kind": "method",
+              "name": "syncListRole",
+              "privacy": "private",
+              "description": "A11y — recompute the internal `<li>`'s role from the flattened tree.\nAlso runs once on the next frame, because the owning list component may\nnot have rendered its `<ul>` yet when this item first updates."
             }
           ],
           "attributes": [
@@ -18888,6 +19127,24 @@
             },
             {
               "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name attribute forwarded to the underlying `<input type=\"range\">`.\n- Previously hardcoded to `\"range\"`, which silently overrode whatever the\n  consumer submitted the field as.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "accessibleName",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "A11y — the accessible name for the slider.\n\nReturns `undefined` when a real `<label for>` (or slotted label) already\nnames the input, so the consumer's label wins. The component used to\nhardcode `aria-label=\"range\"`, which overrode it. Only when there is no\nlabel at all does this fall back to a generic name, so the input is never\nnameless (axe `label`).",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "hasTooltip",
               "type": {
                 "text": "boolean"
@@ -19398,6 +19655,14 @@
               },
               "description": "The unique id of the field",
               "fieldName": "fieldId"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name attribute forwarded to the underlying `<input type=\"range\">`.\n- Previously hardcoded to `\"range\"`, which silently overrode whatever the\n  consumer submitted the field as.",
+              "fieldName": "name"
             },
             {
               "name": "hasTooltip",
@@ -20186,6 +20451,12 @@
               },
               "description": "The unique id of the select",
               "attribute": "fieldId"
+            },
+            {
+              "kind": "field",
+              "name": "panelId",
+              "privacy": "private",
+              "description": "A11y — id of the dropdown panel, referenced by the input's `aria-controls`.\n\n`<al-select>` had no combobox semantics at all: no `role=\"combobox\"`, no\n`aria-expanded`, no `aria-haspopup`, no `aria-controls`, so a screen-reader\nuser was told \"edit text\" and never that a list opens. `<al-combobox>`\nalready does this correctly and this mirrors it rather than inventing a\nthird pattern.\n\nThe options themselves stay un-roled: they are consumer-supplied light-DOM\n`<al-list-item>`s that render their own `<button>`, so stamping\n`role=\"option\"` on them would nest an interactive control inside an\ninteractive role. `aria-haspopup=\"listbox\"` states the intent without\nlying about the tree."
             },
             {
               "kind": "field",
@@ -21117,6 +21388,21 @@
               "default": "1",
               "description": "Step number\n- The number that appears for each step\n- Dynically set by the parent",
               "attribute": "stepNumber"
+            },
+            {
+              "kind": "field",
+              "name": "_listRole",
+              "type": {
+                "text": "'listitem' | 'none'"
+              },
+              "default": "'none'",
+              "description": "A11y — the role rendered on the internal `<li>`.\n\n`listitem` is only legal inside a `list`, and the owning `<ul role=\"list\">`\nlives in the *parent* component's shadow root. Rendered standalone the\nhardcoded role has no required parent (axe `aria-required-parent`), while\ndropping the role leaves a bare `<li>` outside a list (axe `listitem`).\n`none` is the honest answer for an orphan; `hasAncestorRole` walks the\nflattened tree, so the slot/shadow hop to the real `<ul>` is followed."
+            },
+            {
+              "kind": "method",
+              "name": "syncListRole",
+              "privacy": "private",
+              "description": "A11y — recompute the internal `<li>`'s role from the flattened tree.\nAlso runs once on the next frame, because the owning list component may\nnot have rendered its `<ul>` yet when this item first updates."
             }
           ],
           "attributes": [
@@ -21488,7 +21774,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Aria controls attribute\n- Sets to the id used to connect the tab trigger to the tab panel",
+              "description": "Aria controls attribute\n- Set by `<al-tabs>` to the id of the matching `<al-tab-panel>`\n- **Not rendered as an attribute.** The panel's id lives inside\n  `<al-tab-panel>`'s shadow root while this tab's `<button>` lives inside\n  `<al-tab>`'s, and an IDREF cannot cross a shadow boundary — axe reported\n  every value as `aria-valid-attr-value`. `aria-controls` is a SHOULD for\n  `role=\"tab\"`, not a MUST; the selected state still comes through\n  `aria-selected`.",
               "attribute": "ariaControls"
             },
             {
@@ -21500,6 +21786,21 @@
               "default": "0",
               "description": "Index to track tab",
               "attribute": "idx"
+            },
+            {
+              "kind": "field",
+              "name": "_tabRole",
+              "type": {
+                "text": "'tab' | undefined"
+              },
+              "default": "undefined",
+              "description": "A11y — the role rendered on the internal `<button>`.\n\n`tab` requires a `tablist` owner, and `<al-tabs>` renders that\n`<div role=\"tablist\">` in *its* shadow root. Rendered standalone (the\n\"Atoms/Navigation/Tab\" stories) a hardcoded `role=\"tab\"` has no required\nparent and axe reports `aria-required-parent`. Falling back to the\n`<button>`'s implicit `button` role is both valid and honest."
+            },
+            {
+              "kind": "method",
+              "name": "syncTabRole",
+              "privacy": "private",
+              "description": "A11y — recompute the role from the flattened tree. Also runs once on the\nnext frame, because `<al-tabs>` may not have rendered its tablist yet when\nthis tab first updates."
             },
             {
               "kind": "method",
@@ -21551,7 +21852,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Aria controls attribute\n- Sets to the id used to connect the tab trigger to the tab panel",
+              "description": "Aria controls attribute\n- Set by `<al-tabs>` to the id of the matching `<al-tab-panel>`\n- **Not rendered as an attribute.** The panel's id lives inside\n  `<al-tab-panel>`'s shadow root while this tab's `<button>` lives inside\n  `<al-tab>`'s, and an IDREF cannot cross a shadow boundary — axe reported\n  every value as `aria-valid-attr-value`. `aria-controls` is a SHOULD for\n  `role=\"tab\"`, not a MUST; the selected state still comes through\n  `aria-selected`.",
               "fieldName": "ariaControls"
             },
             {
@@ -22232,12 +22533,20 @@
             },
             {
               "kind": "field",
+              "name": "attributionRole",
+              "type": {
+                "text": "string"
+              },
+              "description": "Job title of the person being quoted, e.g. \"VP of Engineering\".\n\nThe attribute is `attribution-role`, **not** `role`. `role` is the ARIA\nrole attribute: `<al-testimonial role=\"VP of Engineering\">` put a job title\nwhere the accessibility tree expects a role name, and axe reported\n`aria-roles` (\"role attribute must use a valid value\") on every\nTestimonial story. `apps/southleft` had already worked around it by\nwriting the *property* from a `data-testimonial-role` attribute.",
+              "attribute": "attribution-role"
+            },
+            {
+              "kind": "field",
               "name": "role",
               "type": {
                 "text": "string"
               },
-              "description": "Job title of the person being quoted, e.g. \"VP of Engineering\".",
-              "attribute": "role"
+              "deprecated": "Use `attributionRole`. Kept because consumers (including\n`apps/southleft`) assign the `role` **property** as a workaround for the\nattribute collision described above; this keeps that working while never\nwriting an invalid ARIA `role` attribute."
             },
             {
               "kind": "field",
@@ -22268,12 +22577,12 @@
               "fieldName": "attribution"
             },
             {
-              "name": "role",
+              "name": "attribution-role",
               "type": {
                 "text": "string"
               },
-              "description": "Job title of the person being quoted, e.g. \"VP of Engineering\".",
-              "fieldName": "role"
+              "description": "Job title of the person being quoted, e.g. \"VP of Engineering\".\n\nThe attribute is `attribution-role`, **not** `role`. `role` is the ARIA\nrole attribute: `<al-testimonial role=\"VP of Engineering\">` put a job title\nwhere the accessibility tree expects a role name, and axe reported\n`aria-roles` (\"role attribute must use a valid value\") on every\nTestimonial story. `apps/southleft` had already worked around it by\nwriting the *property* from a `data-testimonial-role` attribute.",
+              "fieldName": "attributionRole"
             },
             {
               "name": "company",
@@ -24445,9 +24754,24 @@
             },
             {
               "kind": "field",
+              "name": "triggerHasOwnFocusable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "A11y — true when the slotted trigger contains its own focusable control,\nin which case the trigger wrapper must not add a second tab stop."
+            },
+            {
+              "kind": "field",
               "name": "isRTL",
               "description": "Get the document dir",
               "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "syncTriggerFocusability",
+              "privacy": "private",
+              "description": "A11y — decide whether the trigger wrapper needs its own tab stop.\n\nThe wrapper was unconditionally `tabindex=\"0\"`. When the consumer slots a\ncontrol that is already focusable (`<al-button slot=\"trigger\">`) that\nproduced **two** tab stops for one control. The wrapper is only tabbable\nwhen the slotted trigger has nothing focusable of its own — which is the\ndocumented usage (`<span slot=\"trigger\">`)."
             },
             {
               "kind": "method",

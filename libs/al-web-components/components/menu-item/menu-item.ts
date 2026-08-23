@@ -1,5 +1,5 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property, query } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import register from '../../directives/register';
@@ -158,10 +158,31 @@ export class ALMenuItem extends ALElement {
 
   /**
    * Aria controls
-   * - Associates a Expandable Header's control with the items in that group
+   * - Associates an Expandable Header's control with the items in that group
+   * - **Not rendered as an attribute.** The ids `<al-menu>` collects here belong
+   *   to `<al-menu-item>` hosts in the *document*, while the expand control
+   *   lives inside this component's shadow root, and an IDREF cannot cross a
+   *   shadow boundary — every value was reported invalid
+   *   (axe `aria-valid-attr-value`). The disclosure relationship is carried by
+   *   `aria-expanded` on the control, which needs no IDREF. The property is
+   *   kept because it is public API and records the grouping.
+   * - Defaults to `''`: it used to be `undefined`, and `undefined += ' id'`
+   *   produced the literal id list `"undefined group-x-item-1"`.
    */
   @property()
-  accessor ariaControls: string;
+  accessor ariaControls: string = '';
+
+  /**
+   * A11y — the role rendered on the internal `<li>`.
+   *
+   * `<al-menu>` renders the owning `<ul>` in *its* shadow root, so the
+   * list/listitem relationship only exists once this item is assigned to that
+   * slot. A bare `<li>` outside a list is not semantic (axe `listitem`), and a
+   * hardcoded `role="listitem"` on an orphan has no required parent
+   * (`aria-required-parent`). `none` is the honest answer for a standalone item.
+   */
+  @state()
+  accessor _listRole: 'listitem' | 'none' = 'none';
 
   /**
    * Query the al-LINK element inside the component
@@ -186,6 +207,20 @@ export class ALMenuItem extends ALElement {
   }
 
   /**
+   * The element inside this item that actually receives focus.
+   *
+   * `menuItemLinkEl` reaches into `<al-link>`'s shadow root, but a header with
+   * no `href` renders a plain `<div class="al-c-menu-item__link">` with no
+   * shadow root at all — so for those items it is `undefined` and `<al-menu>`'s
+   * arrow-key navigation had nothing to focus. The div now carries
+   * `tabindex="-1"` and this getter falls back to it, so Home/End/arrows can
+   * land on a group header like every other item.
+   */
+  get menuItemFocusable(): HTMLElement | undefined {
+    return (this.menuItemLinkEl as HTMLElement) ?? (this.menuItemLink as unknown as HTMLElement) ?? undefined;
+  }
+
+  /**
    * Query the button element inside the ALButton
    */
   get menuItemControlEl(): HTMLButtonElement {
@@ -203,6 +238,8 @@ export class ALMenuItem extends ALElement {
     this.setIndentation();
     this.setLinkClasses();
     this.setControlClasses();
+    // The owning <al-menu> may not have rendered its <ul> yet.
+    requestAnimationFrame(() => this.syncListRole());
   }
 
   /**
@@ -213,6 +250,15 @@ export class ALMenuItem extends ALElement {
     this.setIndentation();
     this.setLinkClasses();
     this.setControlClasses();
+    this.syncListRole();
+  }
+
+  /**
+   * A11y — recompute the internal `<li>`'s role from the flattened tree, which
+   * is the only path that crosses the slot/shadow hop to `<al-menu>`'s `<ul>`.
+   */
+  private syncListRole() {
+    this._listRole = this.hasAncestorRole(['list', 'group'], ['ul', 'ol', 'menu']) ? 'listitem' : 'none';
   }
 
   /**
@@ -225,6 +271,20 @@ export class ALMenuItem extends ALElement {
     if (this.menuItemLinkEl) {
       /* 1 */
       this.menuItemLinkEl.classList.add('al-c-menu-item-link');
+      /* A11y: `aria-label` and `aria-current` belong on the focusable control
+         that screen readers land on, not on the wrapping `<li>` — which is
+         `role="none"` whenever the item is standalone, and `aria-label` is
+         prohibited there (axe `aria-prohibited-attr`). */
+      if (this.label) {
+        this.menuItemLinkEl.setAttribute('aria-label', this.label);
+      } else {
+        this.menuItemLinkEl.removeAttribute('aria-label');
+      }
+      if (this.isSelected) {
+        this.menuItemLinkEl.setAttribute('aria-current', 'true');
+      } else {
+        this.menuItemLinkEl.removeAttribute('aria-current');
+      }
       /* 2 */
       if (this.isHeader) {
         this.menuItemLinkEl.classList.add('al-c-menu-item-header-link');
@@ -333,12 +393,12 @@ export class ALMenuItem extends ALElement {
     return html`
       <li
         class="${componentClassNames}"
-        aria-label=${ifDefined(this.label)}
-        aria-current=${ifDefined(this.isSelected)}
+        role=${this._listRole}
       >
       ${this.isHeader && !this.href ?
-        html`<div 
-          class="al-c-menu-item__link al-c-menu-item--no-href" 
+        html`<div
+          class="al-c-menu-item__link al-c-menu-item--no-href"
+          tabindex="-1"
           @click=${this.handleOnLinkClick}>
             ${
               this.slotNotEmpty('before') &&
@@ -376,7 +436,6 @@ export class ALMenuItem extends ALElement {
             styleModifier="al-c-menu-item-button"
             @click=${this.handleOnControlClick}
             ?isExpanded=${this.isExpanded}
-            aria-controls=${this.ariaControls}
             ?hideText=${true}
             ?isDisabled=${this.isDisabled}
           >

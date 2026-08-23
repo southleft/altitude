@@ -77,13 +77,20 @@ export class ALAccordion extends ALElement {
     }
   }
 
+  /**
+   * A11y — this used to be a `<dl>` whose `<dt>`/`<dd>` pairs live inside each
+   * `<al-accordion-panel>`'s shadow root, so no `<dt>` was ever a DOM child of
+   * the `<dl>`: axe reported `definition-list` here and `dlitem` on every
+   * panel. An accordion is not a description list, so the definition-list
+   * markup is gone rather than patched.
+   */
   render() {
     const componentClassNames = this.componentClassNames('al-c-accordion', {});
 
     return html`
-      <dl class="${componentClassNames}">
+      <div class="${componentClassNames}">
         <slot></slot>
-      </dl>
+      </div>
     `;
   }
 }

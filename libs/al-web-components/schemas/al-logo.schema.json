@@ -39,6 +39,10 @@
         "href": {
           "description": "The logo link URL",
           "type": "string"
+        },
+        "label": {
+          "description": "A11y — the accessible name of the logo mark.\n\nThe logo renders an inline `<svg>` inside an `<a>`; an `<svg>` with no\n`role`/name contributes nothing to name-from-content, so the link was\nnameless (axe `link-name`). Defaults to the wordmark the variant draws.",
+          "type": "string"
         }
       }
     },

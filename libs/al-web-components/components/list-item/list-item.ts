@@ -1,10 +1,11 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property, query } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { ALElement } from '../ALElement';
+import getFocusableElements from '../../directives/getFocusableElements';
 import { ALDropdownPanel } from '../dropdown-panel/dropdown-panel';
 import { ALIconChevronDown } from '../icon/icons/chevron-down';
 import { ALIconChevronRight } from '../icon/icons/chevron-right';
@@ -113,6 +114,35 @@ export class ALListItem extends ALElement {
   accessor target: '_blank' | '_self' | '_parent' | '_top';
 
   /**
+   * A11y — the role rendered on the internal `<li>`.
+   *
+   * `listitem` is only legal inside a `list`. `<al-list>` renders its
+   * `<ul role="list">` in *its* shadow root, so the relationship only exists
+   * once this item has been assigned to that slot. Rendered standalone (as the
+   * "Atoms/Text/List Item" stories do) a hardcoded `role="listitem"` has no
+   * required parent and axe reports `aria-required-parent`; dropping the role
+   * entirely instead trips the `listitem` rule, because a bare `<li>` outside a
+   * list is not semantic either. `none` is the honest answer for an orphan.
+   */
+  @state()
+  accessor _listRole: 'listitem' | 'none' = 'none';
+
+  /**
+   * A11y — true when the consumer slotted a control of their own
+   * (`<al-list-item><al-link href="#">…</al-link></al-list-item>`, a checkbox,
+   * …).
+   *
+   * The default variant wraps everything in a `<button>`, so slotting a link
+   * or a checkbox produced a control inside a control: axe `nested-interactive`
+   * ("interactive controls must not be nested"), and screen readers announce
+   * only the outer one. When the slotted content is already operable the
+   * wrapper becomes a plain `<div>` — the same element `variant="static"`
+   * renders — and the slotted control owns the interaction.
+   */
+  @state()
+  accessor _slotHasOwnControl: boolean = false;
+
+  /**
    * Query the .al-c-tooltip
    */
   @query('.al-c-list-item')
@@ -123,6 +153,37 @@ export class ALListItem extends ALElement {
    */
   @query('.al-c-list-item__dropdown-panel')
   accessor _enListItemDropdown: HTMLElement;
+
+  /**
+   * A11y — recompute the internal `<li>`'s role from the *flattened* tree.
+   * Runs on every update (cheap: a handful of pointer hops) plus once on the
+   * next frame, because the owning `<al-list>` may not have rendered its
+   * `<ul role="list">` at the time this item first updates.
+   */
+  private syncListRole() {
+    this._listRole = this.hasAncestorRole(['list', 'group'], ['ul', 'ol', 'menu']) ? 'listitem' : 'none';
+  }
+
+  /**
+   * A11y — does the default slot already contain something focusable?
+   */
+  private syncSlotHasOwnControl() {
+    const defaultSlotted = Array.from(this.children).filter((child) => !child.hasAttribute('slot'));
+    this._slotHasOwnControl = defaultSlotted.some((child) => getFocusableElements(child).length > 0);
+  }
+
+  async firstUpdated() {
+    await this.updateComplete;
+    requestAnimationFrame(() => {
+      this.syncListRole();
+      this.syncSlotHasOwnControl();
+    });
+  }
+
+  updated() {
+    this.syncListRole();
+    this.syncSlotHasOwnControl();
+  }
 
   /**
    * Focus on first list item
@@ -379,6 +440,26 @@ export class ALListItem extends ALElement {
     }
   }
 
+  /**
+   * The interactive item's inner content — shared by the `<button>` and the
+   * plain `<div>` wrapper so the two stay identical.
+   */
+  private renderItemBody() {
+    return html`
+      <span class="al-c-list-item__body">
+        ${this.slotNotEmpty('before') && html` <div class="al-c-list-item__icon"><slot name="before"></slot></div> `}
+        <div class="al-c-list-item__text">
+          <slot></slot>
+        </div>
+        ${this.slotNotEmpty('items') &&
+        (this.behavior === 'flyout'
+          ? html` <${this.iconChevronRightEl} class="al-c-list-item__items-icon" size="lg"></${this.iconChevronRightEl}> `
+          : html` <${this.iconChevronDownEl} class="al-c-list-item__items-icon" size="lg"></${this.iconChevronDownEl}> `)}
+      </span>
+      ${this.slotNotEmpty('after') && html` <div class="al-c-list-item__after"><slot name="after"></slot></div> `}
+    `;
+  }
+
   render() {
     const componentClassName = this.componentClassNames('al-c-list-item', {
       'al-c-list-item--flyout': this.behavior === 'flyout',
@@ -393,7 +474,7 @@ export class ALListItem extends ALElement {
 
     if (this.href) {
       return html`
-        <li role="listitem" class="${componentClassName}" @keydown=${this.handleKeyDown}>
+        <li role=${this._listRole} class="${componentClassName}" @keydown=${this.handleKeyDown}>
           <a class="al-c-list-item__link al-c-list-item-href__link" href=${this.href} target=${this.target} tabindex=${this.isDisabled && '-1'}>
             <span class="al-c-list-item__body">
               ${this.slotNotEmpty('before') && html` <div class="al-c-list-item__icon"><slot name="before"></slot></div> `}
@@ -407,7 +488,7 @@ export class ALListItem extends ALElement {
       ` as TemplateResult<1>;
     } else if (this.variant === 'static') {
       return html`
-        <li role="listitem" class="${componentClassName}" @keydown=${this.handleKeyDown}>
+        <li role=${this._listRole} class="${componentClassName}" @keydown=${this.handleKeyDown}>
           <div class="al-c-list-item__link" @click=${this.handleClick} tabindex=${this.isDisabled && '-1'}>
             <span class="al-c-list-item__body">
               ${this.slotNotEmpty('before') && html` <div class="al-c-list-item__icon"><slot name="before"></slot></div> `}
@@ -422,36 +503,34 @@ export class ALListItem extends ALElement {
     } else {
       return html`
         <li
-          role="listitem"
+          role=${this._listRole}
           class="${componentClassName}"
           @keydown=${this.handleKeyDown}
           @mouseenter=${this.handleMouseEnter}
           @mouseleave=${this.handleMouseLeave}
         >
-          <button class="al-c-list-item__link" @click=${this.handleClick} ?disabled=${this.isDisabled} aria-expanded=${ifDefined(this.isActive)}>
-            <span class="al-c-list-item__body">
-              ${this.slotNotEmpty('before') && html` <div class="al-c-list-item__icon"><slot name="before"></slot></div> `}
-              <div class="al-c-list-item__text">
-                <slot></slot>
-              </div>
-              ${this.slotNotEmpty('items') &&
-              (this.behavior === 'flyout'
-                ? html` <${this.iconChevronRightEl} class="al-c-list-item__items-icon" size="lg"></${this.iconChevronRightEl}> `
-                : html` <${this.iconChevronDownEl} class="al-c-list-item__items-icon" size="lg"></${this.iconChevronDownEl}> `)}
-            </span>
-            ${this.slotNotEmpty('after') && html` <div class="al-c-list-item__after"><slot name="after"></slot></div> `}
-          </button>
+          ${this._slotHasOwnControl
+            ? html`
+                <div class="al-c-list-item__link" @click=${this.handleClick}>
+                  ${this.renderItemBody()}
+                </div>
+              `
+            : html`
+                <button class="al-c-list-item__link" @click=${this.handleClick} ?disabled=${this.isDisabled} aria-expanded=${ifDefined(this.isActive)}>
+                  ${this.renderItemBody()}
+                </button>
+              `}
           ${this.slotNotEmpty('items') &&
           (this.behavior === 'flyout'
             ? html`
-                <div class="al-c-list-item__items" @mouseenter=${this.handleMouseEnter} aria-hidden=${ifDefined(!this.isActive)}>
+                <div class="al-c-list-item__items" role="list" @mouseenter=${this.handleMouseEnter} aria-hidden=${ifDefined(!this.isActive)}>
                   <${this.dropdownPanelEl} class="al-c-list-item__dropdown-panel" @keydown=${this.handleClose}>
                     <slot name="items" aria-hidden=${ifDefined(this.isActive)}></slot>
                   </${this.dropdownPanelEl}>
                 </div>
               `
             : html`
-                <div class="al-c-list-item__items" aria-hidden=${ifDefined(!this.isActive)}>
+                <div class="al-c-list-item__items" role="list" aria-hidden=${ifDefined(!this.isActive)}>
                   <slot name="items" aria-hidden=${ifDefined(this.isActive)}></slot>
                 </div>
               `)}

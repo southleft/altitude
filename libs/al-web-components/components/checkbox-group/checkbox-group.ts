@@ -17,6 +17,7 @@ import styles from './checkbox-group.scss';
  *         by default; for a row, nest them in `<al-layout direction="row" wrap>`.
  * @slot field-note - If content is slotted, it will display in place of the fieldNote property
  * @slot error - If content is slotted, it will display in place of the errorNote property
+ * @event onCheckboxGroupChange - Fired when any checkbox in the group changes. Detail: `{ checked, value, checkedValues }` — the state and value of the checkbox that changed, plus the values of every currently-checked checkbox in the group.
  */
 export class ALCheckboxGroup extends ALElement {
   static el = 'al-checkbox-group';
@@ -105,6 +106,40 @@ export class ALCheckboxGroup extends ALElement {
    */
   @queryAssignedNodes({ flatten: true })
   private accessor checkboxItems: Array<ALCheckbox>;
+
+  /**
+   * Initialize functions
+   * 1. Listen for the `onCheckboxChange` event that every slotted `<al-checkbox>`
+   *    bubbles (ALElement.dispatch defaults to bubbles + composed) and re-emit a
+   *    group-level event. Without this the group dispatched nothing at all, so the
+   *    al-react `<ALCheckboxGroup>` wrapper had no event to map. Mirrors radio-group.
+   */
+  constructor() {
+    super();
+    /* 1 */
+    this.addEventListener('onCheckboxChange', (e: Event) => this.handleOnCheckboxChange(e as CustomEvent));
+  }
+
+  /**
+   * Handle a change coming from any slotted checkbox
+   * 1. Collect the value of every currently-checked checkbox in the group
+   * 2. Dispatch the group-level event
+   */
+  handleOnCheckboxChange(e: CustomEvent) {
+    const target = e.target as ALCheckbox;
+    /* 1 */
+    const checkedValues = (this.checkboxItems || []).filter((item: any) => item?.isChecked === true).map((item: any) => item?.value);
+    /* 2 */
+    this.dispatch({
+      e,
+      eventName: 'onCheckboxGroupChange',
+      detailObj: {
+        checked: target?.isChecked,
+        value: target?.value,
+        checkedValues
+      }
+    });
+  }
 
   /**
    * Connected callback

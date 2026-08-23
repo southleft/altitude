@@ -28,9 +28,30 @@ export class ALTestimonial extends ALElement {
 
   /**
    * Job title of the person being quoted, e.g. "VP of Engineering".
+   *
+   * The attribute is `attribution-role`, **not** `role`. `role` is the ARIA
+   * role attribute: `<al-testimonial role="VP of Engineering">` put a job title
+   * where the accessibility tree expects a role name, and axe reported
+   * `aria-roles` ("role attribute must use a valid value") on every
+   * Testimonial story. `apps/southleft` had already worked around it by
+   * writing the *property* from a `data-testimonial-role` attribute.
    */
-  @property()
-  accessor role: string;
+  @property({ attribute: 'attribution-role' })
+  accessor attributionRole: string;
+
+  /**
+   * @deprecated Use `attributionRole`. Kept because consumers (including
+   * `apps/southleft`) assign the `role` **property** as a workaround for the
+   * attribute collision described above; this keeps that working while never
+   * writing an invalid ARIA `role` attribute.
+   */
+  get role(): string {
+    return this.attributionRole;
+  }
+
+  set role(value: string) {
+    this.attributionRole = value;
+  }
 
   /**
    * Company/organization of the person being quoted.
@@ -39,7 +60,7 @@ export class ALTestimonial extends ALElement {
   accessor company: string;
 
   private get roleAndCompany(): string {
-    return [this.role, this.company].filter(Boolean).join(', ');
+    return [this.attributionRole, this.company].filter(Boolean).join(', ');
   }
 
   render() {

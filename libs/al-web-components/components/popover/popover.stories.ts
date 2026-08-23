@@ -252,7 +252,11 @@ WithMenu.play = async ({ canvasElement }) => {
   const popover = canvas.queryByTestId('popover') as any;
   const popoverTrigger = canvas.queryByTestId('popover-trigger') as any;
   const popoverContainer = popover.shadowRoot.querySelector('.al-c-popover__container') as HTMLElement;
-  const firstMenuItem = canvas.queryByTestId('menu-item-01').shadowRoot.querySelector('.al-c-menu-item__link').shadowRoot.querySelector('*') as any;
+  // A header `<al-menu-item>` with no href renders a plain focusable
+  // `<div class="al-c-menu-item__link">` rather than an `<al-link>`, so there
+  // is no nested shadow root to reach into.
+  const firstMenuItemLink = canvas.queryByTestId('menu-item-01').shadowRoot.querySelector('.al-c-menu-item__link') as any;
+  const firstMenuItem = (firstMenuItemLink.shadowRoot ? firstMenuItemLink.shadowRoot.querySelector('*') : firstMenuItemLink) as any;
 
   await userEvent.click(popoverTrigger);
   expect(popover.isActive).toBe(true);
