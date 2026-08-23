@@ -336,10 +336,40 @@ if (httpFlag === -1) {
       req.on('error', reject);
     });
 
+  /** Is this a loopback origin/host? Any port, http or https. */
+  const isLoopback = (value) => {
+    if (!value) return false;
+    try {
+      // Accept both a full origin ("http://localhost:6006") and a bare Host
+      // header ("localhost:6006"), which has no scheme.
+      const { hostname } = new URL(value.includes('://') ? value : `http://${value}`);
+      return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]' || hostname === '::1';
+    } catch {
+      return false;
+    }
+  };
+
   const httpServer = createHttpServer(async (req, res) => {
-    // CORS: the Storybook manager (localhost:6006) and other local tools may
-    // fetch /parity.json cross-origin. Local dev surface only.
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    // DNS-REBINDING GUARD. Without a Host check, a page on any website can point
+    // a hostname it controls at 127.0.0.1 and then reach this server from the
+    // browser as a same-site request. Rejecting a non-loopback Host closes that,
+    // and costs nothing for real local clients.
+    if (!isLoopback(req.headers.host)) {
+      res.writeHead(403, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Host not allowed; altitude-mcp serves loopback clients only.' }));
+      return;
+    }
+
+    // CORS: the Storybook manager (localhost:6006), the docs site and other
+    // local tools fetch /parity.json cross-origin, so a header is needed — but
+    // this was `*`, which let ANY page the developer happened to be visiting
+    // read this repo's component and parity data straight out of their browser.
+    // Reflect loopback origins only.
+    const origin = req.headers.origin;
+    if (isLoopback(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Vary', 'Origin');
+    }
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'content-type, mcp-session-id, mcp-protocol-version');
     if (req.method === 'OPTIONS') {
@@ -414,7 +444,21 @@ if (httpFlag === -1) {
     }
   });
 
-  httpServer.listen(port, () => {
-    console.log(`[altitude-mcp] streamable HTTP on http://localhost:${port}/mcp (parity: /parity.json)`);
+  // BIND TO LOOPBACK EXPLICITLY. `listen(port)` with no host binds 0.0.0.0 —
+  // every interface — while the line below cheerfully logged "localhost". This
+  // server reads the repo off disk and answers unauthenticated, so on any
+  // shared or untrusted network (a café, a conference, a client office) it was
+  // a readable window into the working tree for anyone who could reach the
+  // machine. Loopback is the correct default for a dev-time tool; set
+  // ALTITUDE_MCP_HOST deliberately if you genuinely need to expose it.
+  const host = process.env.ALTITUDE_MCP_HOST ?? '127.0.0.1';
+  httpServer.listen(port, host, () => {
+    console.log(`[altitude-mcp] streamable HTTP on http://${host}:${port}/mcp (parity: /parity.json)`);
+    if (host !== '127.0.0.1' && host !== 'localhost') {
+      console.warn(
+        `[altitude-mcp] WARNING: bound to ${host}, not loopback. This server is unauthenticated ` +
+          'and serves repository contents. Do not do this on an untrusted network.',
+      );
+    }
   });
 }
