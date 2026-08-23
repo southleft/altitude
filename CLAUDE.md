@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Altitude is a design system created by Southleft.com. The documentation is available at [ZeroHeight](https://zeroheight.com/809ab055e).
+Altitude is a design system created by Southleft.com. Documentation is generated from the code and published at [altitude.pages.dev/docs](https://altitude.pages.dev/docs) (source: `apps/docs`).
 
 This is a monorepo using **pnpm workspaces** (pnpm 9, Node 22 LTS) with two main library packages (`@southleft/al-web-components` and `@southleft/al-react`) and the example apps in `apps/`: `angular`, `astro` (replaced the retired Enhance fixture), `home` (the public homepage), `knapsack`, `mfe` (micro-frontend/versioned-registry fixture), `react`, `ssr`, `svelte`, and `web-components` (vanilla). Workspace filter names are `al-app-*` (e.g. `pnpm --filter al-app-astro`), except `knapsack`.
 
@@ -24,7 +24,8 @@ The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with 
 
 ### Building
 - Build all: `pnpm run build:all`
-- Build libraries: `pnpm run build` (builds both @southleft/al-web-components and @southleft/al-react)
+- Build libraries: `pnpm run build` (builds @southleft/al-web-components, then
+  @southleft/sl-web-components — the Southleft brand layer — then @southleft/al-react)
 - Build specific workspace: `pnpm --filter WORKSPACE_NAME build`
 - Build a specific Storybook: `pnpm --filter @southleft/al-web-components build:storybook --output-dir ../../dist/storybook/web-components`
 
@@ -159,7 +160,8 @@ All components follow consistent patterns:
 ## Repo hygiene — search scoping
 
 `.claude/worktrees/` contains full session worktrees and stale directory snapshots of the entire
-repo. **Scope all searches to `apps/`, `libs/`, `scripts/`, `functions/`, and `.altitude/`** —
+repo. **Scope all searches to `apps/`, `libs/`, `scripts/`, `functions/`, `.altitude/`, and
+`.claude/` (skills/agents/commands — but never `.claude/worktrees/`)** —
 an unscoped grep returns duplicated hits from those mirrors and makes findings look like new code.
 Do not delete worktrees without checking `git worktree list` and dirty state first; some belong to
 live sessions.

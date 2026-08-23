@@ -16,7 +16,7 @@ export const SITE = {
   eyebrow: 'DESIGN SYSTEM — V2.0',
   runtime: 'V2.0 · LIT 3.3 · REACT 19',
   vendor: VENDOR,
-  zeroheight: 'https://zeroheight.com/809ab055e',
+  storybook: '/storybook/web-components',
 };
 
 /**
