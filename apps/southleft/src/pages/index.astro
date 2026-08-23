@@ -236,16 +236,14 @@ const testimonials = [
     <div style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);"><al-layout variant="grid" noCollapse>
       {services.map((s) => (
         <div class="al-u-grid__item col:12 col:6@md">
-          <a href={withBase(s.href)} class="sl-service-card">
-            <div class="sl-service-card__head">
-              <h3 class="sl-service-card__heading">{s.name}</h3>
-              <span class="sl-service-card__arrow" aria-hidden="true">↗</span>
-            </div>
-            <p class="sl-service-card__body">{s.body}</p>
-            <ul class="sl-service-card__list">
+          <al-card variant="service" fill href={withBase(s.href)}>
+            <h3 slot="header">{s.name}</h3>
+            <span slot="cue" aria-hidden="true">↗</span>
+            <p>{s.body}</p>
+            <ul slot="list">
               {s.items.map((item) => <li>{item}</li>)}
             </ul>
-          </a>
+          </al-card>
         </div>
       ))}
     </al-layout></div>
@@ -266,19 +264,23 @@ const testimonials = [
     <div style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);"><al-layout variant="grid" noCollapse>
       {tools.map((t) => (
         <div class="al-u-grid__item col:12 col:6@md col:4@lg">
-          <a href={t.href.startsWith('http') ? t.href : withBase(t.href)} target={t.href.startsWith('http') ? '_blank' : undefined} class="sl-tool-card">
-            <p class="sl-tool-card__cmd"><span class="sl-tool-card__cmd-prefix">$</span> {t.cmd}</p>
-            <p class="sl-tool-card__desc">{t.desc}</p>
-            <span class="sl-tool-card__footer" aria-hidden="true">{t.href.startsWith('http') ? 'github →' : 'explore →'}</span>
-          </a>
+          <al-card
+            variant="tool"
+            fill
+            href={t.href.startsWith('http') ? t.href : withBase(t.href)}
+            target={t.href.startsWith('http') ? '_blank' : undefined}
+            command={t.cmd}
+          >
+            <p>{t.desc}</p>
+            <span slot="footer" aria-hidden="true">{t.href.startsWith('http') ? 'github →' : 'explore →'}</span>
+          </al-card>
         </div>
       ))}
       <div class="al-u-grid__item col:12 col:6@md col:4@lg">
-        <div class="sl-tool-card sl-tool-card--dashed">
-          <p class="sl-tool-card__cmd"><span class="sl-tool-card__cmd-prefix">//</span> and the course</p>
-          <p class="sl-tool-card__desc"><strong>AI &amp; Design Systems</strong> — a new online course from Brad Frost and Southleft. Grounded, practical, shaped by real work with large-scale teams.</p>
-          <a href={withBase('/services/workshops-training')} class="sl-tool-card__footer">get early access →</a>
-        </div>
+        <al-card variant="tool" dashed fill command="and the course" command-prefix="//">
+          <p><strong>AI &amp; Design Systems</strong> — a new online course from Brad Frost and Southleft. Grounded, practical, shaped by real work with large-scale teams.</p>
+          <a slot="footer" href={withBase('/services/workshops-training')}>get early access →</a>
+        </al-card>
       </div>
     </al-layout></div>
   </section>

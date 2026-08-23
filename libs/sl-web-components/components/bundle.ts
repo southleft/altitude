@@ -5,12 +5,12 @@
  * `al-web-components/components/bundle.ts`. Add exactly one line in place when
  * a component lands — never rewrite this file with only your own export.
  */
+export { SLCard } from './card/card';
 export { SLCtaBand } from './cta-band/cta-band';
 export { SLFooter } from './footer/footer';
 export { SLHeader } from './header/header';
 export { SLHero } from './hero/hero';
 export { SLLogoWall } from './logo-wall/logo-wall';
 export { SLMarquee } from './marquee/marquee';
-export { SLMediaCard } from './media-card/media-card';
 export { SLPageHero } from './page-hero/page-hero';
 export { SLSectionHeader } from './section-header/section-header';

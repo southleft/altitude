@@ -1,12 +1,13 @@
 ---
-// Insights post card — spec 2026-08-20-southleft-example-app, T4, REBUILT
-// T12 audit-2 round (D): v5's real card anatomy (ArticleCard.astro) is a
-// flush-top image, a mono "CATEGORY · DATE" meta row (category in accent),
-// a bold sans title, a clamped excerpt, and a "read →" mono footer link —
-// not achievable through `al-card` (its single outer `padding` wraps the
-// image too, so it can never render flush-to-edge media; same "stop
-// fighting the component" call as the header/hero). Bespoke markup + the
-// shared `.sl-media-card` treatment in src/styles/layout.css.
+// Insights post card — spec 2026-08-20-southleft-example-app, T4.
+//
+// REBUILT ON `<al-card variant="article">`. This was bespoke `.sl-media-card`
+// markup, on the reasoning that `al-card` could never render flush-to-edge
+// media: its single outer `padding` wraps the image region. That is still true
+// of Altitude's card, and it is no longer true of Southleft's, which owns its
+// padding as `--al-card-padding` and moves it onto the content column for the
+// media variants. The treatment is identical; it now lives in the design
+// system instead of in this app's stylesheet.
 import type { CollectionEntry } from 'astro:content';
 import { withBase } from '../lib/url';
 
@@ -20,28 +21,22 @@ const href = withBase(`/insights/${post.data.category}/${slug}`);
 const dateLabel = post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 ---
 
-<a href={href} class:list={['sl-media-card', featured && 'sl-media-card--featured']}>
-  {post.data.hero && (
-    <div class="sl-media-card__image">
-      <img src={withBase(post.data.hero)} alt="" loading="lazy" />
-    </div>
-  )}
-  <div class="sl-media-card__body">
-    <al-layout direction="row" gap="sm" align="center" class="sl-media-card__meta">
-      <span class="sl-media-card__meta-accent">{post.data.categoryName}</span>
-      <span aria-hidden="true">·</span>
-      <time datetime={post.data.date.toISOString().slice(0, 10)}>{dateLabel}</time>
-    </al-layout>
-    {/* T12 audit-3 (height closure) — v5's card title is 32px (`.text-h3`);
-        al-heading's SCOPED (southleft-brand) steps are 24px (`md`) / 48px
-        (`lg`) with no step between, confirmed live inside `#sl-theme`
-        (an earlier unscoped measurement wrongly read `lg` as 28px and
-        caused a round-6 overshoot, reverted here). `md` is the closer
-        approximation (-8px vs `lg`'s +16px) — a real al-heading scale
-        gap, documented not fixed. `featured` (2-col span, /insights only)
-        keeps `lg` for its intentionally larger treatment. */}
-    <al-heading tagName="h3" variant={featured ? 'lg' : 'md'} isBold={true} class="sl-media-card__title">{post.data.title}</al-heading>
-    {post.data.excerpt && <p class="sl-media-card__excerpt al-u-theme-typography-body-sm">{post.data.excerpt}</p>}
-    <span class="sl-media-card__footer al-u-theme-typography-body-sm" aria-hidden="true">read →</span>
-  </div>
-</a>
+{/* `heading-variant` is left to the component: it resolves to `lg` for a
+    featured card and `md` otherwise, which is the same per-family judgment
+    this file used to make inline (v5's 32px title sits between al-heading's
+    scoped 24px and 48px steps, and long sentence titles overwrap badly at
+    `lg`). The `featured` flag below is what selects it. */}
+<al-card
+  variant="article"
+  fill
+  featured={featured || undefined}
+  href={href}
+  image={post.data.hero ? withBase(post.data.hero) : undefined}
+  heading={post.data.title}
+  excerpt={post.data.excerpt || undefined}
+  footer-label="read →"
+>
+  <span slot="meta" class="sl-media-card__meta-accent">{post.data.categoryName}</span>
+  <span slot="meta" aria-hidden="true">·</span>
+  <time slot="meta" datetime={post.data.date.toISOString().slice(0, 10)}>{dateLabel}</time>
+</al-card>

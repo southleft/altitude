@@ -27,7 +27,7 @@ So, for every component here:
    the component never anticipated into it.
 3. **`::part()` on every region** the component renders, so the arrangement and
    type can be retuned from the page without forking the component.
-4. **Reflected host attributes** for coarse variation (`<al-media-card variant>`),
+4. **Reflected host attributes** for coarse variation (`<al-card variant>`),
    styled `:host([variant='…'])` — inspectable in devtools, targetable from
    both sides of the shadow boundary, and serialized through Declarative Shadow
    DOM.
@@ -44,7 +44,8 @@ name.
 
 Reuse, measured on the real site. `PageHero` appears on 19 of 24 pages,
 `CTABand` on 16, `SectionHeader` on 2 more plus 5 pages that hand-re-inlined its
-markup, and `.al-media-card` is shared by the article and work cards.
+markup, and the media card anatomy is shared by the article and work cards —
+which is why it is two variants of `al-card` rather than two components.
 
 What does **not** belong here: one-off page furniture and brand art. The
 generative canvas, the hero murmur field, the playground — those stay in

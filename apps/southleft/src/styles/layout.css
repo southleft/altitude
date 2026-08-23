@@ -575,240 +575,47 @@ al-text-block {
 }
 
 /* ------------------------------------------------------------------------
- * Media card (v5's ArticleCard.astro / WorkCard.astro anatomy) — spec
- * 2026-08-20-southleft-example-app, T12 audit-2 round (B/C). Flush-top
- * image, hairline border, well bg, ~24px content padding, no radius beyond
- * the brand default. Bespoke markup (`al-card`'s single outer `padding`
- * can't render an edge-to-edge image) shared by both insights and work
- * cards; `--work` / `--featured` modifiers cover their small anatomy
- * differences (aspect ratio, tags row, 2-col span).
+ * Media-card meta accent — the last surviving rule of what used to be the
+ * whole `.sl-media-card` treatment.
+ *
+ * The card itself is now `<al-card variant="article">` / `variant="work"` from
+ * @southleft/sl-web-components, which owns the flush-top media, the hairline
+ * border, the well background, the content padding, the mono meta row, the
+ * clamped excerpt, the tag chips and the footer cue. This one class is the
+ * exception: it colours ONE node inside the meta row (the category, in accent)
+ * while its siblings stay muted, and the row's nodes are light-DOM children of
+ * a slot — `::slotted()` reaches them all or none, and cannot pick out one.
+ *
+ * So the page names the node it wants coloured. That is the shadow boundary,
+ * not an omission in the component.
  * -------------------------------------------------------------------- */
-.sl-media-card {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  text-decoration: none;
-  color: inherit;
-  border: var(--al-theme-border-width) solid var(--sl-border-faint);
-  background: var(--al-theme-color-background-default-strong);
-  border-radius: var(--al-theme-border-radius);
-  transition: border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
-}
-
-.sl-media-card:hover {
-  border-color: var(--al-theme-color-border-default-weak);
-}
-
-.sl-media-card__image {
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  border-block-end: var(--al-theme-border-width) solid var(--sl-border-faint);
-  background: var(--al-theme-color-background-default-strong);
-  display: grid;
-  place-items: center;
-}
-
-.sl-media-card--work .sl-media-card__image {
-  aspect-ratio: 16 / 10;
-}
-
-.sl-media-card__image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top;
-  display: block;
-}
-
-.sl-media-card__image-fallback {
-  font-family: var(--sl-font-mono);
-  color: var(--al-theme-color-content-default-weak);
-}
-
-.sl-media-card__body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  /* T12 audit-3 (height closure) — v5's real `mt-3` rhythm between meta →
-   * title → excerpt is 12px (`--al-theme-space-sm`), not 8px
-   * (`--al-theme-space-xs`, the round-6 value — measured too tight). */
-  gap: var(--al-theme-space-sm);
-  padding: var(--al-theme-space-lg);
-}
-
-.sl-media-card--featured .sl-media-card__body {
-  padding: var(--al-theme-space-xl);
-}
-
-/* Row arrangement now lives on the `<al-layout>` this class is applied to
- * directly (ArticleCard.astro) — the remaining declarations are inherited
- * typography, which still cascades through `<al-layout>`'s `display:
- * contents` host to its slotted children. */
-.sl-media-card__meta {
-  font-family: var(--sl-font-mono);
-  /* v5's meta row is the `.kicker` preset (13px), measured at 12px here
-   * (T12 audit-3 height closure) because the markup carried the 12px
-   * `al-u-theme-typography-body-xs` utility class instead. */
-  font-size: 0.8125rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--al-color-brand-paper-450);
-}
-
-al-theme[mode='light'] .sl-media-card__meta {
-  color: var(--al-color-brand-paper-600);
-}
-
 .sl-media-card__meta-accent {
   color: var(--al-theme-color-content-primary-default);
 }
 
-.sl-media-card__title {
-  /* Spacing to neighbors comes from `.sl-media-card__body`'s flex `gap` —
-   * an explicit margin here double-counted it (T12 audit-3 height
-   * closure). */
-  margin-block-start: 0;
-}
-
-.sl-media-card__excerpt {
-  margin: 0;
-  color: var(--al-theme-color-content-default-weak);
-  line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.sl-media-card__excerpt--clamp-2 {
-  -webkit-line-clamp: 2;
-}
-
-/* Row arrangement now lives on the nested `<al-layout>` (WorkCard.astro);
- * this div keeps only the box-model concerns (the work-card `margin-block-
- * start` override below) `<al-layout>`'s `display: contents` host cannot
- * express. */
-
-/* v5's WorkCard uses asymmetric gaps (excerpt `mt-2`=8px, tags `mt-4`=16px)
- * where ArticleCard uses a uniform `mt-3`=12px rhythm — T12 audit-3 height
- * closure. `.sl-media-card__body`'s shared gap already supplies the first
- * 8px between every pair; this adds the extra 8px WorkCard's tags row
- * needs on top, giving 16px total between excerpt and tags without
- * touching the ArticleCard-shared 12px `.sl-media-card__body` gap. */
-.sl-media-card--work .sl-media-card__body {
-  gap: var(--al-theme-space-xs);
-}
-
-.sl-media-card--work .sl-media-card__tags {
-  margin-block-start: var(--al-theme-space-xs);
-}
-
-.sl-tag-chip {
-  display: inline-flex;
-  align-items: center;
-  font-family: var(--sl-font-mono);
-  color: var(--al-theme-color-content-default-weak);
-  border: var(--al-theme-border-width) solid var(--sl-border-faint);
-  border-radius: var(--al-theme-border-radius-xs);
-  padding: 0.125rem var(--al-theme-space-xs);
-}
-
-.sl-media-card__footer {
-  margin-block-start: auto;
-  padding-block-start: var(--al-theme-space-lg);
-  font-family: var(--sl-font-mono);
-  color: var(--al-theme-color-content-primary-default);
-}
-
 /* ------------------------------------------------------------------------
- * Service card (v5's index.astro `.card` usage in the "04/services" —
- * really "03/services" — grid) — spec 2026-08-20-southleft-example-app,
- * T12 audit-2 round (D). Well-bg bordered card, ~40px padding, 32px
- * Agrandir heading with a top-right accent arrow glyph, mono 13px list
- * items with an accent "›" chevron bullet. Whole card is a link. Bespoke
- * markup — `al-card` + `al-list` can't place an absolutely-positioned
- * corner glyph or a chevron-bulleted mono list without fighting their
- * shadow DOM, same rationale as the media cards above.
+ * Service-card list bullets — the ONLY part of the "<services> What we do"
+ * card that is still page CSS.
+ *
+ * The card itself is now `<al-card variant="service">` from
+ * @southleft/sl-web-components, which owns the well, the border, the 40px
+ * padding step, the display heading, the corner glyph and the list's mono
+ * treatment. What it cannot own is this: the accent chevron is a `::before`
+ * on each `<li>`, the `<li>`s are light-DOM children of a slotted `<ul>`, and
+ * a pseudo-element on a light-DOM descendant is not addressable from a shadow
+ * root in any browser. `::slotted(ul)` reaches the list and stops there.
+ *
+ * So these two rules stay with the page, scoped to the slot so they cannot
+ * touch anything else. The same rules ship in the component's Storybook story
+ * (card.stories.ts), which is what puts the bullets on the docs preview.
  * -------------------------------------------------------------------- */
-.sl-service-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  box-sizing: border-box;
-  /* v5's real card padding is 40px (`p-10`) — `--al-theme-space-xxl` tops
-   * out at 32px (T12 audit-3 height closure: measured 32px, not the 40px
-   * assumed in round 4), so this reaches one step further via `calc()`. */
-  padding: calc(var(--al-theme-space-xxl) + var(--al-theme-space-xs));
-  border: var(--al-theme-border-width) solid var(--sl-border-faint);
-  background: var(--al-theme-color-background-default-strong);
-  border-radius: var(--al-theme-border-radius);
-  text-decoration: none;
-  color: inherit;
-  transition: border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
-}
-
-.sl-service-card:hover {
-  border-color: var(--al-theme-color-border-default-weak);
-}
-
-.sl-service-card:hover .sl-service-card__arrow {
-  transform: translate(2px, -2px);
-}
-
-.sl-service-card__head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--al-theme-space-lg);
-}
-
-.sl-service-card__heading {
-  font-family: var(--al-font-family-secondary, Agrandir, sans-serif);
-  font-size: 2rem;
-  font-weight: 600;
-  line-height: 1.1;
-  margin: 0;
-  color: var(--al-theme-color-content-default);
-}
-
-.sl-service-card__arrow {
-  flex: 0 0 auto;
-  font-family: var(--sl-font-mono);
-  font-size: 1.25rem;
-  line-height: 1;
-  color: var(--al-theme-color-content-primary-default);
-  transition: transform var(--al-theme-animation-duration) var(--al-theme-animation-timing);
-}
-
-.sl-service-card__body {
-  margin: var(--al-theme-space) 0 0;
-  color: var(--al-theme-color-content-default-weak);
-  line-height: 1.6;
-}
-
-.sl-service-card__list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-  margin: var(--al-theme-space-lg) 0 0;
-  padding: 0;
-  font-family: var(--sl-font-mono);
-  /* T12 audit-3 (height closure) — live-measured v5 list is 12px/16px
-   * line-height (`text-xs`/`leading-4`), not 13px. */
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: var(--al-theme-color-content-default-weak);
-}
-
-.sl-service-card__list li {
+al-card[variant='service'] ul[slot='list'] li {
   display: flex;
   align-items: baseline;
   gap: var(--al-theme-space-xs);
 }
 
-.sl-service-card__list li::before {
+al-card[variant='service'] ul[slot='list'] li::before {
   content: '›';
   color: var(--al-theme-color-content-primary-default);
 }
@@ -1342,72 +1149,6 @@ al-theme[mode='light'] .sl-pg-readout {
   color: var(--al-theme-color-content-default-weak);
 }
 
-/* ------------------------------------------------------------------------
- * Tool card ("05/open-source") — spec 2026-08-20-southleft-example-app,
- * T12 audit-2 round (F). v5's real anatomy: a mono `$ cmd` line in accent
- * (the `$`/`//` prefix muted), a description, and a mono footer link — no
- * image, no chip. Bespoke markup, same rationale as the other card
- * rebuilds.
- * -------------------------------------------------------------------- */
-.sl-tool-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--al-theme-space-sm);
-  height: 100%;
-  box-sizing: border-box;
-  padding: var(--al-theme-space-xl);
-  border: var(--al-theme-border-width) solid var(--sl-border-faint);
-  background: var(--al-theme-color-background-default-strong);
-  border-radius: var(--al-theme-border-radius);
-  text-decoration: none;
-  color: inherit;
-  transition: border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
-}
-
-.sl-tool-card:hover {
-  border-color: var(--al-theme-color-border-default-weak);
-}
-
-.sl-tool-card--dashed {
-  border-style: dashed;
-  justify-content: center;
-}
-
-.sl-tool-card__cmd {
-  margin: 0;
-  font-family: var(--sl-font-mono);
-  /* v5's real 14px (`text-sm`, T12 audit-3 height closure — was
-   * unset/inheriting the 16px body size). */
-  font-size: 0.875rem;
-  color: var(--al-theme-color-content-primary-default);
-}
-
-.sl-tool-card__cmd-prefix {
-  color: var(--al-color-brand-paper-450);
-}
-
-al-theme[mode='light'] .sl-tool-card__cmd-prefix {
-  color: var(--al-color-brand-paper-600);
-}
-
-.sl-tool-card__desc {
-  margin: 0;
-  color: var(--al-theme-color-content-default-weak);
-  /* v5's real 14px/22.75px (`text-sm`, T12 audit-3 height closure — was
-   * unset/inheriting the 16px body size). */
-  font-size: 0.875rem;
-  line-height: 1.625;
-}
-
-.sl-tool-card__footer {
-  margin-block-start: auto;
-  /* v5's real `pt-2` (8px, T12 audit-3 height closure — measured, was
-   * `--al-theme-space`/16px). */
-  padding-block-start: var(--al-theme-space-xs);
-  font-family: var(--sl-font-mono);
-  color: var(--al-theme-color-content-primary-default);
-  text-decoration: none;
-}
 
 /* ------------------------------------------------------------------------
  * Quote card ("07/quotes-from-folks") — spec 2026-08-20-southleft-example-

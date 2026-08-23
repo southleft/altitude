@@ -1,10 +1,17 @@
 ---
-// Case-study card — spec 2026-08-20-southleft-example-app, T4, REBUILT T12
-// audit-2 round (D): v5's real anatomy (WorkCard.astro) — flush-top image,
-// CLIENT NAME as the heading (not the full case-study title), a 2-line-
-// clamped excerpt, up to 3 square-cornered bordered tag chips from
-// `capabilities`, and a "case study →" mono footer link. Bespoke markup,
-// same rationale/shared treatment as ArticleCard.astro.
+// Case-study card — spec 2026-08-20-southleft-example-app, T4.
+//
+// REBUILT ON `<al-card variant="work">` — the same move as ArticleCard.astro,
+// and the same reasoning: the constraint that forced bespoke markup here was
+// Altitude's card wrapping its image region in the card's own padding, which
+// Southleft's card no longer does. `work` is the case-study cut of the media
+// anatomy: a 16/10 media ratio, a two-line excerpt clamp, a tighter rhythm and
+// the tag row.
+//
+// The heading is the CLIENT NAME, not the full case-study title. Client names
+// are short (1-2 words: "PetSmart", "IBM"), so they do not overwrap at the `lg`
+// step the component resolves for this variant — the opposite tradeoff from
+// ArticleCard's long sentence titles.
 import type { CollectionEntry } from 'astro:content';
 import { withBase } from '../lib/url';
 
@@ -15,34 +22,18 @@ const { project } = Astro.props;
 const slug = project.id.replace(/\.md$/, '');
 const href = withBase(`/projects/${slug}`);
 const tags = (project.data.capabilities ?? []).slice(0, 3);
+const showImage = project.data.hero && project.data.showHero;
 ---
 
-<a href={href} class="sl-media-card sl-media-card--work">
-  <div class="sl-media-card__image">
-    {project.data.hero && project.data.showHero ? (
-      <img src={withBase(project.data.hero)} alt="" loading="lazy" />
-    ) : (
-      <span class="sl-media-card__image-fallback" aria-hidden="true">&lt;{project.data.client.slice(0, 1)}&gt;</span>
-    )}
-  </div>
-  <div class="sl-media-card__body">
-    {/* T12 audit-3 (height closure) — v5's 32px card title sits between
-        al-heading's scoped 24px (`md`) and 48px (`lg`) steps with nothing
-        between (see ArticleCard.astro's fuller comment). Work-card client
-        names are short (1-2 words: "PetSmart", "IBM") so they don't
-        overwrap at `lg`, and `lg` closes this section's height to within
-        ~0.1% of v5 (measured) — the opposite tradeoff from ArticleCard's
-        long-sentence titles, which overwrap badly at `lg` and overshoot
-        their section. Per-family judgment call, not a rule. */}
-    <al-heading tagName="h3" variant="lg" isBold={true} class="sl-media-card__title">{project.data.client}</al-heading>
-    {project.data.oneLiner && <p class="sl-media-card__excerpt sl-media-card__excerpt--clamp-2 al-u-theme-typography-body-sm">{project.data.oneLiner}</p>}
-    {tags.length > 0 && (
-      <div class="sl-media-card__tags">
-        <al-layout direction="row" wrap gap="xs">
-          {tags.map((t) => <span class="sl-tag-chip al-u-theme-typography-body-xs">{t}</span>)}
-        </al-layout>
-      </div>
-    )}
-    <span class="sl-media-card__footer al-u-theme-typography-body-sm" aria-hidden="true">case study →</span>
-  </div>
-</a>
+<al-card
+  variant="work"
+  fill
+  href={href}
+  image={showImage ? withBase(project.data.hero) : undefined}
+  fallback={showImage ? undefined : `<${project.data.client.slice(0, 1)}>`}
+  heading={project.data.client}
+  excerpt={project.data.oneLiner || undefined}
+  footer-label="case study →"
+>
+  {tags.map((t) => <span slot="tags">{t}</span>)}
+</al-card>

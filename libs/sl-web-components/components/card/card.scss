@@ -1,0 +1,554 @@
+@use '../../../al-web-components/styles/component' as *;
+@use '../../styles/brand' as *;
+/*------------------------------------*\
+  #SL CARD
+\*------------------------------------*/
+
+/**
+ * Southleft's `al-card`. The first block is Altitude's `card.scss` behaviour,
+ * restated rather than imported — this component does not extend `ALCard` (see
+ * the note at the top of card.ts about `customElements.define` being
+ * first-come), so it cannot inherit its styles either. Keep the two in step:
+ * a change to the base card's default/inline/bare treatment belongs here too.
+ *
+ * The blocks after it are the brand's own — `service`, `tool`, and the
+ * `article` / `work` media pair — and are the reason this file exists.
+ */
+@layer al.component {
+  :host {
+    display: contents;
+  }
+
+  /**
+   * Card — the base surface.
+   */
+  .al-c-card {
+    width: 100%;
+    display: flex;
+    padding: var(--al-card-padding, var(--al-theme-space));
+    gap: var(--al-theme-space-xs);
+    flex-flow: row wrap;
+    border-radius: var(--al-theme-border-radius-role-surface, var(--al-theme-border-radius-lg));
+    color: var(--al-theme-color-content-default);
+    background-color: var(--al-theme-color-background-default);
+    box-shadow: var(--al-theme-box-shadow);
+
+    /**
+     * The regions below the media live in a `__content` wrapper that is
+     * `display: contents` for every non-media variant — so they really are
+     * flex items of this box, exactly as they were before the wrapper existed.
+     * `display: contents` does not affect selector matching, though, so `> *`
+     * alone stops naming them. Both levels are listed for that reason; drop
+     * either one and the base card's regions lose their full width.
+     */
+    > *,
+    .al-c-card__content > * {
+      width: 100%;
+    }
+  }
+
+  /**
+   * Card inline
+   */
+  .al-c-card--inline {
+    gap: var(--al-theme-space);
+
+    > *,
+    .al-c-card__content > * {
+      width: auto;
+    }
+  }
+
+  /**
+   * Card bare
+   */
+  .al-c-card--bare {
+    background-color: transparent;
+    border-radius: none;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  /**
+   * Card actions
+   */
+  .al-c-card__actions {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--al-theme-space);
+
+    .al-c-card--inline & {
+      flex-direction: column;
+      order: 4;
+    }
+  }
+
+  .al-c-card__actions-start,
+  .al-c-card__actions-end {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: var(--al-theme-space);
+  }
+
+  .al-c-card__actions-start {
+    justify-content: flex-start;
+
+    .al-c-card--inline & {
+      justify-content: flex-end;
+      align-content: flex-start;
+    }
+  }
+
+  .al-c-card__actions-end {
+    justify-content: flex-end;
+
+    .al-c-card--inline & {
+      flex: 1;
+      align-content: flex-end;
+    }
+  }
+
+  /**
+   * Fill — declared on `.al-c-card` and not on `:host`, because the host is
+   * `display: contents` and has no box of its own.
+   */
+  :host([fill]) .al-c-card {
+    block-size: 100%;
+    box-sizing: border-box;
+  }
+
+  /**
+   * Card image — INSIDE the card's padding, not flush to the edge, exactly as
+   * the base card renders it. The `media` variants override this with a
+   * flush-to-edge well; see the block at the foot of this file.
+   */
+  .al-c-card__image {
+    display: block;
+    height: auto;
+  }
+
+  ::slotted([slot='image']) {
+    width: 100%;
+    height: auto;
+  }
+
+  /**
+   * Card header
+   */
+  .al-c-card__header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--al-theme-space-xs);
+  }
+
+  /**
+   * Card content — every region below the media.
+   *
+   * `display: contents` by default, so the base card's box tree is byte-for-
+   * byte what it was: these regions are flex items of `.al-c-card` itself. The
+   * media variants turn it into a real padded column, which is what lets the
+   * media above it sit flush to the card's edge.
+   */
+  .al-c-card__content {
+    display: contents;
+  }
+
+  /**
+   * Card body
+   */
+  .al-c-card__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--al-theme-space-xs);
+  }
+
+  /**
+   * An unfilled `meta` / `tags` row must not leave a phantom gap behind — the
+   * content column has a `gap`, so an empty wrapper still costs a full one and
+   * the card's rhythm drifts.
+   *
+   * The test is a `has-meta` / `has-tags` attribute the component reflects onto
+   * its own host from `slotchange`. Three CSS-only approaches were tried and
+   * all fail: `slot:empty` matches the slot's FALLBACK children and never the
+   * assigned ones; `:host(:has([slot='meta']))` is the right question but
+   * `CSS.supports('selector(:host(:has(*)))')` is false; and a render-time
+   * `slotNotEmpty()` goes stale when the page swaps children later, which
+   * `slotchange` does not.
+   *
+   * Both wrappers are plain `<div>`s, NOT the `<al-layout>` inside them.
+   * Toggling the layout element directly would not work: an outer-tree rule
+   * beats a `:host` rule, so `display: block` here would override al-layout's
+   * own `:host { display: contents }` and collapse the row.
+   */
+  .al-c-card__meta,
+  .al-c-card__tags {
+    display: none;
+  }
+
+  :host([has-meta]) .al-c-card__meta {
+    display: block;
+  }
+
+  :host([has-tags]) .al-c-card__tags {
+    display: block;
+  }
+
+  /* ---------------------------------------------------------------- brand */
+
+  /**
+   * THE WHOLE CARD AS ONE LINK.
+   *
+   * The brand variants are links in their entirety, so the focus ring belongs
+   * to the card and not to anything inside it — and it is the reason none of
+   * them should ever contain a button.
+   */
+  .al-c-card--linked {
+    text-decoration: none;
+    color: inherit;
+
+    &:focus-visible {
+      @include al-focus;
+    }
+  }
+
+  /**
+   * SERVICE — the "&lt;services&gt; What we do" card.
+   *
+   * A bordered well on the brand's 40px padding step, a display-face heading
+   * with a corner glyph opposite it, and a mono supporting list. Transcribed
+   * from the treatment southleft.com carried as `.sl-service-card` in its own
+   * page CSS, which this replaces.
+   */
+  .al-c-card--service {
+    /* The brand's real card padding is 40px. `--al-theme-space-xxl` tops out
+     * at 32px, so this reaches one step further via calc() — the same
+     * expression the page CSS used. */
+    --al-card-padding: calc(var(--al-theme-space-xxl) + var(--al-theme-space-xs));
+
+    position: relative;
+    display: flex;
+    flex-flow: column nowrap;
+    box-sizing: border-box;
+    gap: 0;
+    border: var(--al-theme-border-width) solid #{$sl-border-faint};
+    background: var(--al-theme-color-background-default-strong);
+    border-radius: var(--al-theme-border-radius);
+    box-shadow: none;
+    transition: border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+
+    &:hover {
+      border-color: var(--al-theme-color-border-default-weak);
+    }
+
+    /* The glyph nudges toward its own corner on hover. It is the only motion
+     * in the card, and it reads as the affordance the whole surface is. */
+    &:hover .al-c-card__cue {
+      transform: translate(2px, -2px);
+    }
+
+    .al-c-card__header {
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--al-theme-space-lg);
+    }
+
+    /* The heading is whatever the consumer slots — an `<h3>`, or an
+     * `<al-heading>`. Only the top-level slotted node is reachable from here,
+     * which is exactly the node the heading is. */
+    ::slotted([slot='header']) {
+      font-family: var(--al-font-family-secondary, Agrandir, sans-serif);
+      font-size: 2rem;
+      font-weight: 600;
+      line-height: 1.1;
+      margin: 0;
+      color: var(--al-theme-color-content-default);
+    }
+
+    .al-c-card__cue {
+      flex: 0 0 auto;
+      width: auto;
+      font-family: #{$sl-font-mono};
+      font-size: 1.25rem;
+      line-height: 1;
+      color: var(--al-theme-color-content-primary-default);
+      transition: transform var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+    }
+
+    .al-c-card__body {
+      margin-block-start: var(--al-theme-space);
+      color: var(--al-theme-color-content-default-weak);
+      line-height: 1.6;
+    }
+
+    .al-c-card__list {
+      margin-block-start: var(--al-theme-space-lg);
+    }
+
+    /**
+     * The supporting list.
+     *
+     * `::slotted()` reaches the slotted `<ul>` and no deeper, so everything
+     * here is either set on the list itself or an INHERITED property that
+     * reaches the items on its own — font, size, line-height, colour. That
+     * covers the treatment except for one thing: the accent `›` bullet is a
+     * `::before` on each `<li>`, and a pseudo-element on a light-DOM
+     * descendant is not addressable from a shadow root in any browser.
+     *
+     * So the bullet is the consumer's one line of CSS, documented on the
+     * `list` slot and shipped with the Storybook story. It is not an oversight
+     * to be fixed here; it is the shadow boundary.
+     */
+    ::slotted(ul[slot='list']),
+    ::slotted(ol[slot='list']) {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+      margin: 0;
+      padding: 0;
+      font-family: #{$sl-font-mono};
+      font-size: 0.75rem;
+      line-height: 1rem;
+      color: var(--al-theme-color-content-default-weak);
+    }
+  }
+
+  /**
+   * TOOL — the "&lt;open-source&gt; We publish our homework" card.
+   *
+   * A mono command line for a title, a smaller body, and a footer cue pinned
+   * to the bottom edge so a row of these lines its cues up regardless of how
+   * much description each carries. Transcribed from `.sl-tool-card`.
+   */
+  .al-c-card--tool {
+    --al-card-padding: var(--al-theme-space-xl);
+
+    display: flex;
+    flex-flow: column nowrap;
+    box-sizing: border-box;
+    gap: var(--al-theme-space-sm);
+    border: var(--al-theme-border-width) solid #{$sl-border-faint};
+    background: var(--al-theme-color-background-default-strong);
+    border-radius: var(--al-theme-border-radius);
+    box-shadow: none;
+    transition: border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+
+    &:hover {
+      border-color: var(--al-theme-color-border-default-weak);
+    }
+
+    .al-c-card__body {
+      gap: var(--al-theme-space-sm);
+      color: var(--al-theme-color-content-default-weak);
+      font-size: 0.875rem;
+      line-height: 1.625;
+    }
+
+    .al-c-card__footer {
+      /* Pinned to the bottom — this is what lines a row of cards up. */
+      margin-block-start: auto;
+      padding-block-start: var(--al-theme-space-xs);
+      font-family: #{$sl-font-mono};
+      color: var(--al-theme-color-content-primary-default);
+    }
+
+    ::slotted([slot='footer']) {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+
+  /**
+   * Dashed — the "coming soon" tool card, which is not a link and centres its
+   * content instead of pinning a cue to the bottom.
+   */
+  .al-c-card--dashed {
+    border-style: dashed;
+    justify-content: center;
+  }
+
+  /**
+   * The mono command line. Rendered by the component rather than slotted
+   * because the prefix glyph carries its own colour, and `::slotted()` cannot
+   * reach a span inside a slotted paragraph.
+   */
+  .al-c-card__command {
+    margin: 0;
+    font-family: #{$sl-font-mono};
+    font-size: 0.875rem;
+    color: var(--al-theme-color-content-primary-default);
+  }
+
+  .al-c-card__command-prefix {
+    /* Muted against the accent command it introduces. Reads as chrome, not as
+     * part of what you would actually type. */
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  /**
+   * ARTICLE / WORK — the linked media card.
+   *
+   * Media flush to the card's edge, then a padded column. This is the treatment
+   * that used to be a separate `al-media-card`, and the reason it had to be one
+   * was Altitude's card: its single outer `padding` wraps the image region, so
+   * the media could never reach the edge. Here the padding is
+   * `--al-card-padding` and the media variants simply move it off the surface
+   * and onto `__content` — same anatomy, one fewer component.
+   */
+  .al-c-card--media {
+    --al-card-padding: 0;
+
+    display: flex;
+    flex-flow: column nowrap;
+    block-size: 100%;
+    box-sizing: border-box;
+    /* What makes the media sit flush inside the rounded border. */
+    overflow: hidden;
+    gap: 0;
+    border: var(--al-theme-border-width) solid #{$sl-border-faint};
+    background: var(--al-theme-color-background-default-strong);
+    border-radius: var(--al-theme-border-radius);
+    box-shadow: none;
+    transition: border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+
+    &:hover {
+      border-color: var(--al-theme-color-border-default-weak);
+    }
+
+    /**
+     * The padded column. `flex: 1` so it absorbs the leftover height in a
+     * stretched grid cell — which is what lets the footer's
+     * `margin-block-start: auto` pin to the bottom and keeps a row of cards'
+     * footer cues on one line.
+     */
+    .al-c-card__content {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: var(--al-theme-space-sm);
+      padding: var(--al-card-media-padding, var(--al-theme-space-lg));
+    }
+
+    .al-c-card__image {
+      aspect-ratio: var(--al-card-media-aspect-ratio, 16 / 9);
+      overflow: hidden;
+      border-block-end: var(--al-theme-border-width) solid #{$sl-border-faint};
+      background: var(--al-theme-color-background-default-strong);
+      display: grid;
+      place-items: center;
+      height: auto;
+
+      img {
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: cover;
+        object-position: top;
+        display: block;
+      }
+    }
+
+    .al-c-card__fallback {
+      font-family: #{$sl-font-mono};
+      color: var(--al-theme-color-content-default-weak);
+    }
+
+    /* The body carries no gap of its own here — the content column owns the
+       rhythm, and a second gap would double every step. */
+    .al-c-card__body {
+      flex: 0 1 auto;
+      gap: var(--al-theme-space-sm);
+    }
+
+    /**
+     * Typography only. The row arrangement is the `<al-layout>` this class
+     * sits on; these declarations still reach the slotted nodes because
+     * inherited properties cascade through al-layout's `display: contents`
+     * host.
+     */
+    .al-c-card__meta {
+      font-family: #{$sl-font-mono};
+      font-size: 0.8125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--al-theme-color-content-default-weak);
+    }
+
+    .al-c-card__footer {
+      /* Pinned to the bottom — the whole reason the content column is
+         `flex: 1`. */
+      margin-block-start: auto;
+      padding-block-start: var(--al-theme-space-lg);
+      font-family: #{$sl-font-mono};
+      font-size: 0.875rem;
+      color: var(--al-theme-color-content-primary-default);
+    }
+
+    /**
+     * The brand's tag chip, applied to whatever the page slots in, so the page
+     * can pass bare `<span>`s and still get the treatment. `::slotted()` can
+     * only reach the top-level assigned nodes, which is exactly the scope
+     * wanted here.
+     */
+    ::slotted([slot='tags']) {
+      display: inline-flex;
+      align-items: center;
+      font-family: #{$sl-font-mono};
+      font-size: 0.75rem;
+      color: var(--al-theme-color-content-default-weak);
+      border: var(--al-theme-border-width) solid #{$sl-border-faint};
+      border-radius: var(--al-theme-border-radius-xs);
+      padding: 0.125rem var(--al-theme-space-xs);
+    }
+  }
+
+  /**
+   * The clamped excerpt. Declared outside the media block because the clamp
+   * depth is variant-dependent and reads more clearly in one place.
+   */
+  .al-c-card__excerpt {
+    margin: 0;
+    color: var(--al-theme-color-content-default-weak);
+    font-size: var(--al-font-size-14);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: var(--al-card-line-clamp, 3);
+    line-clamp: var(--al-card-line-clamp, 3);
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /**
+   * WORK — the case-study cut. Reflected host attribute, styled
+   * `:host([variant])`: it lives in the LIGHT DOM, so a page can also write
+   * `al-card[variant='work'] { … }` and have it apply, which a shadow-internal
+   * class could never offer.
+   */
+  :host([variant='work']) .al-c-card__image {
+    aspect-ratio: var(--al-card-media-aspect-ratio, 16 / 10);
+  }
+
+  :host([variant='work']) .al-c-card__excerpt {
+    -webkit-line-clamp: var(--al-card-line-clamp, 2);
+    line-clamp: var(--al-card-line-clamp, 2);
+  }
+
+  /**
+   * The work card's rhythm is asymmetric where the article card's is uniform —
+   * a tighter base gap, with the tag row buying its extra space back. Splitting
+   * it this way leaves the article card's shared 12px untouched.
+   */
+  :host([variant='work']) .al-c-card--media .al-c-card__content {
+    gap: var(--al-theme-space-xs);
+  }
+
+  :host([variant='work']) .al-c-card__tags {
+    margin-block-start: var(--al-theme-space-xs);
+  }
+
+  /** The lead treatment for a card that spans two grid columns. */
+  :host([featured]) .al-c-card--media .al-c-card__content {
+    padding: var(--al-card-media-padding, var(--al-theme-space-xl));
+  }
+}

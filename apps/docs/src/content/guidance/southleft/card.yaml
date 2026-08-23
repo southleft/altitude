@@ -1,0 +1,168 @@
+purpose: >-
+  Southleft's implementation of the card, and a superset of Altitude's: the same
+  bounded surface with the same named regions, plus the four card treatments
+  this brand ships. `service` is the "what we do" card — a bordered well on the
+  40px padding step, a display-face heading with a corner glyph opposite it, and
+  a mono supporting list. `tool` is the "we publish our homework" card — a mono
+  command line for a title and a footer cue pinned to the bottom edge. `article`
+  and `work` are the linked media card — media flush to the card edge, then a
+  padded column carrying a mono meta row, a heading, a clamped excerpt, tag
+  chips and a footer cue.
+
+whenToUse:
+  - >-
+    You are building a grid of practice areas, offers or capabilities where each
+    entry has a heading, a short body and a list of what is included. That is
+    `variant="service"`, and the whole card is one link.
+  - >-
+    You are listing things a reader can go and run — packages, repos, CLIs —
+    where the most useful first line is the command itself. That is
+    `variant="tool"`, with the command in the `command` property.
+  - >-
+    You want the base card and nothing brand-specific. Leave `variant` unset and
+    this behaves exactly as Altitude's card does, because it is the same
+    component contract.
+  - >-
+    You are listing posts or case studies, each with artwork that should reach
+    the edges of the card. That is `variant="article"` (or `work`, the
+    case-study cut with a wider media ratio and a shallower excerpt clamp).
+  - >-
+    A row of cards should share one height and line their footer cues up. Set
+    `fill`; under `tool`, `article` and `work` the footer is pinned to the
+    bottom edge, so the cues line up however long each description runs.
+
+whenNotToUse:
+  - text: >-
+      The subject is a logo, and what you want is a wall of them at a shared
+      optical weight. That is a different problem — grid rhythm and greyscale
+      treatment, not a bounded surface per subject.
+    instead: logo-wall
+  - text: >-
+      You only need to arrange cards with spacing between them. Arrangement is
+      never a card's job — the grid the homepage lays these out in is the layout
+      primitive, not anything declared here.
+    instead: layout
+  - text: >-
+      What you are showing is one number with a label and a trend. That has its
+      own component with the typography and the delta treatment already decided.
+    instead: stat
+  - text: >-
+      The content is a quotation with an attribution. A card gives it a surface
+      but none of the semantics a quote needs.
+    instead: testimonial
+
+dos:
+  - >-
+    Use `href` rather than wrapping the card in your own `<a>`. It makes the
+    whole surface one link target with one focus ring, which is what every brand
+    variant is — a card wrapped from outside gives you a link around a link.
+  - >-
+    Let `article` and `work` pick their own heading scale. Left unset,
+    `heading-variant` resolves to `lg` for a work card or a featured article and
+    `md` otherwise, which is the judgment the consuming site used to make inline
+    at every call site.
+  - >-
+    Add the accent `›` bullets for a `service` card's list in your own
+    stylesheet, scoped to `al-card[variant='service'] ul[slot='list'] li`. The
+    component cannot do it and the reason is structural, not an oversight.
+  - >-
+    Set `command-prefix` as a kebab-case attribute, not `commandPrefix`. HTML
+    lowercases attribute names, so the camelCase spelling never reaches the
+    property and the prefix silently falls back to `$`.
+  - >-
+    Use `fill` rather than an inline `height: 100%`. `:host` is
+    `display: contents`, so a height written on `<al-card>` from outside is
+    dropped entirely.
+
+donts:
+  - >-
+    Don't put a button inside a `service`, `tool`, `article` or `work` card.
+    Each is a single link in its entirety, and a nested interactive region
+    leaves a keyboard user with no way to tell which target they are about to
+    activate.
+  - >-
+    Don't import the base `al-card` module alongside this one. Both packages
+    publish the same tag, `customElements.define` is first-come and final, and
+    the loser's markup renders into an element that never upgrades.
+  - >-
+    Don't reach for a brand variant just to get a border and some padding. Each
+    carries the brand's display face, its mono face and its own rhythm — use the
+    default variant, which is the plain surface.
+  - >-
+    Don't expect the `image` SLOT to bleed to the edge. It sits inside the
+    card's padding exactly as Altitude's does, because three example apps put an
+    `<al-avatar>` there. Edge-to-edge media is what the `image` PROPERTY plus
+    `variant="article"` or `work` gives you.
+  - >-
+    Don't slot a second heading into the `cue` slot. It is a decorative glyph
+    position, sized and coloured as chrome.
+
+accessibility:
+  - >-
+    The corner glyph is decoration on a surface that is already a link. Mark it
+    `aria-hidden="true"`, or a screen reader announces an arrow character in the
+    middle of the link's name.
+  - >-
+    Put a real heading element in the `header` slot, or use the `heading`
+    property, which renders an `<al-heading tagName="h3">`. The card's container
+    carries no heading semantics of its own, so one of the two is what gives a
+    screen-reader user a way to navigate between cards.
+  - >-
+    When `target="_blank"` is set the component adds `rel="noopener"` for you,
+    so an external card cannot ship without it by omission.
+  - >-
+    A card whose whole surface is the link needs a link name that survives being
+    read out of context. Ten cards that each resolve to "↗" are ten identical
+    entries in a list of links.
+
+content:
+  - >-
+    A `tool` card's command is the headline. Write the command a reader would
+    actually type, not a description of it — the `$` prefix is chrome and is
+    hidden from assistive technology.
+  - >-
+    Keep a `service` card's list to four items or fewer. It is set in 12px mono
+    and read at a glance in a grid, not studied.
+  - >-
+    Lead with what distinguishes this card from the one beside it. The words
+    every card in the row shares are the least useful ones in the first line.
+  - >-
+    Keep an excerpt within its clamp — three lines under `article`, two under
+    `work`. Anything past it is truncated with an ellipsis, so a sentence that
+    carries its point at the end loses it.
+
+sources:
+  - path: libs/sl-web-components/components/card/card.ts
+    contains: SUPERSET of Altitude
+    note: >-
+      The contract this guidance rests on — every region and property of the
+      base card, plus the two brand variants.
+  - path: libs/sl-web-components/components/card/card.ts
+    contains: first-come and final
+    note: >-
+      Why the base card module must not be imported alongside this one, and why
+      this component re-implements rather than extends.
+  - path: libs/sl-web-components/components/card/card.ts
+    contains: forced a second component does not apply
+    note: >-
+      Why the media treatment is a variant here rather than the separate
+      component it used to be — this card owns its own padding.
+  - path: libs/sl-web-components/components/card/card.ts
+    contains: noopener
+    note: >-
+      The default applied whenever the link opens in a new tab, which the
+      accessibility note depends on.
+  - path: libs/sl-web-components/components/card/card.scss
+    contains: not addressable from a shadow root
+    note: >-
+      Why the accent list bullet is the consumer's one line of CSS rather than
+      something the component owns.
+  - path: apps/southleft/src/styles/layout.css
+    contains: not an omission in the component
+    note: >-
+      The consuming site's record of the same boundary — the one node inside a
+      slotted row it still has to colour itself.
+  - path: AGENTS.md
+    contains: Arrangement vs. semantics
+    note: >-
+      The rule that keeps arrangement out of content components like this one.

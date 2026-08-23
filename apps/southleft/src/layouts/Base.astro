@@ -179,7 +179,15 @@ const ldNodes = [organizationLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : 
       import '@southleft/al-web-components/components/breadcrumbs-item';
       import '@southleft/al-web-components/components/breadcrumbs';
       import '@southleft/al-web-components/components/button';
-      import '@southleft/al-web-components/components/card';
+      /*
+       * THE BRAND IMPLEMENTATION OF `al-card` — same rule as the header and
+       * footer below. Southleft's card is a SUPERSET of Altitude's: every
+       * region and property the base card has, plus the `service` and `tool`
+       * variants this site's homepage is built from. Importing the base module
+       * alongside it would register whichever evaluated first and the other's
+       * markup would never upgrade.
+       */
+      import '@southleft/sl-web-components/components/card';
       import '@southleft/al-web-components/components/chip';
       import '@southleft/al-web-components/components/divider';
       /*
