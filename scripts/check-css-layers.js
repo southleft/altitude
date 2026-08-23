@@ -142,7 +142,7 @@ function main() {
   if (!fs.existsSync(GENERATED_HOST)) {
     console.log(
       '[css-layers] note — styles/dist-v5/scss/host/ not built; generated selectors not linted. ' +
-        'Run `pnpm --filter al-web-components build:tokens`.'
+        'Run `pnpm --filter @southleft/al-web-components build:tokens`.'
     );
   } else {
     for (const name of fs.readdirSync(GENERATED_HOST).sort()) {

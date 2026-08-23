@@ -4,7 +4,7 @@
 // accepts. No "preset" concept exists in the token layer, the emitter, the DTCG
 // source, or the component API — the tuples live here and nowhere else. Both
 // Storybooks read this one array: the web-components manager renders it as a
-// light/dark toggle (`.storybook/manager.js`), al-react renders it as a
+// light/dark toggle (`.storybook/manager.js`), @southleft/al-react renders it as a
 // toolbar dropdown, and both share the `withPreset` decorator shape.
 //
 // SCOPE: this list is deliberately just Altitude light and Altitude dark.
@@ -76,11 +76,11 @@ export const DEFAULT_PRESET_ID = DARK_PRESET_ID;
 // WHY A SEPARATE ARRAY RATHER THAN TWO MORE ENTRIES IN `PRESETS`:
 // `manager.js` does not read `PRESETS` as a list at all — it imports
 // `LIGHT_PRESET_ID` / `DARK_PRESET_ID` and toggles between those two strings
-// (`manager.js:212-220`), and al-react renders `PRESET_TOOLBAR_ITEMS`, which is
-// `PRESETS.map(...)`. So appending here would silently grow al-react's dropdown
+// (`manager.js:212-220`), and @southleft/al-react renders `PRESET_TOOLBAR_ITEMS`, which is
+// `PRESETS.map(...)`. So appending here would silently grow @southleft/al-react's dropdown
 // to four entries and put two brands in a Storybook that documents one. Keeping
 // `PRESETS` byte-identical means every existing consumer — `manager.js`,
-// `preview.ts`, `with-preset.ts`, al-react's dropdown — is provably unchanged,
+// `preview.ts`, `with-preset.ts`, @southleft/al-react's dropdown — is provably unchanged,
 // and the SL config opts in explicitly by importing the `SOUTHLEFT_*` names.
 //
 // (The earlier `PRESETS[0]` / `PRESETS[1]` reading of "manager toggles between
@@ -121,5 +121,5 @@ export function getPreset(id: unknown, fallbackId: string = DEFAULT_PRESET_ID): 
   return found ?? ALL_PRESETS.find((p) => p.id === fallbackId) ?? PRESETS[0];
 }
 
-/** Toolbar items, derived — never hand-written. Consumed by al-react's dropdown. */
+/** Toolbar items, derived — never hand-written. Consumed by @southleft/al-react's dropdown. */
 export const PRESET_TOOLBAR_ITEMS = PRESETS.map((p) => ({ value: p.id, title: p.label }));

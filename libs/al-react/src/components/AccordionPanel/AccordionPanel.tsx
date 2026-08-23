@@ -1,8 +1,8 @@
 'use client';
 
 import { createComponent } from '@lit/react';
-import { ALAccordionPanel as ALWebAccordionPanel } from 'al-web-components/components/accordion-panel';
-import register from 'al-web-components/directives/register';
+import { ALAccordionPanel as ALWebAccordionPanel } from '@southleft/al-web-components/components/accordion-panel';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

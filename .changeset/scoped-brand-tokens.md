@@ -1,6 +1,6 @@
 ---
-"al-web-components": minor
-"al-react": minor
+"@southleft/al-web-components": minor
+"@southleft/al-react": minor
 ---
 
 `<al-theme brand>` now actually applies tokens, and three inert rules in

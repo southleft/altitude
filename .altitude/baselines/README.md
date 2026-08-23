@@ -45,7 +45,7 @@ regressions — lives in
 The short version:
 
 ```bash
-pnpm --filter al-web-components build:tokens   # styles/dist/ is gitignored; capture exits 1 without this
+pnpm --filter @southleft/al-web-components build:tokens   # styles/dist/ is gitignored; capture exits 1 without this
 node scripts/test-tokens-contract.js           # inspect the drift BEFORE overwriting
 pnpm run baselines:tokens                      # regenerate
 git diff --stat .altitude/baselines/tokens/snapshot.json
@@ -121,11 +121,11 @@ pnpm run build
 
 ```
 totalBytes  3,330,888 -> 3,524,525   (+193,637, +5.81 %)
-  al-web-components  2,896,160 -> 3,002,910  (+106,750,  584 -> 590 files)
-  al-react             434,728 ->   521,615  ( +86,887,  425 -> 432 files)
+  @southleft/al-web-components  2,896,160 -> 3,002,910  (+106,750,  584 -> 590 files)
+  @southleft/al-react             434,728 ->   521,615  ( +86,887,  425 -> 432 files)
 ```
 
-**al-web-components** — 6 files added, 28 changed, 0 removed:
+**@southleft/al-web-components** — 6 files added, 28 changed, 0 removed:
 
 | bytes | what | spec |
 |---|---|---|
@@ -141,18 +141,18 @@ That reconciles with the three predicted deltas (~+69 KB, ~+12 KB, and the
 directly-measured +18,263 B), which is the check worth doing: the recapture is
 verifiable rather than a rubber stamp.
 
-**al-react** — +7 files net, and almost none of it is new code:
+**@southleft/al-react** — +7 files net, and almost none of it is new code:
 
 - 406 files moved `dist/src/**` → `dist/**`. `tsconfig` now pins
   `rootDir: "src"`, so the long-declared `"main": "dist/index.js"` is finally
   a real file. Size-neutral per file.
 - `dist/package.json` (1,302 B) is no longer emitted — it was a
-  `resolveJsonModule` artifact that also broke every al-react Storybook story
+  `resolveJsonModule` artifact that also broke every @southleft/al-react Storybook story
   by shadowing `/package.json` under `staticDirs`.
-- +12,074 B across 16 `css/` files mirrored from al-web-components.
+- +12,074 B across 16 `css/` files mirrored from @southleft/al-web-components.
 - The rest is the new `<ALTheme>` wrapper.
 
-**Why al-react moved at all**, when the last handoff predicted it would not:
+**Why @southleft/al-react moved at all**, when the last handoff predicted it would not:
 `libs/al-react`'s two build copies used `cp -r … 2>/dev/null || true`, and
 `cp` does not exist in the shell npm uses on Windows. Both copies failed on
 every Windows build and the errors were swallowed, so `dist/` was missing the
@@ -170,16 +170,16 @@ recording here is the delta **this branch** contributed on top of it.
 
 ```
 totalBytes  6,814,415 -> 6,976,100   (+161,685, +2.37 %)
-  al-web-components   +74,705 B  (+6 files)
-  al-react            +86,980 B  (+7 files)
+  @southleft/al-web-components   +74,705 B  (+6 files)
+  @southleft/al-react            +86,980 B  (+7 files)
 ```
 
 Both numbers reproduce the per-package table above, unchanged by the merge:
 
-- **al-web-components** — the four `altitude` brand bundles, and
+- **@southleft/al-web-components** — the four `altitude` brand bundles, and
   `components/theme/theme.js` growing +21,549 B as it stops being a 35-byte
   stub and starts carrying the six `:host([brand])` partials.
-- **al-react** — the `dist/src/**` → `dist/**` move, `dist/package.json` no
+- **@southleft/al-react** — the `dist/src/**` → `dist/**` move, `dist/package.json` no
   longer emitted, the mirrored `css/` tree, and the `<ALTheme>` wrapper.
 
 The CR guard in `capture-bundle-baseline.js` did **not** fire on this capture,

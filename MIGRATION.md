@@ -7,8 +7,8 @@ two edits + a `pnpm upgrade`.
 ## TL;DR
 
 ```diff
-- import { register } from 'al-web-components';
-+ import { registerAltitude } from 'al-web-components';
+- import { register } from '@southleft/al-web-components';
++ import { registerAltitude } from '@southleft/al-web-components';
 - register({ elements: [...], suffix: process.env.VERSION });
 + registerAltitude({ mode: 'versioned', suffix: process.env.VERSION }, [...]);
 ```
@@ -135,7 +135,7 @@ nothing breaks — but new code should use the explicit form.
 `stable` is the default for new apps. `versioned` is for micro-frontends.
 `manual` is for tests / SSR.
 
-## 3. Upgrade React (if consuming `al-react`)
+## 3. Upgrade React (if consuming `@southleft/al-react`)
 
 ```diff
 - "react": "18.2.0",
@@ -144,17 +144,17 @@ nothing breaks — but new code should use the explicit form.
 + "react-dom": "^19",
 ```
 
-al-react's `@lit/react`-backed wrappers handle the rest. R19 + custom
+@southleft/al-react's `@lit/react`-backed wrappers handle the rest. R19 + custom
 elements still requires the explicit `events` map on each wrapper for
 listeners to bind — every shipped wrapper already declares this.
 
 ### `<ALTheme>` — the React theming host
 
-`al-react` now ships a wrapper for `<al-theme>`, so a React tree can be
+`@southleft/al-react` now ships a wrapper for `<al-theme>`, so a React tree can be
 themed without dropping to raw custom elements:
 
 ```tsx
-import { ALTheme, ALButton } from 'al-react';
+import { ALTheme, ALButton } from '@southleft/al-react';
 
 <ALTheme brand="southleft" mode="dark">
   <ALButton>Label</ALButton>
@@ -163,7 +163,7 @@ import { ALTheme, ALButton } from 'al-react';
 
 Two things to know.
 
-**The tag is versioned.** `al-react` registers with
+**The tag is versioned.** `@southleft/al-react` registers with
 `suffix: PackageJson.version`, so the element in the DOM is
 `<al-theme-1-0-0>`, not `<al-theme>`. Anything that looks a theme host up by
 tag name will not find it — including `<al-theme-switcher>`, whose
@@ -194,8 +194,8 @@ running Storybooks through every preset and fails if the toolbars, the host
 attributes, or the computed brand tokens diverge. Point it at non-default ports
 with `--wc <url> --react <url>`.
 
-The al-react Storybook requires a built al-web-components
-(`pnpm --filter al-web-components build`); it now says so instead of failing on
+The @southleft/al-react Storybook requires a built @southleft/al-web-components
+(`pnpm --filter @southleft/al-web-components build`); it now says so instead of failing on
 an unresolved import.
 
 ## 4. New props on existing components
@@ -221,8 +221,8 @@ New code should use the name-based API with an explicit registration, which is
 tree-shakeable and renders synchronously (SSR-safe, no placeholder flash):
 
 ```ts
-import { caretDown } from 'al-web-components/dist/components/icon/glyphs.js';
-import { registerIcons } from 'al-web-components/dist/components/icon/registry.js';
+import { caretDown } from '@southleft/al-web-components/dist/components/icon/glyphs.js';
+import { registerIcons } from '@southleft/al-web-components/dist/components/icon/registry.js';
 registerIcons({ 'caret-down': caretDown });
 ```
 ```html
@@ -233,7 +233,7 @@ If icon names come from data you don't control, opt into the loader once —
 ~13 KB gzipped plus a request per icon, and it cannot render server-side:
 
 ```ts
-import 'al-web-components/dist/components/icon/lazy.js';
+import '@southleft/al-web-components/dist/components/icon/lazy.js';
 ```
 
 ### Legacy name → Phosphor name

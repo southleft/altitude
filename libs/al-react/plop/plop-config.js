@@ -2,13 +2,13 @@
  * Altitude is LAYOUT-FIRST: <al-layout> is the single arrangement primitive.
  * React wrappers exist 1:1 for shipped web components — never scaffold a
  * wrapper for a layout/group component that no longer exists in
- * al-web-components (ALButtonGroup, ALLayoutContainer, ALLayoutSection,
+ * @southleft/al-web-components (ALButtonGroup, ALLayoutContainer, ALLayoutSection,
  * ALBentoGrid, ALSplitContent, ALChipGroup, ALToastGroup were all removed).
  * See "Arrangement vs. semantics" in AGENTS.md.
  */
 const LAYOUT_SUSPECT = /(Group|Container|Wrapper|Section|Grid|Stack|Row|Column|Cluster|Split|Bento)$/;
 
-// These groups survive in al-web-components (they own semantics) and may
+// These groups survive in @southleft/al-web-components (they own semantics) and may
 // legitimately get a React wrapper.
 const EXISTING_SEMANTIC_GROUPS = ['CheckboxGroup', 'RadioGroup', 'ToggleButtonGroup'];
 
@@ -16,7 +16,7 @@ module.exports = (plop) => {
   plop.setHelper('upperCase', (txt) => txt.toUpperCase());
 
   plop.setGenerator('component', {
-    description: 'Create a React wrapper for an EXISTING al-web-components element (layout-first: no new arrangement wrappers)',
+    description: 'Create a React wrapper for an EXISTING @southleft/al-web-components element (layout-first: no new arrangement wrappers)',
     prompts: [
       {
         type: 'input',
@@ -40,7 +40,7 @@ module.exports = (plop) => {
         message:
           'STOP — this name looks like a layout/wrapper component. Arrangement belongs to <al-layout> ' +
           '(ALLayout on the React side); wrappers owning no behavior/ARIA/state were removed from Altitude. ' +
-          'Does the underlying al-web-components element actually exist AND own real semantics?'
+          'Does the underlying @southleft/al-web-components element actually exist AND own real semantics?'
       }
     ],
     actions: (data) => {
@@ -60,7 +60,7 @@ module.exports = (plop) => {
         {
           type: 'add',
           path: './../src/components/{{pascalCase name}}/index.tsx',
-          // `'use client'` on every emitted module: al-react wrappers all call
+          // `'use client'` on every emitted module: @southleft/al-react wrappers all call
           // customElements.define at module scope, so they can only run on the
           // client. Without the directive Next.js App Router / RSC cannot import
           // any of them. Keep this in sync with templates/component/Component.tsx.hbs.

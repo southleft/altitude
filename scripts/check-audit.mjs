@@ -12,10 +12,10 @@
  * So this gate has two tiers, and both can actually fail:
  *
  *   SHIPPED (fatal at `high`): advisories whose dependency path runs through
- *     al-web-components or al-react — the two packages that get published. Code
+ *     @southleft/al-web-components or @southleft/al-react — the two packages that get published. Code
  *     here lands in consumers' apps. This tier is currently EMPTY and the gate
  *     exists to keep it that way. (It was not empty before: nanoid, a direct
- *     runtime dependency of al-web-components used for ARIA id generation,
+ *     runtime dependency of @southleft/al-web-components used for ARIA id generation,
  *     carried a high advisory until it was bumped to 5.1.16.)
  *
  *   WORKSPACE (fatal at `critical`): everything else in the production graph —
@@ -38,7 +38,7 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const ALLOWLIST_PATH = join(REPO_ROOT, '.altitude', 'audit-allowlist.json');
 
 /** Packages that are actually published. A vulnerability here reaches consumers. */
-const PUBLISHED = ['al-web-components', 'al-react'];
+const PUBLISHED = ['@southleft/al-web-components', '@southleft/al-react'];
 
 const RANK = { info: 0, low: 1, moderate: 2, high: 3, critical: 4 };
 const SHIPPED_FATAL_AT = RANK.high;

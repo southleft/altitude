@@ -197,7 +197,7 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build tokens
-        run: pnpm --filter al-web-components build:tokens
+        run: pnpm --filter @southleft/al-web-components build:tokens
       - name: Re-snapshot tokens (to a temp file) and compare hash to committed
         run: |
           cp .altitude/baselines/tokens/snapshot.json /tmp/committed.json
@@ -260,11 +260,11 @@ jobs:
       - name: Build webpack lib (baseline)
         run: pnpm run build
       - name: Build Vite spike
-        run: pnpm --filter al-web-components build:vite-spike
+        run: pnpm --filter @southleft/al-web-components build:vite-spike
       - name: T2.1 — Vite spike bundle assertions
         run: node scripts/check-vite-spike.js
       - name: Build Vite lib
-        run: pnpm --filter al-web-components build:vite
+        run: pnpm --filter @southleft/al-web-components build:vite
       - name: T2.2 — Vite vs webpack export parity (zero removals)
         run: node scripts/check-vite-export-parity.js
       - name: T2.2 — bundle.ts completeness (no component drift)
@@ -286,9 +286,9 @@ jobs:
       # Tokens first: build:tokens writes styles/dist/tokens.json, which is the
       # only input to the AI-readiness tokens digest checked for drift below.
       - name: Build tokens (+ tokens digest)
-        run: pnpm --filter al-web-components build:tokens
+        run: pnpm --filter @southleft/al-web-components build:tokens
       - name: Build CEM + schemas (+ CEM digest)
-        run: pnpm --filter al-web-components build:custom-elements.json
+        run: pnpm --filter @southleft/al-web-components build:custom-elements.json
       # The whole generated chain — custom-elements.json, the 105 per-component
       # schemas, schemas/INDEX.md, and both AI-readiness digests — is committed
       # and read by agents (the MCP server, cli/validate.mjs, the Storybook docs,
@@ -303,7 +303,7 @@ jobs:
             .altitude/ai-readiness \
             || {
               echo "::error::Generated output differs from the committed copy."
-              echo "Run: pnpm --filter al-web-components build:tokens && pnpm --filter al-web-components build:custom-elements.json"
+              echo "Run: pnpm --filter @southleft/al-web-components build:tokens && pnpm --filter @southleft/al-web-components build:custom-elements.json"
               echo "then commit the regenerated files."
               exit 1
             }
@@ -374,7 +374,7 @@ jobs:
       # The empty-event-description half reads the generated CEM, so it must be
       # regenerated here rather than trusting the committed copy.
       - name: Regenerate the CEM
-        run: pnpm --filter al-web-components build:custom-elements.json
+        run: pnpm --filter @southleft/al-web-components build:custom-elements.json
       - name: JSDoc dialect + CEM event descriptions
         run: pnpm run check:jsdoc
 
@@ -443,7 +443,7 @@ jobs:
       - name: Build libs
         run: pnpm run build
       - name: Build static Storybook
-        run: pnpm --filter al-web-components build:storybook --output-dir /tmp/sb-static
+        run: pnpm --filter @southleft/al-web-components build:storybook --output-dir /tmp/sb-static
       - name: Serve static Storybook
         run: nohup npx -y http-server /tmp/sb-static -p 6006 -s > /tmp/sb-serve.log 2>&1 &
       - name: Wait for Storybook
@@ -464,7 +464,7 @@ jobs:
       # This job now fails honestly. It stays red until accessibility-remediation
       # lands, which is exactly the dependency order.json already encodes.
       - name: Run test-storybook (interactions + axe-core a11y)
-        run: pnpm --filter al-web-components test
+        run: pnpm --filter @southleft/al-web-components test
 
   a11y:
     name: T6.3 a11y CI gate (axe-core)
@@ -560,9 +560,9 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build the artifacts the MCP server reads
-        run: pnpm --filter al-web-components build:tokens && pnpm --filter al-web-components build:custom-elements.json
+        run: pnpm --filter @southleft/al-web-components build:tokens && pnpm --filter @southleft/al-web-components build:custom-elements.json
       - name: MCP smoke test
-        run: pnpm --filter altitude-mcp test
+        run: pnpm --filter @southleft/altitude-mcp test
 
   unit-tests:
     # B2 - the component libraries had zero unit tests. Vitest 3 in browser mode
@@ -584,7 +584,7 @@ jobs:
         run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
-      # The `react` vitest project resolves al-web-components through its
+      # The `react` vitest project resolves @southleft/al-web-components through its
       # exports map, i.e. dist/. Without this build it would test a library that
       # does not exist yet.
       - name: Build libraries
@@ -620,18 +620,18 @@ jobs:
         run: pnpm run check:ds-projects
       - name: Southleft scope boundary
         run: pnpm run check:sl-scope
-      # sl-web-components was in NO build pipeline and NO CI job — its own
+      # @southleft/sl-web-components was in NO build pipeline and NO CI job — its own
       # package.json said so. Its `tsc` step had been failing on TS2580 (a bare
-      # `process` reference in al-web-components/directives/register.ts, which it
+      # `process` reference in @southleft/al-web-components/directives/register.ts, which it
       # compiles from source without @types/node) and nothing noticed, because
-      # nothing ran it. It needs al-web-components built first: it compiles that
+      # nothing ran it. It needs @southleft/al-web-components built first: it compiles that
       # package's source directly rather than consuming its dist.
-      - name: Build al-web-components (sl-web-components compiles its source)
-        run: pnpm --filter al-web-components build
-      - name: sl-web-components builds
-        run: pnpm --filter sl-web-components build
+      - name: Build @southleft/al-web-components (@southleft/sl-web-components compiles its source)
+        run: pnpm --filter @southleft/al-web-components build
+      - name: @southleft/sl-web-components builds
+        run: pnpm --filter @southleft/sl-web-components build
       - name: Build tokens (brand distinctiveness reads built output)
-        run: pnpm --filter al-web-components build:tokens
+        run: pnpm --filter @southleft/al-web-components build:tokens
       - name: Brands are distinguishable
         run: pnpm run test:brands
       - name: No phantom tokens (read via var(), never emitted)

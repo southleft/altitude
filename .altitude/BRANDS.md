@@ -329,7 +329,7 @@ this and should be read as the **dark ("ink")** identity only.
 ## 8. Verification
 
 ```bash
-pnpm --filter al-web-components build:tokens
+pnpm --filter @southleft/al-web-components build:tokens
 pnpm test:brands        # token-level assertions
 pnpm brands:compare     # rendered check + regenerates brands.dark.png
 ```
@@ -368,10 +368,10 @@ files with CRLF churn. All three are fixed:
   is byte-reproducible. A Windows capture is now byte-identical to a Linux one
   (verified against a real Linux build: same sha256, all 1022 files equal).
   `capture-bundle-baseline.js` refuses to write a snapshot from a CRLF tree.
-- al-react's `cp -r … 2>/dev/null || true` steps are now
+- @southleft/al-react's `cp -r … 2>/dev/null || true` steps are now
   `libs/al-react/scripts/copy-dist-assets.mjs`, which fails loudly.
 - The CEM and schema emitters normalize `\r` and stable-sort modules, so
-  `pnpm --filter al-web-components build` is a genuine no-op on a clean tree.
+  `pnpm --filter @southleft/al-web-components build` is a genuine no-op on a clean tree.
 
 The baseline was recaptured on 2026-07-28 and includes the four `altitude`
 bundles. Details: `.altitude/baselines/README.md`.

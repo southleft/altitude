@@ -12,7 +12,7 @@ import type { ALIconWeight } from './types';
  *
  * Await this before rendering to make the synchronous `getIcon` fast path hit:
  *
- *   import { preloadIcons } from 'al-web-components/dist/components/icon/preload-node.js';
+ *   import { preloadIcons } from '@southleft/al-web-components/dist/components/icon/preload-node.js';
  *   await preloadIcons(['caret-down', 'x', 'magnifying-glass']);
  *   const ssrResult = render(template);
  *

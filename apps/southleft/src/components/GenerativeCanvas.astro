@@ -20,7 +20,7 @@
  *     hardcoded hex, so every one of v5's eight palette primitives is read
  *     at runtime out of a CSS custom property. All eight have an exact
  *     `--al-color-brand-*` equivalent in the southleft brand recipe (they
- *     are declared once on `:root` in al-web-components/css/main.css and
+ *     are declared once on `:root` in @southleft/al-web-components/css/main.css and
  *     are mode-invariant, exactly like v5's `--sl-color-*` scale), so the
  *     mapping is literal:
  *
@@ -201,7 +201,7 @@
 
     // Every color in the artwork is READ from a design token at draw time —
     // never literal in this file (scripts/check-altitude-only.mjs). The
-    // brand primitives live on `:root` (al-web-components/css/main.css);
+    // brand primitives live on `:root` (@southleft/al-web-components/css/main.css);
     // the resolved text color of the canvas itself is the last-ditch
     // fallback so a missing token can never produce an invalid fillStyle.
     const cssVar = (name: string) =>

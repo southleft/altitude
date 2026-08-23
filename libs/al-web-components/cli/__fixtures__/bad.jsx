@@ -1,5 +1,5 @@
-// Fixture: al-react JSX usage. Each flagged line is a distinct violation the validator MUST catch.
-import { ALButton, ALCard, ALBadge, ALFancyThing } from 'al-react';
+// Fixture: @southleft/al-react JSX usage. Each flagged line is a distinct violation the validator MUST catch.
+import { ALButton, ALCard, ALBadge, ALFancyThing } from '@southleft/al-react';
 
 export function Bad({ rest }) {
   return (

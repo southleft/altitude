@@ -12,8 +12,8 @@ Altitude ships the full [Phosphor](https://phosphoricons.com) icon set — 1,512
 Register the icons you use. This is tree-shakeable and renders synchronously, so it works under SSR and never flashes an empty box:
 
 ```js
-import { caretDown, magnifyingGlass } from 'al-web-components/dist/components/icon/glyphs.js';
-import { registerIcons } from 'al-web-components/dist/components/icon/registry.js';
+import { caretDown, magnifyingGlass } from '@southleft/al-web-components/dist/components/icon/glyphs.js';
+import { registerIcons } from '@southleft/al-web-components/dist/components/icon/registry.js';
 
 registerIcons({ 'caret-down': caretDown, 'magnifying-glass': magnifyingGlass });
 ```
@@ -30,7 +30,7 @@ Set `iconTitle` when the icon carries meaning on its own — it becomes the acce
 If icon names come from data you do not control, opt into the loader once. This costs ~13 KB gzipped plus one request per icon, and it cannot render server-side:
 
 ```js
-import 'al-web-components/dist/components/icon/lazy.js';
+import '@southleft/al-web-components/dist/components/icon/lazy.js';
 ```
 
 ## Deprecated elements

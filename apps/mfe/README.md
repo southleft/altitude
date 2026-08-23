@@ -14,14 +14,14 @@ versioned registration under a `shell` suffix — see `src/main.js`. There is
 no `window.alAutoRegistry` anywhere in this fixture: every Altitude tag on
 the page is a suffixed alias produced by `registerAltitude`.
 
-When a real second copy of `al-web-components` is published, swap the
+When a real second copy of `@southleft/al-web-components` is published, swap the
 shared import with two version-pinned packages; the rest of this wiring
 stays identical.
 
 ## Run locally
 
 ```bash
-pnpm --filter al-web-components build
+pnpm --filter @southleft/al-web-components build
 pnpm --filter al-app-mfe start    # Vite dev server on :5175
 pnpm --filter al-app-mfe build
 pnpm test:vrt --grep mfe           # Playwright versioned-registration test
@@ -30,8 +30,8 @@ pnpm test:vrt --grep mfe           # Playwright versioned-registration test
 ## How the API is used
 
 ```js
-import { registerAltitude } from 'al-web-components/directives/register';
-import { ALButton } from 'al-web-components/components/button';
+import { registerAltitude } from '@southleft/al-web-components/directives/register';
+import { ALButton } from '@southleft/al-web-components/components/button';
 
 const map = registerAltitude({ mode: 'versioned', suffix: '1-0-0' }, [
   [ALButton.el, ALButton],

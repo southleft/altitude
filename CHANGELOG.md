@@ -1,7 +1,7 @@
 # Changelog
 
-All notable changes to the Altitude design system (`al-web-components` and
-`al-react`) are documented here.
+All notable changes to the Altitude design system (`@southleft/al-web-components` and
+`@southleft/al-react`) are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -70,7 +70,7 @@ T6.4 publish time.
 - **Node**: 20 → **22.18 LTS** (pinned via `.nvmrc`).
 - **Lit**: 3.1 → **3.3**. **TypeScript**: 5.3 → **5.9**. **date-fns**: 3 → **4**.
   **ESLint**: 8 → **9** flat config + typescript-eslint 8.
-- **React**: 18.2 → **19** across `al-react` + the React fixture app.
+- **React**: 18.2 → **19** across `@southleft/al-react` + the React fixture app.
 - `ALElement.getSharedThemeSheet()` now adopts only the ~7 KB utility CSS
   (`styles/shadow-utilities.scss`) into every shadow root, instead of the
   legacy 43 KB main.scss — enables scoped-complete components without

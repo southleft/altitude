@@ -16,8 +16,8 @@ Design system created by Southleft.com. Find all documentation on [ZeroHeight](h
 ```bash
 nvm use           # Node 22 LTS (pinned in .nvmrc)
 pnpm install
-pnpm --filter al-web-components start   # Storybook on :6006
-pnpm --filter al-react start            # Storybook on :9009
+pnpm --filter @southleft/al-web-components start   # Storybook on :6006
+pnpm --filter @southleft/al-react start            # Storybook on :9009
 ```
 
 See `CONTRIBUTING.md` for the full development workflow.

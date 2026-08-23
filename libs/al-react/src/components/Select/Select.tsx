@@ -1,8 +1,8 @@
 'use client';
 
 import { createComponent } from '@lit/react';
-import { ALSelect as ALWebSelect } from 'al-web-components/components/select';
-import register from 'al-web-components/directives/register';
+import { ALSelect as ALWebSelect } from '@southleft/al-web-components/components/select';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

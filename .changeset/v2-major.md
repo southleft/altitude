@@ -1,6 +1,6 @@
 ---
-"al-web-components": major
-"al-react": major
+"@southleft/al-web-components": major
+"@southleft/al-react": major
 ---
 
 Altitude v2 — scoped theming, AI contracts, modern toolchain.
@@ -42,7 +42,7 @@ guide and codemods. Most consumers can:
    `<style id="al-tokens-sheet">` shim.
 2. Swap calls to the legacy `register({ elements, suffix })` for
    `registerAltitude({ mode: 'stable' }, elements)`.
-3. Pin `react / react-dom` to `^19` if consuming `al-react`.
+3. Pin `react / react-dom` to `^19` if consuming `@southleft/al-react`.
 
 The 1.x → 2.x migration is staged across all 65 components in
 `.altitude/migration.json`; CI rejects feature work on components that

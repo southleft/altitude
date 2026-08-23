@@ -4,7 +4,7 @@
 //
 // Four sections beyond the existing open-source tool grid:
 //   (a) live token tree — from THIS app's own `/tokens.json` contract
-//       (al-web-components/tokens.json, re-served verbatim by
+//       (@southleft/al-web-components/tokens.json, re-served verbatim by
 //       src/pages/tokens.json.ts) — grouped by tier, searchable.
 //   (b) tier <-> Figma collection mapping table, sourced from
 //       .altitude/FIGMA-SYNC.md — kept accurate to that doc.
@@ -17,7 +17,7 @@ import { resolve } from 'node:path';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import CTABand from '../../components/CTABand.astro';
-import tokens from 'al-web-components/tokens.json';
+import tokens from '@southleft/al-web-components/tokens.json';
 
 const oss = [
   { name: 'figma-console-mcp', href: 'https://github.com/southleft/figma-console-mcp', desc: 'AI-powered design system management inside Figma.' },
@@ -297,8 +297,8 @@ try {
 </Base>
 
 <script>
-  import 'al-web-components/components/table';
-  import 'al-web-components/components/input';
+  import '@southleft/al-web-components/components/table';
+  import '@southleft/al-web-components/components/input';
 
   const search = document.getElementById('sl-token-search') as (HTMLElement & { value?: string }) | null;
   const rows = Array.from(document.querySelectorAll<HTMLElement>('.sl-token-row'));

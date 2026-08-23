@@ -3,7 +3,7 @@
 // WHY THIS FILE EXISTS AT ALL
 // The documentation ELEMENTS are shared: `<utilities-grid>`, `<utilities-spacing>`
 // and `<utilities-typography>` are the very same Lit custom elements the
-// web-components Storybook renders, imported below from al-web-components
+// web-components Storybook renders, imported below from @southleft/al-web-components
 // source. Only the CSF wrapper is re-authored, and it has to be:
 //
 //   * a Storybook has exactly ONE renderer, and this one is
@@ -19,7 +19,7 @@
 // as attributes.
 //
 // Keep the `title` byte-identical to
-// `al-web-components/.storybook/components/utilities/utilities.stories.ts` so
+// `@southleft/al-web-components/.storybook/components/utilities/utilities.stories.ts` so
 // the page sits at the same place in both sidebars.
 
 import type { Meta, StoryObj } from '@storybook/react-vite';

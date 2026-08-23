@@ -1,20 +1,20 @@
-# al-react
+# @southleft/al-react
 
 The React powered design system for web applications.
 
 React 19 wrappers (`@lit/react` `createComponent`) around the Lit components in
-`al-web-components`. Registration is **versioned** — `suffix:
+`@southleft/al-web-components`. Registration is **versioned** — `suffix:
 PackageJson.version` — so the tags in the DOM are `al-button-1-0-0`,
 `al-theme-1-0-0`, and so on.
 
 ## Prerequisite
 
-`al-web-components` must be built first. Every wrapper imports from its
+`@southleft/al-web-components` must be built first. Every wrapper imports from its
 `dist/`, and the Storybook preview injects `dist/css/main.css`.
 
 ```sh
-pnpm --filter al-web-components build
-pnpm --filter al-react start          # Storybook on 9009
+pnpm --filter @southleft/al-web-components build
+pnpm --filter @southleft/al-react start          # Storybook on 9009
 ```
 
 `.storybook/main.ts` checks for that build and fails with the command above if
@@ -27,7 +27,7 @@ should theme must be inside it, and two subtrees can carry different brands on
 one page.
 
 ```tsx
-import { ALTheme, ALButton } from 'al-react';
+import { ALTheme, ALButton } from '@southleft/al-react';
 
 <ALTheme brand="southleft" mode="dark" contrast="more">
   <ALButton>Label</ALButton>
@@ -58,7 +58,7 @@ match the versioned `al-theme-1-0-0` tag — set axes on `<ALTheme>` instead.
 
 The **Preset** toolbar dropdown snaps brand + mode + density + contrast
 together, and a global decorator wraps every story in `<ALTheme>`. The preset
-list is imported from `al-web-components/.storybook/presets.ts` — the same
+list is imported from `@southleft/al-web-components/.storybook/presets.ts` — the same
 module the web-components Storybook reads, so the two cannot drift. Adding a
 preset there makes it appear in both.
 
@@ -73,7 +73,7 @@ computed brand tokens diverge.
 ## Generating a wrapper
 
 ```sh
-pnpm --filter al-react plop        # `component` generator, PascalCase name
+pnpm --filter @southleft/al-react plop        # `component` generator, PascalCase name
 ```
 
 It writes `src/components/<Name>/{<Name>.tsx,index.tsx,<Name>.stories.tsx}` and

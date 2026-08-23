@@ -129,7 +129,7 @@ function classToSchema(c, migration) {
 
 function main() {
   if (!fs.existsSync(CEM_PATH)) {
-    console.error('[schemas] missing CEM — run yarn workspace al-web-components build:custom-elements.json first');
+    console.error('[schemas] missing CEM — run yarn workspace @southleft/al-web-components build:custom-elements.json first');
     process.exit(1);
   }
   const cem = JSON.parse(fs.readFileSync(CEM_PATH, 'utf8'));

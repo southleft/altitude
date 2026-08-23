@@ -63,7 +63,7 @@ const SKIP_DIRS = new Set(['node_modules', 'dist', 'dist-vite', 'dist-v5', 'stor
 
 if (!existsSync(TOKENS_JSON)) {
   console.error(
-    `check-token-usage: none of ${TOKENS_JSON_CANDIDATES.join(', ')} found — run \`pnpm --filter al-web-components build:tokens\` first.`,
+    `check-token-usage: none of ${TOKENS_JSON_CANDIDATES.join(', ')} found — run \`pnpm --filter @southleft/al-web-components build:tokens\` first.`,
   );
   process.exit(1);
 }

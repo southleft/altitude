@@ -1,5 +1,5 @@
 /**
- * Copies al-react's non-TypeScript build assets into `dist/`.
+ * Copies @southleft/al-react's non-TypeScript build assets into `dist/`.
  *
  * WHY THIS FILE EXISTS. The `build` script used to do this with:
  *
@@ -47,8 +47,8 @@ const COPIES = [
   {
     from: join(PKG, '../al-web-components/dist/css'),
     to: join(DIST, 'css'),
-    why: 'the global Altitude stylesheet consumed by al-react apps',
-    fix: 'Run `pnpm --filter al-web-components build` first (the root `build` script encodes this ordering).',
+    why: 'the global Altitude stylesheet consumed by @southleft/al-react apps',
+    fix: 'Run `pnpm --filter @southleft/al-web-components build` first (the root `build` script encodes this ordering).',
   },
 ];
 

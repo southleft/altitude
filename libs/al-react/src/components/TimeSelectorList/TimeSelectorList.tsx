@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { ALTimeSelectorList as ALWebTimeSelectorList } from 'al-web-components/components/time-selector-list';
-import register from 'al-web-components/directives/register';
+import { ALTimeSelectorList as ALWebTimeSelectorList } from '@southleft/al-web-components/components/time-selector-list';
+import register from '@southleft/al-web-components/directives/register';
 import PackageJson from '../../../package.json';
 
 const elementMap = register({

@@ -33,7 +33,7 @@
  * and tears its observers down for you:
  *
  * ```ts
- * import { MotionController } from 'al-web-components/controllers/motion';
+ * import { MotionController } from '@southleft/al-web-components/controllers/motion';
  *
  * export class ALThing extends ALElement {
  *   protected motion = new MotionController(this);
@@ -47,7 +47,7 @@
  * Or drive it directly from any JS:
  *
  * ```ts
- * import { run } from 'al-web-components/motion';
+ * import { run } from '@southleft/al-web-components/motion';
  * await run('modal-exit', dialogEl);   // then tear the dialog down
  * ```
  */

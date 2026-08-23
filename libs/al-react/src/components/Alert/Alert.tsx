@@ -1,8 +1,8 @@
 'use client';
 
 import { createComponent } from '@lit/react';
-import { ALAlert as ALWebAlert } from 'al-web-components/components/alert';
-import register from 'al-web-components/directives/register';
+import { ALAlert as ALWebAlert } from '@southleft/al-web-components/components/alert';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

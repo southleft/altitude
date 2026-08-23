@@ -1,8 +1,8 @@
-// The al-react preset decorator. Spec: 2026-07-28-react-storybook-preset-switcher.
+// The @southleft/al-react preset decorator. Spec: 2026-07-28-react-storybook-preset-switcher.
 //
-// The React counterpart of `al-web-components/.storybook/with-preset.ts`. Both
-// read the SAME `presets.ts` (imported below by relative path — al-react
-// already reaches sideways into al-web-components that way for `main.css` and
+// The React counterpart of `@southleft/al-web-components/.storybook/with-preset.ts`. Both
+// read the SAME `presets.ts` (imported below by relative path — @southleft/al-react
+// already reaches sideways into @southleft/al-web-components that way for `main.css` and
 // the icon font), so preset ids, labels and axis tuples cannot drift between
 // the two Storybooks.
 //
@@ -16,7 +16,7 @@
 //     `:host([brand='southleft'])` selects on. `ALTheme` (the wrapper) closes
 //     that gap — see `src/components/Theme/Theme.tsx`.
 //
-//   * al-react registers with `suffix: PackageJson.version`, so the tag here is
+//   * @southleft/al-react registers with `suffix: PackageJson.version`, so the tag here is
 //     `al-theme-1-0-0`, not `al-theme`. Nothing in this path calls
 //     `closest('al-theme')` (R6): the axes are set on the element this
 //     decorator renders, so the hardcoded tag name in
@@ -39,14 +39,14 @@ function isDisabled(context: { parameters?: { alPreset?: { disable?: boolean } }
 
 /**
  * Repaint the preview iframe's own surface to match the active preset —
- * ported from `al-web-components/.storybook/with-preset.ts` (see that file
+ * ported from `@southleft/al-web-components/.storybook/with-preset.ts` (see that file
  * for why neither a painted wrapper `<div>` nor a `:root` stylesheet swap is
  * acceptable). `<al-theme>` is `display: contents`, so it paints nothing; the
  * iframe background comes from the altitude-DARK `:root` bundle and does not
  * move when the one-click toggle flips to light.
  *
  * One deliberate difference: the selector is `[data-al-preset]` alone, not
- * `al-theme[data-al-preset]` — al-react registers with a version suffix, so
+ * `al-theme[data-al-preset]` — @southleft/al-react registers with a version suffix, so
  * the element here is `al-theme-1-0-0` and a tag-qualified selector would
  * never match.
  */

@@ -71,7 +71,7 @@ const FIXTURE_ENTRY = {
     opsDir: '.altitude/figma-sync/proofclient/ops',
     instanceMap: null,
   },
-  library: { workspace: 'al-web-components', root: 'libs/al-web-components', tagPrefix: 'al-', components: scope },
+  library: { workspace: '@southleft/al-web-components', root: 'libs/al-web-components', tagPrefix: 'al-', components: scope },
   storybook: {
     configDir: 'libs/al-web-components/.storybook',
     port: 6099,

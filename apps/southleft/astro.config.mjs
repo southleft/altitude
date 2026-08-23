@@ -3,7 +3,7 @@ import sitemap from '@astrojs/sitemap';
 // T6 (spec 2026-08-20-southleft-example-app) — serves POST /api/theme during
 // `astro dev`, mirroring the Cloudflare Pages Function that serves it in
 // production (functions/api/theme.js). Dev-server-only Node middleware, so it
-// is NOT part of the browser `al-web-components/theme-engine` export and is
+// is NOT part of the browser `@southleft/al-web-components/theme-engine` export and is
 // deliberately imported by relative path: it lives alongside the library's
 // other build-time plugins and is never packed into the published tarball.
 import { themeApiPlugin } from '../../libs/al-web-components/vite-plugins/theme-api.mjs';

@@ -43,7 +43,7 @@ export function componentMarkdown(component, context = DEFAULT_CONTEXT) {
     '',
     '```js',
     `import '${component.importPath}';`,
-    ...(component.react ? [`import { ${component.react} } from 'al-react';`] : []),
+    ...(component.react ? [`import { ${component.react} } from '@southleft/al-react';`] : []),
     '```',
     '',
     '## Properties',

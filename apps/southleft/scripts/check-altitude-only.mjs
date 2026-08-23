@@ -3,13 +3,13 @@
  * ALTITUDE-ONLY gate — spec 2026-08-20-southleft-example-app, T1.
  *
  * Page/layout styling in this app may only use:
- *   - `.al-u-*` utility classes (al-web-components/styles/shadow-utilities.scss)
+ *   - `.al-u-*` utility classes (@southleft/al-web-components/styles/shadow-utilities.scss)
  *   - semantic `--al-theme-*` design tokens (`var(--al-theme-...)`)
  *   - minimal app-layout CSS (grid/positioning only — src/styles/layout.css)
  *
  * NO hardcoded colors, px font-sizes, or non-token box-shadows anywhere in
  * this app's own source. Pragmatic, not perfect: it greps AUTHORED source
- * (`.astro`, `.css` under `src/`) — not the built `al-web-components` CSS
+ * (`.astro`, `.css` under `src/`) — not the built `@southleft/al-web-components` CSS
  * this app imports verbatim (that file legitimately contains resolved hex
  * values; it is a vendored token artifact, not page styling) and not
  * third-party node_modules.

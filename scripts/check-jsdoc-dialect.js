@@ -85,7 +85,7 @@ console.log(`  ${scanned} source file(s) scanned for legacy prose`);
 console.log('\n[jsdoc-dialect] checking CEM event descriptions');
 
 if (!existsSync(CEM)) {
-  fail('NO-CEM', 'custom-elements.json not found — run `pnpm --filter al-web-components build:custom-elements.json`');
+  fail('NO-CEM', 'custom-elements.json not found — run `pnpm --filter @southleft/al-web-components build:custom-elements.json`');
 } else {
   const cem = JSON.parse(readFileSync(CEM, 'utf8'));
   let total = 0;

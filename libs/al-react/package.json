@@ -1,9 +1,11 @@
 {
-  "name": "al-react",
+  "name": "@southleft/al-react",
   "description": "The React powered design system for web applications",
   "version": "1.0.0",
-  "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "packageManager": "pnpm@9.15.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -27,11 +29,12 @@
     "plop": "plop --plopfile plop/plop-config.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "LICENSE"
   ],
   "dependencies": {
     "@lit/react": "^1.0.6",
-    "al-web-components": "workspace:*",
+    "@southleft/al-web-components": "workspace:*",
     "react": "^19",
     "react-dom": "^19"
   },
@@ -58,5 +61,6 @@
   ],
   "engines": {
     "node": ">=22.0.0"
-  }
+  },
+  "author": "Southleft, LLC"
 }

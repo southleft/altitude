@@ -14,7 +14,7 @@ addons.setConfig({
 
 /**
  * Light / dark toggle — ported verbatim from
- * `al-web-components/.storybook/manager.js` so the two Storybooks present the
+ * `@southleft/al-web-components/.storybook/manager.js` so the two Storybooks present the
  * same chrome. See that file for the full rationale (why a MANAGER tool rather
  * than a `globalTypes.toolbar` entry, why `React.createElement` over JSX).
  *

@@ -4,7 +4,7 @@
 // report + diff PNGs into .altitude/visual-parity/.
 //
 // Usage:
-//   1. pnpm --filter al-web-components build:storybook --output-dir ../../dist/storybook/web-components
+//   1. pnpm --filter @southleft/al-web-components build:storybook --output-dir ../../dist/storybook/web-components
 //   2. npx serve dist/storybook/web-components -l 5050 &   # any static server
 //   3. node scripts/visual-parity-sweep.mjs
 

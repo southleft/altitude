@@ -1,8 +1,8 @@
 'use client';
 
 import { createComponent } from '@lit/react';
-import { ALDatePicker as ALWebDatePicker } from 'al-web-components/components/date-picker';
-import register from 'al-web-components/directives/register';
+import { ALDatePicker as ALWebDatePicker } from '@southleft/al-web-components/components/date-picker';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

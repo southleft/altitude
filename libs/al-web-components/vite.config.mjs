@@ -1,4 +1,4 @@
-// T2.2 — Vite library build for al-web-components.
+// T2.2 — Vite library build for @southleft/al-web-components.
 //
 // Replaces the webpack 5 + babel + sass-loader build (`webpack.config.js`).
 // Mirrors the same multi-entry shape (one entry per component that extends
@@ -71,8 +71,8 @@ const iconEntries = findIconEntries(join(__dirname, 'components/icon/icons'));
 // Public entry points of the Phosphor icon system. These need stable dist paths
 // because consumers import them directly:
 //
-//   import { caretDown } from 'al-web-components/dist/components/icon/glyphs.js';
-//   import { registerIcons } from 'al-web-components/dist/components/icon/registry.js';
+//   import { caretDown } from '@southleft/al-web-components/dist/components/icon/glyphs.js';
+//   import { registerIcons } from '@southleft/al-web-components/dist/components/icon/registry.js';
 //
 // `catalog.ts` and `all.ts` are deliberately NOT entries — they are consumed
 // from source by the Storybook catalog page and must never reach an app bundle.
@@ -112,7 +112,7 @@ const entries = {
 
 // ---------- SCSS import-rewrite plugin ----------
 //
-// Moved to `./vite-plugins/rewrite-scss-imports.mjs` so the al-react Storybook
+// Moved to `./vite-plugins/rewrite-scss-imports.mjs` so the @southleft/al-react Storybook
 // can import the SAME plugin — it now compiles the shared `Foundations/*`
 // documentation elements, which use the bare `import styles from './x.scss'`
 // form. Imported at the top of this file; see that module for the rationale.
@@ -164,7 +164,7 @@ export default defineConfig({
         format: 'es',
         // Preserve original export names. Rollup defaults rename
         // `export { ALButton }` to `export { ALButton as A }` for shared
-        // chunks; consumers (al-react wrappers, the apps fixtures) import by
+        // chunks; consumers (@southleft/al-react wrappers, the apps fixtures) import by
         // the original name.
         minifyInternalExports: false,
         // Emit CSS at stable, webpack-equivalent paths. The `theme` entry

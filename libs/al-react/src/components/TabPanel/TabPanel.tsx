@@ -1,8 +1,8 @@
 'use client';
 
 import { createComponent } from '@lit/react';
-import { ALTabPanel as ALWebTabPanel } from 'al-web-components/components/tab-panel';
-import register from 'al-web-components/directives/register';
+import { ALTabPanel as ALWebTabPanel } from '@southleft/al-web-components/components/tab-panel';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

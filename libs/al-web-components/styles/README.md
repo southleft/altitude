@@ -82,7 +82,7 @@ const brands = [
    emits `dist-v5/{css,scss}/brand/tokens-<brand>-<theme>.{css,scss}`.
 
 3. Register every file you added in `$metadata.json` and `$themes.json`.
-4. Run `pnpm --filter al-web-components build:tokens`, then
+4. Run `pnpm --filter @southleft/al-web-components build:tokens`, then
    `pnpm test:brands` to confirm the new brand is actually distinct and
    carries no inert overrides.
 

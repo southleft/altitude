@@ -45,7 +45,7 @@ export function themeApiPlugin() {
       // otherwise only surface VITE_-prefixed ones).
       //
       // Look in the repo root as well as the cwd: `pnpm --filter
-      // al-web-components start` runs with cwd=libs/al-web-components, but a
+      // @southleft/al-web-components start` runs with cwd=libs/al-web-components, but a
       // monorepo secret naturally lives in the root .env (which is also where
       // .env.example sits). Precedence, most specific first: real environment
       // > workspace .env > root .env.

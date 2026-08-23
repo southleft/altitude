@@ -8,10 +8,10 @@ After T2.1 / T2.2 / T2.4, both libraries and both Storybooks build through
 
 | Surface | Builder | Config | Output |
 |---|---|---|---|
-| `al-web-components` library | Vite 5 (esbuild + Rollup) | `libs/al-web-components/vite.config.mjs` | `libs/al-web-components/dist/` |
-| `al-react` library | Vite 5 | `libs/al-react/` (default config) | `libs/al-react/dist/` |
-| `al-web-components` Storybook | Storybook 10 + `@storybook/web-components-vite` | `libs/al-web-components/.storybook/main.ts` | `dist/storybook/web-components/` |
-| `al-react` Storybook | Storybook 10 + `@storybook/react-vite` | `libs/al-react/.storybook/main.ts` | `dist/storybook/react/` |
+| `@southleft/al-web-components` library | Vite 5 (esbuild + Rollup) | `libs/al-web-components/vite.config.mjs` | `libs/al-web-components/dist/` |
+| `@southleft/al-react` library | Vite 5 | `libs/al-react/` (default config) | `libs/al-react/dist/` |
+| `@southleft/al-web-components` Storybook | Storybook 10 + `@storybook/web-components-vite` | `libs/al-web-components/.storybook/main.ts` | `dist/storybook/web-components/` |
+| `@southleft/al-react` Storybook | Storybook 10 + `@storybook/react-vite` | `libs/al-react/.storybook/main.ts` | `dist/storybook/react/` |
 
 The Vite config preserves **G7** (decorator semantics): `experimentalDecorators: true`,
 `useDefineForClassFields: false`, esbuild target `es2022`.
@@ -20,16 +20,16 @@ The Vite config preserves **G7** (decorator semantics): `experimentalDecorators:
 
 ```bash
 # Library builds:
-pnpm --filter al-web-components build                            # al-web-components → dist/
-pnpm --filter al-react build                                     # al-react → dist/
+pnpm --filter @southleft/al-web-components build                            # @southleft/al-web-components → dist/
+pnpm --filter @southleft/al-react build                                     # @southleft/al-react → dist/
 pnpm run build                                                   # both libraries
 
 # Storybook builds:
-pnpm --filter al-web-components start                            # dev server :6006
-pnpm --filter al-web-components build:storybook \
+pnpm --filter @southleft/al-web-components start                            # dev server :6006
+pnpm --filter @southleft/al-web-components build:storybook \
     --output-dir ../../dist/storybook/web-components             # static export
-pnpm --filter al-react start                                     # dev server :9009
-pnpm --filter al-react build:storybook \
+pnpm --filter @southleft/al-react start                                     # dev server :9009
+pnpm --filter @southleft/al-react build:storybook \
     --output-dir ../../dist/storybook/react
 
 # Everything:
@@ -79,7 +79,7 @@ All Phase 2 acceptance criteria are green and merged on `feature/v2`:
 | Task | Acceptance | Status |
 |---|---|---|
 | T2.1 | SCSS compiles to constructable stylesheet adopted into shadow root | ✅ |
-| T2.2 | `pnpm --filter al-web-components build` exits 0 via Vite (webpack retired) | ✅ |
+| T2.2 | `pnpm --filter @southleft/al-web-components build` exits 0 via Vite (webpack retired) | ✅ |
 | T2.2 | AST diff = zero public export removals vs P0 dist | ✅ |
 | T2.2 | publint 0 errors | ✅ |
 | T2.3 | yarn → pnpm 9, Node 22 LTS, Lit 3.3, TS 5.9, ESLint 9, date-fns 4 | ✅ |

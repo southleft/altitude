@@ -29,8 +29,8 @@ legacy components" gate clears — see §"Remaining T6.2 follow-ups".
 
 ```bash
 # Workspace-relative (most common):
-pnpm --filter al-web-components build:tokens   # the only build. DTCG convert → SD v5 → TS types → legacy mirror
-pnpm --filter al-web-components test:tokens    # contract tests vs .altitude/baselines/tokens/snapshot.json
+pnpm --filter @southleft/al-web-components build:tokens   # the only build. DTCG convert → SD v5 → TS types → legacy mirror
+pnpm --filter @southleft/al-web-components test:tokens    # contract tests vs .altitude/baselines/tokens/snapshot.json
 
 # Top-level:
 node scripts/convert-tokens-to-dtcg.js      # legacy JSON → DTCG JSON (also runs inside build:tokens)
@@ -151,7 +151,7 @@ normalized `name: value` stream. Any token change moves it, and CI enforces it.
 # 1. Build. styles/dist/ is gitignored (.gitignore:5), so the capture script
 #    exits 1 without this. Use the full `pnpm build` instead when bundle or
 #    VRT baselines also move.
-pnpm --filter al-web-components build:tokens
+pnpm --filter @southleft/al-web-components build:tokens
 
 # 2. Check what changed *before* overwriting the baseline. This is the step
 #    that tells you whether the drift is intentional.

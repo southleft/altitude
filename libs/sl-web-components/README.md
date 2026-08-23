@@ -1,4 +1,4 @@
-# sl-web-components — the Southleft brand design system
+# @southleft/sl-web-components — the Southleft brand design system
 
 **Altitude is the base. This is the layer of opinion on top of it.**
 
@@ -7,7 +7,7 @@ is *one brand's opinion* may not live there. This package is where that opinion
 goes: the section shapes southleft.com actually ships, built **from** Altitude
 primitives, never forking them.
 
-The dependency arrow points one way. `al-web-components` is a `workspace:*`
+The dependency arrow points one way. `@southleft/al-web-components` is a `workspace:*`
 dependency here; nothing in `libs/al-web-components` may import from this
 package.
 
@@ -75,7 +75,7 @@ render correctly standalone in Storybook with no app CSS loaded.
 
 ## Build
 
-`pnpm --filter sl-web-components build` exists but is **not** wired into the
+`pnpm --filter @southleft/sl-web-components build` exists but is **not** wired into the
 root `build:all`. The only consumer today is the Southleft Storybook, which
 compiles these sources directly. Wire it in when `apps/southleft` imports the
 package.

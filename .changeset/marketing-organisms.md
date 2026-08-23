@@ -1,6 +1,6 @@
 ---
-"al-web-components": minor
-"al-react": minor
+"@southleft/al-web-components": minor
+"@southleft/al-react": minor
 ---
 
 Add a marketing-organism layer so Altitude serves marketing sites as well as

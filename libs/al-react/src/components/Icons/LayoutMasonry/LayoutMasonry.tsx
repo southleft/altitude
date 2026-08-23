@@ -1,8 +1,8 @@
 'use client';
 
 import { createComponent } from '@lit/react';
-import { ALIconLayoutMasonry as ALWebIconLayoutMasonry } from 'al-web-components/components/icon/icons/layout-masonry';
-import register from 'al-web-components/directives/register';
+import { ALIconLayoutMasonry as ALWebIconLayoutMasonry } from '@southleft/al-web-components/components/icon/icons/layout-masonry';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../../package.json';
 

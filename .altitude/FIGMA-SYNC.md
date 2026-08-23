@@ -28,7 +28,7 @@
    Bridge plugin for write operations. Cloud/SSE modes exist for read-only
    exploration.
 2. The Altitude token build passing locally:
-   `pnpm --filter al-web-components build:tokens`.
+   `pnpm --filter @southleft/al-web-components build:tokens`.
 
 ## What maps to what
 
@@ -87,7 +87,7 @@ brand, state its recipe explicitly.
 3. **Reconcile** — direction depends on which side moved:
    - *Design change (Figma → code):* edit `styles/tokens/**` to match the
      export (respecting fidelity rules), then
-     `pnpm --filter al-web-components build:tokens` and the token contract
+     `pnpm --filter @southleft/al-web-components build:tokens` and the token contract
      tests (`test:tokens`, root `test:brands` / `test:preset-parity`).
    - *Token change (code → Figma):* push variables with
      `figma_batch_create_variables` / import-with-apply, preserving the

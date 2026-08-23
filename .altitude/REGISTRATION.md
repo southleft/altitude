@@ -18,7 +18,7 @@ path that matches what you are building; do not mix them in one document.
   and never touches `customElements` (`register.ts:126`). Always returns
   `Map<originalTag, registeredTag>`.
 - **`register({ elements, suffix })`** — the legacy engine. Still used
-  *internally* by composites and by the `al-react` wrappers. Application code
+  *internally* by composites and by the `@southleft/al-react` wrappers. Application code
   should never call it.
 
 **Rule of thumb (from AGENTS.md):** if you are an APP, call `registerAltitude`.
@@ -44,7 +44,7 @@ if ((globalThis as any).alAutoRegistry === true && customElements.get(ALAlert.el
 }
 ```
 
-So a plain side-effect import (`import 'al-web-components/components/alert'`)
+So a plain side-effect import (`import '@southleft/al-web-components/components/alert'`)
 self-registers the plain tag — but **only** if the flag was set before the
 module evaluated. Setting it in application JS is too late: ESM imports are
 hoisted and evaluate first. That is why the flag must live in the HTML shell
@@ -69,7 +69,7 @@ unflagged bundles on one page will split the tag namespace.
 ## Path 2 — React: implicit, versioned, via the wrappers
 
 React apps do **not** set the flag and do **not** call `registerAltitude`.
-Every `al-react` wrapper registers its own element with the legacy engine and
+Every `@southleft/al-react` wrapper registers its own element with the legacy engine and
 a version suffix (`libs/al-react/src/components/Button/Button.tsx:6-10`):
 
 ```ts
@@ -99,7 +99,7 @@ control define-timing themselves.
 | Consumer | Flag in `<head>`? | API call | Resulting tags |
 |---|---|---|---|
 | Svelte / Angular / Astro / vanilla | **yes** | none | plain (`al-button`) |
-| React via `al-react` | no | none (wrappers do it) | versioned (`al-button-1-0-0`) |
+| React via `@southleft/al-react` | no | none (wrappers do it) | versioned (`al-button-1-0-0`) |
 | Micro-frontend | no | `registerAltitude({ mode: 'versioned', suffix })` | versioned, caller-chosen |
 | Tests / SSR | no | `registerAltitude({ mode: 'manual' })` + own `define` | caller-owned |
 

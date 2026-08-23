@@ -1,7 +1,7 @@
 // Derives a component's Storybook doc URL from its `.stories.ts` `title:`
 // field, using Storybook's own id-sanitization algorithm (lowercase, sanitize
 // each `/`-separated segment, join with `-`, append `--docs` for the
-// autodocs page). Every al-web-components story carries the `autodocs` tag
+// autodocs page). Every @southleft/al-web-components story carries the `autodocs` tag
 // (verified against storybook-static/index.json), so `--docs` always exists.
 //
 // We parse the `.stories.ts` source directly rather than depending on a
@@ -17,11 +17,29 @@ import { resolveProject } from './ds-project.mjs';
 // Southleft publish to different paths), so it is read from
 // `.altitude/ds-projects.json` rather than hardcoded here. Callers that pass no
 // project get the registry default.
-const productionBaseFor = (project) =>
-  (project && typeof project === 'object' && project.storybook
+const resolveFor = (project) =>
+  project && typeof project === 'object' && (project.storybook || project.docs)
     ? project
-    : resolveProject(typeof project === 'string' ? project : null)
-  ).storybook.productionBase;
+    : resolveProject(typeof project === 'string' ? project : null);
+
+/**
+ * Where a component's documentation lives for this project.
+ *
+ * DOCS FIRST, Storybook second. Southleft's Storybook was retired on
+ * 2026-08-23 — the multi-brand docs site serves it at /docs/southleft/ from the
+ * same CEM — so `storybook` is now genuinely absent for that project and
+ * reading `.storybook.productionBase` unguarded threw. Altitude still has both,
+ * and prefers docs because that is the surface being kept.
+ *
+ * Returns null when a project has neither, so callers omit the URL rather than
+ * emitting a broken one.
+ */
+const docsBaseFor = (project) => {
+  const p = resolveFor(project);
+  if (p.docs?.productionBase) return { base: p.docs.productionBase, kind: 'docs' };
+  if (p.storybook?.productionBase) return { base: p.storybook.productionBase, kind: 'storybook' };
+  return null;
+};
 
 /** Storybook's `sanitize()` — mirrors @storybook/csf's toId() algorithm. */
 function sanitize(part) {
@@ -68,7 +86,18 @@ export function getStoryInfo(modulePath, project) {
   return {
     title,
     storyId,
-    docsUrl: `${productionBaseFor(project)}/?path=/docs/${storyId}`,
+    // A docs-site URL is a plain path; a Storybook URL needs its ?path= query.
+    // The docs slug is the component DIRECTORY from the CEM module path
+    // ("components/button/button.ts" -> "button"), which is exactly the route
+    // apps/docs generates (src/lib/registry.mjs keeps only elements declared by
+    // components/<dir>/<dir>.ts, so the directory IS the slug).
+    docsUrl: (() => {
+      const d = docsBaseFor(project);
+      if (!d) return null;
+      if (d.kind === 'storybook') return `${d.base}/?path=/docs/${storyId}`;
+      const slug = modulePath.split('/').filter(Boolean).at(-2);
+      return slug ? `${d.base}/components/${slug}` : null;
+    })(),
     storiesFile,
   };
 }

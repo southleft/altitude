@@ -27,9 +27,13 @@
         "instanceMap": "scripts/figma-atoms/instance-map.mjs"
       },
       "library": {
-        "workspace": "al-web-components",
+        "workspace": "@southleft/al-web-components",
         "root": "libs/al-web-components",
-        "tagPrefix": "al-"
+        "tagPrefix": "al-",
+        "//excludeTitlePrefixes": "SCOPE, not presentation. Story titles under these prefixes are not COMPONENTS of this design system, so parity must not report them as missing in Figma. This used to live under `storybook`, which was wrong twice over: it is a library-scope concern, and it made the field disappear when Southleft's Storybook was retired on 2026-08-23.",
+        "excludeTitlePrefixes": [
+          "Foundations/"
+        ]
       },
       "storybook": {
         "configDir": "libs/al-web-components/.storybook",
@@ -38,10 +42,7 @@
         "brandTitle": "Altitude Design System",
         "brandUrl": "https://altitude.pages.dev/storybook/web-components",
         "brandImage": "./images/logo.svg",
-        "productionBase": "https://altitude.pages.dev/storybook/web-components",
-        "excludeTitlePrefixes": [
-          "Foundations/"
-        ]
+        "productionBase": "https://altitude.pages.dev/storybook/web-components"
       },
       "prompts": {
         "skillName": "altitude-figma-sync",
@@ -55,6 +56,10 @@
       "excluded": {
         "al-theme-switcher": "Owns no pixels — an al-button + al-popover + al-menu composition; a Figma set would duplicate three components (altitude-figma-sync: NOT_COMPONENTS).",
         "al-icon": "Icons live in Figma as 71 flat components on the 🛠 Icons page (resolved by name), not as a component set — there is nothing for a per-set parity check to bind to."
+      },
+      "docs": {
+        "route": "",
+        "productionBase": "https://altitude.pages.dev/docs"
       }
     },
     "southleft": {
@@ -75,10 +80,10 @@
         "instanceMap": null
       },
       "library": {
-        "workspace": "al-web-components",
+        "workspace": "@southleft/al-web-components",
         "root": "libs/al-web-components",
         "tagPrefix": "al-",
-        "$componentsComment": "SCOPE. Southleft's design system is the subset of al-web-components that southleft.com actually ships, not the whole 105-component Altitude catalog. Derived from `grep -rhoE '<al-[a-z0-9-]+' apps/southleft/src --include=*.astro` and re-checkable with scripts/check-sl-scope.mjs. Adding a component to the SITE is what earns it a place here; keep the two in step or the DS documents things Southleft does not use and the parity list fills with noise.",
+        "$componentsComment": "SCOPE. Southleft's design system is the subset of @southleft/al-web-components that southleft.com actually ships, not the whole 105-component Altitude catalog. Derived from `grep -rhoE '<al-[a-z0-9-]+' apps/southleft/src --include=*.astro` and re-checkable with scripts/check-sl-scope.mjs. Adding a component to the SITE is what earns it a place here; keep the two in step or the DS documents things Southleft does not use and the parity list fills with noise.",
         "components": [
           "al-breadcrumbs",
           "al-breadcrumbs-item",
@@ -101,16 +106,8 @@
           "al-testimonial",
           "al-text-block",
           "al-theme"
-        ]
-      },
-      "storybook": {
-        "configDir": "libs/al-web-components/.storybook-sl",
-        "port": 6007,
-        "mcpPort": 6018,
-        "brandTitle": "Southleft Design System",
-        "brandUrl": "https://southleft.com",
-        "brandImage": "./images/logo.svg",
-        "productionBase": "https://altitude.pages.dev/storybook/southleft",
+        ],
+        "//excludeTitlePrefixes": "SCOPE, not presentation. Story titles under these prefixes are not COMPONENTS of this design system, so parity must not report them as missing in Figma. This used to live under `storybook`, which was wrong twice over: it is a library-scope concern, and it made the field disappear when Southleft's Storybook was retired on 2026-08-23.",
         "excludeTitlePrefixes": [
           "Foundations/"
         ]
@@ -128,6 +125,11 @@
         "al-theme-switcher": "Owns no pixels — an al-button + al-popover + al-menu composition; a Figma set would duplicate three components.",
         "al-icon": "Icons are a 1,512-glyph Phosphor catalog resolved by name, not a component set — nothing for a per-set parity check to bind to.",
         "al-theme": "The theming HOST — sets brand/mode/density tokens on :host and owns no pixels of its own. Nothing for Figma to mirror."
+      },
+      "docs": {
+        "//": "Southleft's Storybook was retired (2026-08-23). The multi-brand docs site at apps/docs serves this project at /docs/southleft/, generated from the same CEM, so a second Storybook was duplicating it. `route` is what apps/docs already derives for a non-default project; `productionBase` is where that lands when deployed.",
+        "route": "/southleft",
+        "productionBase": "https://altitude.pages.dev/docs/southleft"
       }
     }
   }

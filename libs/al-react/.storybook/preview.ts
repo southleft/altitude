@@ -1,11 +1,11 @@
-// T2.4 — Storybook 10 preview for al-react.
+// T2.4 — Storybook 10 preview for @southleft/al-react.
 
 import type { Preview } from '@storybook/react-vite';
-// Package specifier on purpose: a518945 gave al-web-components a real exports
+// Package specifier on purpose: a518945 gave @southleft/al-web-components a real exports
 // map (`./css/main.css` → `dist/css/main.css`), and the raw filesystem path
 // (`../../al-web-components/css/main.css`) does not exist — requires
-// `pnpm --filter al-web-components build` first, same as the WC Storybook.
-import mainStyles from 'al-web-components/css/main.css?inline';
+// `pnpm --filter @southleft/al-web-components build` first, same as the WC Storybook.
+import mainStyles from '@southleft/al-web-components/css/main.css?inline';
 import { DEFAULT_PRESET_ID } from '../../al-web-components/.storybook/presets';
 import { withPreset } from './with-preset';
 // The shared autodocs page — a fork of Storybook's `DocsPage` that hangs an
@@ -35,7 +35,7 @@ import { AltitudeDocsPage } from '../../al-web-components/.storybook/docs-page';
 // The per-brand CSS files do exist, and the spec's inferred path was right —
 // `scripts/copy-assets-to-dist.js` copies `styles/dist` (which itself contains
 // `css/`) into `dist/css`, so they land at the doubly nested
-// `al-web-components/css/css/brand/tokens-<brand>-<mode>.css`, six of them.
+// `@southleft/al-web-components/css/css/brand/tokens-<brand>-<mode>.css`, six of them.
 // They are the flat `:root` bundles, for consumers who theme a whole document.
 // Nothing in this Storybook needs them, and importing one would put a second,
 // unscoped `:root` bundle on the page and fight the host rules.
@@ -109,7 +109,7 @@ const preview: Preview = {
       },
     },
     // The docs page every component renders — see the import note above and
-    // `al-web-components/.storybook/docs-page.tsx`.
+    // `@southleft/al-web-components/.storybook/docs-page.tsx`.
     docs: {
       page: AltitudeDocsPage,
     },

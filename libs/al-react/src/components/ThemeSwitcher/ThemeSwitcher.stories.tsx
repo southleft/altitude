@@ -15,7 +15,7 @@ export default {
     // scoped path when it finds one, so inside the decorator's wrapper its own
     // fallback is unreachable and the component demonstrates half of what it
     // documents. (Here it would not find one anyway — the walk is hardcoded to
-    // the plain `al-theme` tag and al-react registers `al-theme-1-0-0`.)
+    // the plain `al-theme` tag and @southleft/al-react registers `al-theme-1-0-0`.)
     alPreset: { disable: true }
   },
 };

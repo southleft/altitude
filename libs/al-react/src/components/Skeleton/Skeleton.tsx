@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { ALSkeleton as ALWebSkeleton } from 'al-web-components/components/skeleton';
-import register from 'al-web-components/directives/register';
+import { ALSkeleton as ALWebSkeleton } from '@southleft/al-web-components/components/skeleton';
+import register from '@southleft/al-web-components/directives/register';
 import PackageJson from '../../../package.json';
 
 const elementMap = register({

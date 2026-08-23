@@ -1,7 +1,7 @@
 // T5 (spec 2026-08-20-southleft-example-app) — the layout half of the AI
 // theme pipeline. `buildTheme()` (imported from the SAME engine every other
 // surface uses — one copy, see .altitude/AI-THEME.md and the
-// `al-web-components/theme-engine` import in `AIDirectionPanel.astro`)
+// `@southleft/al-web-components/theme-engine` import in `AIDirectionPanel.astro`)
 // returns a small,
 // deterministic `ResolvedLayout` intent. This module is the ONLY thing that
 // turns that intent into real DOM changes on the home page, and the ONLY
@@ -33,7 +33,7 @@
 
 // Deliberately NOT importing the whole `ResolvedLayout` type here (its
 // definition lives in another package — `AIDirectionPanel.astro` imports it
-// as `import type { Theme } from 'al-web-components/theme-engine'`). A
+// as `import type { Theme } from '@southleft/al-web-components/theme-engine'`). A
 // structural, app-local type keeps this module buildable even if the shared
 // engine's export shape drifts additively.
 export type SectionId = 'logos' | 'services' | 'work' | 'testimonials' | 'insights' | 'cta';

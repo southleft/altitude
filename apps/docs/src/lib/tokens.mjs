@@ -1,6 +1,6 @@
 /**
  * Foundations data — generated from the library's built token layer
- * (`al-web-components/tokens.json`, emitted by Style Dictionary v5 from the
+ * (`@southleft/al-web-components/tokens.json`, emitted by Style Dictionary v5 from the
  * DTCG sources in `styles/tokens-dtcg/`).
  *
  * The design canvas's Foundations artboard typed its swatch hexes inline
@@ -145,7 +145,7 @@ export function brandOverrides(brand) {
       brand,
       properties: [],
       reason:
-        'The scoped token partials have not been built in this checkout (styles/dist-v5/scss/host is a build artifact of `pnpm --filter al-web-components build:tokens`), so what this brand overrides cannot be reported.',
+        'The scoped token partials have not been built in this checkout (styles/dist-v5/scss/host is a build artifact of `pnpm --filter @southleft/al-web-components build:tokens`), so what this brand overrides cannot be reported.',
     };
   }
 

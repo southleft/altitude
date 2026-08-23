@@ -3,7 +3,7 @@
   "description": "Design system created by Southleft.com",
   "version": "1.0.0",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "packageManager": "pnpm@9.15.0",
   "pnpm": {
     "overrides": {
@@ -16,9 +16,9 @@
     ]
   },
   "scripts": {
-    "build": "pnpm --filter al-web-components build && pnpm --filter al-react build",
-    "build:storybook-web-components": "pnpm --filter al-web-components build:storybook --output-dir ../../dist/storybook/web-components",
-    "build:storybook-react": "pnpm --filter al-react build:storybook --output-dir ../../dist/storybook/react",
+    "build": "pnpm --filter @southleft/al-web-components build && pnpm --filter @southleft/al-react build",
+    "build:storybook-web-components": "pnpm --filter @southleft/al-web-components build:storybook --output-dir ../../dist/storybook/web-components",
+    "build:storybook-react": "pnpm --filter @southleft/al-react build:storybook --output-dir ../../dist/storybook/react",
     "build:app-angular": "pnpm --filter al-app-angular build --output-path ../../dist/angular --base-href /angular/browser/",
     "build:app-react": "pnpm --filter al-app-react build --base=/react --outDir ../../dist/react",
     "build:app-svelte": "pnpm --filter al-app-svelte build --base=/svelte --outDir ../../dist/svelte",
@@ -67,7 +67,7 @@
     "baselines:vrt": "playwright test --update-snapshots",
     "baselines:capture": "pnpm run build && pnpm --filter al-app-web-components build && pnpm run baselines:tokens && pnpm run baselines:bundle && pnpm run baselines:vrt",
     "test:vrt": "playwright test",
-    "//test:unit": "Vitest 3 in BROWSER MODE (Playwright/chromium) over both component libraries. `wc` compiles al-web-components from SOURCE; `react` resolves al-web-components through its exports map, i.e. dist/ - so run `pnpm run build` before `test:unit` or the React project tests a stale library. Ports 6180/6185; 6006-6007 belong to the Storybooks. A min-count reporter fails the run if either project collects fewer tests than its floor.",
+    "//test:unit": "Vitest 3 in BROWSER MODE (Playwright/chromium) over both component libraries. `wc` compiles @southleft/al-web-components from SOURCE; `react` resolves @southleft/al-web-components through its exports map, i.e. dist/ - so run `pnpm run build` before `test:unit` or the React project tests a stale library. Ports 6180/6185; 6006-6007 belong to the Storybooks. A min-count reporter fails the run if either project collects fewer tests than its floor.",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
     "test:unit:coverage": "vitest run --coverage",
@@ -76,13 +76,13 @@
     "coverage:ratchet": "node scripts/check-coverage-ratchet.mjs --ratchet",
     "release": "pnpm run build && changeset publish",
     "//lint:styles": "THE HARD STYLE GATE. Stylelint over every .scss file in both component libraries and every example app (143 files, 0 violations as of 2026-08-23). Two rules only, both aimed at generated CSS: declaration-strict-value forces a var() on colour properties, value-no-unknown-custom-properties catches a hallucinated token name against the committed tokens digest. See stylelint.config.mjs.",
-  "lint:styles": "stylelint \"libs/**/*.scss\" \"apps/**/*.scss\"",
-  "//lint:styles:report": "The same rules over the sites' hand-written .css as well. NOT a gate: 21 pre-existing violations live there (15 literal status hues in apps/docs/src/styles/docs.css, 5 in the visual-compare harness, 1 inline-set swatch property in the southleft site). They are reported, not disabled — see scripts/check-styles-changed.mjs.",
-  "lint:styles:report": "stylelint \"libs/**/*.scss\" \"apps/**/*.scss\" \"apps/**/*.css\" \".altitude/**/*.css\" || true",
-  "lint:styles:fix": "stylelint \"libs/**/*.scss\" \"apps/**/*.scss\" --fix",
-  "//gate:styles-new": "Stylelint on the lines a branch actually changed, in any .scss or .css file. This is what holds the line over the site CSS that lint:styles cannot gate. Per-PR: on a branch that has diverged far from main it approaches 'lint everything'.",
-  "gate:styles-new": "node scripts/check-styles-changed.mjs",
-  "lint": "eslint .",
+    "lint:styles": "stylelint \"libs/**/*.scss\" \"apps/**/*.scss\"",
+    "//lint:styles:report": "The same rules over the sites' hand-written .css as well. NOT a gate: 21 pre-existing violations live there (15 literal status hues in apps/docs/src/styles/docs.css, 5 in the visual-compare harness, 1 inline-set swatch property in the southleft site). They are reported, not disabled — see scripts/check-styles-changed.mjs.",
+    "lint:styles:report": "stylelint \"libs/**/*.scss\" \"apps/**/*.scss\" \"apps/**/*.css\" \".altitude/**/*.css\" || true",
+    "lint:styles:fix": "stylelint \"libs/**/*.scss\" \"apps/**/*.scss\" --fix",
+    "//gate:styles-new": "Stylelint on the lines a branch actually changed, in any .scss or .css file. This is what holds the line over the site CSS that lint:styles cannot gate. Per-PR: on a branch that has diverged far from main it approaches 'lint everything'.",
+    "gate:styles-new": "node scripts/check-styles-changed.mjs",
+    "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "check:publishable": "node scripts/check-publishable.mjs",
     "check:audit": "node scripts/check-audit.mjs",
@@ -124,5 +124,6 @@
   "engines": {
     "node": ">=22.0.0",
     "pnpm": ">=9.15.0"
-  }
+  },
+  "author": "Southleft, LLC"
 }

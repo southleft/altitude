@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ALBadge, ALButton, ALCard, ALCheckboxGroup, ALCheckbox, ALChip, ALDialog, ALDivider, ALHeading, ALIconFilter, ALIconPin, ALIconStar, ALInput, ALLayout, ALLink, ALList, ALListItem, ALPagination, ALRadioGroup, ALRadio, ALRange, ALSearch, ALSelect, ALStat } from 'al-react';
+import { ALBadge, ALButton, ALCard, ALCheckboxGroup, ALCheckbox, ALChip, ALDialog, ALDivider, ALHeading, ALIconFilter, ALIconPin, ALIconStar, ALInput, ALLayout, ALLink, ALList, ALListItem, ALPagination, ALRadioGroup, ALRadio, ALRange, ALSearch, ALSelect, ALStat } from '@southleft/al-react';
 import './JobBoard.scss';
 
 const jobs = [

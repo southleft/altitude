@@ -183,7 +183,7 @@ export function setupManager({ theme, lightPresetId, darkPresetId, addonId = 'al
    * This is a MANAGER tool rather than a `globalTypes.toolbar` entry because core
    * renders `globalTypes` toolbars as dropdowns only; a real one-click toggle has
    * to be registered here. It writes the same `globals.alPreset` value the
-   * dropdown wrote, so `.storybook/with-preset.ts` is unchanged and al-react —
+   * dropdown wrote, so `.storybook/with-preset.ts` is unchanged and @southleft/al-react —
    * which still uses the core dropdown over the same `presets.ts` — keeps working.
    *
    * Written with `React.createElement` rather than JSX so this file can stay

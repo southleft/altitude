@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Smoke test: spawns the real altitude-mcp server, performs the actual MCP
+// Smoke test: spawns the real @southleft/altitude-mcp server, performs the actual MCP
 // handshake over stdio, lists tools, then calls every tool once with real
 // inputs and asserts each response is valid JSON with the shape we expect.
 // No mocking — this exercises the exact path a calling agent would use.

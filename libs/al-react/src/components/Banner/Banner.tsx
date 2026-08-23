@@ -1,8 +1,8 @@
 'use client';
 
 import { createComponent } from '@lit/react';
-import { ALBanner as ALWebBanner } from 'al-web-components/components/banner';
-import register from 'al-web-components/directives/register';
+import { ALBanner as ALWebBanner } from '@southleft/al-web-components/components/banner';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

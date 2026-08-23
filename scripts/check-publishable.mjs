@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * check-publishable.mjs — assert both libraries are actually publishable.
+ * check-publishable.mjs — assert every publishable package really is publishable.
  *
  * WHY THIS REPLACES `npm publish --dry-run`:
  * the old CI job ran `npm publish --dry-run` in each library and treated exit 0
@@ -34,7 +34,19 @@ import { fileURLToPath } from 'node:url';
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
-const LIBS = ['libs/al-web-components', 'libs/al-react'];
+/**
+ * Every workspace that is meant to leave the machine. All four moved to the
+ * `@southleft/*` scope; these are DIRECTORY paths, not package names, so they
+ * are unaffected by the rename. `altitude-mcp` and `sl-web-components` joined
+ * this list when they stopped being `"private": true` — a package that can
+ * publish and is not checked here is exactly the hole this gate replaced.
+ */
+const LIBS = [
+  'libs/al-web-components',
+  'libs/al-react',
+  'libs/altitude-mcp',
+  'libs/sl-web-components',
+];
 
 const failures = [];
 const fail = (lib, rule, msg) => failures.push(`${lib} ${rule}: ${msg}`);
@@ -153,4 +165,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log('\ncheck-publishable: both libraries are publishable.');
+console.log(`\ncheck-publishable: all ${LIBS.length} packages are publishable.`);

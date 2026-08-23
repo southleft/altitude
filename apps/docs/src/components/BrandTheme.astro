@@ -5,7 +5,7 @@
  *
  * A DEEP import, not the full bundle: the theme host is the one element every
  * page needs (component detail pages load the rest through LiveRuntime.astro),
- * and `al-web-components/components/theme` is a literal specifier, so Vite can
+ * and `@southleft/al-web-components/components/theme` is a literal specifier, so Vite can
  * statically analyse it and ship a few kB instead of the whole library on the
  * Overview and Foundations screens.
  *
@@ -19,5 +19,5 @@
 ---
 
 <script>
-  import 'al-web-components/components/theme';
+  import '@southleft/al-web-components/components/theme';
 </script>

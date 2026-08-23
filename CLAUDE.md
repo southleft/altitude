@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Altitude is a design system created by Southleft.com. The documentation is available at [ZeroHeight](https://zeroheight.com/809ab055e).
 
-This is a monorepo using **pnpm workspaces** (pnpm 9, Node 22 LTS) with two main library packages (`al-web-components` and `al-react`) and the example apps in `apps/`: `angular`, `astro` (replaced the retired Enhance fixture), `home` (the public homepage), `knapsack`, `mfe` (micro-frontend/versioned-registry fixture), `react`, `ssr`, `svelte`, and `web-components` (vanilla). Workspace filter names are `al-app-*` (e.g. `pnpm --filter al-app-astro`), except `knapsack`.
+This is a monorepo using **pnpm workspaces** (pnpm 9, Node 22 LTS) with two main library packages (`@southleft/al-web-components` and `@southleft/al-react`) and the example apps in `apps/`: `angular`, `astro` (replaced the retired Enhance fixture), `home` (the public homepage), `knapsack`, `mfe` (micro-frontend/versioned-registry fixture), `react`, `ssr`, `svelte`, and `web-components` (vanilla). Workspace filter names are `al-app-*` (e.g. `pnpm --filter al-app-astro`), except `knapsack`.
 
 The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with the modern compiler API and the modern `@use`/`@forward` module system, **Lit 3.3** for the web components, **React 19** for the React wrappers, and **ESLint 9** flat config + typescript-eslint 8 for linting.
 
@@ -14,23 +14,23 @@ The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with 
 
 ### Development
 - Start a specific workspace: `pnpm --filter WORKSPACE_NAME start`
-- Web components Storybook: `pnpm --filter al-web-components start` (port 6006)
+- Web components Storybook: `pnpm --filter @southleft/al-web-components start` (port 6006)
   (this also starts the altitude MCP in streamable-HTTP mode on port 6017 — `POST /mcp`,
   `GET /parity.json`; `start:sb` runs Storybook alone)
-- React Storybook: `pnpm --filter al-react start` (port 9009)
+- React Storybook: `pnpm --filter @southleft/al-react start` (port 9009)
 - React app: `pnpm --filter al-app-react start`
 - Angular app: `pnpm --filter al-app-angular start`
 - Svelte app: `pnpm --filter al-app-svelte start`
 
 ### Building
 - Build all: `pnpm run build:all`
-- Build libraries: `pnpm run build` (builds both al-web-components and al-react)
+- Build libraries: `pnpm run build` (builds both @southleft/al-web-components and @southleft/al-react)
 - Build specific workspace: `pnpm --filter WORKSPACE_NAME build`
-- Build a specific Storybook: `pnpm --filter al-web-components build:storybook --output-dir ../../dist/storybook/web-components`
+- Build a specific Storybook: `pnpm --filter @southleft/al-web-components build:storybook --output-dir ../../dist/storybook/web-components`
 
 ### Component Generation
-- Generate new web component: `pnpm --filter al-web-components plop`
-- Generate new React component: `pnpm --filter al-react plop`
+- Generate new web component: `pnpm --filter @southleft/al-web-components plop`
+- Generate new React component: `pnpm --filter @southleft/al-react plop`
 
 ### Testing
 - Visual regression: `pnpm test:vrt`
@@ -58,7 +58,7 @@ The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with 
 
 ### Component Libraries
 
-**al-web-components** (`libs/al-web-components/`):
+**@southleft/al-web-components** (`libs/al-web-components/`):
 - Built with Lit 3.3 for web components
 - All components extend `ALElement` base class
 - Components live in `components/[component-name]/`
@@ -66,9 +66,9 @@ The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with 
 - Global styles and design tokens in `styles/`
 - Cascade layers: `@layer al.reset, al.base, al.theme, al.component, al.override` — declared once in `styles/core/layers.scss`
 
-**al-react** (`libs/al-react/`):
+**@southleft/al-react** (`libs/al-react/`):
 - React 19 wrapper components using `@lit/react`
-- Components wrap the web components from al-web-components via `workspace:*` dep
+- Components wrap the web components from @southleft/al-web-components via `workspace:*` dep
 - Located in `src/components/[ComponentName]/`
 - Each has: `.tsx` (component), `.stories.tsx` (Storybook)
 
@@ -129,7 +129,7 @@ All components follow consistent patterns:
 - `manual` — caller owns `customElements.define`; for tests / SSR
 - Three consumer registration paths (see `.altitude/REGISTRATION.md` for the full model):
   template frameworks set `window.alAutoRegistry = true` **inline in `<head>`** so deep imports
-  self-register; React apps skip the flag (every `al-react` wrapper registers its element with a
+  self-register; React apps skip the flag (every `@southleft/al-react` wrapper registers its element with a
   version suffix); micro-frontends skip it and call `registerAltitude({ mode: 'versioned' })`.
   Composites read the flag at module-eval time to pick their sub-component suffix — it is
   load-bearing, not a boot convenience

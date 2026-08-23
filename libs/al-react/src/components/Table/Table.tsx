@@ -1,8 +1,8 @@
 'use client';
 
 import { createComponent } from '@lit/react';
-import { ALTable as ALWebTable } from 'al-web-components/components/table';
-import register from 'al-web-components/directives/register';
+import { ALTable as ALWebTable } from '@southleft/al-web-components/components/table';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

@@ -7,7 +7,7 @@
  *      a tree of `.json` files) using DTCG (`$value`/`$type`).
  *   2. Drop the export at `<repo>/.altitude/inbox/tokens-studio.json` (or
  *      a directory at `.altitude/inbox/tokens-studio/`).
- *   3. Run `yarn workspace al-web-components tokens:ingest` (this script).
+ *   3. Run `yarn workspace @southleft/al-web-components tokens:ingest` (this script).
  *   4. The script:
  *      a. Validates DTCG shape (every leaf has `$value` and `$type`).
  *      b. Validates that no new token name collides with an existing one
@@ -18,7 +18,7 @@
  * After an ingest, rebaseline: see `.altitude/TOKENS.md`
  * § "Rebaselining after a token change".
  *
- * Round-trip: `yarn workspace al-web-components tokens:export` (separately,
+ * Round-trip: `yarn workspace @southleft/al-web-components tokens:export` (separately,
  * not implemented here yet) walks `tokens-dtcg/` and emits a Tokens-Studio
  * shaped export under `.altitude/outbox/` so Figma can re-import without
  * drift.
@@ -149,7 +149,7 @@ function main() {
 
   console.log('[tokens:ingest] rebuilding tokens…');
   try {
-    execSync('pnpm --filter al-web-components build:tokens', { cwd: REPO, stdio: 'inherit' });
+    execSync('pnpm --filter @southleft/al-web-components build:tokens', { cwd: REPO, stdio: 'inherit' });
   } catch (err) {
     fail(`build:tokens failed after ingest: ${err.message}`);
   }

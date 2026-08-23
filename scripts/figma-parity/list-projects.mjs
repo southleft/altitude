@@ -38,8 +38,10 @@ for (const id of listProjectIds()) {
     figmaFileName: p.figma.fileName,
     figmaFileKey: p.figma.fileKey,
     figmaUrl: p.resolved.figmaUrlBase,
-    storybookPort: p.storybook.port,
-    storybookConfigDir: p.storybook.configDir,
+    // Optional: Southleft's Storybook was retired 2026-08-23 (docs site instead).
+    storybookPort: p.storybook?.port ?? null,
+    storybookConfigDir: p.storybook?.configDir ?? null,
+    docs: p.docs?.productionBase ?? null,
     parityManifest: p.paths.parityManifest,
     manifestExists,
     summary,

@@ -157,7 +157,7 @@ function main() {
 
   // 6. SOURCE SYNC — tracked styles/core/variables.scss ↔ generated copy.
   if (!fs.existsSync(GENERATED_VARS)) {
-    console.error('[tokens:contract] missing', path.relative(REPO, GENERATED_VARS), '— run `pnpm --filter al-web-components build:tokens` first.');
+    console.error('[tokens:contract] missing', path.relative(REPO, GENERATED_VARS), '— run `pnpm --filter @southleft/al-web-components build:tokens` first.');
     process.exit(2);
   }
   if (!fs.existsSync(TRACKED_VARS)) {

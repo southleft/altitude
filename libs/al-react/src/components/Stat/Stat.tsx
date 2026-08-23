@@ -1,8 +1,8 @@
 'use client';
 
 import { createComponent } from '@lit/react';
-import { ALStat as ALWebStat } from 'al-web-components/components/stat';
-import register from 'al-web-components/directives/register';
+import { ALStat as ALWebStat } from '@southleft/al-web-components/components/stat';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

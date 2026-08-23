@@ -82,8 +82,8 @@ module.exports = (plop) => {
             'Scaffolded. The rest of the "New component" checklist (AGENTS.md) ships in the SAME PR:',
             `  1. bundle.ts — add \`export { AL${pascal} } from './${dash}/${dash}';\` ALPHABETICALLY in components/bundle.ts`,
             '  2. .altitude/migration.json — new entry, state "scoped-complete", inserted alphabetically',
-            '  3. CEM — pnpm --filter al-web-components build:custom-elements.json (after JSDoc is final)',
-            '  4. React wrapper — pnpm --filter al-react plop',
+            '  3. CEM — pnpm --filter @southleft/al-web-components build:custom-elements.json (after JSDoc is final)',
+            '  4. React wrapper — pnpm --filter @southleft/al-react plop',
             '  REMINDER: arrangement of slotted content = <al-layout>; never add direction/gap/align props here.'
           ].join('\n');
         }

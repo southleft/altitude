@@ -1,6 +1,6 @@
 ---
-"al-web-components": minor
-"al-react": minor
+"@southleft/al-web-components": minor
+"@southleft/al-react": minor
 ---
 
 Foundation for the v2 refactor (Phase 0).

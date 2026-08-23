@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { ALDrawer as ALWebDrawer } from 'al-web-components/components/drawer';
-import register from 'al-web-components/directives/register';
+import { ALDrawer as ALWebDrawer } from '@southleft/al-web-components/components/drawer';
+import register from '@southleft/al-web-components/directives/register';
 import PackageJson from '../../../package.json';
 
 const elementMap = register({

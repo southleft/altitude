@@ -1,6 +1,6 @@
 <script lang="ts">
-  import 'al-web-components/components/calendar';
-  import 'al-web-components/components/empty-state';
+  import '@southleft/al-web-components/components/calendar';
+  import '@southleft/al-web-components/components/empty-state';
 </script>
 
 <!-- gap="md", not "lg": the original class was `al-u-gap--lg`, a dead spelling

@@ -6,7 +6,7 @@
 // returns lit-html `TemplateResult`s that React cannot render.
 //
 // `title` is byte-identical to
-// `al-web-components/.storybook/components/tokens/tier-1/tier-1.stories.ts`
+// `@southleft/al-web-components/.storybook/components/tokens/tier-1/tier-1.stories.ts`
 // so the page lands at the same sidebar path in both Storybooks.
 
 import type { Meta, StoryObj } from '@storybook/react-vite';

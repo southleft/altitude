@@ -37,7 +37,7 @@ const MANUAL_PATH = path.join(REPO_ROOT, '.altitude', 'a11y', 'manual-tests.json
 
 /** Regenerate line printed in the panel when the report is missing or stale. */
 export const A11Y_COMMAND =
-  'pnpm --filter al-web-components exec storybook build --output-dir <dir> && node scripts/build-a11y-report.mjs --storybook <dir>';
+  'pnpm --filter @southleft/al-web-components exec storybook build --output-dir <dir> && node scripts/build-a11y-report.mjs --storybook <dir>';
 
 function readJson(file) {
   try {

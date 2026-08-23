@@ -1,6 +1,6 @@
 // Shared filesystem layout for the Altitude MCP server.
 //
-// This server READS generated artifacts produced by al-web-components' own
+// This server READS generated artifacts produced by @southleft/al-web-components' own
 // build scripts — it is never a second source of truth. Every path below
 // points at a file that already exists somewhere else in the repo; if one is
 // missing (fresh clone, no build yet) `requireFile` throws a structured
@@ -68,7 +68,7 @@ export function requireFile(path, hint) {
 }
 
 export const HINTS = Object.freeze({
-  cem: 'pnpm --filter al-web-components build:custom-elements.json',
-  tokens: 'pnpm --filter al-web-components build:tokens',
-  storybook: "pnpm --filter al-web-components build:storybook --output-dir ../../dist/storybook/web-components",
+  cem: 'pnpm --filter @southleft/al-web-components build:custom-elements.json',
+  tokens: 'pnpm --filter @southleft/al-web-components build:tokens',
+  storybook: "pnpm --filter @southleft/al-web-components build:storybook --output-dir ../../dist/storybook/web-components",
 });

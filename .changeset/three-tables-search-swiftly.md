@@ -1,6 +1,6 @@
 ---
-"al-web-components": minor
-"al-react": minor
+"@southleft/al-web-components": minor
+"@southleft/al-react": minor
 ---
 
 Add three new components: `al-table` (sortable/selectable data table with an

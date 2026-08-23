@@ -2,8 +2,8 @@
 //
 // Tree-shakeable named exports. Import only what you use:
 //
-//   import { caretDown } from 'al-web-components/dist/components/icon/glyphs.js';
-//   import { registerIcons } from 'al-web-components/dist/components/icon/registry.js';
+//   import { caretDown } from '@southleft/al-web-components/dist/components/icon/glyphs.js';
+//   import { registerIcons } from '@southleft/al-web-components/dist/components/icon/registry.js';
 //   registerIcons({ 'caret-down': caretDown });
 //
 export { default as acorn } from './phosphor/acorn';

@@ -47,7 +47,7 @@ const require = createRequire(import.meta.url);
 
 /**
  * pnpm does not hoist `playwright` or `axe-core` to the repo root — they are
- * transitive deps of `al-web-components`'s `axe-playwright`, so a script that
+ * transitive deps of `@southleft/al-web-components`'s `axe-playwright`, so a script that
  * lives in `scripts/` cannot `import` them by bare specifier. Rather than add a
  * dependency (and an install) for a script that runs on demand, resolve through
  * the store the workspace already populated. Throws with the fix if absent.
@@ -72,7 +72,7 @@ function resolvePkg(pkg, subpath) {
   }
   throw new Error(
     `Cannot resolve "${pkg}${subpath ? `/${subpath}` : ''}". It is a transitive dependency of ` +
-      'al-web-components (axe-playwright); run `pnpm install` at the repo root first.',
+      '@southleft/al-web-components (axe-playwright); run `pnpm install` at the repo root first.',
   );
 }
 
@@ -95,7 +95,7 @@ const LIMIT = Number(argOf('--limit', '0'));
 if (!STORYBOOK_DIR || !existsSync(join(STORYBOOK_DIR, 'index.json'))) {
   console.error(
     'usage: node scripts/build-a11y-report.mjs --storybook <static-build-dir> [--out <json>]\n' +
-      '  Build one first:  pnpm --filter al-web-components exec storybook build --output-dir <dir>\n' +
+      '  Build one first:  pnpm --filter @southleft/al-web-components exec storybook build --output-dir <dir>\n' +
       '  Never point this at a running dev server — see the measurement note in this file.',
   );
   process.exit(1);

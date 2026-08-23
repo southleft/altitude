@@ -93,7 +93,7 @@ function extractVars(file) {
 
 function main() {
   if (!fs.existsSync(TOKEN_DIST)) {
-    console.error(`[tokens] ${TOKEN_DIST} does not exist; did you run \`yarn workspace al-web-components build:tokens\`?`);
+    console.error(`[tokens] ${TOKEN_DIST} does not exist; did you run \`yarn workspace @southleft/al-web-components build:tokens\`?`);
     process.exit(1);
   }
 

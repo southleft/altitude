@@ -156,7 +156,7 @@ console.log('\nworkspace app specifiers');
  * in apps/southleft reported as five UNREACHABLE package imports, when nothing
  * there resolved through the exports map at all. (Those particular imports are
  * gone: the OKLCH engine moved to `libs/al-web-components/theme-engine/` and is
- * now a real `al-web-components/theme-engine` subpath — which THIS scanner
+ * now a real `@southleft/al-web-components/theme-engine` subpath — which THIS scanner
  * checks. The lookbehind still earns its keep for every other prose mention.) It also matched package names
  * inside error-message strings and inside template literals building display
  * snippets, where the `${...}` truncated to nonsense like `components//.js`.
@@ -167,7 +167,7 @@ console.log('\nworkspace app specifiers');
  * Reporting it here as an exports-map failure sent readers to the wrong file. Combined with comment stripping below, this took the gate from
  * 14 reported problems to 0 without silencing anything real.
  */
-const specRe = /(?<![\w./-])(al-web-components|al-react)\/[A-Za-z0-9_./-]+/g;
+const specRe = /(?<![\w./-])(@southleft\/al-web-components|@southleft\/al-react)\/[A-Za-z0-9_./-]+/g;
 const seen = new Map(); // specifier -> first file that used it
 
 /**
@@ -189,7 +189,7 @@ const stripComments = (src) =>
   src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|\s)\/\/[^\n]*/g, '$1');
 
 /**
- * A specifier built from a template literal — `al-web-components/components/${slug}`
+ * A specifier built from a template literal — `@southleft/al-web-components/components/${slug}`
  * — reaches this scanner with the `${...}` already gone, leaving a path that
  * ends at a separator. It cannot be resolved without knowing the runtime value,
  * and reporting the truncated stub as UNREACHABLE is a false alarm: the
@@ -210,7 +210,7 @@ for (const file of walkApps(APPS)) {
 
 let checked = 0;
 for (const [spec, usedIn] of seen) {
-  const pkgName = spec.startsWith('al-react') ? 'al-react' : 'al-web-components';
+  const pkgName = spec.startsWith('@southleft/al-react') ? '@southleft/al-react' : '@southleft/al-web-components';
   const meta = pkgMeta.find((p) => p.pkg.name === pkgName);
   if (!meta || !meta.pkg.exports) continue;
 

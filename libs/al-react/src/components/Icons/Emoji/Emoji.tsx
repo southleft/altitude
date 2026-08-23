@@ -1,8 +1,8 @@
 'use client';
 
 import { createComponent } from '@lit/react';
-import { ALIconEmoji as ALWebIconEmoji } from 'al-web-components/components/icon/icons/emoji';
-import register from 'al-web-components/directives/register';
+import { ALIconEmoji as ALWebIconEmoji } from '@southleft/al-web-components/components/icon/icons/emoji';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../../package.json';
 

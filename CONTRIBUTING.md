@@ -19,8 +19,8 @@ The authoritative plan lives in [`NEXT-GEN-UPGRADE-PLAN.md`](./NEXT-GEN-UPGRADE-
 nvm use                                  # Node 22 LTS (pinned in .nvmrc)
 pnpm install                             # pnpm 9 workspaces
 pnpm run build                           # build both libraries
-pnpm --filter al-web-components start    # Storybook on :6006
-pnpm --filter al-react start             # Storybook on :9009
+pnpm --filter @southleft/al-web-components start    # Storybook on :6006
+pnpm --filter @southleft/al-react start             # Storybook on :9009
 ```
 
 ## Branch model

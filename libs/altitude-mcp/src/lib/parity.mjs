@@ -1,6 +1,6 @@
 // Figma <-> code parity engine.
 //
-// MULTI-PROJECT. One component library (`al-web-components`) backs more than
+// MULTI-PROJECT. One component library (`@southleft/al-web-components`) backs more than
 // one design system — Altitude and Southleft today. They share every component;
 // what differs is the brand recipe, the Storybook identity, and WHICH FIGMA FILE
 // each is checked against. That per-design-system record lives in
@@ -326,7 +326,9 @@ export function computeParity(project) {
   const manifest = readManifest(p);
   const allComponents = loadComponents();
   const excludedByConfig = p.excluded ?? {};
-  const excludePrefixes = p.storybook.excludeTitlePrefixes ?? [];
+  // library-scope, with a legacy fallback for any registry still carrying it
+  // under `storybook` (that block is optional now — Southleft has none).
+  const excludePrefixes = p.library?.excludeTitlePrefixes ?? p.storybook?.excludeTitlePrefixes ?? [];
 
   // SCOPE. A project may declare `library.components` — the subset of the shared
   // library that actually IS that design system. Southleft ships 21 of the 105

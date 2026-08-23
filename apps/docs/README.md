@@ -45,7 +45,7 @@ beside it documents every field; the ones this site reads are:
   "figma": { "fileKey": "…", "fileName": "Acme UI", "decoys": [] },
   "paths": { "parityManifest": ".altitude/figma-sync/acme/parity-manifest.json", … },
   "library": {
-    "workspace": "al-web-components",
+    "workspace": "@southleft/al-web-components",
     "root": "libs/al-web-components",
     "tagPrefix": "al-",
     // OMIT to document the whole library. Present = this system's declared

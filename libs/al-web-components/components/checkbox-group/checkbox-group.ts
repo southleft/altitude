@@ -112,7 +112,7 @@ export class ALCheckboxGroup extends ALElement {
    * 1. Listen for the `onCheckboxChange` event that every slotted `<al-checkbox>`
    *    bubbles (ALElement.dispatch defaults to bubbles + composed) and re-emit a
    *    group-level event. Without this the group dispatched nothing at all, so the
-   *    al-react `<ALCheckboxGroup>` wrapper had no event to map. Mirrors radio-group.
+   *    @southleft/al-react `<ALCheckboxGroup>` wrapper had no event to map. Mirrors radio-group.
    */
   constructor() {
     super();

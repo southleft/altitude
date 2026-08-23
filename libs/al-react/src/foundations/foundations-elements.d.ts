@@ -1,6 +1,6 @@
 // JSX typings for the shared Foundations documentation elements.
 //
-// These are Lit custom elements defined in al-web-components source
+// These are Lit custom elements defined in @southleft/al-web-components source
 // (`.storybook/components/**`) and rendered directly as JSX by the
 // `*.stories.tsx` files in this directory. React 19 passes an unknown
 // hyphenated tag straight to `document.createElement` and writes string props

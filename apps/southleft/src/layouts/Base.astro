@@ -3,9 +3,9 @@
 //
 // Mirrors southleft-v5's Base.astro contract (`theme` prop: 'dark' default |
 // 'light'), rebuilt on the Altitude Astro fixture pattern (apps/astro):
-// alAutoRegistry inline in <head>, al-web-components/css/main.css imported
+// alAutoRegistry inline in <head>, @southleft/al-web-components/css/main.css imported
 // once, deep component imports as a bundled <script> at the end of <body>.
-import 'al-web-components/css/main.css';
+import '@southleft/al-web-components/css/main.css';
 import '../styles/fonts.css';
 import '../styles/layout.css';
 import Header from '../components/Header.astro';
@@ -174,29 +174,29 @@ const ldNodes = [organizationLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : 
     </script>
 
     <script>
-      import 'al-web-components/components/avatar';
-      import 'al-web-components/components/badge';
-      import 'al-web-components/components/breadcrumbs-item';
-      import 'al-web-components/components/breadcrumbs';
-      import 'al-web-components/components/button';
-      import 'al-web-components/components/card';
-      import 'al-web-components/components/chip';
-      import 'al-web-components/components/divider';
-      import 'al-web-components/components/footer';
-      import 'al-web-components/components/header';
-      import 'al-web-components/components/heading';
-      import 'al-web-components/components/link';
-      import 'al-web-components/components/list-item';
-      import 'al-web-components/components/list';
-      import 'al-web-components/components/logo';
-      import 'al-web-components/components/layout';
-      import 'al-web-components/components/stat';
-      import 'al-web-components/components/tab-panel';
-      import 'al-web-components/components/tab';
-      import 'al-web-components/components/tabs';
-      import 'al-web-components/components/testimonial';
-      import 'al-web-components/components/text-block';
-      import 'al-web-components/components/theme';
+      import '@southleft/al-web-components/components/avatar';
+      import '@southleft/al-web-components/components/badge';
+      import '@southleft/al-web-components/components/breadcrumbs-item';
+      import '@southleft/al-web-components/components/breadcrumbs';
+      import '@southleft/al-web-components/components/button';
+      import '@southleft/al-web-components/components/card';
+      import '@southleft/al-web-components/components/chip';
+      import '@southleft/al-web-components/components/divider';
+      import '@southleft/al-web-components/components/footer';
+      import '@southleft/al-web-components/components/header';
+      import '@southleft/al-web-components/components/heading';
+      import '@southleft/al-web-components/components/link';
+      import '@southleft/al-web-components/components/list-item';
+      import '@southleft/al-web-components/components/list';
+      import '@southleft/al-web-components/components/logo';
+      import '@southleft/al-web-components/components/layout';
+      import '@southleft/al-web-components/components/stat';
+      import '@southleft/al-web-components/components/tab-panel';
+      import '@southleft/al-web-components/components/tab';
+      import '@southleft/al-web-components/components/tabs';
+      import '@southleft/al-web-components/components/testimonial';
+      import '@southleft/al-web-components/components/text-block';
+      import '@southleft/al-web-components/components/theme';
     </script>
   </body>
 </html>

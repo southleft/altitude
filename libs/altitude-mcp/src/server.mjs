@@ -3,13 +3,14 @@
 // token/component graph (CEM, per-component JSON schemas, migration state,
 // resolved tokens, the icon catalog, and the deterministic OKLCH theme
 // engine). It is a READER of those artifacts, never a second source of
-// truth: every tool below shells out to or parses a file al-web-components'
-// own build already produced. See README.md for the full contract.
+// truth: every tool below shells out to or parses a file that the
+// @southleft/al-web-components build already produced. See README.md for the
+// full contract.
 //
 // Run with `--experimental-strip-types` (harmless no-op on Node versions
 // where type stripping is unflagged). altitude_generate_theme prefers the
-// BUILT theme engine (al-web-components/dist/theme-engine/index.js) and needs
-// no type stripping for it; the flag only matters for the fallback path, where
+// BUILT theme engine (@southleft/al-web-components/dist/theme-engine/index.js)
+// and needs no type stripping for it; the flag only matters for the fallback path, where
 // an unbuilt checkout is served from the engine's TypeScript source. See
 // ./lib/theme.mjs.
 
@@ -98,7 +99,7 @@ server.registerTool(
   {
     title: 'List Altitude components',
     description:
-      'List every al-web-components custom element from the Custom Elements Manifest (CEM): tag, ' +
+      'List every @southleft/al-web-components custom element from the Custom Elements Manifest (CEM): tag, ' +
       'class name, description, and migration state. Optionally filter by a substring match on tag, ' +
       'class name, or description.',
     inputSchema: {
@@ -125,7 +126,7 @@ server.registerTool(
   {
     title: 'Get one Altitude component',
     description:
-      'Full detail for one al-web-components custom element: its CEM entry (attributes, slots, ' +
+      'Full detail for one @southleft/al-web-components custom element: its CEM entry (attributes, slots, ' +
       'events, CSS parts/properties), its JSON Schema from schemas/, its migration state, and its ' +
       'Storybook docs URL.',
     inputSchema: {
@@ -160,7 +161,7 @@ server.registerTool(
   {
     title: 'Validate Altitude usage',
     description:
-      'Validate <al-*> / al-react usage against the component contracts. Wraps ' +
+      'Validate <al-*> / @southleft/al-react usage against the component contracts. Wraps ' +
       'libs/al-web-components/cli/validate.mjs --json verbatim (same stable error codes: ' +
       'ERR_UNKNOWN_COMPONENT, ERR_UNKNOWN_ATTRIBUTE, ERR_INVALID_ENUM, ERR_TYPE_MISMATCH). Pass ' +
       'either inline markup or a file/directory path.',
@@ -333,7 +334,10 @@ server.registerTool(
         brand: p.brand,
         isDefault: p.isDefault,
         figma: { fileKey: p.figma.fileKey, fileName: p.figma.fileName, url: p.resolved.figmaUrlBase },
-        storybook: { port: p.storybook.port, brandTitle: p.storybook.brandTitle },
+        // null when a project has no Storybook (Southleft's was retired in
+        // favour of the docs site); `docs` is the surface that replaced it.
+        storybook: p.storybook ? { port: p.storybook.port, brandTitle: p.storybook.brandTitle } : null,
+        docs: p.docs?.productionBase ?? null,
         parityManifest: p.paths.parityManifest,
       };
     }),
@@ -346,7 +350,7 @@ server.registerTool(
 // ── transports ───────────────────────────────────────────────────────────
 // Default: stdio (what .mcp.json launches — one server, one client).
 // `--http [port]`: streamable HTTP for the Storybook pairing
-// (`pnpm --filter al-web-components start` runs both via concurrently), so
+// (`pnpm --filter @southleft/al-web-components start` runs both via concurrently), so
 // any MCP client can attach to the running instance at /mcp while Storybook
 // is up. Stateless: a fresh server+transport per POST, no session ids.
 const httpFlag = process.argv.indexOf('--http');
@@ -386,7 +390,7 @@ if (httpFlag === -1) {
     // and costs nothing for real local clients.
     if (!isLoopback(req.headers.host)) {
       res.writeHead(403, { 'content-type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Host not allowed; altitude-mcp serves loopback clients only.' }));
+      res.end(JSON.stringify({ error: 'Host not allowed; @southleft/altitude-mcp serves loopback clients only.' }));
       return;
     }
 
@@ -483,10 +487,10 @@ if (httpFlag === -1) {
   // ALTITUDE_MCP_HOST deliberately if you genuinely need to expose it.
   const host = process.env.ALTITUDE_MCP_HOST ?? '127.0.0.1';
   httpServer.listen(port, host, () => {
-    console.log(`[altitude-mcp] streamable HTTP on http://${host}:${port}/mcp (parity: /parity.json)`);
+    console.log(`[@southleft/altitude-mcp] streamable HTTP on http://${host}:${port}/mcp (parity: /parity.json)`);
     if (host !== '127.0.0.1' && host !== 'localhost') {
       console.warn(
-        `[altitude-mcp] WARNING: bound to ${host}, not loopback. This server is unauthenticated ` +
+        `[@southleft/altitude-mcp] WARNING: bound to ${host}, not loopback. This server is unauthenticated ` +
           'and serves repository contents. Do not do this on an untrusted network.',
       );
     }

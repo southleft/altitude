@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * T4.7 acceptance — al-react wrapper contract (R19), exercised end-to-end.
+ * T4.7 acceptance — @southleft/al-react wrapper contract (R19), exercised end-to-end.
  *
  * Asserts:
  *   1. Boolean attribute reflection — `isDisabled` propagates between
@@ -11,10 +11,10 @@ import { test, expect } from '@playwright/test';
  *   4. ref forwarding to the underlying custom element.
  *   5. al-input form participation via ElementInternals (T5.3 cross-ref).
  *
- * The al-react wrappers use `@lit/react` createComponent — we use the
- * already-built `dist/components/<name>/<name>.js` from al-web-components
+ * The @southleft/al-react wrappers use `@lit/react` createComponent — we use the
+ * already-built `dist/components/<name>/<name>.js` from @southleft/al-web-components
  * (the underlying class). The contract is verified at the customElement
- * level since al-react wrappers are thin pass-throughs over these classes.
+ * level since @southleft/al-react wrappers are thin pass-throughs over these classes.
  */
 
 test('T4.7 — boolean attribute reflects from property', async ({ page, baseURL }) => {

@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { ALThemeSwitcher as ALWebThemeSwitcher } from 'al-web-components/components/theme-switcher';
-import register from 'al-web-components/directives/register';
+import { ALThemeSwitcher as ALWebThemeSwitcher } from '@southleft/al-web-components/components/theme-switcher';
+import register from '@southleft/al-web-components/directives/register';
 import PackageJson from '../../../package.json';
 
 const elementMap = register({

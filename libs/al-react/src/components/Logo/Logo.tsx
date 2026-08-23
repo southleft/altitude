@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { ALLogo as ALWebLogo } from 'al-web-components/components/logo';
-import register from 'al-web-components/directives/register';
+import { ALLogo as ALWebLogo } from '@southleft/al-web-components/components/logo';
+import register from '@southleft/al-web-components/directives/register';
 import PackageJson from '../../../package.json';
 
 const elementMap = register({

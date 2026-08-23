@@ -1,6 +1,6 @@
 # Figma ↔ Code Parity (Storybook badges + MCP)
 
-Every component in the al-web-components Storybook sidebar carries a parity
+Every component in the @southleft/al-web-components Storybook sidebar carries a parity
 badge showing whether it is 1:1 with its Figma component set, and every
 autodocs page opens with a parity banner offering actions (open the Figma
 node, copy its id, copy a ready-to-run AI reconciliation prompt).
@@ -56,7 +56,7 @@ a11y report — docsMode has no addon panels).
 
 ## The MCP pairing
 
-`pnpm --filter al-web-components start` now runs **Storybook (6006) and the
+`pnpm --filter @southleft/al-web-components start` now runs **Storybook (6006) and the
 altitude MCP in streamable-HTTP mode (6017)** via concurrently. Endpoints on
 6017: `POST /mcp` (stateless MCP — any client can attach while Storybook is
 up), `GET /parity.json`, `GET /healthz`. Stdio mode (what `.mcp.json`

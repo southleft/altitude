@@ -7,7 +7,7 @@
 // Prefer explicit registration via ./glyphs.js. Reach for this in Storybook,
 // prototypes, or when icon names come from data you do not control.
 //
-//   import 'al-web-components/dist/components/icon/lazy.js';
+//   import '@southleft/al-web-components/dist/components/icon/lazy.js';
 //
 import { setIconResolver } from './registry';
 import type { AltitudeIconDef } from './types';

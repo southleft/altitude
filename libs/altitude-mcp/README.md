@@ -1,4 +1,4 @@
-# altitude-mcp
+# @southleft/altitude-mcp
 
 A stdio [MCP](https://modelcontextprotocol.io) server exposing Altitude's already-generated
 token/component graph to AI agents. Implements `T7.2` from `NEXT-GEN-UPGRADE-PLAN.md`.
@@ -6,7 +6,7 @@ token/component graph to AI agents. Implements `T7.2` from `NEXT-GEN-UPGRADE-PLA
 ## What this is (and isn't)
 
 This server **reads** generated artifacts that already exist elsewhere in the repo — it is
-**never a second source of truth**. Every tool below either parses a file `al-web-components`'
+**never a second source of truth**. Every tool below either parses a file `@southleft/al-web-components`'
 own build already produced, or shells out to an existing script:
 
 | Tool | Reads |
@@ -46,7 +46,7 @@ for one already-plain-JS-shaped module, keeping the dependency list to exactly
 ## Run
 
 ```bash
-pnpm --filter altitude-mcp start
+pnpm --filter @southleft/altitude-mcp start
 # or directly:
 node --experimental-strip-types --no-warnings libs/altitude-mcp/src/server.mjs
 ```
@@ -56,7 +56,7 @@ Registered in the repo's `.mcp.json` as `altitude`, alongside `monday-morning` a
 ## Test
 
 ```bash
-pnpm --filter altitude-mcp test
+pnpm --filter @southleft/altitude-mcp test
 ```
 
 `test/smoke.mjs` spawns the real server, performs the MCP handshake over stdio, lists tools, and
@@ -154,7 +154,7 @@ best-effort resolved value.
   "icons": [
     { "name": "trash", "pascalName": "Trash", "categories": ["office", "system"], "tags": ["garbage", "delete", "..."],
       "exportName": "trash",
-      "snippet": "import { trash } from 'al-web-components/dist/components/icon/glyphs.js';\nimport { registerIcons } from 'al-web-components/dist/components/icon/registry.js';\nregisterIcons({ 'trash': trash });" }
+      "snippet": "import { trash } from '@southleft/al-web-components/dist/components/icon/glyphs.js';\nimport { registerIcons } from '@southleft/al-web-components/dist/components/icon/registry.js';\nregisterIcons({ 'trash': trash });" }
   ]
 }
 ```

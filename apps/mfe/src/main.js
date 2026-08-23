@@ -5,7 +5,7 @@
 // Playwright acceptance (tests/mfe.spec.ts) asserts `customElements.get`
 // returns two distinct entries.
 //
-// Once a real second copy of `al-web-components` is published, replace the
+// Once a real second copy of `@southleft/al-web-components` is published, replace the
 // shared import with the version-pinned packages; the rest of this wiring
 // stays the same.
 //
@@ -16,12 +16,12 @@
 // registers its own card/heading alongside its button, exactly like a real
 // MFE deployment would bring its own copy of every component it renders.
 
-import { ALButton } from 'al-web-components/components/button';
-import { ALTheme } from 'al-web-components/components/theme';
-import { ALLayout } from 'al-web-components/components/layout';
-import { ALCard } from 'al-web-components/components/card';
-import { ALHeading } from 'al-web-components/components/heading';
-import { registerAltitude } from 'al-web-components/directives/register';
+import { ALButton } from '@southleft/al-web-components/components/button';
+import { ALTheme } from '@southleft/al-web-components/components/theme';
+import { ALLayout } from '@southleft/al-web-components/components/layout';
+import { ALCard } from '@southleft/al-web-components/components/card';
+import { ALHeading } from '@southleft/al-web-components/components/heading';
+import { registerAltitude } from '@southleft/al-web-components/directives/register';
 
 const HOST_SUFFIX = 'shell';
 const LEFT_SUFFIX = '1-0-0';

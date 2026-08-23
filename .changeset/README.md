@@ -4,8 +4,8 @@ This folder is the inbox for release notes during the v2 refactor.
 
 ## Why it exists
 
-The v2 refactor will produce many incremental PRs across `al-web-components`
-and `al-react`. Each PR that affects the public API (component tags, props,
+The v2 refactor will produce many incremental PRs across `@southleft/al-web-components`
+and `@southleft/al-react`. Each PR that affects the public API (component tags, props,
 slots, events, CSS parts, CSS custom properties, registry modes) drops a
 markdown file here describing the change and its semver impact.
 

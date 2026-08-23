@@ -2,7 +2,7 @@
 /**
  * Loads the Altitude element registry so the generated playgrounds upgrade.
  *
- * A per-page deep import (`al-web-components/components/<slug>`) would be
+ * A per-page deep import (`@southleft/al-web-components/components/<slug>`) would be
  * leaner, but the tag a detail page needs is only known at build time and a
  * bare-specifier dynamic import is not statically analyzable by Vite — so the
  * docs site pays one bundle and guarantees every one of the generated
@@ -16,5 +16,5 @@
 ---
 
 <script>
-  import 'al-web-components';
+  import '@southleft/al-web-components';
 </script>

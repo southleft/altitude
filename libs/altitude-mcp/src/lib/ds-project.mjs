@@ -1,7 +1,7 @@
 // Design-system PROJECT RESOLUTION.
 //
 // This repo drives more than one Figma-backed design system off ONE component
-// library (`al-web-components`). Altitude and Southleft share every component;
+// library (`@southleft/al-web-components`). Altitude and Southleft share every component;
 // what differs is the brand recipe, the Storybook identity, and — the part this
 // module exists for — WHICH FIGMA FILE the parity engine is checking against.
 //
@@ -143,7 +143,15 @@ export function resolveProject(explicitId = null) {
       // file-scoped, so this must never fall back to another project's map.
       instanceMap: project.paths.instanceMap ? abs(project.paths.instanceMap) : null,
       libraryRoot: abs(project.library.root),
-      storybookConfigDir: abs(project.storybook.configDir),
+      // null for a project with no Storybook. Southleft's was retired on
+      // 2026-08-23 in favour of the multi-brand docs site, and `storybook` is
+      // optional in the schema, so reading it unguarded threw for that project
+      // and took resolveProject() — and therefore every parity CLI — with it.
+      storybookConfigDir: project.storybook ? abs(project.storybook.configDir) : null,
+      // Where this project's documentation is published. Replaces Storybook as
+      // the canonical docs surface; see `docs` in .altitude/ds-projects.json.
+      docsProductionBase: project.docs?.productionBase ?? null,
+      docsRoute: project.docs?.route ?? null,
     },
   };
 }

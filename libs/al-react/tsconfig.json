@@ -22,9 +22,9 @@
     // list contains JSX (the 66 wrappers are `createComponent` calls).
     "jsx": "react-jsx",
     "target": "es6",
-    // `bundler` (not `node`) because al-web-components now publishes an
+    // `bundler` (not `node`) because @southleft/al-web-components now publishes an
     // `exports` map: classic `node` resolution ignores `exports` entirely, so
-    // every `al-web-components/components/*` subpath failed TS2307 while Vite
+    // every `@southleft/al-web-components/components/*` subpath failed TS2307 while Vite
     // resolved it fine. `bundler` reads `exports` and requires `module` to be
     // `esnext`/`preserve`, hence the change just below.
     "moduleResolution": "bundler",
@@ -40,7 +40,7 @@
     // inferred root was therefore the PACKAGE root, not `src`, so the emit
     // landed at `dist/src/index.js` while `package.json` declared
     // `main: dist/index.js` — an entry point that did not exist. `apps/react`
-    // worked around it by deep-importing `al-react/dist/src`.
+    // worked around it by deep-importing `@southleft/al-react/dist/src`.
     //
     // Pinning `src` makes the emit match the manifest, and the JSON specifier
     // stays correct by construction: `src/` and `dist/` are both one level

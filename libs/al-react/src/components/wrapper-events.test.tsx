@@ -52,7 +52,7 @@ const wrappers: Wrapper[] = Object.keys(sources)
 
 afterEach(cleanup);
 
-describe('al-react wrapper runtime contract', () => {
+describe('@southleft/al-react wrapper runtime contract', () => {
   it('discovers every wrapper on disk', () => {
     // A guard against this whole suite silently covering nothing — the exact
     // failure mode the spec's Findings section is about.

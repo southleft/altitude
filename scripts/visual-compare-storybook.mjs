@@ -3,10 +3,10 @@
 // Storybook 7 for the same set of stories.
 //
 // Writes pairs to `.altitude/visual-compare/storybook/`:
-//   <pilot>.local-wc.png    — Storybook 10 al-web-components
-//   <pilot>.prod-wc.png     — production al-web-components
-//   <pilot>.local-react.png — Storybook 10 al-react
-//   <pilot>.prod-react.png  — production al-react
+//   <pilot>.local-wc.png    — Storybook 10 @southleft/al-web-components
+//   <pilot>.prod-wc.png     — production @southleft/al-web-components
+//   <pilot>.local-react.png — Storybook 10 @southleft/al-react
+//   <pilot>.prod-react.png  — production @southleft/al-react
 
 import { chromium } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';

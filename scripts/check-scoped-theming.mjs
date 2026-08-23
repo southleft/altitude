@@ -24,7 +24,7 @@
  *   5. `mode` moves the whole 23-property surface, not two hardcoded hexes;
  *   6. `motion='reduced'` computes a 0s transition on a real component.
  *
- * Requires `pnpm --filter al-web-components build` (dist components + css).
+ * Requires `pnpm --filter @southleft/al-web-components build` (dist components + css).
  *
  *   node scripts/check-scoped-theming.mjs
  *   node scripts/check-scoped-theming.mjs --no-screenshot
@@ -54,7 +54,7 @@ const cssFile = path.join(REPO, 'libs', 'al-web-components', 'dist', 'css', 'mai
 for (const p of [distDir, cssFile]) {
   if (!fs.existsSync(p)) {
     console.error(
-      `[scoped-theming] ${path.relative(REPO, p)} missing — run \`pnpm --filter al-web-components build\` first.`
+      `[scoped-theming] ${path.relative(REPO, p)} missing — run \`pnpm --filter @southleft/al-web-components build\` first.`
     );
     process.exit(1);
   }

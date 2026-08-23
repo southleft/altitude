@@ -1,8 +1,8 @@
 'use client';
 
 import { createComponent } from '@lit/react';
-import { ALIconWarningCircle as ALWebIconWarningCircle } from 'al-web-components/components/icon/icons/warning-circle';
-import register from 'al-web-components/directives/register';
+import { ALIconWarningCircle as ALWebIconWarningCircle } from '@southleft/al-web-components/components/icon/icons/warning-circle';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../../package.json';
 

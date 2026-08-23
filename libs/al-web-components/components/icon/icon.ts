@@ -134,11 +134,11 @@ export class ALIcon extends ALIconBase {
         `[altitude] <al-icon name="${name}"> is not registered and no resolver is installed.\n` +
           aliasNote +
           `  Register it explicitly (recommended — tree-shakeable, SSR-safe):\n` +
-          `    import { ${toExportName(target)} } from 'al-web-components/dist/components/icon/glyphs.js';\n` +
-          `    import { registerIcons } from 'al-web-components/dist/components/icon/registry.js';\n` +
+          `    import { ${toExportName(target)} } from '@southleft/al-web-components/dist/components/icon/glyphs.js';\n` +
+          `    import { registerIcons } from '@southleft/al-web-components/dist/components/icon/registry.js';\n` +
           `    registerIcons({ '${target}': ${toExportName(target)} });\n` +
           `  Or enable dynamic loading of all glyphs (+~13 KB gzipped, not SSR-renderable):\n` +
-          `    import 'al-web-components/dist/components/icon/lazy.js';`
+          `    import '@southleft/al-web-components/dist/components/icon/lazy.js';`
       );
       return;
     }

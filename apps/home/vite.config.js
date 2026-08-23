@@ -7,9 +7,9 @@ import { defineConfig } from 'vite';
 //
 // AI Showcase Homepage (2026-08-20-ai-showcase-homepage, descoped 2026-08-20
 // — see spec.md's Tasks note) — this app composes already-built
-// al-web-components components (imported from `dist/`, plain JS, no
+// @southleft/al-web-components components (imported from `dist/`, plain JS, no
 // decorators to transpile) plus a page-level SCSS file for layout, so no
-// esbuild decorator config is needed here (unlike al-web-components' own
+// esbuild decorator config is needed here (unlike @southleft/al-web-components' own
 // vite.config.mjs, which compiles `@property() accessor foo` source).
 export default defineConfig({
   base: '/',

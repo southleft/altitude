@@ -16,7 +16,7 @@ let cache = null;
 
 export function loadIconCatalog() {
   if (cache) return cache;
-  requireFile(PATHS.iconCatalog, 'pnpm --filter al-web-components build:icons');
+  requireFile(PATHS.iconCatalog, 'pnpm --filter @southleft/al-web-components build:icons');
   const src = readFileSync(PATHS.iconCatalog, 'utf8');
   const m = /export const catalog: readonly AltitudeIconCatalogEntry\[\] = (\[[\s\S]*\]);/.exec(src);
   if (!m) {
@@ -40,8 +40,8 @@ export function importGuidanceFor(kebab) {
   return {
     exportName,
     snippet:
-      `import { ${exportName} } from 'al-web-components/dist/components/icon/glyphs.js';\n` +
-      `import { registerIcons } from 'al-web-components/dist/components/icon/registry.js';\n` +
+      `import { ${exportName} } from '@southleft/al-web-components/dist/components/icon/glyphs.js';\n` +
+      `import { registerIcons } from '@southleft/al-web-components/dist/components/icon/registry.js';\n` +
       `registerIcons({ '${kebab}': ${exportName} });`,
   };
 }

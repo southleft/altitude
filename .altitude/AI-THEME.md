@@ -92,7 +92,7 @@ flip the entire library to paper-white inside a dark Storybook.
 ```
 functions/api/theme.js                       Cloudflare Pages Function — the AI call
 libs/al-web-components/
-  theme-engine/                              BUILT + EXPORTED as `al-web-components/theme-engine`
+  theme-engine/                              BUILT + EXPORTED as `@southleft/al-web-components/theme-engine`
     index.ts                                 the public barrel — everything below is internal
     constants.ts                             channel event ids + the /api/theme path
     types.ts                                 Direction / Theme / Receipt contract
@@ -129,7 +129,7 @@ prompt and the clamps. Set `ANTHROPIC_API_KEY` (see `.env.example`); without it
 the endpoint returns 503 and the panel falls back to the seed engine.
 
 `.env` is gitignored. The plugin reads the repo root *and* the workspace dir,
-because `pnpm --filter al-web-components start` runs with a different cwd.
+because `pnpm --filter @southleft/al-web-components start` runs with a different cwd.
 
 ## What it does not touch
 
@@ -153,7 +153,7 @@ because `pnpm --filter al-web-components start` runs with a different cwd.
   outside the package, with `allowJs` off).
 - The MCP prefers the BUILT barrel (`dist/theme-engine/index.js`) and falls
   back to the TypeScript source only when `dist/` is absent — `dist` is
-  gitignored and `pnpm --filter al-web-components start` boots the MCP with no
+  gitignored and `pnpm --filter @southleft/al-web-components start` boots the MCP with no
   build in front of it. Both paths produce byte-identical themes.
 - The applicator diff-removes keys from the previous theme. Without that, a key
   present before and absent now would linger and blend two palettes.

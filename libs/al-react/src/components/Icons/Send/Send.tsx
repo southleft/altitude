@@ -1,8 +1,8 @@
 'use client';
 
 import { createComponent } from '@lit/react';
-import { ALIconSend as ALWebIconSend } from 'al-web-components/components/icon/icons/send';
-import register from 'al-web-components/directives/register';
+import { ALIconSend as ALWebIconSend } from '@southleft/al-web-components/components/icon/icons/send';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../../package.json';
 

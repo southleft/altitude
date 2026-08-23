@@ -1,12 +1,12 @@
 // SCSS import-rewrite plugin — SHARED build glue.
 //
 // Extracted from `vite.config.mjs` (where it was a private function) so the
-// al-react Storybook can use the identical plugin instead of copying it. Two
+// @southleft/al-react Storybook can use the identical plugin instead of copying it. Two
 // consumers today:
 //   * `libs/al-web-components/vite.config.mjs`         — the library build
 //   * `libs/al-react/.storybook/main.ts`               — so that Storybook can
 //     compile the shared `Foundations/*` documentation elements, which live in
-//     al-web-components source and use the bare-`.scss` import form
+//     @southleft/al-web-components source and use the bare-`.scss` import form
 //
 // WHAT IT DOES
 // The component code uses `import styles from './x.scss'` and then

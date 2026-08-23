@@ -9,7 +9,7 @@
 //
 // HOW THE ENGINE IS LOADED — and why there are still two paths
 // ------------------------------------------------------------
-// Preferred: `import()` the BUILT barrel, `al-web-components/dist/theme-engine/
+// Preferred: `import()` the BUILT barrel, `@southleft/al-web-components/dist/theme-engine/
 // index.js`. Plain ES modules, no loader hook, no TypeScript at runtime, and
 // byte-for-byte the artifact a published consumer would resolve through the
 // package's `"./theme-engine"` export. This is what the engine's move out of
@@ -18,7 +18,7 @@
 // Fallback: the TypeScript SOURCE barrel, via the resolve hook in
 // `./ts-loader-hook.mjs`. This is NOT vestigial. `dist/` is gitignored
 // (.gitignore:4), and this server is routinely started against a checkout
-// that has not been built — `pnpm --filter al-web-components start` boots the
+// that has not been built — `pnpm --filter @southleft/al-web-components start` boots the
 // MCP on port 6017 concurrently with Storybook, with no build step in front
 // of it. Every other artifact this server reads is generated and it throws a
 // MissingArtifactError naming the command that produces it; the theme engine

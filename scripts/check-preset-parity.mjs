@@ -32,8 +32,8 @@
  * packages use; override for a worktree that must not collide with a primary
  * checkout's 6006:
  *
- *   pnpm --filter al-web-components start          # 6006
- *   pnpm --filter al-react start                   # 9009
+ *   pnpm --filter @southleft/al-web-components start          # 6006
+ *   pnpm --filter @southleft/al-react start                   # 9009
  *   node scripts/check-preset-parity.mjs
  *   node scripts/check-preset-parity.mjs --wc http://localhost:6007 --react http://localhost:9011
  */
@@ -94,8 +94,8 @@ function readPresets() {
 // ---------------------------------------------------------------------------
 
 // Runs in the preview iframe. Tag selectors carry both spellings because
-// al-react registers with `suffix: PackageJson.version` (`al-theme-1-0-0`)
-// while al-web-components registers plain — which is itself part of what R6 is
+// @southleft/al-react registers with `suffix: PackageJson.version` (`al-theme-1-0-0`)
+// while @southleft/al-web-components registers plain — which is itself part of what R6 is
 // about.
 const PROBE = () => {
   const root = document.querySelector('#storybook-root');
@@ -186,8 +186,8 @@ if (presets.length === 0) {
 }
 
 for (const [label, url] of [
-  ['al-web-components', WC],
-  ['al-react', REACT],
+  ['@southleft/al-web-components', WC],
+  ['@southleft/al-react', REACT],
 ]) {
   if (!(await reachable(url))) {
     console.error(
@@ -213,11 +213,11 @@ const reactItems = await page.evaluate(TOOLBAR);
 if (!wcItems || !reactItems) {
   failures.push(
     `toolbar items unreadable (web-components: ${wcItems ? 'ok' : 'null'}, ` +
-      `al-react: ${reactItems ? 'ok' : 'null'}) — globalTypes.alPreset missing from a preview?`
+      `@southleft/al-react: ${reactItems ? 'ok' : 'null'}) — globalTypes.alPreset missing from a preview?`
   );
 } else if (wcItems.join('\n') !== reactItems.join('\n')) {
   failures.push(
-    `toolbar item lists DIFFER\n    web-components: ${wcItems.join(', ')}\n    al-react:       ${reactItems.join(', ')}`
+    `toolbar item lists DIFFER\n    web-components: ${wcItems.join(', ')}\n    @southleft/al-react:       ${reactItems.join(', ')}`
   );
 } else {
   const expected = presets.map((p) => `${p.id}|${p.label}`);
@@ -236,7 +236,7 @@ for (const preset of presets) {
 
   for (const [side, got] of [
     ['web-components', wc],
-    ['al-react', react],
+    ['@southleft/al-react', react],
   ]) {
     if (got.hostCount !== 1) failures.push(`${preset.id} / ${side}: expected exactly 1 theme host, found ${got.hostCount}`);
     if (got.legacyTokensSheet) failures.push(`${preset.id} / ${side}: legacy style#al-tokens-sheet present (R6)`);
@@ -262,7 +262,7 @@ for (const preset of presets) {
     'buttonRadius',
   ]) {
     if (norm(wc[key]) !== norm(react[key])) {
-      failures.push(`${preset.id}: computed ${key} DIFFERS\n    web-components: ${wc[key]}\n    al-react:       ${react[key]}`);
+      failures.push(`${preset.id}: computed ${key} DIFFERS\n    web-components: ${wc[key]}\n    @southleft/al-react:       ${react[key]}`);
     }
   }
 

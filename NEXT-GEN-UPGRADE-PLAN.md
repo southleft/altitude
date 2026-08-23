@@ -126,7 +126,7 @@ Each task: **Goal · Changes · Acceptance (objectively verifiable) · Depends o
 
 - **T2.2 — Builder migration webpack → Vite (libs).**
   Goal: replace webpack+babel build with Vite; keep `tsc` for `.d.ts`. **Keep `experimentalDecorators: true` + `useDefineForClassFields: false`** — do not touch decorator semantics (G7).
-  Changes: Vite lib config for `al-web-components` and `al-react`; remove babel decorator plugin chain from the build only; apply the chosen style strategy across components (codemod if needed).
+  Changes: Vite lib config for `@southleft/al-web-components` and `@southleft/al-react`; remove babel decorator plugin chain from the build only; apply the chosen style strategy across components (codemod if needed).
   Acceptance: `pnpm build` exits 0; an API-extractor/AST diff shows **zero public export removals** vs the P0 dist; `publint` reports 0 errors; pilot stories render.
   Depends on: T2.1.
 

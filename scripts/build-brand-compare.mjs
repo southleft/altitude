@@ -10,7 +10,7 @@
  * `.altitude/visual-compare/brands.dark.png`, and reads the computed `font`
  * shorthand off rendered elements inside each column's shadow roots.
  *
- * Requires `pnpm --filter al-web-components build:tokens` (for the bundles)
+ * Requires `pnpm --filter @southleft/al-web-components build:tokens` (for the bundles)
  * and a built `libs/al-web-components/dist/` (for the components).
  *
  *   node scripts/build-brand-compare.mjs
@@ -38,8 +38,8 @@ const PORT = 5199;
 const bundleDir = path.join(REPO, 'libs', 'al-web-components', 'styles', 'dist', 'css', 'brand');
 const distDir = path.join(REPO, 'libs', 'al-web-components', 'dist', 'components');
 for (const [dir, hint] of [
-  [bundleDir, 'pnpm --filter al-web-components build:tokens'],
-  [distDir, 'pnpm --filter al-web-components build'],
+  [bundleDir, 'pnpm --filter @southleft/al-web-components build:tokens'],
+  [distDir, 'pnpm --filter @southleft/al-web-components build'],
 ]) {
   if (!fs.existsSync(dir)) {
     console.error(`[brand-compare] ${path.relative(REPO, dir)} missing — run \`${hint}\` first.`);

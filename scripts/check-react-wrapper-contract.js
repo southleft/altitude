@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * al-react wrapper SURFACE check (static).
+ * @southleft/al-react wrapper SURFACE check (static).
  *
  * NAMING, HONESTLY. CI runs this file under the job name "T4.7 React 19 wrapper
  * contract" (.github/workflows/v2-checks.yml). It is not a contract test: it
@@ -12,10 +12,10 @@
  * as "the surface is intact", nothing more.
  *
  * WHAT IT ASSERTS.
- *   1. React 19 + @lit/react are pinned in al-react's package.json.
+ *   1. React 19 + @lit/react are pinned in @southleft/al-react's package.json.
  *   2. Every pilot has a wrapper that calls createComponent with an elementClass.
  *   3. EVENT MAPS ARE NOT DEAD. Every event name a wrapper maps must actually be
- *      dispatched by some component in al-web-components. This is the check that
+ *      dispatched by some component in @southleft/al-web-components. This is the check that
  *      was missing: `Calendar.tsx` mapped `onChange: 'change'` while calendar.ts
  *      only ever dispatched `onCalendarChange`, and `CheckboxGroup.tsx` mapped
  *      `onChange: 'change'` at a component that dispatched nothing at all — two
@@ -24,7 +24,7 @@
  *      anything, the wrapper must declare a non-empty `events` map. `@lit/react`
  *      surfaces nothing that is not listed there.
  *   5. Every wrapper module opens with a `'use client'` directive. Without it
- *      Next.js App Router / RSC cannot import al-react at all — every wrapper
+ *      Next.js App Router / RSC cannot import @southleft/al-react at all — every wrapper
  *      calls `customElements.define` at module scope.
  *
  * KNOWN LIMIT of check 3: Altitude events bubble and compose
@@ -64,7 +64,7 @@ const fail = (msg) => problems.push(msg);
  * mapping in a comment, and without this the checker reported the very bug it
  * had just been used to fix.
  *
- * Deliberately NOT applied to al-web-components sources, and deliberately not
+ * Deliberately NOT applied to @southleft/al-web-components sources, and deliberately not
  * touching block comments: `file-upload.ts:348` contains the string literal
  * `'/*'`, which a regex-based block-comment stripper reads as an opening
  * delimiter and then swallows everything up to the next `* /` — including the
@@ -78,7 +78,7 @@ function stripLineComments(src) {
   return src.replace(/(^|[^:])\/\/.*$/gm, '$1');
 }
 
-/** Every event name dispatched anywhere in al-web-components. */
+/** Every event name dispatched anywhere in @southleft/al-web-components. */
 function collectDispatchedEvents(dir, out = new Set()) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, entry.name);
@@ -108,10 +108,10 @@ function main() {
 
   // 1. React 19 pinned
   const reactSpec = pkg.dependencies?.react;
-  if (!reactSpec || !/^\^?19/.test(reactSpec)) fail(`al-react react dep is '${reactSpec}', expected ^19.*`);
+  if (!reactSpec || !/^\^?19/.test(reactSpec)) fail(`@southleft/al-react react dep is '${reactSpec}', expected ^19.*`);
   const reactDomSpec = pkg.dependencies?.['react-dom'];
-  if (!reactDomSpec || !/^\^?19/.test(reactDomSpec)) fail(`al-react react-dom dep is '${reactDomSpec}', expected ^19.*`);
-  if (!pkg.dependencies?.['@lit/react']) fail('al-react missing @lit/react');
+  if (!reactDomSpec || !/^\^?19/.test(reactDomSpec)) fail(`@southleft/al-react react-dom dep is '${reactDomSpec}', expected ^19.*`);
+  if (!pkg.dependencies?.['@lit/react']) fail('@southleft/al-react missing @lit/react');
 
   // 2. Every pilot has a wrapper
   for (const name of PILOTS) {
@@ -144,20 +144,20 @@ function main() {
       fail(`${rel} does not start with a 'use client' directive (blocks Next.js App Router / RSC)`);
     }
 
-    // 3. Mapped events must exist somewhere in al-web-components.
+    // 3. Mapped events must exist somewhere in @southleft/al-web-components.
     const map = parseEventMap(src);
     for (const [prop, eventName] of map ?? []) {
       mappedEvents += 1;
       if (!dispatched.has(eventName)) {
         fail(
-          `${rel} maps React prop '${prop}' to event '${eventName}', which no al-web-components ` +
+          `${rel} maps React prop '${prop}' to event '${eventName}', which no @southleft/al-web-components ` +
             'component dispatches — the prop can never fire.'
         );
       }
     }
 
     // 4. A dispatching component must have its events surfaced.
-    const importMatch = src.match(/from\s+'al-web-components\/components\/([^']+)'/);
+    const importMatch = src.match(/from\s+'@southleft\/al-web-components\/components\/([^']+)'/);
     if (!importMatch) continue;
     const slug = importMatch[1];
     const wcFile = path.join(WC_COMPONENTS, slug, `${slug.split('/').pop()}.ts`);
@@ -179,7 +179,7 @@ function main() {
   }
 
   console.log(
-    `[r-surface] PASS — al-react@R19, ${PILOTS.length} pilot wrappers, ${wrappers} wrappers checked, ` +
+    `[r-surface] PASS — @southleft/al-react@R19, ${PILOTS.length} pilot wrappers, ${wrappers} wrappers checked, ` +
       `${mappedEvents} event mappings all backed by a real dispatch, 'use client' on every wrapper.`
   );
 }

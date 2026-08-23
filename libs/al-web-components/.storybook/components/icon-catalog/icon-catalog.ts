@@ -22,7 +22,7 @@ const PAGE_SIZE = 120;
 // this file rather than `@customElement`, matching every sibling in
 // `.storybook/components/**`.
 //
-// This is not just consistency. The al-react Storybook now renders these same
+// This is not just consistency. The @southleft/al-react Storybook now renders these same
 // documentation elements (`libs/al-react/src/foundations/`), and its Vite
 // pipeline runs `@vitejs/plugin-react`'s Babel pass over this file. Babel
 // parses with `decoratorsBeforeExport: false` and hard-errors on the

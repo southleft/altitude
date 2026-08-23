@@ -92,8 +92,8 @@ function countIcons() {
 }
 
 /** Design tokens — the flat `--al-*` token -> value map Style Dictionary
- *  ships to consumers (`al-web-components/tokens.json`, the same file
- *  `al-web-components` exports as `./tokens.json`). This is the resolved,
+ *  ships to consumers (`@southleft/al-web-components/tokens.json`, the same file
+ *  `@southleft/al-web-components` exports as `./tokens.json`). This is the resolved,
  *  shipped surface — the number a consumer of the package actually sees —
  *  rather than an editorial count of DTCG source entries across all three
  *  tiers x 8 brands, which double-counts the same semantic token once per
@@ -102,7 +102,7 @@ function countTokens() {
   const tokensJsonPath = path.join(AL_WEB_COMPONENTS, 'dist/css/tokens.json');
   if (!fs.existsSync(tokensJsonPath)) {
     throw new Error(
-      'generate-stats: libs/al-web-components/dist/css/tokens.json is missing — run `pnpm --filter al-web-components build` first.'
+      'generate-stats: libs/al-web-components/dist/css/tokens.json is missing — run `pnpm --filter @southleft/al-web-components build` first.'
     );
   }
   const tokens = JSON.parse(fs.readFileSync(tokensJsonPath, 'utf8'));

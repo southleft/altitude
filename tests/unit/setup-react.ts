@@ -13,7 +13,7 @@
  *
  * `IS_REACT_ACT_ENVIRONMENT` keeps React 19's `act()` from warning.
  *
- * The BUILT token bundle: the react project resolves `al-web-components`
+ * The BUILT token bundle: the react project resolves `@southleft/al-web-components`
  * through its exports map (i.e. `dist/`), so it consumes the shipped
  * stylesheet too. Run `pnpm run build` first.
  */

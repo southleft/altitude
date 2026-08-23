@@ -1,6 +1,6 @@
 ---
-'al-web-components': major
-'al-react': major
+'@southleft/al-web-components': major
+'@southleft/al-react': major
 ---
 
 Replace the 37 hand-authored icons with the full Phosphor set (1,512 icons, regular weight, MIT) via a new `@phosphor-icons/core` devDependency.
@@ -8,12 +8,12 @@ Replace the 37 hand-authored icons with the full Phosphor set (1,512 icons, regu
 **New canonical API.** `<al-icon name="caret-down">` resolves against a registry. Register the icons you use for a tree-shakeable, synchronous, SSR-safe render:
 
 ```ts
-import { caretDown } from 'al-web-components/dist/components/icon/glyphs.js';
-import { registerIcons } from 'al-web-components/dist/components/icon/registry.js';
+import { caretDown } from '@southleft/al-web-components/dist/components/icon/glyphs.js';
+import { registerIcons } from '@southleft/al-web-components/dist/components/icon/registry.js';
 registerIcons({ 'caret-down': caretDown });
 ```
 
-Opt into `al-web-components/dist/components/icon/lazy.js` when icon names come from data you don't control.
+Opt into `@southleft/al-web-components/dist/components/icon/lazy.js` when icon names come from data you don't control.
 
 **Breaking:**
 

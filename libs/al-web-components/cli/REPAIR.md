@@ -76,8 +76,8 @@ anywhere with just Node. Its contract source is the shipped `custom-elements.jso
 never drift from the real component API.
 
 - It validates two surfaces off the same CEM: **`<al-*>` custom-element usage** (plain HTML, Svelte,
-  Astro, Angular/Vue templates, Lit templates) and **`al-react` JSX wrappers**
-  (`<ALButton variant="…">` imported from `al-react`). In JSX the same checks apply to props.
+  Astro, Angular/Vue templates, Lit templates) and **`@southleft/al-react` JSX wrappers**
+  (`<ALButton variant="…">` imported from `@southleft/al-react`). In JSX the same checks apply to props.
   Framework binding syntax (`[x]=`, `:x=`, `?x=`, `.x=`, `bind:x`, `{expr}`, `${expr}`) and JSX
   `{...spread}` are recognized and treated as dynamic — the attribute/prop is still checked for
   existence, but its value isn't enum/type-checked (it can't be known statically).

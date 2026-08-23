@@ -1,4 +1,4 @@
-// T2.4 — Storybook 10 + Vite builder for al-react.
+// T2.4 — Storybook 10 + Vite builder for @southleft/al-react.
 
 import { existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -11,13 +11,13 @@ import { rewriteScssImports } from '../../al-web-components/vite-plugins/rewrite
 // @ts-expect-error — plain .mjs build glue, no type declarations by design.
 import { mdxFileUrlResolver } from '../../al-web-components/vite-plugins/mdx-file-url-resolver.mjs';
 
-// R8 — al-react is a wrapper package: every one of its 66 components imports
-// from `al-web-components/dist/...`, `preview.ts` injects
+// R8 — @southleft/al-react is a wrapper package: every one of its 66 components imports
+// from `@southleft/al-web-components/dist/...`, `preview.ts` injects
 // `dist/css/main.css?inline`, and the `<ALTheme>` wrapper's `:host([brand])`
 // rules ride along inside `dist/components/theme/theme.js`. None of that exists
-// until al-web-components has been built, and the root `build` script
-// (`pnpm --filter al-web-components build && pnpm --filter al-react build`)
-// encodes the ordering while `pnpm --filter al-react start` did not — so a
+// until @southleft/al-web-components has been built, and the root `build` script
+// (`pnpm --filter @southleft/al-web-components build && pnpm --filter @southleft/al-react build`)
+// encodes the ordering while `pnpm --filter @southleft/al-react start` did not — so a
 // clean checkout failed with an unresolved-import stack trace pointing at a
 // `?inline` CSS query, which names neither the cause nor the fix.
 //
@@ -36,13 +36,13 @@ if (missing.length > 0) {
   throw new Error(
     [
       '',
-      'al-react Storybook cannot start: al-web-components has not been built.',
+      '@southleft/al-react Storybook cannot start: @southleft/al-web-components has not been built.',
       '',
       ...missing.map(([rel, why]) => `  missing  ${join(WC_DIST, rel)}\n           (${why})`),
       '',
       'Run this first, from the repo root:',
       '',
-      '  pnpm --filter al-web-components build',
+      '  pnpm --filter @southleft/al-web-components build',
       '',
     ].join('\n')
   );
@@ -92,7 +92,7 @@ const config: StorybookConfig = {
     },
   ],
   // WAS `['../dist']`, which broke EVERY story in this Storybook whenever
-  // `pnpm --filter al-react build` had been run.
+  // `pnpm --filter @southleft/al-react build` had been run.
   //
   // `tsc` emits `dist/package.json` (all 66 wrappers do `import PackageJson
   // from '../../../package.json'` and `resolveJsonModule` copies it to
@@ -116,7 +116,7 @@ const config: StorybookConfig = {
   // 404'd. Autodocs is tag-driven now and is switched on in `preview.ts` via
   // `tags: ['autodocs']`, matching the web-components Storybook.
   docs: {
-    // DOCS-ONLY SIDEBAR, matching `al-web-components/.storybook/main.ts`: one
+    // DOCS-ONLY SIDEBAR, matching `@southleft/al-web-components/.storybook/main.ts`: one
     // node per component that opens its docs page; the individual stories are
     // still rendered inline by autodocs. Consequence: docs entries get no
     // addon panel, so the stock a11y tab is unreachable — the shared
@@ -128,13 +128,13 @@ const config: StorybookConfig = {
   viteFinal: async (cfg) =>
     mergeConfig(cfg, {
       // The shared SCSS import-rewrite plugin. Needed because the
-      // `Foundations/*` documentation elements live in al-web-components
+      // `Foundations/*` documentation elements live in @southleft/al-web-components
       // SOURCE (`.storybook/components/**`) and use the bare
       // `import styles from './x.scss'` form, which Vite does not resolve to a
       // string without `?inline`. Imported rather than copied so the two
       // builds cannot drift.
       //
-      // NOTE this is the one place al-react compiles al-web-components source
+      // NOTE this is the one place @southleft/al-react compiles @southleft/al-web-components source
       // rather than its built `dist` (see the R8 note at the top of this file).
       // It is scoped to documentation elements only — every actual COMPONENT
       // still comes from `dist`.

@@ -12,8 +12,8 @@
  *   - `wc`    — compiles `libs/al-web-components` FROM SOURCE (it needs the
  *               same SCSS-import rewrite and decorator settings the library
  *               build uses, or every `@property accessor` breaks).
- *   - `react` — imports `al-react` from source, which in turn imports
- *               `al-web-components` through its published `exports` map, i.e.
+ *   - `react` — imports `@southleft/al-react` from source, which in turn imports
+ *               `@southleft/al-web-components` through its published `exports` map, i.e.
  *               the BUILT `dist/`. That is deliberate: the React layer's job is
  *               to bind to the shipped element, so the test should exercise the
  *               shipped element. Run `pnpm run build` first.

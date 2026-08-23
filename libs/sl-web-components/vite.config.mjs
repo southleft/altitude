@@ -1,4 +1,4 @@
-// Vite library build for sl-web-components — the Southleft brand layer.
+// Vite library build for @southleft/sl-web-components — the Southleft brand layer.
 //
 // Deliberately much smaller than `libs/al-web-components/vite.config.mjs`: this
 // package has no icon system, no motion runtime, no token pipeline and no
@@ -83,7 +83,7 @@ export default defineConfig({
       // different ways depending on who is compiling: tsc follows `exports` to
       // `dist/**/*.d.ts`, plain Vite follows `exports` to built `dist/*.js`,
       // and the Storybook config aliases the bare name to the PACKAGE ROOT
-      // (`.storybook/main.ts:196`), under which `al-web-components/ALElement`
+      // (`.storybook/main.ts:196`), under which `@southleft/al-web-components/ALElement`
       // does not exist at all. A relative source path resolves identically in
       // all three.
       //

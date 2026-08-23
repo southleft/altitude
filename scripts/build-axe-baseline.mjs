@@ -6,7 +6,7 @@
  * Usage: node scripts/build-axe-baseline.mjs <clean-log-path> <out-md-path>
  *
  * The log must be ANSI-stripped output of
- *   pnpm --filter al-web-components exec test-storybook --url http://localhost:PORT
+ *   pnpm --filter @southleft/al-web-components exec test-storybook --url http://localhost:PORT
  * run against a STATIC Storybook build. See the measurement note it emits.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -95,7 +95,7 @@ ${rows.map(([c, s]) => `| ${c} | ${s.size} |`).join('\n')}
 
 ---
 _Regenerate:_ build the static Storybook, serve it on a free port, run
-\`pnpm --filter al-web-components exec test-storybook --url http://localhost:PORT\`,
+\`pnpm --filter @southleft/al-web-components exec test-storybook --url http://localhost:PORT\`,
 strip ANSI from the log, then \`node scripts/build-axe-baseline.mjs <log> <out.md>\`.
 `;
 

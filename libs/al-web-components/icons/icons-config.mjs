@@ -243,8 +243,8 @@ await writeFile(
 //
 // Tree-shakeable named exports. Import only what you use:
 //
-//   import { caretDown } from 'al-web-components/dist/components/icon/glyphs.js';
-//   import { registerIcons } from 'al-web-components/dist/components/icon/registry.js';
+//   import { caretDown } from '@southleft/al-web-components/dist/components/icon/glyphs.js';
+//   import { registerIcons } from '@southleft/al-web-components/dist/components/icon/registry.js';
 //   registerIcons({ 'caret-down': caretDown });
 //
 ${names.map((n) => `export { default as ${toExportName(n)} } from './phosphor/${n}';`).join('\n')}
@@ -303,7 +303,7 @@ await writeFile(
 // Prefer explicit registration via ./glyphs.js. Reach for this in Storybook,
 // prototypes, or when icon names come from data you do not control.
 //
-//   import 'al-web-components/dist/components/icon/lazy.js';
+//   import '@southleft/al-web-components/dist/components/icon/lazy.js';
 //
 import { setIconResolver } from './registry';
 import type { AltitudeIconDef } from './types';

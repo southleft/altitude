@@ -1,4 +1,4 @@
-// Storybook 10 preview config for al-web-components.
+// Storybook 10 preview config for @southleft/al-web-components.
 //
 // Deliberately kept in step with `libs/al-react/.storybook/preview.ts` — the
 // two Storybooks are the same product in two renderers, so anything that is not

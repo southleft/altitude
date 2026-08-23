@@ -1,10 +1,10 @@
-// Storybook 10 + Vite builder for al-web-components.
+// Storybook 10 + Vite builder for @southleft/al-web-components.
 //
 // Deliberately kept in step with `libs/al-react/.storybook/main.ts`. The
 // differences that remain are forced by the renderer, not by taste:
 //   * the `@storybook/web-components-vite` framework;
 //   * the `./components/**` story globs — this Storybook OWNS the
-//     `Foundations/*` documentation elements; al-react renders the same
+//     `Foundations/*` documentation elements; @southleft/al-react renders the same
 //     elements through thin React CSF shims in `src/foundations/`;
 //   * the shared `mdxFileUrlResolver` plugin and the generated-token pre-flight
 //     below, both of which exist to make those MDX/token pages work at all.
@@ -64,7 +64,7 @@ for (const [rel, why] of [
         `  Needed because: ${why}`,
         '  These are gitignored BUILD ARTIFACTS — a fresh clone does not have them.',
         '',
-        '  Fix:  pnpm --filter al-web-components build:tokens',
+        '  Fix:  pnpm --filter @southleft/al-web-components build:tokens',
         '',
       ].join('\n'),
     );
@@ -92,9 +92,9 @@ const config: StorybookConfig = {
   },
   // `./templates/**`, `./pages/**` and `./recipes/**` are gone. Templates and
   // Pages were whole-screen compositions that existed in this Storybook only —
-  // al-react never had them — and `recipes/` never held anything but a
+  // @southleft/al-react never had them — and `recipes/` never held anything but a
   // placeholder, so its glob logged "No story files found" on every boot.
-  // What remains matches al-react's shape plus the documentation this
+  // What remains matches @southleft/al-react's shape plus the documentation this
   // Storybook owns: `./docs/*` (Resources) and `./components/**` (Foundations).
   stories: [
     './docs/*.@(js|jsx|ts|tsx|mdx)',
@@ -103,7 +103,7 @@ const config: StorybookConfig = {
     './components/**/*.stories.@(js|jsx|ts|tsx|mdx)',
   ],
   // Storybook 10 dropped addon-essentials (the docs/controls/measure/outline/
-  // backgrounds/viewport modules now ship with core). a11y matches al-react;
+  // backgrounds/viewport modules now ship with core). a11y matches @southleft/al-react;
   // docs is required here for the MDX documentation pages.
   addons: [
     '@storybook/addon-a11y',
@@ -130,7 +130,7 @@ const config: StorybookConfig = {
   // the sidebar logo 404s (Cloudflare then serves the SPA fallback HTML for
   // it, so the brand image is broken).
   //
-  // NOTE: unlike al-react, `../dist` is safe to serve here — `tsc` does not
+  // NOTE: unlike @southleft/al-react, `../dist` is safe to serve here — `tsc` does not
   // emit a `dist/package.json` for this package, so there is no static file
   // shadowing Vite's JSON->ESM transform.
   staticDirs: ['../dist', './static'],
@@ -193,7 +193,7 @@ const config: StorybookConfig = {
       },
       resolve: {
         alias: {
-          'al-web-components': resolve(__dirname, '..'),
+          '@southleft/al-web-components': resolve(__dirname, '..'),
         },
       },
     });

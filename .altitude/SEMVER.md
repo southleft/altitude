@@ -1,7 +1,7 @@
 # Semver Policy — Altitude v2
 
 Altitude follows [Semantic Versioning 2.0](https://semver.org/). Both
-`al-web-components` and `al-react` ship as a unit and share a version line.
+`@southleft/al-web-components` and `@southleft/al-react` ship as a unit and share a version line.
 
 ## Major (X.0.0)
 
@@ -12,7 +12,7 @@ Reserved for changes that break consumers:
 - Removal of a CSS custom property listed in the v1 token surface
   (or changing its semantic meaning without a working alias).
 - Breaking change to the `registerAltitude({mode,suffix})` factory contract.
-- React API breaks visible to consumers of `al-react`.
+- React API breaks visible to consumers of `@southleft/al-react`.
 
 > The v1 → v2 publish (T6.4) is itself a major; the migration plan exists
 > to *avoid* additional majors for the lifetime of v2.

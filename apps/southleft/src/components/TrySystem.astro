@@ -334,7 +334,7 @@ import SectionHeader from './SectionHeader.astro';
     const status = document.getElementById('acttwo-status');
     if (!form || !input) return;
 
-    const { buildTheme, applyTheme, THEME_API } = await import('al-web-components/theme-engine');
+    const { buildTheme, applyTheme, THEME_API } = await import('@southleft/al-web-components/theme-engine');
     const { applyLayout } = await import('../lib/layout-resolver');
 
     let requestId = 0;

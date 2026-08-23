@@ -21,7 +21,7 @@
  *      inert-override smell: components resolve typography through Sass
  *      mixins to the tier-1 preset property and never read the tier-2 one.
  *
- * Run after `pnpm --filter al-web-components build:tokens`.
+ * Run after `pnpm --filter @southleft/al-web-components build:tokens`.
  */
 
 'use strict';
@@ -78,7 +78,7 @@ function diffNames(a, b) {
 // ---------- discover what was built ----------
 
 if (!fs.existsSync(CSS)) {
-  console.error(`[brands] ${path.relative(REPO, CSS)} missing — run \`pnpm --filter al-web-components build:tokens\` first.`);
+  console.error(`[brands] ${path.relative(REPO, CSS)} missing — run \`pnpm --filter @southleft/al-web-components build:tokens\` first.`);
   process.exit(1);
 }
 

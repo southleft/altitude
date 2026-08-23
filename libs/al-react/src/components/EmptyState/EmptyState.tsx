@@ -1,8 +1,8 @@
 'use client';
 
 import { createComponent } from '@lit/react';
-import { ALEmptyState as ALWebEmptyState } from 'al-web-components/components/empty-state';
-import register from 'al-web-components/directives/register';
+import { ALEmptyState as ALWebEmptyState } from '@southleft/al-web-components/components/empty-state';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../package.json';
 

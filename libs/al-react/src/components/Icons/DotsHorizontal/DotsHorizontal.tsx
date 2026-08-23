@@ -1,8 +1,8 @@
 'use client';
 
 import { createComponent } from '@lit/react';
-import { ALIconDotsHorizontal as ALWebIconDotsHorizontal } from 'al-web-components/components/icon/icons/dots-horizontal';
-import register from 'al-web-components/directives/register';
+import { ALIconDotsHorizontal as ALWebIconDotsHorizontal } from '@southleft/al-web-components/components/icon/icons/dots-horizontal';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
 import PackageJson from '../../../../package.json';
 

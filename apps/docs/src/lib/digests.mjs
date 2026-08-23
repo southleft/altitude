@@ -34,7 +34,7 @@ function read(name) {
       artifact: `.altitude/ai-readiness/${name}`,
       reason:
         error.code === 'ENOENT'
-          ? `${name} has not been generated in this checkout (it is tracked in git — restore it, or run \`pnpm --filter al-web-components build\`).`
+          ? `${name} has not been generated in this checkout (it is tracked in git — restore it, or run \`pnpm --filter @southleft/al-web-components build\`).`
           : `${name} could not be read: ${error.message}`,
     };
   }

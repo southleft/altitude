@@ -1,22 +1,31 @@
 {
-  "name": "sl-web-components",
+  "name": "@southleft/sl-web-components",
   "description": "The Southleft brand design system — opinionated section components built on Altitude",
   "version": "1.0.0",
-  "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/components/bundle/bundle.d.ts",
+      "//": "The `types` and `default` targets sit in DIFFERENT subtrees and that is not a typo. Vite writes the JS to `dist/components/…` (vite.config.mjs entry map). `tsc` writes the declarations one level deeper, under `dist/sl-web-components/components/…`, because this package's components import Altitude through RELATIVE paths (`../../../al-web-components/components/ALElement`), which pulls those sources into the tsc program and makes the inferred rootDir `libs/`, not `libs/sl-web-components`. Both halves were pointed at the vite layout, where no .d.ts has ever existed — the same class of break as the note on al-web-components' root export, and it was invisible while this package was `\"private\": true`. The emitted tree is internally consistent (`dist/sl-web-components/**` re-imports `dist/al-web-components/**` at exactly those relative depths), so it is the map that was wrong, not the emit. If those relative imports are ever replaced by the `@southleft/al-web-components` specifier, rootDir collapses to this package and these two paths must lose the `sl-web-components/` segment.",
+      "types": "./dist/sl-web-components/components/bundle.d.ts",
       "default": "./dist/components/bundle/bundle.js"
     },
     "./components/*": {
-      "types": "./dist/components/*/*.d.ts",
+      "types": "./dist/sl-web-components/components/*/*.d.ts",
       "default": "./dist/components/*/*.js"
     },
     "./custom-elements.json": "./custom-elements.json",
     "./package.json": "./package.json"
   },
+  "files": [
+    "dist",
+    "custom-elements.json",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "//build": "NOT yet wired into the root `build:all` — the only consumer today is the Southleft Storybook, which compiles these sources directly through its own Vite. Wire it in when apps/southleft imports the package (spec 2026-08-22-southleft-brand-design-system-as-a-linked-layer-on-altitude, T11).",
     "build": "del-cli dist && vite build -c vite.config.mjs && tsc",
@@ -24,7 +33,7 @@
     "lint": "eslint components --ext .ts"
   },
   "dependencies": {
-    "al-web-components": "workspace:*",
+    "@southleft/al-web-components": "workspace:*",
     "lit": "^3.3.0"
   },
   "devDependencies": {
@@ -34,12 +43,14 @@
     "typescript": "^5.6.3",
     "vite": "^7.1.12"
   },
-  "//sideEffects": "Source paths as well as dist, for the same reason as al-web-components — see the note there. Every component module here ends in a `customElements.define` guarded by `alAutoRegistry`; if the bundler thinks the module is side-effect-free it drops the whole import and the element silently never upgrades in a production Storybook build.",
+  "//sideEffects": "Source paths as well as dist, for the same reason as @southleft/al-web-components — see the note there. Every component module here ends in a `customElements.define` guarded by `alAutoRegistry`; if the bundler thinks the module is side-effect-free it drops the whole import and the element silently never upgrades in a production Storybook build.",
   "sideEffects": [
     "**/*.css",
     "**/*.scss",
     "./components/*/*.ts",
     "./components/bundle.ts",
     "./dist/components/**/*.js"
-  ]
+  ],
+  "author": "Southleft, LLC",
+  "customElements": "custom-elements.json"
 }

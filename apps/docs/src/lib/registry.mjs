@@ -103,14 +103,14 @@ function readStoryMeta(slug) {
   };
 }
 
-/** Which components ship an al-react wrapper (parsed from its barrel file). */
+/** Which components ship an @southleft/al-react wrapper (parsed from its barrel file). */
 const reactWrappers = (() => {
   const set = new Set();
   try {
     const source = fs.readFileSync(REACT_INDEX, 'utf8');
     for (const m of source.matchAll(/from '\.\/components\/([A-Za-z0-9]+)'/g)) set.add(m[1]);
   } catch {
-    /* al-react not present (partial checkout) — the switcher degrades to HTML only. */
+    /* @southleft/al-react not present (partial checkout) — the switcher degrades to HTML only. */
   }
   return set;
 })();
@@ -183,7 +183,7 @@ for (const module of cem.modules) {
     status: declaration.deprecated ? 'deprecated' : story.status,
     deprecated: Boolean(declaration.deprecated),
     modulePath: module.path,
-    importPath: `al-web-components/components/${slug}`,
+    importPath: `@southleft/al-web-components/components/${slug}`,
     description: declaration.description ?? '',
     summary: summarize(declaration.description, declaration.tagName),
     react: reactName,

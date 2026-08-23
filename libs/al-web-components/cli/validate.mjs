@@ -3,13 +3,13 @@
  * Altitude — design-system usage validator (shippable CLI)
  *
  * A fresh, dependency-free validator that checks how code USES Altitude — both the web components
- * (`<al-*>` custom elements) and the al-react JSX wrappers (`<ALButton/>` from `al-react`) — against
+ * (`<al-*>` custom elements) and the @southleft/al-react JSX wrappers (`<ALButton/>` from `@southleft/al-react`) — against
  * the library's own Custom Elements Manifest, and returns actionable, self-heal-oriented feedback
  * so an agent can fix invalid usage on its own.
  *
  *   npx altitude-validate <file-or-dir>          # human report, non-zero exit on any error
  *   npx altitude-validate --json <file-or-dir>   # one JSON envelope on stdout (for agents)
- *   pnpm --filter al-web-components validate:usage <file-or-dir>   # in-repo
+ *   pnpm --filter @southleft/al-web-components validate:usage <file-or-dir>   # in-repo
  *
  * The contract source is the shipped `custom-elements.json` (CEM) — the same manifest the
  * analyzer generates from the components. This CLI is a READER of that manifest, never a second
@@ -18,7 +18,7 @@
  *
  * It is intentionally framework-agnostic: it scans `<al-*>` tags out of any markup surface Altitude
  * is consumed from — plain HTML, Svelte, Astro, Angular/Vue templates, or Lit `html` templates —
- * plus `<AL*>` al-react wrappers in JSX/TSX (resolved via each file's `al-react` imports). It is
+ * plus `<AL*>` @southleft/al-react wrappers in JSX/TSX (resolved via each file's `@southleft/al-react` imports). It is
  * tolerant of binding syntax (`[x]=`, `:x=`, `?x=`, `.x=`, `bind:x`, `{expr}`, `${expr}`) and JSX
  * `{...spread}`, which it marks dynamic and skips for value checks (still counted as present).
  *
@@ -90,7 +90,7 @@ function parseType(text) {
 function loadContracts(cemPath) {
   const cem = JSON.parse(readFileSync(cemPath, 'utf8'));
   const components = new Map();  // tagName   -> spec  (for `<al-*>` custom-element usage)
-  const byClassName = new Map(); // className -> spec  (for al-react wrappers: `<ALButton/>` -> ALButton)
+  const byClassName = new Map(); // className -> spec  (for @southleft/al-react wrappers: `<ALButton/>` -> ALButton)
   for (const mod of cem.modules ?? []) {
     for (const d of mod.declarations ?? []) {
       if (!d.customElement || !d.tagName) continue;
@@ -106,10 +106,10 @@ function loadContracts(cemPath) {
   return { components, byClassName };
 }
 
-/** Map local import name -> exported name for `al-react` wrappers used in a file (named imports). */
+/** Map local import name -> exported name for `@southleft/al-react` wrappers used in a file (named imports). */
 function parseReactImports(text) {
   const map = new Map();
-  const re = /import\s+(?:type\s+)?\{([^}]*)\}\s*from\s*['"]al-react(?:\/[^'"]*)?['"]/g;
+  const re = /import\s+(?:type\s+)?\{([^}]*)\}\s*from\s*['"]@southleft\/al-react(?:\/[^'"]*)?['"]/g;
   let m;
   while ((m = re.exec(text))) {
     for (const raw of m[1].split(',')) {
@@ -250,14 +250,14 @@ function checkValue(value, type) {
 
 function validateSource(filePath, text, contracts, sink) {
   const { components, byClassName } = contracts;
-  // al-react wrappers are only in scope for files that import them; web components are always global.
-  const reactMap = text.includes('al-react') ? parseReactImports(text) : new Map();
+  // @southleft/al-react wrappers are only in scope for files that import them; web components are always global.
+  const reactMap = text.includes('@southleft/al-react') ? parseReactImports(text) : new Map();
 
   const lineStarts = [0];
   for (let i = 0; i < text.length; i++) if (text[i] === '\n') lineStarts.push(i + 1);
 
   // Resolve a JSX/markup tag name to a contract: `<al-*>` web components (always), or `<AL*>`
-  // al-react wrappers imported in this file. Everything else (div, user components) → ignored.
+  // @southleft/al-react wrappers imported in this file. Everything else (div, user components) → ignored.
   const resolve = (name) => {
     if (/^al-[a-z]/.test(name)) {
       const spec = components.get(name);
@@ -295,7 +295,7 @@ function validateSource(filePath, text, contracts, sink) {
     if (r.unknown) {
       const pool = r.mode === 'react' ? byClassName.keys() : components.keys();
       push('unknown-component', r.mode === 'react'
-        ? `<${r.display}> is imported from al-react but maps to no registered Altitude component (typo or hallucination)`
+        ? `<${r.display}> is imported from @southleft/al-react but maps to no registered Altitude component (typo or hallucination)`
         : `<${r.display}> is not a registered Altitude element (typo or hallucination)`,
         { suggestion: didYouMean(r.unknown, pool) });
       bc.errors++; sink.failingUsages++;
@@ -359,7 +359,7 @@ export function validateApp(target, opts = {}) {
 const isCli = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isCli) {
   let argv = process.argv.slice(2);
-  if (argv[0] === 'validate') argv = argv.slice(1); // allow `npx al-web-components validate <path>`
+  if (argv[0] === 'validate') argv = argv.slice(1); // allow `npx @southleft/al-web-components validate <path>`
   const asJson = argv.includes('--json');
   const ci = argv.indexOf('--cem');
   const cemPath = ci >= 0 ? argv[ci + 1] : undefined;

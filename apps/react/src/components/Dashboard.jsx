@@ -1,4 +1,4 @@
-import { ALCalendar, ALEmptyState, ALLayout } from 'al-react';
+import { ALCalendar, ALEmptyState, ALLayout } from '@southleft/al-react';
 
 const Home = () => {
   // gap="md", not "lg": the original class was `al-u-gap--lg`, a dead spelling
