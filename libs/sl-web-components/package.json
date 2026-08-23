@@ -27,8 +27,9 @@
     "LICENSE"
   ],
   "scripts": {
-    "//build": "NOT yet wired into the root `build:all` — the only consumer today is the Southleft Storybook, which compiles these sources directly through its own Vite. Wire it in when apps/southleft imports the package (spec 2026-08-22-southleft-brand-design-system-as-a-linked-layer-on-altitude, T11).",
-    "build": "del-cli dist && vite build -c vite.config.mjs && tsc",
+    "//build": "Wired into the root `build` (and so into `build:all`) as of 2026-08-23. The Southleft Storybook that used to be the only consumer was retired, and apps/docs took its place: /docs/southleft documents this package as Southleft's BRAND LAYER (`brandLibrary` in .altitude/ds-projects.json) and imports `dist/components/bundle/bundle.js` so its playgrounds upgrade. The docs build therefore FAILS if this package has not been built — which is why it can no longer sit outside the pipeline. apps/southleft still does not import it (spec 2026-08-22-southleft-brand-design-system-as-a-linked-layer-on-altitude, T11).",
+    "build": "del-cli dist && vite build -c vite.config.mjs && tsc && pnpm run build:custom-elements.json",
+    "//build:custom-elements.json": "Part of `build` (above) since the committed custom-elements.json is the SOLE source for the /docs/southleft component pages — a stale CEM ships silently wrong docs. CI diffs the regenerated file against the committed copy (repo-hygiene job).",
     "build:custom-elements.json": "cem analyze --config custom-elements-manifest.config.mjs --outdir .",
     "lint": "eslint components --ext .ts"
   },

@@ -127,6 +127,18 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Build everything (libs + storybooks + angular/react/svelte/astro)
         run: pnpm run build:all
+      # The four docs gates existed as `pnpm run` scripts that only ever ran by
+      # hand — the exact "documented but not enforced" pattern the repo-hygiene
+      # job comment describes. They need built docs HTML, which only this job
+      # produces, so they run here after build:all.
+      - name: Docs coverage (every component routed, scopes resolve)
+        run: pnpm run gate:docs
+      - name: Docs status panels (no Figma-key/node-id leaks, no silent-success panels)
+        run: pnpm run gate:docs-panels
+      - name: Docs generalises across projects
+        run: pnpm run gate:docs-generalises
+      - name: Guidance quality (citations resolve, all sections present)
+        run: pnpm run gate:guidance
 
   gate-self-test:
     name: G2/G8 gate self-test
@@ -620,6 +632,11 @@ jobs:
         run: pnpm run check:ds-projects
       - name: Southleft scope boundary
         run: pnpm run check:sl-scope
+      # Warning-only until the 7 real al-header/al-footer supersession gaps it
+      # found on day one are fixed (tracked as an .mm issue); then drop the
+      # fallback so new base->brand divergence becomes a hard failure.
+      - name: Brand supersession conformance (warning only, see issue)
+        run: pnpm run check:brand-conformance || echo "::warning::brand supersession gaps — see check:brand-conformance output and the tracking issue"
       # @southleft/sl-web-components was in NO build pipeline and NO CI job — its own
       # package.json said so. Its `tsc` step had been failing on TS2580 (a bare
       # `process` reference in @southleft/al-web-components/directives/register.ts, which it
@@ -628,8 +645,19 @@ jobs:
       # package's source directly rather than consuming its dist.
       - name: Build @southleft/al-web-components (@southleft/sl-web-components compiles its source)
         run: pnpm --filter @southleft/al-web-components build
-      - name: @southleft/sl-web-components builds
+      - name: "@southleft/sl-web-components builds"
         run: pnpm --filter @southleft/sl-web-components build
+      # The brand-layer CEM is the SOLE source for the /docs/southleft component
+      # pages, yet nothing regenerated or diffed it (the base library has had
+      # this gate in cem-and-contracts all along). The package's `build` now
+      # regenerates it; diffing here makes a stale committed copy a hard failure.
+      - name: Brand-layer CEM is in sync with source
+        run: |
+          git diff --exit-code -- libs/sl-web-components/custom-elements.json || {
+            echo "::error::libs/sl-web-components/custom-elements.json differs from its source."
+            echo "Run: pnpm --filter @southleft/sl-web-components build:custom-elements.json and commit the result."
+            exit 1
+          }
       - name: Build tokens (brand distinctiveness reads built output)
         run: pnpm --filter @southleft/al-web-components build:tokens
       - name: Brands are distinguishable
@@ -638,3 +666,14 @@ jobs:
         run: pnpm run gate:token-usage
       - name: Dependency audit (shipped packages are fatal at high)
         run: pnpm run check:audit
+      - name: llms.txt matches its sources
+        run: pnpm run check:llms
+      - name: MCP tool docs match the server's registered tools
+        run: pnpm run check:mcp-docs
+      - name: Styles lint (the hard style gate)
+        run: pnpm run lint:styles
+      # Parity freshness — visibility, not a gate: prints figmaLastRefreshed age,
+      # everObserved, and unreachable statuses per DS project. Exit 0 by design
+      # (the Figma loop is deliberately operator-driven; see .altitude/FIGMA-SYNC.md).
+      - name: Parity freshness (warning only)
+        run: node scripts/check-parity-freshness.mjs || echo "::warning::parity freshness script failed (non-blocking)"
