@@ -54,6 +54,29 @@ function jsonFilesIn(dir) {
     .map((f) => join(dir, f));
 }
 
+/**
+ * Every .json under `dir`, at any depth, paired with the path segments between
+ * `dir` and the file.
+ *
+ * `jsonFilesIn` above is deliberately flat and stays that way — tier-1/tier-2
+ * roots are single-level. A BRAND directory is not: a brand may carry its own
+ * mode overrides at `<brand>/mode/<mode>/*.json`, and reading it flat silently
+ * dropped every one of them. Measured before this fix: southleft's 18 mode
+ * tokens (9 dark + 9 light) never entered the index, so `altitude_get_tokens`
+ * under-reported and no caller could see that southleft themes differently per
+ * mode at all.
+ */
+function jsonFilesUnder(dir, prefix = []) {
+  if (!existsSync(dir)) return [];
+  const out = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...jsonFilesUnder(full, [...prefix, entry.name]));
+    else if (entry.name.endsWith('.json')) out.push({ file: full, segments: prefix });
+  }
+  return out;
+}
+
 /** Build (and cache) the full tier/brand/mode-tagged token record list. */
 export function loadDtcgIndex() {
   if (dtcgCache) return dtcgCache;
@@ -67,8 +90,12 @@ export function loadDtcgIndex() {
   const brandDir = join(root, 'tier-2', 'brand');
   if (existsSync(brandDir)) {
     for (const brand of readdirSync(brandDir)) {
-      for (const f of jsonFilesIn(join(brandDir, brand))) {
-        records.push(...flattenFile(f, 2, { brand }));
+      // Recursive: a brand may nest per-mode overrides under `mode/<mode>/`.
+      // The segments between the brand root and the file tell us which.
+      for (const { file, segments } of jsonFilesUnder(join(brandDir, brand))) {
+        const modeIdx = segments.indexOf('mode');
+        const mode = modeIdx >= 0 ? segments[modeIdx + 1] : undefined;
+        records.push(...flattenFile(file, 2, mode ? { brand, mode } : { brand }));
       }
     }
   }
