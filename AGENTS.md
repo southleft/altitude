@@ -71,7 +71,7 @@ no script can check them, so they are on you and the PR reviewer:
 | Plan + phase gates | [`NEXT-GEN-UPGRADE-PLAN.md`](./NEXT-GEN-UPGRADE-PLAN.md) |
 | Token engine docs | [`.altitude/TOKENS.md`](./.altitude/TOKENS.md) |
 | Design-system projects (which Figma file each DS is checked against) | [`.altitude/ds-projects.json`](./.altitude/ds-projects.json) + [`.altitude/DS-PROJECTS.md`](./.altitude/DS-PROJECTS.md) — **parity is multi-project.** `altitude` is the default; `southleft` targets the "Southleft V5" file. Select with `--project <id>` or `DS_PROJECT`. Never hardcode a Figma file key, manifest path or "Altitude" string in parity tooling again — read it from the registry. Validate with `pnpm run check:ds-projects`. |
-| Brand contract + token reachability map | [`.altitude/BRANDS.md`](./.altitude/BRANDS.md) — **read before editing any `tier-2/brand/` file.** A brand carries the whole look (typography, radius, shadow, border width, spacing), and several obvious overrides are inert: `--al-theme-typography-*` has zero consumers, `theme.space.{sm,md,lg}` belongs to the `density` axis, `theme.border.radius.sm` is unused, and `letterSpacing` is dropped by the formatter. |
+| Brand contract + token reachability map | [`.altitude/BRANDS.md`](./.altitude/BRANDS.md) — **read before editing any `tier-2/brand/` file.** A brand carries the whole look (typography, radius, shadow, border width, spacing), and several obvious overrides are inert: `--al-theme-typography-*` has zero consumers, `theme.space.{sm,md,lg}` belongs to the `density` axis, `theme.border.radius.sm` is unused, and `letterSpacing` is dropped by the formatter. **Adding a *new* brand** (not editing an existing one) is § 9 of that doc — an ordered ~8-site checklist; there is no scaffold, and `altitude_generate_theme` is not one. |
 | Build pipeline docs | [`.altitude/BUILD.md`](./.altitude/BUILD.md) |
 | Pinned target versions | [`.altitude/targets.json`](./.altitude/targets.json) |
 | Migration manifest | [`.altitude/migration.json`](./.altitude/migration.json) |
@@ -90,7 +90,7 @@ no script can check them, so they are on you and the PR reviewer:
 pnpm --filter @southleft/al-web-components build:tokens                # Style Dictionary v5 (the only token pipeline)
 pnpm --filter @southleft/al-web-components test:tokens                 # token contract tests vs .altitude/baselines/
 pnpm test:brands                                            # brands must differ beyond colour; no inert overrides
-pnpm brands:compare                                         # rendered four-column check → .altitude/visual-compare/brands.dark.png
+pnpm brands:compare                                         # rendered side-by-side check → .altitude/visual-compare/brands.dark.png
 pnpm --filter @southleft/al-web-components build                       # library build (Vite)
 pnpm --filter @southleft/al-web-components build:storybook \
     --output-dir ../../dist/storybook/web-components        # Storybook static

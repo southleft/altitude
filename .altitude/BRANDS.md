@@ -375,3 +375,272 @@ files with CRLF churn. All three are fixed:
 
 The baseline was recaptured on 2026-07-28 and includes the four `altitude`
 bundles. Details: `.altitude/baselines/README.md`.
+
+---
+
+## 9. Adding a new brand — the quick start
+
+> §6 says what a brand token set **may contain**. This section says what you
+> **do**, in order, to make `<al-theme brand="yourbrand">` real. Traced against
+> the code on 2026-08-23; every path below was verified.
+>
+> **There is no scaffold.** No plop template, no `scripts/*` generator. The MCP
+> tool `altitude_generate_theme` is *not* one — it runs an in-memory OKLCH
+> solver (`.altitude/AI-THEME.md`) and writes no files, and its raw hex output
+> violates rule 1 below anyway. Adding a brand is a hand edit in ~8 places.
+>
+> Precedent to copy: `git show 5575fac` added four brands; `git show 02a0900`
+> removed six. The union of those two diffs is the checklist.
+
+### 9.0 Before you start — read these three
+
+1. **§1** — the reachability map. Several obvious overrides change nothing.
+2. **§6** — the contract's 8 rules. Rule 1 (reference, never literal) and
+   rule 8 (`altitude` stays neutral) are gate-enforced.
+3. **[`AXES.md`](./AXES.md) §1-2** — a brand look is a *recipe* across axes, not
+   one attribute flip, and there are **no per-brand shape/motion files**.
+
+### 9.1 Author the token set
+
+```
+libs/al-web-components/styles/tokens/tier-2/brand/<brand>/
+  colors.json                  # required
+  borders.json                 # optional
+  shadows.json                 # optional
+  typography-primitives.json   # optional — tier-1 exception (§2)
+  spacing.json                 # optional — theme.space.{xxxs,xxs,xs,@} ONLY (§4)
+  mode/light/colors.json       # optional — see 9.2
+  mode/dark/colors.json
+```
+
+Legacy Tokens Studio shape (`value`/`type`, **not** `$value`/`$type` — the DTCG
+mirror is generated). Copy `tier-2/brand/southleft/borders.json` for the
+canonical form:
+
+```json
+{ "theme": { "border": { "radius": {
+  "@": { "value": "{border.radius.2}", "type": "borderRadius" } } } } }
+```
+
+Every value is a `{…}` reference to a tier-1 primitive (§6 rule 1). If the
+primitive you need does not exist, add it **additively** to
+`tokens/tier-1/*.json` — never rename or re-value an existing stop.
+
+**Do not create these files for `altitude`.** See
+`tier-2/brand/altitude/README.md`: `tokens-altitude-{light,dark}.css` is
+asserted byte-identical to the base bundles, so any non-colour file there fails
+`test:brands`. Giving altitude character is a re-scope, not a brand edit.
+
+**No `motion.json`, no `shape.json` — and no gate will stop you.** The file
+list above is exhaustive: `shape` and `motion` are hand-written host rules in
+`theme.scss`, never per-brand files ([`AXES.md`](./AXES.md) §2). Writing
+`theme.animation.*` into a brand set makes the axes multiply instead of
+compose — 2 brands × 3 shapes × 3 motions — which is the exact thing the
+six-independent-dials model exists to prevent.
+
+This one is on you: **it is a review obligation, not a checked rule.**
+`check-brand-distinctiveness.js` enforces R4, R5, R7 and R12 only
+(`:102, :106, :117, :133, :138, :153, :171`) — none of them look at animation
+or shape properties — and no script reads `tier-2/brand/**` to validate which
+token paths a brand file touched. A brand that overrides motion **builds and
+ships silently**. Verified 2026-08-23: no `dist-v5/scss/host/tokens-brand-*.scss`
+partial contains the string `animation`, and all 13 motion tokens resolve
+identically across altitude/southleft × light/dark. That is the current state
+of an ungated rule, not a guarantee — keep it true.
+
+Contrast this with §9.5's failure mode, which is its mirror image: there, a
+brand that does *too little* silently does nothing; here, a brand that reaches
+*too far* silently works.
+
+#### The `border-radius-role-*` exception — and an open discrepancy
+
+The rule above is **motion-only**. Shape's role tokens are a different case,
+and the difference is not cosmetic:
+
+`southleft/borders.json:32, :36` defines `theme.border.radius.role-surface`
+and `role-action`, and they emit as real `:host([brand='southleft'])`
+declarations (`dist-v5/scss/host/tokens-brand-southleft.scss:30-31`). So a
+brand setting shape role radii is shipped, working precedent — do not read the
+motion rule as forbidding it.
+
+**But it contradicts a stated invariant, and someone should decide which one
+is right.** `theme.scss:196-207` says the shape role tokens have no tier-2
+`:root` default and "exist ONLY as the direct `:host` declarations below",
+concluding that with no `shape` attribute the fallback wins "so `default` shape
+is byte-identical in EVERY brand, not just altitude." That conclusion does not
+hold for southleft: with `shape` unset its `role-action` is *present*, so
+`var(--role, var(--legacy))` resolves to it rather than to southleft's own
+`--al-theme-border-radius`.
+
+Measured 2026-08-23 — computed values at an element inside each brand's
+`<al-theme>` on the built site:
+
+| brand | `shape` | `role-action` | `role-surface` | legacy radius |
+|---|---|---|---|---|
+| altitude | unset | *absent* | *absent* | 4px |
+| altitude | `pill` | 999px | 999px | 4px |
+| altitude | `sharp` | 0px | 0px | 4px |
+| southleft | **unset** | **999px** | **4px** | **2px** |
+| southleft | `pill` | 999px | 999px | 2px |
+| southleft | `sharp` | 0px | 0px | 2px |
+
+Read the `southleft / unset` row against `altitude / unset`: the role tokens
+are meant to be absent there. Southleft's actions render at 999px while its own
+legacy radius is 2px. Note that `shape="pill"` is a no-op on `role-action`
+specifically (999px → 999px) but **not** wholly a no-op — `role-surface` still
+moves 4px → 999px. The word "partial" is doing real work.
+
+Two readings, both defensible, not resolved here:
+
+- **Deliberate** — pill actions are southleft's identity, and the `theme.scss`
+  comment's "EVERY brand" is simply overstated and should be narrowed.
+- **Accidental** — the role entries predate the shape axis and quietly opted
+  southleft out of it, in which case they belong in `theme.border.radius.@`/`-lg`
+  instead.
+
+Flagged rather than fixed: it is a design call about southleft's identity, not
+a docs edit. If you are adding a brand today, the safe path is to express radii
+through `theme.border.radius.{@,md,lg}` and leave `role-*` to the `shape` axis —
+you get the same look with no invariant to argue about.
+
+### 9.2 The per-mode escape hatch
+
+A brand's top-level `colors.json` is **theme-independent by construction** — the
+same file builds against both the light and dark includes, so a value there
+lands in the mode-invariant `:host([brand='x'])` block. For a value that must
+flip with `mode` (a neutral canvas, a paper/ink pair), put it in
+`tier-2/brand/<brand>/mode/<theme>/colors.json`.
+
+The nesting is load-bearing. The top-level glob (`tokens-config.v5.mjs:474`) is
+deliberately **non-recursive**; the mode file is picked up only by the explicit
+`existsSync` check at `tokens-config.v5.mjs:476-478`. Rationale: the comment at
+`tokens-config.v5.mjs:451-472`. Precedent: southleft's light "paper" mode.
+
+### 9.3 Register with Tokens Studio (both files)
+
+- `tokens/$metadata.json` → `tokenSetOrder`: one entry per file, placed **after
+  the tier-2 default it overrides** (existing brand rows: lines 25-29).
+- `tokens/$themes.json` → a new object with `"group": "Tier 2 (Brand)"`. Copy
+  the `Southleft` entry: dependencies are `"source"`, the brand's own sets are
+  `"enabled"`.
+
+**Known gap, inherited:** `southleft/mode/{light,dark}/colors.json` are in
+neither file. They build correctly (Style Dictionary reads them directly) but
+the Tokens Studio round-trip does not see them. Mirror the omission or fix it —
+just know it is a gap, not a convention.
+
+`tokens-dtcg/` needs no edit: `scripts/convert-tokens-to-dtcg.js` mirrors the
+tree recursively, so a new directory appears on its own.
+
+### 9.4 The one config edit
+
+`libs/al-web-components/styles/tokens-config.v5.mjs:589-602` — the `brands`
+array is **hardcoded**, one entry per brand × mode you intend to ship:
+
+```js
+const brands = [
+  { theme: 'light', brand: 'altitude' },
+  { theme: 'dark',  brand: 'altitude' },
+  { theme: 'dark',  brand: 'southleft' },
+  { theme: 'light', brand: 'southleft' },
+  { theme: 'dark',  brand: '<brand>' },   // <- add
+];
+```
+
+A brand with no entry for a mode has **no `:host` block for that mode** — under
+that mode it renders its mode-invariant identity over the base theme's colours.
+That is what the compile-time `PresetBundle` union in `.storybook/presets.ts`
+(`presets.ts:33-35`) exists to guard.
+
+### 9.5 Build, then check the emitter actually emitted
+
+```bash
+pnpm --filter @southleft/al-web-components build:tokens
+ls libs/al-web-components/styles/dist-v5/css/brand/tokens-<brand>-*.css
+ls libs/al-web-components/styles/dist-v5/scss/host/tokens-brand-<brand>*.scss
+```
+
+**`components/theme/theme.scss` needs no edit.** It has a single
+`@use '../../styles/dist-v5/scss/host'` (`theme.scss:13`), and the emitter
+regenerates `host/_index.scss` with the full `@use` list in specificity-correct
+order (`tokens-config.v5.mjs:733-745`).
+
+**If the host partial is missing, the brand is a silent no-op.** The emitter
+skips an empty delta (`tokens-config.v5.mjs:706, 715-717`) — which is exactly
+why there is no `tokens-brand-altitude.scss`. A missing file means your values
+resolved identically to the base theme: the attribute will parse and do nothing.
+
+### 9.6 Widen the surface (8 sites)
+
+| # | File:line | Edit |
+|---|---|---|
+| 1 | `components/theme/theme.ts:39-40` | The brand literal union **and** its JSDoc. This is the source of truth. |
+| 2 | `custom-elements.json`, `schemas/al-theme.schema.json:35-42` | **Generated** — do not hand-edit. Run `pnpm --filter @southleft/al-web-components build:custom-elements.json`. |
+| 3 | `components/theme-switcher/theme-switcher.ts:16-18, 28-31, 46-50` | SCSS import (from legacy `styles/dist/scss/brand/`, **not** `dist-v5`), the `ThemeKey` union, the `BRANDS` array. |
+| 4 | `.storybook/presets.ts:33-35` | `PresetBundle` union — required. |
+| 5 | `.storybook/presets.ts:53-56` | `PRESETS` — **read the SCOPE note at `presets.ts:68-88` first.** Appending here also grows `@southleft/al-react`'s toolbar dropdown and puts two brands in a Storybook that documents one. For a brand with its own Storybook, copy the `SOUTHLEFT_PRESETS` pattern (`presets.ts:91-94`) instead. |
+| 6 | `libs/altitude-mcp/src/server.mjs:189-196` | The `z.enum([...])` on `altitude_get_tokens`, plus the prose naming the shipped brands. |
+| 7 | `libs/al-react/src/components/Theme/Theme.stories.tsx:18, 59` | Storybook control only. `ALThemeProps` derives from the generated wrapper, so the type flows from site 1 — no React source edit. |
+| 8 | `.altitude/visual-compare/harness/<brand>.html` | Copy `southleft.html`, swap the single `<link>` to `tokens-<brand>-<mode>.css`. Then add the column to `harness/index.html`. |
+
+### 9.7 Widen the three brand lists in the harnesses
+
+```
+.altitude/visual-compare/harness/scoped.js:31-34   const BRANDS = [[id, description], …]
+scripts/build-brand-compare.mjs:35                 const BRANDS = ['altitude', 'southleft']
+scripts/check-scoped-theming.mjs:49                const BRANDS = ['altitude', 'southleft']
+```
+
+`scripts/check-brand-distinctiveness.js` needs **no** edit — it discovers brands
+from `readdirSync(dist-v5/css/brand)` (`:87-93`).
+
+### 9.8 Verify
+
+```bash
+pnpm --filter @southleft/al-web-components build       # full: dist + css, not just tokens
+pnpm --filter @southleft/al-web-components test:tokens
+pnpm run test:brands            # distinctiveness — see §8
+pnpm run brands:compare         # regenerates .altitude/visual-compare/brands.dark.png
+pnpm run test:scoped-theming    # regenerates .altitude/visual-compare/brands.scoped.png
+pnpm run gate:token-usage       # no phantom tokens
+node scripts/capture-token-baseline.js   # MANDATORY, same PR — AGENTS.md G8
+```
+
+The two gates a new brand most often trips:
+
+- **`test:brands`** — the brand must differ from *every* other brand on at least
+  3 of the 5 marker properties, and vary at least 3 **non-colour** axes vs
+  `altitude`. A colours-only brand fails. It also fails a
+  `--al-theme-typography-*` override with no matching `--al-typography-preset-*`
+  change (the inert-override smell test, §2).
+- **`test:scoped-theming`** — asserts the number of distinct computed
+  `--al-theme-color-background-primary-default` values across sibling hosts is
+  **exactly** `BRANDS.length` (`check-scoped-theming.mjs:143-146`). A new brand
+  that shares a primary background with an existing one fails.
+
+The token baseline is a hard CI gate with no tolerance (`AGENTS.md:62-65`, G8);
+procedure in [`TOKENS.md`](./TOKENS.md) § "Rebaselining after a token change".
+
+### 9.9 Optional — register a DS project
+
+**A brand does not need one.** The dependency runs the other way:
+`scripts/check-ds-projects.mjs:144-149` (R9) requires every registered project
+to *have* a brand token set, not the reverse. A brand on its own already gives
+you `<al-theme brand="x">`, the scoped `:host` blocks, and the built bundles.
+
+Add a `.altitude/ds-projects.json` entry only if the brand needs its **own Figma
+file parity tracking** and a **scoped docs site** at `/<id>/`. Required fields
+(`ds-projects.schema.json:34-42`, `additionalProperties: false`): `id`, `name`,
+`brand`, `figma{fileKey,fileName,urlBase}`,
+`paths{figmaSyncDir,parityManifest,opsDir}`, `library`, `prompts`. Procedure:
+[`DS-PROJECTS.md`](./DS-PROJECTS.md) § "Adding a project". `apps/docs` picks a
+new project up with **zero code changes** — enforced by
+`pnpm run gate:docs-generalises`.
+
+Note that `llms.txt` derives its brand count from `ds-projects.json`, not from
+the token directories, so a brand without a project entry will not appear there.
+
+### 9.10 Finally
+
+Update §7 above (its title and table), `MIGRATION.md` if the brand is
+consumer-facing, and add a changeset.

@@ -32,7 +32,7 @@ them in the same PR as the code they describe.
 | File | Covers |
 |---|---|
 | `TOKENS.md` | The token pipeline and the parallel-pipeline rationale; rebaselining after a token change |
-| `BRANDS.md` | What a brand may override, the token reachability map, and the two shipped brands |
+| `BRANDS.md` | What a brand may override, the token reachability map, the two shipped brands, and **§9 — the ordered quick start for adding a new brand** |
 | `AXES.md` | The five theme axes and which token slice each one owns |
 | `BUILD.md` | The build graph — what produces what, in what order |
 | `REGISTRATION.md` | The three consumer registration paths (`stable` / `versioned` / `manual`) |

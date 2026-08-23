@@ -91,8 +91,26 @@ export function docsProject(entry, { isDefault }) {
 
   /** `Altitude Design System` → `Altitude`. The long name is the registry's. */
   const shortName = entry.name.replace(/\s+design\s+system$/i, '').trim() || entry.name;
-  /** `null` = the whole library. An array = the subset this system ships. */
-  const scope = Array.isArray(entry.library?.components) && entry.library.components.length
+  /**
+   * DOCS SCOPE. `null` = document the whole library; an array = document only
+   * these tags.
+   *
+   * It defaults to `library.components` — the subset this system ships — which
+   * is what it always was. But the two are NOT the same question, and a project
+   * may now say so: `docs.components: "all"` documents the whole shared library
+   * while leaving `library.components` to mean what it means everywhere else.
+   *
+   * That separation is load-bearing rather than cosmetic. `library.components`
+   * is read by `libs/altitude-mcp/src/lib/parity.mjs` to build the Figma parity
+   * list, by `scripts/check-sl-scope.mjs` to re-derive the allowlist from the
+   * consuming site's own source, and by `scripts/check-brand-conformance.mjs`.
+   * Widening the docs catalog by emptying that array would have silently
+   * widened all three — a parity manifest full of components the brand's Figma
+   * file has never contained, and a scope gate that switches itself off. So the
+   * docs site reads its own field and those three keep reading theirs.
+   */
+  const documentsWholeLibrary = entry.docs?.components === 'all';
+  const scope = !documentsWholeLibrary && Array.isArray(entry.library?.components) && entry.library.components.length
     ? [...entry.library.components]
     : null;
 

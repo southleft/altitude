@@ -318,6 +318,15 @@
               "description": "Path segment the docs site serves this project under: '' for the default project, '/<id>' otherwise. Same value apps/docs derives in src/lib/projects.mjs.",
               "type": "string"
             },
+            "$componentsComment": {
+              "type": "string"
+            },
+            "components": {
+              "description": "DOCS SCOPE, decoupled from LIBRARY scope. Omit and the docs site documents `library.components` (the subset this system ships) exactly as before. Set to \"all\" and the docs site documents the WHOLE base library, while `library.components` keeps its own meaning untouched — it is still what Figma parity builds its list from, what scripts/check-sl-scope.mjs re-derives from the consuming site, and what scripts/check-brand-conformance.mjs treats as the project's base allowlist. The two answer different questions: `library.components` is what this design system SHIPS, `docs.components` is what its documentation SHOWS. A brand layer and its `supersedes` apply either way.",
+              "enum": [
+                "all"
+              ]
+            },
             "productionBase": {
               "description": "Absolute URL of this project's deployed docs, no trailing slash.",
               "type": "string"

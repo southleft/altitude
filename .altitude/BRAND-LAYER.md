@@ -40,10 +40,16 @@ external, because nothing yet consumes `dist` as a real npm dependency
 (`apps/southleft` still imports nothing from this package — spec
 `2026-08-22-southleft-brand-design-system-as-a-linked-layer-on-altitude`, T11).
 
-Seven of the nine are new tags (`sl-hero`, `sl-cta-band`, `sl-marquee`,
-`sl-media-card`, `sl-logo-wall`, `sl-section-header`, `sl-page-hero` — class
-names `SLHero`, `SLCtaBand`, etc., `libs/sl-web-components/components/bundle.ts`).
-**`SLHeader` and `SLFooter` are different: they do not register a new tag.**
+Six of the nine are new tags (`sl-hero`, `sl-cta-band`, `sl-marquee`,
+`sl-logo-wall`, `sl-section-header`, `sl-page-hero` — class names `SLHero`,
+`SLCtaBand`, etc., `libs/sl-web-components/components/bundle.ts`).
+**`SLCard`, `SLHeader` and `SLFooter` are different: they do not register a new
+tag.** `SLCard` is the brand implementation of `al-card` — a superset of the
+base card that adds the `service`, `tool`, `article` and `work` variants. The
+last two were `sl-media-card` until the card started owning its own padding, at
+which point the reason for a separate component (Altitude's card wraps its image
+region in the card's padding, so media can never reach the edge) stopped
+applying.
 
 ```ts
 // libs/sl-web-components/components/header/header.ts:73-74

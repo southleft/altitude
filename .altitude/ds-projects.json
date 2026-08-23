@@ -119,6 +119,7 @@
         "tagPrefix": "al-",
         "$supersedesComment": "SAME TAG, BRAND IMPLEMENTATION. A brand layer publishes al-* tags like everything else â one namespace, so a page is authored in al-* and never mixes two (spec 2026-08-23-one-al-namespace-across-brand-and-base). Where a brand component MODIFIES a base one they share the tag outright: `al-header` and `al-footer` here are Southleft's, and the app imports this package's module instead of the base one, so exactly one definition exists at runtime. `supersedes` maps the tag to itself to say that this is deliberate override rather than an accidental collision â the docs site documents the brand implementation under that tag and drops the base record for this project.",
         "supersedes": {
+          "al-card": "al-card",
           "al-header": "al-header",
           "al-footer": "al-footer"
         }
@@ -140,6 +141,8 @@
       "docs": {
         "//": "Southleft's Storybook was retired (2026-08-23). The multi-brand docs site at apps/docs serves this project at /docs/southleft/, generated from the same CEM, so a second Storybook was duplicating it. `route` is what apps/docs already derives for a non-default project; `productionBase` is where that lands when deployed.",
         "route": "/southleft",
+        "$componentsComment": "DOCS SCOPE, and deliberately NOT the same thing as `library.components` above. Southleft's docs now show every component in the shared library, so a reader browsing /docs/southleft sees the same catalog Altitude documents, rendered under the Southleft brand. `library.components` is untouched and still means what it always meant — the subset southleft.com actually ships — which is what Figma parity builds its list from (the Southleft V5 file has sets for those, not for all 70), what scripts/check-sl-scope.mjs re-derives from apps/southleft/src, and what scripts/check-brand-conformance.mjs reads. Collapsing the two would have flooded the Southleft parity manifest with 50 components that file has never contained and switched the scope gate off entirely. Two fields, two questions: what this system SHIPS vs. what its docs SHOW.",
+        "components": "all",
         "productionBase": "https://altitude.pages.dev/docs/southleft"
       }
     }

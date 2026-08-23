@@ -84,6 +84,30 @@ procedure, the frozen `core/variables.scss`).
 Depth: `.altitude/BRANDS.md` (the reachability map, the brand contract's 8
 rules, the two shipped brands' marker table).
 
+## Add a NEW brand (`<al-theme brand="yourbrand">`)
+
+Different from the row above: that one edits an existing brand's values, this
+one makes a new `brand` value exist. **There is no scaffold** — it is a hand
+edit in ~8 places, and skipping any one of them fails a gate or (worse) makes
+the brand a silent no-op.
+
+**Full ordered checklist: [`.altitude/BRANDS.md`](./BRANDS.md) § 9 "Adding a new
+brand — the quick start".** Shape of it:
+
+| Step | Where |
+|---|---|
+| Author the token set | `styles/tokens/tier-2/brand/<brand>/*.json` — references only (§9.1); `mode/<theme>/colors.json` for values that must flip with `mode` (§9.2) |
+| Register with Tokens Studio | `tokens/$metadata.json` + `tokens/$themes.json` (§9.3) |
+| The one config edit | `styles/tokens-config.v5.mjs:589-602` — the hardcoded `brands` array, one entry per brand × mode (§9.4) |
+| Build + sanity check | `build:tokens`, then confirm `dist-v5/scss/host/tokens-brand-<brand>*.scss` exists — **a missing partial means an empty delta, i.e. the brand does nothing** (§9.5). `theme.scss` needs no edit. |
+| Widen the surface | `theme.ts` union → regenerate CEM/schema; `theme-switcher.ts`; `.storybook/presets.ts`; MCP `z.enum`; React stories; a harness HTML (§9.6) |
+| Widen the harness brand lists | `harness/scoped.js`, `build-brand-compare.mjs`, `check-scoped-theming.mjs` (§9.7) |
+| Verify | `test:brands`, `brands:compare`, `test:scoped-theming`, `gate:token-usage`, **`node scripts/capture-token-baseline.js`** (G8, same PR) (§9.8) |
+| Optional | A `.altitude/ds-projects.json` entry — only for Figma parity + a scoped docs site. A brand does **not** require one (§9.9) |
+
+`altitude_generate_theme` (MCP) is **not** a brand generator — it is an
+in-memory OKLCH solver that writes no files. See `.altitude/AI-THEME.md`.
+
 ---
 
 ## Work on the Southleft brand layer (`@southleft/sl-web-components`)
