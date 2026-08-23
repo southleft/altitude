@@ -205,6 +205,55 @@ async function main() {
     ok(typeof data.aiPrompt === 'string' && data.aiPrompt.length > 0, 'reconciliation prompt attached');
   }
 
+  console.log('\naltitude_check_parity({ project: "southleft" }) — brand layer components (T7)');
+  {
+    const res = await client.callTool({ name: 'altitude_check_parity', arguments: { project: 'southleft' } });
+    const data = parseToolJson(res);
+    // .altitude/ds-projects.json southleft.brandLibrary declares @southleft/sl-web-components:
+    // 9 brand CEM components total, 7 of which are brand-only (hero, cta-band, marquee,
+    // logo-wall, media-card, page-hero, section-header); al-header/al-footer SUPERSEDE the
+    // base library's under the same tag rather than adding new ones.
+    ok(data.scope?.brandComponents === 9, `southleft reports 9 brand components (got ${data.scope?.brandComponents})`);
+    ok(data.scope?.brandOnly === 7, `southleft reports 7 brand-only components (got ${data.scope?.brandOnly})`);
+    ok(
+      data.components.every((c) => c.origin === 'base' || c.origin === 'brand'),
+      'every southleft entry carries an origin of "base" or "brand"'
+    );
+    const hero = data.components.find((c) => c.tag === 'al-hero');
+    ok(hero?.origin === 'brand', 'brand-only component al-hero is present with origin "brand"');
+    const header = data.components.find((c) => c.tag === 'al-header');
+    ok(header?.origin === 'brand', 'al-header is attributed to the brand layer (supersedes the base component)');
+    ok(typeof header?.codeHash === 'string' && header.codeHash.length > 0, 'al-header carries a code hash');
+
+    // The bug this fixes: al-header/al-footer used to hash the BASE source
+    // (libs/al-web-components) even though Southleft ships the BRAND
+    // implementation (libs/sl-web-components) under that tag. Cross-check
+    // against Altitude's al-header, which is genuinely base-sourced — the two
+    // hashes must differ, because they are now reading two different files.
+    const altitudeReport = parseToolJson(
+      await client.callTool({ name: 'altitude_check_parity', arguments: { project: 'altitude' } })
+    );
+    const altitudeHeader = altitudeReport.components.find((c) => c.tag === 'al-header');
+    ok(altitudeHeader?.origin === 'base', 'altitude\'s al-header stays attributed to the base library');
+    ok(
+      !!altitudeHeader?.codeHash && altitudeHeader.codeHash !== header?.codeHash,
+      'southleft al-header hashes the BRAND source, not the same bytes as altitude\'s base al-header'
+    );
+  }
+
+  console.log('\naltitude_check_parity({ project: "altitude" }) — base library output unchanged by the brand layer');
+  {
+    const res = await client.callTool({ name: 'altitude_check_parity', arguments: { project: 'altitude' } });
+    const data = parseToolJson(res);
+    ok(data.scope?.brandComponents === 0, 'altitude has no brand layer — brandComponents is 0');
+    ok(data.scope?.brandOnly === 0, 'altitude has no brand layer — brandOnly is 0');
+    ok(data.scope?.allowlisted === false, 'altitude is still unscoped (the whole library)');
+    ok(
+      data.components.every((c) => c.origin === 'base'),
+      'every altitude entry is still origin "base"'
+    );
+  }
+
   console.log('\naltitude_check_parity — every project in .altitude/ds-projects.json resolves');
   for (const id of projectIds) {
     const res = await client.callTool({ name: 'altitude_check_parity', arguments: { project: id } });

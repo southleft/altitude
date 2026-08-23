@@ -33,22 +33,68 @@ import { MoonIcon, SunIcon } from '@storybook/icons';
  * lands. Polling keeps badges live in dev (the emitter rewrites the file when
  * component source or the parity manifest changes); in a static build the file
  * never changes and the poll is harmless.
+ *
+ * HONESTY: `status` distinguishes three situations that used to render
+ * IDENTICALLY (no badge at all) — a clean report, an engine that threw
+ * (`parity-emitter.mjs` writes an `{ error: {...} }`-shaped report on failure),
+ * and a report the manager simply could not fetch. `null` = not loaded yet,
+ * `'ok'` = a real report, `'engine-error'` = the emitter caught and reported a
+ * failure, `'unreachable'` = several fetches in a row failed outright.
  */
-const parityStore = { byKind: null, listeners: new Set() };
+const parityStore = {
+  byKind: null,
+  observation: null,
+  status: null,
+  errorMessage: null,
+  consecutiveFailures: 0,
+  listeners: new Set(),
+};
+
+/** Two in a row (~20s at the 10s poll interval) before flipping to 'unreachable' — one blip should not paint every badge grey. */
+const FAILURE_THRESHOLD = 2;
+
+function notifyUnreachable() {
+  parityStore.consecutiveFailures += 1;
+  if (parityStore.consecutiveFailures < FAILURE_THRESHOLD) return;
+  if (parityStore.status === 'unreachable') return; // already flagged — don't re-render every poll
+  parityStore.status = 'unreachable';
+  parityStore.listeners.forEach((l) => l());
+}
 
 async function loadParity(url) {
   try {
     const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) return;
+    if (!res.ok) {
+      notifyUnreachable();
+      return;
+    }
     const report = await res.json();
+    parityStore.consecutiveFailures = 0;
+
+    // The emitter's error-shaped report (see parity-emitter.mjs) — tolerant of
+    // `error` being either the `{ message, at }` object it writes today or a
+    // bare string, in case an older report is still on disk.
+    if (report && report.error) {
+      parityStore.status = 'engine-error';
+      parityStore.errorMessage = typeof report.error === 'string' ? report.error : (report.error?.message ?? 'unknown error');
+      parityStore.byKind = {};
+      parityStore.observation = null;
+      parityStore.listeners.forEach((l) => l());
+      return;
+    }
+
     const byKind = {};
     for (const c of report.components ?? []) {
       if (c.kindId) byKind[c.kindId] = c;
     }
+    parityStore.status = 'ok';
     parityStore.byKind = byKind;
+    // Tolerant of extra/unknown fields — another agent is actively extending
+    // the engine's report shape (brand-layer `origin`) concurrently with this.
+    parityStore.observation = report.observation ?? null;
     parityStore.listeners.forEach((l) => l());
   } catch {
-    /* parity is chrome — never break the manager */
+    notifyUnreachable();
   }
 }
 /** Armed once, by the first `setupManager` call — a manager runs one Storybook. */
@@ -96,30 +142,51 @@ const CheckGlyph = ({ title }) =>
 
 const AMBER = '#f59e0b';
 const RED = '#ef4444';
+const GREY = '#9ca3af';
+
+/** Grey struck circle — "parity data is not trustworthy right now", distinct from every real status color. */
+const ErrorGlyph = ({ title }) =>
+  React.createElement(
+    'svg',
+    { viewBox: '0 0 24 24', width: 12, height: 12, 'aria-hidden': false, role: 'img' },
+    React.createElement('title', null, title),
+    React.createElement('circle', { cx: 12, cy: 12, r: 10, fill: GREY }),
+    React.createElement('path', { d: 'M7 12h10', stroke: '#fff', strokeWidth: 2, strokeLinecap: 'round' }),
+  );
 
 /**
  * Status -> glyph(s). The colored glyph points at WHERE the unmatched/newer
  * truth lives: yellow = that side drifted ahead since the last confirmed sync,
  * red = the component is missing entirely on the OTHER side.
+ *
+ * `observation` is the engine's honesty block (see parity-emitter.mjs / the
+ * `computeParity` report). When Figma has never been read at all
+ * (`everObserved === false`), every glyph's tooltip gets a one-line caveat —
+ * a code-drift badge in that state is a guess about the code side only, not a
+ * confirmed drift against Figma.
  */
-function glyphsFor(entry) {
+function glyphsFor(entry, observation) {
   const f = entry.figma?.name ? ` — Figma set "${entry.figma.name}"` : '';
+  const suffix = observation && observation.everObserved === false
+    ? ' — Figma never observed; code-drift may be false-positive; run parity:refresh'
+    : '';
+  const t = (title) => `${title}${suffix}`;
   switch (entry.status) {
     case 'in-sync':
-      return [React.createElement(CheckGlyph, { key: 'ok', title: `In sync with Figma${f}` })];
+      return [React.createElement(CheckGlyph, { key: 'ok', title: t(`In sync with Figma${f}`) })];
     case 'code-drift':
-      return [React.createElement(CodeGlyph, { key: 'c', color: AMBER, title: `Code changed since last Figma sync${f}` })];
+      return [React.createElement(CodeGlyph, { key: 'c', color: AMBER, title: t(`Code changed since last Figma sync${f}`) })];
     case 'figma-drift':
-      return [React.createElement(FigmaGlyph, { key: 'f', color: AMBER, title: `Figma changed since last sync — code is behind${f}` })];
+      return [React.createElement(FigmaGlyph, { key: 'f', color: AMBER, title: t(`Figma changed since last sync — code is behind${f}`) })];
     case 'conflict':
       return [
-        React.createElement(CodeGlyph, { key: 'c', color: AMBER, title: 'Both code and Figma changed since last sync' }),
-        React.createElement(FigmaGlyph, { key: 'f', color: AMBER, title: 'Both code and Figma changed since last sync' }),
+        React.createElement(CodeGlyph, { key: 'c', color: AMBER, title: t('Both code and Figma changed since last sync') }),
+        React.createElement(FigmaGlyph, { key: 'f', color: AMBER, title: t('Both code and Figma changed since last sync') }),
       ];
     case 'missing-in-figma':
-      return [React.createElement(CodeGlyph, { key: 'c', color: RED, title: 'Exists in code only — no Figma component set' })];
+      return [React.createElement(CodeGlyph, { key: 'c', color: RED, title: t('Exists in code only — no Figma component set') })];
     case 'missing-in-code':
-      return [React.createElement(FigmaGlyph, { key: 'f', color: RED, title: 'Exists in Figma only — no code component' })];
+      return [React.createElement(FigmaGlyph, { key: 'f', color: RED, title: t('Exists in Figma only — no code component') })];
     default:
       return []; // 'excluded' and anything unknown: no badge
   }
@@ -133,6 +200,21 @@ const ParityLabel = ({ item }) => {
     return () => parityStore.listeners.delete(force);
   }, []);
 
+  // Engine failure or a report the manager cannot reach: say so, rather than
+  // rendering nothing — indistinguishable-from-in-sync is the bug this fixes.
+  if (parityStore.status === 'engine-error' || parityStore.status === 'unreachable') {
+    const title =
+      parityStore.status === 'engine-error'
+        ? `parity engine error — see terminal${parityStore.errorMessage ? ` (${parityStore.errorMessage})` : ''}`
+        : 'parity report unavailable';
+    return React.createElement(
+      'span',
+      { style: { display: 'inline-flex', alignItems: 'center', gap: 6 } },
+      item.name,
+      React.createElement(ErrorGlyph, { key: 'err', title }),
+    );
+  }
+
   const kindId = String(item.id ?? '').replace(/--docs$/, '');
   const entry = parityStore.byKind?.[kindId];
   if (!entry) return item.name;
@@ -141,7 +223,7 @@ const ParityLabel = ({ item }) => {
     'span',
     { style: { display: 'inline-flex', alignItems: 'center', gap: 6 } },
     item.name,
-    ...glyphsFor(entry),
+    ...glyphsFor(entry, parityStore.observation),
   );
 };
 

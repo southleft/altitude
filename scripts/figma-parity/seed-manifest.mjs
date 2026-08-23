@@ -33,7 +33,13 @@ import { pathToFileURL } from 'node:url';
 
 import { loadComponents } from '../../libs/altitude-mcp/src/lib/cem.mjs';
 import { resolveProject } from '../../libs/altitude-mcp/src/lib/ds-project.mjs';
-import { readManifest, writeManifest, hashComponentSource, digestOf } from '../../libs/altitude-mcp/src/lib/parity.mjs';
+import {
+  readManifest,
+  writeManifest,
+  hashComponentSource,
+  digestOf,
+  resolveComponentRoster,
+} from '../../libs/altitude-mcp/src/lib/parity.mjs';
 
 const force = process.argv.includes('--force');
 const project = resolveProject();
@@ -113,28 +119,38 @@ let skipped = 0;
 // library that IS this design system (see .altitude/ds-projects.json). Seed only
 // those, so the manifest is a build list rather than the whole 105-component
 // catalog. No allowlist means the project is the whole library.
-const allowlist = project.library.components?.length ? new Set(project.library.components) : null;
-const inScope = allowlist ? loadComponents().filter((c) => allowlist.has(c.tag)) : loadComponents();
+//
+// The ROSTER (T7) also folds in the project's `brandLibrary` — page-section
+// components in a separate workspace/CEM (Southleft's @southleft/sl-web-components)
+// on top of the shared library, with superseded tags (al-header/al-footer)
+// replaced by the brand's record. `resolveComponentRoster` is the SAME
+// function `computeParity()` uses, so this script and the parity report can
+// never disagree on which components exist for a project. Each roster item's
+// `view` is a project record whose `resolved.libraryRoot` points at whichever
+// source (base or brand) backs it, so `hashComponentSource` reads the right files.
+const { roster, allowlist } = resolveComponentRoster(project);
+const rosterTags = new Set(roster.map((r) => r.component.tag));
 
 // Drop entries that fell OUT of scope since the last seed, so narrowing the
-// allowlist actually shrinks the manifest instead of leaving orphans behind.
+// allowlist (or a brand tag the brandLibrary no longer declares) actually
+// shrinks the manifest instead of leaving orphans behind.
 let pruned = 0;
 if (allowlist) {
   for (const tag of Object.keys(manifest.components)) {
-    if (!allowlist.has(tag)) {
+    if (!rosterTags.has(tag)) {
       delete manifest.components[tag];
       pruned += 1;
     }
   }
 }
 
-for (const c of inScope) {
+for (const { component: c, view } of roster) {
   if (manifest.components[c.tag] && !force) {
     skipped += 1;
     continue;
   }
 
-  const codeHash = hashComponentSource(c.modulePath, project);
+  const codeHash = hashComponentSource(c.modulePath, view);
   const mapEntry = INSTANCE_MAP[c.tag] ?? null;
   const knownMissing = MISSING_IN_FIGMA.has(c.tag);
   const opsName = opsNames.get(c.tag) ?? null;
@@ -166,9 +182,11 @@ for (const c of inScope) {
 writeManifest(manifest, project);
 const mapped = Object.values(manifest.components).filter((e) => e.figma).length;
 const total = Object.keys(manifest.components).length;
+const brandTotal = roster.filter((r) => r.origin === 'brand').length;
 console.log(
   `[${project.id}] ${project.resolved.parityManifest}: ${total} components ` +
     `(${mapped} mapped to "${project.figma.fileName}", ${total - mapped} unmapped) — ` +
     `${added} written, ${skipped} kept${pruned ? `, ${pruned} pruned (out of scope)` : ''}.` +
-    (allowlist ? ` Scoped to library.components (${allowlist.size} of ${loadComponents().length}).` : ''),
+    (allowlist ? ` Scoped to library.components (${allowlist.size} of ${loadComponents().length}).` : '') +
+    (brandTotal ? ` ${brandTotal} from the brand layer (${project.resolved.brandLibrary?.workspace}).` : ''),
 );

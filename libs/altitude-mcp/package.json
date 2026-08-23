@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "node --experimental-strip-types --no-warnings ./src/server.mjs",
-    "test": "node --experimental-strip-types --no-warnings ./test/smoke.mjs"
+    "test": "node --experimental-strip-types --no-warnings ./test/smoke.mjs && node --experimental-strip-types --no-warnings ./test/mark-synced.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",

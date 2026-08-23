@@ -46,10 +46,20 @@ interface ParityEntry {
 interface ParityReport {
   generated: string;
   figmaLastRefreshed: string | null;
+  /** Written by `parity-emitter.mjs` on engine failure. Present ⇒ the rest of the report is empty and not to be trusted. */
+  error?: { message: string; at: string } | string;
+  /** The engine's honesty block. `null` on an error report; tolerant of extra fields another agent may add. */
+  observation?: { everObserved: boolean; [key: string]: unknown } | null;
   components: ParityEntry[];
 }
 
-/** One shared fetch per docs page, however many blocks/components mount. */
+/**
+ * `null` from `fetchReport` used to mean two different things — "the fetch
+ * failed" and "the engine threw" — collapsed into one, which is exactly the
+ * ambiguity `manager.shared.js` had. Here the report is passed through
+ * (including an `error`-shaped one) and ONLY a genuine network/parse failure
+ * resolves to `null`; the component below tells the two apart.
+ */
 let reportPromise: Promise<ParityReport | null> | null = null;
 function fetchReport(): Promise<ParityReport | null> {
   if (!reportPromise) {
@@ -132,6 +142,38 @@ const Blurb = styled.div(({ theme }) => ({
   color: theme.textMutedColor,
 }));
 
+/** Small muted inline note — used for both "unavailable" and the freshness caveat, so both read as chrome rather than as a status. */
+const MutedNote = styled.div(({ theme }) => ({
+  margin: '16px 0 24px',
+  padding: '8px 12px',
+  fontSize: theme.typography.size.s1,
+  color: theme.textMutedColor,
+  fontFamily: theme.typography.fonts.base,
+}));
+
+const FreshnessNote = styled.div(({ theme }) => ({
+  padding: '0 14px 10px',
+  fontSize: theme.typography.size.s1 - 1,
+  color: theme.textMutedColor,
+}));
+
+const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+
+/**
+ * "Figma last observed" caveat text, or `null` when there is nothing worth
+ * saying (observed recently). Never observed reads as maximally stale, not as
+ * "no data" — silence here is how a dead Figma read started looking clean.
+ */
+function freshnessCaveat(figmaLastRefreshed: string | null): string | null {
+  if (!figmaLastRefreshed) {
+    return 'Figma last observed: never — statuses figma-drift/conflict unreachable';
+  }
+  const ageMs = Date.now() - new Date(figmaLastRefreshed).getTime();
+  if (ageMs <= THIRTY_DAYS_MS) return null;
+  const days = Math.round(ageMs / (24 * 60 * 60 * 1000));
+  return `Figma last observed: ${days} day${days === 1 ? '' : 's'} ago`;
+}
+
 async function copyText(text: string): Promise<boolean> {
   try {
     await navigator.clipboard.writeText(text);
@@ -169,12 +211,23 @@ const CopyButton = ({ label, text }: { label: string; text: string }) => {
 export const FigmaParity = ({ tag }: { tag?: unknown }) => {
   const [entry, setEntry] = useState<ParityEntry | null>(null);
   const [refreshed, setRefreshed] = useState<string | null>(null);
+  // 'unreachable' = fetch/parse failed outright; 'engine-error' = a report
+  // landed but it's the emitter's error shape. Both used to render nothing.
+  const [unavailable, setUnavailable] = useState<null | 'unreachable' | 'engine-error'>(null);
 
   useEffect(() => {
     if (typeof tag !== 'string') return;
     let alive = true;
     fetchReport().then((report) => {
-      if (!alive || !report) return;
+      if (!alive) return;
+      if (!report) {
+        setUnavailable('unreachable');
+        return;
+      }
+      if (report.error) {
+        setUnavailable('engine-error');
+        return;
+      }
       setEntry(report.components.find((c) => c.tag === tag) ?? null);
       setRefreshed(report.figmaLastRefreshed);
     });
@@ -183,7 +236,19 @@ export const FigmaParity = ({ tag }: { tag?: unknown }) => {
     };
   }, [tag]);
 
+  if (unavailable) {
+    return (
+      <MutedNote data-parity-unavailable={unavailable}>
+        {unavailable === 'engine-error'
+          ? 'Parity status unavailable — parity engine error'
+          : 'Parity status unavailable — could not reach the parity report'}
+      </MutedNote>
+    );
+  }
+
   if (!entry || entry.status === 'excluded') return null;
+
+  const freshness = freshnessCaveat(refreshed);
 
   const tone = TONE[entry.status] ?? TONE['missing-in-figma'];
   const synced = entry.lastSync?.date ? new Date(entry.lastSync.date).toLocaleDateString() : null;
@@ -221,6 +286,7 @@ export const FigmaParity = ({ tag }: { tag?: unknown }) => {
           {' '}The “Copy AI fix prompt” button yields a ready-to-paste prompt for a Claude session with the altitude MCP — it names the component, the Figma set, and the exact reconciliation pipeline.
         </Blurb>
       )}
+      {freshness && <FreshnessNote data-parity-freshness>{freshness}</FreshnessNote>}
     </Wrapper>
   );
 };

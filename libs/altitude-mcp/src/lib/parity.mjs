@@ -42,7 +42,7 @@ import { dirname, join } from 'node:path';
 
 import { WC_ROOT } from './paths.mjs';
 import { resolveProject, figmaNodeUrlFor } from './ds-project.mjs';
-import { loadComponents } from './cem.mjs';
+import { loadComponents, loadComponentsFrom } from './cem.mjs';
 import { getStoryInfo } from './stories.mjs';
 
 /**
@@ -315,20 +315,30 @@ function assessEntry(entry, current) {
 }
 
 /**
- * Compute the full parity report for ONE design-system project: one entry per
- * CEM component (joined to its Storybook kind id so the manager sidebar can key
- * by nav item), plus `figmaOnly` sets that have no code component.
+ * Resolve the full component ROSTER for a project: base library components in
+ * scope, with tags the project's `brandLibrary` SUPERSEDES replaced by that
+ * brand's CEM record, plus brand-only additions. Shared by `computeParity()`
+ * and `scripts/figma-parity/seed-manifest.mjs` so the two never drift on which
+ * components exist for a project.
  *
- * @param {object|string} [project] resolved project, id, or omit for default
+ * THE BRAND LAYER (T7, spec 2026-08-23-process-audit-and-dev-workflow-coherence).
+ * A project may declare `brandLibrary` — page-section components shipped in a
+ * SEPARATE workspace/CEM on top of the shared library (Southleft's
+ * @southleft/sl-web-components: hero, cta-band, marquee, logo-wall,
+ * media-card, page-hero, section-header, plus a brand al-header/al-footer that
+ * supersedes the base ones under the same tag). No `brandLibrary` (Altitude)
+ * means `brandComponents`/`brandOnly` are empty and the roster is exactly the
+ * base scope, unchanged from before this existed.
+ *
+ * Each roster item carries `origin` and `view` — a project record whose
+ * `resolved.libraryRoot` points at whichever source backs it (base or brand),
+ * so hashing/contract/story all read the right files while everything else
+ * (docs base, prompts, figma config) stays the real project's.
+ *
+ * @param {object} p a RESOLVED project record (see `ds-project.mjs resolveProject`)
  */
-export function computeParity(project) {
-  const p = asProject(project);
-  const manifest = readManifest(p);
+export function resolveComponentRoster(p) {
   const allComponents = loadComponents();
-  const excludedByConfig = p.excluded ?? {};
-  // library-scope, with a legacy fallback for any registry still carrying it
-  // under `storybook` (that block is optional now — Southleft has none).
-  const excludePrefixes = p.library?.excludeTitlePrefixes ?? p.storybook?.excludeTitlePrefixes ?? [];
 
   // SCOPE. A project may declare `library.components` — the subset of the shared
   // library that actually IS that design system. Southleft ships 21 of the 105
@@ -336,8 +346,8 @@ export function computeParity(project) {
   // "missing-in-figma" against its own file, which is noise, not a build list.
   // No allowlist (Altitude) means the project IS the whole library.
   const allowlist = p.library.components?.length ? new Set(p.library.components) : null;
-  const components = allowlist ? allComponents.filter((c) => allowlist.has(c.tag)) : allComponents;
-  const omittedByScope = allComponents.length - components.length;
+  const baseInScope = allowlist ? allComponents.filter((c) => allowlist.has(c.tag)) : allComponents;
+  const omittedByScope = allComponents.length - baseInScope.length;
 
   // A tag in the allowlist that the library does not have is a config error the
   // report should surface rather than silently drop.
@@ -345,13 +355,57 @@ export function computeParity(project) {
     ? [...allowlist].filter((tag) => !allComponents.some((c) => c.tag === tag))
     : [];
 
+  const brand = p.resolved.brandLibrary;
+  const supersedes = brand?.supersedes ?? {};
+  const brandComponents = brand
+    ? loadComponentsFrom(brand.cem, `pnpm --filter ${brand.workspace} build:custom-elements.json`)
+    : [];
+  const brandByTag = new Map(brandComponents.map((c) => [c.tag, c]));
+  const brandView = brand ? { ...p, resolved: { ...p.resolved, libraryRoot: brand.root } } : null;
+
+  const roster = [];
+  for (const c of baseInScope) {
+    if (supersedes[c.tag] && brandByTag.has(c.tag)) {
+      roster.push({ component: brandByTag.get(c.tag), origin: 'brand', view: brandView });
+    } else {
+      roster.push({ component: c, origin: 'base', view: p });
+    }
+  }
+  const supersededTags = new Set(Object.keys(supersedes));
+  const brandOnly = brandComponents.filter((c) => !supersededTags.has(c.tag));
+  for (const bc of brandOnly) {
+    roster.push({ component: bc, origin: 'brand', view: brandView });
+  }
+
+  return { roster, allComponents, baseInScope, allowlist, omittedByScope, unknownInScope, brandComponents, brandOnly };
+}
+
+/**
+ * Compute the full parity report for ONE design-system project: one entry per
+ * roster component (see `resolveComponentRoster`, joined to its Storybook kind
+ * id so the manager sidebar can key by nav item), plus `figmaOnly` sets that
+ * have no code component.
+ *
+ * @param {object|string} [project] resolved project, id, or omit for default
+ */
+export function computeParity(project) {
+  const p = asProject(project);
+  const manifest = readManifest(p);
+  const excludedByConfig = p.excluded ?? {};
+  // library-scope, with a legacy fallback for any registry still carrying it
+  // under `storybook` (that block is optional now — Southleft has none).
+  const excludePrefixes = p.library?.excludeTitlePrefixes ?? p.storybook?.excludeTitlePrefixes ?? [];
+
+  const { roster, allComponents, allowlist, omittedByScope, unknownInScope, brandComponents, brandOnly } =
+    resolveComponentRoster(p);
+
   const entries = [];
 
-  for (const c of components) {
+  for (const { component: c, origin, view } of roster) {
     const entry = manifest?.components?.[c.tag] ?? null;
-    const codeHash = hashComponentSource(c.modulePath, p);
+    const codeHash = hashComponentSource(c.modulePath, view);
     const contract = codeContract(c);
-    const story = getStoryInfo(c.modulePath, p);
+    const story = getStoryInfo(c.modulePath, view);
     const contractDiff = diffFigmaContract(contract, entry?.figmaContract ?? null);
 
     // A config-level exclusion stands in for a manifest one, so a project whose
@@ -378,6 +432,9 @@ export function computeParity(project) {
       kindId: story ? story.storyId.replace(/--docs$/, '') : null,
       storyId: story?.storyId ?? null,
       status,
+      /** `'base'` — @southleft/al-web-components, or `'brand'` — this project's
+       * `brandLibrary` (hash/contract sourced from the brand CEM/directory). */
+      origin,
       figma: entry?.figma?.name
         ? { name: entry.figma.name, nodeId: entry.figma.nodeId ?? null, url: figmaNodeUrl(entry.figma.nodeId, p) }
         : null,
@@ -456,11 +513,16 @@ export function computeParity(project) {
     scope: {
       // `false` = this project is the whole library (no allowlist declared).
       allowlisted: Boolean(allowlist),
-      inScope: components.length,
+      // Total roster size — base components in scope (supersessions included,
+      // counted once) plus brand-only additions. `entries.length` always equals this.
+      inScope: roster.length,
       libraryTotal: allComponents.length,
       omittedByScope,
       // Allowlisted tags the library does not actually export — a config typo.
       unknownInScope,
+      // The BRAND layer (null-safe: 0 for a project with no `brandLibrary`).
+      brandComponents: brandComponents.length,
+      brandOnly: brandOnly.length,
     },
     summary,
     components: entries,
@@ -603,6 +665,7 @@ export function publicParityReport(project) {
     components: full.components.map((c) => ({
       tag: c.tag,
       status: c.status,
+      origin: c.origin,
       driftBasis: c.driftBasis,
       figmaObserved: c.figmaObserved,
       /** The Figma SET NAME is a design-system fact; the node id is not. */

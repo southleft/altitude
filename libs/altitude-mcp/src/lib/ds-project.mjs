@@ -143,6 +143,22 @@ export function resolveProject(explicitId = null) {
       // file-scoped, so this must never fall back to another project's map.
       instanceMap: project.paths.instanceMap ? abs(project.paths.instanceMap) : null,
       libraryRoot: abs(project.library.root),
+      // The BRAND layer (T7, spec 2026-08-22-southleft-brand-design-system-as-a-
+      // linked-layer-on-altitude): a project may ship page-section components
+      // on top of the shared library, in their own workspace/CEM. `null` for a
+      // project with no brand layer (Altitude). `supersedes` maps a tag the
+      // brand REPLACES (same tag, brand implementation wins — e.g. Southleft's
+      // al-header/al-footer) to itself; everything else in the brand CEM is
+      // brand-only and adds NEW tags to the roster. See `parity.mjs computeParity()`.
+      brandLibrary: project.brandLibrary
+        ? {
+            workspace: project.brandLibrary.workspace,
+            root: abs(project.brandLibrary.root),
+            cem: join(abs(project.brandLibrary.root), 'custom-elements.json'),
+            tagPrefix: project.brandLibrary.tagPrefix ?? project.library.tagPrefix,
+            supersedes: project.brandLibrary.supersedes ?? {},
+          }
+        : null,
       // null for a project with no Storybook. Southleft's was retired on
       // 2026-08-23 in favour of the multi-brand docs site, and `storybook` is
       // optional in the schema, so reading it unguarded threw for that project

@@ -12,15 +12,26 @@
  * `DS_PROJECT` / the registry default in `.altitude/ds-projects.json`, which
  * selects the manifest and ops dir this stamps into.
  *
+ * THE BRAND LAYER (T7 follow-up, spec
+ * 2026-08-23-process-audit-and-dev-workflow-coherence): a project may declare
+ * `brandLibrary` — page-section components in a separate workspace/CEM on top
+ * of the shared library (Southleft's @southleft/sl-web-components), with tags
+ * it SUPERSEDES (al-header/al-footer) replacing the base component under the
+ * same tag. Looking a tag up via `resolveComponentRoster()` — the same roster
+ * `computeParity()` and `seed-manifest.mjs` use — instead of the base CEM
+ * directly means (a) a superseded tag hashes the BRAND source, not the base
+ * one, and (b) a brand-only tag (e.g. al-hero) is found at all instead of
+ * being rejected as "not in the CEM".
+ *
  * Usage:
  *   node scripts/figma-parity/mark-synced.mjs al-button al-badge
  *   node scripts/figma-parity/mark-synced.mjs --all                    # every mapped component
  *   node scripts/figma-parity/mark-synced.mjs --project southleft al-button
+ *   node scripts/figma-parity/mark-synced.mjs --project southleft al-hero  # brand-only tag
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { getComponent } from '../../libs/altitude-mcp/src/lib/cem.mjs';
 import { resolveProject } from '../../libs/altitude-mcp/src/lib/ds-project.mjs';
 import {
   readManifest,
@@ -28,10 +39,15 @@ import {
   hashComponentSource,
   contractDigest,
   digestOf,
+  resolveComponentRoster,
 } from '../../libs/altitude-mcp/src/lib/parity.mjs';
 
 const project = resolveProject();
 const projectFlag = project.isDefault ? '' : ` --project ${project.id}`;
+
+// Tag -> { component, origin, view }, joining base scope + brand supersessions
+// + brand-only additions exactly as `computeParity()` sees them.
+const rosterByTag = new Map(resolveComponentRoster(project).roster.map((r) => [r.component.tag, r]));
 
 // Positional tags only: drop `--all`, `--project` and the id that follows it.
 const raw = process.argv.slice(2);
@@ -75,14 +91,19 @@ for (const tag of tags) {
     console.warn(`skip ${tag}: no Figma mapping in "${project.figma.fileName}" — map it first (instance-map.mjs / seed-manifest.mjs)`);
     continue;
   }
-  const component = getComponent(tag);
-  if (!component) {
-    console.warn(`skip ${tag}: not in the CEM`);
+  const rosterEntry = rosterByTag.get(tag);
+  if (!rosterEntry) {
+    console.warn(`skip ${tag}: not in the CEM (base library or brand layer)`);
     continue;
   }
+  const { component, view } = rosterEntry;
   entry.lastSync = {
     date: now,
-    codeHash: hashComponentSource(component.modulePath, project),
+    // `view` is the ROSTER's project record for this tag — the real project
+    // with `resolved.libraryRoot` swapped for the brand root when `origin` is
+    // 'brand', so a superseded tag (al-header/al-footer) hashes the brand
+    // source instead of silently re-hashing the base component underneath it.
+    codeHash: hashComponentSource(component.modulePath, view),
     // The PUBLIC-SURFACE digest, which is what the parity engine now compares
     // (libs/altitude-mcp/src/lib/parity.mjs, "the contract"). `codeHash` is
     // still written beside it so an older reader keeps working, but a JSDoc

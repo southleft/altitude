@@ -101,9 +101,17 @@ function ensureReport(projectId) {
         mkdirSync(DIST_DIR, { recursive: true });
         writeFileSync(
           target,
+          // UNAMBIGUOUS SHAPE. `error` is always an object here (never a bare
+          // string) so a consumer can tell "error report" from "clean report"
+          // with one truthy check (`report.error`) and still get a message +
+          // timestamp to show. `components: []` alone cannot be that signal —
+          // an empty catalog and a broken engine both produce it, which is the
+          // exact ambiguity this exists to remove (see the comment above).
           JSON.stringify({
             generated: new Date().toISOString(),
-            error: String(err?.message ?? err),
+            error: { message: String(err?.message ?? err), at: new Date().toISOString() },
+            observation: null,
+            figmaLastRefreshed: null,
             components: [],
             figmaOnly: [],
             summary: {},
