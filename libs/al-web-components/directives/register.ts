@@ -24,7 +24,20 @@
 type ElementTuple = [string, any];
 type ElementsInput = ElementTuple | ElementTuple[];
 
-const isDev = typeof process === 'undefined' || (process as any).env?.NODE_ENV !== 'production';
+/**
+ * Reached through `globalThis` rather than the bare `process` identifier.
+ *
+ * The runtime behaviour is identical — `process` absent (a browser) still means
+ * dev, and only an explicit NODE_ENV=production turns it off. But naming
+ * `process` directly makes this file need @types/node to TYPECHECK, and it is a
+ * browser file compiled by more than one package: libs/sl-web-components has no
+ * @types/node and its `tsc` step failed here with TS2580 for exactly that
+ * reason, so `pnpm --filter sl-web-components build` could not pass. Requiring a
+ * Node type package to compile a browser library is the wrong dependency to
+ * push onto anyone who compiles this from source.
+ */
+const isDev = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env
+  ?.NODE_ENV !== 'production';
 
 function normalizeElements(elements: ElementsInput): ElementTuple[] {
   return Array.isArray(elements[0]) ? (elements as ElementTuple[]) : [elements as ElementTuple];

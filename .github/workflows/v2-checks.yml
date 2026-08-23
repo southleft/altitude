@@ -620,6 +620,16 @@ jobs:
         run: pnpm run check:ds-projects
       - name: Southleft scope boundary
         run: pnpm run check:sl-scope
+      # sl-web-components was in NO build pipeline and NO CI job — its own
+      # package.json said so. Its `tsc` step had been failing on TS2580 (a bare
+      # `process` reference in al-web-components/directives/register.ts, which it
+      # compiles from source without @types/node) and nothing noticed, because
+      # nothing ran it. It needs al-web-components built first: it compiles that
+      # package's source directly rather than consuming its dist.
+      - name: Build al-web-components (sl-web-components compiles its source)
+        run: pnpm --filter al-web-components build
+      - name: sl-web-components builds
+        run: pnpm --filter sl-web-components build
       - name: Build tokens (brand distinctiveness reads built output)
         run: pnpm --filter al-web-components build:tokens
       - name: Brands are distinguishable
