@@ -36,6 +36,11 @@
       "types": "./dist/controllers/*.d.ts",
       "default": "./dist/controllers/*.js"
     },
+    "./theme-engine": {
+      "//": "The deterministic OKLCH theme engine (buildTheme/applyTheme + the OKLCH/WCAG primitives). A single barrel, deliberately NOT a wildcard: the sub-modules behind it (engine, oklch, ramps, personalities, apply, constants, types) are bundled into one chunk by vite.config.mjs and have no stable dist paths of their own. Until now this lived in `.storybook/ai-theme/`, where a dot-directory kept it out of the tsc program and out of the Vite entry map — so it was never compiled, never declared, never packed, and no consumer of this package could derive a theme. The `types`/`default` split mirrors `./motion`: same source layout, same emit.",
+      "types": "./dist/theme-engine/index.d.ts",
+      "default": "./dist/theme-engine/index.js"
+    },
     "./icons/*": "./dist/icons/*",
     "./icon-glyphs/*": "./dist/icon-glyphs/*",
     "./custom-elements.json": "./custom-elements.json",

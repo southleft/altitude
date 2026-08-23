@@ -1,7 +1,8 @@
 // T5 (spec 2026-08-20-southleft-example-app) — the layout half of the AI
-// theme pipeline. `buildTheme()` (imported from the SAME engine Storybook's
-// console uses — one copy, see .altitude/AI-THEME.md and this module's
-// sibling `apply.ts` import in `ai-theme-panel.ts`) returns a small,
+// theme pipeline. `buildTheme()` (imported from the SAME engine every other
+// surface uses — one copy, see .altitude/AI-THEME.md and the
+// `al-web-components/theme-engine` import in `AIDirectionPanel.astro`)
+// returns a small,
 // deterministic `ResolvedLayout` intent. This module is the ONLY thing that
 // turns that intent into real DOM changes on the home page, and the ONLY
 // place the structural invariants live:
@@ -31,11 +32,10 @@
 // layout object.
 
 // Deliberately NOT importing the whole `ResolvedLayout` type here (its
-// definition lives four levels up, outside this app's package boundary —
-// see the sibling import in `ai-theme-panel.ts` for the same relative-path
-// pattern `vite-plugin-theme-api.ts` uses to reach `functions/api/theme.js`
-// from an equivalent depth). A structural, app-local type keeps this module
-// buildable even if the shared engine's export shape drifts additively.
+// definition lives in another package — `AIDirectionPanel.astro` imports it
+// as `import type { Theme } from 'al-web-components/theme-engine'`). A
+// structural, app-local type keeps this module buildable even if the shared
+// engine's export shape drifts additively.
 export type SectionId = 'logos' | 'services' | 'work' | 'testimonials' | 'insights' | 'cta';
 export type HeroComposition = 'centered' | 'split' | 'poster';
 export type GridDensity = 'airy' | 'regular' | 'dense';

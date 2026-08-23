@@ -2,12 +2,11 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 // T6 (spec 2026-08-20-southleft-example-app) — serves POST /api/theme during
 // `astro dev`, mirroring the Cloudflare Pages Function that serves it in
-// production (functions/api/theme.js) and the identical wiring the WC
-// Storybook uses for its own dev server (libs/al-web-components/.storybook/
-// main.ts `viteFinal`). Same plugin, same handler, imported by relative path
-// across the package boundary — see that plugin's own header comment for why
-// a relative import (not a workspace package specifier) is deliberate here.
-import { themeApiPlugin } from '../../libs/al-web-components/.storybook/ai-theme/vite-plugin-theme-api.ts';
+// production (functions/api/theme.js). Dev-server-only Node middleware, so it
+// is NOT part of the browser `al-web-components/theme-engine` export and is
+// deliberately imported by relative path: it lives alongside the library's
+// other build-time plugins and is never packed into the published tarball.
+import { themeApiPlugin } from '../../libs/al-web-components/vite-plugins/theme-api.mjs';
 // T11 — dev-only local media middleware (serves southleft-v5's real
 // public/media/ at /media when present; see src/lib/vite-plugin-local-media.mjs).
 import { localMediaPlugin } from './src/lib/vite-plugin-local-media.mjs';

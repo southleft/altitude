@@ -26,7 +26,13 @@ export const PATHS = Object.freeze({
   migrationJson: join(REPO_ROOT, '.altitude', 'migration.json'),
   componentsDir: join(WC_ROOT, 'components'),
   iconCatalog: join(WC_ROOT, 'components', 'icon', 'catalog.ts'),
-  aiThemeDir: join(WC_ROOT, '.storybook', 'ai-theme'),
+  // The deterministic OKLCH theme engine. TWO paths on purpose (see
+  // ./theme.mjs): the BUILT barrel is preferred — plain JS, no loader hook,
+  // and the same artifact a published consumer would get — but `dist/` is
+  // gitignored, so a fresh clone that has not run `pnpm run build` still has
+  // to fall back to the TypeScript SOURCE, which does ship in git.
+  themeEngineDist: join(WC_ROOT, 'dist', 'theme-engine', 'index.js'),
+  themeEngineSrc: join(WC_ROOT, 'theme-engine', 'index.ts'),
   validateCli: join(WC_ROOT, 'cli', 'validate.mjs'),
 
   // The design-system PROJECT REGISTRY. Everything below it used to be a

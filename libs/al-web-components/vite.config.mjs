@@ -99,6 +99,13 @@ const entries = {
   // shared-chunked behind them.
   'motion/index': join(__dirname, 'motion/index.ts'),
   'controllers/motion': join(__dirname, 'controllers/motion.ts'),
+  // The deterministic OKLCH theme engine. One entry for the whole subsystem:
+  // `engine`, `oklch`, `ramps`, `personalities`, `apply`, `constants` and
+  // `types` are internal modules bundled behind `theme-engine/index.ts`, the
+  // same way `motion/`'s internals sit behind `motion/index.ts`. Before this
+  // entry existed the engine lived in `.storybook/ai-theme/` and was never
+  // built at all — see `theme-engine/index.ts` for the full history.
+  'theme-engine/index': join(__dirname, 'theme-engine/index.ts'),
   bundle: join(__dirname, 'components/bundle.ts'),
   'styles-theme': join(__dirname, 'styles/theme.ts'),
 };
@@ -182,6 +189,9 @@ export default defineConfig({
           if (chunk.name.startsWith('controllers/')) return `${chunk.name}.js`;
           // `motion/index` -> motion/index.js, matching the "./motion" export.
           if (chunk.name.startsWith('motion/')) return `${chunk.name}.js`;
+          // `theme-engine/index` -> theme-engine/index.js, matching the
+          // "./theme-engine" export (and where tsc writes index.d.ts).
+          if (chunk.name.startsWith('theme-engine/')) return `${chunk.name}.js`;
           if (chunk.name === 'bundle') return 'components/bundle/bundle.js';
           // The stylesheet entry emits an (empty) JS shim; its payload is the
           // css/main.css asset above. `components/theme/theme.js` belongs to

@@ -9,7 +9,7 @@
 //      API Key."}` without an `X-Api-Key` header. Storybook deploys publicly
 //      to altitude.pages.dev, so any key reaching the browser bundle is a
 //      public key. (The one API this Storybook *does* call keeps its key in
-//      Node and proxies it — see `.storybook/ai-theme/vite-plugin-theme-api.ts`
+//      Node and proxies it — see `vite-plugins/theme-api.mjs`
 //      — but that buys live AI themes; filler text is not worth an endpoint.)
 //   2. It makes stories async and network-dependent. `.storybook/test-runner.ts`
 //      runs axe-core against every story; content that arrives late, or never

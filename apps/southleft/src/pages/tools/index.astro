@@ -278,7 +278,7 @@ try {
         { tool: 'altitude_validate', reads: 'cli/validate.mjs --json', desc: 'Validates markup or a file against Altitude usage rules.' },
         { tool: 'altitude_get_tokens', reads: 'dist/css/{tokens,aliases}.json + tokens-dtcg/**', desc: 'Queries the resolved token set, or a specific tier/brand/mode.' },
         { tool: 'altitude_search_icons', reads: 'icon catalog', desc: 'Finds an icon by name, tag, or category, with an import snippet.' },
-        { tool: 'altitude_generate_theme', reads: 'the SAME deterministic ai-theme engine this page and the Storybook console use', desc: 'Generates a WCAG-AA theme from a prompt or explicit direction — never calls an LLM.' },
+        { tool: 'altitude_generate_theme', reads: 'dist/theme-engine — the SAME deterministic OKLCH engine this page uses', desc: 'Generates a WCAG-AA theme from a prompt or explicit direction — never calls an LLM.' },
       ].map((t) => (
         <div class="al-u-grid__item col:12 col:6@md col:4@lg">
           <al-card style="height:100%; box-sizing:border-box;">

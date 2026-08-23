@@ -7,9 +7,11 @@
 // own build already produced. See README.md for the full contract.
 //
 // Run with `--experimental-strip-types` (harmless no-op on Node versions
-// where type stripping is unflagged) so the deterministic theme engine — a
-// plain-TypeScript module that ships in git with no build step — can be
-// imported directly by altitude_generate_theme.
+// where type stripping is unflagged). altitude_generate_theme prefers the
+// BUILT theme engine (al-web-components/dist/theme-engine/index.js) and needs
+// no type stripping for it; the flag only matters for the fallback path, where
+// an unbuilt checkout is served from the engine's TypeScript source. See
+// ./lib/theme.mjs.
 
 import { createServer as createHttpServer } from 'node:http';
 

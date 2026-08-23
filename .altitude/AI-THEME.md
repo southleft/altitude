@@ -91,25 +91,37 @@ flip the entire library to paper-white inside a dark Storybook.
 
 ```
 functions/api/theme.js                       Cloudflare Pages Function — the AI call
-libs/al-web-components/.storybook/
-  manager.tsx                                toolbar button + panel (React)
-  preview.ts                                 channel listener → applicator
-  ai-theme/
-    constants.ts                             addon ids + channel events
+libs/al-web-components/
+  theme-engine/                              BUILT + EXPORTED as `al-web-components/theme-engine`
+    index.ts                                 the public barrel — everything below is internal
+    constants.ts                             channel event ids + the /api/theme path
     types.ts                                 Direction / Theme / Receipt contract
     oklch.ts                                 OKLab math, WCAG contrast, the solver
     ramps.ts                                 Altitude's measured tonal skeleton
     personalities.ts                         shape + motion presets
     engine.ts                                buildTheme() — seed, merge, solve
-    apply.ts                                 preview-side inline-prop applicator
-    vite-plugin-theme-api.ts                 serves /api/theme in `storybook dev`
+    apply.ts                                 client-side inline-prop applicator
+  vite-plugins/theme-api.mjs                 serves /api/theme in `astro dev` (Node-only)
+apps/southleft/src/components/
+  AIDirectionPanel.astro                     the live console (drawer + prompt)
+  TrySystem.astro                            "try the system" — same engine, one chunk
+libs/altitude-mcp/src/lib/theme.mjs          altitude_generate_theme — same solver, no LLM
 ```
+
+The engine lived in `.storybook/ai-theme/` until 2026-08-23. That directory is
+a dot-directory, so TypeScript's wildcard `include` skipped it: it was never in
+the `tsc` program, never emitted to `dist`, never named in `exports`, and never
+packed — no consumer of the published package could derive a theme. The move to
+`theme-engine/` (a built, exported top-level directory, same shape as `motion/`
+and `controllers/`) fixed all four at once, and removed both symptoms: the
+southleft app's four-levels-deep relative imports into the library's Storybook
+internals, and the MCP's need to hot-compile TypeScript off disk at runtime.
 
 ## The API key never reaches the browser
 
 | | Serves `/api/theme` | Key source |
 | --- | --- | --- |
-| `storybook dev` | `vite-plugin-theme-api.ts` (`configureServer`) | `.env` via Vite `loadEnv`, in Node |
+| `astro dev` | `vite-plugins/theme-api.mjs` (`configureServer`) | `.env` via Vite `loadEnv`, in Node |
 | Deployed | `functions/api/theme.js` (Pages Function) | Cloudflare Pages env vars |
 
 Both import **the same handler**, so there is exactly one copy of the system
@@ -132,10 +144,17 @@ because `pnpm --filter al-web-components start` runs with a different cwd.
 ## Gotchas worth knowing
 
 - `.storybook` is a dot-directory, so TypeScript excludes it from the `tsc`
-  program entirely — these files are type-checked by the editor and bundled by
-  Vite/esbuild, but never emitted into `dist`.
-- `react` and `@types/react` are devDependencies of `al-web-components` purely
-  so `manager.tsx` type-checks. Storybook externalises both at build time.
+  program entirely — anything still in there is type-checked by the editor and
+  bundled by Vite/esbuild, but never emitted into `dist`. That is exactly why
+  the engine no longer lives there.
+- `vite-plugins/theme-api.mjs` is plain `.mjs`, not `.ts`, on purpose: as
+  TypeScript it would join the declaration-emit program and fail on its
+  `import ... from '../../../functions/api/theme.js'` (an untyped `.js` module
+  outside the package, with `allowJs` off).
+- The MCP prefers the BUILT barrel (`dist/theme-engine/index.js`) and falls
+  back to the TypeScript source only when `dist/` is absent — `dist` is
+  gitignored and `pnpm --filter al-web-components start` boots the MCP with no
+  build in front of it. Both paths produce byte-identical themes.
 - The applicator diff-removes keys from the previous theme. Without that, a key
   present before and absent now would linger and blend two palettes.
 - `setProperty(k, undefined)` writes the literal string `"undefined"` — an

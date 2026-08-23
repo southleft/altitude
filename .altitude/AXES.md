@@ -164,7 +164,7 @@ CSS bundle — each is a one-line entry in `PRESETS` (`with-preset.ts` /
 `Theme.tsx`'s `AXES` list is what makes the React wrapper mirror `shape` too,
 per-property, not per-preset).
 
-## 4. AI theme engine (`.storybook/ai-theme/`)
+## 4. AI theme engine (`theme-engine/`)
 
 `engine.ts`'s `buildTheme()` already derives a `RADIUS_SCALES` /
 `MOTION_SCALES` tuple per personality (`personalities.ts`) and writes it as
@@ -179,6 +179,10 @@ applies here: an inline literal value inherits correctly as-is, and an inline
 declaration on `<al-theme>` itself always outranks its own `:host` rules —
 consistent with the documented "AI theme stacks on top of the preset"
 behavior (`.storybook/with-preset.ts` and `.storybook/manager.js`).
+
+(The engine moved out of `.storybook/ai-theme/` to `libs/al-web-components/
+theme-engine/` on 2026-08-23 so it is actually built, declared and exported;
+the file names referenced above are unchanged, only their directory is.)
 
 `role.control` and `role.surface` both take the personality's `lg` radius
 stop (matching the fallback every wired component reads); `role.duration.fast`

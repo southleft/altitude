@@ -1,6 +1,7 @@
 /**
  * Shared contract between the AI endpoint (functions/api/theme.js), the
- * derivation engine, the manager panel and the preview applicator.
+ * derivation engine, its callers (apps/southleft's AI direction panel,
+ * libs/altitude-mcp's altitude_generate_theme) and the applicator.
  *
  * The endpoint returns a `Direction` — never colors, never CSS. The local
  * solver in `engine.ts` turns that direction into real token values and
@@ -26,7 +27,7 @@ export type Mode = (typeof MODES)[number];
 
 /**
  * Layout vocabulary — spec 2026-08-20-southleft-example-app, T5. Additive:
- * Storybook's console never reads these (it has no page to lay out), only
+ * most callers never read these (the MCP tool has no page to lay out), only
  * the southleft app's `src/lib/layout-resolver.ts` does. Kept here, next to
  * the color/shape/motion vocabulary, so `functions/api/theme.js`'s SCHEMA
  * and this client contract describe the exact same fields under one glance

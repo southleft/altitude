@@ -1,9 +1,10 @@
 /**
  * Preview-side applicator.
  *
- * Runs inside the story iframe. Writes the derived tokens as *inline* custom
- * properties on <html>, which beats every `:root` rule in `main.scss` without
- * touching the cascade layers — inline styles outrank all layered CSS.
+ * Runs in the page that asked for the theme. Writes the derived tokens as
+ * *inline* custom properties on <html>, which beats every `:root` rule in
+ * `main.scss` without touching the cascade layers — inline styles outrank all
+ * layered CSS.
  *
  * Custom properties pierce shadow boundaries, so every <al-*> component picks
  * the new values up automatically; no per-component work and no restyling of

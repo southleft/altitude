@@ -4,8 +4,8 @@
 // Same principle as the Storybook token console (.altitude/AI-THEME.md): the
 // AI never returns colors, CSS, or layout markup — only small structured
 // intent (functions/api/theme.js SCHEMA). A deterministic client-side engine
-// (libs/al-web-components/.storybook/ai-theme/engine.ts, imported here by
-// relative path — ONE copy, not forked) derives every token and enforces
+// (al-web-components/theme-engine — a real package subpath export, ONE copy,
+// not forked) derives every token and enforces
 // WCAG AA; src/lib/layout-resolver.ts derives the home page's layout and
 // enforces its own structural invariants. Home page only.
 //
@@ -54,14 +54,16 @@
 </al-drawer>
 
 <script>
-  // T6 client wiring. Relative imports cross the app/library package
-  // boundary on purpose — see this file's frontmatter comment and
-  // `.altitude/AI-THEME.md` "Files" table for why there is exactly one copy
-  // of this engine, reused (not forked) from Storybook's implementation.
-  import { buildTheme } from '../../../../libs/al-web-components/.storybook/ai-theme/engine';
-  import { applyTheme, resetTheme } from '../../../../libs/al-web-components/.storybook/ai-theme/apply';
-  import { THEME_API } from '../../../../libs/al-web-components/.storybook/ai-theme/constants';
-  import type { Theme } from '../../../../libs/al-web-components/.storybook/ai-theme/types';
+  // T6 client wiring. One package specifier, resolved through
+  // al-web-components' `"./theme-engine"` export — the same built artifact a
+  // published consumer would get. This used to be four relative imports
+  // reaching into `libs/al-web-components/.storybook/ai-theme/`, which
+  // compiled the library's TypeScript inside this app's build; the engine now
+  // lives at `libs/al-web-components/theme-engine/` and is built and exported
+  // properly. Still exactly one copy, reused and not forked — see
+  // `.altitude/AI-THEME.md` "Files".
+  import { buildTheme, applyTheme, resetTheme, THEME_API } from 'al-web-components/theme-engine';
+  import type { Theme } from 'al-web-components/theme-engine';
   import { applyLayout, resetLayout } from '../lib/layout-resolver';
 
   import 'al-web-components/components/drawer';

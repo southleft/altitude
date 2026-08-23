@@ -154,15 +154,17 @@ console.log('\nworkspace app specifiers');
  * than a substring search. Without it the regex matched the TAIL of relative
  * filesystem paths — `../../../../libs/al-web-components/.storybook/ai-theme/engine`
  * in apps/southleft reported as five UNREACHABLE package imports, when nothing
- * there resolves through the exports map at all. It also matched package names
+ * there resolved through the exports map at all. (Those particular imports are
+ * gone: the OKLCH engine moved to `libs/al-web-components/theme-engine/` and is
+ * now a real `al-web-components/theme-engine` subpath — which THIS scanner
+ * checks. The lookbehind still earns its keep for every other prose mention.) It also matched package names
  * inside error-message strings and inside template literals building display
  * snippets, where the `${...}` truncated to nonsense like `components//.js`.
  *
- * Those relative deep imports ARE a real coupling problem — an app reaching
- * into the library's .storybook internals — but that is a different defect
- * with a different fix (export the OKLCH engine properly; see the token-debt
- * spec), and reporting it here as an exports-map failure sent readers to the
- * wrong file. Combined with comment stripping below, this took the gate from
+ * Those relative deep imports WERE a real coupling problem — an app reaching
+ * into the library's .storybook internals — but that was a different defect
+ * with a different fix (export the OKLCH engine properly), since done.
+ * Reporting it here as an exports-map failure sent readers to the wrong file. Combined with comment stripping below, this took the gate from
  * 14 reported problems to 0 without silencing anything real.
  */
 const specRe = /(?<![\w./-])(al-web-components|al-react)\/[A-Za-z0-9_./-]+/g;

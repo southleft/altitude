@@ -2,8 +2,9 @@
  * CSS Color 4 OKLab/OKLCH math + WCAG contrast, zero dependencies.
  *
  * Ported from southleft.com's <theme.console>. Kept dependency-free on
- * purpose: this runs in the Storybook manager bundle, where every import is
- * a global that has to be externalised.
+ * purpose, and more so now that it ships in the package: `theme-engine` is
+ * the one exported subpath a consumer can pull in without also pulling Lit,
+ * and every dependency added here would become theirs.
  */
 
 export type RGB = [number, number, number];

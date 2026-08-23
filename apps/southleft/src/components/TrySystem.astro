@@ -334,9 +334,7 @@ import SectionHeader from './SectionHeader.astro';
     const status = document.getElementById('acttwo-status');
     if (!form || !input) return;
 
-    const { buildTheme } = await import('../../../../libs/al-web-components/.storybook/ai-theme/engine');
-    const { applyTheme } = await import('../../../../libs/al-web-components/.storybook/ai-theme/apply');
-    const { THEME_API } = await import('../../../../libs/al-web-components/.storybook/ai-theme/constants');
+    const { buildTheme, applyTheme, THEME_API } = await import('al-web-components/theme-engine');
     const { applyLayout } = await import('../lib/layout-resolver');
 
     let requestId = 0;

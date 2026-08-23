@@ -1,5 +1,7 @@
-// Custom ESM resolve hook (Node's `module.register()` API) used ONLY to load
-// the ai-theme engine (libs/al-web-components/.storybook/ai-theme/*.ts).
+// Custom ESM resolve hook (Node's `module.register()` API) used ONLY as the
+// FALLBACK path for loading the theme engine from TypeScript source
+// (libs/al-web-components/theme-engine/*.ts), when `dist/theme-engine/
+// index.js` has not been built. See `./theme.mjs` for why both paths exist.
 //
 // Those files are plain TypeScript with erasable syntax only (interfaces,
 // type-only imports, no enums/namespaces/decorators), so Node's built-in
