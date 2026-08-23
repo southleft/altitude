@@ -19,10 +19,14 @@ let dtcgCache = null;
 
 export function loadFlatTokens() {
   if (flatCache) return flatCache;
-  requireFile(PATHS.tokensJson, HINTS.tokens);
-  requireFile(PATHS.aliasesJson, HINTS.tokens);
-  const tokens = JSON.parse(readFileSync(PATHS.tokensJson, 'utf8'));
-  const aliasesDoc = JSON.parse(readFileSync(PATHS.aliasesJson, 'utf8'));
+  // Prefer the packaged copy (full build); fall back to the styles/dist/
+  // output that `build:tokens` — the command HINTS.tokens names — produces.
+  const tokensPath = existsSync(PATHS.tokensJson) ? PATHS.tokensJson : PATHS.tokensJsonFallback;
+  const aliasesPath = existsSync(PATHS.aliasesJson) ? PATHS.aliasesJson : PATHS.aliasesJsonFallback;
+  requireFile(tokensPath, HINTS.tokens);
+  requireFile(aliasesPath, HINTS.tokens);
+  const tokens = JSON.parse(readFileSync(tokensPath, 'utf8'));
+  const aliasesDoc = JSON.parse(readFileSync(aliasesPath, 'utf8'));
   flatCache = { tokens, aliases: aliasesDoc.aliases ?? {} };
   return flatCache;
 }

@@ -22,6 +22,15 @@ export const PATHS = Object.freeze({
   schemasDir: join(WC_ROOT, 'schemas'),
   tokensJson: join(WC_ROOT, 'dist', 'css', 'tokens.json'),
   aliasesJson: join(WC_ROOT, 'dist', 'css', 'aliases.json'),
+  // `build:tokens` — the exact command HINTS.tokens prescribes — writes these
+  // under styles/dist/; the dist/css/ copies above only appear after a FULL
+  // package build (copy-assets-to-dist.js). Same two-path pattern as the
+  // theme engine below: prefer the packaged copy, fall back to the
+  // build:tokens output so a fresh clone + build:tokens (what CI's mcp-smoke
+  // job runs) satisfies the reader — otherwise the error hint names a
+  // command that does not produce the file the reader requires.
+  tokensJsonFallback: join(WC_ROOT, 'styles', 'dist', 'tokens.json'),
+  aliasesJsonFallback: join(WC_ROOT, 'styles', 'dist', 'aliases.json'),
   tokensDtcgDir: join(WC_ROOT, 'styles', 'tokens-dtcg'),
   migrationJson: join(REPO_ROOT, '.altitude', 'migration.json'),
   componentsDir: join(WC_ROOT, 'components'),

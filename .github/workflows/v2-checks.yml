@@ -174,8 +174,12 @@ jobs:
         run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
-      - name: Build libraries + fixture
-        run: pnpm run build && pnpm --filter al-app-web-components build
+      # playwright.config.ts declares THREE webServers (web-components :5174,
+      # mfe :5176, ssr :5177 serving a prebuilt dist/index.html) — every one of
+      # their fixtures must be built or config.webServer dies on a missing dist
+      # and the run collects 0 tests.
+      - name: Build libraries + fixtures (web-components, mfe, ssr)
+        run: pnpm run build && pnpm --filter al-app-web-components build && pnpm --filter al-app-mfe build && pnpm --filter al-app-ssr build
       - name: Run VRT against baselines
         run: pnpm run test:vrt
       # Scoped `<al-theme brand>` regression guard. Deliberately NOT a pixel
