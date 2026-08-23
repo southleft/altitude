@@ -41,6 +41,10 @@
     "parity:synced:sl": "node scripts/figma-parity/mark-synced.mjs --project southleft",
     "parity:refresh:sl": "node scripts/figma-parity/refresh-figma-digests.mjs --project southleft",
     "gate:docs": "pnpm --filter al-app-docs check:coverage",
+    "//gate:docs-panels": "Runs AFTER `pnpm --filter al-app-docs build` — it reads the built html in dist/docs to prove the status panels shipped no Figma file keys, node ids or internal script paths, and that every rendered status matches what the parity engine and the axe report say.",
+    "gate:docs-panels": "pnpm --filter al-app-docs check:panels",
+    "//a11y:report": "Regenerates .altitude/a11y/report.json, which the docs accessibility panels read. Build a STATIC Storybook first and point it there — never at a dev server (see the measurement note in scripts/build-a11y-report.mjs).",
+    "a11y:report": "node scripts/build-a11y-report.mjs",
     "gate:migration": "node scripts/check-migration-gate.js",
     "gate:baselines": "node scripts/check-baselines-gate.js",
     "gate:self-test": "bash scripts/__tests__/gate-self-test.sh",
@@ -63,7 +67,9 @@
     "lint:fix": "eslint . --fix",
     "check:publishable": "node scripts/check-publishable.mjs",
     "check:audit": "node scripts/check-audit.mjs",
-    "check:token-usage": "node scripts/check-token-usage.mjs"
+    "check:token-usage": "node scripts/check-token-usage.mjs",
+    "//gate:token-usage": "Fails on PHANTOM tokens only — a name read through var() that the pipeline never emits, so it silently falls back and its value is outside design-system control. DEAD tokens stay a report (see the script header): a tier-1 palette reserve is a legitimate design choice, a phantom never is. Reads styles/dist/tokens.json, so `build:tokens` is enough — no full build needed.",
+    "gate:token-usage": "node scripts/check-token-usage.mjs --fail-on-phantom"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",

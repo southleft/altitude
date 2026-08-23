@@ -26,6 +26,66 @@ const REPO = path.resolve(__dirname, '..');
 const SRC = path.join(REPO, 'libs', 'al-web-components', 'styles', 'tokens');
 const DST = path.join(REPO, 'libs', 'al-web-components', 'styles', 'tokens-dtcg');
 
+/**
+ * Tokens Studio `type` -> DTCG `$type`.
+ *
+ * The source tree under `styles/tokens/` is authored in, and round-trips
+ * through, Tokens Studio, whose type vocabulary predates the DTCG spec and does
+ * not match it: `sizing`, `fontSizes`, `boxShadow`, `other` and friends are not
+ * DTCG types, so a spec-conformant tool reading the published tree cannot
+ * interpret 196 of its 554 tokens. Translating here — at the one point that
+ * already rewrites `type` to `$type` — makes the PUBLISHED tree conformant
+ * while leaving the Tokens Studio source untouched, which is the only way to
+ * keep the design-tool round trip working.
+ *
+ * Deliberately absent, because DTCG has no type that fits and inventing one
+ * would be worse than an honest gap:
+ *
+ *   letterSpacing  — DTCG's `dimension` admits only `px` and `rem`; these are
+ *                    authored as percentages of the font size (`1%`), which is
+ *                    what Figma exports and what the typography composite
+ *                    means. Retyping without re-authoring the values would
+ *                    produce a conformant label on a non-conformant value.
+ *   textDecoration — DTCG has no equivalent type at all.
+ *   the `animation.timing` easings — DTCG's `cubicBezier` is a 4-number array;
+ *                    these are CSS easing strings (`ease`, `linear`,
+ *                    `cubic-bezier(...)`), which that type cannot express.
+ *
+ * Those are left on their Tokens Studio type rather than mislabelled. See
+ * `.altitude/TOKENS.md`.
+ */
+const DTCG_TYPE_MAP = {
+  // dimensional scales
+  sizing: 'dimension',
+  spacing: 'dimension',
+  borderRadius: 'dimension',
+  borderWidth: 'dimension',
+  fontSizes: 'dimension',
+  lineHeights: 'dimension',
+  // typography atoms
+  fontFamilies: 'fontFamily',
+  fontWeights: 'fontWeight',
+  // composites
+  boxShadow: 'shadow',
+  // scalars
+  opacity: 'number',
+};
+
+/**
+ * `other` is Tokens Studio's escape hatch and covers three unrelated scales
+ * here, so it cannot be mapped by type alone — the token's path decides.
+ */
+function dtcgTypeFor(type, pathSegments) {
+  if (type === 'other') {
+    const path = pathSegments.join('.');
+    if (path.startsWith('animation.duration')) return 'duration';
+    if (path.startsWith('animation.distance')) return 'dimension';
+    if (path.startsWith('z-index')) return 'number';
+    return type; // animation.timing — see the note above.
+  }
+  return DTCG_TYPE_MAP[type] || type;
+}
+
 function isTokenLeaf(node) {
   if (node === null || typeof node !== 'object') return false;
   // DTCG (idempotency)
@@ -37,20 +97,20 @@ function isTokenLeaf(node) {
   return false;
 }
 
-function convertTree(node) {
-  if (Array.isArray(node)) return node.map(convertTree);
+function convertTree(node, pathSegments = []) {
+  if (Array.isArray(node)) return node.map((child) => convertTree(child, pathSegments));
   if (node === null || typeof node !== 'object') return node;
   if (isTokenLeaf(node)) {
     const out = {};
     for (const [k, v] of Object.entries(node)) {
       if (k === 'value') out.$value = v;
-      else if (k === 'type') out.$type = v;
+      else if (k === 'type' || k === '$type') out.$type = dtcgTypeFor(v, pathSegments);
       else out[k] = v;
     }
     return out;
   }
   const out = {};
-  for (const [k, v] of Object.entries(node)) out[k] = convertTree(v);
+  for (const [k, v] of Object.entries(node)) out[k] = convertTree(v, [...pathSegments, k]);
   return out;
 }
 

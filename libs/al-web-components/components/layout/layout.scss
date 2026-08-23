@@ -361,17 +361,28 @@
 
   /**
    * Measure scale - the width of the centred content column.
+   *
+   * These read the TIER-2 semantics (`--al-theme-layout-max-width-*`), not the
+   * tier-1 pixel primitives (`--al-layout-max-width-600`). Four of these five
+   * steps used to reach straight past tier-2 to tier-1 while `size-xl` alone
+   * read a semantic, which had two costs: the block was inconsistent with
+   * itself, and it made `--al-theme-layout-max-width-lg` / `-xxl` dead tokens
+   * -- emitted into `:root` on every page with zero `var()` readers, so a brand
+   * that restated the measure scale changed nothing here. The tier-2 tokens
+   * alias exactly the primitives that were inlined (600/800/1000/1440), so this
+   * is value-identical for the default brand and correctly brand-aware for
+   * every other.
    */
   .al-c-layout--size-sm {
-    --al-layout-measure: var(--al-layout-max-width-600);
+    --al-layout-measure: var(--al-theme-layout-max-width-sm);
   }
 
   .al-c-layout--size-md {
-    --al-layout-measure: var(--al-layout-max-width-800);
+    --al-layout-measure: var(--al-theme-layout-max-width-md);
   }
 
   .al-c-layout--size-lg {
-    --al-layout-measure: var(--al-layout-max-width-1000);
+    --al-layout-measure: var(--al-theme-layout-max-width-lg);
   }
 
   .al-c-layout--size-xl {
@@ -379,7 +390,7 @@
   }
 
   .al-c-layout--size-xxl {
-    --al-layout-measure: var(--al-layout-max-width-1440);
+    --al-layout-measure: var(--al-theme-layout-max-width-xxl);
   }
 
   .al-c-layout--size-full {

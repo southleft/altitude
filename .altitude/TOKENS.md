@@ -43,6 +43,100 @@ node scripts/ingest-tokens-from-studio.js   # ingest a Figma/Tokens-Studio DTCG 
 (`scripts/ingest-tokens-from-studio.js` calls it by that name). It does not
 run a second pipeline.
 
+## DTCG `$type` conformance
+
+`styles/tokens/**` is authored in, and round-trips through, **Tokens Studio**,
+whose type vocabulary predates the DTCG spec: `sizing`, `spacing`,
+`borderRadius`, `fontSizes`, `boxShadow`, `opacity`, `other` and friends are not
+DTCG types. Measured before the conformance pass, **196 of 554 tokens** carried a
+`$type` no spec-conformant tool can interpret.
+
+The translation happens in `scripts/convert-tokens-to-dtcg.js`
+(`DTCG_TYPE_MAP` + `dtcgTypeFor`) — the one point that already rewrites `type`
+to `$type`. That is deliberate: **the Tokens Studio source stays untouched**, so
+the design-tool round trip keeps working, and only the generated
+`tokens-dtcg/` tree (the tree the package publishes) becomes conformant.
+
+After the pass: **538 of 554 conformant.** The remaining 16 are left on their
+Tokens Studio type rather than mislabelled, because DTCG cannot express them:
+
+| Tokens | Type | Why it cannot be mapped |
+|---|---|---|
+| 12 | `other` (`animation.timing.*`) | DTCG `cubicBezier` is a 4-number array; these are CSS easing strings (`ease`, `linear`, `cubic-bezier(...)`). |
+| 2 | `letterSpacing` | DTCG `dimension` admits only `px`/`rem`; these are percentages of the font size (`1%`), which is what Figma exports and what the typography composite means. |
+| 2 | `textDecoration` | DTCG has no equivalent type. |
+
+### Why this was value-neutral, and the trap it avoided
+
+Style Dictionary transforms select on `$type`. Five transforms in the
+`css-v3-shape` / `scss-v3-shape` groups — `size/rem`, `time/seconds`,
+`cubicBezier/css`, `html/icon`, `asset/url` — were **inert only because the
+types were non-conformant**. Making the types conformant would have switched all
+five on at once, silently: `size/rem` would start rewriting every `dimension`
+(racing `formatSpaceValue`, which already does that conversion by hand for the
+space scale), `time/seconds` would rewrite a duration scale already authored in
+seconds, and `cubicBezier/css` would choke on easing strings it cannot parse.
+
+So the groups were trimmed to the three transforms that actually fire
+(`attribute/cti`, `name/kebab`, `color/css`) **first**. Removing a transform
+that matches nothing is a no-op by construction, which is what makes the
+relabel safe. Verified rather than argued: the full `dist-v5/` emission —
+`tokens.json` and every file under `css/` — is **byte-identical** before and
+after.
+
+If you add a token type, check whether it activates a dormant transform before
+assuming a rename is cosmetic.
+
+## Composite typography: the sub-values the `font` shorthand drops
+
+A `typography` token authors five sub-values. The CSS `font` shorthand can carry
+three of them, and `formatTypographyValue` emits exactly that shorthand — so
+`letterSpacing` and `textDecoration` were silently discarded. Every
+letter-spacing the designers authored (all 10 bold presets, in both the altitude
+and southleft brands) was **inert**.
+
+`letterSpacing` is now emitted as a **companion custom property** beside each
+preset:
+
+```css
+--al-typography-preset-16-bold: 600 1rem/1.5rem IBM Plex Sans, sans-serif;
+--al-typography-preset-16-bold-letter-spacing: 0.01em;
+```
+
+Figma authors letter-spacing as a percentage of the font size and CSS
+`letter-spacing` rejects `%`, so the pipeline converts `1%` → `0.01em`
+(lossless). A companion is emitted for **every** preset, including the ones
+whose authored tracking is zero (as the keyword `normal`), so the mixins carry
+no hardcoded fallback and a brand can restate any of them.
+
+`textDecoration` is still not emitted, and that is not a formatter bug: it is
+only ever non-`none` on the `-underline` presets, and every emitter filters
+`-italic`/`-underline` out of the output set entirely. Emitting it on the
+presets that DO ship would add 40 declarations of the CSS initial value.
+Restoring it means un-filtering the underline presets — a change to the public
+token surface, not a formatter fix.
+
+## Phantom tokens are a gate; dead tokens are a report
+
+`scripts/check-token-usage.mjs` classifies every `--al-*` name:
+
+- **PHANTOM** — read through `var()`, never emitted by the token layer. Always a
+  defect: the declaration silently falls back and the value has left
+  design-system control. Gated in CI via `pnpm run gate:token-usage`
+  (`--fail-on-phantom`), wired into the hand-run-gates job of
+  `.github/workflows/v2-checks.yml`.
+- **DEAD** — emitted, zero `var()` readers. A **report**, not a gate: a tier-1
+  palette reserve is a legitimate design choice. A dead *semantic* token is a
+  different matter — it means the state it names is being expressed some other
+  way, and it is worth finding out how before deleting it.
+
+Read the script's header comment before trusting any number from it. Three
+classifications are non-obvious and a naive version gets all three wrong:
+component theming hooks (`--al-button-padding`) are unemitted *by design*; the
+shape and motion role tokens are declared by the scoped `<al-theme>` host and
+the per-brand partials rather than the `:root` bundle; and a component
+*overriding* a custom property is not the pipeline *emitting* it.
+
 ## Rebaselining after a token change
 
 **Read this before adding a brand, a theme, or any token.**
@@ -157,6 +251,27 @@ Two properties the snapshot depends on, both of which have bitten us:
 
 If a local baseline disagrees with CI, delete `styles/dist/` and
 `styles/dist-v5/` and rebuild before investigating anything else.
+
+
+### Baselines already rebaselined on this branch
+
+The snapshot was regenerated for the token-debt pass. Two things moved:
+
+1. **Additions** (1200 -> 1323 unique names): the `--al-theme-color-focus-ring`
+   token, and the 40 typography `-letter-spacing` companions across both tiers
+   and every brand/mode file.
+2. **One inherited value drift, now accepted.** `--al-theme-border-width` on
+   the southleft brand reads `var(--al-border-width-1)` where the old baseline
+   recorded `var(--al-border-width-2)`. That is the deliberate hairline change
+   documented in the `comment` field of
+   `styles/tokens/tier-2/brand/southleft/borders.json` ("southleft.com draws
+   every rule as a hairline ... the brand shipped 2px, which doubled every one
+   of them"). It landed in `7961425` together with a snapshot regeneration that
+   evidently ran against a stale `styles/dist/`, so `test:tokens` had been
+   failing on it since. It is source-of-truth intent, not a regression.
+
+Nothing else drifted: the whole token-debt change set is value-neutral on the
+pre-existing surface.
 
 ## The frozen `core/variables.scss`
 

@@ -12,6 +12,11 @@
           "value": "{theme.color.background.default-weak}",
           "type": "color"
         }
+      },
+      "focus-ring": {
+        "comment": "The focus indicator colour. Lives in tier-3 because it is a THEME-level alias of a tier-2 semantic, exactly like header/body background. Before this existed, `al-focus()` read `var(--al-theme-color-focus-ring, var(--al-theme-color-border-primary-default))` against a token the pipeline never emitted, so the fallback always won and no brand or mode could restate the focus colour without editing the mixin.",
+        "value": "{theme.color.border.primary-default}",
+        "type": "color"
       }
     }
   }

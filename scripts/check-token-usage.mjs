@@ -30,7 +30,22 @@ import { dirname, extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const TOKENS_JSON = join(REPO_ROOT, 'libs/al-web-components/dist/css/tokens.json');
+
+/**
+ * The emitted `:root` token map, in preference order.
+ *
+ * `dist/css/tokens.json` is the full library build's copy. `styles/dist/` is
+ * written by `build:tokens` ALONE (via `copy-tokens-to-legacy-dist.js`) and is
+ * byte-identical to it — which is what lets CI run this as a gate after the
+ * cheap token build instead of a full Vite build.
+ */
+const TOKENS_JSON_CANDIDATES = [
+  'libs/al-web-components/dist/css/tokens.json',
+  'libs/al-web-components/styles/dist/tokens.json',
+];
+const TOKENS_JSON =
+  TOKENS_JSON_CANDIDATES.map((p) => join(REPO_ROOT, p)).find((p) => existsSync(p)) ??
+  join(REPO_ROOT, TOKENS_JSON_CANDIDATES[0]);
 
 /** Where a var() consumer could legitimately live. */
 const SOURCE_ROOTS = [
@@ -47,7 +62,9 @@ const SOURCE_EXTS = new Set(['.scss', '.css', '.ts', '.tsx', '.js', '.jsx', '.mj
 const SKIP_DIRS = new Set(['node_modules', 'dist', 'dist-vite', 'dist-v5', 'storybook-static', '.astro', '.angular', '.svelte-kit', 'build', 'tokens-dtcg']);
 
 if (!existsSync(TOKENS_JSON)) {
-  console.error(`check-token-usage: ${relative(REPO_ROOT, TOKENS_JSON)} not found — run \`pnpm run build\` first.`);
+  console.error(
+    `check-token-usage: none of ${TOKENS_JSON_CANDIDATES.join(', ')} found — run \`pnpm --filter al-web-components build:tokens\` first.`,
+  );
   process.exit(1);
 }
 

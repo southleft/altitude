@@ -49,6 +49,102 @@ function formatTypographyValue(value) {
   return `${formatFontWeightValue(value.fontWeight)} ${fontSize}/${lineHeight} ${value.fontFamily}, ${themeFontFamilyFallback}`;
 }
 
+/**
+ * The composite typography token authors FIVE sub-values; the CSS `font`
+ * shorthand can only carry three of them. `letterSpacing` and `textDecoration`
+ * are not `font` sub-properties at all, so they were silently dropped on the
+ * floor - every `letterSpacing` the designers authored was inert.
+ * `formatLetterSpacingValue` is half of putting them back.
+ *
+ * Two things to know:
+ *
+ * 1. UNIT. Figma (and therefore Tokens Studio, and therefore
+ *    `tier-1/typography.json`) authors letter-spacing as a PERCENTAGE of the
+ *    font size. CSS `letter-spacing` takes a `<length>` and rejects `%`
+ *    outright - emitting `letter-spacing: 1%` would produce a declaration the
+ *    parser discards, i.e. the same inert result by a longer route. 1% of the
+ *    font size is exactly `0.01em`, so `% -> em` is lossless.
+ *
+ * 2. ZERO IS STILL EMITTED, as the CSS keyword `normal`. The first cut skipped
+ *    the 20 presets whose authored tracking is zero, on the grounds that
+ *    `0em` is just the CSS initial value and emitting it is noise. That was
+ *    wrong, and `scripts/check-token-usage.mjs` said so: the mixins then read
+ *    `var(--al-theme-typography-body-md-letter-spacing, normal)` against a
+ *    name the pipeline never emitted, which is the tool's PHANTOM case - the
+ *    hardcoded `normal` in the mixin always won and no brand could add
+ *    tracking to body copy. Emitting every preset's tracking costs 20 `:root`
+ *    declarations and buys a fully brand-restatable axis, and the mixins carry
+ *    no hardcoded fallback at all. `normal` rather than `0` on purpose: `0`
+ *    forbids the UA's justification adjustment, `normal` permits it, and
+ *    "no tracking authored" means the latter.
+ */
+function formatLetterSpacingValue(raw) {
+  if (raw === undefined || raw === null) return null;
+  const str = String(raw).trim();
+  const pct = /^(-?[\d.]+)%$/.exec(str);
+  const value = pct ? `${parseFloat(pct[1]) / 100}em` : str;
+  if (!Number.isNaN(parseFloat(value)) && parseFloat(value) === 0) return 'normal';
+  return value;
+}
+
+/**
+ * The other half — and the reason it always returns `null` today.
+ *
+ * `textDecoration` is only ever non-`none` on the `-underline` presets, and
+ * every emitter below filters `-underline` (and `-italic`) out of the output
+ * set entirely. So on the tokens that ARE emitted the authored value is
+ * uniformly `{text-decoration.none}`, and emitting it would add 40 `:root`
+ * declarations of the CSS initial value with no call site able to observe a
+ * difference.
+ *
+ * The honest fix for text-decoration is therefore NOT here: it is to stop
+ * filtering the `-underline` presets out of emission, which is a change to the
+ * public token surface (10 new tier-1 + 10 new tier-2 names) and a design
+ * decision, not a formatter bug. Recorded here rather than left implicit so
+ * the next reader does not re-derive it.
+ */
+function formatTextDecorationValue(raw) {
+  if (raw === undefined || raw === null) return null;
+  const str = String(raw).trim();
+  return str === 'none' ? null : str;
+}
+
+/**
+ * The `[name, value]` pairs a single token contributes: itself, plus any
+ * companion custom properties carrying composite sub-values that the primary
+ * value's CSS shorthand cannot express.
+ *
+ * Emitted for every typography preset in BOTH tiers, and for the same reason
+ * the primary is: the tier-2
+ * mixins in `styles/core/mixins/typography.scss` read the tier-2 custom
+ * property, so a tier-2 preset without its companion would silently lose the
+ * tracking the tier-1 preset it aliases carries.
+ *
+ * `referenceName` mirrors the `outputReferences` treatment of the primary
+ * value. When it is supplied (a tier-2 token whose value is a whole-string
+ * alias) the companion is emitted as `var(--al-<tier-1>-letter-spacing)`
+ * rather than a copy of the resolved literal, so the alias chain stays intact
+ * and a brand restating the tier-1 preset moves the tier-2 tracking with it.
+ */
+function companionsFor(token, primaryName, referenceName) {
+  const isPreset = token.name.startsWith('typography-preset-');
+  const isThemePreset = token.name.startsWith('theme-typography-');
+  if (!isPreset && !isThemePreset) return [];
+  const value = tokenValue(token);
+  if (!value || typeof value !== 'object') return [];
+  const pairs = [];
+  const asRef = (suffix) => `var(--${themePrefix}-${referenceName}${suffix})`;
+  const tracking = formatLetterSpacingValue(value.letterSpacing);
+  if (tracking !== null) {
+    pairs.push([primaryName + '-letter-spacing', referenceName ? asRef('-letter-spacing') : tracking]);
+  }
+  const decoration = formatTextDecorationValue(value.textDecoration);
+  if (decoration !== null) {
+    pairs.push([primaryName + '-text-decoration', referenceName ? asRef('-text-decoration') : decoration]);
+  }
+  return pairs;
+}
+
 function formatSpaceValue(value) {
   return `${parseFloat(value) / themeSpaceBaseSize}rem`;
 }
@@ -71,32 +167,32 @@ function tokenOriginalValue(token) {
 // (`formatTypographyValue`, `formatBoxShadowValue`) need the raw value
 // objects. Register replacement groups that strip the shorthand transforms.
 
-StyleDictionary.registerTransformGroup({
-  name: 'css-v3-shape',
-  transforms: [
-    'attribute/cti',
-    'name/kebab',
-    'time/seconds',
-    'html/icon',
-    'size/rem',
-    'color/css',
-    'asset/url',
-    'cubicBezier/css',
-  ],
-});
-StyleDictionary.registerTransformGroup({
-  name: 'scss-v3-shape',
-  transforms: [
-    'attribute/cti',
-    'name/kebab',
-    'time/seconds',
-    'html/icon',
-    'size/rem',
-    'color/css',
-    'asset/url',
-    'cubicBezier/css',
-  ],
-});
+//
+// The list below is only the transforms that actually FIRE against this token
+// tree, and that is load-bearing rather than tidiness. `time/seconds`,
+// `html/icon`, `size/rem`, `asset/url` and `cubicBezier/css` all select on
+// `$type`, and every one of them was inert here because the tree carried
+// Tokens Studio `$type` values (`sizing`, `fontSizes`, `boxShadow`, `other`, …)
+// that no SD filter recognises. Making those `$type` values DTCG-conformant
+// would have silently switched all five on:
+//
+//   - `size/rem` would begin rewriting every `dimension`. It happens to
+//     preserve an explicit unit, so `14px` survives — but that is a detail of
+//     SD 5.4's implementation, not a contract, and `formatSpaceValue` already
+//     does this conversion by hand for the space scale, so the two would race.
+//   - `time/seconds` would rewrite the `duration` scale, whose values are
+//     already authored in seconds (`0.1s`).
+//   - `cubicBezier/css` expects a 4-number ARRAY; this tree authors easing as
+//     CSS strings (`ease`, `cubic-bezier(0.2,0,0,1)`), which it cannot consume.
+//
+// Dropping them is a no-op TODAY (they match nothing today, by construction)
+// and is what makes the `$type` conformance pass in
+// `scripts/convert-tokens-to-dtcg.js` value-neutral. Verified by diffing the
+// full `dist-v5/` emission before and after: byte-identical.
+const V3_SHAPE_TRANSFORMS = ['attribute/cti', 'name/kebab', 'color/css'];
+
+StyleDictionary.registerTransformGroup({ name: 'css-v3-shape', transforms: V3_SHAPE_TRANSFORMS });
+StyleDictionary.registerTransformGroup({ name: 'scss-v3-shape', transforms: V3_SHAPE_TRANSFORMS });
 
 // ---------- custom formats (ported from v3 to v5 API) ----------
 
@@ -127,7 +223,7 @@ StyleDictionary.registerFormat({
           !token.name.endsWith('-underline') &&
           !token.name.includes('breakpoint')
       )
-      .map((token) => {
+      .flatMap((token) => {
         let name;
         let value = tokenValue(token);
 
@@ -148,17 +244,22 @@ StyleDictionary.registerFormat({
           value = tokenValue(token);
         }
 
+        // Captured so the composite companions below can be emitted as
+        // references too, instead of copies of the resolved literal.
+        let referenceName = null;
         if (token.name.includes('theme') && options.outputReferences) {
           const origValue = tokenOriginalValue(token);
           if (usesReferences(origValue)) {
             const refs = getReferences(origValue, dictionary.tokens, { usesDtcg: true });
             refs.forEach((ref) => {
               const refName = ref.name.endsWith('-regular') ? ref.name.replace('-regular', '') : ref.name;
+              referenceName = refName;
               value = `var(--${themePrefix}-${refName})`;
             });
           }
         }
-        return [`--${themePrefix}-${name}`, value];
+        const primary = `--${themePrefix}-${name}`;
+        return [[primary, value], ...companionsFor(token, primary, referenceName)];
       });
 
     // R2 — scoped (host) emission is a DELTA, not a copy.
@@ -208,9 +309,9 @@ StyleDictionary.registerFormat({
 StyleDictionary.registerFormat({
   name: 'al-json-flat',
   format: ({ dictionary, options }) => {
-    const variables = dictionary.allTokens
+    const entries = dictionary.allTokens
       .filter((token) => !token.name.endsWith('-italic') && !token.name.endsWith('-underline'))
-      .map((token, index, array) => {
+      .flatMap((token) => {
         let name;
         let value;
         if (token.name.includes('font-weight')) {
@@ -227,19 +328,30 @@ StyleDictionary.registerFormat({
           value = tokenValue(token);
         }
 
+        // Captured so the composite companions below can be emitted as
+        // references too, instead of copies of the resolved literal.
+        let referenceName = null;
         if (token.name.includes('theme') && options.outputReferences) {
           const origValue = tokenOriginalValue(token);
           if (usesReferences(origValue)) {
             const refs = getReferences(origValue, dictionary.tokens, { usesDtcg: true });
             refs.forEach((ref) => {
               const refName = ref.name.endsWith('-regular') ? ref.name.replace('-regular', '') : ref.name;
+              referenceName = refName;
               value = `var(--${themePrefix}-${refName})`;
             });
           }
         }
-        const comma = index === array.length - 1 ? '' : ',';
-        return `  "${themePrefix}-${name}": "${value}"${comma}`;
-      })
+        // companionsFor returns `--al-…` CSS custom-property names; this
+        // format keys on the bare `al-…` name, so strip the leading `--`.
+        return [
+          [`${themePrefix}-${name}`, value],
+          ...companionsFor(token, `--${themePrefix}-${name}`, referenceName).map(([n, v]) => [n.slice(2), v]),
+        ];
+      });
+
+    const variables = entries
+      .map(([name, value], index) => `  "${name}": "${value}"${index === entries.length - 1 ? '' : ','}`)
       .join('\n');
 
     return `{\n${variables}\n}`;

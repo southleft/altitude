@@ -200,14 +200,21 @@
 \*------------------------------------ */
 
 /**
- * Visible focus outline for elements
+ * Visible focus outline for elements.
+ *
+ * `--al-theme-color-focus-ring` is a REAL tier-3 token (tokens/tier-3/theme/
+ * {light,dark}/colors.json), so no hardcoded fallback belongs here. It used to
+ * read `var(--al-theme-color-focus-ring, var(--al-theme-color-border-primary-default))`
+ * against a name the pipeline never emitted — the fallback always won, which put
+ * the focus-ring colour outside design-system control: no brand, mode or
+ * `<al-theme>` host could restate it.
  */
 @mixin al-focus() {
-  outline: var(--al-theme-border-width-md) solid var(--al-theme-color-focus-ring, var(--al-theme-color-border-primary-default));
+  outline: var(--al-theme-border-width-md) solid var(--al-theme-color-focus-ring);
   outline-offset: var(--al-focus-outline-offset, var(--al-theme-border-width-md));
 }
 
 @mixin al-focus-inset() {
-  outline: var(--al-theme-border-width-md) solid var(--al-theme-color-focus-ring, var(--al-theme-color-border-primary-default));
+  outline: var(--al-theme-border-width-md) solid var(--al-theme-color-focus-ring);
   outline-offset: calc(#{var(--al-theme-border-width-md)} * -1);
 }

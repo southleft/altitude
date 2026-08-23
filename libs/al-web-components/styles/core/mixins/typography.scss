@@ -2,50 +2,84 @@
   #TYPOGRAPHY TIER-1 MIXINS
 \*------------------------------------ */
 
+/**
+ * Each preset is a CSS `font` shorthand plus its tracking.
+ *
+ * `font` can only carry style/variant/weight/stretch/size/line-height/family.
+ * The composite typography token also authors `letterSpacing` (and
+ * `textDecoration`), which the shorthand cannot express — so the token
+ * pipeline emits a companion `--al-typography-preset-<n>[-bold]-letter-spacing`
+ * custom property alongside each preset, and these mixins are what read it.
+ * Before that, every `letterSpacing` the designers authored was dropped by
+ * `formatTypographyValue` and had no effect on any rendered page.
+ *
+ * There is no CSS fallback on these reads, deliberately: the pipeline emits a
+ * companion for EVERY preset, including the ones whose authored tracking is
+ * zero (as the keyword `normal`), so a brand can restate any of them. Declaring
+ * letter-spacing on every preset rather than only the tracked ones matters
+ * because the `font` shorthand does not reset `letter-spacing` — without it a
+ * preset used inside a tracked ancestor would inherit that ancestor's tracking.
+ *
+ * The `!important` on the bold tracking mirrors the `font-weight` above it and
+ * exists for the same reason: Sass hoists the responsive @media block after the
+ * flat declarations, so without it a bold preset would pick up the SMALLER
+ * regular preset's tracking below the md breakpoint.
+ */
+
 @use '../variables' as *;
 
 @mixin al-typography-preset-12($responsive: true) {
   font: var(--al-typography-preset-12);
+  letter-spacing: var(--al-typography-preset-12-letter-spacing);
 }
 
 @mixin al-typography-preset-12-bold {
   @include al-typography-preset-12();
   font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-typography-preset-12-bold-letter-spacing) !important;
 }
 
 @mixin al-typography-preset-14($responsive: true) {
   font: var(--al-typography-preset-14);
+  letter-spacing: var(--al-typography-preset-14-letter-spacing);
 }
 
 @mixin al-typography-preset-14-bold {
   @include al-typography-preset-14();
   font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-typography-preset-14-bold-letter-spacing) !important;
 }
 
 @mixin al-typography-preset-16($responsive: true) {
   font: var(--al-typography-preset-16);
+  letter-spacing: var(--al-typography-preset-16-letter-spacing);
 }
 
 @mixin al-typography-preset-16-bold {
   @include al-typography-preset-16();
   font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-typography-preset-16-bold-letter-spacing) !important;
 }
 
 @mixin al-typography-preset-18($responsive: true) {
   font: var(--al-typography-preset-18);
+  letter-spacing: var(--al-typography-preset-18-letter-spacing);
 }
 
 @mixin al-typography-preset-18-bold {
   @include al-typography-preset-18();
   font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-typography-preset-18-bold-letter-spacing) !important;
 }
 
 @mixin al-typography-preset-20($responsive: true) {
   font: var(--al-typography-preset-20);
+  letter-spacing: var(--al-typography-preset-20-letter-spacing);
 
   @if $responsive == true {
     @media all and (max-width: $al-breakpoint-md) {
       font: var(--al-typography-preset-18);
+      letter-spacing: var(--al-typography-preset-18-letter-spacing);
     }
   }
 }
@@ -53,14 +87,17 @@
 @mixin al-typography-preset-20-bold {
   @include al-typography-preset-20();
   font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-typography-preset-20-bold-letter-spacing) !important;
 }
 
 @mixin al-typography-preset-24($responsive: true) {
   font: var(--al-typography-preset-24);
+  letter-spacing: var(--al-typography-preset-24-letter-spacing);
 
   @if $responsive == true {
     @media all and (max-width: $al-breakpoint-md) {
       font: var(--al-typography-preset-20);
+      letter-spacing: var(--al-typography-preset-20-letter-spacing);
     }
   }
 }
@@ -68,14 +105,17 @@
 @mixin al-typography-preset-24-bold {
   @include al-typography-preset-24();
   font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-typography-preset-24-bold-letter-spacing) !important;
 }
 
 @mixin al-typography-preset-36($responsive: true) {
   font: var(--al-typography-preset-36);
+  letter-spacing: var(--al-typography-preset-36-letter-spacing);
 
   @if $responsive == true {
     @media all and (max-width: $al-breakpoint-md) {
       font: var(--al-typography-preset-24);
+      letter-spacing: var(--al-typography-preset-24-letter-spacing);
     }
   }
 }
@@ -83,14 +123,17 @@
 @mixin al-typography-preset-36-bold {
   @include al-typography-preset-36();
   font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-typography-preset-36-bold-letter-spacing) !important;
 }
 
 @mixin al-typography-preset-40($responsive: true) {
   font: var(--al-typography-preset-40);
+  letter-spacing: var(--al-typography-preset-40-letter-spacing);
 
   @if $responsive == true {
     @media all and (max-width: $al-breakpoint-md) {
       font: var(--al-typography-preset-36);
+      letter-spacing: var(--al-typography-preset-36-letter-spacing);
     }
   }
 }
@@ -98,14 +141,17 @@
 @mixin al-typography-preset-40-bold {
   @include al-typography-preset-40();
   font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-typography-preset-40-bold-letter-spacing) !important;
 }
 
 @mixin al-typography-preset-44($responsive: true) {
   font: var(--al-typography-preset-44);
+  letter-spacing: var(--al-typography-preset-44-letter-spacing);
 
   @if $responsive == true {
     @media all and (max-width: $al-breakpoint-md) {
       font: var(--al-typography-preset-40);
+      letter-spacing: var(--al-typography-preset-40-letter-spacing);
     }
   }
 }
@@ -113,14 +159,17 @@
 @mixin al-typography-preset-44-bold {
   @include al-typography-preset-44();
   font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-typography-preset-44-bold-letter-spacing) !important;
 }
 
 @mixin al-typography-preset-48($responsive: true) {
   font: var(--al-typography-preset-48);
+  letter-spacing: var(--al-typography-preset-48-letter-spacing);
 
   @if $responsive == true {
     @media all and (max-width: $al-breakpoint-md) {
       font: var(--al-typography-preset-44);
+      letter-spacing: var(--al-typography-preset-44-letter-spacing);
     }
   }
 }
@@ -128,6 +177,7 @@
 @mixin al-typography-preset-48-bold {
   @include al-typography-preset-48();
   font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-typography-preset-48-bold-letter-spacing) !important;
 }
 
 /* ------------------------------------*\
@@ -135,93 +185,184 @@
 \*------------------------------------ */
 
 /**
+ * The SEMANTIC type scale, and the layer 109 component call sites actually use.
+ *
+ * These read the tier-2 custom properties directly. They used to delegate to
+ * the tier-1 preset mixins (`@include al-typography-preset-36`), which made the
+ * semantic layer a BUILD-TIME indirection: every component compiled down to
+ * `font: var(--al-typography-preset-36)`, so the tier-2 custom properties had
+ * one `var()` reader in the whole repo (`styles/core/base.scss`) and a brand
+ * restating `--al-theme-typography-heading-lg` on its `<al-theme>` host changed
+ * nothing. Reading the tier-2 name keeps the same resolved value -- each tier-2
+ * token is a whole-string alias of the tier-1 preset that used to be inlined --
+ * but resolves it at RUNTIME, where the brand/mode cascade can reach it.
+ *
+ * The responsive step-down is expressed in tier-2 names too. It is the same
+ * ladder the tier-1 mixins encoded (20->18, 24->20, 36->24, 40->36, 44->40,
+ * 48->44); every one of those targets happens to have a tier-2 name, so this
+ * is a rename of the existing behaviour, not a new design decision.
+ */
+
+/**
  * Body
  */
 
-@mixin al-theme-typography-body-xs {
-  @include al-typography-preset-12;
+@mixin al-theme-typography-body-xs($responsive: true) {
+  font: var(--al-theme-typography-body-xs);
+  letter-spacing: var(--al-theme-typography-body-xs-letter-spacing);
 }
 
 @mixin al-theme-typography-body-xs-bold {
-  @include al-typography-preset-12-bold;
+  @include al-theme-typography-body-xs();
+  font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-theme-typography-body-xs-bold-letter-spacing) !important;
 }
 
-@mixin al-theme-typography-body-sm {
-  @include al-typography-preset-14;
+@mixin al-theme-typography-body-sm($responsive: true) {
+  font: var(--al-theme-typography-body-sm);
+  letter-spacing: var(--al-theme-typography-body-sm-letter-spacing);
 }
 
 @mixin al-theme-typography-body-sm-bold {
-  @include al-typography-preset-14-bold;
+  @include al-theme-typography-body-sm();
+  font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-theme-typography-body-sm-bold-letter-spacing) !important;
 }
 
-@mixin al-theme-typography-body-md {
-  @include al-typography-preset-16;
+@mixin al-theme-typography-body-md($responsive: true) {
+  font: var(--al-theme-typography-body-md);
+  letter-spacing: var(--al-theme-typography-body-md-letter-spacing);
 }
 
 @mixin al-theme-typography-body-md-bold {
-  @include al-typography-preset-16-bold;
+  @include al-theme-typography-body-md();
+  font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-theme-typography-body-md-bold-letter-spacing) !important;
 }
 
-@mixin al-theme-typography-body-lg {
-  @include al-typography-preset-18;
+@mixin al-theme-typography-body-lg($responsive: true) {
+  font: var(--al-theme-typography-body-lg);
+  letter-spacing: var(--al-theme-typography-body-lg-letter-spacing);
 }
 
 @mixin al-theme-typography-body-lg-bold {
-  @include al-typography-preset-18-bold;
+  @include al-theme-typography-body-lg();
+  font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-theme-typography-body-lg-bold-letter-spacing) !important;
 }
 
 /**
  * Heading
  */
 
-@mixin al-theme-typography-heading-sm {
-  @include al-typography-preset-20;
+@mixin al-theme-typography-heading-sm($responsive: true) {
+  font: var(--al-theme-typography-heading-sm);
+  letter-spacing: var(--al-theme-typography-heading-sm-letter-spacing);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-theme-typography-body-lg);
+      letter-spacing: var(--al-theme-typography-body-lg-letter-spacing);
+    }
+  }
 }
 
 @mixin al-theme-typography-heading-sm-bold {
-  @include al-typography-preset-20-bold;
+  @include al-theme-typography-heading-sm();
+  font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-theme-typography-heading-sm-bold-letter-spacing) !important;
 }
 
-@mixin al-theme-typography-heading-md {
-  @include al-typography-preset-24;
+@mixin al-theme-typography-heading-md($responsive: true) {
+  font: var(--al-theme-typography-heading-md);
+  letter-spacing: var(--al-theme-typography-heading-md-letter-spacing);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-theme-typography-heading-sm);
+      letter-spacing: var(--al-theme-typography-heading-sm-letter-spacing);
+    }
+  }
 }
 
 @mixin al-theme-typography-heading-md-bold {
-  @include al-typography-preset-24-bold;
+  @include al-theme-typography-heading-md();
+  font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-theme-typography-heading-md-bold-letter-spacing) !important;
 }
 
-@mixin al-theme-typography-heading-lg {
-  @include al-typography-preset-36;
+@mixin al-theme-typography-heading-lg($responsive: true) {
+  font: var(--al-theme-typography-heading-lg);
+  letter-spacing: var(--al-theme-typography-heading-lg-letter-spacing);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-theme-typography-heading-md);
+      letter-spacing: var(--al-theme-typography-heading-md-letter-spacing);
+    }
+  }
 }
 
 @mixin al-theme-typography-heading-lg-bold {
-  @include al-typography-preset-36-bold;
+  @include al-theme-typography-heading-lg();
+  font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-theme-typography-heading-lg-bold-letter-spacing) !important;
 }
 
 /**
  * Display
  */
 
-@mixin al-theme-typography-display-sm {
-  @include al-typography-preset-40;
+@mixin al-theme-typography-display-sm($responsive: true) {
+  font: var(--al-theme-typography-display-sm);
+  letter-spacing: var(--al-theme-typography-display-sm-letter-spacing);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-theme-typography-heading-lg);
+      letter-spacing: var(--al-theme-typography-heading-lg-letter-spacing);
+    }
+  }
 }
 
 @mixin al-theme-typography-display-sm-bold {
-  @include al-typography-preset-40-bold;
+  @include al-theme-typography-display-sm();
+  font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-theme-typography-display-sm-bold-letter-spacing) !important;
 }
 
-@mixin al-theme-typography-display-md {
-  @include al-typography-preset-44;
+@mixin al-theme-typography-display-md($responsive: true) {
+  font: var(--al-theme-typography-display-md);
+  letter-spacing: var(--al-theme-typography-display-md-letter-spacing);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-theme-typography-display-sm);
+      letter-spacing: var(--al-theme-typography-display-sm-letter-spacing);
+    }
+  }
 }
 
 @mixin al-theme-typography-display-md-bold {
-  @include al-typography-preset-44-bold;
+  @include al-theme-typography-display-md();
+  font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-theme-typography-display-md-bold-letter-spacing) !important;
 }
 
-@mixin al-theme-typography-display-lg {
-  @include al-typography-preset-48;
+@mixin al-theme-typography-display-lg($responsive: true) {
+  font: var(--al-theme-typography-display-lg);
+  letter-spacing: var(--al-theme-typography-display-lg-letter-spacing);
+
+  @if $responsive == true {
+    @media all and (max-width: $al-breakpoint-md) {
+      font: var(--al-theme-typography-display-md);
+      letter-spacing: var(--al-theme-typography-display-md-letter-spacing);
+    }
+  }
 }
 
 @mixin al-theme-typography-display-lg-bold {
-  @include al-typography-preset-48-bold;
+  @include al-theme-typography-display-lg();
+  font-weight: var(--al-font-weight-bold) !important;
+  letter-spacing: var(--al-theme-typography-display-lg-bold-letter-spacing) !important;
 }

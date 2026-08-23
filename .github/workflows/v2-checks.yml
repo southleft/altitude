@@ -588,5 +588,7 @@ jobs:
         run: pnpm --filter al-web-components build:tokens
       - name: Brands are distinguishable
         run: pnpm run test:brands
+      - name: No phantom tokens (read via var(), never emitted)
+        run: pnpm run gate:token-usage
       - name: Dependency audit (shipped packages are fatal at high)
         run: pnpm run check:audit
