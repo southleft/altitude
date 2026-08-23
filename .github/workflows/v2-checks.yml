@@ -430,9 +430,19 @@ jobs:
             curl -sf http://localhost:6006/iframe.html > /dev/null && break
             sleep 1
           done
+      # `continue-on-error: true` lived here with the comment "3 pre-existing Lit
+      # warnings; tracked separately". Both halves were false. Measured against a
+      # static build: 428 passed, 94 FAILED across 22 of 72 suites, and every
+      # failure is an axe-core violation, not a Lit warning — the list/listitem/
+      # aria-required-parent cluster alone accounts for most of them. The flag was
+      # hiding the entire accessibility debt of the library while the job showed
+      # green. Full inventory:
+      # .mm/specs/2026-08-22-accessibility-remediation/axe-baseline.md
+      #
+      # This job now fails honestly. It stays red until accessibility-remediation
+      # lands, which is exactly the dependency order.json already encodes.
       - name: Run test-storybook (interactions + axe-core a11y)
         run: pnpm --filter al-web-components test
-        continue-on-error: true  # 3 pre-existing Lit warnings; tracked separately
 
   a11y:
     name: T6.3 a11y CI gate (axe-core)
@@ -508,3 +518,30 @@ jobs:
             }
             console.log('migration.json validates against schema. components:', Object.keys(data.components).length);
           "
+
+  repo-hygiene:
+    # The four gates below existed as `pnpm run` scripts that only ever ran by
+    # hand. AGENTS.md names check:ds-projects as its own enforcement mechanism,
+    # so leaving it unwired meant the contract was documented but not enforced.
+    name: hand-run gates (ds-projects, sl-scope, brands, audit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: DS project registry is coherent
+        run: pnpm run check:ds-projects
+      - name: Southleft scope boundary
+        run: pnpm run check:sl-scope
+      - name: Build tokens (brand distinctiveness reads built output)
+        run: pnpm --filter al-web-components build:tokens
+      - name: Brands are distinguishable
+        run: pnpm run test:brands
+      - name: Dependency audit (shipped packages are fatal at high)
+        run: pnpm run check:audit
