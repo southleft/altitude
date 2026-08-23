@@ -30,6 +30,7 @@ import '../styles/docs.css';
 import Sidebar from '../components/Sidebar.astro';
 import BrandTheme from '../components/BrandTheme.astro';
 import LiveRuntime from '../components/LiveRuntime.astro';
+import BrandRuntime from '../components/BrandRuntime.astro';
 import { SITE, base } from '../lib/site.mjs';
 
 interface Props {
@@ -134,6 +135,24 @@ const canonical = new URL(Astro.url.pathname, SITE.url).toString();
     </script>
 
     <BrandTheme />
+    <!--
+      THE BRAND LAYER GOES FIRST, AND THE ORDER IS LOAD-BEARING.
+
+      A brand layer may OVERRIDE a base component: same tag, brand
+      implementation (`supersedes` in .altitude/ds-projects.json — Southleft's
+      `al-header` and `al-footer`). `customElements.define` is first-come,
+      first-served and cannot be undone, so whichever bundle evaluates first
+      owns the tag for the life of the page. LiveRuntime imports the WHOLE base
+      library; if it ran first it would claim `al-header` and the brand
+      implementation this page exists to document would silently never upgrade.
+
+      Registered in this order, the base bundle finds the tag taken and skips
+      it — which is exactly the override the registry declares. Module scripts
+      execute in document order, so this is ordering, not a race.
+
+      Only pages of a project that HAS a layer render this at all.
+    -->
+    {liveComponents && context.registry.layer && <BrandRuntime />}
     {liveComponents && <LiveRuntime />}
   </body>
 </html>

@@ -6,7 +6,7 @@ import '../../../al-web-components/components/layout/layout';
 
 const meta: Meta = {
   title: 'Molecules/Section Header',
-  component: 'sl-section-header',
+  component: 'al-section-header',
   parameters: { status: { type: 'beta' } },
   tags: ['autodocs'],
   argTypes: {
@@ -36,14 +36,14 @@ export const Default: Story = {
     linkLabel: 'all insights →'
   },
   render: (args) => html`
-    <sl-section-header
+    <al-section-header
       index=${args.index}
       label=${args.label}
       heading=${args.heading}
       dek=${args.dek}
       link-href=${args.linkHref}
       link-label=${args.linkLabel}
-    ></sl-section-header>
+    ></al-section-header>
   `
 };
 
@@ -59,7 +59,7 @@ export const NoLink: Story = {
     dek: 'Four practices that compound.'
   },
   render: (args) => html`
-    <sl-section-header index=${args.index} label=${args.label} heading=${args.heading} dek=${args.dek}></sl-section-header>
+    <al-section-header index=${args.index} label=${args.label} heading=${args.heading} dek=${args.dek}></al-section-header>
   `
 };
 
@@ -69,7 +69,7 @@ export const NoLink: Story = {
  */
 export const NoIndex: Story = {
   args: { label: 'Elsewhere', heading: 'Find us around the web' },
-  render: (args) => html`<sl-section-header label=${args.label} heading=${args.heading}></sl-section-header>`
+  render: (args) => html`<al-section-header label=${args.label} heading=${args.heading}></al-section-header>`
 };
 
 /**
@@ -79,12 +79,12 @@ export const NoIndex: Story = {
 export const WithSlottedControl: Story = {
   args: { index: '01', label: 'Work', heading: 'Selected case studies' },
   render: (args) => html`
-    <sl-section-header index=${args.index} label=${args.label} heading=${args.heading}>
+    <al-section-header index=${args.index} label=${args.label} heading=${args.heading}>
       <al-layout direction="row" gap="sm">
         <al-button variant="tertiary">All</al-button>
         <al-button variant="tertiary">Design systems</al-button>
         <al-button variant="tertiary">AI</al-button>
       </al-layout>
-    </sl-section-header>
+    </al-section-header>
   `
 };

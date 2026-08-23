@@ -22,7 +22,7 @@ export function contextFor(project) {
   const cached = cache.get(project.id);
   if (cached) return cached;
 
-  const registry = buildRegistry(project.scope);
+  const registry = buildRegistry(project.scope, project.brandLayer);
   const context = {
     project,
     registry,

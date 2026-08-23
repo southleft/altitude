@@ -1,33 +1,36 @@
 ---
-// Sticky primary nav — spec 2026-08-22-southleft-example-1-to-1-parity, T4.
+// Sticky primary nav — spec 2026-08-22-southleft-example-1-to-1-parity, T4;
+// rebuilt onto the BRAND header by spec
+// 2026-08-23-one-al-namespace-across-brand-and-base.
 //
-// REBUILT on `<al-header>` + `<al-layout>`. The previous revision was a plain
-// semantic `<header>`, justified by a comment claiming `al-header`'s shadow
-// DOM "forces its default/before/after slots into three EQUAL flex:1 thirds".
-// That is no longer true and hasn't been since the header/footer arrangement
-// removal (spec 2026-08-21-header-and-footer-arrangement-removal):
-// `header.ts` now renders a SINGLE unnamed slot, and `header.scss` is a
-// one-column grid that takes no position on horizontal distribution. So the
-// component composes cleanly with an `<al-layout>` row and there is no reason
-// left to hand-roll the landmark.
+// WHAT CHANGED, AND WHY IT IS SHORTER.
 //
-// Two things `al-header` could not express before this spec — the hairline
-// under the bar and the backdrop blur — are now `--al-header-border-block-end`
-// and `--al-header-backdrop-filter` (header.scss). They HAD to move into the
-// component: `:host` is `display: contents`, so the shadow-root `<header>` is
-// the only box, and no page-level rule can reach it.
+// This file used to hand-roll the whole bar — the measure, the nav row, the
+// menu button, the mobile panel and the script that opened it — on top of the
+// base `<al-header>`, which is a bare landmark with a single slot. That work
+// has a home now: `@southleft/sl-web-components` ships the Southleft header as
+// a component, and after the namespace unification it IS `<al-header>` in this
+// app (Base.astro imports the brand module in place of the base one). Same tag,
+// brand implementation — the override the design system declares in
+// `.altitude/ds-projects.json`.
 //
-// The page measure is `<al-layout variant="constrained">`, not a bespoke
-// `.sl-header__bar` max-width. `--al-layout-measure: 79rem` (1264px) plus the
-// reference's own `clamp(1.25rem, 4vw, 3rem)` gutter reproduces v5's
-// `.container-sl` EXACTLY at every width: at 1440 the content column measures
-// x=88 w=1264, which is what the reference measures. (v5's 1360px figure is
-// its border-box INCLUDING padding; al-layout's `measure` is the content
-// column, hence 1264 = 1360 − 2×48.)
+// So the arrangement, the sticky chrome, the blur, the hairline, the menu
+// button and the mobile panel all moved into the component. What is left here
+// is what this SITE contributes: which links, which actions, and the two
+// buttons that drive site-level behaviour.
 //
-// The nav pills, the two circular icon buttons and the mobile panel have no
-// al-* equivalent — v5 hand-styles them too — so they stay app markup styled
-// through src/styles/layout.css tokens.
+// THE SLOTS the brand header exposes (see its story for the canonical shape):
+//   brand    — the wordmark
+//   nav      — the desktop nav links
+//   actions  — the right-hand cluster (icon buttons + CTA)
+//   mobile   — the links inside the panel the component opens
+//
+// STYLING IS UNCHANGED. Slotted children stay in the light DOM, so every
+// `.sl-header__*` rule in src/styles/layout.css still applies to exactly the
+// elements it applied to before. The rules that styled markup now owned by the
+// component (`.sl-header__bar`, `.sl-header__menu-btn`, `.sl-header__mobile-nav`)
+// simply stop matching; they are left in place rather than deleted so the diff
+// is reviewable, and are dead code to be swept separately.
 import { NAV, CTA } from '../lib/site';
 import { withBase } from '../lib/url';
 
@@ -40,114 +43,88 @@ const path = rawPath.replace(/\/$/, '') || '/';
 const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href));
 ---
 
-<al-header sticky class="sl-header" data-header>
-  <al-layout variant="constrained" class="sl-measure">
-    <!-- `justify="between"` with exactly TWO children — the wordmark, and one
-         group holding nav + actions — is what pushes the right-hand cluster to
-         the gutter. The previous revision used `margin-inline-start: auto` on
-         nav and actions; that cannot work once those become `<al-layout>`s,
-         because an al-layout host is `display: contents` and margins on such a
-         box are dropped (its inner `.al-c-layout` div is the real flex item).
-         Saying `justify="between"` states the intent directly instead. -->
-    <al-layout direction="row" align="center" justify="between" gap="lg" class="sl-header__bar">
-      <!-- `al-logo` renders its OWN `<a href>` (logo.ts) — wrapping it in a
-           second anchor, as the previous revision did, nests one interactive
-           element inside another (axe `nested-interactive`). The aria-label
-           moves onto the component itself. -->
-      <al-logo variant="southleft" href={withBase('/')} class="sl-header__logo" aria-label="Southleft home"></al-logo>
+<al-header sticky data-header>
+  <!-- `al-logo` renders its OWN `<a href>` (logo.ts) — wrapping it in a second
+       anchor nests one interactive element inside another (axe
+       `nested-interactive`), so the aria-label lives on the component. -->
+  <al-logo
+    slot="brand"
+    variant="southleft"
+    href={withBase('/')}
+    class="sl-header__logo"
+    aria-label="Southleft home"
+  ></al-logo>
 
-      <al-layout direction="row" align="center" gap="md">
-        <nav class="sl-header__nav" aria-label="Primary">
-          <al-layout direction="row" align="center" gap="xs">
-            {NAV.map((item) => (
-              <a
-                href={withBase(item.href)}
-                aria-current={isActive(item.href) ? 'page' : undefined}
-                class:list={[
-                  'sl-header__nav-link al-u-theme-typography-body-sm',
-                  isActive(item.href) && 'sl-header__nav-link--active',
-                ]}
-              >
-                {item.label}
-              </a>
-            ))}
-          </al-layout>
-        </nav>
+  {
+    NAV.map((item) => (
+      <a
+        slot="nav"
+        href={withBase(item.href)}
+        aria-current={isActive(item.href) ? 'page' : undefined}
+        class:list={[
+          'sl-header__nav-link al-u-theme-typography-body-sm',
+          isActive(item.href) && 'sl-header__nav-link--active',
+        ]}
+      >
+        {item.label}
+      </a>
+    ))
+  }
 
-        <al-layout direction="row" align="center" gap="sm" class="sl-header__actions">
-        <button
-          type="button"
-          id="theme-console-open"
-          class="sl-header__icon-btn sl-header__icon-btn--accent-hover"
-          aria-label="Open theme console — derive your own site theme"
-          title="Derive your own theme"
-          data-sl-ai-trigger
-        >
-          <!-- palette: three token dots + a brush stroke of a ring — copied
-               verbatim from southleft-v5 src/components/Header.astro:48-53 -->
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <path d="M12 21a9 9 0 1 1 9-9c0 2.5-2 3-3.5 3H15a2 2 0 0 0-1.5 3.3c.6.7.2 1.7-.7 1.7Z"></path>
-            <circle cx="8" cy="10.5" r="0.6" fill="currentColor"></circle>
-            <circle cx="12" cy="7.5" r="0.6" fill="currentColor"></circle>
-            <circle cx="16" cy="10.5" r="0.6" fill="currentColor"></circle>
-          </svg>
-        </button>
-        <!-- Ink/paper toggle. v5 ships BOTH a sun and a moon and CSS-swaps
-             them on the active theme (ThemeToggle.astro:36-40); the previous
-             revision here had only a static sun, so the control never
-             reflected its own state. Both icons are present now and the
-             script below swaps them with the mode. -->
-        <button
-          type="button"
-          class="sl-header__icon-btn"
-          aria-label="Switch to paper (light) mode"
-          title="Ink / paper"
-          data-sl-mode-toggle
-        >
-          <svg data-sl-mode-icon="dark" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="4"></circle>
-            <path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path>
-          </svg>
-          <svg data-sl-mode-icon="light" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="display:none">
-            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path>
-          </svg>
-        </button>
-        <span class="sl-header__cta">
-          <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
-        </span>
-        <button
-          type="button"
-          class="sl-header__icon-btn sl-header__menu-btn"
-          aria-label="Menu"
-          aria-expanded="false"
-          aria-controls="mobile-nav"
-          data-menu-button
-        >
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <path d="M3 6h18M3 12h18M3 18h18" class="icon-open"></path>
-            <path d="M6 6l12 12M18 6L6 18" class="icon-close" style="display:none"></path>
-          </svg>
-        </button>
-        </al-layout>
-      </al-layout>
-    </al-layout>
-  </al-layout>
+  <button
+    slot="actions"
+    type="button"
+    id="theme-console-open"
+    class="sl-header__icon-btn sl-header__icon-btn--accent-hover"
+    aria-label="Open theme console — derive your own site theme"
+    title="Derive your own theme"
+    data-sl-ai-trigger
+  >
+    <!-- palette: three token dots + a brush stroke of a ring — copied
+         verbatim from southleft-v5 src/components/Header.astro:48-53 -->
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <path d="M12 21a9 9 0 1 1 9-9c0 2.5-2 3-3.5 3H15a2 2 0 0 0-1.5 3.3c.6.7.2 1.7-.7 1.7Z"></path>
+      <circle cx="8" cy="10.5" r="0.6" fill="currentColor"></circle>
+      <circle cx="12" cy="7.5" r="0.6" fill="currentColor"></circle>
+      <circle cx="16" cy="10.5" r="0.6" fill="currentColor"></circle>
+    </svg>
+  </button>
 
-  <nav id="mobile-nav" class="sl-header__mobile-nav" aria-label="Primary mobile" hidden>
-    <al-layout variant="constrained" class="sl-measure">
-      <al-layout gap="xs" class="sl-header__mobile-nav-inner">
-        {NAV.map((item, i) => (
-          <a href={withBase(item.href)} class="sl-header__mobile-nav-link al-u-theme-typography-body-md">
-            <span>{item.label}</span>
-            <span class="sl-header__mobile-nav-index al-u-theme-typography-body-xs">0{i + 1}</span>
-          </a>
-        ))}
-        <div class="sl-header__mobile-cta">
-          <al-button href={withBase(CTA.href)} fullWidth>{CTA.label}</al-button>
-        </div>
-      </al-layout>
-    </al-layout>
-  </nav>
+  <!-- Ink/paper toggle. v5 ships BOTH a sun and a moon and CSS-swaps them on
+       the active theme (ThemeToggle.astro:36-40); both icons are present and
+       the script below swaps them with the mode. -->
+  <button
+    slot="actions"
+    type="button"
+    class="sl-header__icon-btn"
+    aria-label="Switch to paper (light) mode"
+    title="Ink / paper"
+    data-sl-mode-toggle
+  >
+    <svg data-sl-mode-icon="dark" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4"></circle>
+      <path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path>
+    </svg>
+    <svg data-sl-mode-icon="light" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="display:none">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path>
+    </svg>
+  </button>
+
+  <span slot="actions" class="sl-header__cta">
+    <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
+  </span>
+
+  {
+    NAV.map((item, i) => (
+      <a slot="mobile" href={withBase(item.href)} class="sl-header__mobile-nav-link al-u-theme-typography-body-md">
+        <span>{item.label}</span>
+        <span class="sl-header__mobile-nav-index al-u-theme-typography-body-xs">0{i + 1}</span>
+      </a>
+    ))
+  }
+  <div slot="mobile" class="sl-header__mobile-cta">
+    <al-button href={withBase(CTA.href)} fullWidth>{CTA.label}</al-button>
+  </div>
 </al-header>
 
 <script>
@@ -179,22 +156,10 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
     syncModeIcon();
     if (themeEl) new MutationObserver(syncModeIcon).observe(themeEl, { attributeFilter: ['mode'] });
 
-    const menuBtn = document.querySelector<HTMLElement>('[data-menu-button]');
-    const mobileNav = document.getElementById('mobile-nav');
-    menuBtn?.addEventListener('click', () => {
-      const willOpen = mobileNav?.hasAttribute('hidden');
-      if (willOpen) {
-        mobileNav?.removeAttribute('hidden');
-      } else {
-        mobileNav?.setAttribute('hidden', '');
-      }
-      menuBtn.setAttribute('aria-expanded', String(!!willOpen));
-      const iconOpen = menuBtn.querySelector<SVGPathElement>('.icon-open');
-      const iconClose = menuBtn.querySelector<SVGPathElement>('.icon-close');
-      if (iconOpen && iconClose) {
-        iconOpen.style.display = willOpen ? 'none' : '';
-        iconClose.style.display = willOpen ? '' : 'none';
-      }
-    });
+    // NOTE: the menu button and the mobile panel are the COMPONENT's now —
+    // `<al-header>` owns `menuOpen`, renders the toggle and the panel, and
+    // dispatches `sl-header-menu-toggle`. The ~20 lines that used to open a
+    // panel in this file are deleted rather than kept alongside it, because two
+    // things toggling one menu is how a menu ends up half-open.
   });
 </script>

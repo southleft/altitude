@@ -23,11 +23,13 @@
 import { a11yFor, A11Y_REPORT, A11Y_MANUAL_AVAILABLE } from '../lib/a11y.mjs';
 
 interface Props {
-  slug: string;
+  /** The component record — the panel needs its library, not only its slug. */
+  component: any;
 }
 
-const { slug } = Astro.props;
-const checks = a11yFor(slug);
+const { component } = Astro.props;
+const slug = component.slug;
+const checks = a11yFor(component);
 
 const STATE_LABEL = {
   pass: 'PASS',
@@ -67,7 +69,11 @@ const STATE_TONE = {
 
 {
   checks.measured && (
-    <div class="checks" data-a11y-panel data-a11y-slug={slug}>
+    <div class="checks" data-a11y-panel data-a11y-slug={slug} data-a11y-surface={checks.surface}>
+      {/* Which run produced these numbers. Only shown when it is NOT the
+          Storybook run, because that is the assumed one everywhere else on the
+          site — an unannotated table would be read as full story coverage. */}
+      {checks.surfaceNote && <p class="empty-note" data-a11y-surface-note>{checks.surfaceNote}</p>}
       <div class="spec-table spec-table--checks">
         <div class="spec-table__head">
           <span>CHECK</span>

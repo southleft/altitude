@@ -1,0 +1,43 @@
+purpose: 'Southleft''s site footer, and the brand implementation of `al-footer`: an asymmetric
+  three-column masthead, an optional pull quote, and a legal bar. Altitude''s `al-footer`
+  is a bare landmark with a single slot; this is the whole footer.'
+whenToUse:
+- You are building a page on the Southleft design system and it needs the site's closing chrome.
+- The footer carries a sitemap and a set of external links that should keep the same column
+  proportions on every page.
+whenNotToUse:
+- text: You need a neutral footer landmark to compose something else inside. That is Altitude's,
+    and this design system replaces it, so building your own means arranging with the layout
+    primitive.
+  instead: layout
+- text: What you want is the closing call to action rather than the site's legal and navigational
+    footer.
+  instead: cta-band
+dos:
+- Pass the pull quote and the copyright as `quote`, `cite` and `copyright` props. The component
+  renders the blockquote and the legal bar, and hand-built markup will not match their spacing.
+- Slot each sitemap column as its own element in `columns`. The masthead grid places them,
+  and wrapping them in one container collapses three tracks into one.
+donts:
+- Do not add block padding to whatever sits above the footer to space it. The component owns
+  its own through `--al-footer-padding-block`.
+- Do not put the primary call to action here. By the time a reader is in the footer they have
+  passed the ask.
+accessibility:
+- The footer landmark is the component's, so slot plain lists and anchors rather than another
+  footer element. External links need their own rel attribute, because the component forwards
+  nothing onto slotted content.
+content:
+- Column headings are categories in angle brackets by convention, matching the kicker treatment
+  used elsewhere on the site.
+sources:
+- path: libs/sl-web-components/components/footer/footer.ts
+  contains: export class SLFooter
+  note: The brand implementation that registers under the base library tag — the override
+    this guidance opens by describing.
+- path: libs/sl-web-components/components/footer/footer.ts
+  contains: sl-c-footer__masthead
+  note: Each column is placed by the masthead grid, which is why they must be slotted individually.
+- path: .altitude/ds-projects.json
+  contains: al-footer
+  note: The registry declares this as a deliberate same-tag override rather than a collision.

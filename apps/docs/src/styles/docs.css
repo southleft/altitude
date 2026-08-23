@@ -687,7 +687,15 @@ input:focus {
 .pg {
   border: 1px solid var(--line);
   display: grid;
-  grid-template-columns: 1fr 280px;
+  /*
+   * `minmax(0, 1fr)` and not `1fr`. A grid track's default minimum is
+   * min-content, so a wide preview — a hero with a 72px display headline, a
+   * header with a full nav — pushes the track past the page instead of being
+   * constrained by it, and the whole playground scrolls sideways. Capping the
+   * minimum at 0 makes the track obey the container, which is what lets the
+   * component reflow the way it would on a real page.
+   */
+  grid-template-columns: minmax(0, 1fr) 280px;
 }
 
 .pg__stage {
@@ -697,6 +705,79 @@ input:focus {
   align-items: center;
   justify-content: center;
   padding: 56px 40px 40px;
+}
+
+/*
+ * Full-bleed stage for organisms (Playground.astro sets this from the derived
+ * tier). The default stage centres a shrink-wrapped element inside 40px of
+ * padding; a page section needs the whole column instead, top-aligned, with
+ * only the label's headroom kept so it does not sit on the component.
+ */
+/*
+ * A page section gets the whole row, with its controls stacked underneath
+ * rather than beside it. Sharing the row with a 280px control column leaves a
+ * hero, a header or a footer rendering at roughly two thirds of the measure —
+ * which is the one thing about an organism a preview has to get right.
+ */
+.pg--stacked {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.pg--stacked .pg__controls {
+  border-left: 0;
+  border-top: 1px solid var(--line);
+  max-height: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 28px;
+}
+
+/* Nothing to toggle — the stage takes the row rather than sitting beside a
+   280px column with a sentence in it. */
+.pg--no-controls {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.pg__stage--full {
+  display: block;
+  align-items: initial;
+  justify-content: initial;
+  padding: 32px 0 0;
+}
+
+/*
+ * `<f-po>` is the base library's Storybook-only "flexible placeholder" element
+ * (.storybook/components/f-po/f-po). Seven stories slot one in to stand for
+ * "whatever the consumer puts here". It lives under the library's Storybook
+ * config rather than in its published exports, so it is not a component this
+ * site can register — an unregistered custom element renders as bare inline
+ * text, which reads like a bug rather than like a placeholder. Giving it the
+ * dashed box it has in Storybook restores the meaning without importing it.
+ */
+[data-pg-example] f-po {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border: 1px dashed var(--line);
+  border-radius: 2px;
+  font: 400 11px/1 var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--fg-weak);
+  text-transform: uppercase;
+}
+
+.pg__stage--full > [data-pg-mount] {
+  width: 100%;
+  min-width: 0;
+}
+
+/* The stage is also a grid ITEM, so it needs the same escape from min-content
+   sizing that the track above does. */
+.pg__stage {
+  min-width: 0;
+  overflow: hidden;
 }
 
 .pg__stage-label {

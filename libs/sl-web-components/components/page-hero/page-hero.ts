@@ -8,16 +8,16 @@ import '../../../al-web-components/components/text-block/text-block';
 import styles from './page-hero.scss';
 
 /**
- * Component: sl-page-hero
+ * Component: al-page-hero
  *
  * Southleft's INTERIOR-page hero band — an eyebrow, a display heading, a lead
  * paragraph, and whatever the page adds below. Appears on 19 of the site's 24
  * pages.
  *
- * Not to be confused with `sl-hero`, the HOMEPAGE hero: that one is a
+ * Not to be confused with `al-hero`, the HOMEPAGE hero: that one is a
  * two-column landing composition with the grid texture behind it. They are
- * genuinely different shapes, and the site's own class names (`.sl-page-hero`
- * vs `.sl-hero`) already tell them apart — this keeps that distinction rather
+ * genuinely different shapes, and the site's own class names (`.al-page-hero`
+ * vs `.al-hero`) already tell them apart — this keeps that distinction rather
  * than overloading one name with two jobs.
  *
  * What it owns is the BAND: the vertical rhythm, and the eyebrow hugging its
@@ -26,11 +26,11 @@ import styles from './page-hero.scss';
  * have to restate it, not replaced by a grid of this component's own.
  *
  * ```html
- * <sl-page-hero label="Services" heading="Design systems that hold" dek="…">
+ * <al-page-hero label="Services" heading="Design systems that hold" dek="…">
  *   <al-layout direction="row" gap="md">
  *     <al-button>Book a call</al-button>
  *   </al-layout>
- * </sl-page-hero>
+ * </al-page-hero>
  * ```
  *
  * The three content props are CONTENT, not layout — they say what the band
@@ -46,13 +46,13 @@ import styles from './page-hero.scss';
  * @csspart heading - The `<al-heading>`.
  * @csspart dek - The lead paragraph.
  *
- * @cssproperty --sl-page-hero-padding-block - The band's vertical rhythm. Defaults to `clamp(3rem, 6vw, 5rem)`.
- * @cssproperty --sl-page-hero-max-width - The measure the band is capped to. Defaults to `85rem`, the site's own container width.
- * @cssproperty --sl-page-hero-padding-inline - The side gutters. Defaults to `clamp(1.25rem, 4vw, 3rem)`.
- * @cssproperty --sl-page-hero-gap - Gap between the stacked items. Defaults to `--al-theme-space-md`.
+ * @cssproperty --al-page-hero-padding-block - The band's vertical rhythm. Defaults to `clamp(3rem, 6vw, 5rem)`.
+ * @cssproperty --al-page-hero-max-width - The measure the band is capped to. Defaults to `85rem`, the site's own container width.
+ * @cssproperty --al-page-hero-padding-inline - The side gutters. Defaults to `clamp(1.25rem, 4vw, 3rem)`.
+ * @cssproperty --al-page-hero-gap - Gap between the stacked items. Defaults to `--al-theme-space-md`.
  */
 export class SLPageHero extends ALElement {
-  static el = 'sl-page-hero';
+  static el = 'al-page-hero';
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -108,6 +108,6 @@ if ((globalThis as any).alAutoRegistry === true && customElements.get(SLPageHero
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sl-page-hero': SLPageHero;
+    'al-page-hero': SLPageHero;
   }
 }

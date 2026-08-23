@@ -5,7 +5,7 @@ import '../../../al-web-components/components/layout/layout';
 
 const meta: Meta = {
   title: 'Molecules/Media Card',
-  component: 'sl-media-card',
+  component: 'al-media-card',
   parameters: { status: { type: 'beta' } },
   tags: ['autodocs'],
   argTypes: {
@@ -45,7 +45,7 @@ export const Article: Story = {
   },
   render: (args) => html`
     <div style="max-width: 24rem;">
-      <sl-media-card
+      <al-media-card
         variant=${args.variant}
         href=${args.href}
         image=${args.image}
@@ -56,7 +56,7 @@ export const Article: Story = {
         <span slot="meta" style="color: var(--al-theme-color-content-primary-default);">Design systems</span>
         <span slot="meta" aria-hidden="true">·</span>
         <time slot="meta" datetime="2026-08-12">Aug 12, 2026</time>
-      </sl-media-card>
+      </al-media-card>
     </div>
   `
 };
@@ -77,7 +77,7 @@ export const Work: Story = {
   },
   render: (args) => html`
     <div style="max-width: 24rem;">
-      <sl-media-card
+      <al-media-card
         variant=${args.variant}
         href=${args.href}
         image=${args.image}
@@ -88,7 +88,7 @@ export const Work: Story = {
         <span slot="tags">Design systems</span>
         <span slot="tags">Accessibility</span>
         <span slot="tags">Governance</span>
-      </sl-media-card>
+      </al-media-card>
     </div>
   `
 };
@@ -108,14 +108,14 @@ export const NoImage: Story = {
   },
   render: (args) => html`
     <div style="max-width: 24rem;">
-      <sl-media-card
+      <al-media-card
         variant=${args.variant}
         href=${args.href}
         fallback=${args.fallback}
         heading=${args.heading}
         excerpt=${args.excerpt}
         footer-label=${args.footerLabel}
-      ></sl-media-card>
+      ></al-media-card>
     </div>
   `
 };
@@ -136,7 +136,7 @@ export const Featured: Story = {
   },
   render: (args) => html`
     <div style="max-width: 40rem;">
-      <sl-media-card
+      <al-media-card
         variant=${args.variant}
         ?featured=${args.featured}
         href=${args.href}
@@ -148,7 +148,7 @@ export const Featured: Story = {
         <span slot="meta" style="color: var(--al-theme-color-content-primary-default);">Design systems</span>
         <span slot="meta" aria-hidden="true">·</span>
         <time slot="meta" datetime="2026-07-30">Jul 30, 2026</time>
-      </sl-media-card>
+      </al-media-card>
     </div>
   `
 };
@@ -171,11 +171,11 @@ export const InAGrid: Story = {
         { h: 'Middling title here', e: 'Two lines of summary copy, roughly speaking.' }
       ].map(
         (c) => html`
-          <sl-media-card href="#" image=${placeholder} heading=${c.h} excerpt=${c.e} footer-label="read →">
+          <al-media-card href="#" image=${placeholder} heading=${c.h} excerpt=${c.e} footer-label="read →">
             <span slot="meta" style="color: var(--al-theme-color-content-primary-default);">Insights</span>
             <span slot="meta" aria-hidden="true">·</span>
             <time slot="meta" datetime="2026-08-01">Aug 1, 2026</time>
-          </sl-media-card>
+          </al-media-card>
         `
       )}
     </al-layout>

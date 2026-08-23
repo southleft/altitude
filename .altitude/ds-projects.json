@@ -112,6 +112,17 @@
           "Foundations/"
         ]
       },
+      "$brandLibraryComment": "THE SECOND LAYER. `library` above is SHARED — Altitude documents all of @southleft/al-web-components and Southleft documents 21 of it — so nothing brand-specific can live there. The page sections that ARE Southleft (hero, cta band, marquee, media card, logo wall, section header, page hero, and the brand header/footer) are a separate package, @southleft/sl-web-components, built on top of Altitude. They had their own Storybook until it was retired on 2026-08-23, which is when they stopped being documented anywhere: apps/docs read one manifest. Declaring the layer here is what puts them back on /docs/southleft, and it is generic — any project may declare one.",
+      "brandLibrary": {
+        "workspace": "@southleft/sl-web-components",
+        "root": "libs/sl-web-components",
+        "tagPrefix": "al-",
+        "$supersedesComment": "SAME TAG, BRAND IMPLEMENTATION. A brand layer publishes al-* tags like everything else â one namespace, so a page is authored in al-* and never mixes two (spec 2026-08-23-one-al-namespace-across-brand-and-base). Where a brand component MODIFIES a base one they share the tag outright: `al-header` and `al-footer` here are Southleft's, and the app imports this package's module instead of the base one, so exactly one definition exists at runtime. `supersedes` maps the tag to itself to say that this is deliberate override rather than an accidental collision â the docs site documents the brand implementation under that tag and drops the base record for this project.",
+        "supersedes": {
+          "al-header": "al-header",
+          "al-footer": "al-footer"
+        }
+      },
       "prompts": {
         "skillName": "altitude-figma-sync",
         "skillPath": ".claude/skills/altitude-figma-sync/SKILL.md",

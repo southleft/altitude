@@ -23,7 +23,7 @@
   .sl-c-marquee {
     overflow: hidden;
     border-block: var(--al-theme-border-width) solid #{$sl-border-faint};
-    padding-block: var(--sl-marquee-padding-block, clamp(1.25rem, 3vw, 2.5rem));
+    padding-block: var(--al-marquee-padding-block, clamp(1.25rem, 3vw, 2.5rem));
     user-select: none;
   }
 
@@ -37,9 +37,9 @@
    */
   .sl-c-marquee__track {
     display: flex; /* 3 */
-    gap: var(--sl-marquee-gap, 3rem);
+    gap: var(--al-marquee-gap, 3rem);
     inline-size: max-content; /* 2 */
-    animation: sl-marquee var(--sl-marquee-duration, 36s) linear infinite;
+    animation: al-marquee var(--al-marquee-duration, 36s) linear infinite;
   }
 
   .sl-c-marquee:hover .sl-c-marquee__track,
@@ -55,7 +55,7 @@
   .sl-c-marquee__item {
     font-family: var(--al-font-family-secondary, Agrandir, sans-serif);
     font-variation-settings: 'wght' 650, 'wdth' 120;
-    font-size: var(--sl-marquee-font-size, clamp(2.5rem, 6vw, 5rem));
+    font-size: var(--al-marquee-font-size, clamp(2.5rem, 6vw, 5rem));
     line-height: 1;
     text-transform: uppercase;
     white-space: nowrap;
@@ -82,7 +82,7 @@
     text-transform: none;
   }
 
-  @keyframes sl-marquee {
+  @keyframes al-marquee {
     to {
       transform: translateX(-50%);
     }

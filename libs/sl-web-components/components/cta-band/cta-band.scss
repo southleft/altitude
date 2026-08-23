@@ -28,7 +28,7 @@
    * 3. The 72px grid, radially masked so it fades toward the edges. Sits at
    *    `z-index: 0` under content raised to `1` — NOT at `-1`. A negative index
    *    on a child of a `position: relative` parent paints behind the parent's
-   *    own background, which is why the site's page-level `.sl-hero__texture`
+   *    own background, which is why the site's page-level `.al-hero__texture`
    *    has a comment pinning it to a specific stacking context. Keeping both
    *    layers non-negative inside this component's own stacking context means
    *    it composes correctly wherever the band is dropped.
@@ -41,17 +41,17 @@
     position: relative;
     z-index: 1; /* 3 */
     inline-size: 100%;
-    max-inline-size: var(--sl-cta-band-max-width, 85rem);
+    max-inline-size: var(--al-cta-band-max-width, 85rem);
     margin-inline: auto;
     box-sizing: border-box;
     padding-inline: clamp(1.25rem, 4vw, 3rem);
-    padding-block: var(--sl-cta-band-padding-block, 6rem);
+    padding-block: var(--al-cta-band-padding-block, 6rem);
     text-align: center;
   }
 
   @media (min-width: 48rem) {
     .sl-c-cta-band__inner {
-      padding-block: var(--sl-cta-band-padding-block, 8rem);
+      padding-block: var(--al-cta-band-padding-block, 8rem);
     }
   }
 
@@ -72,14 +72,14 @@
     display: block;
     margin-inline: auto; /* 4 */
     margin-block-start: var(--al-theme-space);
-    max-inline-size: var(--sl-cta-band-heading-max-width, 48rem);
+    max-inline-size: var(--al-cta-band-heading-max-width, 48rem);
   }
 
   .sl-c-cta-band__dek {
     margin-inline: auto; /* 4 */
     margin-block-start: var(--al-theme-space);
     margin-block-end: 0;
-    max-inline-size: var(--sl-cta-band-dek-max-width, 32rem);
+    max-inline-size: var(--al-cta-band-dek-max-width, 32rem);
     font-size: $sl-text-lead;
     line-height: 1.55;
     color: var(--al-theme-color-content-default-weak);

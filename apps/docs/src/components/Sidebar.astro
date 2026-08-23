@@ -145,6 +145,43 @@ const systems = PROJECTS.map((candidate) => ({
     }
   </nav>
 
+  <!--
+    SCROLL CONTINUITY. `.sidebar__nav` is its own scroll container, and this is
+    a multi-page app: every component link is a full document load, so the nav
+    re-mounts at scrollTop 0. Clicking the last organism in a 28-item list
+    therefore threw the reader back to the top of the list, on the one
+    interaction where they are most likely to click a NEIGHBOURING item next.
+
+    Deliberately `is:inline`, and deliberately placed immediately after the
+    element it restores. A bundled Astro script is a deferred module: it would
+    run after first paint, so the reader would see the list at the top and then
+    watch it jump. Inline and in-flow, this runs while the parser is still
+    inside <aside>, before anything is painted.
+  -->
+  <script is:inline>
+    (() => {
+      const KEY = 'docs:sidebar-scroll';
+      const nav = document.currentScript.previousElementSibling;
+      if (!(nav instanceof HTMLElement)) return;
+
+      const saved = sessionStorage.getItem(KEY);
+      if (saved) nav.scrollTop = Number(saved) || 0;
+
+      // Written on the way out rather than on every scroll frame: one write per
+      // navigation, and `pagehide` (unlike `beforeunload`) also fires when the
+      // page goes into the back/forward cache.
+      const save = () => {
+        try {
+          sessionStorage.setItem(KEY, String(nav.scrollTop));
+        } catch {
+          /* private mode / quota — scroll continuity is not worth an error. */
+        }
+      };
+      addEventListener('pagehide', save);
+      nav.addEventListener('click', save);
+    })();
+  </script>
+
   <div class="sidebar__foot">
     <div class="sidebar__foot-row">
       <span class="micro">THEME / <span data-theme-label>LIGHT</span></span>

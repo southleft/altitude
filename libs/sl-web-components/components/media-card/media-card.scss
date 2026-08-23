@@ -52,7 +52,7 @@
   }
 
   .sl-c-media-card__image {
-    aspect-ratio: var(--sl-media-card-aspect-ratio, 16 / 9);
+    aspect-ratio: var(--al-media-card-aspect-ratio, 16 / 9);
     overflow: hidden;
     border-block-end: var(--al-theme-border-width) solid #{$sl-border-faint};
     background: var(--al-theme-color-background-default-strong);
@@ -83,7 +83,7 @@
     flex: 1; /* 4 */
     flex-direction: column;
     gap: var(--al-theme-space-sm);
-    padding: var(--sl-media-card-padding, var(--al-theme-space-lg));
+    padding: var(--al-media-card-padding, var(--al-theme-space-lg));
   }
 
   /**
@@ -106,8 +106,8 @@
     font-size: var(--al-font-size-14);
     line-height: 1.6;
     display: -webkit-box;
-    -webkit-line-clamp: var(--sl-media-card-line-clamp, 3);
-    line-clamp: var(--sl-media-card-line-clamp, 3);
+    -webkit-line-clamp: var(--al-media-card-line-clamp, 3);
+    line-clamp: var(--al-media-card-line-clamp, 3);
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -186,16 +186,16 @@
    * 9. Reflected host attribute, styled `:host([variant])` — the mechanism the
    *    ADR settled on, and the one `<al-theme brand mode>` already proves. It
    *    lives in the LIGHT DOM, so a page can also write
-   *    `sl-media-card[variant='work'] { … }` and have it apply, which a
+   *    `al-media-card[variant='work'] { … }` and have it apply, which a
    *    shadow-internal class could never offer.
    */
   :host([variant='work']) .sl-c-media-card__image {
-    aspect-ratio: var(--sl-media-card-aspect-ratio, 16 / 10); /* 9 */
+    aspect-ratio: var(--al-media-card-aspect-ratio, 16 / 10); /* 9 */
   }
 
   :host([variant='work']) .sl-c-media-card__excerpt {
-    -webkit-line-clamp: var(--sl-media-card-line-clamp, 2);
-    line-clamp: var(--sl-media-card-line-clamp, 2);
+    -webkit-line-clamp: var(--al-media-card-line-clamp, 2);
+    line-clamp: var(--al-media-card-line-clamp, 2);
   }
 
   /**
@@ -215,7 +215,7 @@
   /* -- featured --------------------------------------------------------- */
 
   :host([featured]) .sl-c-media-card__body {
-    padding: var(--sl-media-card-padding, var(--al-theme-space-xl));
+    padding: var(--al-media-card-padding, var(--al-theme-space-xl));
   }
 
   /**

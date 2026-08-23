@@ -39,6 +39,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { COMPONENTS, registryReport, STATS } from '../src/lib/registry.mjs';
+import { exampleReport } from '../src/lib/examples.mjs';
 import { CONTEXTS } from '../src/lib/context.mjs';
 
 const APP_ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -87,6 +88,21 @@ if (report.missingReactWrapper.length) {
 
 /* ------------------------------------------------- per design-system scope */
 
+/*
+ * PREVIEW COVERAGE. A component whose playground has no story-derived example
+ * falls back to the bare tag, which for anything content-bearing is an empty
+ * box. That is not a build failure — some components genuinely cannot be shown
+ * as static markup (a table driven by a `.data` property, an icon that needs the
+ * icon registry) — but it has to be VISIBLE, or "no designs are showing" is
+ * something a reader discovers before the build does.
+ */
+const examples = await exampleReport(COMPONENTS);
+console.log(`\nPlayground previews (rendered from each component's own story)`);
+console.log(`  with a real example : ${examples.withExample.length}/${COMPONENTS.length}`);
+for (const row of examples.without) {
+  console.log(`  ${row.tag.padEnd(22)} no example — ${row.reason}`);
+}
+
 console.log('\nDesign systems (.altitude/ds-projects.json)');
 
 const prefixes = new Map();
@@ -94,9 +110,19 @@ for (const { project, registry, site } of CONTEXTS) {
   const scope = registry.scope;
   const where = project.routePrefix === '' ? '/ (site root)' : `${project.routePrefix}/`;
 
+  // With a brand layer in play, "scope=21 declared" beside "28 pages" reads as
+  // a discrepancy. Spell the arithmetic out: allowlist, minus what the layer
+  // supersedes, plus the layer itself.
+  const superseded = Object.keys(registry.layer?.supersedes ?? {}).length;
+  const scopeLine = scope.scoped ? `${scope.requested} declared` : 'whole library';
+  const layerLine = registry.layer
+    ? ` + ${registry.layer.count} from ${registry.layer.workspace}` +
+      (superseded ? ` (${superseded} superseded)` : '')
+    : '';
+
   console.log(
     `  ${project.id.padEnd(12)}: ${String(registry.count).padStart(3)} pages at ${where.padEnd(14)} ` +
-      `brand=${project.brand} scope=${scope.scoped ? `${scope.requested} declared` : 'whole library'}`,
+      `brand=${project.brand} scope=${scopeLine}${layerLine}`,
   );
 
   if (registry.count === 0) {

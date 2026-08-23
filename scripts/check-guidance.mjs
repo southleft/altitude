@@ -59,10 +59,17 @@ const argOf = (flag) => {
 const DIST = path.resolve(argOf('--dist') ?? path.join(REPO_ROOT, 'dist', 'docs'));
 
 /**
- * The coverage floor. Raise it when guidance is authored for more components;
- * never lower it to make a red gate green.
+ * The coverage floor, counted in PAGES that render a panel — not in files.
+ *
+ * One base guidance file serves every project site that documents that
+ * component, and a brand layer's file serves exactly one, so pages is the unit
+ * that reflects what a reader can actually reach. 25 is where it stands after
+ * the nine Southleft brand components were authored.
+ *
+ * Raise it when guidance is written for more components; never lower it to make
+ * a red gate green.
  */
-const DEFAULT_MIN = 12;
+const DEFAULT_MIN = 25;
 const MIN = Number(argOf('--min') ?? DEFAULT_MIN);
 
 /** Every section the panel must render when it claims to have guidance. */
@@ -88,12 +95,35 @@ let sourceFiles = [];
 if (!fs.existsSync(GUIDANCE_DIR)) {
   failures.push(`No guidance directory at ${GUIDANCE_DIR}.`);
 } else {
-  sourceFiles = fs
-    .readdirSync(GUIDANCE_DIR)
-    .filter((name) => name.endsWith('.yaml') || name.endsWith('.yml'));
+  /*
+   * ONE LEVEL DEEP, because guidance for a BRAND LAYER lives in a subdirectory.
+   *
+   * A layer may override a base component, so a slug no longer identifies one
+   * component: `header.yaml` is Altitude's and `southleft/header.yaml` is
+   * Southleft's (see apps/docs/src/content.config.ts). A flat readdir missed
+   * every layer file, which showed up as "12 files on disk, 25 pages rendered a
+   * panel" — the scan silently not validating the files it could not see.
+   */
+  const walkGuidance = (dir, prefix = '') => {
+    const out = [];
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory()) {
+        out.push(...walkGuidance(path.join(dir, entry.name), `${prefix}${entry.name}/`));
+      } else if (/\.ya?ml$/.test(entry.name)) {
+        out.push(prefix + entry.name);
+      }
+    }
+    return out;
+  };
+  sourceFiles = walkGuidance(GUIDANCE_DIR);
+
   for (const file of sourceFiles) {
-    const slug = file.replace(/\.ya?ml$/, '');
-    if (!slugs.has(slug)) {
+    const id = file.replace(/\.ya?ml$/, '');
+    const slug = id.split('/').pop();
+    // A layer's slug is not in the base CEM (al-hero ships in the layer, not in
+    // Altitude), so a nested file is validated by the content config's own
+    // resolver at build time; here it is enough that the base ones resolve.
+    if (!id.includes('/') && !slugs.has(slug)) {
       failures.push(
         `guidance/${file} describes "${slug}", which is not a component in the CEM. ` +
           `Guidance may only be written for elements the library actually ships.`,
@@ -144,14 +174,39 @@ if (pagesBySlug.size === 0) {
     `No built component pages under ${DIST}. Run \`pnpm --filter al-app-docs build\` before this gate.`,
   );
 } else {
+  /*
+   * EVERY PAGE IS CHECKED ON ITS OWN, and it used to be otherwise.
+   *
+   * This loop joined every published copy of a slug into one document, on the
+   * reasoning that "every published copy must agree". That held while a slug
+   * named exactly one component. It stopped holding when a BRAND LAYER could
+   * override a base component: `/components/header` is Altitude's bare landmark
+   * and `/southleft/components/header` is Southleft's navigation bar — two
+   * different components sharing a slug, with correctly different guidance.
+   * Joined, they read as one page carrying both an authored panel and a "not
+   * authored" note, which the invariant below rejects.
+   *
+   * So each FILE is its own subject, and a page is identified in a message by
+   * its url path — the tag is no longer unique either.
+   */
   for (const component of COMPONENTS) {
-    const files = pagesBySlug.get(component.slug) ?? [];
-    if (files.length === 0) {
+    if (!pagesBySlug.has(component.slug)) {
       failures.push(`No built page for ${component.tag} anywhere under ${DIST}.`);
-      continue;
     }
-    // Every published copy must agree, so they are checked as one document.
-    const html = files.map((f) => fs.readFileSync(f, 'utf8')).join('\n');
+  }
+
+  const pageList = [];
+  for (const [slug, files] of pagesBySlug) {
+    for (const file of files) pageList.push({ slug, file });
+  }
+
+  for (const page of pageList) {
+    const where = page.file
+      .slice(DIST.length)
+      .replace(/\\/g, '/')
+      .replace(/\/index\.html$/, '');
+    const component = { slug: page.slug, tag: where };
+    const html = fs.readFileSync(page.file, 'utf8');
     const hasPanel = html.includes('data-guidance-panel');
     const hasMissingNote = html.includes('data-guidance-missing');
 
@@ -168,10 +223,10 @@ if (pagesBySlug.size === 0) {
       continue;
     }
     if (!hasPanel) {
-      missing.push(component.slug);
+      missing.push(where);
       continue;
     }
-    authored.push(component.slug);
+    authored.push(where);
 
     /* 3 — no partial panels. */
     for (const section of REQUIRED_SECTIONS) {
@@ -235,19 +290,27 @@ if (Number.isNaN(MIN)) {
   );
 }
 
-if (sourceFiles.length && authored.length && sourceFiles.length !== authored.length) {
-  notes.push(
-    `${sourceFiles.length} guidance files on disk but ${authored.length} pages rendered a panel — ` +
-      `a file is present that the site is not showing.`,
-  );
+/*
+ * A guidance FILE and a rendered PAGE stopped being one-to-one: a base file is
+ * shown on every project site that documents that component, and a brand
+ * layer's file on exactly one. Comparing the two counts now reports a
+ * discrepancy that is simply how the site works. What still matters is that
+ * every file reaches SOME page — a file the site never shows is real drift.
+ */
+const renderedSlugs = new Set([...citations.values()].map((citation) => citation.slug));
+const unusedFiles = sourceFiles.filter(
+  (file) => !renderedSlugs.has(file.replace(/\.ya?ml$/, '').split('/').pop()),
+);
+if (unusedFiles.length) {
+  notes.push(`guidance file(s) never rendered on any page: ${unusedFiles.join(', ')}.`);
 }
 
 /* -------------------------------------------------------------- report */
 
 console.log('Altitude docs — component guidance');
 console.log(`  components          : ${COMPONENTS.length}`);
-console.log(`  guidance authored   : ${authored.length} (floor ${MIN})`);
-console.log(`  not yet authored    : ${missing.length}`);
+console.log(`  pages with guidance : ${authored.length} (floor ${MIN})`);
+console.log(`  pages not authored  : ${missing.length}`);
 console.log(`  citations verified  : ${checkedCitations} of ${citations.size}`);
 if (authored.length) console.log(`  covered             : ${authored.join(', ')}`);
 

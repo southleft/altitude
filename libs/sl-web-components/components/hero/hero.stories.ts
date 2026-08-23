@@ -6,7 +6,7 @@ import '../../../al-web-components/components/layout/layout';
 
 const meta: Meta = {
   title: 'Organisms/Hero',
-  component: 'sl-hero',
+  component: 'al-hero',
   parameters: { status: { type: 'beta' }, layout: 'fullscreen' },
   tags: ['autodocs'],
   argTypes: {
@@ -133,12 +133,12 @@ export const Default: Story = {
   args: { kicker: '<southleft>', heading: HEADING, lead: LEAD },
   render: (args) => html`
     ${fixtureStyles}
-    <sl-hero kicker=${args.kicker} heading=${args.heading} lead=${args.lead}>
+    <al-hero kicker=${args.kicker} heading=${args.heading} lead=${args.lead}>
       <al-button slot="actions" href="#">Book a call</al-button>
       <al-button slot="actions" variant="tertiary" href="#">See how we work</al-button>
       <div slot="chips">${chips}</div>
       <div slot="aside">${terminal}</div>
-    </sl-hero>
+    </al-hero>
   `
 };
 
@@ -151,10 +151,10 @@ export const NoAside: Story = {
   args: { kicker: '<southleft>', heading: HEADING, lead: LEAD },
   render: (args) => html`
     ${fixtureStyles}
-    <sl-hero kicker=${args.kicker} heading=${args.heading} lead=${args.lead}>
+    <al-hero kicker=${args.kicker} heading=${args.heading} lead=${args.lead}>
       <al-button slot="actions" href="#">Book a call</al-button>
       <al-button slot="actions" variant="tertiary" href="#">See how we work</al-button>
-    </sl-hero>
+    </al-hero>
   `
 };
 
@@ -172,8 +172,8 @@ export const NoTexture: Story = {
         display: none;
       }
     </style>
-    <sl-hero class="plain" kicker=${args.kicker} heading=${args.heading} lead=${args.lead}>
+    <al-hero class="plain" kicker=${args.kicker} heading=${args.heading} lead=${args.lead}>
       <al-button slot="actions" href="#">Book a call</al-button>
-    </sl-hero>
+    </al-hero>
   `
 };

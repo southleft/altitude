@@ -59,7 +59,15 @@ const unobserved = rows.filter((row) => !row.figmaObserved && row.figmaSetName);
 {
   PARITY_AVAILABLE && rows.length === 0 && (
     <p class="empty-note">
-      NO DESIGN-SYSTEM PROJECT TRACKS THIS COMPONENT — IT IS OUTSIDE EVERY PROJECT’S DECLARED SCOPE.
+      {/* Two different situations reach this line and they must not be
+          conflated. A base-library component with no row is outside every
+          system's scope. A BRAND LAYER component always has a scope — the one
+          system it was built for — but only appears here once that system's
+          Figma file has a component set seeded for it in its parity manifest.
+          Saying "outside every scope" for the second case states something
+          false about a component that is very much in scope. */}
+      NO DESIGN-SYSTEM PROJECT TRACKS THIS COMPONENT AGAINST A FIGMA FILE — IT IS EITHER OUTSIDE EVERY
+      PROJECT’S DECLARED SCOPE, OR NOT YET SEEDED INTO ITS PROJECT’S PARITY MANIFEST.
     </p>
   )
 }

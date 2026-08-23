@@ -20,12 +20,30 @@
     border-block-start: var(--al-theme-border-width) solid #{$sl-border-faint}; /* 1 */
   }
 
+  /**
+   * THE FOOTER BOX. This component owns the `<footer>` landmark now; it no
+   * longer wraps `<al-footer>`, because it holds the `al-footer` TAG and an
+   * `<al-footer>` inside `<al-footer>` recurses forever.
+   *
+   * The base component's declarations, reproduced with their custom properties
+   * intact so `--al-footer-gap` / `-padding-block` / `-background` keep working
+   * for a consumer. Only the default block padding differs, and it differed
+   * before this change too — 3.5rem is the brand's rhythm, previously passed in
+   * through the same property.
+   */
   .sl-c-footer {
-    --al-footer-padding-block: var(--sl-footer-padding-block, 3.5rem);
+    display: flex;
+    flex-direction: column;
+    gap: var(--al-footer-gap, var(--al-theme-space-lg));
+    inline-size: 100%;
+    box-sizing: border-box;
+    padding-block: var(--al-footer-padding-block, 3.5rem);
+    color: var(--al-theme-color-content-default);
+    background: var(--al-footer-background, transparent);
   }
 
   .sl-c-footer__measure {
-    --al-layout-measure: var(--sl-footer-measure, 79rem);
+    --al-layout-measure: var(--al-footer-measure, 79rem);
     --al-layout-gutter: clamp(1.25rem, 4vw, 3rem);
   }
 
@@ -37,7 +55,7 @@
    *    responsive collapse alongside it.
    */
   .sl-c-footer__masthead {
-    --al-layout-template: var(--sl-footer-template, 1.4fr 1fr 1fr); /* 2 */
+    --al-layout-template: var(--al-footer-template, 1.4fr 1fr 1fr); /* 2 */
   }
 
   /**

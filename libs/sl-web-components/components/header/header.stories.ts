@@ -6,7 +6,7 @@ import '../../../al-web-components/components/button/button';
 
 const meta: Meta = {
   title: 'Organisms/Header',
-  component: 'sl-header',
+  component: 'al-header',
   parameters: { status: { type: 'beta' }, layout: 'fullscreen' },
   tags: ['autodocs'],
   argTypes: {
@@ -46,7 +46,7 @@ const sunIcon = html`<svg viewBox="0 0 24 24" width="16" height="16" fill="none"
  */
 export const Default: Story = {
   render: () => html`
-    <sl-header>
+    <al-header>
       <al-logo slot="brand" variant="southleft" href="#" aria-label="Southleft home"></al-logo>
       ${NAV.map(
         ([href, label], i) =>
@@ -56,7 +56,7 @@ export const Default: Story = {
       <button slot="actions" aria-label="Switch to paper (light) mode" title="Ink / paper">${sunIcon}</button>
       <al-button slot="actions" href="#">Book a call</al-button>
       ${NAV.map(([href, label], i) => html`<a slot="mobile" href=${href}>${label}<span>0${i + 1}</span></a>`)}
-    </sl-header>
+    </al-header>
     <div style="block-size: 60vh;"></div>
   `
 };
@@ -69,12 +69,12 @@ export const Default: Story = {
  */
 export const MenuOpen: Story = {
   render: () => html`
-    <sl-header menu-open>
+    <al-header menu-open>
       <al-logo slot="brand" variant="southleft" href="#" aria-label="Southleft home"></al-logo>
       ${NAV.map(([href, label]) => html`<a slot="nav" href=${href}>${label}</a>`)}
       <al-button slot="actions" href="#">Book a call</al-button>
       ${NAV.map(([href, label], i) => html`<a slot="mobile" href=${href}>${label}<span>0${i + 1}</span></a>`)}
-    </sl-header>
+    </al-header>
     <div style="block-size: 40vh;"></div>
   `
 };
@@ -85,10 +85,10 @@ export const MenuOpen: Story = {
  */
 export const Minimal: Story = {
   render: () => html`
-    <sl-header>
+    <al-header>
       <al-logo slot="brand" variant="southleft" href="#" aria-label="Southleft home"></al-logo>
       <al-button slot="actions" href="#">Book a call</al-button>
-    </sl-header>
+    </al-header>
     <div style="block-size: 40vh;"></div>
   `
 };

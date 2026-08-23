@@ -1,32 +1,52 @@
 import { html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ALElement } from '../../../al-web-components/components/ALElement';
-import '../../../al-web-components/components/header/header';
+/*
+ * The base `al-header` module is deliberately NOT imported.
+ *
+ * It used to be, because this component rendered `<al-header>` inside its
+ * own template. It no longer does — this component IS `al-header` now (one
+ * namespace; the brand implementation overrides the base one), so importing
+ * the base module would register the BASE class under that tag first and win,
+ * `customElements.define` being first-come and final. The symptom is exact and
+ * silent: every named slot below goes unassigned, because the element that
+ * actually upgraded has one unnamed slot, and the header renders empty.
+ */
 import '../../../al-web-components/components/layout/layout';
 import styles from './header.scss';
 
 /**
- * Component: sl-header
+ * Component: al-header
  *
  * Southleft's primary navigation bar — sticky, translucent, blurred, with pill
  * nav items, circular icon actions and a numbered mobile panel.
  *
- * Built ON `<al-header>`, not instead of it. Altitude owns the `<header>`
- * landmark, the sticky behaviour and the stacking context; this component feeds
- * it the brand's chrome through the custom properties `al-header` exposes for
- * exactly that purpose (`--al-header-background`, `--al-header-backdrop-filter`,
- * `--al-header-border-block-end`) and adds the parts that are Southleft's
- * alone: the pill treatment, the icon-button shape, and the mobile panel.
+ * IT *IS* `al-header` — the brand implementation of that tag, not a wrapper
+ * around Altitude's. It owns the `<header>` landmark, the sticky behaviour and
+ * the stacking context itself, and adds what is Southleft's alone: the pill
+ * treatment, the icon-button shape, and the mobile panel.
+ *
+ * It used to compose `<al-header>` and feed it chrome through
+ * `--al-header-background` / `-backdrop-filter` / `-border-block-end`. Taking
+ * the tag ended that (one namespace, spec
+ * 2026-08-23-one-al-namespace-across-brand-and-base): an `<al-header>` rendered
+ * inside `<al-header>` recurses forever. Those custom properties are still the
+ * public API — header.scss now READS them rather than passing them on — so a
+ * consumer overriding one is unaffected.
+ *
+ * An app gets this implementation, or Altitude's bare landmark, by importing
+ * one module or the other. Never both: `customElements.define` is first-come
+ * and final.
  *
  * ```html
- * <sl-header>
+ * <al-header>
  *   <al-logo slot="brand" variant="southleft" href="/"></al-logo>
  *   <a slot="nav" href="/work">Work</a>
  *   <a slot="nav" href="/insights" aria-current="page">Insights</a>
  *   <button slot="actions" aria-label="Ink / paper">…</button>
  *   <al-button slot="actions" href="/contact">Book a call</al-button>
  *   <a slot="mobile" href="/work">Work</a>
- * </sl-header>
+ * </al-header>
  * ```
  *
  * It earns its own tag by owning BEHAVIOUR, not arrangement: the mobile panel's
@@ -44,14 +64,14 @@ import styles from './header.scss';
  * @csspart menu-button - The button that opens the mobile panel.
  * @csspart panel - The mobile panel.
  *
- * @cssproperty --sl-header-height - Bar height. Defaults to `4rem`, and `5rem` from the `48rem` breakpoint up.
- * @cssproperty --sl-header-measure - The content column. Defaults to `79rem`.
- * @cssproperty --sl-header-background - Bar surface. Defaults to the page background at 85% so the blur reads.
+ * @cssproperty --al-header-height - Bar height. Defaults to `4rem`, and `5rem` from the `48rem` breakpoint up.
+ * @cssproperty --al-header-measure - The content column. Defaults to `79rem`.
+ * @cssproperty --al-header-background - Bar surface. Defaults to the page background at 85% so the blur reads.
  *
  * @fires sl-header-menu-toggle - When the mobile panel opens or closes. `detail.open` carries the new state.
  */
 export class SLHeader extends ALElement {
-  static el = 'sl-header';
+  static el = 'al-header';
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -63,7 +83,7 @@ export class SLHeader extends ALElement {
 
   /**
    * Whether the mobile panel is open. Reflected so the page can style against
-   * `sl-header[menu-open]` and so the state is inspectable in devtools rather
+   * `al-header[menu-open]` and so the state is inspectable in devtools rather
    * than trapped in the shadow root.
    */
   @property({ type: Boolean, reflect: true, attribute: 'menu-open' })
@@ -75,10 +95,12 @@ export class SLHeader extends ALElement {
   }
 
   render() {
-    const componentClassNames = this.componentClassNames('sl-c-header', {});
+    const componentClassNames = this.componentClassNames('sl-c-header', {
+      'al-is-sticky': this.sticky,
+    });
 
     return html`
-      <al-header ?sticky=${this.sticky} class="${componentClassNames}">
+      <header class="${componentClassNames}" part="bar-outer">
         <al-layout variant="constrained" class="sl-c-header__measure">
           <al-layout direction="row" align="center" justify="between" gap="lg" part="bar">
             <slot name="brand"></slot>
@@ -125,7 +147,7 @@ export class SLHeader extends ALElement {
             </al-layout>
           </al-layout>
         </nav>
-      </al-header>
+      </header>
     `;
   }
 }
@@ -134,8 +156,23 @@ if ((globalThis as any).alAutoRegistry === true && customElements.get(SLHeader.e
   customElements.define(SLHeader.el, SLHeader);
 }
 
-declare global {
-  interface HTMLElementTagNameMap {
-    'sl-header': SLHeader;
-  }
-}
+/*
+ * NO `HTMLElementTagNameMap` ENTRY, DELIBERATELY.
+ *
+ * This component OVERRIDES the base library's `al-header`: same tag, brand
+ * implementation, and the app imports one or the other (see the module note at
+ * the top of this file). `HTMLElementTagNameMap` cannot express that. It is a
+ * global interface keyed by tag name, both packages compile into one TypeScript
+ * program (this package reaches Altitude through relative paths, so its sources
+ * join the program — see the `exports` note in package.json), and two
+ * declarations of one key with different types is TS2717, a hard build error:
+ *
+ *   Property ''al-header'' must be of type 'ALHeader', but here has type 'SLHeader'.
+ *
+ * The base declaration therefore stands, and `document.querySelector('al-header')`
+ * types as `ALHeader` even where this implementation is the one registered.
+ * That is a known, narrow inaccuracy in the TYPES only — the runtime element is
+ * whichever module was imported. Anyone who needs this component's own type
+ * imports the exported `SLHeader` class directly, which is the reason it is
+ * exported.
+ */

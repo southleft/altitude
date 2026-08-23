@@ -10,7 +10,7 @@ interface MarqueeItem {
 }
 
 /**
- * Component: sl-marquee
+ * Component: al-marquee
  *
  * An endless belt of outline display type. Decorative reinforcement of the
  * page's message — it pauses on hover and stands still under reduced motion.
@@ -19,12 +19,12 @@ interface MarqueeItem {
  * itself, twice:
  *
  * ```html
- * <sl-marquee>
+ * <al-marquee>
  *   <span>Design Systems</span>
  *   <span data-variant="solid">×</span>
  *   <span>AI</span>
  *   <span data-variant="mono">— built by the people building the tools —</span>
- * </sl-marquee>
+ * </al-marquee>
  * ```
  *
  * WHY THE SLOT IS A DATA SOURCE, NOT THE RENDERED CONTENT. A seamless loop
@@ -43,13 +43,13 @@ interface MarqueeItem {
  *
  * @csspart track - The animated belt. Retune or stop the animation here.
  *
- * @cssproperty --sl-marquee-duration - One full cycle. Defaults to `36s`.
- * @cssproperty --sl-marquee-gap - Space between items. Defaults to `3rem`.
- * @cssproperty --sl-marquee-font-size - Display item size. Defaults to `clamp(2.5rem, 6vw, 5rem)`.
- * @cssproperty --sl-marquee-padding-block - The band's vertical rhythm. Defaults to `clamp(1.25rem, 3vw, 2.5rem)`.
+ * @cssproperty --al-marquee-duration - One full cycle. Defaults to `36s`.
+ * @cssproperty --al-marquee-gap - Space between items. Defaults to `3rem`.
+ * @cssproperty --al-marquee-font-size - Display item size. Defaults to `clamp(2.5rem, 6vw, 5rem)`.
+ * @cssproperty --al-marquee-padding-block - The band's vertical rhythm. Defaults to `clamp(1.25rem, 3vw, 2.5rem)`.
  */
 export class SLMarquee extends ALElement {
-  static el = 'sl-marquee';
+  static el = 'al-marquee';
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -57,7 +57,7 @@ export class SLMarquee extends ALElement {
 
   /**
    * Pause the belt. Reflected so a page can stop it from outside
-   * (`sl-marquee[paused]`) without reaching into the shadow root.
+   * (`al-marquee[paused]`) without reaching into the shadow root.
    */
   @property({ type: Boolean, reflect: true })
   accessor paused: boolean;
@@ -105,6 +105,6 @@ if ((globalThis as any).alAutoRegistry === true && customElements.get(SLMarquee.
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sl-marquee': SLMarquee;
+    'al-marquee': SLMarquee;
   }
 }

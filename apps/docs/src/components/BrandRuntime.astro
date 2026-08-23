@@ -1,0 +1,29 @@
+---
+/**
+ * Loads a BRAND LAYER's element registry, so its playgrounds upgrade too.
+ *
+ * `LiveRuntime.astro` loads the shared library every design system is built
+ * on. A design system may also declare a brand layer — a second package of
+ * components belonging to it alone (`brandLibrary` in
+ * `.altitude/ds-projects.json`) — and those elements live in a different
+ * package, so they need a second import or their tags never upgrade.
+ *
+ * WHY THE SPECIFIER IS TYPED HERE, when nothing else about a design system is.
+ * Everything else this site derives is DATA — a name, a route, a tag list — and
+ * data can come from the registry. An import is not data: a bare specifier has
+ * to be statically analysable for Vite to bundle it, and the package has to be
+ * a real dependency of this app (apps/docs/package.json) before it can be
+ * imported at all. A brand layer therefore costs one dependency and one line
+ * here — unlike a whole design system, which still costs only a registry entry.
+ * Shell.astro decides WHETHER to render this from `registry.layer`, so no page
+ * pays for a layer it does not document, and no project id is branched on.
+ *
+ * Requires `window.alAutoRegistry = true` inline in <head> (Shell.astro) — the
+ * layer's modules read it at module-eval time to decide whether to call
+ * `customElements.define`, exactly as the base library's do (.altitude/REGISTRATION.md).
+ */
+---
+
+<script>
+  import '@southleft/sl-web-components';
+</script>

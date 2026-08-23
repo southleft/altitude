@@ -10,33 +10,69 @@
   }
 
   /**
-   * The brand's chrome, fed to `<al-header>` through the custom properties it
-   * exposes.
+   * THE BAR. This component OWNS the `<header>` landmark and its chrome; it no
+   * longer wraps `<al-header>`.
    *
-   * 1. These MUST be custom properties, not plain declarations. `al-header`'s
-   *    `:host` is `display: contents`, so its shadow-root `<header>` is the
-   *    only box that exists — nothing out here can select it. Altitude added
-   *    `--al-header-background` / `-backdrop-filter` / `-border-block-end`
-   *    precisely because a translucent blurred bar was otherwise unreachable
-   *    from outside the boundary.
-   * 2. `--al-header-padding: 0` because the page measure is the nested
-   *    `<al-layout variant="constrained">`. Two sources of inline padding
-   *    would double the gutter.
+   * It used to, and fed the brand's look in through `--al-header-*`. That
+   * stopped being possible the moment this component took the `al-header` TAG
+   * (one namespace, spec 2026-08-23-one-al-namespace-across-brand-and-base):
+   * an `<al-header>` inside `<al-header>` is infinite recursion, not
+   * composition. So the base component's chrome is declared here directly.
+   *
+   * The `--al-header-*` custom properties are KEPT as the outer layer of every
+   * declaration, because they are the component's public API — a consumer
+   * overriding `--al-header-background` must keep working across the change.
+   * What was a value passed to another element is now a value read by this one.
+   *
+   * 1. Grid with `align-content: center`, the base component's arrangement
+   *    opinion, reproduced exactly: one column stretches the single child to
+   *    the full inline size, and centring the block is what makes it read as a
+   *    bar. Horizontal distribution stays the slotted `<al-layout>`'s business.
+   * 2. `min-block-size`, never `height` — a header that wraps to two rows on a
+   *    narrow screen must grow rather than clip.
+   * 3. Padding defaults to 0 because the page measure is the nested
+   *    `<al-layout variant="constrained">`; two sources of inline padding would
+   *    double the gutter.
+   * 4. `<al-input>` reads this to blend a search field's floating label into
+   *    the bar. Carried over from the base component for the same reason.
    */
   .sl-c-header {
-    --al-header-padding: 0; /* 2 */
-    --al-header-min-height: var(--sl-header-height, 4rem); /* 1 */
-    --al-header-background: var(
-      --sl-header-background,
+    display: grid; /* 1 */
+    align-content: center; /* 1 */
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-block-size: var(--al-header-min-height, var(--al-header-height, 4rem)); /* 2 */
+    padding: var(--al-header-padding, 0); /* 3 */
+    background-color: var(
+      --al-header-background,
       color-mix(in srgb, var(--al-theme-color-background-default-weak) 85%, transparent)
     );
-    --al-header-border-block-end: var(--al-theme-border-width) solid #{$sl-border-faint};
-    --al-header-backdrop-filter: blur(12px);
+    border-block-end: var(
+      --al-header-border-block-end,
+      var(--al-theme-border-width) solid #{$sl-border-faint}
+    );
+    backdrop-filter: var(--al-header-backdrop-filter, blur(12px));
+    --al-input-label-background: var(
+      --al-header-background,
+      var(--al-theme-color-background-default-weak)
+    ); /* 4 */
+  }
+
+  /**
+   * `sticky` is a reflected prop on this component now, not a prop forwarded to
+   * `<al-header>`. Same class name (`al-is-sticky`) and same declarations as the
+   * base component, so the behaviour a consumer already relies on is unchanged.
+   */
+  .sl-c-header.al-is-sticky {
+    position: sticky;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    z-index: var(--al-z-index-400);
   }
 
   @media (min-width: 48rem) {
     .sl-c-header {
-      --al-header-min-height: var(--sl-header-height, 5rem);
+      min-block-size: var(--al-header-min-height, var(--al-header-height, 5rem));
     }
   }
 
@@ -47,7 +83,7 @@
    *    1360px border-box container exactly (1360 − 2×48 = 1264px = 79rem).
    */
   .sl-c-header__measure {
-    --al-layout-measure: var(--sl-header-measure, 79rem); /* 3 */
+    --al-layout-measure: var(--al-header-measure, 79rem); /* 3 */
     --al-layout-gutter: clamp(1.25rem, 4vw, 3rem);
   }
 

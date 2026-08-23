@@ -24,16 +24,19 @@
 interface Props {
   /** The design-system project whose brand the stage renders under. */
   project: { brand: string };
+  /** Story-derived preview markup (lib/examples.mjs), or a reason there is none. */
+  example?: { ok: boolean; html?: string; styles?: string; story?: string; reason?: string } | null;
   component: {
     tag: string;
     react: string | null;
     name: string;
+    tier: string;
     props: { name: string; field: string; type: string; options: string[]; isBoolean: boolean }[];
     slots: { name: string; rawName: string }[];
   };
 }
 
-const { component, project } = Astro.props;
+const { component, project, example = null } = Astro.props;
 
 /* Controls, in the canvas's order: enums, then the content field, then flags. */
 const enums = component.props.filter((p) => p.options.length >= 2);
@@ -48,18 +51,83 @@ const hasDefaultSlot = component.slots.some((s) => s.rawName === '');
  * flag the live element had silently ignored. The snippet still prints the
  * attribute name, which is what a consumer writes in markup.
  */
+const initialText = component.name;
+
+/*
+ * ORGANISMS GET THE FULL WIDTH. An atom is a thing you look AT — a button
+ * centred in a generous stage reads correctly. An organism is a page SECTION:
+ * a hero, a header, a footer, a CTA band. Centring one in a padded box and
+ * letting it shrink-wrap misrepresents it, because the thing being documented
+ * is precisely how it behaves across the full measure. The tier is already
+ * derived from the component's own story title (registry.mjs), so this asks
+ * the taxonomy rather than listing tags.
+ */
+const fullBleed = component.tier === 'organisms';
+
+/*
+ * WHAT THE STAGE MOUNTS.
+ *
+ * With a story-derived example, the stage renders THAT — the component with the
+ * heading, the actions and the slotted content its author gave it, which is the
+ * markup the retired Storybook showed. `data-pg-el` is injected onto the first
+ * occurrence of the component's own tag so the controls below still drive the
+ * real element.
+ *
+ * Without one, the stage falls back to the manifest-only mount: the bare tag
+ * with its name as default-slot text. That is honest for an atom (a button with
+ * the word "Button" in it IS a button) and threadbare for anything whose
+ * content lives in named slots — which is exactly why the example path exists,
+ * and why the absence of one is stated on the page instead of left to look like
+ * a broken preview.
+ */
+const hasExample = Boolean(example?.ok && example.html);
+const exampleHtml = hasExample
+  ? example.html.replace(
+      // `\\s` and not `\s`: inside a template literal an unrecognised escape
+      // collapses to the bare character, so `[\s/>]` would compile to `[s/>]`
+      // and match `<sl-heros…`. The lookahead keeps `<al-list` from matching
+      // `<al-list-item`.
+      new RegExp(`<${component.tag}(?=[\\s/>])`),
+      `<${component.tag} data-pg-el`,
+    )
+  : '';
+const mountHtml = hasExample
+  ? exampleHtml
+  : `<${component.tag} data-pg-el>${hasDefaultSlot ? initialText : ''}</${component.tag}>`;
+
+/*
+ * The CONTENT field edits default-slot text by assigning `textContent`, which
+ * would delete every slotted child. With an example on the stage there are
+ * children worth keeping, so the field is withheld rather than shipped as a
+ * control that destroys the preview on first keystroke.
+ */
+const showTextControl = hasDefaultSlot && !hasExample;
+
+/** Counted from what is actually rendered, so the header cannot overstate it. */
+const controlCount = enums.length + flags.length + (showTextControl ? 1 : 0);
+
+/*
+ * The snippet is the markup on the stage, not a reconstruction of it. When an
+ * example is showing, that means the story's own markup — so what a reader
+ * copies is what they are looking at, slots and all. The enum/flag controls
+ * still apply on top, merged into the root element's opening tag by
+ * `mergeRootAttrs` in the script below.
+ */
 const config = {
   tag: component.tag,
   /** The brand the stage inherits, restated in the copyable HTML snippet. */
   brand: project.brand,
   react: component.react,
-  hasDefaultSlot,
+  hasDefaultSlot: showTextControl,
+  hasExample,
+  /* The story's markup WITHOUT `data-pg-el` — that attribute is this
+     playground's internal handle on the element, not something a reader
+     copying the snippet should paste into their app. */
+  exampleHtml: hasExample ? example.html : '',
+  exampleStory: hasExample ? example.story : null,
   enums: enums.map((p) => ({ name: p.name, field: p.field, options: p.options })),
   flags: flags.map((p) => ({ name: p.name, field: p.field })),
 };
-
-const initialText = component.name;
-const controlCount = enums.length + flags.length + (hasDefaultSlot ? 1 : 0);
 ---
 
 <div class="section-rule">
@@ -67,23 +135,23 @@ const controlCount = enums.length + flags.length + (hasDefaultSlot ? 1 : 0);
   <span>{controlCount} {controlCount === 1 ? 'CONTROL' : 'CONTROLS'}</span>
 </div>
 
-<div class="pg">
-  <div class="pg__stage blueprint blueprint--sm">
+<div class:list={['pg', fullBleed && 'pg--stacked', controlCount === 0 && 'pg--no-controls']}>
+  <div class:list={['pg__stage', 'blueprint', 'blueprint--sm', fullBleed && 'pg__stage--full']}>
     <span class="pg__stage-label">PREVIEW / {component.tag} / BRAND {project.brand.toUpperCase()}</span>
-    <div data-pg-mount set:html={`<${component.tag} data-pg-el>${
-      hasDefaultSlot ? initialText : ''
-    }</${component.tag}>`} />
+    <div data-pg-mount data-pg-example={hasExample ? '' : undefined} set:html={mountHtml} />
   </div>
 
-  <div class="pg__controls">
-    {
-      controlCount === 0 && (
-        <p class="pg__control-label">
-          NO ENUM OR BOOLEAN PROPS IN THE MANIFEST — NOTHING TO TOGGLE.
-        </p>
-      )
-    }
+  {/* Fixture styles the story ships for its slotted content. Already prefixed
+       with `[data-pg-example]` by lib/examples.mjs, so `.chip` here cannot
+       reach `.chip` anywhere else on the page. */}
+  {hasExample && example.styles && <style set:html={example.styles} />}
 
+  {/* A control column with nothing in it is 280px of dead width beside the one
+      thing the reader came to look at. When the manifest declares no enum and
+      no boolean prop there is nothing to toggle, so the column is dropped and
+      the stage takes the row (`pg--no-controls`). The section rule already says
+      "0 CONTROLS", so nothing is hidden by removing it. */}
+  <div class="pg__controls" hidden={controlCount === 0}>
     {
       config.enums.map((control) => (
         <div>
@@ -117,7 +185,7 @@ const controlCount = enums.length + flags.length + (hasDefaultSlot ? 1 : 0);
     }
 
     {
-      hasDefaultSlot && (
+      showTextControl && (
         <div>
           <div class="pg__control-label">CONTENT</div>
           <input class="pg__text" type="text" value={initialText} data-pg-text />
@@ -181,6 +249,9 @@ const controlCount = enums.length + flags.length + (hasDefaultSlot ? 1 : 0);
       brand: string;
       react: string | null;
       hasDefaultSlot: boolean;
+      hasExample: boolean;
+      exampleHtml: string;
+      exampleStory: string | null;
       enums: { name: string; field: string; options: string[] }[];
       flags: { name: string; field: string }[];
     };
@@ -204,12 +275,43 @@ const controlCount = enums.length + flags.length + (hasDefaultSlot ? 1 : 0);
       return pairs;
     };
 
+    /**
+     * Apply the control state to the opening tag of the story's markup.
+     *
+     * The example is a whole tree — a hero with two buttons, a chip row and a
+     * terminal panel in its slots — and the controls only ever change the ROOT
+     * element's attributes. So the snippet keeps the story's markup verbatim and
+     * rewrites just the first opening tag, which is also the element
+     * `data-pg-el` is on and the one the live stage is mutating. Attribute
+     * values are escaped; an attribute the story already set is replaced rather
+     * than duplicated.
+     */
+    const mergeRootAttrs = (markup: string, tag: string, pairs: [string, string | true][]) => {
+      const open = new RegExp(`<${tag}(\\s[^>]*?)?(/?)>`);
+      const match = markup.match(open);
+      if (!match) return markup;
+      let attrs = match[1] ?? '';
+      for (const [name, value] of pairs) {
+        const existing = new RegExp(`\\s${name}(="[^"]*")?`, 'g');
+        attrs = attrs.replace(existing, '');
+        attrs += value === true ? ` ${name}` : ` ${name}="${String(value).replace(/"/g, '&quot;')}"`;
+      }
+      return markup.replace(open, `<${tag}${attrs}${match[2]}>`);
+    };
+
     const snippet = (open: string, close: string) => {
-      const attrs = attrPairs()
+      const pairs = attrPairs();
+      const attrs = pairs
         .map(([name, value]) => (value === true ? ` ${name}` : ` ${name}="${value}"`))
         .join('');
       const body = config.hasDefaultSlot ? state.text : '';
-      const element = `<${open}${attrs}>${body}</${close}>`;
+      // The HTML tab shows what is actually on the stage. The React tab does
+      // not: a wrapper takes children as JSX, so the story's slotted markup
+      // does not transliterate, and a bare element is the honest thing to show.
+      const element =
+        config.hasExample && state.tab !== 'react'
+          ? mergeRootAttrs(config.exampleHtml, config.tag, pairs)
+          : `<${open}${attrs}>${body}</${close}>`;
       // The HTML path ships the theme host too: pasted on its own, outside an
       // <al-theme>, the element renders under the base token bundle rather than
       // this design system's brand. The React path does not — an app using the

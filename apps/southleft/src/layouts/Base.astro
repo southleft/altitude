@@ -182,8 +182,23 @@ const ldNodes = [organizationLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : 
       import '@southleft/al-web-components/components/card';
       import '@southleft/al-web-components/components/chip';
       import '@southleft/al-web-components/components/divider';
-      import '@southleft/al-web-components/components/footer';
-      import '@southleft/al-web-components/components/header';
+      /*
+       * THE BRAND IMPLEMENTATIONS OF `al-footer` AND `al-header`.
+       *
+       * Same tag as the base library's, different component: Southleft's header
+       * is a full navigation bar and its footer a three-column masthead, where
+       * Altitude's are bare landmarks. The design system declares that override
+       * in `.altitude/ds-projects.json` (brandLibrary.supersedes), and THIS is
+       * where it takes effect — `customElements.define` is first-come and
+       * cannot be undone, so the override is expressed by importing one module
+       * instead of the other rather than by any runtime negotiation.
+       *
+       * Do not add the base `@southleft/al-web-components/components/header`
+       * back alongside this. Whichever evaluated first would win, and the
+       * loser's markup would render into an element that never upgrades.
+       */
+      import '@southleft/sl-web-components/components/footer';
+      import '@southleft/sl-web-components/components/header';
       import '@southleft/al-web-components/components/heading';
       import '@southleft/al-web-components/components/link';
       import '@southleft/al-web-components/components/list-item';

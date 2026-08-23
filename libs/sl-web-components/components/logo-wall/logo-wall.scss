@@ -12,7 +12,7 @@
   /**
    * 1. Arrangement is `<al-layout direction="row" wrap>` — NOT a
    *    `display: flex` of this component's own, even though the site's
-   *    `.sl-logo-wall` is one. The brand's rhythm is asymmetric (48px between
+   *    `.al-logo-wall` is one. The brand's rhythm is asymmetric (48px between
    *    rows, 56px between marks), which looks at first like something a single
    *    `gap` cannot express and therefore like a reason to hand-roll the flex.
    *    It is not: CSS `gap` takes TWO values, `row-gap column-gap`, so feeding
@@ -21,7 +21,7 @@
    *    fix rather than the exception.
    */
   .sl-c-logo-wall {
-    --al-layout-gap: var(--sl-logo-wall-gap, 3rem 3.5rem); /* 1 */
+    --al-layout-gap: var(--al-logo-wall-gap, 3rem 3.5rem); /* 1 */
   }
 
   /**
@@ -34,11 +34,11 @@
    *    to line up logos of wildly different aspect ratios.
    */
   ::slotted(img) {
-    block-size: var(--sl-logo-wall-height, 1.75rem); /* 3 */
+    block-size: var(--al-logo-wall-height, 1.75rem); /* 3 */
     inline-size: auto; /* 3 */
     display: block;
     filter: brightness(0) invert(1); /* 2 */
-    opacity: var(--sl-logo-wall-opacity, 0.5);
+    opacity: var(--al-logo-wall-opacity, 0.5);
     transition: opacity var(--al-theme-animation-duration) var(--al-theme-animation-timing);
   }
 
@@ -53,7 +53,7 @@
 
   @media (min-width: 48rem) {
     ::slotted(img) {
-      block-size: var(--sl-logo-wall-height, 2rem); /* 3 */
+      block-size: var(--al-logo-wall-height, 2rem); /* 3 */
     }
   }
 }

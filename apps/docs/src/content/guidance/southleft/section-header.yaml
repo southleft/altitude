@@ -1,0 +1,35 @@
+purpose: 'The rule that opens a section inside a page: an optional ordinal, a label, the section
+  heading, an optional dek, and an optional link out. It is the punctuation between a page''s
+  parts.'
+whenToUse:
+- A page has several distinct sections and a reader needs to see where one ends and the next
+  begins.
+- The section has somewhere to go in full, an archive or a listing page, which becomes the
+  `link-href` and `link-label` pair.
+whenNotToUse:
+- text: You need the heading band at the very top of an interior page rather than a divider
+    between sections.
+  instead: page-hero
+- text: All you actually want is space between two blocks. Spacing is arrangement and belongs
+    to the layout primitive, not to a component.
+  instead: layout
+dos:
+- Number sections with `index` only when the order is meaningful; an ordinal on an unordered
+  set implies a sequence that does not exist.
+- Keep `heading-tag` consistent down a page so the section headings form one flat level rather
+  than a drifting hierarchy.
+donts:
+- Do not repeat the page title as the first section heading. The band above already said it,
+  and the repetition reads as a rendering bug.
+- Do not use the dek for body copy; it is a one-line orientation, and anything longer belongs
+  in the section itself.
+accessibility:
+- The link is a real anchor with its own label, so `link-label` has to make sense read on
+  its own. A screen-reader user may reach it out of context in a list of links.
+content:
+- The label is the section's kind; the heading is what this particular section says. Do not
+  collapse the two into one string.
+sources:
+- path: libs/sl-web-components/components/section-header/section-header.ts
+  contains: export class SLSectionHeader
+  note: The component this guidance describes.

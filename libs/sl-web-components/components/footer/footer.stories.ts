@@ -6,7 +6,7 @@ import '../../../al-web-components/components/button/button';
 
 const meta: Meta = {
   title: 'Organisms/Footer',
-  component: 'sl-footer',
+  component: 'al-footer',
   parameters: { status: { type: 'beta' }, layout: 'fullscreen' },
   tags: ['autodocs'],
   argTypes: {
@@ -35,7 +35,7 @@ export const Default: Story = {
     copyright: '© 2026 Southleft, LLC. All rights reserved.'
   },
   render: (args) => html`
-    <sl-footer quote=${args.quote} cite=${args.cite} copyright=${args.copyright}>
+    <al-footer quote=${args.quote} cite=${args.cite} copyright=${args.copyright}>
       <al-logo slot="brand" variant="southleft" href="#" aria-label="Southleft home"></al-logo>
       <p slot="brand" style="margin: 0; color: var(--al-theme-color-content-default-weak); font-size: 0.875rem;">
         Design systems consulting, engineering, and AI integration — from the team behind Figma Console MCP and Story
@@ -55,7 +55,7 @@ export const Default: Story = {
 
       <a slot="legal" href="#">Privacy policy</a>
       <a slot="legal" href="#">Cookie policy</a>
-    </sl-footer>
+    </al-footer>
   `
 };
 
@@ -66,31 +66,31 @@ export const Default: Story = {
 export const NoQuote: Story = {
   args: { copyright: '© 2026 Southleft, LLC.' },
   render: (args) => html`
-    <sl-footer copyright=${args.copyright}>
+    <al-footer copyright=${args.copyright}>
       <al-logo slot="brand" variant="southleft" href="#" aria-label="Southleft home"></al-logo>
       <div slot="columns">
         <h2 style="margin:0; font-family: var(--sl-font-mono); font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--al-theme-color-content-default-weak);">&lt;sitemap&gt;</h2>
         ${SITEMAP.slice(0, 4).map((l) => html`<a href="#" style="color: var(--al-theme-color-content-default-weak); text-decoration: none; font-size: 0.875rem;">${l}</a>`)}
       </div>
       <a slot="legal" href="#">Privacy policy</a>
-    </sl-footer>
+    </al-footer>
   `
 };
 
 /**
  * The track list is a custom property, so a two-column masthead needs no new
- * component — just a different `--sl-footer-template`.
+ * component — just a different `--al-footer-template`.
  */
 export const TwoColumn: Story = {
   args: { copyright: '© 2026 Southleft, LLC.' },
   render: (args) => html`
-    <sl-footer style="--sl-footer-template: 2fr 1fr;" copyright=${args.copyright}>
+    <al-footer style="--al-footer-template: 2fr 1fr;" copyright=${args.copyright}>
       <al-logo slot="brand" variant="southleft" href="#" aria-label="Southleft home"></al-logo>
       <div slot="columns">
         <h2 style="margin:0; font-family: var(--sl-font-mono); font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--al-theme-color-content-default-weak);">&lt;elsewhere&gt;</h2>
         ${ELSEWHERE.map((l) => html`<a href="#" style="color: var(--al-theme-color-content-default-weak); text-decoration: none; font-size: 0.875rem;">${l}</a>`)}
       </div>
       <a slot="legal" href="#">Privacy policy</a>
-    </sl-footer>
+    </al-footer>
   `
 };

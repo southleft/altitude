@@ -32,10 +32,14 @@ import { getCollection } from 'astro:content';
 import { assertPointsAtRealComponents } from '../content.config';
 
 interface Props {
-  slug: string;
+  /** The component record — its library decides which guidance file applies. */
+  component: any;
+  /** The design system rendering the page, for the brand-layer lookup. */
+  project: any;
 }
 
-const { slug } = Astro.props;
+const { component, project } = Astro.props;
+const slug = component.slug;
 
 /**
  * Sibling-component links are derived from the CURRENT url rather than from a
@@ -53,7 +57,25 @@ assertPointsAtRealComponents(all as any);
 // Looked up in the loaded collection rather than with `getEntry`, which logs a
 // warning for every miss — and with 68 components and guidance authored for a
 // subset, a miss is the normal case, not an error.
-const g = all.find((item) => item.id === slug)?.data;
+/*
+ * WHICH FILE APPLIES, and why a bare slug is not enough.
+ *
+ * A brand layer may override a base component, so `header` names two different
+ * components depending on the site: Altitude's bare landmark, and the brand's
+ * navigation bar. Guidance for the layer therefore lives under the project that
+ * owns it (`guidance/southleft/header.yaml`, see content.config.ts), and this
+ * page asks for that file only when the component it is rendering actually came
+ * from that layer.
+ *
+ * No fallback to the base file for a layer component: inheriting Altitude's
+ * advice about a component the brand replaced is precisely the wrong answer,
+ * and "not yet authored" is the honest one until someone writes it.
+ */
+const fromBrandLayer =
+  project.brandLayer && component.libraryWorkspace === project.brandLayer.workspace;
+const entryId = fromBrandLayer ? `${project.id}/${slug}` : slug;
+
+const g = all.find((item) => item.id === entryId)?.data;
 
 /** Guidance coverage, so the panel can say where this page sits. */
 const authored = all.length;

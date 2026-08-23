@@ -6,7 +6,7 @@ import '../../../al-web-components/components/heading/heading';
 import styles from './media-card.scss';
 
 /**
- * Component: sl-media-card
+ * Component: al-media-card
  *
  * The linked card the site uses for both insights posts and case studies: a
  * flush-to-edge image, a body, and a mono footer cue. Shared by `ArticleCard`
@@ -23,7 +23,7 @@ import styles from './media-card.scss';
  * from `al-card`.
  *
  * ```html
- * <sl-media-card
+ * <al-media-card
  *   variant="work"
  *   href="/projects/petsmart"
  *   image="/img/petsmart.webp"
@@ -33,7 +33,7 @@ import styles from './media-card.scss';
  * >
  *   <span slot="tags">Design systems</span>
  *   <span slot="tags">Accessibility</span>
- * </sl-media-card>
+ * </al-media-card>
  * ```
  *
  * @slot meta - The meta row above the heading — category, date. Laid out as a row; each node is its own item.
@@ -47,12 +47,12 @@ import styles from './media-card.scss';
  * @csspart excerpt - The clamped excerpt paragraph.
  * @csspart footer - The mono footer cue.
  *
- * @cssproperty --sl-media-card-aspect-ratio - The media well's ratio. Defaults to `16 / 9`, or `16 / 10` under `variant="work"`.
- * @cssproperty --sl-media-card-padding - The body's padding. Defaults to `--al-theme-space-lg`, or `-xl` when `featured`.
- * @cssproperty --sl-media-card-line-clamp - Lines the excerpt is clamped to. Defaults to `3`, or `2` under `variant="work"`.
+ * @cssproperty --al-media-card-aspect-ratio - The media well's ratio. Defaults to `16 / 9`, or `16 / 10` under `variant="work"`.
+ * @cssproperty --al-media-card-padding - The body's padding. Defaults to `--al-theme-space-lg`, or `-xl` when `featured`.
+ * @cssproperty --al-media-card-line-clamp - Lines the excerpt is clamped to. Defaults to `3`, or `2` under `variant="work"`.
  */
 export class SLMediaCard extends ALElement {
-  static el = 'sl-media-card';
+  static el = 'al-media-card';
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -60,7 +60,7 @@ export class SLMediaCard extends ALElement {
 
   /**
    * Which of the two card anatomies to render. Reflected so it is inspectable
-   * in devtools, targetable as `sl-media-card[variant='work']` from the page,
+   * in devtools, targetable as `al-media-card[variant='work']` from the page,
    * and serialized through Declarative Shadow DOM.
    */
   @property({ reflect: true })
@@ -176,6 +176,6 @@ if ((globalThis as any).alAutoRegistry === true && customElements.get(SLMediaCar
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sl-media-card': SLMediaCard;
+    'al-media-card': SLMediaCard;
   }
 }

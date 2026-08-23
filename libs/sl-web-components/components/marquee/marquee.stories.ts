@@ -4,7 +4,7 @@ import './marquee';
 
 const meta: Meta = {
   title: 'Organisms/Marquee',
-  component: 'sl-marquee',
+  component: 'al-marquee',
   parameters: { status: { type: 'beta' }, layout: 'fullscreen' },
   tags: ['autodocs'],
   argTypes: { paused: { control: 'boolean' } }
@@ -19,7 +19,7 @@ type Story = StoryObj;
  */
 export const Default: Story = {
   render: () => html`
-    <sl-marquee>
+    <al-marquee>
       <span>Design Systems</span>
       <span data-variant="solid">×</span>
       <span>AI</span>
@@ -28,22 +28,22 @@ export const Default: Story = {
       <span data-variant="solid">&lt;S&gt;</span>
       <span>Parity</span>
       <span data-variant="mono">// zero rogue divs</span>
-    </sl-marquee>
+    </al-marquee>
   `
 };
 
 /**
  * `paused` is reflected, so a page can stop the belt from outside with
- * `sl-marquee[paused]` — no reaching into the shadow root.
+ * `al-marquee[paused]` — no reaching into the shadow root.
  */
 export const Paused: Story = {
   render: () => html`
-    <sl-marquee paused>
+    <al-marquee paused>
       <span>Design Systems</span>
       <span data-variant="solid">×</span>
       <span>AI</span>
       <span data-variant="mono">— paused for inspection —</span>
-    </sl-marquee>
+    </al-marquee>
   `
 };
 
@@ -53,12 +53,12 @@ export const Paused: Story = {
  */
 export const Faster: Story = {
   render: () => html`
-    <sl-marquee style="--sl-marquee-duration: 12s; --sl-marquee-gap: 2rem;">
+    <al-marquee style="--al-marquee-duration: 12s; --al-marquee-gap: 2rem;">
       <span>Ship</span>
       <span data-variant="solid">→</span>
       <span>Measure</span>
       <span data-variant="solid">→</span>
       <span>Repeat</span>
-    </sl-marquee>
+    </al-marquee>
   `
 };

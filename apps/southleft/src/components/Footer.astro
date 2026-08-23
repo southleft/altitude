@@ -74,11 +74,14 @@ const STATE_CHIPS: { label: string; value: string; key?: string }[] = [
 ];
 ---
 
-<al-footer class="sl-footer">
-  <al-layout variant="constrained" class="sl-measure">
-    <al-layout variant="grid" gap="xl" noCollapse class="sl-footer__cols">
+<al-footer
+  class="sl-footer"
+  quote="“If I cannot do great things, I can do small things in a great way.”"
+  cite="— attributed to Dr. Martin Luther King Jr."
+  copyright={`© ${year} Southleft, LLC. All rights reserved.`}
+>
       <!-- Column A — brand -->
-      <div class="sl-footer__brand sl-measure-md">
+  <div slot="brand" class="sl-footer__brand sl-measure-md">
         <!-- `al-logo` renders its own `<a href>`; the label goes on the host,
              never on a second wrapping anchor (axe `nested-interactive`). -->
         <al-logo
@@ -125,7 +128,7 @@ const STATE_CHIPS: { label: string; value: string; key?: string }[] = [
       </div>
 
       <!-- Column B — sitemap -->
-      <nav class="sl-footer__col" aria-label="Footer">
+  <nav slot="columns" class="sl-footer__col" aria-label="Footer">
         <h2 class="sl-kicker">&lt;sitemap&gt;</h2>
         <ul class="sl-footer__links al-u-theme-typography-body-sm">
           {
@@ -141,7 +144,7 @@ const STATE_CHIPS: { label: string; value: string; key?: string }[] = [
       </nav>
 
       <!-- Column C — elsewhere + legacy -->
-      <div class="sl-footer__col">
+  <div slot="columns" class="sl-footer__col">
         <h2 class="sl-kicker">&lt;elsewhere&gt;</h2>
         <ul class="sl-footer__links al-u-theme-typography-body-sm">
           {
@@ -165,23 +168,13 @@ const STATE_CHIPS: { label: string; value: string; key?: string }[] = [
           </li>
         </ul>
       </div>
-    </al-layout>
+  <!-- The pull quote and the copyright line are PROPS on the brand footer, not
+       markup: the component renders the blockquote, the <cite> and the legal
+       bar itself. Only the legal LINKS stay here, because which links a site
+       has is the site's business. -->
+  <a slot="legal" href={withBase('/privacy-policy')} class="sl-footer__link">Privacy policy</a>
+  <a slot="legal" href={withBase('/cookie-policy')} class="sl-footer__link">Cookie policy</a>
 
-    <blockquote class="sl-footer__quote al-u-theme-typography-body-sm">
-      “If I cannot do great things, I can do small things in a great way.”
-      <cite class="sl-footer__cite al-u-theme-typography-body-xs">
-        — attributed to Dr. Martin Luther King Jr.
-      </cite>
-    </blockquote>
-
-    <div class="sl-footer__bar al-u-theme-typography-body-xs">
-      <p class="sl-footer__copyright">© {year} Southleft, LLC. All rights reserved.</p>
-      <al-layout direction="row" gap="md">
-        <a href={withBase('/privacy-policy')} class="sl-footer__link">Privacy policy</a>
-        <a href={withBase('/cookie-policy')} class="sl-footer__link">Cookie policy</a>
-      </al-layout>
-    </div>
-  </al-layout>
 </al-footer>
 
 <style>

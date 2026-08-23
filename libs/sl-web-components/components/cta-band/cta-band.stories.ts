@@ -6,7 +6,7 @@ import '../../../al-web-components/components/layout/layout';
 
 const meta: Meta = {
   title: 'Organisms/CTA Band',
-  component: 'sl-cta-band',
+  component: 'al-cta-band',
   parameters: { status: { type: 'beta' }, layout: 'fullscreen' },
   tags: ['autodocs'],
   argTypes: {
@@ -31,12 +31,12 @@ export const Default: Story = {
     kicker: '<cta>'
   },
   render: (args) => html`
-    <sl-cta-band heading=${args.heading} dek=${args.dek} kicker=${args.kicker}>
+    <al-cta-band heading=${args.heading} dek=${args.dek} kicker=${args.kicker}>
       <al-layout direction="row" wrap gap="md" align="center" justify="center">
         <al-button href="#">Book a call</al-button>
         <al-button variant="tertiary" href="#">Ask about a workshop</al-button>
       </al-layout>
-    </sl-cta-band>
+    </al-cta-band>
   `
 };
 
@@ -47,9 +47,9 @@ export const Default: Story = {
 export const SingleAction: Story = {
   args: { heading: 'Ready when you are.', kicker: '<start>' },
   render: (args) => html`
-    <sl-cta-band heading=${args.heading} kicker=${args.kicker}>
+    <al-cta-band heading=${args.heading} kicker=${args.kicker}>
       <al-button href="#">Get in touch</al-button>
-    </sl-cta-band>
+    </al-cta-band>
   `
 };
 
@@ -70,9 +70,9 @@ export const NoTexture: Story = {
         display: none;
       }
     </style>
-    <sl-cta-band class="sl-plain" heading=${args.heading} dek=${args.dek} kicker=${args.kicker}>
+    <al-cta-band class="sl-plain" heading=${args.heading} dek=${args.dek} kicker=${args.kicker}>
       <al-button href="#">Book a call</al-button>
-    </sl-cta-band>
+    </al-cta-band>
   `
 };
 
@@ -83,8 +83,8 @@ export const NoTexture: Story = {
 export const Minimal: Story = {
   args: { heading: 'Let us talk.', kicker: '' },
   render: (args) => html`
-    <sl-cta-band heading=${args.heading} kicker=${args.kicker}>
+    <al-cta-band heading=${args.heading} kicker=${args.kicker}>
       <al-button href="#">Contact</al-button>
-    </sl-cta-band>
+    </al-cta-band>
   `
 };

@@ -38,12 +38,61 @@ import { glob } from 'astro/loaders';
 // @ts-expect-error — plain ESM module, no type declarations. It is the same
 // generator the routes and the gates read, so guidance is validated against
 // exactly the component set the site renders.
-import { COMPONENTS } from './lib/registry.mjs';
+import { COMPONENTS, libraryRecords } from './lib/registry.mjs';
+// @ts-expect-error — plain ESM module, as above.
+import { PROJECTS } from './lib/projects.mjs';
 
-/** Live component slugs, from the CEM — never a hand-kept list. */
+/** Live component slugs in the SHARED library, from the CEM. */
 const SLUGS: Set<string> = new Set(
   (COMPONENTS as { slug: string }[]).map((component) => component.slug),
 );
+
+/**
+ * BRAND-LAYER GUIDANCE LIVES IN A SUBDIRECTORY, AND HAS TO.
+ *
+ * A guidance file is keyed by component slug, and a slug stopped being unique
+ * the moment a brand layer could override a base component: `header` is both
+ * Altitude's bare landmark and Southleft's navigation bar. One `header.yaml`
+ * would render on both pages, telling a reader of the Altitude header about
+ * pill nav items and a mobile panel it does not have.
+ *
+ * So a layer's guidance is namespaced by the project that owns it —
+ * `guidance/southleft/header.yaml` — and the base library keeps the flat path.
+ * The directory is not decoration: it is what makes the two addressable
+ * separately. Built from the registry, so a new layer needs no edit here.
+ */
+const LAYER_SLUGS: Map<string, Set<string>> = new Map(
+  (PROJECTS as { id: string; brandLayer: { root: string; workspace: string } | null }[])
+    .filter((project) => project.brandLayer)
+    .map((project) => [
+      project.id,
+      new Set(
+        (libraryRecords(project.brandLayer) as { records: { slug: string }[] }).records.map(
+          (record) => record.slug,
+        ),
+      ),
+    ]),
+);
+
+/**
+ * Which component an entry id addresses, or `null` if it addresses none.
+ * `header` → the base library's; `southleft/header` → that project's layer.
+ */
+function resolveEntryId(id: string): { slug: string; scope: Set<string> } | null {
+  const parts = id.split('/');
+  if (parts.length === 1) {
+    return SLUGS.has(id) ? { slug: id, scope: SLUGS } : null;
+  }
+  if (parts.length === 2) {
+    const [projectId, slug] = parts;
+    const layer = LAYER_SLUGS.get(projectId);
+    if (!layer?.has(slug)) return null;
+    // An `instead:` pointer from layer guidance may name a base component —
+    // "use al-layout instead" is the commonest correct advice a layer gives.
+    return { slug, scope: new Set([...SLUGS, ...layer]) };
+  }
+  return null;
+}
 
 /**
  * A citation anchor is embedded in a `data-` attribute and re-read from the
@@ -115,13 +164,16 @@ function assertPointsAtRealComponents(
 ): void {
   const problems: string[] = [];
   for (const entry of entries) {
-    if (!SLUGS.has(entry.id)) {
+    const resolved = resolveEntryId(entry.id);
+    if (!resolved) {
       problems.push(
-        `guidance/${entry.id}.yaml describes "${entry.id}", which is not a component in the CEM.`,
+        `guidance/${entry.id}.yaml describes "${entry.id}", which is not a component in the CEM. ` +
+          'Base-library guidance is `<slug>.yaml`; guidance for a brand layer is `<project-id>/<slug>.yaml`.',
       );
+      continue;
     }
     for (const row of entry.data.whenNotToUse) {
-      if (row.instead && !SLUGS.has(row.instead)) {
+      if (row.instead && !resolved.scope.has(row.instead)) {
         problems.push(
           `guidance/${entry.id}.yaml points at "${row.instead}" via instead:, which is not a component in the CEM.`,
         );

@@ -12,4 +12,5 @@ export { SLHero } from './hero/hero';
 export { SLLogoWall } from './logo-wall/logo-wall';
 export { SLMarquee } from './marquee/marquee';
 export { SLMediaCard } from './media-card/media-card';
+export { SLPageHero } from './page-hero/page-hero';
 export { SLSectionHeader } from './section-header/section-header';

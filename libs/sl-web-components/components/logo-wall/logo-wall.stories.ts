@@ -4,7 +4,7 @@ import './logo-wall';
 
 const meta: Meta = {
   title: 'Organisms/Logo Wall',
-  component: 'sl-logo-wall',
+  component: 'al-logo-wall',
   parameters: { status: { type: 'beta' }, layout: 'fullscreen' },
   tags: ['autodocs'],
   argTypes: { vivid: { control: 'boolean' } }
@@ -31,9 +31,9 @@ const LOGOS = [
 
 export const Default: Story = {
   render: () => html`
-    <sl-logo-wall>
+    <al-logo-wall>
       ${LOGOS.map(([slug, name]) => html`<img src="/southleft/logos/${slug}.webp" alt=${name} />`)}
-    </sl-logo-wall>
+    </al-logo-wall>
   `
 };
 
@@ -43,8 +43,8 @@ export const Default: Story = {
  */
 export const Vivid: Story = {
   render: () => html`
-    <sl-logo-wall vivid>
+    <al-logo-wall vivid>
       ${LOGOS.slice(0, 4).map(([slug, name]) => html`<img src="/southleft/logos/${slug}.webp" alt=${name} />`)}
-    </sl-logo-wall>
+    </al-logo-wall>
   `
 };

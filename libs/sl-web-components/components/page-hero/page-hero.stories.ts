@@ -6,7 +6,7 @@ import '../../../al-web-components/components/layout/layout';
 
 const meta: Meta = {
   title: 'Organisms/Page Hero',
-  component: 'sl-page-hero',
+  component: 'al-page-hero',
   parameters: { status: { type: 'beta' }, layout: 'fullscreen' },
   tags: ['autodocs'],
   argTypes: {
@@ -32,7 +32,7 @@ export const Default: Story = {
     dek: 'We build the system, the governance around it, and the muscle to keep it alive after we leave.'
   },
   render: (args) => html`
-    <sl-page-hero label=${args.label} heading=${args.heading} dek=${args.dek}></sl-page-hero>
+    <al-page-hero label=${args.label} heading=${args.heading} dek=${args.dek}></al-page-hero>
   `
 };
 
@@ -48,12 +48,12 @@ export const WithActions: Story = {
     dek: 'A 30-minute call is the fastest way to find out where your leverage is.'
   },
   render: (args) => html`
-    <sl-page-hero label=${args.label} heading=${args.heading} dek=${args.dek}>
+    <al-page-hero label=${args.label} heading=${args.heading} dek=${args.dek}>
       <al-layout direction="row" wrap gap="md">
         <al-button href="#">Book a call</al-button>
         <al-button variant="tertiary" href="#">See our work</al-button>
       </al-layout>
-    </sl-page-hero>
+    </al-page-hero>
   `
 };
 
@@ -63,7 +63,7 @@ export const WithActions: Story = {
  */
 export const HeadingOnly: Story = {
   args: { heading: 'Insights' },
-  render: (args) => html`<sl-page-hero heading=${args.heading}></sl-page-hero>`
+  render: (args) => html`<al-page-hero heading=${args.heading}></al-page-hero>`
 };
 
 /**
@@ -78,7 +78,7 @@ export const AsSection: Story = {
     headingTag: 'h2'
   },
   render: (args) => html`
-    <sl-page-hero label=${args.label} heading=${args.heading} dek=${args.dek} heading-tag=${args.headingTag}></sl-page-hero>
+    <al-page-hero label=${args.label} heading=${args.heading} dek=${args.dek} heading-tag=${args.headingTag}></al-page-hero>
   `
 };
 
@@ -90,6 +90,6 @@ export const AsSection: Story = {
 export const TightRhythm: Story = {
   args: { label: 'Legal', heading: 'Privacy policy' },
   render: (args) => html`
-    <sl-page-hero style="--sl-page-hero-padding-block: 2rem;" label=${args.label} heading=${args.heading}></sl-page-hero>
+    <al-page-hero style="--al-page-hero-padding-block: 2rem;" label=${args.label} heading=${args.heading}></al-page-hero>
   `
 };

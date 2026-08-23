@@ -7,19 +7,19 @@ import '../../../al-web-components/components/text-block/text-block';
 import styles from './hero.scss';
 
 /**
- * Component: sl-hero
+ * Component: al-hero
  *
  * The HOMEPAGE hero — a full-bleed landing composition: the brand's grid
  * texture behind a kicker and a display headline, then a two-column split with
  * the lead copy and actions on the left and a supporting panel on the right.
  *
- * Distinct from `sl-page-hero`, the interior band on 19 of the site's other
- * pages. The site's own class names (`.sl-hero` vs `.sl-page-hero`) already
+ * Distinct from `al-page-hero`, the interior band on 19 of the site's other
+ * pages. The site's own class names (`.al-hero` vs `.al-page-hero`) already
  * separate them; these components keep that split rather than overloading one
  * name — they are different shapes, not variants of each other.
  *
  * ```html
- * <sl-hero
+ * <al-hero
  *   kicker="<southleft>"
  *   heading="AI-powered design systems. Built by the people building the tools."
  *   lead="We audit, build, and evolve design systems for teams at…"
@@ -28,7 +28,7 @@ import styles from './hero.scss';
  *   <al-button slot="actions" variant="tertiary" href="/services">See how we work</al-button>
  *   <div slot="chips">…loose token chips…</div>
  *   <div slot="aside">…the terminal panel…</div>
- * </sl-hero>
+ * </al-hero>
  * ```
  *
  * THE GLYPH FIELD IS PART OF THE HERO, not page art. It was first left in the
@@ -56,14 +56,14 @@ import styles from './hero.scss';
  * @csspart lead - The lead paragraph.
  * @csspart aside - The right-hand column wrapper.
  *
- * @cssproperty --sl-hero-padding-block - The band's vertical rhythm. Defaults to `5rem`, stepping up at the `48rem` and `64rem` breakpoints.
- * @cssproperty --sl-hero-measure - The content column. Defaults to `79rem`.
- * @cssproperty --sl-hero-template - The two-column track list above `64rem`. Defaults to `minmax(0, 1fr) minmax(0, 0.85fr)`.
- * @cssproperty --sl-hero-heading-max-width - Measure the headline is capped to. Defaults to `18ch`.
+ * @cssproperty --al-hero-padding-block - The band's vertical rhythm. Defaults to `5rem`, stepping up at the `48rem` and `64rem` breakpoints.
+ * @cssproperty --al-hero-measure - The content column. Defaults to `79rem`.
+ * @cssproperty --al-hero-template - The two-column track list above `64rem`. Defaults to `minmax(0, 1fr) minmax(0, 0.85fr)`.
+ * @cssproperty --al-hero-heading-max-width - Measure the headline is capped to. Defaults to `18ch`.
  * @cssproperty --sl-artifacts - Density of the glyph field, `0`–`1`. `0` silences it entirely. Defaults to `1`.
  */
 export class SLHero extends ALElement {
-  static el = 'sl-hero';
+  static el = 'al-hero';
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -263,6 +263,6 @@ if ((globalThis as any).alAutoRegistry === true && customElements.get(SLHero.el)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sl-hero': SLHero;
+    'al-hero': SLHero;
   }
 }

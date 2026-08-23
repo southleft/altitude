@@ -181,6 +181,40 @@
             }
           }
         },
+        "brandLibrary": {
+          "type": "object",
+          "description": "OPTIONAL SECOND LAYER — a library of components that belong to THIS design system alone, built on top of `library`. `library` is shared: several design systems document subsets of the same package, so nothing brand-specific may live there. A brand layer is not shared and therefore needs no `components` allowlist: every component it declares is, by construction, in scope. The docs site composes the two (apps/docs/src/lib/registry.mjs).",
+          "required": [
+            "workspace",
+            "root",
+            "tagPrefix"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "workspace": {
+              "type": "string",
+              "description": "npm package name of the brand layer, e.g. `@southleft/sl-web-components`. Used to build each component's documented import path."
+            },
+            "root": {
+              "type": "string",
+              "description": "Repo-root-relative path to the brand layer, holding its `custom-elements.json` and `components/<slug>/<slug>.stories.ts`."
+            },
+            "tagPrefix": {
+              "type": "string",
+              "description": "Custom-element tag prefix, e.g. `sl-`. Distinct from `library.tagPrefix` so the two layers never collide."
+            },
+            "$supersedesComment": {
+              "type": "string"
+            },
+            "supersedes": {
+              "type": "object",
+              "description": "brand tag -> base tag. The base component stays in `library.components` (the consuming app really does use it, and parity still tracks it), but the docs site documents the brand component in its place rather than listing both under the same name. Use ONLY when the brand component is the brand's answer to that base component — e.g. a brand header built on the base header.",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        },
         "storybook": {
           "type": "object",
           "required": [

@@ -6,7 +6,7 @@ import '../../../al-web-components/components/heading/heading';
 import styles from './section-header.scss';
 
 /**
- * Component: sl-section-header
+ * Component: al-section-header
  *
  * The heading block that opens a section of a Southleft page: a mono rule
  * carrying an index and label, an accent kicker, a heading, an optional lead,
@@ -17,14 +17,14 @@ import styles from './section-header.scss';
  * siblings), which is the shape of a component the system was missing.
  *
  * ```html
- * <sl-section-header
+ * <al-section-header
  *   index="02"
  *   label="Insights"
  *   heading="We publish our homework"
  *   dek="Notes from inside real design-system work."
  *   link-href="/insights"
  *   link-label="all insights →"
- * ></sl-section-header>
+ * ></al-section-header>
  * ```
  *
  * @slot - The trailing position, for a control the link cannot express — a filter, a segmented toggle. Use it INSTEAD of `linkHref`; both render if both are set.
@@ -35,10 +35,10 @@ import styles from './section-header.scss';
  * @csspart dek - The lead paragraph.
  * @csspart link - The trailing mono link.
  *
- * @cssproperty --sl-section-header-margin-block-end - Space between the header and the section body. Defaults to `--al-theme-space-xl`.
+ * @cssproperty --al-section-header-margin-block-end - Space between the header and the section body. Defaults to `--al-theme-space-xl`.
  */
 export class SLSectionHeader extends ALElement {
-  static el = 'sl-section-header';
+  static el = 'al-section-header';
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -115,6 +115,6 @@ if ((globalThis as any).alAutoRegistry === true && customElements.get(SLSectionH
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sl-section-header': SLSectionHeader;
+    'al-section-header': SLSectionHeader;
   }
 }

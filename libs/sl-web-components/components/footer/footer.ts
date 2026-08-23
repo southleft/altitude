@@ -1,30 +1,41 @@
 import { html, unsafeCSS, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ALElement } from '../../../al-web-components/components/ALElement';
-import '../../../al-web-components/components/footer/footer';
+/*
+ * The base `al-footer` module is deliberately NOT imported.
+ *
+ * It used to be, because this component rendered `<al-footer>` inside its
+ * own template. It no longer does — this component IS `al-footer` now (one
+ * namespace; the brand implementation overrides the base one), so importing
+ * the base module would register the BASE class under that tag first and win,
+ * `customElements.define` being first-come and final. The symptom is exact and
+ * silent: every named slot below goes unassigned, because the element that
+ * actually upgraded has one unnamed slot, and the header renders empty.
+ */
 import '../../../al-web-components/components/layout/layout';
 import styles from './footer.scss';
 
 /**
- * Component: sl-footer
+ * Component: al-footer
  *
  * Southleft's site footer — an asymmetric three-column masthead, a pull quote,
  * and a legal bar.
  *
- * Built ON `<al-footer>`, which owns the `<footer>` landmark, the block padding
- * and the stacking. What this adds is the brand's shape: the 1.4fr/1fr/1fr
- * masthead, the column kicker and link treatment, and the rules above the quote
- * and the legal bar.
+ * IT *IS* `al-footer` — the brand implementation of that tag. It owns the
+ * `<footer>` landmark and its box directly; it no longer wraps Altitude's,
+ * because a component cannot render the tag it is registered under without
+ * recursing (spec 2026-08-23-one-al-namespace-across-brand-and-base). The
+ * `--al-footer-*` custom properties remain the public API, now read here.
  *
  * ```html
- * <sl-footer copyright="© 2026 Southleft, LLC. All rights reserved."
+ * <al-footer copyright="© 2026 Southleft, LLC. All rights reserved."
  *            quote="If I cannot do great things, I can do small things in a great way."
  *            cite="— attributed to Dr. Martin Luther King Jr.">
  *   <al-logo slot="brand" variant="southleft" href="/"></al-logo>
  *   <p slot="brand">Design systems consulting, engineering, and AI integration.</p>
  *   <nav slot="columns" aria-label="Footer">…</nav>
  *   <a slot="legal" href="/privacy-policy">Privacy policy</a>
- * </sl-footer>
+ * </al-footer>
  * ```
  *
  * The masthead is `<al-layout variant="grid">` driven through the documented
@@ -40,12 +51,12 @@ import styles from './footer.scss';
  * @csspart quote - The pull quote.
  * @csspart bar - The bottom legal bar.
  *
- * @cssproperty --sl-footer-template - The masthead track list. Defaults to `1.4fr 1fr 1fr`.
- * @cssproperty --sl-footer-measure - The content column. Defaults to `79rem`.
- * @cssproperty --sl-footer-padding-block - The footer's vertical rhythm. Defaults to `3.5rem`.
+ * @cssproperty --al-footer-template - The masthead track list. Defaults to `1.4fr 1fr 1fr`.
+ * @cssproperty --al-footer-measure - The content column. Defaults to `79rem`.
+ * @cssproperty --al-footer-padding-block - The footer's vertical rhythm. Defaults to `3.5rem`.
  */
 export class SLFooter extends ALElement {
-  static el = 'sl-footer';
+  static el = 'al-footer';
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -67,7 +78,7 @@ export class SLFooter extends ALElement {
     const componentClassNames = this.componentClassNames('sl-c-footer', {});
 
     return html`
-      <al-footer class="${componentClassNames}">
+      <footer class="${componentClassNames}">
         <al-layout variant="constrained" class="sl-c-footer__measure">
           <al-layout variant="grid" gap="xl" noCollapse class="sl-c-footer__masthead" part="masthead">
             <div class="sl-c-footer__brand">
@@ -90,7 +101,7 @@ export class SLFooter extends ALElement {
             </al-layout>
           </div>
         </al-layout>
-      </al-footer>
+      </footer>
     `;
   }
 }
@@ -99,8 +110,23 @@ if ((globalThis as any).alAutoRegistry === true && customElements.get(SLFooter.e
   customElements.define(SLFooter.el, SLFooter);
 }
 
-declare global {
-  interface HTMLElementTagNameMap {
-    'sl-footer': SLFooter;
-  }
-}
+/*
+ * NO `HTMLElementTagNameMap` ENTRY, DELIBERATELY.
+ *
+ * This component OVERRIDES the base library's `al-footer`: same tag, brand
+ * implementation, and the app imports one or the other (see the module note at
+ * the top of this file). `HTMLElementTagNameMap` cannot express that. It is a
+ * global interface keyed by tag name, both packages compile into one TypeScript
+ * program (this package reaches Altitude through relative paths, so its sources
+ * join the program — see the `exports` note in package.json), and two
+ * declarations of one key with different types is TS2717, a hard build error:
+ *
+ *   Property ''al-footer'' must be of type 'ALFooter', but here has type 'SLFooter'.
+ *
+ * The base declaration therefore stands, and `document.querySelector('al-footer')`
+ * types as `ALFooter` even where this implementation is the one registered.
+ * That is a known, narrow inaccuracy in the TYPES only — the runtime element is
+ * whichever module was imported. Anyone who needs this component's own type
+ * imports the exported `SLFooter` class directly, which is the reason it is
+ * exported.
+ */

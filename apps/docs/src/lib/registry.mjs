@@ -44,15 +44,31 @@ import path from 'node:path';
 import { repoRoot } from './repo-root.mjs';
 
 const REPO_ROOT = repoRoot();
-const WC_ROOT = path.join(REPO_ROOT, 'libs', 'al-web-components');
-const CEM_PATH = path.join(WC_ROOT, 'custom-elements.json');
-const COMPONENTS_DIR = path.join(WC_ROOT, 'components');
 const REACT_INDEX = path.join(REPO_ROOT, 'libs', 'al-react', 'src', 'index.ts');
+
+/**
+ * THE BASE LIBRARY — the shared package every design system here is built on.
+ *
+ * It is the only library this module knows by path, and that is deliberate: it
+ * is the one whose WHOLE catalog is a design system, so the unscoped exports at
+ * the bottom of this file need a fixed starting point. Every OTHER library
+ * reaches this module as data, out of `.altitude/ds-projects.json` — see
+ * `libraryRecords()` and `buildRegistry()`'s `layer` argument.
+ *
+ * `workspace` is read from the package rather than typed, so the import line
+ * this site documents cannot drift from what a consumer actually installs.
+ */
+const BASE_LIBRARY = {
+  root: 'libs/al-web-components',
+  workspace: JSON.parse(
+    fs.readFileSync(path.join(REPO_ROOT, 'libs', 'al-web-components', 'package.json'), 'utf8'),
+  ).name,
+  /** Only the base library has React wrappers; a brand layer ships none. */
+  react: true,
+};
 
 /** `components/button/button.ts` → the one module that declares a component. */
 const CANONICAL_MODULE = /^components\/([a-z0-9-]+)\/\1\.ts$/;
-
-const cem = JSON.parse(fs.readFileSync(CEM_PATH, 'utf8'));
 
 /* ------------------------------------------------------------------ tiers */
 
@@ -82,8 +98,8 @@ const LIFECYCLE_ORDER = ['stable', 'alpha', 'beta', 'experimental', 'deprecated'
 /* --------------------------------------------------------- library probes */
 
 /** Storybook metadata for one component, read from its stories file. */
-function readStoryMeta(slug) {
-  const file = path.join(COMPONENTS_DIR, slug, `${slug}.stories.ts`);
+function readStoryMeta(slug, componentsDir) {
+  const file = path.join(componentsDir, slug, `${slug}.stories.ts`);
   let source;
   try {
     source = fs.readFileSync(file, 'utf8');
@@ -158,80 +174,128 @@ function enumOptions(typeText) {
 
 /* -------------------------------------------------------------- the build */
 
-const records = [];
+/**
+ * ONE library → its component records, its icon glyphs, its raw tag count.
+ *
+ * Everything path-shaped is taken from the `library` descriptor rather than
+ * from a constant, because this runs for the base library AND for any BRAND
+ * LAYER a design system declares (`brandLibrary` in `.altitude/ds-projects.json`
+ * — a package of components that belong to one design system alone, built on
+ * top of the shared library). Both kinds are read the same way: the CEM for
+ * the API, the component's own story file for its tier and lifecycle.
+ *
+ * Memoised by root, because two projects declaring the same layer must not
+ * re-parse the same manifest.
+ *
+ * @param {{root: string, workspace: string, react?: boolean}} library
+ */
+const LIBRARY_CACHE = new Map();
 
-for (const module of cem.modules) {
-  const match = CANONICAL_MODULE.exec(module.path);
-  if (!match) continue;
-  const slug = match[1];
-  const declaration = (module.declarations ?? []).find((d) => d.tagName);
-  if (!declaration) continue;
+export function libraryRecords(library) {
+  const cached = LIBRARY_CACHE.get(library.root);
+  if (cached) return cached;
 
-  const story = readStoryMeta(slug);
-  const members = declaration.members ?? [];
-  const reactName = reactWrappers.has(pascal(slug)) ? `AL${pascal(slug)}` : null;
+  const libRoot = path.join(REPO_ROOT, ...library.root.split('/'));
+  const componentsDir = path.join(libRoot, 'components');
+  const cem = JSON.parse(fs.readFileSync(path.join(libRoot, 'custom-elements.json'), 'utf8'));
 
-  records.push({
-    slug,
-    tag: declaration.tagName,
-    className: declaration.name,
-    name: story.name ?? titleCase(slug),
-    tier: story.tier ?? FALLBACK_TIER,
-    tierInferred: story.tier === null,
-    storyTitle: story.title,
-    /** 'beta' etc. from the story's `status` param; 'deprecated' wins. */
-    status: declaration.deprecated ? 'deprecated' : story.status,
-    deprecated: Boolean(declaration.deprecated),
-    modulePath: module.path,
-    importPath: `@southleft/al-web-components/components/${slug}`,
-    description: declaration.description ?? '',
-    summary: summarize(declaration.description, declaration.tagName),
-    react: reactName,
-    props: (declaration.attributes ?? []).map((a) => propRow(a, members)),
-    slots: (declaration.slots ?? []).map((s) => ({
-      name: s.name || '(default)',
-      rawName: s.name || '',
-      description: (s.description ?? '').replace(/\s+/g, ' ').trim(),
-    })),
-    events: (declaration.events ?? []).map((e) => ({
-      name: e.name,
-      type: e.type?.text ?? 'CustomEvent',
-      description: (e.description ?? '').replace(/\s+/g, ' ').trim(),
-    })),
-    cssParts: (declaration.cssParts ?? []).map((p) => ({
-      name: p.name,
-      description: (p.description ?? '').replace(/\s+/g, ' ').trim(),
-    })),
-    cssProperties: (declaration.cssProperties ?? []).map((p) => ({
-      name: p.name,
-      default: p.default ?? '—',
-      description: (p.description ?? '').replace(/\s+/g, ' ').trim(),
-    })),
-    methods: members
-      .filter((m) => m.kind === 'method' && !m.privacy && !m.static)
-      .map((m) => ({
-        name: m.name,
-        description: (m.description ?? '').replace(/\s+/g, ' ').trim(),
+  const records = [];
+
+  for (const module of cem.modules) {
+    const match = CANONICAL_MODULE.exec(module.path);
+    if (!match) continue;
+    const slug = match[1];
+    const declaration = (module.declarations ?? []).find((d) => d.tagName);
+    if (!declaration) continue;
+
+    const story = readStoryMeta(slug, componentsDir);
+    const members = declaration.members ?? [];
+    const reactName = library.react && reactWrappers.has(pascal(slug)) ? `AL${pascal(slug)}` : null;
+
+    records.push({
+      slug,
+      tag: declaration.tagName,
+      className: declaration.name,
+      name: story.name ?? titleCase(slug),
+      tier: story.tier ?? FALLBACK_TIER,
+      tierInferred: story.tier === null,
+      storyTitle: story.title,
+      /** 'beta' etc. from the story's `status` param; 'deprecated' wins. */
+      status: declaration.deprecated ? 'deprecated' : story.status,
+      deprecated: Boolean(declaration.deprecated),
+      modulePath: module.path,
+      /** Absolute path of the library this record came from — how examples.mjs finds its story. */
+      libraryRoot: libRoot,
+      /** The package this component ships in, for panels that must say which library was measured. */
+      libraryWorkspace: library.workspace,
+      importPath: `${library.workspace}/components/${slug}`,
+      description: declaration.description ?? '',
+      summary: summarize(declaration.description, declaration.tagName),
+      react: reactName,
+      props: (declaration.attributes ?? []).map((a) => propRow(a, members)),
+      slots: (declaration.slots ?? []).map((s) => ({
+        name: s.name || '(default)',
+        rawName: s.name || '',
+        description: (s.description ?? '').replace(/\s+/g, ' ').trim(),
       })),
-  });
+      events: (declaration.events ?? []).map((e) => ({
+        name: e.name,
+        type: e.type?.text ?? 'CustomEvent',
+        description: (e.description ?? '').replace(/\s+/g, ' ').trim(),
+      })),
+      cssParts: (declaration.cssParts ?? []).map((p) => ({
+        name: p.name,
+        description: (p.description ?? '').replace(/\s+/g, ' ').trim(),
+      })),
+      cssProperties: (declaration.cssProperties ?? []).map((p) => ({
+        name: p.name,
+        default: p.default ?? '—',
+        description: (p.description ?? '').replace(/\s+/g, ' ').trim(),
+      })),
+      methods: members
+        .filter((m) => m.kind === 'method' && !m.privacy && !m.static)
+        .map((m) => ({
+          name: m.name,
+          description: (m.description ?? '').replace(/\s+/g, ' ').trim(),
+        })),
+    });
+  }
+
+  records.sort((a, b) => a.name.localeCompare(b.name));
+
+  /**
+   * Icon glyphs — CEM tags that are payloads of one component rather than
+   * components in their own right. Only the base library emits any; the
+   * pattern simply finds nothing in a layer that has no icon runtime.
+   */
+  const glyphs = cem.modules
+    .filter((m) => /^components\/icon\/icons\/[a-z0-9-]+\.ts$/.test(m.path))
+    .flatMap((m) => (m.declarations ?? []).filter((d) => d.tagName).map((d) => d.tagName))
+    .sort();
+
+  /** Every custom element the manifest declares — components and glyphs alike. */
+  const cemTags = cem.modules.reduce(
+    (n, m) => n + (m.declarations ?? []).filter((d) => d.tagName).length,
+    0,
+  );
+
+  const result = { records, glyphs, cemTags };
+  LIBRARY_CACHE.set(library.root, result);
+  return result;
 }
 
-records.sort((a, b) => a.name.localeCompare(b.name));
+/* ------------------------------------------------------- the base library */
 
-/** Every component the library declares. The unscoped truth. */
-const ALL_RECORDS = records;
+const BASE = libraryRecords(BASE_LIBRARY);
+
+/** Every component the shared library declares. The unscoped truth. */
+const ALL_RECORDS = BASE.records;
 
 /** Icon glyphs — the CEM tags that are payloads of `al-icon`, not components. */
-export const ICON_GLYPHS = cem.modules
-  .filter((m) => /^components\/icon\/icons\/[a-z0-9-]+\.ts$/.test(m.path))
-  .flatMap((m) => (m.declarations ?? []).filter((d) => d.tagName).map((d) => d.tagName))
-  .sort();
+export const ICON_GLYPHS = BASE.glyphs;
 
-/** Every custom element the manifest declares — components and glyphs alike. */
-const CEM_TAG_COUNT = cem.modules.reduce(
-  (n, m) => n + (m.declarations ?? []).filter((d) => d.tagName).length,
-  0,
-);
+/** Every custom element the base manifest declares — components and glyphs alike. */
+const CEM_TAG_COUNT = BASE.cemTags;
 
 /* ------------------------------------------------------------ scoped views */
 
@@ -245,11 +309,47 @@ const CEM_TAG_COUNT = cem.modules.reduce(
  * lifecycle groups and every total RE-DERIVED from what survives the filter —
  * which is what stops a scoped site quoting a whole-library number by accident.
  *
- * @param {string[] | null} scope allowlisted tags, or `null` for the whole library
+ * A design system may also declare a BRAND LAYER (`brandLibrary` in the same
+ * file): a second package of components that exist for this one system, built
+ * on top of the shared library. The layer needs no allowlist — it is not
+ * shared, so everything it declares is in scope by construction — and it may
+ * SUPERSEDE base components it is the brand's answer to. A superseded base
+ * component is dropped from this view only; it stays in `library.components`,
+ * because the consuming app still uses it and parity still tracks it. What
+ * supersession decides is which of the two the documentation leads with.
+ *
+ * @param {string[] | null} scope allowlisted base tags, or `null` for the whole library
+ * @param {{root: string, workspace: string, supersedes?: Record<string,string>} | null} layer
  */
-export function buildRegistry(scope = null) {
+export function buildRegistry(scope = null, layer = null) {
   const allow = scope === null ? null : new Set(scope);
-  const components = allow === null ? ALL_RECORDS : ALL_RECORDS.filter((c) => allow.has(c.tag));
+  const base = allow === null ? ALL_RECORDS : ALL_RECORDS.filter((c) => allow.has(c.tag));
+
+  const layered = layer ? libraryRecords(layer).records : [];
+  const superseded = new Set(Object.values(layer?.supersedes ?? {}));
+  const components = [...base.filter((c) => !superseded.has(c.tag)), ...layered].sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
+
+  // Two layers, one route namespace: `/components/<slug>` is keyed by slug, and
+  // a slug is a directory name, so a brand layer's `components/footer/` and the
+  // base library's collide even though `sl-footer` and `al-footer` do not. When
+  // the layer supersedes the base component this resolves itself — that is the
+  // Southleft case — but a layer that merely SHARES a name would otherwise
+  // silently emit one page for two components. Fail instead, naming the fix.
+  const bySlug = new Map();
+  for (const component of components) {
+    const clash = bySlug.get(component.slug);
+    if (clash) {
+      throw new Error(
+        `Two components claim the route /components/${component.slug}: <${clash.tag}> (${clash.importPath}) ` +
+          `and <${component.tag}> (${component.importPath}). If the brand component is this design system's ` +
+          `answer to the base one, say so with "supersedes": { "${component.tag}": "${clash.tag}" } under ` +
+          `brandLibrary in .altitude/ds-projects.json. If they are genuinely different components, rename one.`,
+      );
+    }
+    bySlug.set(component.slug, component);
+  }
 
   // An empty tier is rendered by the whole-library site (the taxonomy is the
   // site's structure) but dropped by a scoped one, where "MOLECULES 0" would be
@@ -280,6 +380,15 @@ export function buildRegistry(scope = null) {
     count: components.length,
     tiers,
     lifecycle,
+    /** The brand layer's own contribution, for the gates and the status panels. */
+    layer: layer
+      ? {
+          workspace: layer.workspace,
+          count: layered.length,
+          tags: layered.map((c) => c.tag),
+          supersedes: layer.supersedes ?? {},
+        }
+      : null,
     stats: {
       components: components.length,
       icons: ICON_GLYPHS.length,

@@ -5,16 +5,16 @@ import '../../../al-web-components/components/layout/layout';
 import styles from './logo-wall.scss';
 
 /**
- * Component: sl-logo-wall
+ * Component: al-logo-wall
  *
  * The client logo band — a wrapping row of monochrome marks that come up to
  * full strength on hover.
  *
  * ```html
- * <sl-logo-wall>
+ * <al-logo-wall>
  *   <img src="/logos/ibm.webp" alt="IBM" />
  *   <img src="/logos/google.webp" alt="Google" />
- * </sl-logo-wall>
+ * </al-logo-wall>
  * ```
  *
  * The marks are slotted, because which clients appear is the page's business.
@@ -25,12 +25,12 @@ import styles from './logo-wall.scss';
  *
  * @csspart wall - The wrapping row.
  *
- * @cssproperty --sl-logo-wall-height - Optical height every mark is normalised to. Defaults to `1.75rem`, and `2rem` from the `48rem` breakpoint up.
- * @cssproperty --sl-logo-wall-opacity - Resting opacity. Defaults to `0.5`.
- * @cssproperty --sl-logo-wall-gap - Row and column gap, in that order. Defaults to `3rem 3.5rem`.
+ * @cssproperty --al-logo-wall-height - Optical height every mark is normalised to. Defaults to `1.75rem`, and `2rem` from the `48rem` breakpoint up.
+ * @cssproperty --al-logo-wall-opacity - Resting opacity. Defaults to `0.5`.
+ * @cssproperty --al-logo-wall-gap - Row and column gap, in that order. Defaults to `3rem 3.5rem`.
  */
 export class SLLogoWall extends ALElement {
-  static el = 'sl-logo-wall';
+  static el = 'al-logo-wall';
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -62,6 +62,6 @@ if ((globalThis as any).alAutoRegistry === true && customElements.get(SLLogoWall
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sl-logo-wall': SLLogoWall;
+    'al-logo-wall': SLLogoWall;
   }
 }

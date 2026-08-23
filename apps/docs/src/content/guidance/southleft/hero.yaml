@@ -1,0 +1,53 @@
+purpose: 'The homepage opening. A full-bleed landing composition: the brand''s grid texture
+  behind a kicker and a display headline, then a two-column split with the lead copy and actions
+  on the left and a supporting panel on the right. It is the one component allowed to set
+  the visual temperature of a page.'
+whenToUse:
+- The page is a landing page and this is its first screen, the thing a visitor sees before
+  they have decided to read anything.
+- You need the brand's grid texture and glyph field as the backdrop, rather than a plain surface
+  a section could sit on.
+- There is a supporting artefact worth showing beside the copy (a terminal panel, a product
+  shot, a live demo), which goes in the `aside` slot.
+whenNotToUse:
+- text: This is an interior page and you want a title band, not a landing composition. The
+    band shape exists as its own component and does not carry the texture.
+  instead: page-hero
+- text: You are opening a section in the middle of a page rather than the page itself. A section
+    wants a rule, a label and a heading, not a full-bleed composition.
+  instead: section-header
+- text: What you actually need is the closing ask at the bottom of the page. That is a different
+    component with its own padding and a centred stack.
+  instead: cta-band
+dos:
+- Put the primary and secondary action in the `actions` slot and let the component space them;
+  it is a row that wraps on its own.
+- Keep the headline near 18 characters per line at the display size. `--al-hero-heading-max-width`
+  is the knob for that, not a manual line break.
+donts:
+- Do not nest a second heading of display rank inside the `aside` slot; the composition already
+  has exactly one loudest element and a rival flattens it.
+- Do not put anything a reader must act on into the `chips` slot. The reference treats it
+  as annotation and marks it `aria-hidden`.
+accessibility:
+- 'The texture and the glyph canvas are decorative and marked `aria-hidden`; the canvas also
+  stops animating under `prefers-reduced-motion: reduce`, so nothing here needs a motion opt-out
+  from the consumer.'
+- The `heading` prop renders the page's `h1`. Do not also place an `h1` in a slot, or the
+  page has two and the document outline stops being navigable.
+content:
+- The kicker is a machine-ish label in angle brackets by convention, not a sentence. It reads
+  as a tag on the section rather than as copy.
+- The lead is one paragraph. If it needs two, the second belongs further down the page, because
+  nothing below the fold is competing with it here.
+sources:
+- path: libs/sl-web-components/components/hero/hero.ts
+  contains: export class SLHero
+  note: The component this guidance describes.
+- path: libs/sl-web-components/components/hero/hero.ts
+  contains: 'prefers-reduced-motion: reduce'
+  note: The glyph canvas stops animating under a reduced-motion preference; the accessibility
+    note depends on it.
+- path: libs/sl-web-components/components/hero/hero.ts
+  contains: sl-c-hero__texture
+  note: The decorative texture layer the accessibility note refers to.

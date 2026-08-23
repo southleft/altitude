@@ -6,7 +6,7 @@ import '../../../al-web-components/components/heading/heading';
 import styles from './cta-band.scss';
 
 /**
- * Component: sl-cta-band
+ * Component: al-cta-band
  *
  * The closing call-to-action band that ends 16 of the site's 24 pages: a
  * full-bleed surface with the brand's grid texture behind it, a kicker, a
@@ -18,12 +18,12 @@ import styles from './cta-band.scss';
  * is the page's decision, not the band's.
  *
  * ```html
- * <sl-cta-band heading="Is your design system AI-ready?" dek="…">
+ * <al-cta-band heading="Is your design system AI-ready?" dek="…">
  *   <al-layout direction="row" wrap gap="md" align="center" justify="center">
  *     <al-button href="/contact">Book a call</al-button>
  *     <al-button variant="tertiary" href="/services/workshops">Ask about a workshop</al-button>
  *   </al-layout>
- * </sl-cta-band>
+ * </al-cta-band>
  * ```
  *
  * @slot - The band's actions. Wrap them in an `<al-layout>` to arrange them — a row that wraps to a stack is the usual choice.
@@ -36,13 +36,13 @@ import styles from './cta-band.scss';
  * @csspart dek - The lead paragraph.
  * @csspart actions - The wrapper around the slotted actions.
  *
- * @cssproperty --sl-cta-band-padding-block - The band's vertical rhythm. Defaults to `6rem`, and `8rem` from the `48rem` breakpoint up.
- * @cssproperty --sl-cta-band-max-width - Measure the content column is capped to. Defaults to `85rem`.
- * @cssproperty --sl-cta-band-heading-max-width - Measure the heading is capped to. Defaults to `48rem`.
- * @cssproperty --sl-cta-band-dek-max-width - Measure the lead is capped to. Defaults to `32rem`.
+ * @cssproperty --al-cta-band-padding-block - The band's vertical rhythm. Defaults to `6rem`, and `8rem` from the `48rem` breakpoint up.
+ * @cssproperty --al-cta-band-max-width - Measure the content column is capped to. Defaults to `85rem`.
+ * @cssproperty --al-cta-band-heading-max-width - Measure the heading is capped to. Defaults to `48rem`.
+ * @cssproperty --al-cta-band-dek-max-width - Measure the lead is capped to. Defaults to `32rem`.
  */
 export class SLCtaBand extends ALElement {
-  static el = 'sl-cta-band';
+  static el = 'al-cta-band';
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -99,6 +99,6 @@ if ((globalThis as any).alAutoRegistry === true && customElements.get(SLCtaBand.
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sl-cta-band': SLCtaBand;
+    'al-cta-band': SLCtaBand;
   }
 }

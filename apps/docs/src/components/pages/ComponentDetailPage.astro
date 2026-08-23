@@ -21,6 +21,7 @@ import Playground from '../Playground.astro';
 import ParityPanel from '../ParityPanel.astro';
 import ChecksPanel from '../ChecksPanel.astro';
 import GuidancePanel from '../GuidancePanel.astro';
+import { exampleFor } from '../../lib/examples.mjs';
 
 interface Props {
   /** The design-system context this page belongs to (lib/context.mjs). */
@@ -31,6 +32,14 @@ interface Props {
 
 const { context, component } = Astro.props;
 const { project, href } = context;
+
+/*
+ * The preview markup, taken from this component's own Storybook story
+ * (lib/examples.mjs). `null`-ish when the story cannot be represented as static
+ * markup, in which case Playground.astro falls back to its manifest-only mount
+ * and says so rather than showing an empty stage without explanation.
+ */
+const example = await exampleFor(component);
 
 /** Two-column rows (name + description) reused for slots / parts / methods. */
 const pairTable = (rows, nameKey = 'name') =>
@@ -76,16 +85,16 @@ const pairTable = (rows, nameKey = 'name') =>
          with ("is this the right component?") before the one the playground
          answers ("what does it do?"). Absent guidance renders as an explicit
          note rather than nothing; see GuidancePanel.astro. -->
-    <GuidancePanel slug={component.slug} />
+    <GuidancePanel component={component} project={project} />
 
-    <Playground component={component} project={project} />
+    <Playground component={component} project={project} example={example} />
 
     <!-- Status panels, generated at build time from the parity manifests and
          the axe report. They sit directly under the playground because they
          qualify what the reader just looked at: whether the design file agrees
          with it, and what a machine found wrong with it. -->
     <ParityPanel tag={component.tag} project={project} />
-    <ChecksPanel slug={component.slug} />
+    <ChecksPanel component={component} />
 
     <div class="section-rule"><span>INSTALL</span><span class="section-rule__raw">{component.importPath}</span></div>
     <pre class="code code--inline detail-install">{`import '${component.importPath}';${

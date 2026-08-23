@@ -96,6 +96,22 @@ export function docsProject(entry, { isDefault }) {
     ? [...entry.library.components]
     : null;
 
+  /**
+   * The BRAND LAYER, if this system declares one — a second component package
+   * that belongs to it alone, built on the shared library (`brandLibrary` in
+   * the registry). It carries no allowlist: a layer is not shared, so
+   * everything in it is in scope. `supersedes` names the base components it is
+   * this brand's answer to, so the docs lead with the brand version.
+   */
+  const brandLayer = entry.brandLibrary
+    ? {
+        workspace: entry.brandLibrary.workspace,
+        root: entry.brandLibrary.root,
+        tagPrefix: entry.brandLibrary.tagPrefix ?? '',
+        supersedes: entry.brandLibrary.supersedes ?? {},
+      }
+    : null;
+
   return {
     id,
     name: entry.name,
@@ -106,6 +122,7 @@ export function docsProject(entry, { isDefault }) {
     routePrefix: isDefault ? '' : `/${id}`,
     scope,
     scoped: scope !== null,
+    brandLayer,
     tagPrefix: entry.library?.tagPrefix ?? '',
     libraryWorkspace: entry.library?.workspace ?? '',
     figmaFileName: entry.figma?.fileName ?? null,

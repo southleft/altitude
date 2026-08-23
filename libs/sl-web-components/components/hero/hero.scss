@@ -52,7 +52,7 @@
    *
    * A plain `<div>` generates a box, takes the stacking context, and puts the
    * copy above both decorative layers. Same trap as the eyebrow chip in
-   * `sl-page-hero`: when a rule has to act on the element itself rather than on
+   * `al-page-hero`: when a rule has to act on the element itself rather than on
    * its contents, `display: contents` means you need a real box.
    */
   .sl-c-hero__content {
@@ -68,20 +68,20 @@
    *    the content column off the measure.
    */
   .sl-c-hero__inner {
-    --al-layout-measure: var(--sl-hero-measure, 79rem);
+    --al-layout-measure: var(--al-hero-measure, 79rem);
     --al-layout-gutter: clamp(1.25rem, 4vw, 3rem);
-    --al-layout-padding: var(--sl-hero-padding-block, 5rem) 0; /* 2 */
+    --al-layout-padding: var(--al-hero-padding-block, 5rem) 0; /* 2 */
   }
 
   @media (min-width: 48rem) {
     .sl-c-hero__inner {
-      --al-layout-padding: var(--sl-hero-padding-block, 7rem) 0;
+      --al-layout-padding: var(--al-hero-padding-block, 7rem) 0;
     }
   }
 
   @media (min-width: 64rem) {
     .sl-c-hero__inner {
-      --al-layout-padding: var(--sl-hero-padding-block, 8rem) 0;
+      --al-layout-padding: var(--al-hero-padding-block, 8rem) 0;
     }
   }
 
@@ -134,7 +134,7 @@
     display: block;
     margin-block-start: var(--al-theme-space-md);
     font: var(--al-typography-preset-48-bold); /* 3 */
-    max-inline-size: var(--sl-hero-heading-max-width, 18ch); /* 3 */
+    max-inline-size: var(--al-hero-heading-max-width, 18ch); /* 3 */
     text-wrap: balance; /* 4 */
   }
 
@@ -151,7 +151,7 @@
 
   @media (min-width: 64rem) {
     .sl-c-hero__grid {
-      --al-layout-template: var(--sl-hero-template, minmax(0, 1fr) minmax(0, 0.85fr)); /* 4 */
+      --al-layout-template: var(--al-hero-template, minmax(0, 1fr) minmax(0, 0.85fr)); /* 4 */
       --al-layout-gap: 5rem;
     }
   }
