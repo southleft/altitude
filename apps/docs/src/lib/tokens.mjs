@@ -110,3 +110,88 @@ export function typeScale() {
     })
     .sort((a, b) => b.px - a.px || a.name.localeCompare(b.name));
 }
+
+/* ---------------------------------------------------------- brand overrides */
+
+/**
+ * What ONE brand changes about the token layer.
+ *
+ * `tokens.json` above is the base `:root` bundle — the neutral reference every
+ * brand composes on top of. A brand is a DELTA over it, emitted by
+ * `styles/tokens-config.v5.mjs` as a scoped `:host([brand='<id>'])` partial in
+ * `styles/dist-v5/scss/host/`. This reads that partial so a brand's Foundations
+ * page can say which properties it actually moves, rather than restating the
+ * base bundle under a different name.
+ *
+ * The neutral reference brand emits NO partial (it IS the base), so an absent
+ * file means "this brand overrides nothing" — not an error. The directory is a
+ * gitignored build artifact, so a missing directory means the same thing for a
+ * checkout that has not run `build:tokens`; both are reported as `available:
+ * false` with the reason rather than as zero.
+ */
+export function brandOverrides(brand) {
+  const dir = path.join(
+    REPO_ROOT,
+    'libs',
+    'al-web-components',
+    'styles',
+    'dist-v5',
+    'scss',
+    'host'
+  );
+  if (!fs.existsSync(dir)) {
+    return {
+      available: false,
+      brand,
+      properties: [],
+      reason:
+        'The scoped token partials have not been built in this checkout (styles/dist-v5/scss/host is a build artifact of `pnpm --filter al-web-components build:tokens`), so what this brand overrides cannot be reported.',
+    };
+  }
+
+  // One brand emits up to three blocks: the mode-independent one and a
+  // light/dark pair. They are read together because a reader asking "what does
+  // this brand change" means all of it, not the third of it that happens to be
+  // mode-independent.
+  const files = fs
+    .readdirSync(dir)
+    .filter((name) => new RegExp(`^tokens-brand-${brand}(-light|-dark)?\\.scss$`).test(name));
+
+  if (files.length === 0) {
+    return {
+      available: true,
+      brand,
+      properties: [],
+      reason:
+        'This brand emits no scoped override block — it is the neutral reference the base token bundle already publishes.',
+    };
+  }
+
+  const byName = new Map();
+  for (const name of files.sort()) {
+    const block = /-light\.scss$/.test(name) ? 'light' : /-dark\.scss$/.test(name) ? 'dark' : 'base';
+    const source = fs.readFileSync(path.join(dir, name), 'utf8');
+    for (const match of source.matchAll(/^\s*(--al-[a-z0-9-]+)\s*:\s*([^;]+);/gm)) {
+      const [, property, raw] = match;
+      const existing = byName.get(property);
+      if (existing) {
+        if (!existing.blocks.includes(block)) existing.blocks.push(block);
+        continue;
+      }
+      byName.set(property, {
+        name: property,
+        blocks: [block],
+        raw: raw.trim(),
+        value: resolve(raw.trim()),
+        base: TOKENS[property.slice(2)] ?? null,
+      });
+    }
+  }
+
+  return {
+    available: true,
+    brand,
+    properties: [...byName.values()].sort((a, b) => a.name.localeCompare(b.name)),
+    reason: null,
+  };
+}

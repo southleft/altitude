@@ -1,0 +1,119 @@
+purpose: >-
+  A set of radios that are one question with exactly one answer. Like the
+  checkbox group it renders a real `<fieldset>` and `<legend>` with one shared
+  field note and error note — and on top of that it owns the selection: arrow
+  keys move the checked item, the previous item is unchecked for you, and the
+  selection wraps at both ends.
+
+whenToUse:
+  - >-
+    The choices are mutually exclusive and the user must land on exactly one of
+    them.
+  - >-
+    There are few enough options to show at once — roughly two to seven — and
+    seeing them all is worth the vertical space.
+  - >-
+    Comparison matters. Radios put every option in front of the user at the same
+    time, which a control that opens cannot do.
+
+whenNotToUse:
+  - text: >-
+      The user may choose more than one, or none. Radios cannot express either.
+    instead: checkbox-group
+  - text: >-
+      The list is long. Past a handful of options the form becomes a wall and
+      the choice is better made in a field that opens.
+    instead: select
+  - text: >-
+      The choice is between two states of one setting that takes effect
+      immediately.
+    instead: toggle
+  - text: >-
+      You want the options rendered as a row of segmented buttons rather than as
+      a form field with a legend.
+    instead: toggle-button-group
+
+dos:
+  - >-
+    Give the group a `label`; it becomes the `<legend>` that names the question
+    for everyone who reaches an option by keyboard or screen reader.
+  - >-
+    Preselect a sensible default when one exists. A radio group with nothing
+    checked forces a choice the user may not have an opinion about.
+  - >-
+    Listen for `onRadioGroupChange` on the group. Its detail carries the newly
+    checked radio's `checked`, `name` and `value`.
+  - >-
+    Use `hideLegend` rather than dropping `label` when the question is already
+    asked by the surrounding UI.
+
+donts:
+  - >-
+    Don't add an arrangement prop or wrap the group in your own flex container.
+    Items stack in a column by default; for a row, nest them in `<al-layout
+    direction="row" wrap>`.
+  - >-
+    Don't manage the unchecking yourself. Arrow navigation moves the checked
+    item, sets the new one, focuses its input and dispatches the change event in
+    one step — a competing handler will double-fire it.
+  - >-
+    Don't offer a radio group with a single option. One radio cannot be
+    unchecked once checked, which makes it a control the user can enter and
+    never leave.
+  - >-
+    Don't use a radio group for an action. Selecting an option should change a
+    value, not trigger navigation or a save.
+
+accessibility:
+  - >-
+    Arrow Left and Arrow Up move to the previous option, Arrow Right and Arrow
+    Down to the next, and both wrap around the ends — the standard radio group
+    keyboard model, implemented on the group rather than left to the browser
+    across shadow boundaries.
+  - >-
+    Moving the selection also moves focus: the newly checked radio's inner input
+    is focused directly, and disabled inputs are skipped by the selector that
+    finds it.
+  - >-
+    Enter re-commits the currently targeted radio, so a keyboard user who
+    arrived by Tab can confirm without hunting for Space.
+  - >-
+    The legend carries `aria-describedby` to the field note, so the helper text
+    belongs to the question rather than to whichever option happens to be
+    focused.
+
+content:
+  - >-
+    Write the legend as the question and the options as its answers, so the two
+    read as one sentence together.
+  - >-
+    Keep options parallel in structure and comparable in length. Uneven options
+    read as if one of them is the recommended answer.
+  - >-
+    Order options by a real property — sequence, size, price, frequency — rather
+    than alphabetically, so position carries meaning.
+  - >-
+    Explain a consequence in the field note rather than inside one option's
+    label; a long label breaks the parallel scan of the set.
+
+sources:
+  - path: libs/al-web-components/components/radio-group/radio-group.ts
+    contains: ArrowRight
+    note: >-
+      Arrow-key selection in both axes, the wrap at each end, the focus move to
+      the newly checked input, and the change event dispatched with it.
+  - path: libs/al-web-components/components/radio-group/radio-group.ts
+    contains: fieldset
+    note: >-
+      The native fieldset and legend, with `aria-describedby` from the legend to
+      the field note.
+  - path: libs/al-web-components/components/radio-group/radio-group.ts
+    contains: al-layout
+    note: >-
+      The slot documentation sending row arrangement to `al-layout` rather than
+      to a prop here.
+  - path: AGENTS.md
+    contains: Arrangement vs. semantics
+    note: >-
+      The contract entry naming roving selection and single-selection
+      enforcement as this component's reason to exist.

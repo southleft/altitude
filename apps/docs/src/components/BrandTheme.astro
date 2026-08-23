@@ -1,0 +1,23 @@
+---
+/**
+ * Loads `<al-theme>` — the scoped theming host every page in this site wraps
+ * its content in.
+ *
+ * A DEEP import, not the full bundle: the theme host is the one element every
+ * page needs (component detail pages load the rest through LiveRuntime.astro),
+ * and `al-web-components/components/theme` is a literal specifier, so Vite can
+ * statically analyse it and ship a few kB instead of the whole library on the
+ * Overview and Foundations screens.
+ *
+ * Registration is the flag path from `.altitude/REGISTRATION.md`:
+ * `window.alAutoRegistry = true` is set inline in <head> (Shell.astro) before
+ * this module evaluates, and the module reads it at module-eval time to decide
+ * whether to call `customElements.define`. When the full bundle also loads, its
+ * own `customElements.get(...) === undefined` guard means whichever arrives
+ * first wins and the second is a no-op.
+ */
+---
+
+<script>
+  import 'al-web-components/components/theme';
+</script>

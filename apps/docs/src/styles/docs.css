@@ -121,6 +121,32 @@ html body {
   font: 400 16px/24px var(--sans);
 }
 
+/*
+ * THE BRAND HOST. Shell.astro wraps the whole shell in `<al-theme brand=…>`,
+ * which sets that design system's tokens on `:host` and inherits them into the
+ * light DOM inside it. Two rules matter here:
+ *
+ * 1. `display: contents` in the LIGHT dom. The element's own shadow stylesheet
+ *    says the same, but only once it upgrades; without this, an un-upgraded
+ *    `<al-theme>` is an inline box wrapping a grid, and the shell reflows on
+ *    hydration.
+ *
+ * 2. The accent, re-declared ON THE HOST rather than on `:root`. Custom
+ *    properties substitute where they are DECLARED, so `--blue:
+ *    var(--al-theme-color-content-primary-default)` written at `:root` would
+ *    resolve against the base bundle and inherit that frozen value into every
+ *    brand. Declared on `al-theme` — an element the brand's own `:host` block
+ *    applies to — it resolves against the BRANDED value, so the docs chrome's
+ *    accent is the design system's accent, for every project, from one rule.
+ *    The fallbacks are the base bundle's values, which is what the reference
+ *    brand resolves to anyway: this changes nothing for it.
+ */
+al-theme {
+  display: contents;
+  --blue: var(--al-theme-color-content-primary-default, #4375ff);
+  --blue-hover: var(--al-theme-color-content-primary-strong, #6b93ff);
+}
+
 a {
   color: var(--blue);
   text-decoration: none;

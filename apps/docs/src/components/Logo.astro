@@ -1,21 +1,73 @@
 ---
 /*
- * Altitude marks — the wordmark and the standalone mark, lifted byte-for-byte
- * from the approved design canvas
- * (.mm/specs/2026-08-22-altitude-docs-site/visuals/altitude-ds-site.dc.html,
- * the <aside data-screen-label="Sidebar"> brand block and the Home hero's
- * AL-LOGO / MARK plate). The chevron fills --blue; the wordmark is
+ * The brand mark for whichever design system's site is being rendered.
+ *
+ * Marks are ASSETS, not code: each one is a file in `src/brand-marks/` named
+ * for the brand it belongs to (`<brand>.svg` for the wordmark,
+ * `<brand>.mark.svg` for the standalone mark). They are picked up by
+ * `import.meta.glob`, which is statically analysable but keyed at runtime — so
+ * a new design system gets its logo by DROPPING A FILE IN, with no branch and
+ * no import added here.
+ *
+ * A brand with no file falls back to a typographic wordmark built from the
+ * project's own name. That is deliberate: an unbranded-but-correct name beats
+ * another system's chevron, and it means a brand can get a docs site before it
+ * has a logo.
+ *
+ * `altitude.svg` / `altitude.mark.svg` are the marks from the approved design
+ * canvas (.mm/specs/2026-08-22-altitude-docs-site/visuals/altitude-ds-site.dc.html,
+ * the sidebar brand block and the Home hero's AL-LOGO / MARK plate), moved out
+ * of this file byte-for-byte. The chevron fills --blue; the wordmark is
  * currentColor so it inverts with the theme.
  */
 interface Props {
+  /** The design-system project whose mark to render. */
+  project: { brand: string; shortName: string };
   variant?: 'wordmark' | 'mark';
   class?: string;
   style?: string;
 }
-const { variant = 'wordmark', class: className, style } = Astro.props;
+const { project, variant = 'wordmark', class: className, style } = Astro.props;
+
+const marks = import.meta.glob('../brand-marks/*.svg', { query: '?raw', import: 'default', eager: true });
+const file = variant === 'mark' ? `${project.brand}.mark.svg` : `${project.brand}.svg`;
+const svg = marks[`../brand-marks/${file}`] ?? null;
+
+/** Fallback monogram: the brand's initial, for a project with no mark file. */
+const initial = (project.shortName[0] ?? '?').toUpperCase();
 ---
-{variant === 'wordmark' ? (
-  <svg class={className} style={style} aria-hidden="true" focusable="false" viewBox="0 0 420.57 50"><path d="M42.07,37.94l-21.12-11.1L0,37.74v11.08l20.94-11.17,21.12,11.27v-10.99ZM42.07,11.1L20.94,0,0,10.9v11.08l20.94-11.17,21.12,11.27v-10.99h0Z" fill="var(--blue)"></path><path d="M140.66,40.49h-10.57V8.45c0-4.44,1.06-6.13,3.59-7.82l-.07-.63h-17.68l-.07.63c2.61,1.69,3.59,3.38,3.59,7.82v32.39c0,4.44-.99,6.13-3.59,7.82l.07.63h33.95l2.82-12.82-.56-.28c-3.38,3.03-6.83,4.3-11.48,4.3ZM154.11,0l-2.68,12.18.63.35c3.1-2.54,6.2-4.01,11.27-4.01h3.87v31.97c0,4.58-1.27,6.27-4.23,8.17l.07.63h18.88l.07-.63c-2.89-1.9-4.15-3.59-4.15-8.17V8.52h3.8c5.14,0,8.24,1.48,11.27,4.01l.7-.35-2.75-12.18h-36.77ZM218.07.63l-.07-.63h-17.82l-.07.63c2.68,1.69,3.73,3.38,3.73,7.82v32.39c0,4.44-1.06,6.13-3.73,7.82l.07.63h17.82l.07-.63c-2.68-1.69-3.73-3.38-3.73-7.82V8.45c0-4.44,1.06-6.13,3.73-7.82ZM227.3,0l-2.68,12.18.63.35c3.1-2.54,6.2-4.01,11.27-4.01h3.87v31.97c0,4.58-1.27,6.27-4.23,8.17l.07.63h18.88l.07-.63c-2.89-1.9-4.16-3.59-4.16-8.17V8.52h3.8c5.14,0,8.24,1.48,11.27,4.01l.7-.35-2.75-12.18h-36.77ZM301.81,0l-.07.63c2.54,1.69,3.59,3.38,3.59,7.82v22.11c0,5.7-3.8,9.65-9.37,9.65s-9.44-3.94-9.44-9.65V8.45c0-4.44,1.06-6.13,3.59-7.82l-.07-.63h-17.68l-.07.63c2.61,1.69,3.59,3.38,3.59,7.82v22.82c0,11.13,8.17,18.73,20.14,18.73s19.93-7.61,19.93-18.73V8.45c0-4.44.99-6.13,3.59-7.82l-.07-.63h-17.68ZM348.79,0h-21.13l-.07.63c2.61,1.69,3.59,3.38,3.59,7.82v32.39c0,4.44-.99,6.13-3.59,7.82l.07.63h21.13c14.16,0,24.93-10.63,24.93-24.65S362.95,0,348.79,0ZM348.65,39.93h-6.83V9.37h6.83c8.1,0,14.23,6.55,14.23,15.28s-6.13,15.28-14.23,15.28ZM419.93,36.2c-3.45,3.03-6.83,4.3-11.41,4.3h-12.96v-12.54h9.23c3.38,0,5.14.77,6.9,2.89l.63-.07v-14.3l-.63-.07c-1.76,2.11-3.52,2.96-6.9,2.96h-9.23v-10.56h11.48c4.65,0,8.03,1.2,11.41,4.15l.63-.28L416.27,0h-34.86l-.07.63c2.61,1.69,3.59,3.38,3.59,7.82v32.39c0,4.44-.99,6.13-3.59,7.82l.07.63h36.34l2.82-12.82-.63-.28ZM104.83,41.2L89.62,0h-16.76l-.14.7c3.45,1.69,3.87,4.3,2.61,7.75l-12.26,32.75c-1.55,4.16-2.89,5.77-5,7.46v.63h16.62l.07-.63c-2.13-1.46-2.62-2.87-1.54-6.28l10.74-5.65,10.23,5.38c1.25,3.6.79,5.04-1.46,6.54l.07.63h16.97l.07-.63c-2.11-1.69-3.52-3.31-5-7.46ZM77.57,30.06l6.2-17.6,6.12,17.37-5.94-3.13-6.38,3.35Z" fill="currentColor"></path></svg>
-) : (
-  <svg class={className} style={style} aria-hidden="true" focusable="false" viewBox="0 0 42.07 48.82"><path d="M42.07,37.94l-21.12-11.1L0,37.74v11.08l20.94-11.17,21.12,11.27v-10.99ZM42.07,11.1L20.94,0,0,10.9v11.08l20.94-11.17,21.12,11.27v-10.99h0Z" fill="var(--blue)"></path></svg>
-)}
+
+{
+  svg ? (
+    <span class={className} style={style} set:html={svg} />
+  ) : variant === 'mark' ? (
+    <span class:list={['logo-mono', className]} style={style} aria-hidden="true">
+      {initial}
+    </span>
+  ) : (
+    <span class:list={['logo-word', className]} style={style}>
+      {project.shortName}
+    </span>
+  )
+}
+
+<style>
+  .logo-word {
+    display: block;
+    font: 700 20px/1 var(--sans);
+    letter-spacing: -0.02em;
+    text-transform: lowercase;
+  }
+
+  .logo-mono {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    width: 60%;
+    max-width: 220px;
+    margin: 0 auto;
+    background: var(--blue);
+    color: var(--bg);
+    font: 700 clamp(48px, 12vw, 120px) / 1 var(--sans);
+  }
+</style>

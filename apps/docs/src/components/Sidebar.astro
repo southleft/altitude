@@ -3,40 +3,57 @@
  * The persistent 264px sidebar from the design canvas
  * (.mm/specs/.../visuals/altitude-ds-site.dc.html, `<aside
  * data-screen-label="Sidebar">`): logo + "DESIGN SYSTEM — V2.0" eyebrow,
- * search field, INDEX section, then the ATOMS / MOLECULES / ORGANISMS groups
- * with live counts.
+ * search field, INDEX section, then the atomic groups with live counts.
  *
  * NOTHING here is hand-maintained. The groups, their order, their counts and
- * every link inside them come from `registry.mjs`, which derives them from
- * `libs/al-web-components/custom-elements.json` plus each component's own
- * story title. Adding a component to the library adds it here; there is no
- * second list to update.
+ * every link inside them come from the SCOPED registry on the context
+ * (`buildRegistry(project.scope)`), which derives them from
+ * `libs/al-web-components/custom-elements.json` plus each component's own story
+ * title, filtered by that design system's `library.components` allowlist in
+ * `.altitude/ds-projects.json`. Adding a component to the library adds it to
+ * the whole-library site; adding it to a project's allowlist adds it to that
+ * project's. There is no second list to update, and no per-project template.
+ *
+ * The DESIGN SYSTEMS block at the foot is the same idea one level up: one row
+ * per project in the registry, so a new entry appears in every site's sidebar
+ * without an edit here.
  */
-import { TIERS, LIFECYCLE, COMPONENT_COUNT } from '../lib/registry.mjs';
-import { SITE, href } from '../lib/site.mjs';
+import { PROJECTS } from '../lib/projects.mjs';
+import { contextFor } from '../lib/context.mjs';
 import Logo from './Logo.astro';
 import SearchIcon from './SearchIcon.astro';
 
 interface Props {
+  context: any;
   /** Which INDEX entry is current. */
   active?: 'overview' | 'foundations' | 'components';
   /** Slug of the component detail page being viewed, if any. */
   activeSlug?: string;
 }
 
-const { active, activeSlug } = Astro.props;
+const { context, active, activeSlug } = Astro.props;
+const { project, registry, site, href } = context;
 
 const index = [
   { id: 'overview', label: 'Overview', path: '/' },
   { id: 'foundations', label: 'Foundations', path: '/foundations' },
   { id: 'components', label: 'Components', path: '/components' },
 ] as const;
+
+/** Every design system's site, so any of them is one click from any other. */
+const systems = PROJECTS.map((candidate) => ({
+  id: candidate.id,
+  shortName: candidate.shortName,
+  count: contextFor(candidate).registry.count,
+  href: contextFor(candidate).href('/'),
+  current: candidate.id === project.id,
+}));
 ---
 
 <aside class="sidebar">
-  <a class="sidebar__brand" href={href('/')} aria-label={`${SITE.name} home`}>
-    <Logo variant="wordmark" />
-    <div class="sidebar__eyebrow">{SITE.eyebrow}</div>
+  <a class="sidebar__brand" href={href('/')} aria-label={`${site.name} home`}>
+    <Logo project={project} variant="wordmark" />
+    <div class="sidebar__eyebrow">{site.eyebrow}</div>
   </a>
 
   <div class="sidebar__search">
@@ -49,9 +66,9 @@ const index = [
         id="sidebar-search"
         type="search"
         autocomplete="off"
-        aria-label={`Search ${COMPONENT_COUNT} components`}
-        data-total={COMPONENT_COUNT}
-        placeholder={`SEARCH ${COMPONENT_COUNT} COMPONENTS`}
+        aria-label={`Search ${registry.count} components`}
+        data-total={registry.count}
+        placeholder={`SEARCH ${registry.count} COMPONENTS`}
       />
     </div>
   </div>
@@ -72,7 +89,7 @@ const index = [
     }
 
     {
-      TIERS.map((tier) => (
+      registry.tiers.map((tier) => (
         <div data-tier-block={tier.id}>
           <div class="sidebar__group">
             <span>{tier.label}</span>
@@ -99,12 +116,30 @@ const index = [
          derived (registry.mjs → CEM `deprecated` + each story's own
          `status` parameter), so a component promoted out of beta moves here
          by itself. Each row filters the index. -->
-    <div class="sidebar__group"><span>LIFECYCLE</span><span>{LIFECYCLE.length}</span></div>
+    <div class="sidebar__group"><span>LIFECYCLE</span><span>{registry.lifecycle.length}</span></div>
     {
-      LIFECYCLE.map((phase) => (
+      registry.lifecycle.map((phase) => (
         <a class="sidebar__link sidebar__link--phase" href={href(`/components?status=${phase.id}`)}>
           <span>{phase.label}</span>
           <span>{phase.count}</span>
+        </a>
+      ))
+    }
+
+    <!-- One row per design system in .altitude/ds-projects.json. The count
+         beside each is that system's own scope, so the difference between the
+         library and what a brand ships is visible before you click. -->
+    <div class="sidebar__group"><span>DESIGN SYSTEMS</span><span>{systems.length}</span></div>
+    {
+      systems.map((system) => (
+        <a
+          class="sidebar__link sidebar__link--phase"
+          href={system.href}
+          data-system={system.id}
+          aria-current={system.current ? 'true' : undefined}
+        >
+          <span>{system.shortName}</span>
+          <span>{system.count}</span>
         </a>
       ))
     }
@@ -115,7 +150,7 @@ const index = [
       <span class="micro">THEME / <span data-theme-label>LIGHT</span></span>
       <button class="switch" type="button" data-theme-toggle aria-label="Toggle color theme"></button>
     </div>
-    <div class="sidebar__version">{SITE.footprint}</div>
+    <div class="sidebar__version">{site.footprint}</div>
   </div>
 </aside>
 
@@ -154,12 +189,18 @@ const index = [
     };
 
     input.addEventListener('input', apply);
-    // A query typed on any page should be able to escalate to the full index.
+    // A query typed on any page should be able to escalate to the full index —
+    // this design system's index, which is what `data-docs-site` carries (the
+    // base plus this project's route prefix).
     input.addEventListener('keydown', (event) => {
       if (event.key !== 'Enter') return;
       const q = input.value.trim();
-      const base = document.documentElement.dataset.docsBase ?? '';
-      window.location.href = q ? `${base}/components?q=${encodeURIComponent(q)}` : `${base}/components`;
+      const root =
+        document.querySelector<HTMLAnchorElement>('.sidebar__brand')?.getAttribute('href') ?? '';
+      const prefix = root.replace(/\/$/, '');
+      window.location.href = q
+        ? `${prefix}/components?q=${encodeURIComponent(q)}`
+        : `${prefix}/components`;
     });
   }
 </script>

@@ -1,15 +1,19 @@
 /**
  * Markdown renderings of the generated pages.
  *
+ * Every renderer takes a design-system CONTEXT (`context.mjs` — one project,
+ * its scoped registry, its site copy and its href builder) and defaults to the
+ * site at the root, so Southleft's Markdown describes Southleft's 21 components
+ * under Southleft's name without a second set of renderers existing.
+ *
  * Every docs page is also served as Markdown at the same URL plus `.md`
  * (`/docs/components/button` → `/docs/components/button.md`), and the same
  * renderers feed `llms-full.txt`. Both read the registry, so the Markdown an
  * agent fetches and the HTML a human reads are the same facts rendered twice —
  * there is no second copy of the content to drift.
  */
-import { TIERS, COMPONENTS, COMPONENT_COUNT, STATS } from './registry.mjs';
-import { TOKEN_COUNT, colorRamps, spacingScale, radiusScale, typeScale } from './tokens.mjs';
-import { SITE } from './site.mjs';
+import { TOKEN_COUNT, colorRamps, spacingScale, radiusScale, typeScale, brandOverrides } from './tokens.mjs';
+import { DEFAULT_CONTEXT } from './context.mjs';
 
 const table = (headers, rows) =>
   rows.length
@@ -21,9 +25,11 @@ const table = (headers, rows) =>
     : '_None declared in the manifest._';
 
 /** One component, as Markdown. */
-export function componentMarkdown(component) {
+export function componentMarkdown(component, context = DEFAULT_CONTEXT) {
   const lines = [
     `# ${component.name}`,
+    '',
+    `In ${context.site.fullName}, rendered under \`<al-theme brand="${context.project.brand}">\`.`,
     '',
     `\`<${component.tag}>\`${component.react ? ` · React: \`<${component.react}>\`` : ''}${
       component.status ? ` · status: ${component.status}` : ''
@@ -105,42 +111,52 @@ export function componentMarkdown(component) {
 }
 
 /** The Overview page, as Markdown. */
-export function overviewMarkdown() {
+export function overviewMarkdown(context = DEFAULT_CONTEXT) {
+  const { site, registry, project } = context;
   return [
-    `# ${SITE.title}`,
+    `# ${site.title}`,
     '',
-    SITE.description,
+    site.description,
     '',
     '## By the numbers',
     '',
-    `- Components: ${COMPONENT_COUNT}`,
-    `- Icon glyphs: ${STATS.icons}`,
-    `- Custom elements in the manifest: ${STATS.cemTags}`,
-    `- Documented properties: ${STATS.documentedProps} of ${STATS.totalProps}`,
-    `- Components with a React wrapper: ${STATS.withReact}`,
+    `- Components documented: ${registry.count}${
+      registry.scope.scoped
+        ? " (this design system's declared scope; the shared library declares more)"
+        : ''
+    }`,
+    `- Icon glyphs: ${registry.stats.icons}`,
+    `- Custom elements in the manifest: ${registry.stats.cemTags}`,
+    `- Documented properties: ${registry.stats.documentedProps} of ${registry.stats.totalProps}`,
+    `- Components with a React wrapper: ${registry.stats.withReact}`,
     `- Design tokens: ${TOKEN_COUNT}`,
+    `- Brand: \`<al-theme brand="${project.brand}">\``,
     '',
     '## Taxonomy',
     '',
-    ...TIERS.map((tier) => `- ${tier.label}: ${tier.count}`),
+    ...registry.tiers.map((tier) => `- ${tier.label}: ${tier.count}`),
     '',
   ].join('\n');
 }
 
 /** The Components index, as Markdown. */
-export function componentsIndexMarkdown() {
+export function componentsIndexMarkdown(context = DEFAULT_CONTEXT) {
+  const { site, registry } = context;
   return [
-    `# Components (${COMPONENT_COUNT})`,
+    `# Components (${registry.count})`,
     '',
-    'Generated from `libs/al-web-components/custom-elements.json`.',
+    'Generated from `libs/al-web-components/custom-elements.json`' +
+      (registry.scope.scoped
+        ? ", scoped to this design system's `library.components` allowlist in `.altitude/ds-projects.json`."
+        : '.'),
     '',
-    ...TIERS.flatMap((tier) => [
+    ...registry.tiers.flatMap((tier) => [
       `## ${tier.label} (${tier.count})`,
       '',
       table(
         ['Component', 'Tag', 'React', 'Props', 'Slots', 'Events'],
         tier.components.map((c) => [
-          `[${c.name}](${SITE.url}/docs/components/${c.slug})`,
+          `[${c.name}](${site.url}/components/${c.slug})`,
           `\`<${c.tag}>\``,
           c.react ? `\`<${c.react}>\`` : '—',
           c.props.length,
@@ -154,13 +170,32 @@ export function componentsIndexMarkdown() {
 }
 
 /** The Foundations page, as Markdown. */
-export function foundationsMarkdown() {
+export function foundationsMarkdown(context = DEFAULT_CONTEXT) {
   const ramps = colorRamps();
+  const overrides = brandOverrides(context.project.brand);
   return [
     '# Foundations',
     '',
     `Read at build time from the published token layer — ${TOKEN_COUNT} tokens.`,
     '',
+    `## Brand — \`${context.project.brand}\``,
+    '',
+    overrides.available
+      ? overrides.properties.length
+        ? `This brand redeclares ${overrides.properties.length} of those properties inside ` +
+          `\`<al-theme brand="${context.project.brand}">\`; everything else resolves to the base bundle.`
+        : overrides.reason
+      : overrides.reason,
+    '',
+    ...(overrides.properties.length
+      ? [
+          table(
+            ['Property', 'Brand value', 'Base value'],
+            overrides.properties.map((p) => [`\`${p.name}\``, p.value, p.base ?? '—'])
+          ),
+          '',
+        ]
+      : []),
     `## Color (${ramps.length} ramps)`,
     '',
     ...ramps.flatMap((ramp) => [
@@ -197,11 +232,11 @@ export function foundationsMarkdown() {
 }
 
 /** Everything, concatenated — the body of `llms-full.txt`. */
-export function fullCorpus() {
+export function fullCorpus(context = DEFAULT_CONTEXT) {
   return [
-    overviewMarkdown(),
-    foundationsMarkdown(),
-    componentsIndexMarkdown(),
-    ...COMPONENTS.map(componentMarkdown),
+    overviewMarkdown(context),
+    foundationsMarkdown(context),
+    componentsIndexMarkdown(context),
+    ...context.registry.components.map((component) => componentMarkdown(component, context)),
   ].join('\n\n---\n\n');
 }

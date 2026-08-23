@@ -1,0 +1,26 @@
+---
+/**
+ * ROUTE ONLY — the component pages of every non-default design system.
+ *
+ * The cross product of `SCOPED_PROJECTS` and each project's OWN scoped
+ * registry: a project that documents 21 of the library's components gets 21
+ * pages here, not 68. Both halves come from the registry file, so neither the
+ * project list nor the component list is typed.
+ */
+import ComponentDetailPage from '../../../components/pages/ComponentDetailPage.astro';
+import { SCOPED_PROJECTS } from '../../../lib/projects.mjs';
+import { contextFor } from '../../../lib/context.mjs';
+
+export function getStaticPaths() {
+  return SCOPED_PROJECTS.flatMap((project) =>
+    contextFor(project).registry.components.map((component) => ({
+      params: { project: project.id, slug: component.slug },
+      props: { project, component },
+    })),
+  );
+}
+
+const { project, component } = Astro.props;
+---
+
+<ComponentDetailPage context={contextFor(project)} component={component} />

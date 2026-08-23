@@ -1,0 +1,127 @@
+purpose: >-
+  The single-line text field, and the system's reference implementation of a
+  form control. It owns the whole field — label, asterisk, optional marker,
+  field note, error note and character counter — so the surrounding page never
+  has to assemble those parts itself, and it is form-associated, so its value
+  reaches the owning `<form>`'s FormData across the shadow boundary.
+
+whenToUse:
+  - >-
+    You need one line of typed input: text, email, number, password, url or tel.
+    `type` selects the native input type, which is what gives mobile keyboards
+    and browser autofill something to work with.
+  - >-
+    The field belongs to a form whose data you read with `FormData`. Set `name`
+    and the value is carried through form-associated custom element internals.
+  - >-
+    The field needs helper text, an error, a required marker or a character
+    counter — all four are built in and positioned for you.
+
+whenNotToUse:
+  - text: >-
+      The user needs to write more than a line or two. A single-line field with
+      a long value hides most of what has been typed.
+    instead: textarea
+  - text: >-
+      The value comes from a fixed set of options rather than free typing. A
+      text field with a validation message is a worse version of a picker.
+    instead: select
+  - text: >-
+      The user is filtering or querying a list rather than filling in a field —
+      that pattern wants its own affordance and clear control.
+    instead: search
+  - text: >-
+      You want a number the user nudges up and down rather than types, such as a
+      quantity.
+    instead: input-stepper
+
+dos:
+  - >-
+    Set `isError` whenever you set `errorNote`. The error block only renders
+    when `isError` is true, so an error string on its own displays nothing at
+    all.
+  - >-
+    Prefer `hideLabel` over omitting `label` when the layout has no room for it.
+    The `<label for>` is still rendered and still associated — it is only
+    visually hidden, and the required asterisk is relocated so it stays visible.
+  - >-
+    Use `fieldNote` for the rule the user needs BEFORE typing ("At least 8
+    characters"), and `errorNote` for what went wrong after.
+  - >-
+    Set `maxLength` when there is a real limit; it renders both the native
+    `maxlength` and a live `n/max` counter, and drive the counter with
+    `maxLengthValue`.
+
+donts:
+  - >-
+    Don't rely on the error note being announced. Only the FIELD note is given
+    the `aria-describedby` id — the error block is rendered without it, so a
+    screen-reader user reaches the error only by browsing the field, not on
+    focus.
+  - >-
+    Don't expect `isError` to set `aria-invalid`. The component renders no
+    `aria-invalid` at all, so the invalid state is conveyed visually and through
+    the note, not through the accessibility tree.
+  - >-
+    Don't use `placeholder` as the label. It disappears on the first keystroke,
+    is not associated with the field, and leaves the user with no way back to
+    the question.
+  - >-
+    Don't set `autoComplete` on a password field expecting it to apply — the
+    component forces `autocomplete="off"` whenever `type="password"`.
+  - >-
+    Don't stack `isRequired` and `isOptional` on the same field. They render two
+    contradictory markers, an asterisk and an "(Optional)" note.
+
+accessibility:
+  - >-
+    `fieldId` is generated when you do not supply one and wires the `<label
+    for>` to the `<input id>`, so the field always has a programmatic label even
+    with `hideLabel` set.
+  - >-
+    `isRequired` renders the native `required` attribute as well as the visual
+    asterisk, so browser constraint validation and assistive technology both see
+    it.
+  - >-
+    `ariaDescribedBy` is generated when absent and is applied to the input and
+    to the field note. If you pass your own id, you own keeping it pointed at
+    something that exists.
+  - >-
+    `isDisabled` renders the native `disabled` attribute here — unlike
+    `al-button` — so a disabled input genuinely leaves the tab order.
+
+content:
+  - >-
+    Label the data, not the action: "Email address", not "Enter your email".
+    The field already tells the user to enter something.
+  - >-
+    Write field notes as the rule, not the failure: "Use 8 or more characters"
+    reads better before typing than "Password too short" does after.
+  - >-
+    Write error notes so they say what to do next, and keep them specific
+    enough that the user does not have to guess which rule they broke.
+  - >-
+    Mark the minority. If most fields in a form are required, mark the optional
+    ones with `isOptional`; if most are optional, mark the required ones.
+
+sources:
+  - path: libs/al-web-components/components/input/input.ts
+    contains: form-associated participation
+    note: >-
+      `static formAssociated` and the FormAssociatedController — why a value set
+      inside shadow DOM still reaches the owning form.
+  - path: libs/al-web-components/components/input/input.ts
+    contains: al-c-input__asterisk
+    note: >-
+      The required asterisk, including the relocated variant rendered when
+      `hideLabel` would otherwise hide it.
+  - path: libs/al-web-components/components/input/input.ts
+    contains: aria-describedby
+    note: >-
+      The describedby wiring: it reaches the input and the field note, and no
+      equivalent id is put on the error block.
+  - path: libs/al-web-components/components/input/input.ts
+    contains: al-c-input__label
+    note: >-
+      The `<label for>` that survives `hideLabel`, and the asterisk / optional
+      markers rendered inside it.

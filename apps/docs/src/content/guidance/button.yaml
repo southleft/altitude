@@ -1,0 +1,143 @@
+purpose: >-
+  The system's action control. It renders a real `<button>` — or an `<a
+  role="button">` when `href` is set — so the element the user actually gets,
+  and the keyboard behaviour that comes with it, follows the props rather than
+  the styling. Everything else about a button is ranking: `variant` says how
+  much weight this action carries against the others on screen.
+
+whenToUse:
+  - >-
+    The control performs an action in the current page: submits a form, opens a
+    dialog, applies a filter, saves a draft.
+  - >-
+    The action has to participate in a form. `type="submit"` and `type="reset"`
+    are routed through the shared FormController, so a button inside a `<form>`
+    behaves like a native one even across the shadow boundary.
+  - >-
+    A dense toolbar needs an icon-only affordance: set `hideText`, supply
+    `label`, and put the glyph in the `before` slot.
+  - >-
+    You need to rank actions visually — `default`, `secondary`, `tertiary`,
+    `bare` and `danger` are the whole ladder, and there is no sixth treatment.
+
+whenNotToUse:
+  - text: >-
+      The control only navigates, and should read as text inside a sentence or a
+      list of destinations. `href` does swap in an `<a>`, but it keeps button
+      styling and `role="button"` — use it only when the navigation is meant to
+      look and be announced like a button.
+    instead: link
+  - text: >-
+      You are putting several buttons side by side and what you actually want is
+      control over their spacing. There is no button-group component: it was
+      removed precisely because it owned arrangement and nothing else.
+    instead: layout
+  - text: >-
+      The control flips a state that stays visible after the click — a filter
+      pill, a view switch, a formatting toggle. That is selection, not
+      invocation, and it wants a component that owns the selected state.
+    instead: toggle-button
+  - text: >-
+      The trigger opens a list of navigation destinations. Let the menu own its
+      own trigger relationship rather than wiring a bare button to a floating
+      list by hand.
+    instead: menu
+
+dos:
+  - >-
+    For an icon-only button, set `hideText`, supply `label`, and place the icon
+    in the `before` slot. That exact pattern is documented on the component with
+    a worked example, and it is the only combination that produces one
+    accessible name.
+  - >-
+    Gate the action in your own click handler when the button is disabled. The
+    component renders `aria-disabled` but not the native `disabled` attribute,
+    and its click handler has no disabled branch, so a disabled submit button
+    still submits.
+  - >-
+    Drive `isExpanded` from the open state of whatever the button controls, so
+    the control and the thing it discloses never disagree.
+  - >-
+    Reserve `variant="danger"` for actions that destroy data or cannot be
+    undone. A treatment used for merely important actions stops carrying a
+    warning.
+
+donts:
+  - >-
+    Don't combine `hideText` with visible slot text. The text node is only
+    visually hidden — it stays in the layout and in the accessibility tree, so
+    it duplicates `label` into a redundant accessible name.
+  - >-
+    Don't rely on the glyph alone for meaning. With `hideText` set and no
+    `label`, the button ships with no accessible name at all.
+  - >-
+    Don't assume `ariaControls` reaches the DOM on a plain button. It is
+    rendered on the `href` branch only; the `<button>` branch emits
+    `aria-label`, `aria-disabled`, `aria-pressed` and `aria-expanded` and stops
+    there.
+  - >-
+    Don't use `variant="bare"` as a way to draw a link. A bare button is still
+    announced as a button, and still activates on Space.
+  - >-
+    Don't leave a disabled button as the only visible path forward without
+    saying somewhere what would enable it. A disabled control is not an error
+    message.
+
+accessibility:
+  - >-
+    `label` becomes `aria-label` on both rendered branches, and it is the only
+    accessible name an icon-only button has.
+  - >-
+    `isPressed` accepts `true`, `false` or `mixed` and passes straight through
+    to `aria-pressed` — `mixed` is the tri-state case, such as a select-all
+    whose children are partly checked. It is state you must keep in sync, not a
+    style hook.
+  - >-
+    `isDisabled` renders `aria-disabled` only. The control therefore keeps its
+    tab stop and can still be reached, focused and announced as unavailable —
+    which is the accessible behaviour — but it also remains clickable, so the
+    guard has to live in your handler.
+  - >-
+    Setting `href` produces `<a role="button">`. Assistive technology will
+    announce a button while the browser still treats it as a link for
+    middle-click, copy-link and Space-vs-Enter purposes.
+
+content:
+  - >-
+    Label the action, not the mechanism — a verb plus the object it acts on:
+    "Save changes", "Delete project", "Invite teammate".
+  - >-
+    Let the surrounding UI carry the object when it already does. A dialog
+    titled "Delete project" can end in "Delete"; a button floating in a toolbar
+    cannot.
+  - >-
+    Write an icon-only button's `label` as the whole sentence a screen-reader
+    user hears, not as a tooltip fragment: "Open actions menu", not "Actions".
+
+sources:
+  - path: libs/al-web-components/components/button/button.ts
+    contains: Icon-only button pattern
+    note: >-
+      The icon-only recipe, its worked example and its explicit do-not, written
+      on the class and previously visible to nobody outside the source file.
+  - path: libs/al-web-components/components/button/button.ts
+    contains: this swaps
+    note: >-
+      `href` swapping the rendered element from `<button>` to `<a>` — the reason
+      this page distinguishes navigation from action.
+  - path: libs/al-web-components/components/button/button.ts
+    contains: aria-disabled
+    note: >-
+      The disabled treatment is advisory only: `aria-disabled` is emitted, the
+      native `disabled` attribute is not, and the click handler does not check
+      it.
+  - path: libs/al-web-components/components/button/button.ts
+    contains: aria-controls
+    note: >-
+      The single `aria-controls` render site, inside the link branch — the basis
+      for the do-not about disclosure on a plain button.
+  - path: AGENTS.md
+    contains: Arrangement vs. semantics
+    note: >-
+      The rule that removed `al-button-group` and sends a row of buttons to
+      `al-layout` instead.

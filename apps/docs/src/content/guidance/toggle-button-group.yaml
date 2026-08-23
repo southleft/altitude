@@ -1,0 +1,116 @@
+purpose: >-
+  A row of toggle buttons where at most one is selected at a time. It exists for
+  that single-select state and for one behaviour that comes with it — a click
+  anywhere outside the group clears the selection — and for nothing else. The
+  row itself is an `<al-layout>` inside its shadow root.
+
+whenToUse:
+  - >-
+    Several toggle buttons form one exclusive choice — a view switcher, a
+    segmented filter, a formatting mode.
+  - >-
+    The selection is transient and should clear when the user's attention moves
+    elsewhere. Clicking outside the group deselects, which is the behaviour that
+    makes this different from a radio group.
+  - >-
+    Each option is short enough to read as a button rather than as a labelled
+    form field.
+
+whenNotToUse:
+  - text: >-
+      The choice is a value the form will submit, and it needs a label, a
+      required marker and a validation message. That is a form field with a
+      legend, not a button row.
+    instead: radio-group
+  - text: >-
+      Options can be combined. Nothing here allows more than one selection at a
+      time.
+    instead: checkbox-group
+  - text: >-
+      There is one button whose pressed state persists. A group of one is the
+      button itself with `isPressed`.
+    instead: toggle-button
+  - text: >-
+      You only want buttons in a row with spacing between them. That is
+      arrangement, and this component's `variant` is about the group background,
+      not about the gap.
+    instead: layout
+
+dos:
+  - >-
+    Use `variant="background"` when the group needs to read as one segmented
+    control rather than as separate buttons.
+  - >-
+    Read the current selection from the group rather than tracking it per
+    button. The group clears the previously selected item when a new one is
+    chosen.
+  - >-
+    Keep the option set short and stable. A segmented control the user has to
+    scroll has stopped being one.
+  - >-
+    Nest the buttons in your own `<al-layout>` if you need a column or a gap —
+    the group's internal layout is a row with no gap and is not configurable
+    from outside.
+
+donts:
+  - >-
+    Don't rely on the selection surviving a click elsewhere on the page. A
+    document-level mousedown listener deselects whenever the click lands outside
+    the group, which is deliberate and is the reason this is not a radio group.
+  - >-
+    Don't add arrangement props here. The group renders `<al-layout
+    direction="row" gap="none">` around its slot, and arrangement belongs to
+    that component.
+  - >-
+    Don't use this group where the choice must persist and be submitted. It
+    holds no name, no value and no form participation.
+  - >-
+    Don't put more than a handful of buttons in one group. Past that, the row
+    wraps or scrolls and the exclusivity stops being visible.
+
+accessibility:
+  - >-
+    The group renders no `radiogroup` role and no roving tabindex. Every toggle
+    button stays its own tab stop, and arrow keys do not move between them —
+    the exclusivity is enforced in state, not announced as a group.
+  - >-
+    Because there is no group role, each toggle button has to carry its own
+    accessible name and its own pressed state. Nothing here names the set as a
+    whole.
+  - >-
+    The click-outside deselection is driven by a `mousedown` listener on the
+    global object, so it responds to pointer input only. A keyboard user cannot
+    clear the selection the same way.
+
+content:
+  - >-
+    Label each option with one or two words, in parallel form, so the row reads
+    as a set of alternatives rather than a set of commands.
+  - >-
+    Name the dimension being switched somewhere near the group. Segmented
+    controls show the options but never the question.
+  - >-
+    Keep the labels similar in length. A row where one option is twice as wide
+    reads as if that option is the important one.
+
+sources:
+  - path: libs/al-web-components/components/toggle-button-group/toggle-button-group.ts
+    contains: handleOnClickOutside
+    note: >-
+      The document-level mousedown listener that clears the selection when the
+      click lands outside the group.
+  - path: libs/al-web-components/components/toggle-button-group/toggle-button-group.ts
+    contains: selectedItem
+    note: >-
+      Single-select enforcement — the previously selected button is unset when a
+      new one is chosen.
+  - path: libs/al-web-components/components/toggle-button-group/toggle-button-group.ts
+    contains: layoutEl
+    note: >-
+      The row is an `al-layout` inside the shadow root, which is why this
+      component has no arrangement props of its own.
+  - path: AGENTS.md
+    contains: Arrangement vs. semantics
+    note: >-
+      The contract entry naming single-select state and click-outside
+      deselection as this component's reason to exist.

@@ -1,23 +1,40 @@
 ---
 /**
  * The app shell from the design canvas: a fixed 264px sidebar beside a
- * single scrolling `<main>`. Every page in this site renders inside it.
+ * single scrolling `<main>`. Every page of every design system's site renders
+ * inside it — one shell, one design language, N brands.
  *
- * Theming is `data-theme` on `<html>`, driven by the sidebar's pill switch —
- * the same mechanism the canvas uses (`document.documentElement.dataset.theme`
- * in its `toggleTheme`). It is deliberately independent of `<al-theme>`:
- * `data-theme` styles the DOCS CHROME, while `<al-theme>` (mounted only
- * around live component previews) styles the COMPONENTS. Mixing the two would
- * make the docs' ink-on-paper design a hostage of whichever brand a preview
- * happens to select.
+ * TWO THEMING AXES, deliberately separate:
+ *
+ *   `data-theme` on <html> — the docs CHROME's light/dark, driven by the
+ *   sidebar's pill switch, the same mechanism the canvas uses. It styles the
+ *   documentation, not the thing being documented.
+ *
+ *   `<al-theme brand mode>` around the whole shell — the COMPONENTS' brand.
+ *   Tokens land on `:host` and inherit into the light DOM inside it
+ *   (`.altitude/BRANDS.md`; the mechanism `pnpm test:scoped-theming` proves),
+ *   so every live preview on a project's site renders in that project's brand
+ *   with no forked template and no second stylesheet. It composes on top of
+ *   `dist/css/main.css` rather than replacing it, which is why the neutral
+ *   reference brand emits no override block at all and still works.
+ *
+ * The one place the two meet is the accent: `docs.css` re-declares `--blue`
+ * ON the `al-theme` element as `var(--al-theme-color-content-primary-default)`.
+ * Declared there and not on `:root`, so it resolves against the BRANDED value
+ * rather than the base one — custom properties substitute where they are
+ * declared, so a `:root` declaration would have frozen the base blue before the
+ * brand could reach it.
  */
 import 'al-web-components/css/main.css';
 import '../styles/docs.css';
 import Sidebar from '../components/Sidebar.astro';
+import BrandTheme from '../components/BrandTheme.astro';
 import LiveRuntime from '../components/LiveRuntime.astro';
 import { SITE, base } from '../lib/site.mjs';
 
 interface Props {
+  /** The design-system context this page belongs to (lib/context.mjs). */
+  context: any;
   title: string;
   description?: string;
   active?: 'overview' | 'foundations' | 'components';
@@ -27,19 +44,26 @@ interface Props {
 }
 
 const {
+  context,
   title,
-  description = SITE.description,
+  description = context.site.description,
   active,
   activeSlug,
   liveComponents = false,
 } = Astro.props;
 
-const pageTitle = title === SITE.name ? SITE.title : `${title} · ${SITE.name}`;
+const { project, site } = context;
+const pageTitle = title === site.name ? site.title : `${title} · ${site.name}`;
 const canonical = new URL(Astro.url.pathname, SITE.url).toString();
 ---
 
 <!doctype html>
-<html lang="en" data-docs-base={base}>
+<html
+  lang="en"
+  data-docs-base={base}
+  data-docs-project={project.id}
+  data-docs-brand={project.brand}
+>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -47,7 +71,7 @@ const canonical = new URL(Astro.url.pathname, SITE.url).toString();
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:site_name" content={site.fullName} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
@@ -69,25 +93,32 @@ const canonical = new URL(Astro.url.pathname, SITE.url).toString();
     {
       /* Deep component imports self-register only when this flag is set at
          module-eval time (.altitude/REGISTRATION.md — load-bearing, not a boot
-         convenience). Inline, in <head>, before the runtime module. */
-      liveComponents && <script is:inline>window.alAutoRegistry = true;</script>
+         convenience). Inline, in <head>, before any component module. Set on
+         every page now, not only the live ones: `<al-theme>` wraps the shell. */
     }
+    <script is:inline>window.alAutoRegistry = true;</script>
   </head>
   <body>
-    <div class="shell">
-      <Sidebar active={active} activeSlug={activeSlug} />
-      <main class="shell__main" id="main">
-        <slot />
-      </main>
-    </div>
+    <al-theme brand={project.brand} data-brand-host>
+      <div class="shell">
+        <Sidebar context={context} active={active} activeSlug={activeSlug} />
+        <main class="shell__main" id="main">
+          <slot />
+        </main>
+      </div>
+    </al-theme>
 
     <script>
-      // Theme switch. Reflects into `data-theme` on <html> and persists.
+      // Theme switch. Reflects into `data-theme` on <html> for the docs chrome
+      // and into `mode` on <al-theme> for the components, so one control moves
+      // both axes together instead of leaving branded previews in light mode on
+      // a dark page.
       const label = document.querySelector<HTMLElement>('[data-theme-label]');
+      const host = document.querySelector<HTMLElement>('[data-brand-host]');
       const paint = () => {
-        if (label) {
-          label.textContent = document.documentElement.dataset.theme === 'dark' ? 'DARK' : 'LIGHT';
-        }
+        const mode = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+        if (label) label.textContent = mode.toUpperCase();
+        host?.setAttribute('mode', mode);
       };
       document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
         const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
@@ -102,6 +133,7 @@ const canonical = new URL(Astro.url.pathname, SITE.url).toString();
       paint();
     </script>
 
+    <BrandTheme />
     {liveComponents && <LiveRuntime />}
   </body>
 </html>

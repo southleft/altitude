@@ -10,21 +10,33 @@
  * The panel's job is to be HONEST before it is reassuring. Three things it
  * insists on saying, because the Storybook badges it replaces could not:
  *   * WHICH design system. One library backs several, each with its own Figma
- *     file, so parity is one row per project rather than one badge.
+ *     file, so parity is one row per project rather than one badge. The
+ *     whole-library site shows every project's row; a SCOPED project's site
+ *     shows only its own (parityForProject) — another system's Figma file is
+ *     not this reader's business, and would read as drift in a file they
+ *     cannot open.
  *   * WHAT DECIDED the status — a contract diff, a byte hash, or nothing at all
  *     (`driftBasis`).
  *   * WHETHER FIGMA WAS EVER READ. While `figmaCurrentDigest` is unobserved,
  *     `figma-drift` and `conflict` cannot occur, so "0 drift" would be a
  *     statement about the tooling, not about the design. The panel says so.
  */
-import { parityFor, PARITY_STATUS, DRIFT_BASIS, PARITY_AVAILABLE, PARITY_FAILURES } from '../lib/parity.mjs';
+import {
+  parityForProject,
+  PARITY_STATUS,
+  DRIFT_BASIS,
+  PARITY_AVAILABLE,
+  PARITY_FAILURES,
+} from '../lib/parity.mjs';
 
 interface Props {
   tag: string;
+  /** The design-system project whose site this panel is rendering on. */
+  project: any;
 }
 
-const { tag } = Astro.props;
-const rows = parityFor(tag);
+const { tag, project } = Astro.props;
+const rows = parityForProject(tag, project);
 
 /** Projects whose Figma side has never been observed, so their status is partial. */
 const unobserved = rows.filter((row) => !row.figmaObserved && row.figmaSetName);

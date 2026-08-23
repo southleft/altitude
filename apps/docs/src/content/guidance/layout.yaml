@@ -1,0 +1,128 @@
+purpose: >-
+  The single arrangement primitive in the system. Everything about where boxes
+  sit — direction, gap, alignment, distribution, wrapping, stretch, the page
+  measure, grid columns — lives here and nowhere else. Four jobs, selected by
+  `variant`: `flow` stacks or rows content, `constrained` owns the page measure
+  with fluid gutters, `grid` is an N-column grid, `bento` is a 12-column
+  auto-row grid for asymmetric tiles.
+
+whenToUse:
+  - >-
+    Any time you need to arrange content — inside a component's slot, inside a
+    page section, or around a whole page. There is no second answer to this
+    question in the system.
+  - >-
+    A page needs a measure: `variant="constrained"` puts children in a centred
+    column capped at `size`, with fluid gutter tracks either side.
+  - >-
+    A child needs to break out of that measure edge-to-edge: give it the `bleed`
+    attribute and it spans the gutters.
+  - >-
+    You need a track list the props cannot name — a sidebar shell, an asymmetric
+    split. Set `--al-layout-template` on a `grid` layout; three dashboard apps
+    already do exactly this.
+
+whenNotToUse:
+  - text: >-
+      What you actually need is a bounded content surface with a heading, body
+      and actions. That is a container with regions, not an arrangement.
+    instead: card
+  - text: >-
+      You are grouping form controls that share a label, a required state and a
+      validation message. That grouping is semantic, and it needs the component
+      that owns the semantics — which then nests its own layout inside.
+    instead: checkbox-group
+  - text: >-
+      You need a visual break between sections rather than space between them.
+    instead: divider
+  - text: >-
+      You are positioning something against a trigger — a floating panel
+      anchored to a control. That is not flow arrangement.
+    instead: popover
+
+dos:
+  - >-
+    Reach for `<al-layout>` FIRST when a new component needs its slotted
+    children arranged. Nesting the slot content in a layout is the pattern
+    `al-checkbox-group`, `al-radio-group` and `al-toggle-button-group` all use.
+  - >-
+    Use `--al-layout-padding` for the layout's own inset. `:host` is `display:
+    contents`, so padding set on `<al-layout>` from outside is dropped — the
+    custom property is the supported way in.
+  - >-
+    Span grid children with the shared `.al-u-grid__item.col:N` classes. There
+    is deliberately no second span system.
+  - >-
+    Prefer the `gap` prop over `--al-layout-gap`. The prop is on the design
+    scale and wins over the custom property; the custom property exists for the
+    value the scale cannot name.
+
+donts:
+  - >-
+    Don't create a new `*-group` wrapper component. A wrapper that owns no
+    behaviour, no ARIA relationship and no state is this component with props —
+    that rule is a blocker in the contributor contract, not a preference.
+  - >-
+    Don't add a `direction`, `orientation`, `gap`, `align`, `justify` or `wrap`
+    property to a new component, and don't hand-roll `display: flex` or
+    `display: grid` to arrange SLOTTED children. Internal shadow structure — an
+    icon against a label inside an atom — is exempt; content the consumer
+    provides is not.
+  - >-
+    Don't look for `al-button-group`, `al-layout-container`, `al-layout-section`,
+    `al-bento-grid`, `al-split-content`, `al-chip-group` or `al-toast-group`.
+    All seven were removed. The first five owned only arrangement; the last two
+    did own behaviour, but nothing in the system used it, so they were cut
+    rather than carried.
+  - >-
+    Don't use `--al-layout-padding` for inline insets under
+    `variant="constrained"`. The inline space there is the gutter tracks — use
+    it for block padding only.
+
+accessibility:
+  - >-
+    Layout renders no landmark and no role. A `<main>`, `<nav>` or `<aside>`
+    around it is the page's job, and a page built entirely from layouts with no
+    landmarks is unnavigable by region.
+  - >-
+    Visual order and DOM order are the same in `flow` and `grid` here, and they
+    should stay that way. Reordering with CSS breaks the correspondence between
+    what is seen and what is read or tabbed.
+  - >-
+    `fullHeight` sets a height floor of 100vh by default via
+    `--al-layout-min-height`. Viewport-height floors are a common source of
+    content that cannot be scrolled to on small screens — check the short
+    viewport.
+
+content:
+  - >-
+    Layout holds no text of its own, so its content rule is about rhythm: use
+    the `gap` scale rather than one-off values, so unrelated pages end up with
+    the same spacing vocabulary.
+  - >-
+    Let the measure do the work for reading. A `constrained` layout capped at
+    `size` keeps line length in the range prose is comfortable at, without any
+    per-page decision.
+
+sources:
+  - path: libs/al-web-components/components/layout/layout.ts
+    contains: Semantic components must not re-implement arrangement
+    note: >-
+      The rule stated on the component itself, with the two semantic groups
+      named as the examples of what is allowed to exist alongside it.
+  - path: libs/al-web-components/components/layout/layout.scss
+    contains: al-layout-template
+    note: >-
+      The escape hatch for a track list the props cannot express, and the note
+      that three dashboard apps use it for sidebar shells.
+  - path: libs/al-web-components/components/layout/layout.ts
+    contains: al-layout-padding
+    note: >-
+      Why padding has to arrive as a custom property: `display: contents` drops
+      padding set from outside.
+  - path: AGENTS.md
+    contains: Arrangement vs. semantics
+    note: >-
+      The contributor contract: the blocker-level rule against new arrangement
+      props and new `*-group` wrappers, and the list of components removed under
+      it.

@@ -31,6 +31,13 @@
  * their own right. The rule "the element declared by
  * `components/<dir>/<dir>.ts`" separates them exactly, and independently
  * reproduces the 68-component set that `.altitude/migration.json` tracks.
+ *
+ * WHAT A DESIGN SYSTEM DOCUMENTS — a second, independent question. The library
+ * is shared; a design system built on it may document all of it or a declared
+ * subset (`library.components` in `.altitude/ds-projects.json`). That is
+ * `buildRegistry(scope)` below: the same generated records, filtered, with
+ * every count re-derived from what survives. The unscoped exports at the bottom
+ * are the whole library — the default project's view, and every gate's baseline.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -65,6 +72,12 @@ const TIER_LABEL = { atoms: 'ATOMS', molecules: 'MOLECULES', organisms: 'ORGANIS
  * visible instead of silently absorbing a future mis-titled component.
  */
 const FALLBACK_TIER = 'organisms';
+
+/**
+ * The lifecycle axis, in render order. A lifecycle, not a component list: which
+ * groups appear, and their counts, come entirely from what the library declares.
+ */
+const LIFECYCLE_ORDER = ['stable', 'alpha', 'beta', 'experimental', 'deprecated', 'undeclared'];
 
 /* --------------------------------------------------------- library probes */
 
@@ -205,17 +218,126 @@ for (const module of cem.modules) {
 
 records.sort((a, b) => a.name.localeCompare(b.name));
 
+/** Every component the library declares. The unscoped truth. */
+const ALL_RECORDS = records;
+
+/** Icon glyphs — the CEM tags that are payloads of `al-icon`, not components. */
+export const ICON_GLYPHS = cem.modules
+  .filter((m) => /^components\/icon\/icons\/[a-z0-9-]+\.ts$/.test(m.path))
+  .flatMap((m) => (m.declarations ?? []).filter((d) => d.tagName).map((d) => d.tagName))
+  .sort();
+
+/** Every custom element the manifest declares — components and glyphs alike. */
+const CEM_TAG_COUNT = cem.modules.reduce(
+  (n, m) => n + (m.declarations ?? []).filter((d) => d.tagName).length,
+  0,
+);
+
+/* ------------------------------------------------------------ scoped views */
+
+/**
+ * The registry as ONE design system sees it.
+ *
+ * `.altitude/ds-projects.json` already records, per project, which components
+ * that system ships (`library.components` — "adding a component to the SITE is
+ * what earns it a place here"). A docs site for that project is therefore this
+ * same generated registry, filtered by that list, with the taxonomy, the
+ * lifecycle groups and every total RE-DERIVED from what survives the filter —
+ * which is what stops a scoped site quoting a whole-library number by accident.
+ *
+ * @param {string[] | null} scope allowlisted tags, or `null` for the whole library
+ */
+export function buildRegistry(scope = null) {
+  const allow = scope === null ? null : new Set(scope);
+  const components = allow === null ? ALL_RECORDS : ALL_RECORDS.filter((c) => allow.has(c.tag));
+
+  // An empty tier is rendered by the whole-library site (the taxonomy is the
+  // site's structure) but dropped by a scoped one, where "MOLECULES 0" would be
+  // a heading about components the system does not document.
+  const tiers = TIER_ORDER.map((id) => {
+    const inTier = components.filter((c) => c.tier === id);
+    return { id, label: TIER_LABEL[id], count: inTier.length, components: inTier };
+  }).filter((tier) => allow === null || tier.count > 0);
+
+  const lifecycle = (() => {
+    const buckets = new Map();
+    for (const component of components) {
+      const id = component.status ?? 'undeclared';
+      if (!buckets.has(id)) buckets.set(id, []);
+      buckets.get(id).push(component);
+    }
+    return [...buckets.entries()]
+      .map(([id, group]) => ({ id, label: id.toUpperCase(), count: group.length, components: group }))
+      .sort((a, b) => {
+        const ai = LIFECYCLE_ORDER.indexOf(a.id);
+        const bi = LIFECYCLE_ORDER.indexOf(b.id);
+        return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi) || a.id.localeCompare(b.id);
+      });
+  })();
+
+  return {
+    components,
+    count: components.length,
+    tiers,
+    lifecycle,
+    stats: {
+      components: components.length,
+      icons: ICON_GLYPHS.length,
+      documentedProps: components.reduce((n, c) => n + c.props.filter((p) => p.description).length, 0),
+      totalProps: components.reduce((n, c) => n + c.props.length, 0),
+      withReact: components.filter((c) => c.react).length,
+      cemTags: CEM_TAG_COUNT,
+    },
+    find: (slug) => components.find((c) => c.slug === slug),
+    /** What the filter kept, dropped, and could not find. */
+    scope: scopeReport(scope),
+  };
+}
+
+/**
+ * How a declared scope lines up with the library — the gate's evidence.
+ *
+ * `unknown` is the failure that matters: a tag allowlisted in the registry that
+ * the library does not declare as a component. It is either a typo or a removed
+ * component, and either way that design system is claiming to document
+ * something which does not exist. Icon GLYPH tags are not components (they are
+ * payloads of `al-icon`), so they are reported separately rather than as
+ * unknowns.
+ */
+export function scopeReport(scope) {
+  if (scope === null) {
+    return {
+      scoped: false,
+      requested: ALL_RECORDS.length,
+      matched: ALL_RECORDS.length,
+      unknown: [],
+      glyphs: [],
+    };
+  }
+  const byTag = new Set(ALL_RECORDS.map((c) => c.tag));
+  const glyphs = new Set(ICON_GLYPHS);
+  return {
+    scoped: true,
+    requested: scope.length,
+    matched: scope.filter((tag) => byTag.has(tag)).length,
+    unknown: scope.filter((tag) => !byTag.has(tag) && !glyphs.has(tag)),
+    glyphs: scope.filter((tag) => glyphs.has(tag)),
+  };
+}
+
+/* ---------------------------------------------------- the unscoped exports */
+
+/** The whole library — the default project's view, and every gate's baseline. */
+const FULL = buildRegistry(null);
+
 /** Every component, alphabetical. */
-export const COMPONENTS = records;
+export const COMPONENTS = FULL.components;
 
 /** Component count — the number behind "SEARCH n COMPONENTS". */
-export const COMPONENT_COUNT = records.length;
+export const COMPONENT_COUNT = FULL.count;
 
 /** Sidebar / index taxonomy, in render order, with live counts. */
-export const TIERS = TIER_ORDER.map((id) => {
-  const components = records.filter((c) => c.tier === id);
-  return { id, label: TIER_LABEL[id], count: components.length, components };
-});
+export const TIERS = FULL.tiers;
 
 /**
  * Lifecycle groups — the second axis of the sidebar hierarchy (Primer's
@@ -224,46 +346,14 @@ export const TIERS = TIER_ORDER.map((id) => {
  * `status: { type: … }` parameter. A component with neither declares nothing,
  * and lands in `undeclared` — which is the honest label for it, and the one
  * that makes the gap visible.
- *
- * The order below is a lifecycle, not a component list; the groups that
- * actually appear (and their counts) come entirely from what the library says.
  */
-const LIFECYCLE_ORDER = ['stable', 'alpha', 'beta', 'experimental', 'deprecated', 'undeclared'];
-
-export const LIFECYCLE = (() => {
-  const buckets = new Map();
-  for (const component of records) {
-    const id = component.status ?? 'undeclared';
-    if (!buckets.has(id)) buckets.set(id, []);
-    buckets.get(id).push(component);
-  }
-  return [...buckets.entries()]
-    .map(([id, components]) => ({ id, label: id.toUpperCase(), count: components.length, components }))
-    .sort((a, b) => {
-      const ai = LIFECYCLE_ORDER.indexOf(a.id);
-      const bi = LIFECYCLE_ORDER.indexOf(b.id);
-      return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi) || a.id.localeCompare(b.id);
-    });
-})();
-
-/** Icon glyphs — the CEM tags that are payloads of `al-icon`, not components. */
-export const ICON_GLYPHS = cem.modules
-  .filter((m) => /^components\/icon\/icons\/[a-z0-9-]+\.ts$/.test(m.path))
-  .flatMap((m) => (m.declarations ?? []).filter((d) => d.tagName).map((d) => d.tagName))
-  .sort();
+export const LIFECYCLE = FULL.lifecycle;
 
 /** Totals the Overview screen quotes, all derived. */
-export const STATS = {
-  components: records.length,
-  icons: ICON_GLYPHS.length,
-  documentedProps: records.reduce((n, c) => n + c.props.filter((p) => p.description).length, 0),
-  totalProps: records.reduce((n, c) => n + c.props.length, 0),
-  withReact: records.filter((c) => c.react).length,
-  cemTags: cem.modules.reduce((n, m) => n + (m.declarations ?? []).filter((d) => d.tagName).length, 0),
-};
+export const STATS = FULL.stats;
 
 export function findComponent(slug) {
-  return records.find((c) => c.slug === slug);
+  return FULL.find(slug);
 }
 
 /**
@@ -274,11 +364,11 @@ export function findComponent(slug) {
  */
 export function registryReport() {
   return {
-    total: records.length,
+    total: COMPONENTS.length,
     tiers: TIERS.map((t) => `${t.label}=${t.count}`).join(' '),
-    inferredTier: records.filter((c) => c.tierInferred).map((c) => c.slug),
+    inferredTier: COMPONENTS.filter((c) => c.tierInferred).map((c) => c.slug),
     lifecycle: LIFECYCLE.map((l) => `${l.label}=${l.count}`).join(' '),
-    missingReactWrapper: records.filter((c) => !c.react).map((c) => c.slug),
+    missingReactWrapper: COMPONENTS.filter((c) => !c.react).map((c) => c.slug),
     icons: ICON_GLYPHS.length,
   };
 }

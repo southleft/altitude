@@ -13,8 +13,17 @@
  * The stage renders the REAL custom element (registered by LiveRuntime.astro),
  * not a CSS facsimile — the two things the spec says Storybook structurally
  * cannot do are this switcher and this copyable, real-markup playground.
+ *
+ * And it renders it IN THIS SITE'S BRAND. The whole shell is already inside
+ * `<al-theme brand=…>` (Shell.astro), so the element on the stage inherits that
+ * project's scoped tokens with no per-brand markup here. The HTML snippet
+ * states the wrapper explicitly, because a consumer copying it gets the
+ * component but not the page it was sitting in — and without the wrapper the
+ * markup they paste renders under the base bundle, not this brand.
  */
 interface Props {
+  /** The design-system project whose brand the stage renders under. */
+  project: { brand: string };
   component: {
     tag: string;
     react: string | null;
@@ -24,7 +33,7 @@ interface Props {
   };
 }
 
-const { component } = Astro.props;
+const { component, project } = Astro.props;
 
 /* Controls, in the canvas's order: enums, then the content field, then flags. */
 const enums = component.props.filter((p) => p.options.length >= 2);
@@ -41,6 +50,8 @@ const hasDefaultSlot = component.slots.some((s) => s.rawName === '');
  */
 const config = {
   tag: component.tag,
+  /** The brand the stage inherits, restated in the copyable HTML snippet. */
+  brand: project.brand,
   react: component.react,
   hasDefaultSlot,
   enums: enums.map((p) => ({ name: p.name, field: p.field, options: p.options })),
@@ -58,7 +69,7 @@ const controlCount = enums.length + flags.length + (hasDefaultSlot ? 1 : 0);
 
 <div class="pg">
   <div class="pg__stage blueprint blueprint--sm">
-    <span class="pg__stage-label">PREVIEW / {component.tag}</span>
+    <span class="pg__stage-label">PREVIEW / {component.tag} / BRAND {project.brand.toUpperCase()}</span>
     <div data-pg-mount set:html={`<${component.tag} data-pg-el>${
       hasDefaultSlot ? initialText : ''
     }</${component.tag}>`} />
@@ -167,6 +178,7 @@ const controlCount = enums.length + flags.length + (hasDefaultSlot ? 1 : 0);
   if (configEl && stage && codeEl) {
     const config = JSON.parse(configEl.textContent || '{}') as {
       tag: string;
+      brand: string;
       react: string | null;
       hasDefaultSlot: boolean;
       enums: { name: string; field: string; options: string[] }[];
@@ -197,7 +209,16 @@ const controlCount = enums.length + flags.length + (hasDefaultSlot ? 1 : 0);
         .map(([name, value]) => (value === true ? ` ${name}` : ` ${name}="${value}"`))
         .join('');
       const body = config.hasDefaultSlot ? state.text : '';
-      return `<${open}${attrs}>${body}</${close}>`;
+      const element = `<${open}${attrs}>${body}</${close}>`;
+      // The HTML path ships the theme host too: pasted on its own, outside an
+      // <al-theme>, the element renders under the base token bundle rather than
+      // this design system's brand. The React path does not — an app using the
+      // wrappers mounts its theme host once, at the root.
+      return state.tab === 'react'
+        ? element
+        : `<al-theme brand="${config.brand}">
+  ${element}
+</al-theme>`;
     };
 
     const render = () => {

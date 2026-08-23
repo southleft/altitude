@@ -1,0 +1,118 @@
+purpose: >-
+  A small floating label attached to a trigger, shown on hover and on focus. It
+  owns the show/hide debounce and the positioning; you give it the control to
+  attach to via the `trigger` slot and the text via the default slot.
+
+whenToUse:
+  - >-
+    A control's meaning is not fully carried by its visible label — most often
+    an icon-only button in a dense toolbar.
+  - >-
+    You are naming something the user can already see, briefly. A tooltip
+    supplements; it does not explain.
+  - >-
+    The trigger is not itself focusable — a plain `<span slot="trigger">` — which
+    is the usage the component's own focus handling is written for.
+
+whenNotToUse:
+  - text: >-
+      The information is required to complete a field. Persistent helper text
+      under the input is read by everyone, including people who never hover.
+    instead: input
+  - text: >-
+      The content is more than a phrase, or contains its own controls. A tooltip
+      that has to be read is the wrong container for it.
+    instead: popover
+  - text: >-
+      You are reporting the result of an action.
+    instead: toast
+  - text: >-
+      The content is a decision the user must make before continuing.
+    instead: dialog
+
+dos:
+  - >-
+    Slot a non-focusable trigger — a `<span>` or an icon — and let the component
+    supply the tab stop. That is the documented usage, and the case where the
+    description is wired to the element that actually receives focus.
+  - >-
+    Give the trigger control its own accessible name when it IS focusable. Do
+    not let the tooltip be the only place the name exists.
+  - >-
+    Use `isDynamic` when the tooltip sits near a viewport edge; it repositions
+    based on where the trigger is rather than always honouring `position`.
+  - >-
+    Set `isInteractive` only when the tooltip's content genuinely has to be
+    reached with the pointer, and accept that a tooltip you can move into is
+    harder to dismiss.
+
+donts:
+  - >-
+    Don't put information in a tooltip that exists nowhere else. It is
+    unavailable to touch users, to anyone who does not hover, and — when the
+    trigger is a focusable control — to screen-reader users too.
+  - >-
+    Don't assume `aria-describedby` reaches your slotted control. The attribute
+    is rendered on the tooltip's own internal trigger wrapper, not on what you
+    slot into it, and the description cannot be projected across the shadow
+    boundary onto a focusable slotted element.
+  - >-
+    Don't slot an `<al-button>` and expect both a tab stop on the wrapper and
+    the tooltip association. When the slotted trigger has its own focusable
+    element the wrapper deliberately drops its `tabindex` — it used to produce
+    two tab stops for one control — so the focused control is the button, which
+    carries no reference to the tooltip.
+  - >-
+    Don't use a tooltip on a touch-primary surface as the only affordance. There
+    is no hover there to trigger it.
+
+accessibility:
+  - >-
+    The tooltip container renders `role="tooltip"` with a generated id and
+    toggles `aria-hidden` with its visible state, so it is not announced while
+    hidden.
+  - >-
+    `aria-describedby` is placed on the internal trigger wrapper. That wrapper
+    is only tabbable when the slotted trigger contains nothing focusable of its
+    own, so the association holds for the plain-`<span>` case and is lost for
+    the slotted-button case.
+  - >-
+    An empty tooltip is hidden outright — the component measures its container
+    on first update and sets it to `display: none` below a height threshold — so
+    an empty tooltip fails silently rather than opening blank.
+  - >-
+    Because the tooltip opens on focus as well as hover, a keyboard user reaches
+    it, but only through the tab stop the wrapper provides.
+
+content:
+  - >-
+    Write a phrase, not a sentence, and do not punctuate it as one. A tooltip is
+    a label.
+  - >-
+    Name the action or the thing — "Duplicate row" — rather than describing the
+    icon or restating what is already visible.
+  - >-
+    Never put the only copy of an instruction, a keyboard shortcut, or an error
+    in a tooltip. Repeat it somewhere permanent.
+
+sources:
+  - path: libs/al-web-components/components/tooltip/tooltip.ts
+    contains: aria-describedby
+    note: >-
+      The single render site — on the tooltip's own trigger wrapper, not on the
+      slotted control.
+  - path: libs/al-web-components/components/tooltip/tooltip.ts
+    contains: syncTriggerFocusability
+    note: >-
+      The recorded fix for the double tab stop: the wrapper is tabbable only
+      when the slotted trigger has nothing focusable of its own.
+  - path: libs/al-web-components/components/tooltip/tooltip.ts
+    contains: role=
+    note: >-
+      The tooltip role, the generated id it is addressed by, and the
+      `aria-hidden` toggle tied to the visible state.
+  - path: libs/al-web-components/components/tooltip/tooltip.ts
+    contains: clientHeight
+    note: >-
+      The empty-tooltip guard — the container is hidden when it measures below
+      the height threshold on first update.

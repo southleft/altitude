@@ -184,3 +184,25 @@ export const PARITY_TOTALS = (() => {
     };
   });
 })();
+
+/**
+ * Parity rows for one component ON ONE PROJECT'S SITE.
+ *
+ * The whole-library site (the registry's `default`) is the umbrella: it shows
+ * every design system's row, because a component's Figma story there genuinely
+ * is "in sync for Altitude, missing for Southleft". A SCOPED project's site
+ * shows only its own row — the other systems' Figma files are not that
+ * system's business, and listing them would read as drift in a design file its
+ * readers cannot open.
+ */
+export function parityForProject(tag, project) {
+  const rows = parityFor(tag);
+  return project.isDefault ? rows : rows.filter((row) => row.project === project.id);
+}
+
+/** The overview roll-up for one project's site, filtered the same way. */
+export function totalsForProject(project) {
+  return project.isDefault
+    ? PARITY_TOTALS
+    : PARITY_TOTALS.filter((total) => total.project === project.id);
+}

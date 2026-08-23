@@ -1,0 +1,119 @@
+purpose: >-
+  A bounded surface that groups one subject — its media, its heading, its body
+  and its actions — so a page can present many of them side by side and the user
+  reads each as one thing. It is a container with named regions, not a layout: a
+  card decides what goes where inside itself and nothing about how cards sit
+  next to each other.
+
+whenToUse:
+  - >-
+    You are showing a repeated set of objects — projects, jobs, articles,
+    people — where each entry has its own actions.
+  - >-
+    A block of content needs to be visually separated from the page around it.
+    `variant="bare"` keeps the regions and drops the background, shadow and
+    radius.
+  - >-
+    Cards sit in a grid or a stretched row and their footers should line up. Set
+    `fill` and every card in the row shares one height.
+
+whenNotToUse:
+  - text: >-
+      You only need to arrange boxes with spacing between them. Cards are a
+      content container; the arrangement around them belongs to the layout
+      primitive.
+    instead: layout
+  - text: >-
+      The content is a single number with a label and a trend. That has its own
+      component, with the typography and the delta treatment already decided.
+    instead: stat
+  - text: >-
+      You are showing rows of comparable fields that the user will scan down a
+      column. A card per row destroys the comparison a table makes easy.
+    instead: table
+  - text: >-
+      There is nothing to separate — one card holding the whole page adds a
+      border and no meaning.
+    instead: layout
+
+dos:
+  - >-
+    Use `fill` rather than an inline `height: 100%` from the page. `:host` is
+    `display: contents`, so a height written on `<al-card>` from outside is
+    dropped entirely — this property exists because one app hit exactly that and
+    worked around it at 25 call sites.
+  - >-
+    Put the primary action in `actions-end`, which is the canonical bottom-right
+    position, and a secondary one in `actions-start`.
+  - >-
+    Use the `image` slot for media above the heading, including an avatar —
+    that is the common case across the example apps.
+  - >-
+    Reach for `layout="inline"` when the media and the text should sit side by
+    side rather than stacked.
+
+donts:
+  - >-
+    Don't slot content into `action-right`. The slot is documented on the
+    component but the template renders no `<slot name="action-right">`, so
+    anything assigned to it does not appear. Put an overflow control in
+    `actions-end` until that is fixed.
+  - >-
+    Don't expect `image` to bleed to the card edge. The card carries a single
+    outer padding and the image region neither resets nor negates it. A card
+    that needs edge-to-edge media wants a component that renders it, not a flag
+    here.
+  - >-
+    Don't make the whole card a link when it also contains buttons. Nested
+    interactive regions leave the user with no way to tell which target they are
+    about to hit.
+  - >-
+    Don't hand-roll a grid of cards with flex or grid in your own stylesheet.
+    That is what the layout primitive's `grid` and `bento` variants are for.
+
+accessibility:
+  - >-
+    The card renders a plain `<div>` with no landmark or list semantics. If a
+    set of cards is a list, the surrounding markup has to say so — the card will
+    not.
+  - >-
+    Put a real heading in the `header` slot. The card provides the visual
+    grouping; the heading is what gives a screen-reader user a way to navigate
+    between cards.
+  - >-
+    Each action inside a card needs a label that makes sense out of context. Ten
+    cards each containing "View" produce ten identical entries in a list of
+    links.
+
+content:
+  - >-
+    Lead with what distinguishes this card from the one beside it. The shared
+    parts — the category, the label, the icon — are the least useful words in
+    the first line.
+  - >-
+    Keep body text to what survives being scanned. A card is read in a grid, at
+    a glance, alongside others.
+  - >-
+    Keep action labels consistent across every card in a set, so the row reads
+    as one pattern rather than as variations.
+
+sources:
+  - path: libs/al-web-components/components/card/card.ts
+    contains: NOT flush to the card edge
+    note: >-
+      The recorded correction about the `image` slot — the docs previously
+      claimed edge-to-edge media and the code never did that.
+  - path: libs/al-web-components/components/card/card.ts
+    contains: is dropped entirely
+    note: >-
+      Why `fill` has to be a property: `display: contents` means a height set
+      from outside never applies.
+  - path: libs/al-web-components/components/card/card.ts
+    contains: action-right
+    note: >-
+      The slot is declared in the component's documentation; the render function
+      below it emits no matching slot element.
+  - path: AGENTS.md
+    contains: Arrangement vs. semantics
+    note: >-
+      The rule that keeps arrangement out of content components like this one.

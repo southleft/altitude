@@ -1,0 +1,135 @@
+/**
+ * Component guidance — the half of the docs that cannot be generated.
+ *
+ * Everything component-SHAPED on this site is generated from the CEM
+ * (`src/lib/registry.mjs`). That covers the API: 528 of 532 attributes carry a
+ * description, so the props tables are in good shape. What the manifest cannot
+ * carry is the judgement — what a component is FOR, when reaching for it is
+ * wrong, and which mistakes this library has already paid for. Only 11 of the
+ * 68 components have a CEM description beyond the generated `Component: al-x`
+ * stub, so most detail pages open with a stat line and nothing else.
+ *
+ * This collection is where that judgement lives. Three rules shape it, and all
+ * three exist because prose drifts and generated data does not:
+ *
+ *   1. STRUCTURED, NOT FREE PROSE. Guidance is YAML data, not a markdown body,
+ *      so the schema below can REQUIRE the sections that matter. A file with no
+ *      `whenNotToUse` does not render a thinner page — it fails the build. A
+ *      "when not to use" section that silently disappears for 40 components is
+ *      worse than none, so it is made impossible rather than discouraged.
+ *
+ *   2. EVERY FILE CITES CODE. `sources[]` is mandatory and each entry names a
+ *      repo-relative path plus a literal string that must still appear in it.
+ *      `scripts/check-guidance.mjs` re-reads every citation from the BUILT
+ *      pages and fails when the file moved or the anchor text is gone — so
+ *      guidance that has quietly stopped being true breaks a gate instead of
+ *      misleading a reader.
+ *
+ *   3. NO GUIDANCE FOR THINGS THAT ARE NOT COMPONENTS. The filename must be a
+ *      slug the registry knows, and every `instead:` pointer must resolve to a
+ *      live component. That is what stops a page recommending `al-button-group`
+ *      (removed — AGENTS.md:244-249) or documenting `al-stat-card` / `al-tag`,
+ *      which are AI-eval fixtures in
+ *      `scripts/ai-readiness/fixtures/canonical-contracts.md`, not elements the
+ *      library ships.
+ */
+import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
+// @ts-expect-error — plain ESM module, no type declarations. It is the same
+// generator the routes and the gates read, so guidance is validated against
+// exactly the component set the site renders.
+import { COMPONENTS } from './lib/registry.mjs';
+
+/** Live component slugs, from the CEM — never a hand-kept list. */
+const SLUGS: Set<string> = new Set(
+  (COMPONENTS as { slug: string }[]).map((component) => component.slug),
+);
+
+/**
+ * A citation anchor is embedded in a `data-` attribute and re-read from the
+ * built HTML by the gate, so it must survive HTML escaping unambiguously.
+ * Rejecting the five escapable characters at authoring time is cheaper than
+ * teaching the gate to unescape them.
+ */
+const anchor = z
+  .string()
+  .min(3)
+  .refine((value) => !/[<>&"']/.test(value), {
+    message:
+      'A source anchor must not contain < > & " or \' — it is round-tripped through an HTML attribute.',
+  });
+
+/** Prose lines are full sentences; the floor stops a one-word placeholder. */
+const line = z.string().min(20);
+
+const guidance = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/guidance' }),
+  schema: z.object({
+    /** One paragraph answering "what is this for". Becomes the page's lede. */
+    purpose: z.string().min(60),
+    /** Situations this component is the right answer to. */
+    whenToUse: z.array(line).min(2),
+    /**
+     * Situations it is the WRONG answer to. Required, and required to be
+     * non-empty: this is the section the audit found missing everywhere, and a
+     * schema is the only thing that keeps it from quietly rotting away again.
+     */
+    whenNotToUse: z
+      .array(
+        z.object({
+          text: line,
+          /** Optional pointer to the component that IS the right answer. */
+          instead: z.string().optional(),
+        }),
+      )
+      .min(2),
+    dos: z.array(line).min(2),
+    donts: z.array(line).min(2),
+    /** Real constraints of THIS implementation, not generic WCAG restatement. */
+    accessibility: z.array(line).min(1),
+    /** UX writing rules for the strings a consumer puts into this component. */
+    content: z.array(line).min(1),
+    /** Where each claim above came from, and what proves it is still true. */
+    sources: z
+      .array(
+        z.object({
+          /** Repo-relative, forward slashes. Checked to exist by the gate. */
+          path: z.string().min(5),
+          /** Literal text that must still be present in `path`. */
+          contains: anchor,
+          note: z.string().min(10),
+        }),
+      )
+      .min(1),
+  }),
+});
+
+/**
+ * Cross-file validation the per-entry schema cannot express: the entry id must
+ * be a real component, and so must every `instead:` pointer. Astro surfaces a
+ * thrown error here as a build failure, which is the point — a dangling
+ * pointer to a removed component is exactly the drift this spec exists to stop.
+ */
+function assertPointsAtRealComponents(
+  entries: { id: string; data: { whenNotToUse: { instead?: string }[] } }[],
+): void {
+  const problems: string[] = [];
+  for (const entry of entries) {
+    if (!SLUGS.has(entry.id)) {
+      problems.push(
+        `guidance/${entry.id}.yaml describes "${entry.id}", which is not a component in the CEM.`,
+      );
+    }
+    for (const row of entry.data.whenNotToUse) {
+      if (row.instead && !SLUGS.has(row.instead)) {
+        problems.push(
+          `guidance/${entry.id}.yaml points at "${row.instead}" via instead:, which is not a component in the CEM.`,
+        );
+      }
+    }
+  }
+  if (problems.length) throw new Error(`Component guidance:\n  - ${problems.join('\n  - ')}`);
+}
+
+export const collections = { guidance };
+export { assertPointsAtRealComponents, SLUGS };

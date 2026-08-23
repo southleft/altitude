@@ -1,0 +1,112 @@
+purpose: >-
+  A set of checkboxes that are one question. It exists for its semantics, not
+  its spacing — it renders a real `<fieldset>` with a `<legend>`, carries one
+  field note and one error note for the whole set, and cascades `isRequired` and
+  `isDisabled` down to every checkbox inside it.
+
+whenToUse:
+  - >-
+    Several checkboxes answer the same question and the user may choose any
+    number of them, including none.
+  - >-
+    The set needs one shared label, one shared helper note, or one shared error
+    — a legend and a field note per group rather than per box.
+  - >-
+    Required or disabled applies to the whole set. Setting it once on the group
+    cascades to the children rather than being repeated on each.
+
+whenNotToUse:
+  - text: >-
+      The choices are mutually exclusive — exactly one must be selected. That is
+      a different control with different keyboard behaviour.
+    instead: radio-group
+  - text: >-
+      You only want the boxes arranged with spacing between them and there is no
+      shared question, legend or validation. That is arrangement, and it has its
+      own primitive.
+    instead: layout
+  - text: >-
+      There is one checkbox. A fieldset around a single control adds a grouping
+      that means nothing.
+    instead: checkbox
+  - text: >-
+      The user is choosing several values from a long list. A field that opens
+      keeps the form scannable where twenty checkboxes would not.
+    instead: select
+
+dos:
+  - >-
+    Give the group a `label`. It becomes the `<legend>`, which is what a screen
+    reader reads before each option so the user knows which question they are
+    answering.
+  - >-
+    Set `isRequired` and `isDisabled` on the GROUP, not on each checkbox — the
+    group pushes them down to its children on update.
+  - >-
+    Listen for `onCheckboxGroupChange`, whose detail carries `checkedValues` —
+    every currently-checked value in the group — alongside the box that changed.
+  - >-
+    Use `hideLegend` when the surrounding UI already asks the question, rather
+    than dropping `label` entirely. The legend stays in the accessibility tree.
+
+donts:
+  - >-
+    Don't add an arrangement prop to this component or wrap it in your own flex
+    container to get a row. Its slot content is already nested in a layout —
+    nest the items in `<al-layout direction="row" wrap>` instead.
+  - >-
+    Don't use a checkbox group where the answer is binary. One question with a
+    yes and a no is a single checkbox, or a toggle if it takes effect
+    immediately.
+  - >-
+    Don't set the error note without setting the error state, and don't put
+    per-option errors on a group that renders one shared error region.
+  - >-
+    Don't nest a checkbox group inside another. Nested fieldsets are announced
+    as nested groups and quickly become impossible to follow by ear.
+
+accessibility:
+  - >-
+    The group renders `<fieldset>` and `<legend>` — native grouping semantics
+    rather than an ARIA imitation of them. That is the entire reason this
+    component survived the removal of the arrangement-only wrappers.
+  - >-
+    The legend carries `aria-describedby` pointing at the field note, so the
+    helper text is associated with the question rather than floating beside it.
+  - >-
+    Cascading `isRequired` to the children means each checkbox reports the
+    requirement itself, which is what assistive technology reads when focus
+    lands on an individual box.
+
+content:
+  - >-
+    Write the legend as the question the options answer: "Which notifications do
+    you want?", not "Notifications".
+  - >-
+    Say in the field note when the choice is unlimited or bounded — "Choose any
+    that apply", "Choose up to three" — because a checkbox group cannot show a
+    limit on its own.
+  - >-
+    Keep option labels parallel and positive. A list mixing "Enable X" with
+    "Don't send Y" makes the user work out what checking each box means.
+
+sources:
+  - path: libs/al-web-components/components/checkbox-group/checkbox-group.ts
+    contains: fieldset
+    note: >-
+      The native fieldset and legend — the semantics this component exists for.
+  - path: libs/al-web-components/components/checkbox-group/checkbox-group.ts
+    contains: checkboxItems.isRequired
+    note: >-
+      Required and disabled cascading from the group down to every checkbox in
+      it.
+  - path: libs/al-web-components/components/checkbox-group/checkbox-group.ts
+    contains: al-layout
+    note: >-
+      The slot documentation sending row arrangement to `al-layout` rather than
+      to a prop on this component.
+  - path: AGENTS.md
+    contains: Arrangement vs. semantics
+    note: >-
+      The table naming exactly why this group is allowed to exist while the
+      arrangement-only wrappers were removed.
