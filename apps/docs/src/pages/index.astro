@@ -10,6 +10,8 @@
 import Shell from '../layouts/Shell.astro';
 import Logo from '../components/Logo.astro';
 import { TIERS, COMPONENT_COUNT, STATS } from '../lib/registry.mjs';
+import { PARITY_TOTALS, PARITY_STATUS } from '../lib/parity.mjs';
+import { A11Y_REPORT } from '../lib/a11y.mjs';
 import { SITE, href } from '../lib/site.mjs';
 
 const TIER_COPY = {
@@ -103,6 +105,100 @@ const stats = [
     </div>
   </div>
 
+  <!--
+    SYSTEM STATUS — the site-wide roll-up of the same two artifacts the
+    per-component panels read (each project's Figma parity manifest, and
+    .altitude/a11y/report.json). Deliberately placed on the overview rather
+    than buried: a design system's honest claim about itself is a headline
+    fact, and stating it once at the top is what stops the per-component
+    panels reading as isolated warnings.
+  -->
+  <div class="stack-56">
+    <div class="micro--lg" style="margin-bottom:14px">/// SYSTEM STATUS</div>
+    <h2 class="t-display-md" style="margin-bottom:12px; max-width:640px">
+      Measured, not asserted.
+    </h2>
+    <p class="t-body-md" style="margin:0 0 36px; max-width:640px; color:var(--fg-weak)">
+      Every number below is generated at build time from the artifact that produced it — the Figma
+      parity manifests and an axe-core run over the component library's stories. Where something has
+      not been measured, this says so instead of leaving it blank.
+    </p>
+
+    <div class="status-grid">
+      {
+        PARITY_TOTALS.map((project) => (
+          <div class="hard-card status-card">
+            <div class="tier-cards__head">
+              <span class="micro">FIGMA PARITY</span>
+              <span class="micro micro--blue">{project.projectName.toUpperCase()}</span>
+            </div>
+            <dl class="status-card__rows">
+              {Object.entries(project.counts)
+                .sort((a, b) => b[1] - a[1])
+                .map(([status, count]) => (
+                  <div>
+                    <dt>{PARITY_STATUS[status].label}</dt>
+                    <dd>{count}</dd>
+                  </div>
+                ))}
+            </dl>
+            <p class="status-card__foot">
+              {project.observation.everObserved
+                ? `${project.observation.observedComponents} of ${project.observation.mappedComponents} mapped Figma sets observed, last read ${project.observation.figmaLastRefreshed.slice(0, 10)}.`
+                : `The Figma side of "${project.figmaFileName}" has never been read, so drift originating in Figma cannot be reported at all.`}
+            </p>
+          </div>
+        ))
+      }
+
+      <div class="hard-card status-card">
+        <div class="tier-cards__head">
+          <span class="micro">ACCESSIBILITY</span>
+          <span class="micro micro--blue">
+            {A11Y_REPORT.available ? `AXE ${A11Y_REPORT.source.axeVersion}` : 'NOT MEASURED'}
+          </span>
+        </div>
+        {
+          A11Y_REPORT.available ? (
+            <>
+              <dl class="status-card__rows">
+                <div>
+                  <dt>CLEAN COMPONENTS</dt>
+                  <dd>
+                    {A11Y_REPORT.totals.componentsClean}/{A11Y_REPORT.totals.componentsMeasured}
+                  </dd>
+                </div>
+                <div>
+                  <dt>STORIES CHECKED</dt>
+                  <dd>{A11Y_REPORT.totals.stories}</dd>
+                </div>
+                <div>
+                  <dt>STRUCTURAL RULES FAILING</dt>
+                  <dd>{A11Y_REPORT.totals.structuralViolations}</dd>
+                </div>
+                <div>
+                  <dt>CONTRAST RULES FAILING</dt>
+                  <dd>{A11Y_REPORT.totals.contrastViolations}</dd>
+                </div>
+                <div>
+                  <dt>STORIES UNMEASURED</dt>
+                  <dd>{A11Y_REPORT.totals.storiesErrored}</dd>
+                </div>
+              </dl>
+              <p class="status-card__foot">
+                {A11Y_REPORT.source.axeTags.join(' + ')} on {A11Y_REPORT.generated.slice(0, 10)}. The
+                CI gate excludes <code>{A11Y_REPORT.source.gateExcludes.join(', ')}</code>; this run
+                does not.
+              </p>
+            </>
+          ) : (
+            <p class="status-card__foot">{A11Y_REPORT.reason}</p>
+          )
+        }
+      </div>
+    </div>
+  </div>
+
   <div class="split">
     <a class="split__cell" href={href('/foundations')}>
       <div class="micro">01 — FOUNDATIONS</div>
@@ -133,6 +229,53 @@ const stats = [
 </Shell>
 
 <style>
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .status-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .status-card__rows {
+    margin: 22px 0 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .status-card__rows > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 9px 0;
+    border-top: 1px solid var(--line-weak);
+  }
+
+  .status-card__rows dt {
+    font: 500 9px/1.4 var(--mono);
+    letter-spacing: 0.12em;
+    color: var(--fg-weak);
+  }
+
+  .status-card__rows dd {
+    margin: 0;
+    font: 500 15px/1 var(--mono);
+  }
+
+  .status-card__foot {
+    margin: 18px 0 0;
+    font: 400 12px/19px var(--sans);
+    color: var(--fg-weak);
+  }
+
+  .status-card__foot code {
+    font: 400 11px/1 var(--mono);
+  }
+
   .hero {
     display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);

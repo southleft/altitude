@@ -45,8 +45,23 @@ const config: TestRunnerConfig = {
       detailedReportOptions: { html: true },
       axeOptions: {
         runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
-        // The pre-existing visual rules ride along with the storybook env;
-        // we exclude noisy color-contrast on legacy demos pending P6 audit.
+        // `color-contrast` is excluded from THE GATE, and only from the gate.
+        //
+        // The old comment here said "noisy … pending P6 audit", which was a
+        // guess: nobody had ever seen the rule's output, because disabling it
+        // globally is also what stopped it being reported anywhere. It has now
+        // been measured — `scripts/build-a11y-report.mjs` runs the identical
+        // WCAG tag set with this rule ENABLED, against a static build, and the
+        // result is checked in at `.altitude/a11y/report.json` and rendered
+        // per-component by the docs site.
+        //
+        // Measured 2026-08-23 against 522 stories: 0 structural violations,
+        // and 18 components failing `color-contrast` — concentrated in
+        // disabled-state form controls (al-checkbox, al-radio, al-input,
+        // al-range, al-select…) and al-header. That is real, and it is why the
+        // line below stays: flipping it on turns a green suite red today
+        // without fixing a single contrast ratio. Fix the tokens, then delete
+        // this line — the docs panel will show the progress either way.
         rules: { 'color-contrast': { enabled: false } },
       },
     });

@@ -1,0 +1,212 @@
+---
+/**
+ * Figma ↔ code parity for one component, generated at build time.
+ *
+ * Every value on this panel is read from the parity engine's public report
+ * (`../lib/parity.mjs`), which reads each project's parity manifest. There is
+ * no literal status, count or date in this file — and there is no fetch: the
+ * markup Astro emits is the answer.
+ *
+ * The panel's job is to be HONEST before it is reassuring. Three things it
+ * insists on saying, because the Storybook badges it replaces could not:
+ *   * WHICH design system. One library backs several, each with its own Figma
+ *     file, so parity is one row per project rather than one badge.
+ *   * WHAT DECIDED the status — a contract diff, a byte hash, or nothing at all
+ *     (`driftBasis`).
+ *   * WHETHER FIGMA WAS EVER READ. While `figmaCurrentDigest` is unobserved,
+ *     `figma-drift` and `conflict` cannot occur, so "0 drift" would be a
+ *     statement about the tooling, not about the design. The panel says so.
+ */
+import { parityFor, PARITY_STATUS, DRIFT_BASIS, PARITY_AVAILABLE, PARITY_FAILURES } from '../lib/parity.mjs';
+
+interface Props {
+  tag: string;
+}
+
+const { tag } = Astro.props;
+const rows = parityFor(tag);
+
+/** Projects whose Figma side has never been observed, so their status is partial. */
+const unobserved = rows.filter((row) => !row.figmaObserved && row.figmaSetName);
+---
+
+<div class="section-rule">
+  <span>FIGMA PARITY</span>
+  <span>{PARITY_AVAILABLE ? `${rows.length} ${rows.length === 1 ? 'PROJECT' : 'PROJECTS'}` : 'UNAVAILABLE'}</span>
+</div>
+
+{
+  !PARITY_AVAILABLE && (
+    <p class="empty-note" data-parity-unavailable>
+      PARITY COULD NOT BE COMPUTED FOR THIS BUILD.
+      {PARITY_FAILURES.map((failure) => ` ${failure.scope.toUpperCase()}: ${failure.reason}`)}
+    </p>
+  )
+}
+
+{
+  PARITY_AVAILABLE && rows.length === 0 && (
+    <p class="empty-note">
+      NO DESIGN-SYSTEM PROJECT TRACKS THIS COMPONENT — IT IS OUTSIDE EVERY PROJECT’S DECLARED SCOPE.
+    </p>
+  )
+}
+
+{
+  rows.length > 0 && (
+    <div class="parity" data-parity-panel data-parity-tag={tag}>
+      {rows.map((row) => {
+        const status = PARITY_STATUS[row.status];
+        const basis = DRIFT_BASIS[row.driftBasis];
+        return (
+          <div class="parity__row" data-parity-project={row.project}>
+            <div class="parity__head">
+              <span class={`status status--parity-${status.tone}`} data-parity-status={row.status}>
+                {status.label}
+              </span>
+              <span class="parity__project">{row.projectName}</span>
+              {row.figmaSetName && <span class="chip-tag chip-tag--weak">FIGMA SET · {row.figmaSetName}</span>}
+            </div>
+
+            <p class="parity__blurb">{status.blurb}</p>
+
+            <dl class="parity__facts">
+              <div>
+                <dt class="micro">DECIDED BY</dt>
+                <dd data-parity-basis={row.driftBasis}>{basis.label}</dd>
+              </div>
+              <div>
+                <dt class="micro">FIGMA SIDE</dt>
+                <dd data-parity-observed={String(row.figmaObserved)}>
+                  {row.figmaObserved ? 'OBSERVED' : 'NEVER OBSERVED'}
+                </dd>
+              </div>
+              <div>
+                <dt class="micro">LAST CONFIRMED SYNC</dt>
+                <dd>{row.lastSyncDate ? row.lastSyncDate.slice(0, 10) : 'NEVER'}</dd>
+              </div>
+              <div>
+                <dt class="micro">PUBLIC SURFACE</dt>
+                <dd data-parity-attributes={row.contractShape.attributes}>
+                  {row.contractShape.attributes} ATTR · {row.contractShape.slots} SLOT ·{' '}
+                  {row.contractShape.events} EVENT · {row.contractShape.cssParts} PART
+                </dd>
+              </div>
+            </dl>
+
+            <p class="parity__basis">{basis.blurb}</p>
+
+            {row.contractDiff && row.contractDiff.mismatches.length > 0 && (
+              <div class="spec-table spec-table--props parity__diff">
+                <div class="spec-table__head">
+                  <span>PROPERTY</span>
+                  <span>DIFFERENCE</span>
+                  <span>CODE / FIGMA</span>
+                </div>
+                {row.contractDiff.mismatches.map((mismatch) => (
+                  <div class="spec-table__row">
+                    <span class="spec-table__name">{mismatch.property}</span>
+                    <span class="spec-table__type">
+                      {mismatch.kind === 'option-count'
+                        ? 'The two sides offer a different number of variant values.'
+                        : mismatch.kind}
+                    </span>
+                    <span class="spec-table__default">
+                      {mismatch.codeOptions} / {mismatch.figmaOptions}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {row.note && <p class="parity__note">{row.note}</p>}
+          </div>
+        );
+      })}
+
+      {unobserved.length > 0 && (
+        <p class="parity__caveat" data-parity-caveat>
+          {unobserved.length === rows.length
+            ? 'The Figma side has never been read by the parity tooling.'
+            : `The Figma side has never been read for ${unobserved.map((r) => r.projectName).join(', ')}.`}{' '}
+          “Figma ahead of code” and “both changed” therefore cannot be reported at all — only the
+          code half of this status is measured.
+        </p>
+      )}
+    </div>
+  )
+}
+
+<style>
+  .parity {
+    margin-bottom: 44px;
+  }
+
+  .parity__row + .parity__row {
+    margin-top: 26px;
+    padding-top: 26px;
+    border-top: 1px solid var(--line-weak);
+  }
+
+  .parity__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .parity__project {
+    font: 500 12px/1 var(--mono);
+    letter-spacing: 0.08em;
+  }
+
+  .parity__blurb {
+    margin: 12px 0 0;
+    font: 400 13px/21px var(--sans);
+    color: var(--fg-weak);
+    max-width: 640px;
+  }
+
+  .parity__facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px 20px;
+    margin: 18px 0 0;
+    padding: 14px 0 0;
+    border-top: 1px solid var(--line-weak);
+  }
+
+  .parity__facts dt {
+    margin-bottom: 6px;
+  }
+
+  .parity__facts dd {
+    margin: 0;
+    font: 400 11px/16px var(--mono);
+  }
+
+  .parity__basis {
+    margin: 16px 0 0;
+    font: 400 12px/19px var(--sans);
+    color: var(--fg-weak);
+    max-width: 640px;
+  }
+
+  .parity__diff {
+    margin: 20px 0 0;
+  }
+
+  .parity__note,
+  .parity__caveat {
+    margin: 16px 0 0;
+    font: 400 12px/19px var(--sans);
+    color: var(--fg-weak);
+    border-left: 2px solid var(--line-weak);
+    padding-left: 12px;
+    max-width: 640px;
+  }
+
+  .parity__caveat {
+    border-left-color: var(--blue);
+  }
+</style>

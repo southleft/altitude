@@ -13,6 +13,8 @@
 import Shell from '../../layouts/Shell.astro';
 import PropsTable from '../../components/PropsTable.astro';
 import Playground from '../../components/Playground.astro';
+import ParityPanel from '../../components/ParityPanel.astro';
+import ChecksPanel from '../../components/ChecksPanel.astro';
 import { COMPONENTS, findComponent } from '../../lib/registry.mjs';
 import { href } from '../../lib/site.mjs';
 
@@ -63,6 +65,13 @@ const pairTable = (rows, nameKey = 'name') =>
     </p>
 
     <Playground component={component} />
+
+    <!-- Status panels, generated at build time from the parity manifests and
+         the axe report. They sit directly under the playground because they
+         qualify what the reader just looked at: whether the design file agrees
+         with it, and what a machine found wrong with it. -->
+    <ParityPanel tag={component.tag} />
+    <ChecksPanel slug={component.slug} />
 
     <div class="section-rule"><span>INSTALL</span><span class="section-rule__raw">{component.importPath}</span></div>
     <pre class="code code--inline detail-install">{`import '${component.importPath}';${

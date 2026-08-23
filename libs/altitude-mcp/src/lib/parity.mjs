@@ -122,6 +122,132 @@ export function digestOf(value) {
   return createHash('sha1').update(JSON.stringify(value)).digest('hex');
 }
 
+// ── the contract (what Figma actually mirrors) ──────────────────────────
+//
+// `hashComponentSource` above hashes BYTES. That makes it wrong in both
+// directions, and the two failures are the reason this section exists:
+//
+//   * FALSE POSITIVE — editing a JSDoc comment, renaming a private field, or
+//     reformatting the SCSS changes the sha1 and flips the badge to
+//     `code-drift`, though nothing a Figma component set can represent moved.
+//   * FALSE NEGATIVE — the hash says "something changed" and never says WHAT,
+//     so a genuinely breaking change (a variant value removed from an enum) is
+//     indistinguishable from a typo fix, and a variant removed IN FIGMA is
+//     invisible to it entirely.
+//
+// The contract below is the component's PUBLIC SURFACE as the CEM records it —
+// the same surface a Figma component set mirrors: attribute names and their
+// value sets, slots, events, CSS parts and CSS custom properties. Descriptions
+// are deliberately excluded; that is the whole point.
+//
+// `hashComponentSource` is KEPT, and still reported as `codeHash`: it is the
+// only signal available for a manifest entry stamped before contracts existed,
+// and `driftBasis` on every report entry says which one decided the status.
+
+/** `'a' | 'b'` → ['a','b']; a non-union type → []. */
+function unionValues(typeText) {
+  const parts = String(typeText ?? '').split('|').map((s) => s.trim());
+  if (parts.length < 2) return [];
+  const literals = parts.filter((s) => /^'[^']*'$/.test(s)).map((s) => s.slice(1, -1));
+  return literals.length === parts.length ? literals.sort() : [];
+}
+
+/**
+ * The code-side contract for one CEM component record.
+ *
+ * @param {object} component a `loadComponents()` entry
+ * @returns {{attributes: Array<{name:string,type:string,values:string[]}>,
+ *            slots:string[], events:string[], cssParts:string[], cssProperties:string[]}}
+ */
+export function codeContract(component) {
+  const names = (list, key = 'name') => (list ?? []).map((x) => x[key] ?? '').filter(Boolean).sort();
+  return {
+    attributes: (component.attributes ?? [])
+      .map((a) => {
+        const type = (a.type?.text ?? 'string').replace(/\s+/g, ' ').trim();
+        return { name: a.name, type, values: unionValues(type) };
+      })
+      .sort((a, b) => a.name.localeCompare(b.name)),
+    // The DEFAULT slot is declared with an empty name, so it has to be labelled
+    // before anything filters on truthiness — dropping it would understate the
+    // surface of every component that projects unnamed content.
+    slots: (component.slots ?? []).map((s) => s.name || '(default)').sort(),
+    events: names(component.events),
+    cssParts: names(component.cssParts),
+    cssProperties: names(component.cssProperties),
+  };
+}
+
+/** Stable digest of `codeContract` — the drift signal that replaces the sha1. */
+export function contractDigest(component) {
+  return component ? digestOf(codeContract(component)) : null;
+}
+
+/**
+ * Match a Figma variant-property name to a CEM attribute name.
+ *
+ * The two sides spell the same idea differently ON PURPOSE: Figma axes are
+ * Title Case (`Variant`, `Width`) and the code's are kebab (`variant`,
+ * `width`), so comparison is case- and separator-insensitive. Names that do not
+ * survive that normalisation on both sides are reported as UNMATCHED rather
+ * than as drift — the Figma sets carry a synthetic `State` axis with no code
+ * attribute at all, and the plan (scripts/figma-atoms/plan.mjs:18) deliberately
+ * withholds behavioural props from the axis list. Curation is not drift.
+ */
+const normKey = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+/**
+ * Diff the code contract against an OBSERVED Figma component-set contract.
+ *
+ * `figmaContract` is what `scripts/figma-parity/refresh-figma-digests.mjs`
+ * records per entry: `{ props: { <Name>: { type, options } }, variants: [...] }`.
+ *
+ * What counts as a mismatch is narrow on purpose. Option LABELS differ between
+ * the two sides by design (the library's Button calls its implicit default
+ * variant "Primary" in Figma — plan.mjs:87-89), so a label difference is
+ * reported but is NOT drift. A difference in the NUMBER of options is: that is
+ * exactly "a variant was added or removed on one side", the case the byte hash
+ * could not see.
+ *
+ * @returns {null|{checked:number, mismatches:Array, matched:Array, unmatchedFigmaProps:string[]}}
+ */
+export function diffFigmaContract(contract, figmaContract) {
+  if (!contract || !figmaContract?.props) return null;
+  const byKey = new Map(contract.attributes.map((a) => [normKey(a.name), a]));
+  const matched = [];
+  const mismatches = [];
+  const unmatchedFigmaProps = [];
+
+  for (const [figmaName, def] of Object.entries(figmaContract.props)) {
+    const attr = byKey.get(normKey(figmaName));
+    if (!attr) {
+      unmatchedFigmaProps.push(figmaName);
+      continue;
+    }
+    const figmaOptions = (def?.options ?? []).slice().sort();
+    const row = {
+      property: attr.name,
+      figmaProperty: figmaName,
+      figmaType: def?.type ?? null,
+      code: attr.values,
+      figma: figmaOptions,
+    };
+    // Only VARIANT properties carry an option set to compare against an enum.
+    if (def?.type === 'VARIANT' && attr.values.length && figmaOptions.length) {
+      if (attr.values.length !== figmaOptions.length) {
+        mismatches.push({ ...row, kind: 'option-count' });
+        continue;
+      }
+      const relabelled = attr.values.some((v, i) => normKey(v) !== normKey(figmaOptions[i]));
+      matched.push({ ...row, relabelled });
+      continue;
+    }
+    matched.push({ ...row, relabelled: false });
+  }
+
+  return { checked: matched.length + mismatches.length, mismatches, matched, unmatchedFigmaProps };
+}
+
 // ── status computation ──────────────────────────────────────────────────
 
 /** Figma deep-link for a node id in the given project's file. */
@@ -129,18 +255,63 @@ export function figmaNodeUrl(nodeId, project) {
   return figmaNodeUrlFor(asProject(project), nodeId);
 }
 
-function statusFor(entry, currentCodeHash) {
-  if (entry?.excluded) return STATUS.EXCLUDED;
-  if (!entry?.figma?.name) return STATUS.MISSING_IN_FIGMA;
-  const last = entry.lastSync ?? {};
-  const codeDrift = Boolean(last.codeHash && currentCodeHash && last.codeHash !== currentCodeHash) || (!last.codeHash && Boolean(currentCodeHash));
-  // Figma drift is only assessable when a refresh has observed a digest.
-  const observed = entry.figmaCurrentDigest ?? null;
-  const figmaDrift = Boolean(observed && last.figmaDigest && observed !== last.figmaDigest);
-  if (codeDrift && figmaDrift) return STATUS.CONFLICT;
-  if (codeDrift) return STATUS.CODE_DRIFT;
-  if (figmaDrift) return STATUS.FIGMA_DRIFT;
-  return STATUS.IN_SYNC;
+/**
+ * Decide one component's status, and SAY WHAT DECIDED IT.
+ *
+ * The second half matters as much as the first. `figmaCurrentDigest` is null
+ * until someone runs `refresh-figma-digests.mjs`, and while it is null
+ * `figma-drift` and `conflict` are not "absent", they are UNREACHABLE — no
+ * amount of design change can produce them. The old function returned
+ * `in-sync` in that state, which is how "nobody has ever looked at Figma"
+ * came to render identically to "Figma matches". Every entry now carries
+ * `driftBasis` and `figmaObserved` so a consumer can render the difference.
+ *
+ * @returns {{status:string, driftBasis:'contract'|'source-hash'|'never-synced',
+ *            figmaObserved:boolean, codeDrift:boolean, figmaDrift:boolean,
+ *            contractMismatches:number}}
+ */
+function assessEntry(entry, current) {
+  const observed = entry?.figmaCurrentDigest ?? null;
+  const figmaObserved = observed !== null;
+  const last = entry?.lastSync ?? {};
+
+  if (entry?.excluded) {
+    return { status: STATUS.EXCLUDED, driftBasis: 'never-synced', figmaObserved, codeDrift: false, figmaDrift: false, contractMismatches: 0 };
+  }
+  if (!entry?.figma?.name) {
+    return { status: STATUS.MISSING_IN_FIGMA, driftBasis: 'never-synced', figmaObserved, codeDrift: false, figmaDrift: false, contractMismatches: 0 };
+  }
+
+  // Prefer the CONTRACT digest; fall back to the byte hash only for manifest
+  // entries stamped before contracts existed. Which one ran is reported.
+  let codeDrift;
+  let driftBasis;
+  if (last.contractDigest && current.contractDigest) {
+    codeDrift = last.contractDigest !== current.contractDigest;
+    driftBasis = 'contract';
+  } else if (last.codeHash && current.codeHash) {
+    codeDrift = last.codeHash !== current.codeHash;
+    driftBasis = 'source-hash';
+  } else {
+    // Never stamped: the two sides have never been confirmed equal, so the
+    // honest reading is "code is ahead", not "in sync".
+    codeDrift = Boolean(current.codeHash);
+    driftBasis = 'never-synced';
+  }
+
+  // A contract mismatch against an OBSERVED Figma set is a design-level
+  // difference the digest comparison cannot express, and counts as Figma drift
+  // on its own — the set no longer offers the variants the code declares.
+  const contractMismatches = current.contractDiff?.mismatches?.length ?? 0;
+  const digestDrift = Boolean(observed && last.figmaDigest && observed !== last.figmaDigest);
+  const figmaDrift = digestDrift || contractMismatches > 0;
+
+  let status = STATUS.IN_SYNC;
+  if (codeDrift && figmaDrift) status = STATUS.CONFLICT;
+  else if (codeDrift) status = STATUS.CODE_DRIFT;
+  else if (figmaDrift) status = STATUS.FIGMA_DRIFT;
+
+  return { status, driftBasis, figmaObserved, codeDrift, figmaDrift, contractMismatches };
 }
 
 /**
@@ -177,13 +348,18 @@ export function computeParity(project) {
   for (const c of components) {
     const entry = manifest?.components?.[c.tag] ?? null;
     const codeHash = hashComponentSource(c.modulePath, p);
+    const contract = codeContract(c);
     const story = getStoryInfo(c.modulePath, p);
+    const contractDiff = diffFigmaContract(contract, entry?.figmaContract ?? null);
 
     // A config-level exclusion stands in for a manifest one, so a project whose
     // manifest has not been seeded yet still reports its known exclusions.
     const configExclusion = Object.prototype.hasOwnProperty.call(excludedByConfig, c.tag) ? excludedByConfig[c.tag] : null;
 
-    let status = manifest ? statusFor(entry, codeHash) : STATUS.MISSING_IN_FIGMA;
+    const assessed = manifest
+      ? assessEntry(entry, { codeHash, contractDigest: digestOf(contract), contractDiff })
+      : { status: STATUS.MISSING_IN_FIGMA, driftBasis: 'never-synced', figmaObserved: false, codeDrift: false, figmaDrift: false, contractMismatches: 0 };
+    let status = assessed.status;
     if (!entry?.figma?.name && configExclusion) status = STATUS.EXCLUDED;
 
     // Foundations are code primitives (layout, icon runtime, motion, utilities)
@@ -204,6 +380,21 @@ export function computeParity(project) {
         ? { name: entry.figma.name, nodeId: entry.figma.nodeId ?? null, url: figmaNodeUrl(entry.figma.nodeId, p) }
         : null,
       codeHash,
+      /** Digest of the PUBLIC SURFACE (see `codeContract`) — the drift signal. */
+      contractDigest: digestOf(contract),
+      /** Sizes, so a consumer can show what was compared without the payload. */
+      contractShape: {
+        attributes: contract.attributes.length,
+        slots: contract.slots.length,
+        events: contract.events.length,
+        cssParts: contract.cssParts.length,
+        cssProperties: contract.cssProperties.length,
+      },
+      /** Property-level diff against the observed Figma set, or null if unobserved. */
+      contractDiff,
+      /** Which comparison decided `status`, and whether Figma was ever read. */
+      driftBasis: assessed.driftBasis,
+      figmaObserved: assessed.figmaObserved,
       lastSync: entry?.lastSync ?? null,
       figmaCurrentDigest: entry?.figmaCurrentDigest ?? null,
       note: entry?.note ?? configExclusion ?? null,
@@ -227,8 +418,31 @@ export function computeParity(project) {
   for (const s of Object.values(STATUS)) summary[s] = 0;
   for (const e of [...entries, ...figmaOnly]) summary[e.status] += 1;
 
+  /**
+   * THE HONESTY BLOCK. Without it, a report where nobody has ever read Figma is
+   * byte-identical in shape to one where Figma matches — which is how
+   * `figma-drift: 0` came to mean two opposite things. `mapped` vs `observed`
+   * is the distinction: a status is only trustworthy for the observed ones.
+   */
+  const mapped = entries.filter((e) => e.figma);
+  const observation = {
+    figmaLastRefreshed: manifest?.figmaLastRefreshed ?? null,
+    everObserved: Boolean(manifest?.figmaLastRefreshed),
+    mappedComponents: mapped.length,
+    observedComponents: mapped.filter((e) => e.figmaObserved).length,
+    /** Statuses that cannot occur at all while nothing has been observed. */
+    unreachableStatuses: mapped.some((e) => e.figmaObserved) ? [] : [STATUS.FIGMA_DRIFT, STATUS.CONFLICT],
+    driftBasis: entries.reduce((acc, e) => {
+      acc[e.driftBasis] = (acc[e.driftBasis] ?? 0) + 1;
+      return acc;
+    }, {}),
+    contractsCompared: entries.filter((e) => e.contractDiff).length,
+    refreshCommand: `node scripts/figma-parity/refresh-figma-digests.mjs${p.isDefault ? '' : ` --project ${p.id}`}`,
+  };
+
   return {
     generated: new Date().toISOString(),
+    observation,
     project: p.id,
     projectName: p.name,
     brand: p.brand,
@@ -340,4 +554,72 @@ export function buildAiPrompt(item, project) {
   };
 
   return [head, context, '', ...(byStatus[item.status] ?? []), '', ...promptFooter(item.tag, p)].join('\n');
+}
+
+// ── the public projection ───────────────────────────────────────────────
+
+/**
+ * `computeParity()` for a PUBLIC consumer — the docs site, which is deployed to
+ * the open internet.
+ *
+ * The full report is an internal tool's output and reads like one. Every entry
+ * carries an `aiPrompt` that names the Figma FILE KEY, the component's NODE ID,
+ * the path of every script in `scripts/figma-atoms/` and `scripts/figma-parity/`,
+ * the skill file under `.claude/`, and the decoy-file warning. None of that is
+ * documentation; it is a map of this repo's internals and a set of handles on a
+ * private Figma file, and shipping it to altitude.pages.dev publishes both.
+ *
+ * This projection is an ALLOWLIST, not a redaction pass: it builds new objects
+ * from named fields, so a field added to the engine later is absent here until
+ * somebody adds it deliberately. `apps/docs/scripts/check-status-panels.mjs`
+ * greps the BUILT html for the leaks this is meant to prevent, so the rule is
+ * enforced against the output rather than trusted here.
+ *
+ * @param {object|string} [project] resolved project, id, or omit for default
+ */
+export function publicParityReport(project) {
+  const full = computeParity(project);
+  return {
+    generated: full.generated,
+    project: full.project,
+    projectName: full.projectName,
+    brand: full.brand,
+    /** Name only — never `figmaFileId`, and never a node-scoped deep link. */
+    figmaFileName: full.figmaFileName,
+    manifestPresent: full.manifestPresent,
+    observation: {
+      figmaLastRefreshed: full.observation.figmaLastRefreshed,
+      everObserved: full.observation.everObserved,
+      mappedComponents: full.observation.mappedComponents,
+      observedComponents: full.observation.observedComponents,
+      unreachableStatuses: full.observation.unreachableStatuses,
+      driftBasis: full.observation.driftBasis,
+      contractsCompared: full.observation.contractsCompared,
+    },
+    scope: full.scope,
+    summary: full.summary,
+    components: full.components.map((c) => ({
+      tag: c.tag,
+      status: c.status,
+      driftBasis: c.driftBasis,
+      figmaObserved: c.figmaObserved,
+      /** The Figma SET NAME is a design-system fact; the node id is not. */
+      figmaSetName: c.figma?.name ?? null,
+      lastSyncDate: c.lastSync?.date ?? null,
+      contractShape: c.contractShape,
+      contractDiff: c.contractDiff
+        ? {
+            checked: c.contractDiff.checked,
+            mismatches: c.contractDiff.mismatches.map((m) => ({
+              property: m.property,
+              kind: m.kind,
+              codeOptions: m.code.length,
+              figmaOptions: m.figma.length,
+            })),
+            relabelled: c.contractDiff.matched.filter((m) => m.relabelled).map((m) => m.property),
+          }
+        : null,
+      note: c.note,
+    })),
+  };
 }

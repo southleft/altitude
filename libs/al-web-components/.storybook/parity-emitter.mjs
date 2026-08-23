@@ -90,7 +90,29 @@ function ensureReport(projectId) {
       );
       return { parity, project, target, figmaSyncDir: project.resolved.figmaSyncDir };
     } catch (err) {
-      console.warn(`[al-storybook] parity report not emitted (${err?.message ?? err}) — sidebar badges will be absent.`);
+      // FAILURE IS DATA. Warning to a console nobody reads and writing nothing
+      // is why "the parity engine threw" and "every component is in sync" have
+      // been indistinguishable in the UI: both render as no badges. Write a
+      // report-shaped ERROR artifact instead, so a consumer that gets a 200 can
+      // tell the difference between a clean report and a broken one.
+      console.warn(`[al-storybook] parity report FAILED (${err?.message ?? err}) — emitting an error report.`);
+      try {
+        const target = resolve(DIST_DIR, 'parity.json');
+        mkdirSync(DIST_DIR, { recursive: true });
+        writeFileSync(
+          target,
+          JSON.stringify({
+            generated: new Date().toISOString(),
+            error: String(err?.message ?? err),
+            components: [],
+            figmaOnly: [],
+            summary: {},
+          }),
+          'utf8',
+        );
+      } catch (writeErr) {
+        console.warn(`[al-storybook] could not write the error report either: ${writeErr?.message ?? writeErr}`);
+      }
       return null;
     }
   })();

@@ -26,6 +26,7 @@ import {
   readManifest,
   writeManifest,
   hashComponentSource,
+  contractDigest,
   digestOf,
 } from '../../libs/altitude-mcp/src/lib/parity.mjs';
 
@@ -82,6 +83,11 @@ for (const tag of tags) {
   entry.lastSync = {
     date: now,
     codeHash: hashComponentSource(component.modulePath, project),
+    // The PUBLIC-SURFACE digest, which is what the parity engine now compares
+    // (libs/altitude-mcp/src/lib/parity.mjs, "the contract"). `codeHash` is
+    // still written beside it so an older reader keeps working, but a JSDoc
+    // edit moves only the hash and no longer flips the badge.
+    contractDigest: contractDigest(component),
     figmaDigest: entry.figmaCurrentDigest ?? entry.lastSync?.figmaDigest ?? opsDigestFor(tag),
   };
   stamped += 1;

@@ -152,6 +152,14 @@ for (const [tag, entry] of Object.entries(manifest.components)) {
   const digest = digestOf({ name: live.name, defs: live.defs, variants: live.variants });
   if (entry.figmaCurrentDigest !== digest) updated += 1;
   entry.figmaCurrentDigest = digest;
+  // The digest alone can only answer "did anything change". Persist the
+  // OBSERVED CONTRACT too, so `diffFigmaContract` (parity.mjs) can answer
+  // "which property, and how" — a variant removed from the Figma set becomes a
+  // named mismatch instead of an opaque hash difference.
+  entry.figmaContract = {
+    props: live.defs ?? {},
+    variants: (live.variants ?? []).map((v) => v.name),
+  };
   // First observation after a seed: the seed stored an ops-derived stand-in
   // digest that can never equal a live digest. Rebase lastSync.figmaDigest to
   // the first observed value so "no change since sync" reads as in-sync.

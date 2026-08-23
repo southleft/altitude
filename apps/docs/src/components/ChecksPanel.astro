@@ -1,0 +1,197 @@
+---
+/**
+ * Accessibility checks for one component, generated at build time.
+ *
+ * Two blocks, deliberately separated because they answer different questions:
+ *
+ *   1. THE FOUR ROWS — Carbon's per-component accessibility status: default
+ *      state, advanced states, screen reader, keyboard navigation. Each row
+ *      carries the KIND of evidence behind it (AXE / INTERACTION TESTS /
+ *      MANUAL), because two of the four cannot be established by a machine, and
+ *      a panel that renders all four the same way is claiming coverage it does
+ *      not have. A manual row with no recorded pass reads NOT RECORDED.
+ *
+ *   2. COLOR CONTRAST — reported on its own, because
+ *      `libs/al-web-components/.storybook/test-runner.ts:50` disables the
+ *      `color-contrast` rule for the CI gate. That exclusion is the reason no
+ *      one has seen this result; the docs are the wrong place to inherit it, so
+ *      the measurement runs the rule and the panel names the exclusion.
+ *
+ * Every rule id, node count and story id below comes from
+ * `.altitude/a11y/report.json` via `../lib/a11y.mjs`. None is written here.
+ */
+import { a11yFor, A11Y_REPORT, A11Y_MANUAL_AVAILABLE } from '../lib/a11y.mjs';
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const checks = a11yFor(slug);
+
+const STATE_LABEL = {
+  pass: 'PASS',
+  violations: 'VIOLATIONS',
+  'not-measured': 'NOT MEASURED',
+  partial: 'PARTIAL',
+  'not-recorded': 'NOT RECORDED',
+};
+
+const STATE_TONE = {
+  pass: 'ok',
+  violations: 'warn',
+  'not-measured': 'gap',
+  partial: 'mute',
+  'not-recorded': 'mute',
+};
+---
+
+<div class="section-rule">
+  <span>ACCESSIBILITY</span>
+  <span>{A11Y_REPORT.available ? `AXE ${A11Y_REPORT.source.axeVersion}` : 'NOT MEASURED'}</span>
+</div>
+
+{
+  !A11Y_REPORT.available && (
+    <p class="empty-note" data-a11y-unavailable>
+      {A11Y_REPORT.reason} REGENERATE WITH: {A11Y_REPORT.command}
+    </p>
+  )
+}
+
+{
+  A11Y_REPORT.available && !checks.measured && (
+    <p class="empty-note" data-a11y-unmeasured>{checks.reason}</p>
+  )
+}
+
+{
+  checks.measured && (
+    <div class="checks" data-a11y-panel data-a11y-slug={slug}>
+      <div class="spec-table spec-table--checks">
+        <div class="spec-table__head">
+          <span>CHECK</span>
+          <span>EVIDENCE</span>
+          <span>DETAIL</span>
+          <span>RESULT</span>
+        </div>
+        {checks.rows.map((row) => (
+          <div class="spec-table__row" data-a11y-row={row.id}>
+            <span class="spec-table__name">{row.label}</span>
+            <span class="spec-table__default">{row.evidence}</span>
+            <span class="spec-table__type">
+              {row.detail || '—'}
+              {row.rules.length > 0 && (
+                <span class="spec-table__desc">
+                  {row.rules.map((rule) => `${rule.id} (${rule.nodes})`).join(', ')}
+                </span>
+              )}
+            </span>
+            <span class={`status status--parity-${STATE_TONE[row.state]}`} data-a11y-state={row.state}>
+              {STATE_LABEL[row.state]}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <p class="checks__meta micro">
+        MEASURED {A11Y_REPORT.generated.slice(0, 10)} · {checks.storyCount} STORIES · AXE{' '}
+        {A11Y_REPORT.source.axeTags.join(' + ').toUpperCase()}
+      </p>
+
+      {checks.errored.length > 0 && (
+        <p class="checks__note">
+          {checks.errored.length} of this component’s stories could not be measured:{' '}
+          {checks.errored.map((e) => e.id).join(', ')}. Their result is unknown, not clean.
+        </p>
+      )}
+
+      {!A11Y_MANUAL_AVAILABLE && (
+        <p class="checks__note">
+          No manual test record store was found, so the screen-reader and keyboard rows have nothing
+          to read. They report what the machine can see and nothing more.
+        </p>
+      )}
+
+      <div class="section-rule checks__contrast-rule">
+        <span>COLOR CONTRAST</span>
+        <span>
+          {checks.contrastViolations.length}{' '}
+          {checks.contrastViolations.length === 1 ? 'RULE FAILING' : 'RULES FAILING'}
+        </span>
+      </div>
+
+      <p class="checks__note checks__note--lead">
+        The CI gate disables <code>{A11Y_REPORT.source.contrastRule}</code> globally
+        (<code>{A11Y_REPORT.source.gateConfig}</code>), so its result never reaches a test run. It is
+        enabled for this measurement, and reported here whichever way it comes out.
+      </p>
+
+      {checks.contrastViolations.length === 0 ? (
+        <p class="empty-note" data-a11y-contrast="clean">
+          NO CONTRAST VIOLATIONS ACROSS THIS COMPONENT’S {checks.storyCount} STORIES.
+        </p>
+      ) : (
+        <div class="spec-table spec-table--props" data-a11y-contrast="violations">
+          <div class="spec-table__head">
+            <span>RULE</span>
+            <span>WHERE</span>
+            <span>ELEMENTS</span>
+          </div>
+          {checks.contrastViolations.map((rule) => (
+            <div class="spec-table__row">
+              <span class="spec-table__name">{rule.id}</span>
+              <span class="spec-table__type">
+                {rule.help}
+                <span class="spec-table__desc">{rule.stories.join(', ')}</span>
+              </span>
+              <span class="spec-table__default">{rule.nodes}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+<style>
+  .checks {
+    margin-bottom: 44px;
+  }
+
+  .spec-table--checks .spec-table__head,
+  .spec-table--checks .spec-table__row {
+    grid-template-columns: 170px 120px minmax(0, 1fr) 110px;
+  }
+
+  .spec-table--checks .spec-table__name {
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 13px;
+  }
+
+  .checks__meta {
+    padding: 6px 0 0;
+  }
+
+  .checks__note {
+    margin: 16px 0 0;
+    font: 400 12px/19px var(--sans);
+    color: var(--fg-weak);
+    border-left: 2px solid var(--line-weak);
+    padding-left: 12px;
+    max-width: 640px;
+  }
+
+  .checks__note code {
+    font: 400 11px/1 var(--mono);
+  }
+
+  .checks__contrast-rule {
+    margin-top: 40px;
+  }
+
+  .checks__note--lead {
+    margin-bottom: 18px;
+  }
+</style>

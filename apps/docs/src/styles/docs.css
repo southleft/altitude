@@ -864,6 +864,43 @@ input:focus {
   color: #f05735;
 }
 
+/*
+ * Status-panel tones. Four, not seven: the parity vocabulary has seven statuses
+ * and the accessibility rows have five states, but a reader only needs to know
+ * whether a thing is settled (ok), moving (warn), absent (gap) or deliberately
+ * out of scope / unrecorded (mute). The mapping from status to tone lives in
+ * src/lib/parity.mjs and ChecksPanel.astro, never in the colour itself.
+ */
+.status--parity-ok {
+  border-color: #2f8f4e;
+  color: #2f8f4e;
+}
+
+.status--parity-warn {
+  border-color: #b4761a;
+  color: #b4761a;
+}
+
+.status--parity-gap {
+  border-color: #f05735;
+  color: #f05735;
+}
+
+.status--parity-mute {
+  border-color: var(--line-weak);
+  color: var(--fg-weak);
+}
+
+[data-theme='dark'] .status--parity-ok {
+  border-color: #58c07c;
+  color: #58c07c;
+}
+
+[data-theme='dark'] .status--parity-warn {
+  border-color: #e0a94a;
+  color: #e0a94a;
+}
+
 /* ------------------------------------------------------------------ misc */
 
 .site-foot {
