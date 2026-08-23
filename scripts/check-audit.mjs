@@ -37,8 +37,23 @@ import { fileURLToPath } from 'node:url';
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const ALLOWLIST_PATH = join(REPO_ROOT, '.altitude', 'audit-allowlist.json');
 
-/** Packages that are actually published. A vulnerability here reaches consumers. */
-const PUBLISHED = ['@southleft/al-web-components', '@southleft/al-react'];
+/**
+ * Packages that are actually published. A vulnerability here reaches consumers.
+ *
+ * BOTH the npm name AND the directory are needed, and conflating them broke this
+ * gate once already. `pnpm audit` prints dependency paths rooted at the WORKSPACE
+ * DIRECTORY (`libs\altitude-mcp > @modelcontextprotocol/sdk@1.30.0 > ...`), not
+ * at the package name. When these packages moved to the @southleft/* scope, a
+ * matcher that built `libs/${name}` began looking for
+ * `libs/@southleft/al-web-components` — a path that cannot exist, because the
+ * directory is still `libs/al-web-components`. The SHIPPED tier silently went
+ * permanently empty, so the gate could no longer fail on anything reaching
+ * consumers: a vacuous check of exactly the kind this repo has been removing.
+ */
+const PUBLISHED = [
+  { name: '@southleft/al-web-components', dir: 'libs/al-web-components' },
+  { name: '@southleft/al-react', dir: 'libs/al-react' },
+];
 
 const RANK = { info: 0, low: 1, moderate: 2, high: 3, critical: 4 };
 const SHIPPED_FATAL_AT = RANK.high;
@@ -102,9 +117,19 @@ const workspace = [];
 
 for (const adv of advisories) {
   const paths = (adv.findings ?? []).flatMap((f) => f.paths ?? []);
-  const hitsPublished = paths.some((p) =>
-    PUBLISHED.some((pkg) => p.includes(`libs/${pkg}`) || p.includes(`libs\\${pkg}`) || p.includes(`${pkg}@link`)),
-  );
+  const hitsPublished = paths.some((p) => {
+    const norm = p.replace(/\\/g, '/');
+    return PUBLISHED.some(
+      ({ name, dir }) =>
+        // rooted at the workspace DIRECTORY, which is how pnpm audit prints it
+        norm.includes(dir) ||
+        // ...or referenced by package NAME anywhere in the chain, which is how a
+        // workspace link or a real dependency edge appears.
+        norm.includes(`${name}@`) ||
+        norm.includes(`> ${name} `) ||
+        norm.endsWith(`> ${name}`),
+    );
+  });
   const row = {
     id: String(adv.github_advisory_id ?? adv.id ?? adv.module_name),
     module: adv.module_name,
@@ -123,7 +148,7 @@ const fmt = (r) =>
   `      patched: ${r.patched ?? 'none'}  |  via ${r.samplePath}`;
 
 console.log('check-audit: production dependency graph\n');
-console.log(`SHIPPED (published packages: ${PUBLISHED.join(', ')})`);
+console.log(`SHIPPED (published packages: ${PUBLISHED.map((p) => p.name).join(", ")})`);
 if (shipped.length === 0) {
   console.log('  none — nothing known-vulnerable reaches consumers.\n');
 } else {
