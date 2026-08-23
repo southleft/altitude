@@ -564,6 +564,42 @@ jobs:
       - name: MCP smoke test
         run: pnpm --filter altitude-mcp test
 
+  unit-tests:
+    # B2 - the component libraries had zero unit tests. Vitest 3 in browser mode
+    # (Playwright/chromium), because focus order, `inert`, :focus-visible,
+    # constructable stylesheets and ElementInternals are all either missing or
+    # subtly wrong under a DOM shim - which is how a green suite ends up proving
+    # nothing.
+    name: unit tests (vitest browser) + coverage floor
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+      # The `react` vitest project resolves al-web-components through its
+      # exports map, i.e. dist/. Without this build it would test a library that
+      # does not exist yet.
+      - name: Build libraries
+        run: pnpm run build
+      - name: Unit tests with coverage
+        run: pnpm run test:unit:coverage
+      - name: Coverage floor (one-way ratchet)
+        run: pnpm run gate:coverage
+      - name: Upload coverage on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+
   repo-hygiene:
     # The four gates below existed as `pnpm run` scripts that only ever ran by
     # hand. AGENTS.md names check:ds-projects as its own enforcement mechanism,

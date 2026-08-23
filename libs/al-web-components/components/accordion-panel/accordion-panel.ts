@@ -146,7 +146,7 @@ export class ALAccordionPanel extends ALElement {
         <div class="al-c-accordion-panel__header">
           <button
             class="al-c-accordion-panel__button"
-            aria-expanded=${ifDefined(this.isActive)}
+            aria-expanded=${this.isActive === true ? 'true' : 'false'}
             aria-controls=${ifDefined(this.ariaControls)}
             id="${this.ariaLabelledBy}"
             @click=${this.toggleActive}
