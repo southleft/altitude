@@ -100,9 +100,16 @@ const inner = (probe, host, sel, css) =>
       const el = scope?.querySelector(h)?.shadowRoot?.querySelector(s);
       if (!el) return '(not found)';
       const st = getComputedStyle(el);
-      return c === 'font'
-        ? st.font || `${st.fontWeight} ${st.fontSize}/${st.lineHeight} ${st.fontFamily}`
-        : st[c] || st.getPropertyValue(c);
+      const font = st.font || `${st.fontWeight} ${st.fontSize}/${st.lineHeight} ${st.fontFamily}`;
+      if (c === 'font') return font;
+      // 'brand-probe': font PLUS background-color. Brands are free to share a
+      // font (southleft converged on the primary stack in the southleft-v5
+      // parity work), but --al-theme-color-background-primary-default is
+      // asserted distinct per brand above — so the painted button background
+      // is the reliable reached-the-component signal, with font kept in the
+      // tuple for the subtree-attribution equality checks below.
+      if (c === 'brand-probe') return `${font} | bg:${st.backgroundColor}`;
+      return st[c] || st.getPropertyValue(c);
     },
     [probe, host, sel, css]
   );
@@ -139,23 +146,23 @@ check(
 
 // ---------- 2: it reaches the component ----------
 
-console.log('\n  computed `font` on al-button\'s label, inside the shadow root');
+console.log('\n  computed font + background on al-button\'s label, inside the shadow root');
 const fonts = {};
 for (const brand of BRANDS) {
-  fonts[brand] = await inner(brand, 'al-button', '.al-c-button', 'font');
+  fonts[brand] = await inner(brand, 'al-button', '.al-c-button', 'brand-probe');
   console.log(`      ${brand.padEnd(11)} ${fonts[brand]}`);
 }
 check(!Object.values(fonts).includes('(not found)'), 'every column rendered an al-button label');
 check(
   new Set(Object.values(fonts)).size === BRANDS.length,
-  `al-button label resolves to ${new Set(Object.values(fonts)).size} distinct fonts across ${BRANDS.length} brands`
+  `al-button label resolves to ${new Set(Object.values(fonts)).size} distinct font+background tuple(s) across ${BRANDS.length} brands`
 );
 
 // ---------- 4: nesting ----------
 
 console.log('\n  nesting — altitude inside southleft');
-const outerFont = await inner('outer', 'al-button', '.al-c-button', 'font');
-const innerFont = await inner('inner', 'al-button', '.al-c-button', 'font');
+const outerFont = await inner('outer', 'al-button', '.al-c-button', 'brand-probe');
+const innerFont = await inner('inner', 'al-button', '.al-c-button', 'brand-probe');
 console.log(`      outer (southleft) ${outerFont}`);
 console.log(`      inner (altitude)  ${innerFont}`);
 check(outerFont === fonts.southleft, 'outer subtree resolves to southleft');
@@ -172,7 +179,7 @@ console.log('\n  versioned registry — <al-theme-9-9-9 brand="southleft">');
 const versionedTag = await page.evaluate(
   () => document.querySelector('[data-probe="versioned"]')?.tagName.toLowerCase() ?? '(missing)'
 );
-const versionedFont = await inner('versioned', 'al-button', '.al-c-button', 'font');
+const versionedFont = await inner('versioned', 'al-button', '.al-c-button', 'brand-probe');
 console.log(`      tag  ${versionedTag}`);
 console.log(`      font ${versionedFont}`);
 check(versionedTag === 'al-theme-9-9-9', 'the versioned host really is a suffixed tag');
