@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALToast as ALWebToast } from 'al-web-components/components/toast';
 import register from 'al-web-components/directives/register';

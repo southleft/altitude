@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALIconDotsVertical as ALWebIconDotsVertical } from 'al-web-components/components/icon/icons/dots-vertical';
 import register from 'al-web-components/directives/register';

@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALMenuItem as ALWebMenuItem } from 'al-web-components/components/menu-item';
 import register from 'al-web-components/directives/register';

@@ -6,7 +6,7 @@
 // client-side hydration entry that loads the component definitions so the
 // browser upgrades the elements without remeasuring the DOM.
 
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { Readable } from 'node:stream';
@@ -104,6 +104,26 @@ async function ssrFor(pilot) {
   }
 }
 
+/**
+ * The client bundle that upgrades the server-rendered markup.
+ *
+ * Resolved at build time from `apps/web-components/dist` (Vite emits a hashed
+ * filename). Served repo-root-relative — `apps/ssr/scripts/serve.mjs` roots the
+ * static server at the repo root precisely so these cross-app paths resolve.
+ */
+const WC_FIXTURE_DIST = resolve(ROOT, '../web-components/dist/assets');
+let HYDRATION_ENTRY;
+try {
+  const bundle = (await readdir(WC_FIXTURE_DIST)).find((f) => f.startsWith('index-') && f.endsWith('.js'));
+  if (!bundle) throw new Error('no index-*.js in ' + WC_FIXTURE_DIST);
+  HYDRATION_ENTRY = `/apps/web-components/dist/assets/${bundle}`;
+} catch (err) {
+  throw new Error(
+    `[ssr] cannot find the al-app-web-components client bundle (${err?.message || err}). ` +
+      'Run `pnpm --filter al-app-web-components build` first — `pnpm run build:fixtures` does this in order.'
+  );
+}
+
 const pageHtml = (pilot, dsd) => `<!doctype html>
 <html lang="en">
   <head>
@@ -125,8 +145,20 @@ const pageHtml = (pilot, dsd) => `<!doctype html>
       <p data-hydration="pending">Hydration: <span id="status">pending</span></p>
     </main>
     <script type="module">
-      // Load the component definition so the browser upgrades the DSD.
-      import('../../../libs/al-web-components/dist/components/${pilot.tag.replace(/^al-/, '')}/${pilot.tag.replace(/^al-/, '')}.js')
+      // Load the component definitions so the browser upgrades the DSD.
+      //
+      // This used to import libs/al-web-components/dist/components/NAME/NAME.js
+      // directly. That file is tsc output, so it still carries BARE specifiers
+      // (import { html } from 'lit') -- a browser cannot resolve those without an
+      // import map, so hydration failed on every page with
+      // 'Failed to resolve module specifier \"lit\"' and the marker below never
+      // flipped. Nothing noticed, because tests/ssr.spec.ts asserted against a
+      // hand-written 'class FakeButton' in page.setContent instead of this page.
+      //
+      // The entry below is the al-app-web-components Vite bundle -- the real
+      // library, bundled by the real fixture build, every specifier resolved.
+      // 'pnpm run build:fixtures' builds it before this script runs.
+      import('${HYDRATION_ENTRY}')
         .then(() => {
           document.getElementById('status').textContent = 'complete';
           document.querySelector('[data-hydration]').dataset.hydration = 'complete';

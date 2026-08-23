@@ -1,3 +1,5 @@
+'use client';
+
 
 export * from './components/Accordion';
 export * from './components/AccordionPanel';

@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALTooltip as ALWebTooltip } from 'al-web-components/components/tooltip';
 import register from 'al-web-components/directives/register';

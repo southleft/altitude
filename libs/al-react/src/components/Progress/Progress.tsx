@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALProgress as ALWebProgress } from 'al-web-components/components/progress';
 import register from 'al-web-components/directives/register';

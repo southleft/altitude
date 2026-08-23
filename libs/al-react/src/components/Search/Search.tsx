@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALSearch as ALWebSearch } from 'al-web-components/components/search';
 import register from 'al-web-components/directives/register';

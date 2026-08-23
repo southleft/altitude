@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALIconCalendar as ALWebIconCalendar } from 'al-web-components/components/icon/icons/calendar';
 import register from 'al-web-components/directives/register';

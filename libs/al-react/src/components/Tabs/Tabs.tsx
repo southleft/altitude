@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALTabs as ALWebTabs } from 'al-web-components/components/tabs';
 import register from 'al-web-components/directives/register';

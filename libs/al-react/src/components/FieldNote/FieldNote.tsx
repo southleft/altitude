@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALFieldNote as ALWebFieldNote } from 'al-web-components/components/field-note';
 import register from 'al-web-components/directives/register';

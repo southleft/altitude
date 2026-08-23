@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALListItem as ALWebListItem } from 'al-web-components/components/list-item';
 import register from 'al-web-components/directives/register';

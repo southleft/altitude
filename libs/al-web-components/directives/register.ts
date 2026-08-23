@@ -35,6 +35,15 @@ function sanitize(part: string | undefined): string {
 }
 
 function defineSafely(alias: string, elementClass: any): void {
+  // No DOM: bail out instead of throwing. Every al-react wrapper (and every
+  // composite web component) calls register() at MODULE SCOPE, so without this
+  // guard `import 'al-react'` in a Node process with no DOM shim — SSR, a unit
+  // test runner, a Next.js server component — throws `customElements is not
+  // defined` at import time, before any consumer code runs. Callers still get
+  // their alias Map back; only the define() is skipped.
+  if (typeof customElements === 'undefined') {
+    return;
+  }
   if (customElements.get(alias)) {
     if (isDev) {
       const existing = customElements.get(alias);

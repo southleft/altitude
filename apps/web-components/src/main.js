@@ -13,6 +13,13 @@ import 'al-web-components/components/theme';
 import 'al-web-components/components/layout';
 import 'al-web-components/components/heading';
 import 'al-web-components/components/text-block';
+// Not rendered by index.html — imported only so `tests/wrapper-contract.spec.ts`
+// can mount them into `document.body` and assert the events their al-react
+// wrappers map. Adding imports here cannot move a VRT baseline: every screenshot
+// in `tests/pilots.vrt.spec.ts` targets a `<section>` that exists in index.html.
+import 'al-web-components/components/checkbox';
+import 'al-web-components/components/checkbox-group';
+import 'al-web-components/components/calendar';
 
 const open = document.getElementById('open');
 const dlg = document.getElementById('dlg');

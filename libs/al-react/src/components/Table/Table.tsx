@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALTable as ALWebTable } from 'al-web-components/components/table';
 import register from 'al-web-components/directives/register';

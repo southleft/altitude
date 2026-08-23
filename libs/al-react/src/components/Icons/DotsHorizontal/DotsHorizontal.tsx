@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALIconDotsHorizontal as ALWebIconDotsHorizontal } from 'al-web-components/components/icon/icons/dots-horizontal';
 import register from 'al-web-components/directives/register';

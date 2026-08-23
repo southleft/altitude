@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALInputStepper as ALWebInputStepper } from 'al-web-components/components/input-stepper';
 import register from 'al-web-components/directives/register';

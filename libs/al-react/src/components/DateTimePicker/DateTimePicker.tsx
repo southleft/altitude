@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { createComponent } from '@lit/react';
 import { ALDateTimePicker as ALWebDateTimePicker } from 'al-web-components/components/date-time-picker';

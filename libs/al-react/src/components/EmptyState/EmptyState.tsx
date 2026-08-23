@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALEmptyState as ALWebEmptyState } from 'al-web-components/components/empty-state';
 import register from 'al-web-components/directives/register';

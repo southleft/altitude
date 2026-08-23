@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALAvatar as ALWebAvatar } from 'al-web-components/components/avatar';
 import register from 'al-web-components/directives/register';

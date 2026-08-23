@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALIconSignIn as ALWebIconSignIn } from 'al-web-components/components/icon/icons/sign-in';
 import register from 'al-web-components/directives/register';

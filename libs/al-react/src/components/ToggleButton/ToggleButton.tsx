@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALToggleButton as ALWebToggleButton } from 'al-web-components/components/toggle-button';
 import register from 'al-web-components/directives/register';

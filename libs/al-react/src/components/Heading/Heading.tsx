@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALHeading as ALWebHeading } from 'al-web-components/components/heading';
 import register from 'al-web-components/directives/register';

@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALAccordion as ALWebAccordion } from 'al-web-components/components/accordion';
 import register from 'al-web-components/directives/register';

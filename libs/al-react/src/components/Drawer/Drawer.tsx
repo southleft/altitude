@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { createComponent } from '@lit/react';
 import { ALDrawer as ALWebDrawer } from 'al-web-components/components/drawer';

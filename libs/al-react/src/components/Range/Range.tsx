@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { createComponent } from '@lit/react';
 import { ALRange as ALWebRange } from 'al-web-components/components/range';

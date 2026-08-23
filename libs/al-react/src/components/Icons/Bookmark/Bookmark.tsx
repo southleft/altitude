@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALIconBookmark as ALWebIconBookmark } from 'al-web-components/components/icon/icons/bookmark';
 import register from 'al-web-components/directives/register';

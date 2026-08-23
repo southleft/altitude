@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { createComponent } from '@lit/react';
 import { ALThemeSwitcher as ALWebThemeSwitcher } from 'al-web-components/components/theme-switcher';

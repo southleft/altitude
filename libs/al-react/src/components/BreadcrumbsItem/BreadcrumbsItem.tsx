@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALBreadcrumbsItem as ALWebBreadcrumbsItem } from 'al-web-components/components/breadcrumbs-item';
 import register from 'al-web-components/directives/register';

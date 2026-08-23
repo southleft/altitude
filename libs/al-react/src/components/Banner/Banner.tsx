@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALBanner as ALWebBanner } from 'al-web-components/components/banner';
 import register from 'al-web-components/directives/register';

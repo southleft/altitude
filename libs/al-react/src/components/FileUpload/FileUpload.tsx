@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { createComponent } from '@lit/react';
 import { ALFileUpload as ALWebFileUpload } from 'al-web-components/components/file-upload';

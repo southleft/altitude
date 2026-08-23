@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALIconChevronRight as ALWebIconChevronRight } from 'al-web-components/components/icon/icons/chevron-right';
 import register from 'al-web-components/directives/register';

@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALSelect as ALWebSelect } from 'al-web-components/components/select';
 import register from 'al-web-components/directives/register';

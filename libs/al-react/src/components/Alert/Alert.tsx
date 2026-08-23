@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALAlert as ALWebAlert } from 'al-web-components/components/alert';
 import register from 'al-web-components/directives/register';

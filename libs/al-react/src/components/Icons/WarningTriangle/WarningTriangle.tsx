@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALIconWarningTriangle as ALWebIconWarningTriangle } from 'al-web-components/components/icon/icons/warning-triangle';
 import register from 'al-web-components/directives/register';

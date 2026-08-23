@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALIconSignOut as ALWebIconSignOut } from 'al-web-components/components/icon/icons/sign-out';
 import register from 'al-web-components/directives/register';

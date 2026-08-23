@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALDropdownPanel as ALWebDropdownPanel } from 'al-web-components/components/dropdown-panel';
 import register from 'al-web-components/directives/register';

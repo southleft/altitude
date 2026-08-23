@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { createComponent } from '@lit/react';
 import { ALDialog as ALWebDialog } from 'al-web-components/components/dialog';

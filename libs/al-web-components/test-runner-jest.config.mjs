@@ -35,17 +35,47 @@
 // run; on Linux the mapping is already an identity transform.
 
 import { getJestConfig } from '@storybook/test-runner';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const base = getJestConfig();
+const here = dirname(fileURLToPath(import.meta.url));
 
 /** Absolute glob patterns are all-separator; POSIX-ify every one of them. */
 const toPosixGlob = (p) => (typeof p === 'string' ? p.split('\\').join('/') : p);
 
+const testMatch = (base.testMatch ?? []).map(toPosixGlob);
+
+// The bug above was silent because Jest reports "0 tests" as success. Two
+// guards, at the two points it can go wrong:
+//
+//   1. HERE, before Jest starts — if the patterns come back empty, or a
+//      backslash survived `toPosixGlob`, nothing could ever match and there is
+//      no point running.
+//   2. `test-runner-min-tests.cjs`, after the run — if the patterns look fine
+//      but the run still collected almost nothing.
+if (testMatch.length === 0) {
+  throw new Error(
+    '[min-tests] getJestConfig() produced an EMPTY testMatch — test-storybook would run 0 tests and exit 0. ' +
+      'Check the `stories` globs in .storybook/main.ts.'
+  );
+}
+const BACKSLASH = String.fromCharCode(92);
+const withBackslash = testMatch.filter((p) => typeof p === 'string' && p.includes(BACKSLASH));
+if (withBackslash.length > 0) {
+  throw new Error(
+    `[min-tests] testMatch still contains backslashes after POSIX-ifying: ${withBackslash.join(', ')}. ` +
+      'jest-util keeps a backslash before a glob metacharacter, so these patterns match nothing on Windows.'
+  );
+}
+
 /** @type {import('@jest/types').Config.InitialOptions} */
 export default {
   ...base,
-  testMatch: (base.testMatch ?? []).map(toPosixGlob),
+  testMatch,
   // `roots` is only set in index-json mode (a generated temp dir). Same
   // treatment for the same reason.
   ...(base.roots ? { roots: base.roots.map(toPosixGlob) } : {}),
+  // Appended, not replaced: keep whatever reporters the test-runner set up.
+  reporters: [...(base.reporters ?? ['default']), resolve(here, 'test-runner-min-tests.cjs')],
 };

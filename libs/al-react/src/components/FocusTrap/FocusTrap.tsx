@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { createComponent } from '@lit/react';
 import { ALFocusTrap as ALWebFocusTrap } from 'al-web-components/components/focus-trap';

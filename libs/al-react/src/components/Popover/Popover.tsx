@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALPopover as ALWebPopover } from 'al-web-components/components/popover';
 import register from 'al-web-components/directives/register';

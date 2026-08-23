@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALDivider as ALWebDivider } from 'al-web-components/components/divider';
 import register from 'al-web-components/directives/register';

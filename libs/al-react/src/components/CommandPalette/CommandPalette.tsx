@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALCommandPalette as ALWebCommandPalette } from 'al-web-components/components/command-palette';
 import register from 'al-web-components/directives/register';

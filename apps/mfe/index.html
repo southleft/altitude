@@ -29,8 +29,10 @@
             <code>versioned</code> suffixes via
             <code>registerAltitude({mode: 'versioned', suffix})</code>.
             The buttons on the left and right are <em>different custom-element
-            tags</em> backed by the same class — proving subtree isolation works
-            for multi-version MFE deployments.
+            tags</em> backed by <em>different constructors</em> (one empty
+            subclass per simulated bundle — the registry rejects the same
+            constructor twice) — proving subtree isolation works for
+            multi-version MFE deployments.
           </p>
         </header>
 

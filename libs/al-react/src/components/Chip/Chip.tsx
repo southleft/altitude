@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALChip as ALWebChip } from 'al-web-components/components/chip';
 import register from 'al-web-components/directives/register';

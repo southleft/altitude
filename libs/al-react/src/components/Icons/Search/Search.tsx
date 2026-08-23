@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALIconSearch as ALWebIconSearch } from 'al-web-components/components/icon/icons/search';
 import register from 'al-web-components/directives/register';

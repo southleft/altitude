@@ -60,7 +60,13 @@ module.exports = (plop) => {
         {
           type: 'add',
           path: './../src/components/{{pascalCase name}}/index.tsx',
-          template: "export * from './{{pascalCase name}}';"
+          // `'use client'` on every emitted module: al-react wrappers all call
+          // customElements.define at module scope, so they can only run on the
+          // client. Without the directive Next.js App Router / RSC cannot import
+          // any of them. Keep this in sync with templates/component/Component.tsx.hbs.
+          template: `'use client';
+
+export * from './{{pascalCase name}}';`
         },
         {
           type: 'add',

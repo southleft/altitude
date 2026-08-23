@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALIconCheck as ALWebIconCheck } from 'al-web-components/components/icon/icons/check';
 import register from 'al-web-components/directives/register';

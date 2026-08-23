@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { createComponent } from '@lit/react';
 import { ALTimeSelectorList as ALWebTimeSelectorList } from 'al-web-components/components/time-selector-list';

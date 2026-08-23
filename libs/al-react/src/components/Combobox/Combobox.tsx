@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALCombobox as ALWebCombobox } from 'al-web-components/components/combobox';
 import register from 'al-web-components/directives/register';

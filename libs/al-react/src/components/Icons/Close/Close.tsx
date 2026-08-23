@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALIconClose as ALWebIconClose } from 'al-web-components/components/icon/icons/close';
 import register from 'al-web-components/directives/register';

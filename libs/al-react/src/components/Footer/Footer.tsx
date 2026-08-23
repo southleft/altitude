@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALFooter as ALWebFooter } from 'al-web-components/components/footer';
 import register from 'al-web-components/directives/register';

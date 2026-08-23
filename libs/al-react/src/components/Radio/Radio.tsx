@@ -1,3 +1,5 @@
+'use client';
+
 import { createComponent } from '@lit/react';
 import { ALRadio as ALWebRadio } from 'al-web-components/components/radio';
 import register from 'al-web-components/directives/register';
