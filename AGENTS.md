@@ -92,9 +92,27 @@ pnpm --filter al-web-components build:custom-elements.json  # CEM regenerate
 node scripts/check-cem-coverage.js                          # T3.1 acceptance
 pnpm test:vrt                                               # Playwright VRT
 pnpm gate:self-test                                         # G2/G8 gate scripts
+pnpm lint:styles                                            # Stylelint: literal colours + hallucinated token names
+pnpm check:llms                                             # the generated root llms.txt still matches its sources
 ```
 
 If any of the above is red, the change isn't ready to commit.
+
+### If you touched a stylesheet
+
+`pnpm lint:styles` runs two rules over every `.scss` file in both component libraries and
+every example app (`stylelint.config.mjs`), and it is currently at **zero** violations:
+
+- **a literal colour** in a colour property — `color: #4375ff` renders identically to
+  `color: var(--al-theme-color-content-primary-default)` and is invisible in review, but it
+  does not move with a brand, a mode or a contrast setting;
+- **a hallucinated token name** — `var(--al-theme-focus-ring-color)` is not a CSS error. It
+  falls back silently, so the page renders and is quietly wrong. The rule is fed the real
+  token set from `.altitude/ai-readiness/tokens-digest.json`.
+
+`pnpm lint:styles:report` adds the sites' hand-written `.css`, where 21 pre-existing
+violations live; they are reported, never disabled. `pnpm gate:styles-new` holds the line
+there by checking only the lines a branch changed.
 
 ### Validate your DS usage, then self-heal
 

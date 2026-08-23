@@ -8,7 +8,8 @@
  *
  * Every docs page is also served as Markdown at the same URL plus `.md`
  * (`/docs/components/button` → `/docs/components/button.md`), and the same
- * renderers feed `llms-full.txt`. Both read the registry, so the Markdown an
+ * renderers feed the machine artifacts in `artifacts.mjs` (`llms-full.txt` and
+ * `llms-components.txt`). Both read the registry, so the Markdown an
  * agent fetches and the HTML a human reads are the same facts rendered twice —
  * there is no second copy of the content to drift.
  */
@@ -229,14 +230,4 @@ export function foundationsMarkdown(context = DEFAULT_CONTEXT) {
     ),
     '',
   ].join('\n');
-}
-
-/** Everything, concatenated — the body of `llms-full.txt`. */
-export function fullCorpus(context = DEFAULT_CONTEXT) {
-  return [
-    overviewMarkdown(context),
-    foundationsMarkdown(context),
-    componentsIndexMarkdown(context),
-    ...context.registry.components.map((component) => componentMarkdown(component, context)),
-  ].join('\n\n---\n\n');
 }

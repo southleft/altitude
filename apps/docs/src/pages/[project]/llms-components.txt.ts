@@ -1,6 +1,6 @@
-// /<project>/llms-full.txt — one whole corpus per design system.
+// /<project>/llms-components.txt — every element's complete API. One per design system.
 import type { APIRoute } from 'astro';
-import { llmsFull } from '../../lib/artifacts.mjs';
+import { llmsComponents } from '../../lib/artifacts.mjs';
 import { projectPaths } from '../../lib/projects.mjs';
 import { contextFor } from '../../lib/context.mjs';
 
@@ -9,6 +9,6 @@ export function getStaticPaths() {
 }
 
 export const GET: APIRoute = ({ props }) =>
-  new Response(llmsFull(contextFor((props as any).project)), {
+  new Response(llmsComponents(contextFor((props as any).project)), {
     headers: { 'Content-Type': 'text/plain; charset=utf-8' },
   });

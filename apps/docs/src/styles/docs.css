@@ -46,6 +46,32 @@
   --blue-hover: #6b93ff;
   --blue-ink: #000b29;
   --blue-soft: #dbe5ff;
+
+  /*
+   * Status tones. Named here rather than inline at the rule sites because
+   * fourteen scattered hex literals is exactly what `lint:styles` exists to
+   * stop — a colour nobody can find and nobody can restate per brand.
+   *
+   * These are deliberately NOT yet `var(--al-theme-color-content-success-*)`.
+   * The design system's semantic status tokens exist and main.css is loaded,
+   * but they switch on `<al-theme mode>` while this site switches on
+   * `[data-theme]`, so binding to them today would freeze the status colours
+   * in light mode. Reconcile the two switches, then replace these three pairs
+   * with the semantic tokens; the values below are the canvas's.
+   */
+  --status-ok: #2f8f4e;
+  --status-warn: #b4761a;
+  --status-gap: #f05735;
+
+  /*
+   * Two tones that stay fixed across both themes, so they live here rather
+   * than being restated per rule. The code block is deliberately dark in
+   * light mode too (it is the canvas's treatment), and --on-blue is the
+   * foreground that sits on the accent, used by ::selection.
+   */
+  --code-bg: #0b0b0b;
+  --code-fg: #e9e7e2;
+  --on-blue: #ffffff;
   --al-bg-default: #e9e7e2;
   --al-bg-strong: #f2f1ee;
   --al-bg-stronger: #f4f3f1;
@@ -81,6 +107,8 @@
   --al-border: #8a8a8a;
   --al-border-weak: #616161;
   --al-shadow: 0 8px 8px rgb(0 0 0 / 60%), 0 4px 4px rgb(0 0 0 / 60%), 0 2px 2px rgb(0 0 0 / 60%);
+  --status-ok: #58c07c;
+  --status-warn: #e0a94a;
 }
 
 /* ------------------------------------------------------------------ base */
@@ -158,7 +186,7 @@ a:hover {
 
 ::selection {
   background: var(--blue);
-  color: #ffffff;
+  color: var(--on-blue);
 }
 
 :focus-visible {
@@ -629,8 +657,8 @@ input:focus {
 .code {
   margin: 0;
   font: 400 13px/22px var(--mono);
-  background: #0b0b0b;
-  color: #e9e7e2;
+  background: var(--code-bg);
+  color: var(--code-fg);
   padding: 20px 22px;
   overflow: auto;
   white-space: pre;
@@ -886,8 +914,8 @@ input:focus {
 }
 
 .status--deprecated {
-  border-color: #f05735;
-  color: #f05735;
+  border-color: var(--status-gap);
+  color: var(--status-gap);
 }
 
 /*
@@ -898,33 +926,23 @@ input:focus {
  * src/lib/parity.mjs and ChecksPanel.astro, never in the colour itself.
  */
 .status--parity-ok {
-  border-color: #2f8f4e;
-  color: #2f8f4e;
+  border-color: var(--status-ok);
+  color: var(--status-ok);
 }
 
 .status--parity-warn {
-  border-color: #b4761a;
-  color: #b4761a;
+  border-color: var(--status-warn);
+  color: var(--status-warn);
 }
 
 .status--parity-gap {
-  border-color: #f05735;
-  color: #f05735;
+  border-color: var(--status-gap);
+  color: var(--status-gap);
 }
 
 .status--parity-mute {
   border-color: var(--line-weak);
   color: var(--fg-weak);
-}
-
-[data-theme='dark'] .status--parity-ok {
-  border-color: #58c07c;
-  color: #58c07c;
-}
-
-[data-theme='dark'] .status--parity-warn {
-  border-color: #e0a94a;
-  color: #e0a94a;
 }
 
 /* ------------------------------------------------------------------ misc */

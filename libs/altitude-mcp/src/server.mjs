@@ -37,6 +37,30 @@ function json(data) {
   return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
 }
 
+/**
+ * The `project` argument's description, WITHOUT reading the registry eagerly.
+ *
+ * This string used to be built by calling `listProjectIds()` / `resolveProject()`
+ * inline in the description template. Both read `.altitude/ds-projects.json`, and
+ * a description is evaluated at `registerTool()` time — so a missing or malformed
+ * registry threw out of `buildServer()` and took down ALL EIGHT tools, not just
+ * the two that need the registry. `altitude_list_components` has nothing to do
+ * with design-system projects and should not stop working because a JSON file a
+ * different tool reads went missing.
+ *
+ * The read is now best-effort: on success the ids are named (they are genuinely
+ * useful in a description), on failure the description degrades to prose and the
+ * error resurfaces where it belongs — inside the handler, as structured JSON the
+ * agent can act on.
+ */
+function describeProjectArg() {
+  try {
+    return `Design-system project id from .altitude/ds-projects.json (${listProjectIds().join(', ')}). Omit for the default ("${resolveProject().id}").`;
+  } catch {
+    return 'Design-system project id from .altitude/ds-projects.json. Call altitude_list_ds_projects for the valid ids (the registry could not be read when this server started, so they cannot be named here). Omit for the registry default.';
+  }
+}
+
 function toolHandler(fn) {
   return async (args) => {
     try {
@@ -45,7 +69,15 @@ function toolHandler(fn) {
       if (err instanceof MissingArtifactError) {
         return json({ error: err.message, code: err.code, path: err.path, hint: err.hint });
       }
-      return json({ error: String(err?.message ?? err), code: 'ERR_TOOL_FAILURE' });
+      // Errors that carry their own `code` (UnknownProjectError's
+      // ERR_MISSING_DS_REGISTRY / ERR_INVALID_DS_REGISTRY / ERR_UNKNOWN_DS_PROJECT)
+      // are self-describing — pass the code and the known-id list through rather
+      // than flattening them to a generic failure.
+      return json({
+        error: String(err?.message ?? err),
+        code: typeof err?.code === 'string' ? err.code : 'ERR_TOOL_FAILURE',
+        ...(Array.isArray(err?.known) && err.known.length ? { knownProjects: err.known } : {}),
+      });
     }
   };
 }
@@ -250,9 +282,7 @@ server.registerTool(
       project: z
         .string()
         .optional()
-        .describe(
-          `Design-system project id from .altitude/ds-projects.json (${listProjectIds().join(', ')}). Omit for the default ("${resolveProject().id}").`,
-        ),
+        .describe(describeProjectArg()),
     },
   },
   toolHandler(({ tag, status, project }) => {

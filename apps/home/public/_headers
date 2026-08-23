@@ -1,0 +1,48 @@
+# Cloudflare Pages response headers for the whole published site.
+#
+# WHY THIS FILE EXISTS. The machine artifacts (`/docs/llms*.txt` and every
+# `.md` twin of a docs page) are only useful if they arrive as TEXT. Every one
+# of the design systems this repo was benchmarked against — spectrum.adobe.com,
+# polaris.shopify.com, primer.style — serves an llms.txt endpoint that returns
+# 200 with `text/html`, because the request fell through to a single-page-app
+# shell and the agent read a page of markup instead of the documentation.
+#
+# Cloudflare Pages does map `.txt` and `.md` to text/plain by default. Declaring
+# it makes that a property of this deployment rather than of a default that a
+# future config, framework adapter or redirect rule could change silently.
+# `scripts/check-llms-content-type.mjs <base-url>` asserts it against a running
+# deployment.
+#
+# Vite copies apps/home/public/ verbatim into dist/, which IS the published
+# root (apps/home/vite.config.js:build.outDir), so this lands at dist/_headers.
+
+/docs/*.txt
+  Content-Type: text/plain; charset=utf-8
+  X-Content-Type-Options: nosniff
+
+/docs/*.md
+  Content-Type: text/plain; charset=utf-8
+  X-Content-Type-Options: nosniff
+
+/docs/*/llms.txt
+  Content-Type: text/plain; charset=utf-8
+  X-Content-Type-Options: nosniff
+
+/docs/*/llms-full.txt
+  Content-Type: text/plain; charset=utf-8
+  X-Content-Type-Options: nosniff
+
+/docs/*/llms-tokens.txt
+  Content-Type: text/plain; charset=utf-8
+  X-Content-Type-Options: nosniff
+
+/docs/*/llms-components.txt
+  Content-Type: text/plain; charset=utf-8
+  X-Content-Type-Options: nosniff
+
+/docs/*/llms-a11y.txt
+  Content-Type: text/plain; charset=utf-8
+  X-Content-Type-Options: nosniff
+
+/docs/*/status.json
+  Content-Type: application/json; charset=utf-8

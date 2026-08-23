@@ -880,6 +880,18 @@ al-theme[mode='light'] .sl-media-card__meta {
 }
 
 .sl-pg-swatch {
+  /*
+   * Declared here with a fallback, though every call site sets it inline
+   * (TrySystem.astro:43-55, each to a real `var(--al-color-brand-*)`). Two
+   * reasons: a swatch rendered without the inline style previously had NO
+   * background at all rather than a visible neutral, and a custom property
+   * that only ever exists in a `style` attribute is invisible to
+   * stylelint's value-no-unknown-custom-properties, which cannot read inline
+   * styles and so reported it as a hallucinated token. The inline value still
+   * wins, so nothing about the rendered swatches changes.
+   */
+  --sw: var(--al-theme-color-background-default-strong);
+
   inline-size: 2rem;
   block-size: 2rem;
   border-radius: var(--al-theme-border-radius-role-action);

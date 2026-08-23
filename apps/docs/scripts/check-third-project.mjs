@@ -41,7 +41,7 @@ import { fileURLToPath } from 'node:url';
 import { docsProject, PROJECTS } from '../src/lib/projects.mjs';
 import { contextFor } from '../src/lib/context.mjs';
 import { COMPONENTS } from '../src/lib/registry.mjs';
-import { llmsTxt, statusJson } from '../src/lib/artifacts.mjs';
+import { llmsTxt, llmsTokens, llmsComponents, llmsA11y, llmsFull, statusJson } from '../src/lib/artifacts.mjs';
 import { overviewMarkdown, componentsIndexMarkdown, foundationsMarkdown } from '../src/lib/markdown.mjs';
 
 const APP_ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -143,6 +143,10 @@ const outOfScope = COMPONENTS.filter((component) => !inScope.has(component.slug)
 
 const artifacts = {
   'llms.txt': llmsTxt(context),
+  'llms-tokens.txt': llmsTokens(context),
+  'llms-components.txt': llmsComponents(context),
+  'llms-a11y.txt': llmsA11y(context),
+  'llms-full.txt': llmsFull(context),
   'status.json': JSON.stringify(statusJson(context)),
   'index.md': overviewMarkdown(context),
   'components.md': componentsIndexMarkdown(context),
