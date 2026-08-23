@@ -84,16 +84,43 @@ statuses are computed per project against that project's manifest, so the same
 component can legitimately be `in-sync` for Altitude and `missing-in-figma` for
 Southleft.
 
-## Current state (2026-08-22)
+## Current state (measured 2026-08-23)
+
+Every number below is computed, not remembered. Note that the **`in-sync` vs.
+`code-drift` split is not stable** — code drift is hashed live from component
+source, so any un-resynced component edit moves one into the other. Only their
+SUM (how many sets are mapped at all) is a durable figure; do not quote the
+split here. Re-derive the parity rows with:
+
+```bash
+node -e "import('./libs/altitude-mcp/src/lib/parity.mjs').then(async m => {
+  for (const p of ['altitude', 'southleft']) {
+    const r = m.computeParity(p);
+    console.log(p, JSON.stringify(r.summary), 'scope:', JSON.stringify(r.scope));
+  }
+})"
+```
 
 | | Altitude | Southleft |
 | --- | --- | --- |
 | Figma file | Altitude Design System | Southleft V5 |
-| Component sets in Figma | 36 mapped | **0 — the file starts empty** |
-| Parity | `in-sync=36  missing-in-figma=66  excluded=3` | `missing-in-figma=102  excluded=3` |
+| Scope | all 105 components | 21 — the allowlist in `ds-projects.json` (84 omitted) |
+| Component sets mapped in Figma | 36 | **0 — the file starts empty** |
+| Parity | `in-sync + code-drift = 36`, `missing-in-figma=66`, `excluded=3` | `missing-in-figma=18 excluded=3` |
 | Storybook | port 6006 | port 6007 |
-| Brand deltas | none by design (neutral reference) | 47 of 392 properties |
+| Brand deltas | none by design (neutral reference) | 46 of 392 properties |
 
-Southleft reporting 102 `missing-in-figma` is **correct, not a bug** — the Figma
+Southleft reporting 18 `missing-in-figma` is **correct, not a bug** — the Figma
 file is empty, and every component's `aiPrompt` is a build-it-in-Figma
-instruction pointed at `Southleft V5`.
+instruction pointed at `Southleft V5`. The count is 18 (not 105) because
+Southleft's `library.components` allowlist scopes the report to the 21
+components southleft.com actually ships, minus 3 `excluded`.
+
+The "brand deltas" row counts distinct `--al-*` properties **declared** by the
+three scoped host partials, against the 392 in the base `:root` bundle:
+
+```bash
+cat libs/al-web-components/styles/dist-v5/scss/host/tokens-brand-southleft*.scss \
+  | grep -oE '^\s+--al-[a-z0-9-]+:' | sort -u | wc -l   # 46
+grep -cE '^\s*--al-' libs/al-web-components/dist/css/main.css              # 392
+```

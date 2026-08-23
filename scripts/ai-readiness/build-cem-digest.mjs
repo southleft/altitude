@@ -56,13 +56,13 @@ const DO_NOT_FLAG = {
       pattern: 'controlled-close-without-isDismissed',
       rule: 'Same as al-chip. Controlled close() without owned isDismissed is sanctioned for al-tag too.',
       severity: 'do-not-flag',
-      citation: 'AGENTS.md Canonical al-tag contract',
+      citation: 'scripts/ai-readiness/fixtures/canonical-contracts.md > Canonical al-tag contract',
     },
     {
       pattern: 'dispatch-only-handler-IS-controlled-close',
       rule: 'AFFIRMATIVE: A handler method (named `handleClose`, `onClose`, `dismiss`, or anything else) that ONLY dispatches a close event (no `isDismissed` state mutation, no method literally named `close()`) IS the sanctioned controlled-close shape. It COUNTS as controlled-close. Do NOT flag it as "incomplete", "partial", "neither shape", or "missing close() method". The method name does not matter — what matters is that the dismissal decision is delegated to the consumer via the dispatched event. Reviewers reasoning "this is neither owned-state nor a literal close() method, therefore neither shape" are misreading the rule.',
       severity: 'do-not-flag',
-      citation: 'AGENTS.md Canonical al-tag contract, Dismissal model row',
+      citation: 'scripts/ai-readiness/fixtures/canonical-contracts.md > Canonical al-tag contract, Dismissal model row',
     },
   ],
   'al-button': [
@@ -104,26 +104,30 @@ const DO_NOT_FLAG = {
       pattern: 'molecule-mis-taxonomy',
       rule: 'A display atom that composes internal `<al-icon>` atoms for decoration remains an Atom. Do NOT flag `title: "Atoms/Stat Card"` as a taxonomy violation that "should be Molecules" — the Molecules tier is reserved for compositions that combine 2+ semantically meaningful atoms, not for atoms that wrap decorative icons.',
       severity: 'do-not-flag',
-      citation: 'AGENTS.md Canonical stat-card contract, Taxonomy row',
+      citation: 'scripts/ai-readiness/fixtures/canonical-contracts.md > Canonical stat-card contract, Taxonomy row',
     },
     {
       pattern: 'consumed-theme-token-not-cssproperty',
       rule: 'A consumed `--al-theme-*` token (e.g. --al-theme-color-content-default) is NOT a @cssproperty of the component that reads it. Do NOT flag the absence of @cssproperty entries for global theme tokens; only the component\'s own --al-<component>-* override hooks are @cssproperty.',
       severity: 'do-not-flag',
-      citation: 'AGENTS.md @cssproperty semantics + Canonical stat-card contract, Owned override hooks row',
+      citation: 'AGENTS.md @cssproperty semantics + scripts/ai-readiness/fixtures/canonical-contracts.md > Canonical stat-card contract, Owned override hooks row',
     },
   ],
 };
 
-// Forward-looking stubs: components that don't exist in the CEM yet but
-// the docs (AGENTS.md) already cite. Without these, prose cross-references
-// like "see al-tag's doNotFlag" turn into dangling references that hurt
-// review precision (v11 hit this on al-tag).
+// EVAL-FIXTURE stubs. Neither tag is a real component and neither is planned:
+// al-stat-card is the subject of tasks/B-scaffold.md, al-tag of
+// tasks/C-violation.md. They are emitted so the DO_NOT_FLAG entries above and
+// the judge's cross-references do not dangle (v11 hit that on al-tag), NOT as
+// a roadmap signal. `al-stat` and `al-chip` already ship these use cases, and
+// the pinned contracts live in fixtures/canonical-contracts.md — deliberately
+// out of AGENTS.md since 2026-08-23, so an agent doing product work is never
+// told to build them.
 const FORWARD_STUBS = {
   'al-tag': {
     tag: 'al-tag',
-    status: 'planned',
-    note: 'Component not shipped yet. Docs reference this tag for contract pinning purposes.',
+    status: 'eval-fixture',
+    note: 'NOT A REAL COMPONENT - an AI-readiness eval fixture (tasks/C-violation.md). al-chip ships the same use case. Contract: scripts/ai-readiness/fixtures/canonical-contracts.md.',
     attributes: [],
     events: [],
     slots: [],
@@ -132,8 +136,8 @@ const FORWARD_STUBS = {
   },
   'al-stat-card': {
     tag: 'al-stat-card',
-    status: 'planned',
-    note: 'Component not shipped yet. Canonical contract lives in AGENTS.md > "Canonical stat-card contract".',
+    status: 'eval-fixture',
+    note: 'NOT A REAL COMPONENT - an AI-readiness eval fixture (tasks/B-scaffold.md). al-stat ships the same use case. Contract: scripts/ai-readiness/fixtures/canonical-contracts.md.',
     attributes: [],
     events: [],
     slots: [],

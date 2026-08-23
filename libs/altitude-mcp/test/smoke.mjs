@@ -12,6 +12,10 @@ import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SERVER_PATH = join(HERE, '..', 'src', 'server.mjs');
 
+// Must stay in lockstep with every server.registerTool() call in
+// ../src/server.mjs — the LENGTH is asserted against listTools() below, so
+// registering a ninth tool without adding a smoke case here fails CI rather
+// than shipping an untested tool.
 const EXPECTED_TOOLS = [
   'altitude_list_components',
   'altitude_get_component',
@@ -19,6 +23,8 @@ const EXPECTED_TOOLS = [
   'altitude_get_tokens',
   'altitude_search_icons',
   'altitude_generate_theme',
+  'altitude_check_parity',
+  'altitude_list_ds_projects',
 ];
 
 let failures = 0;
@@ -59,6 +65,10 @@ async function main() {
   const names = tools.map((t) => t.name).sort();
   console.log(`\nlistTools -> ${names.length} tools: ${names.join(', ')}`);
   for (const name of EXPECTED_TOOLS) ok(names.includes(name), `server exposes ${name}`);
+  ok(
+    names.length === EXPECTED_TOOLS.length,
+    `server exposes exactly ${EXPECTED_TOOLS.length} tools (got ${names.length}: ${names.join(', ')})`
+  );
 
   console.log('\naltitude_list_components({ filter: "button" })');
   {
@@ -106,14 +116,29 @@ async function main() {
     ok(Array.isArray(data.tokens) && data.tokens.length > 0, 'returned tokens matching name filter');
   }
 
-  console.log('\naltitude_get_tokens({ tier: 2, brand: "meridian", name: "theme-color-background-primary-default" })');
+  // altitude + southleft are the only brands the repo ships — see
+  // styles/tokens-dtcg/tier-2/brand/* and .altitude/ds-projects.json.
+  console.log('\naltitude_get_tokens({ tier: 2, brand: "southleft", name: "theme-color-background-primary-default" })');
   {
     const res = await client.callTool({
       name: 'altitude_get_tokens',
-      arguments: { tier: 2, brand: 'meridian', name: 'theme-color-background-primary-default' },
+      arguments: { tier: 2, brand: 'southleft', name: 'theme-color-background-primary-default' },
     });
     const data = parseToolJson(res);
-    ok(data.tokens?.[0]?.brand === 'meridian' && !!data.tokens?.[0]?.resolvedValue, 'brand-scoped token resolved');
+    ok(data.tokens?.[0]?.brand === 'southleft' && !!data.tokens?.[0]?.resolvedValue, 'brand-scoped token resolved');
+  }
+
+  console.log('\naltitude_get_tokens({ brand: "meridian" }) — a pruned brand must be rejected');
+  {
+    let rejected = false;
+    try {
+      const res = await client.callTool({ name: 'altitude_get_tokens', arguments: { brand: 'meridian' } });
+      rejected = res.isError === true;
+    } catch {
+      // An input-schema violation surfaces as a thrown protocol error.
+      rejected = true;
+    }
+    ok(rejected, 'brand enum rejects a brand the repo no longer ships');
   }
 
   console.log('\naltitude_search_icons({ query: "trash" })');
@@ -143,6 +168,57 @@ async function main() {
     const data = parseToolJson(res);
     ok(data.source === 'direction', 'used the deterministic direction path');
     ok(data.mode === 'dark' && data.personality === 'geometric', 'direction fields respected');
+  }
+
+  console.log('\naltitude_list_ds_projects({})');
+  let projectIds = [];
+  {
+    const res = await client.callTool({ name: 'altitude_list_ds_projects', arguments: {} });
+    const data = parseToolJson(res);
+    ok(Array.isArray(data.projects) && data.projects.length > 0, 'returned at least one DS project');
+    ok(
+      data.projects.some((p) => p.id === data.default && p.isDefault === true),
+      'the `default` id resolves to a project flagged isDefault'
+    );
+    ok(
+      data.projects.every((p) => p.figma?.fileKey && p.parityManifest),
+      'every project names a Figma file key and a parity manifest'
+    );
+    projectIds = data.projects.map((p) => p.id);
+  }
+
+  console.log('\naltitude_check_parity({}) — full report for the default project');
+  {
+    const res = await client.callTool({ name: 'altitude_check_parity', arguments: {} });
+    const data = parseToolJson(res);
+    ok(data.manifestPresent === true, 'default project parity manifest is present (tracked in git)');
+    ok(Array.isArray(data.components) && data.components.length > 0, 'report covers at least one component');
+    ok(data.components.every((c) => c.tag && c.status), 'each entry carries a tag + status');
+  }
+
+  console.log('\naltitude_check_parity({ tag: "al-button" })');
+  {
+    const res = await client.callTool({ name: 'altitude_check_parity', arguments: { tag: 'al-button' } });
+    const data = parseToolJson(res);
+    ok(data.tag === 'al-button', 'returned the requested component');
+    ok(typeof data.status === 'string', 'status attached');
+    ok(typeof data.aiPrompt === 'string' && data.aiPrompt.length > 0, 'reconciliation prompt attached');
+  }
+
+  console.log('\naltitude_check_parity — every project in .altitude/ds-projects.json resolves');
+  for (const id of projectIds) {
+    const res = await client.callTool({ name: 'altitude_check_parity', arguments: { project: id } });
+    const data = parseToolJson(res);
+    ok(data.project === id, `project "${id}" reports itself`);
+    ok(data.manifestPresent === true, `project "${id}" parity manifest is present`);
+  }
+
+  console.log('\naltitude_check_parity({ project: "not-a-project" }) — expect a structured error');
+  {
+    const res = await client.callTool({ name: 'altitude_check_parity', arguments: { project: 'not-a-project' } });
+    const data = parseToolJson(res);
+    ok(data.code === 'ERR_UNKNOWN_DS_PROJECT', 'unknown project reported with a stable error code');
+    ok(Array.isArray(data.knownProjects) && data.knownProjects.length > 0, 'error names the known projects');
   }
 
   await client.close();

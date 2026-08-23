@@ -283,8 +283,30 @@ jobs:
           cache: 'pnpm'
       - name: Install
         run: pnpm install --frozen-lockfile --ignore-scripts
-      - name: Build CEM + schemas
+      # Tokens first: build:tokens writes styles/dist/tokens.json, which is the
+      # only input to the AI-readiness tokens digest checked for drift below.
+      - name: Build tokens (+ tokens digest)
+        run: pnpm --filter al-web-components build:tokens
+      - name: Build CEM + schemas (+ CEM digest)
         run: pnpm --filter al-web-components build:custom-elements.json
+      # The whole generated chain — custom-elements.json, the 105 per-component
+      # schemas, schemas/INDEX.md, and both AI-readiness digests — is committed
+      # and read by agents (the MCP server, cli/validate.mjs, the Storybook docs,
+      # run-probe/run-judge). Nothing detected a JSDoc or token edit that was
+      # never regenerated, so the committed copies could silently diverge from
+      # source. Regenerating above and diffing here makes that a hard failure.
+      - name: Generated artifacts are in sync with source (no un-regenerated edits)
+        run: |
+          git diff --exit-code -- \
+            libs/al-web-components/custom-elements.json \
+            libs/al-web-components/schemas \
+            .altitude/ai-readiness \
+            || {
+              echo "::error::Generated output differs from the committed copy."
+              echo "Run: pnpm --filter al-web-components build:tokens && pnpm --filter al-web-components build:custom-elements.json"
+              echo "then commit the regenerated files."
+              exit 1
+            }
       - name: T3.1 — CEM coverage
         run: node scripts/check-cem-coverage.js
       - name: T3.4 — contract validator
@@ -518,6 +540,29 @@ jobs:
             }
             console.log('migration.json validates against schema. components:', Object.keys(data.components).length);
           "
+
+  mcp-smoke:
+    # libs/altitude-mcp/test/smoke.mjs existed but nothing ran it, so it had
+    # rotted: it asserted 6 of the 8 registered tools and queried a brand
+    # (meridian) pruned by 2026-08-20-brand-pruning-and-storybook-de-bloat.
+    # It performs a real MCP handshake over stdio and calls every tool, so it
+    # needs the artifacts the server reads (tokens, CEM, schemas) to exist.
+    name: altitude-mcp tool contract (all 8 tools)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Build the artifacts the MCP server reads
+        run: pnpm --filter al-web-components build:tokens && pnpm --filter al-web-components build:custom-elements.json
+      - name: MCP smoke test
+        run: pnpm --filter altitude-mcp test
 
   repo-hygiene:
     # The four gates below existed as `pnpm run` scripts that only ever ran by

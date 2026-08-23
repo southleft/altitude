@@ -16,18 +16,41 @@ A monorepo on **pnpm 9 workspaces** (Node 22 LTS) shipping two libraries:
 There's an active multi-phase refactor described in
 [`NEXT-GEN-UPGRADE-PLAN.md`](./NEXT-GEN-UPGRADE-PLAN.md). **All changes must
 map to a plan task** (T0.x, T1.x, …) or be explicitly flagged as out-of-plan
-in the PR description. Eight non-negotiable guardrails (G1–G8) are CI-enforced:
+in the PR description. Eight non-negotiable guardrails (G1–G8), defined in
+[`NEXT-GEN-UPGRADE-PLAN.md` §1](./NEXT-GEN-UPGRADE-PLAN.md). **Four have a CI
+job that can fail** (G2, G5, G6, G8); the other four are review obligations —
+no script can check them, so they are on you and the PR reviewer:
 
-- **G1 — Evolve, don't rebuild.**
+- **G1 — Evolve, don't rebuild.** *(review obligation)*
 - **G2 — `legacy` components are read-only** outside migration PRs. State is
   tracked in [`.altitude/migration.json`](./.altitude/migration.json); see
   [`.altitude/migration.schema.json`](./.altitude/migration.schema.json).
+  *(CI: `migration-gate`, `schema-validate-migration`, `gate-self-test`)*
 - **G3 — Prove every new pattern on the 5 pilot components first**:
-  `button`, `input`, `select`, `dialog`, `theme-switcher`.
+  `button`, `input`, `select`, `dialog`, `theme-switcher`. *(review obligation)*
+- **G4 — Codemod-or-rebuild.** If an automated codemod cannot bridge a
+  component, that slice earns a clean rewrite — surfaced in the PR, never
+  silent. *(review obligation)*
+- **G5 — Green gate between phases.** install + typecheck + lint +
+  unit/interaction tests + VRT + Storybook build all green before the next
+  phase starts. *(CI: the whole `v2-checks` workflow is this gate)*
 - **G6 — Contracts are generated** (CEM → schemas → AGENTS.md → validator).
   Hand-edit JSDoc and types; everything else is downstream.
+  *(CI: `cem-and-contracts`, `jsdoc-dialect` — the `cem-and-contracts` job
+  regenerates the chain and `git diff --exit-code`s it, so a JSDoc edit that
+  was not regenerated fails)*
 - **G7 — Decorator semantics frozen**: `experimentalDecorators: true`,
-  `useDefineForClassFields: false`. Don't touch.
+  `useDefineForClassFields: false`. Don't touch. *(review obligation — no
+  script asserts it)* The setting that decides the **shipped** semantics is
+  esbuild's, not tsc's: `libs/al-web-components/vite.config.mjs:119-123` (and
+  `vite.spike.config.mjs:44-45`), plus both Storybook configs
+  (`al-web-components/.storybook/main.ts:177-178`,
+  `al-react/.storybook/main.ts:152-153`). `libs/al-web-components/tsconfig.json:21`
+  sets only `useDefineForClassFields: false` and deliberately omits
+  `experimentalDecorators` — it is `emitDeclarationOnly`, and `@property accessor`
+  auto-accessors type-check identically either way (verified: `tsc --noEmit`
+  exits 0 with and without the flag). `libs/al-react/tsconfig.json:56-57` sets
+  both, because it emits JS.
 - **G8 — Baselines move with build/dep changes**: token snapshot, bundle
   size, and VRT live at [`.altitude/baselines/`](./.altitude/baselines/).
   Adding a token, brand, or theme requires regenerating
@@ -135,7 +158,7 @@ For a web component (`libs/al-web-components/components/<name>/`):
    component. The two are different surfaces:
    - Consumed theme tokens (`--al-theme-color-background-default`) →
      must exist in the tokens digest (digest is the contract).
-   - Owned component override hooks (`--al-stat-card-value-color`) →
+   - Owned component override hooks (`--al-stat-value-color`) →
      declared by the component itself, documented via `@cssproperty`,
      wired in SCSS with a `var(--al-theme-*, …)` fallback. The digest
      intentionally does not list these.
@@ -289,7 +312,7 @@ every shipped component. Mirror them when scaffolding a new component:
 | **blocker** | **`bundle.ts`** | **Hand-maintained, alphabetical.** Add one `export …` line for every new component. The bundler picks it up. | `libs/al-web-components/components/bundle.ts` |
 | **medium** | **Storybook taxonomy** | Title prefix decides folder. `Atoms/X` = standalone primitive (single tag, no composition). `Molecules/X` = composes 2+ atoms. `Organisms/X` = page-level region (header/layout). `Templates/X` = full page templates. | `title: 'Atoms/Stat Card'` |
 | **medium** | **Story format** | **CSF3 object stories** is the target for new components — `const meta = { title, component, tags: ['autodocs'], parameters, argTypes }; export default meta; export const Default = { args: {…} };`. Existing chip/badge precedents still use CSF2 `Template.bind({})` and will be migrated; do not copy that pattern into new stories. Always provide an explicit `render: (args) => html\`…\``  — don't rely on a default Lit renderer. | new component: CSF3; legacy precedent: CSF2 (pending migration) |
-| **blocker** | **Display numerics** | Type the value prop as `string` (not `number`). Consumers own locale formatting / digit grouping / unit suffixes; an internal `Intl.NumberFormat` in a display-only atom imposes a locale on every consumer. | `@property() accessor value: string;` on `<al-stat-card value="1,234">` |
+| **blocker** | **Display numerics** | Type the value prop as `string` (not `number`). Consumers own locale formatting / digit grouping / unit suffixes; an internal `Intl.NumberFormat` in a display-only atom imposes a locale on every consumer. | `@property() accessor value: string;` on `<al-stat value="1,234">` |
 
 ### Precedent map — which existing component to mirror
 
@@ -311,50 +334,23 @@ patterns, and JSDoc style.
 If nothing matches: copy the *most recently shipped* atom (`al-chip` is the
 current freshest convention) and ask for review.
 
-### Canonical stat-card contract (al-stat-card)
+### `al-stat-card` and `al-tag` are NOT components — do not build them
 
-When scaffolding `<al-stat-card>` or any metric / KPI tile, follow this
-contract verbatim. The contract is intentionally narrow so two
-independent scaffolders produce visually-identical output.
+Neither exists in `libs/al-web-components/components/`, in
+`custom-elements.json`, or in `.altitude/migration.json`. They are the subjects
+of the AI-readiness eval (`scripts/ai-readiness/tasks/B-scaffold.md` scaffolds
+`<al-stat-card>`; `C-violation.md` reviews a non-conformant `<al-tag>` PR), and
+`build-cem-digest.mjs` emits them as `FORWARD_STUBS`.
 
-| Concern | Decision |
-|---|---|
-| **Taxonomy** | `Atoms/Stat Card`. Composing internal `<al-icon>` atoms for decoration does NOT promote a display atom to a Molecule. Badge/chip/stat-card all remain Atoms. |
-| **Visual surface** | Bordered card (NOT a bare inline tile). Padding: `var(--al-theme-space-md)`. Border-radius: `var(--al-theme-border-radius)`. Border: `var(--al-theme-border-width) solid var(--al-theme-color-border-default)`. Background: `var(--al-theme-color-background-default)`. No shadow by default. |
-| **Value typography** | `@include al-theme-typography-display-sm-bold;` — do NOT hand-assemble from raw `--al-font-size-*` / `--al-font-weight-*` primitives. The mixin lives in `libs/al-web-components/styles/core/mixins/typography.scss`. |
-| **Label typography** | `@include al-theme-typography-body-sm;` with `color: var(--al-theme-color-content-default-weak);`. |
-| **Delta typography** | `@include al-theme-typography-body-xs;`. Color by trend (see Trend polarity row). |
-| **Properties** | `value: string` (display numeric, consumer formats — see "Display numerics" in the Naming table), `label: string`, `trend: 'up' \| 'down' \| 'none'`, `delta: string` (e.g. `"+12%"`), `invertPolarity: boolean` (escape hatch for metrics where down=good — see Trend polarity below). |
-| **Owned override hooks** | Exactly ONE: `--al-stat-card-value-color` with `var(--al-theme-color-content-default)` fallback. Documented via `@cssproperty`. Do not invent additional hooks unless the consumer override case is documented. |
-| **Trend polarity** | Default: `trend='up'` uses `--al-theme-color-content-success-default`, `trend='down'` uses `--al-theme-color-content-danger-default`, `trend='none'` uses `--al-theme-color-content-default-weak` with NO direction icon. **`invertPolarity` flips ONLY the success/danger color mapping** for metrics where lower is better (cost, latency, churn, open tickets). The chevron direction, `iconTitle`, and `aria-label` ALWAYS reflect the literal `trend` value — a rising cost shows an up-chevron colored danger and says "Trending up". Inverting the icon or label would lie about which direction the number moved. |
-| **Slot** | `slot="icon"` for an optional leading icon. **Keep the `<slot>` permanently mounted** so `slotchange` keeps firing if content is added at runtime; gate only the WRAPPER element (e.g. `<div ?hidden=${!hasIcon}>` with a matching `[hidden] { display: none }` rule in @layer al.component, OR conditional class on a wrapper). Conditionally rendering the `<slot>` itself away (e.g. `${hasIcon ? html\`<slot>\` : ''}`) breaks late-add reactivity. Use `slotNotEmpty('icon')` to decide, plus `@slotchange=${() => this.requestUpdate()}` on the slot to re-evaluate when assigned nodes change. |
-| **Layout / DOM structure** | Exactly this hierarchy — independent scaffolders MUST produce visually-identical output: `<div class="al-c-stat-card" part="container">` (the bordered surface) containing, in this order: an optional `<div class="al-c-stat-card__icon" ?hidden=${!hasIcon}><slot name="icon" @slotchange=…></slot></div>` (icon row, top), then `<span class="al-c-stat-card__value" part="value">${value}</span>` (the numeric, full width), then `<span class="al-c-stat-card__label">${label}</span>` (label, immediately below value), then an optional trend row `<div class="al-c-stat-card__trend" part="trend" ?hidden=${!delta}>` containing the chevron + visually-hidden direction + visible `${delta}`. Vertical gaps: `gap: var(--al-theme-space-xs)` between value/label, `margin-block-start: var(--al-theme-space-sm)` on the trend row. Icon position: LEADING the value horizontally is NOT canonical — use the stacked vertical hierarchy above. |
-| **Accessibility — canonical shape** | Use shape (a) — `aria-hidden="true"` on the chevron + a visually-hidden `<span class="al-u-is-vishidden">Trending up,</span>` (or "Trending down,") immediately before the visible delta. Shape (b) (wrapping aria-label that includes the delta) is also acceptable but (a) is canonical: it keeps the visible delta on the screen-reader path naturally and avoids any masking risk. Pick (a) when scaffolding; flag (b) only if it omits the delta. |
-| **Chevron sizing** | `<al-icon name="caret-up" size="sm">` / `<al-icon name="caret-down" size="sm">` — size="sm" matches the body-xs delta typography. Do NOT let the icon use its default size; do NOT set width/height on `.al-c-stat-card__trend` to size the icon. |
-| **Badge composition** | Compose `<al-badge>` only when the stat itself communicates a status (success/warning). For a plain numeric tile, render the value with the typography mixin directly and skip the badge. |
-| **Trend icon** | Use `<al-icon name="caret-up">` / `<al-icon name="caret-down">`. Do NOT hand-roll a CSS triangle or use Unicode ▲/▼ glyphs. (The deprecated `al-icon-chevron-up` / `al-icon-chevron-down` elements still render the same artwork, but new code should use `name=`.) |
-| **Trend-row gating** | Render the trend row only when `delta` is a non-empty string (the consumer's signal that a comparison exists). If `trend === 'none'` AND `delta` is set, still render the row but omit the direction icon — never invent a default delta to satisfy the row. |
-| **Accessibility — trend cue** | The direction is conveyed by BOTH color and icon — but color alone is insufficient. Two acceptable shapes: (a) Set `iconTitle="Trending up"` on the chevron, mark the chevron `aria-hidden="true"`, and add a visually-hidden `<span class="al-u-is-vishidden">Trending up,</span>` BEFORE the visible delta — the screen reader announces "Trending up, +12%" while sighted users see "+12%". (b) Fold the direction into a wrapping `aria-label` that INCLUDES the delta text — e.g. `aria-label="Trending up, +12%"`. **Do NOT set an `aria-label` that omits the delta** (e.g. `aria-label="Trending up"` next to a visible "+12%") — the aria-label REPLACES the accessible name, masking the visible delta from screen readers. |
-| **CSS parts** | Expose three: `@csspart container` (the bordered surface), `@csspart value` (the numeric), `@csspart trend` (the row containing delta + chevron). Consumers theme via these, not by descending the BEM tree. |
-| **Property defaults** | `@property accessor foo: T = '<default>'` initializers are PERMITTED under G7 (`useDefineForClassFields: false` plus `experimentalDecorators: true` keep field initializers reactive). The pilots all use them. Setting a default in the accessor is canonical; omitting it just means "no initial value" — both are valid. |
+**They duplicate shipping components exactly.** For a metric / KPI tile use
+[`al-stat`](./libs/al-web-components/components/stat/); for a small dismissible
+inline label use [`al-chip`](./libs/al-web-components/components/chip/).
 
-### Canonical al-tag contract (al-tag)
-
-Mirrors the al-chip dismissible-atom recipe. Pin these so reviewers and
-scaffolders converge.
-
-| Concern | Decision |
-|---|---|
-| **Taxonomy** | `Atoms/Tag`. |
-| **Variant union** | `'secondary' \| 'info' \| 'success' \| 'warning' \| 'danger'` — no `'default'` member. The default state is the UNSET attribute (mirrors al-button "primary = unset"). Reviewer: flag a literal `variant="default"` as a typing bug. |
-| **Variant default styling** | When `variant` is unset, render the neutral surface using `--al-theme-color-content-default-weak` for text and `--al-theme-color-background-default-weak` for the chip body. |
-| **Boolean props** | `isDismissible: boolean` (capability). If owning state: `isDismissed: boolean`. Same `is*` prefix as chip. |
-| **Dismissal model** | Same as `al-chip`: two acceptable shapes — owned `isDismissed` + `.al-is-dismissed` hide class OR controlled `close()` without owned state. Reviewers MUST NOT flag controlled-close as a violation (see CEM digest `doNotFlag` for this tag). |
-| **Close event** | `this.dispatch({ eventName: 'onTagClose', detailObj: { value: this.value } })`. The `value` mirrors `al-menu-item.value` for consumer pattern-matching. |
-| **Focus ring** | `&:focus-visible { @include al-focus; }` on the inner clickable element (blocker — same as the global rule). |
-| **Tokens** | Padding `var(--al-theme-space-xxs) var(--al-theme-space-sm)`, gap `var(--al-theme-space-xs)`, radius `size(4)` (NOT `--al-theme-border-radius-round` which is 50% = circle), per-variant `color` from `--al-theme-color-content-<role>-default`. |
-| **Host display** | `:host { display: contents; }` — style the inner `.al-c-tag`, never the host. |
-| **Stories** | CSF3 object stories with `tags: ['autodocs']`, one story per variant + dismissible state. |
+Their pinned contracts — which this document used to carry, at the cost of
+telling agents to build redundant components and of parking the eval's answer
+key inside the document the eval measures — now live at
+[`scripts/ai-readiness/fixtures/canonical-contracts.md`](./scripts/ai-readiness/fixtures/canonical-contracts.md).
+Read them only when working ON the eval harness.
 
 ### Canonical dismissible-atom recipe (from `al-chip`)
 
@@ -386,7 +382,7 @@ violation — do not flag it in reviews).
 | **blocker** | **Host display** | `:host { display: contents; }` — the host has NO visual properties of its own. Never set `display: inline-block` / `padding` / `border-radius` / `font-family` on `:host`; style the inner `.al-c-<name>` instead. |
 | **blocker** | **Dismissal model** | EITHER own `isDismissed` state (canonical: `isDismissible: boolean` capability + `isDismissed: boolean` state toggled by `close()`, with `.al-is-dismissed { display: none }`) OR expose a controlled `close()` method without owning `isDismissed` (the consumer's container manages dismissal — chip groups, tag lists in a form). **Both shapes are acceptable. Do NOT flag a controlled `close()` as a violation.** |
 | **blocker** | **Boolean props (when owning state)** | `isDismissible: boolean` (capability) + `isDismissed: boolean` (state) — the `is*` prefix applies. |
-| **blocker** | **Close event** | `this.dispatch({ eventName: 'onChipClose' })` (use ALElement's dispatch — bubbles + composed). For `al-tag` mirror as `onTagClose`. |
+| **blocker** | **Close event** | `this.dispatch({ eventName: 'onChipClose' })` (use ALElement's dispatch — bubbles + composed). Mirror the tag name in the event: an `al-<name>` atom dispatches `on<Name>Close`. |
 | **blocker** | **Focus ring** | `&:focus-visible { @include al-focus; }` on the inner clickable element. Never re-author an outline rule. (Already in the blocker checklist; restated here for visibility.) |
 | **blocker** | **Padding / radius / color tokens** | `padding: var(--al-theme-space-xxs) var(--al-theme-space-sm);`, `border-radius: size(4);` (NOT `--al-theme-border-radius-round` — that's `50%` = circle, not pill), `color: var(--al-theme-color-content-default-weak);`. Token names must verify against the digest. |
 | **blocker** | **Internal gap** | `gap: var(--al-theme-space-xs);` |
@@ -592,15 +588,35 @@ Source: `libs/al-web-components/styles/core/utilities/*.scss`.
 For row layouts with right-aligned content, use `<al-layout>` with `gap`
 and CSS — not a fabricated utility class.
 
-### Tokens you may reference
+### Tokens you may reference — and where the digests are
 
-The full token surface is digested for you. Read these to verify a token
-exists before referencing it:
+Everywhere this document says "the digest", it means one of exactly two files.
+Both are **tracked in git**, so they are readable in a bare clone with no build,
+and both are regenerated by `pnpm --filter al-web-components build` and
+drift-gated by the `cem-and-contracts` CI job:
+
+| Digest | Path | Answers |
+|---|---|---|
+| **Tokens digest** | `.altitude/ai-readiness/tokens-digest.json` | Does this `--al-*` name exist? Which role/suffix combinations are real? Which names are known hallucination targets (`conventions.notExistDoNotInvent`)? |
+| **CEM digest** | `.altitude/ai-readiness/cem-digest.json` | Does this tag/attribute/slot/event/enum-value exist? Which review findings are sanctioned and must NOT be flagged (each tag's `doNotFlag` array)? |
+
+Both are also mirrored to `/tmp/ai-readiness-tokens-digest.json` and
+`/tmp/ai-readiness-cem-digest.json` — that is the copy the fleet probe
+(`scripts/ai-readiness/run-probe.mjs`) and judge (`run-judge.mjs`) point agents at.
+Regenerate either with `pnpm --filter al-web-components build`, or individually:
+`node scripts/ai-readiness/build-tokens-digest.mjs` /
+`node scripts/ai-readiness/build-cem-digest.mjs`.
+
+The underlying build output the tokens digest is derived from — useful when you
+want raw values rather than the convention matrix — is **generated, not tracked**
+(run `pnpm --filter al-web-components build:tokens` first):
 
 - `libs/al-web-components/styles/dist/tokens.json` — every `--al-*` name with
-  its resolved value (328 tokens).
+  its resolved value (398 as of 2026-08-23; the digest's `total` field is the
+  live count, so read that rather than trusting this sentence).
 - `libs/al-web-components/styles/dist-v5/aliases.json` — the frozen alias
-  contract (names that cannot drift through 3.0).
+  contract (names that cannot drift through 3.0). Byte-identical to
+  `libs/al-web-components/dist/css/aliases.json`.
 
 **Suffix matrix — per role, not per family**. The roles + suffixes that actually exist are NOT uniform across the matrix. Verify against `tokens.json` before inventing combinations.
 

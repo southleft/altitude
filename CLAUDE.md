@@ -73,10 +73,17 @@ The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with 
 - Each has: `.tsx` (component), `.stories.tsx` (Storybook)
 
 ### Design Tokens
-- DTCG source in `libs/al-web-components/styles/tokens-dtcg/` (auto-generated from `tokens/`)
+- **Edit `libs/al-web-components/styles/tokens/**.json`** — the tracked, hand-authored
+  Tokens Studio tree (legacy `value`/`type` shape). This is the only token source you edit.
+- `libs/al-web-components/styles/tokens-dtcg/` is its **generated DTCG mirror**
+  (`$value`/`$type`), rewritten by `scripts/convert-tokens-to-dtcg.js` on every
+  `build:tokens` and **gitignored** (`.gitignore:18`). Do not hand-edit it — your change is
+  overwritten by the next build. (T6.2 will delete `tokens/` and flip `tokens-dtcg/` to
+  editable; until then, the direction is `tokens/` → `tokens-dtcg/`.)
 - Built via **Style Dictionary v5** to CSS custom properties, JSON, and TypeScript types
 - Token tiers: tier-1 (base values), tier-2 (semantic tokens), tier-3 (brand/theme tokens)
-- See `.altitude/TOKENS.md` for the parallel-pipeline rationale
+- See `.altitude/TOKENS.md` § Overview for the stage-by-stage table, and `llms.txt`
+  for the consumer-facing view — all three must keep naming `tokens/` as the source.
 
 ### Theming
 - Scoped `<al-theme brand mode density contrast motion>` host (Phase 4) — sets tokens on `:host`, not `:root`

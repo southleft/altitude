@@ -126,15 +126,19 @@ tree instead — a token's CSS custom-property **name** is stable across brand/m
 **value** changes, so scoped results carry both the raw (possibly-aliased) value and a
 best-effort resolved value.
 
+`brand` is an enum of the two brands this repo ships — `altitude` and `southleft` — matching
+`styles/tokens-dtcg/tier-2/brand/*` and `.altitude/ds-projects.json`.
+
 ```jsonc
 // request
-{ "brand": "meridian", "name": "theme-color-background-primary-default" }
+{ "tier": 2, "brand": "southleft", "name": "theme-color-background-primary-default" }
 // response
 {
   "count": 1,
+  "totalMatched": 1,
   "tokens": [
-    { "name": "al-theme-color-background-primary-default", "tier": 2, "brand": "meridian", "mode": null,
-      "rawValue": "{color.brand.blue.600}", "resolvedValue": "#2F62EF", "type": "color" }
+    { "name": "al-theme-color-background-primary-default", "tier": 2, "brand": "southleft", "mode": null,
+      "rawValue": "{color.brand.red.500}", "resolvedValue": "#F05735", "type": "color" }
   ]
 }
 ```

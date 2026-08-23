@@ -145,13 +145,21 @@ server.registerTool(
     title: 'Query Altitude design tokens',
     description:
       'Query design tokens. With no filters, returns the flat resolved dist/css/tokens.json set ' +
-      '(the default altitude/light build). Add `tier` (1|2|3), `brand` (e.g. "meridian"), or ' +
+      '(the default altitude/light build). Add `tier` (1|2|3), `brand` ("altitude" or "southleft"), or ' +
       '`mode` ("light"|"dark") to query the DTCG source tree instead and get brand/mode-scoped ' +
       'raw + resolved values (a token\'s CSS custom-property name is stable across brand/mode; ' +
       'only its value changes). `name` is a substring filter on the token name in all cases.',
     inputSchema: {
       tier: z.union([z.string(), z.number()]).optional().describe('1, 2, or 3 (or "tier-1" etc).'),
-      brand: z.string().optional().describe('e.g. "altitude", "meridian", "nocturne", "northright", "odyssey", "solstice", "southleft", "voltage".'),
+      brand: z
+        .enum(['altitude', 'southleft'])
+        .optional()
+        .describe(
+          'The two brands this repo ships, matching styles/tokens-dtcg/tier-2/brand/* and ' +
+          '.altitude/ds-projects.json. "altitude" is the design system default identity; "southleft" is the ' +
+          'southleft.com brand. (northright, odyssey, meridian, voltage, solstice and nocturne ' +
+          'were removed by spec 2026-08-20-brand-pruning-and-storybook-de-bloat — see .altitude/BRANDS.md §7 "The two brands".)',
+        ),
       mode: z.enum(['light', 'dark']).optional(),
       name: z.string().optional().describe('Substring to match against the token name.'),
       limit: z.number().int().positive().max(1000).optional(),

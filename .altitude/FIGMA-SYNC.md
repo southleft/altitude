@@ -146,9 +146,12 @@ convention. `Southleft V5` was seeded the same way
 (`scripts/figma-southleft/push-variables.mjs`, which keeps an `--opacity-percent` escape
 hatch should this ever be revisited).
 
-**Southleft is no longer dark-only** (this doc still says it is). `presets.ts:45-47` and
-`tokens-config.v5.mjs:486-489` both give 2 brands x 2 modes. Figma additionally carries
-`Northright` and `Odyssey` brand modes that the code does not have.
+**Southleft is no longer dark-only.** `.storybook/presets.ts:34-35` types the pairs as
+`altitude|southleft` x `light|dark`, and `styles/tokens-config.v5.mjs:486-489` builds
+exactly those four — 2 brands x 2 modes. The Figma file may still carry `Northright` and
+`Odyssey` brand modes; the CODE has neither, and neither does any other brand beyond these
+two (spec `2026-08-20-brand-pruning-and-storybook-de-bloat` removed six — see
+[`BRANDS.md` §7](./BRANDS.md)). Delete stray Figma modes rather than re-adding code for them.
 
 **Token identity must be READ, not inferred.** Matching a computed colour back to the
 token table is guesswork — many tokens share a hex, and it cannot recover spacing or
@@ -159,10 +162,16 @@ The component CSS names its token in the declaration; read that.
 
 | | |
 |---|---|
-| Full method + traps | `.claude/skills/altitude-figma-sync/SKILL.md` (**gitignored** — see below) |
-| Scripts | `scripts/audit-figma-vs-code.mjs`, `scripts/figma-var-fixes.mjs`, `scripts/figma-atoms/` |
-| History and rationale | `.mm/specs/2026-08-20-altitude-figma-atoms/spec.md` |
+| Full method + traps | `.claude/skills/altitude-figma-sync/SKILL.md` (**tracked** — survives a fresh clone) |
+| Scripts | `scripts/audit-figma-vs-code.mjs`, `scripts/figma-var-fixes.mjs`, `scripts/figma-atoms/`, `scripts/figma-southleft/` |
+| History and rationale | `.mm/specs/2026-08-20-altitude-figma-atoms/spec.md` (local-only — `.mm/` is not in git) |
 
-`.claude/` is gitignored (`.gitignore:71`), so the skill survives new sessions on this
-machine but NOT a fresh clone or `git clean -xdf`. The scripts and this document are
-tracked; if the skill goes missing, regenerate it from the spec.
+An earlier version of this section said `.claude/` was gitignored and the skill would not
+survive a clone. That is wrong, and `.gitignore:71` says the opposite in as many words:
+`.claude/` is **tracked** so skills, agents, commands and `CLAUDE.md` survive a clone —
+only `/.claude/worktrees/`, `/.claude/settings.local.json` and `/.claude/.mm-manifest.json`
+are ignored. Confirm with `git ls-files .claude/skills/altitude-figma-sync/`.
+
+What genuinely does not survive a clone is `.mm/` (gitignored by design; shared through the
+Monday Morning cloud workspace instead), so the spec link above is the one that can go
+missing — not the skill.

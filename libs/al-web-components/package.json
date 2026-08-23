@@ -64,7 +64,8 @@
     "build": "npm run build:tokens && npm run build:icons && npm run build:custom-elements.json && del-cli dist && vite build -c vite.config.mjs && tsc && node ../../scripts/copy-assets-to-dist.js",
     "build:storybook": "storybook build",
     "build:storybook:sl": "storybook build -c .storybook-sl",
-    "build:tokens": "node ../../scripts/convert-tokens-to-dtcg.js && node ./styles/tokens-config.v5.mjs && node ../../scripts/emit-token-types.js && node ../../scripts/copy-tokens-to-legacy-dist.js",
+    "//build:tokens": "build-tokens-digest.mjs is the LAST step here, not in build:custom-elements.json, because its only input is styles/dist/tokens.json — written by copy-tokens-to-legacy-dist.js on the line before. Wiring it to the CEM build instead would make `pnpm --filter al-web-components build:custom-elements.json` (which CI runs standalone) crash on a fresh clone.",
+    "build:tokens": "node ../../scripts/convert-tokens-to-dtcg.js && node ./styles/tokens-config.v5.mjs && node ../../scripts/emit-token-types.js && node ../../scripts/copy-tokens-to-legacy-dist.js && node ../../scripts/ai-readiness/build-tokens-digest.mjs",
     "build:tokens:v5": "pnpm run build:tokens",
     "build:vite": "vite build -c vite.config.mjs --outDir dist-vite --emptyOutDir",
     "build:vite-spike": "vite build -c vite.spike.config.mjs",
@@ -128,7 +129,7 @@
     "storybook": "^10.4",
     "style-dictionary": "^5.0.0",
     "typescript": "^5.7",
-    "vite": "^5",
+    "vite": "^7.1.12",
     "wait-on": "^7"
   },
   "resolutions": {
