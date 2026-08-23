@@ -17,9 +17,9 @@
  *
  * Raw fetch instead of the Anthropic SDK on purpose: the repo has a
  * no-new-npm-deps rule, Pages Functions deploy dependency-free this way, and
- * the same file is imported straight into the Storybook dev server (see
- * libs/al-web-components/.storybook/ai-theme/vite-plugin-theme-api.ts) so
- * there is exactly one copy of the handler and the prompt.
+ * the same file is imported straight into the app dev server by the Vite
+ * plugin at libs/al-web-components/vite-plugins/theme-api.mjs, so there is
+ * exactly one copy of the handler and the prompt.
  */
 
 const PERSONALITIES = ['editorial', 'brutalist', 'geometric', 'luxe', 'playful']
