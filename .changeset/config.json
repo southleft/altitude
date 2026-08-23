@@ -13,13 +13,18 @@
   "_provenance": "Provenance is set via NPM_CONFIG_PROVENANCE=true on the release workflow (.github/workflows/release.yml). Changesets honors that env var when running npm publish.",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
+  "_ignore": "Every workspace that is NOT part of a release must be listed, or changeset status surfaces it as a spurious patch bump. al-app-astro, al-app-home and al-app-southleft were missing — three fixture/marketing apps added after this list was last touched. sl-web-components is deliberately listed too, but for a different reason: it is a LIBRARY, not a fixture, and whether it ships is an open decision in the publish-altitude-v2 spec. Listing it keeps the release surface honest until that decision is made; remove it here the moment it is meant to publish.",
   "ignore": [
     "al-app-angular",
+    "al-app-astro",
+    "al-app-home",
+    "al-app-mfe",
     "al-app-react",
+    "al-app-southleft",
+    "al-app-ssr",
     "al-app-svelte",
     "al-app-web-components",
-    "al-app-mfe",
-    "al-app-ssr",
-    "knapsack"
+    "knapsack",
+    "sl-web-components"
   ]
 }
