@@ -1,0 +1,306 @@
+---
+/**
+ * Overview (Home) — the canvas's `data-screen-label="Home"` screen.
+ *
+ * The canvas typed "68 COMPONENTS" and "21 / 28 / 19 COMPONENTS" into its
+ * markup. Here every one of those numbers is read from the generated registry,
+ * so the hero, the stat bar and the three atomic cards restate the library
+ * rather than a snapshot of it.
+ */
+import Shell from '../layouts/Shell.astro';
+import Logo from '../components/Logo.astro';
+import { TIERS, COMPONENT_COUNT, STATS } from '../lib/registry.mjs';
+import { SITE, href } from '../lib/site.mjs';
+
+const TIER_COPY = {
+  atoms: 'Indivisible primitives — buttons, inputs, badges, icons. Each maps to one token contract.',
+  molecules: 'Atoms bonded into function — search fields, alerts, cards, selects, toasts.',
+  organisms: 'Full sections of interface — headers, footers, layout and theme hosts.',
+};
+
+const stats = [
+  { value: COMPONENT_COUNT, label: 'COMPONENTS' },
+  { value: 3, label: 'TOKEN TIERS' },
+  { value: 2, label: 'THEMES' },
+  { value: STATS.icons, label: 'ICON GLYPHS' },
+];
+---
+
+<Shell title={SITE.name} active="overview">
+  <div class="topbar">
+    <span>ALTITUDE DESIGN SYSTEM</span>
+    <span class="micro--blue"
+      >{COMPONENT_COUNT} COMPONENTS — 2 THEMES — 3 TOKEN TIERS</span
+    >
+    <span>BY SOUTHLEFT</span>
+  </div>
+
+  <div class="hero blueprint">
+    <span class="blueprint__tick blueprint__tick--tl">+</span>
+    <span class="blueprint__tick blueprint__tick--tr">+</span>
+    <span class="blueprint__tick blueprint__tick--bl">+</span>
+    <span class="blueprint__tick blueprint__tick--br">+</span>
+    <div>
+      <div class="micro--lg">/// DOCUMENTATION SITE</div>
+      <h1 class="t-display-lg">Design at altitude<span style="color:var(--blue)">.</span></h1>
+      <p class="t-body-lg hero__lede">
+        {COMPONENT_COUNT} production components, three tiers of design tokens, light and dark
+        themes. Built on Lit web components with React wrappers, organized by atomic design.
+      </p>
+      <div class="hero__actions">
+        <a class="btn" href={href('/components')}>Browse components</a>
+        <a class="btn btn--outline" href={href('/foundations')}>Foundations</a>
+      </div>
+    </div>
+    <div class="hero__plate-wrap">
+      <div class="hero__plate">
+        <span class="hero__plate-label hero__plate-label--tl">AL-LOGO / MARK</span>
+        <span class="hero__plate-label hero__plate-label--br">FILL: BRAND-BLUE-500</span>
+        <Logo variant="mark" style="width:60%;max-width:220px;display:block;margin:0 auto" />
+        <div class="hero__measure">
+          <span></span>
+          <span class="micro">42.07 × 48.82</span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="statbar">
+    {
+      stats.map((stat) => (
+        <div class="statbar__cell">
+          <div class="statbar__value">{stat.value}</div>
+          <div class="micro" style="margin-top:10px">
+            {stat.label}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="stack-56">
+    <div class="micro--lg" style="margin-bottom:14px">/// ATOMIC BY DESIGN</div>
+    <h2 class="t-display-md" style="margin-bottom:36px; max-width:640px">
+      Atoms make molecules. Molecules make organisms.
+    </h2>
+    <div class="tier-cards">
+      {
+        TIERS.map((tier, i) => (
+          <a class="hard-card" href={`${href('/components')}#${tier.id}`}>
+            <div class="tier-cards__head">
+              <span class="micro">{String(i + 1).padStart(2, '0')}</span>
+              <span class="micro micro--blue">{tier.count} COMPONENTS</span>
+            </div>
+            <div class="tier-cards__glyph" data-tier={tier.id} />
+            <div class="t-heading-sm">{tier.label.charAt(0) + tier.label.slice(1).toLowerCase()}</div>
+            <p class="t-body-sm" style="margin:6px 0 0">
+              {TIER_COPY[tier.id]}
+            </p>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="split">
+    <a class="split__cell" href={href('/foundations')}>
+      <div class="micro">01 — FOUNDATIONS</div>
+      <div class="split__swatches">
+        <span style="background:#4375FF"></span>
+        <span style="background:#8FADFF"></span>
+        <span style="background:#DBE5FF"></span>
+        <span style="background:var(--fg)"></span>
+        <span style="border:1px solid var(--line)"></span>
+        <span class="split__aa">Aa</span>
+      </div>
+      <div class="t-heading-sm">Color, type, space, elevation <span style="color:var(--blue)">→</span></div>
+    </a>
+    <div class="split__cell split__cell--static">
+      <div class="micro">GET STARTED</div>
+      <pre class="code code--inline" style="margin:20px 0"><span style="color:#6B93FF">$</span> pnpm add {SITE.npmPackage}</pre>
+      <div class="t-heading-sm">Ship it in Lit, React, or plain HTML</div>
+    </div>
+  </div>
+
+  <div class="site-foot">
+    <span>© 2026 SOUTHLEFT LLC</span>
+    <span>TOKENS IN DTCG · STYLE DICTIONARY V5</span>
+    <a href={SITE.zeroheight} target="_blank" rel="noopener" style="letter-spacing:.12em"
+      >ZEROHEIGHT ↗</a
+    >
+  </div>
+</Shell>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: 56px;
+    padding: 72px 64px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hero__lede {
+    margin: 24px 0 0;
+    max-width: 520px;
+  }
+
+  .hero__actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+
+  .hero__plate-wrap {
+    display: flex;
+    align-items: center;
+  }
+
+  .hero__plate {
+    position: relative;
+    width: 100%;
+    border: 1px dashed var(--al-border);
+    background: var(--bg);
+    box-shadow: 10px 10px 0 var(--blue);
+    padding: 56px 40px;
+  }
+
+  .hero__plate-label {
+    position: absolute;
+    font: 400 9px/1 var(--mono);
+    letter-spacing: 0.14em;
+    color: var(--fg-weak);
+  }
+
+  .hero__plate-label--tl {
+    top: 10px;
+    left: 12px;
+  }
+
+  .hero__plate-label--br {
+    bottom: 10px;
+    right: 12px;
+  }
+
+  .hero__measure {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 32px;
+  }
+
+  .hero__measure > span:first-child,
+  .hero__measure > span:last-child {
+    flex: 1;
+    border-top: 1px solid var(--fg);
+  }
+
+  .tier-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .tier-cards__head {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .tier-cards__glyph {
+    height: 88px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .tier-cards__glyph::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    background: var(--blue);
+    display: block;
+  }
+
+  .tier-cards__glyph[data-tier='molecules']::after,
+  .tier-cards__glyph[data-tier='organisms']::after {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--fg);
+    display: block;
+  }
+
+  .tier-cards__glyph[data-tier='organisms']::before {
+    box-shadow:
+      24px 0 0 var(--fg),
+      -24px 0 0 var(--blue);
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .split__cell {
+    padding: 36px 40px;
+    color: inherit;
+    display: block;
+    transition: background 0.15s;
+  }
+
+  .split__cell:hover {
+    background: var(--bg2);
+    color: inherit;
+  }
+
+  .split__cell--static {
+    border-left: 1px solid var(--line-weak);
+  }
+
+  .split__cell--static:hover {
+    background: transparent;
+  }
+
+  .split__swatches {
+    display: flex;
+    gap: 4px;
+    margin: 20px 0;
+    align-items: center;
+  }
+
+  .split__swatches > span {
+    width: 26px;
+    height: 26px;
+  }
+
+  .split__aa {
+    font: 700 26px/1 var(--sans);
+    margin-left: 12px;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  @media (max-width: 1100px) {
+    .hero,
+    .split {
+      grid-template-columns: 1fr;
+    }
+
+    .tier-cards {
+      grid-template-columns: 1fr;
+    }
+
+    .hero {
+      padding: 40px 20px;
+    }
+
+    .split__cell--static {
+      border-left: none;
+      border-top: 1px solid var(--line-weak);
+    }
+  }
+</style>

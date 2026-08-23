@@ -1,0 +1,165 @@
+---
+/**
+ * The persistent 264px sidebar from the design canvas
+ * (.mm/specs/.../visuals/altitude-ds-site.dc.html, `<aside
+ * data-screen-label="Sidebar">`): logo + "DESIGN SYSTEM — V2.0" eyebrow,
+ * search field, INDEX section, then the ATOMS / MOLECULES / ORGANISMS groups
+ * with live counts.
+ *
+ * NOTHING here is hand-maintained. The groups, their order, their counts and
+ * every link inside them come from `registry.mjs`, which derives them from
+ * `libs/al-web-components/custom-elements.json` plus each component's own
+ * story title. Adding a component to the library adds it here; there is no
+ * second list to update.
+ */
+import { TIERS, LIFECYCLE, COMPONENT_COUNT } from '../lib/registry.mjs';
+import { SITE, href } from '../lib/site.mjs';
+import Logo from './Logo.astro';
+import SearchIcon from './SearchIcon.astro';
+
+interface Props {
+  /** Which INDEX entry is current. */
+  active?: 'overview' | 'foundations' | 'components';
+  /** Slug of the component detail page being viewed, if any. */
+  activeSlug?: string;
+}
+
+const { active, activeSlug } = Astro.props;
+
+const index = [
+  { id: 'overview', label: 'Overview', path: '/' },
+  { id: 'foundations', label: 'Foundations', path: '/foundations' },
+  { id: 'components', label: 'Components', path: '/components' },
+] as const;
+---
+
+<aside class="sidebar">
+  <a class="sidebar__brand" href={href('/')} aria-label={`${SITE.name} home`}>
+    <Logo variant="wordmark" />
+    <div class="sidebar__eyebrow">{SITE.eyebrow}</div>
+  </a>
+
+  <div class="sidebar__search">
+    <div class="sidebar__search-field">
+      <SearchIcon />
+      <!-- The placeholder quotes the generated component count; it is never
+           typed. `data-total` lets the client script restore it after a
+           filter is cleared. -->
+      <input
+        id="sidebar-search"
+        type="search"
+        autocomplete="off"
+        aria-label={`Search ${COMPONENT_COUNT} components`}
+        data-total={COMPONENT_COUNT}
+        placeholder={`SEARCH ${COMPONENT_COUNT} COMPONENTS`}
+      />
+    </div>
+  </div>
+
+  <nav class="sidebar__nav" aria-label="Documentation">
+    <div class="sidebar__group sidebar__group--first"><span>INDEX</span><span>00</span></div>
+    {
+      index.map((item) => (
+        <a
+          class="sidebar__index-link"
+          href={href(item.path)}
+          aria-current={active === item.id ? 'page' : undefined}
+        >
+          <span class="sidebar__mark">{active === item.id ? '■' : '·'}</span>
+          {item.label}
+        </a>
+      ))
+    }
+
+    {
+      TIERS.map((tier) => (
+        <div data-tier-block={tier.id}>
+          <div class="sidebar__group">
+            <span>{tier.label}</span>
+            <span data-tier-count={tier.id}>{tier.count}</span>
+          </div>
+          {tier.components.map((component) => (
+            <a
+              class="sidebar__link"
+              data-component-link
+              data-name={component.name.toLowerCase()}
+              data-tag={component.tag}
+              href={href(`/components/${component.slug}`)}
+              aria-current={activeSlug === component.slug ? 'page' : undefined}
+            >
+              {component.name}
+            </a>
+          ))}
+        </div>
+      ))
+    }
+    <p class="sidebar__version" data-no-results hidden>NO COMPONENT MATCHES</p>
+
+    <!-- The second axis of the hierarchy: lifecycle. Groups and counts are
+         derived (registry.mjs → CEM `deprecated` + each story's own
+         `status` parameter), so a component promoted out of beta moves here
+         by itself. Each row filters the index. -->
+    <div class="sidebar__group"><span>LIFECYCLE</span><span>{LIFECYCLE.length}</span></div>
+    {
+      LIFECYCLE.map((phase) => (
+        <a class="sidebar__link sidebar__link--phase" href={href(`/components?status=${phase.id}`)}>
+          <span>{phase.label}</span>
+          <span>{phase.count}</span>
+        </a>
+      ))
+    }
+  </nav>
+
+  <div class="sidebar__foot">
+    <div class="sidebar__foot-row">
+      <span class="micro">THEME / <span data-theme-label>LIGHT</span></span>
+      <button class="switch" type="button" data-theme-toggle aria-label="Toggle color theme"></button>
+    </div>
+    <div class="sidebar__version">{SITE.footprint}</div>
+  </div>
+</aside>
+
+<script>
+  // Sidebar component filter. Filters the generated links in place and
+  // rewrites each group's count to the number still shown, which is exactly
+  // what the design canvas does (`atomsCount` = `navAtoms.length` after the
+  // query filter, altitude-ds-site.dc.html's `renderVals()`).
+  const input = document.getElementById('sidebar-search') as HTMLInputElement | null;
+  if (input) {
+    const links = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>('[data-component-link]')
+    );
+    const blocks = Array.from(document.querySelectorAll<HTMLElement>('[data-tier-block]'));
+    const empty = document.querySelector<HTMLElement>('[data-no-results]');
+
+    const apply = () => {
+      const q = input.value.trim().toLowerCase();
+      for (const link of links) {
+        const name = link.dataset.name ?? '';
+        const tag = link.dataset.tag ?? '';
+        link.hidden = q !== '' && !name.includes(q) && !tag.includes(q);
+      }
+      let shown = 0;
+      for (const block of blocks) {
+        const id = block.dataset.tierBlock;
+        const visible = block.querySelectorAll<HTMLElement>(
+          '[data-component-link]:not([hidden])'
+        ).length;
+        shown += visible;
+        const counter = block.querySelector<HTMLElement>(`[data-tier-count="${id}"]`);
+        if (counter) counter.textContent = String(visible);
+        block.hidden = visible === 0 && q !== '';
+      }
+      if (empty) empty.hidden = shown !== 0;
+    };
+
+    input.addEventListener('input', apply);
+    // A query typed on any page should be able to escalate to the full index.
+    input.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter') return;
+      const q = input.value.trim();
+      const base = document.documentElement.dataset.docsBase ?? '';
+      window.location.href = q ? `${base}/components?q=${encodeURIComponent(q)}` : `${base}/components`;
+    });
+  }
+</script>

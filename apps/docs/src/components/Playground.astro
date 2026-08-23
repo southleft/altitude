@@ -1,0 +1,276 @@
+---
+/**
+ * The live playground + HTML/React framework switcher from the canvas's
+ * Button spec screen — generalized to every component in the manifest.
+ *
+ * The canvas hard-codes Button's five variants and three flags. Here the
+ * controls are DERIVED: any prop whose CEM type is a union of string literals
+ * becomes a segmented control over exactly those literals; any prop typed
+ * `boolean` becomes a flag; a component that declares a default slot gets a
+ * content field. The emitted snippets are built from the same state, so the
+ * code shown is always the code the stage is rendering.
+ *
+ * The stage renders the REAL custom element (registered by LiveRuntime.astro),
+ * not a CSS facsimile — the two things the spec says Storybook structurally
+ * cannot do are this switcher and this copyable, real-markup playground.
+ */
+interface Props {
+  component: {
+    tag: string;
+    react: string | null;
+    name: string;
+    props: { name: string; field: string; type: string; options: string[]; isBoolean: boolean }[];
+    slots: { name: string; rawName: string }[];
+  };
+}
+
+const { component } = Astro.props;
+
+/* Controls, in the canvas's order: enums, then the content field, then flags. */
+const enums = component.props.filter((p) => p.options.length >= 2);
+const flags = component.props.filter((p) => p.isBoolean);
+const hasDefaultSlot = component.slots.some((s) => s.rawName === '');
+
+/*
+ * `field` matters as much as `name`. The controls drive the element by setting
+ * PROPERTIES, not attributes: `setAttribute` lowercases the name in an HTML
+ * document, so `isDisabled` would land as `isdisabled` and never match the
+ * `observedAttributes` entry Lit registered — the code snippet would claim a
+ * flag the live element had silently ignored. The snippet still prints the
+ * attribute name, which is what a consumer writes in markup.
+ */
+const config = {
+  tag: component.tag,
+  react: component.react,
+  hasDefaultSlot,
+  enums: enums.map((p) => ({ name: p.name, field: p.field, options: p.options })),
+  flags: flags.map((p) => ({ name: p.name, field: p.field })),
+};
+
+const initialText = component.name;
+const controlCount = enums.length + flags.length + (hasDefaultSlot ? 1 : 0);
+---
+
+<div class="section-rule">
+  <span>PLAYGROUND</span>
+  <span>{controlCount} {controlCount === 1 ? 'CONTROL' : 'CONTROLS'}</span>
+</div>
+
+<div class="pg">
+  <div class="pg__stage blueprint blueprint--sm">
+    <span class="pg__stage-label">PREVIEW / {component.tag}</span>
+    <div data-pg-mount set:html={`<${component.tag} data-pg-el>${
+      hasDefaultSlot ? initialText : ''
+    }</${component.tag}>`} />
+  </div>
+
+  <div class="pg__controls">
+    {
+      controlCount === 0 && (
+        <p class="pg__control-label">
+          NO ENUM OR BOOLEAN PROPS IN THE MANIFEST — NOTHING TO TOGGLE.
+        </p>
+      )
+    }
+
+    {
+      config.enums.map((control) => (
+        <div>
+          <div class="pg__control-label">{control.name}</div>
+          <div class="pg__opts" role="group" aria-label={control.name}>
+            <button
+              class="pg__opt"
+              type="button"
+              data-enum={control.name}
+              data-field={control.field}
+              data-value=""
+              aria-pressed="true"
+            >
+              default
+            </button>
+            {control.options.map((option) => (
+              <button
+                class="pg__opt"
+                type="button"
+                data-enum={control.name}
+                data-field={control.field}
+                data-value={option}
+                aria-pressed="false"
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+
+    {
+      hasDefaultSlot && (
+        <div>
+          <div class="pg__control-label">CONTENT</div>
+          <input class="pg__text" type="text" value={initialText} data-pg-text />
+        </div>
+      )
+    }
+
+    {
+      config.flags.length > 0 && (
+        <div>
+          <div class="pg__control-label">FLAGS</div>
+          <div class="pg__flags">
+            {config.flags.map((flag) => (
+              <button
+                class="pg__flag"
+                type="button"
+                data-flag={flag.name}
+                data-field={flag.field}
+                aria-pressed="false"
+              >
+                <span class="pg__box" />
+                <span>{flag.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )
+    }
+  </div>
+
+  <div class="pg__code">
+    <div class="pg__tabs" role="tablist" aria-label="Framework">
+      <button class="pg__tab" type="button" role="tab" data-tab="html" aria-selected="true">
+        HTML
+      </button>
+      {
+        component.react && (
+          <button class="pg__tab" type="button" role="tab" data-tab="react" aria-selected="false">
+            REACT
+          </button>
+        )
+      }
+      <button class="pg__copy" type="button" data-pg-copy>COPY</button>
+    </div>
+    <pre class="code" data-pg-code></pre>
+  </div>
+</div>
+
+<script type="application/json" data-pg-config set:html={JSON.stringify(config)} />
+
+<script>
+  // Playground state machine. Reads the generated config, mutates the real
+  // element on the stage, and re-emits both snippets from the same state.
+  const configEl = document.querySelector<HTMLScriptElement>('[data-pg-config]');
+  const stage = document.querySelector<HTMLElement>('[data-pg-el]');
+  const codeEl = document.querySelector<HTMLElement>('[data-pg-code]');
+
+  if (configEl && stage && codeEl) {
+    const config = JSON.parse(configEl.textContent || '{}') as {
+      tag: string;
+      react: string | null;
+      hasDefaultSlot: boolean;
+      enums: { name: string; field: string; options: string[] }[];
+      flags: { name: string; field: string }[];
+    };
+
+    const fieldOf = new Map<string, string>([
+      ...config.enums.map((e) => [e.name, e.field] as [string, string]),
+      ...config.flags.map((f) => [f.name, f.field] as [string, string]),
+    ]);
+
+    const state = {
+      enums: Object.fromEntries(config.enums.map((e) => [e.name, ''])) as Record<string, string>,
+      flags: Object.fromEntries(config.flags.map((f) => [f.name, false])) as Record<string, boolean>,
+      text: (document.querySelector<HTMLInputElement>('[data-pg-text]')?.value ?? '').trim(),
+      tab: 'html' as 'html' | 'react',
+    };
+
+    const attrPairs = () => {
+      const pairs: [string, string | true][] = [];
+      for (const [name, value] of Object.entries(state.enums)) if (value) pairs.push([name, value]);
+      for (const [name, on] of Object.entries(state.flags)) if (on) pairs.push([name, true]);
+      return pairs;
+    };
+
+    const snippet = (open: string, close: string) => {
+      const attrs = attrPairs()
+        .map(([name, value]) => (value === true ? ` ${name}` : ` ${name}="${value}"`))
+        .join('');
+      const body = config.hasDefaultSlot ? state.text : '';
+      return `<${open}${attrs}>${body}</${close}>`;
+    };
+
+    const render = () => {
+      // Live element: drive it through PROPERTIES (see the config comment in
+      // this component's frontmatter for why attributes are the wrong lever).
+      const target = stage as unknown as Record<string, unknown>;
+      for (const [name, value] of Object.entries(state.enums)) {
+        target[fieldOf.get(name) ?? name] = value || undefined;
+      }
+      for (const [name, on] of Object.entries(state.flags)) {
+        target[fieldOf.get(name) ?? name] = on;
+      }
+      if (config.hasDefaultSlot) stage.textContent = state.text;
+
+      codeEl.textContent =
+        state.tab === 'react' && config.react
+          ? snippet(config.react, config.react)
+          : snippet(config.tag, config.tag);
+    };
+
+    for (const button of document.querySelectorAll<HTMLButtonElement>('[data-enum]')) {
+      button.addEventListener('click', () => {
+        const name = button.dataset.enum!;
+        state.enums[name] = button.dataset.value ?? '';
+        for (const sibling of document.querySelectorAll<HTMLButtonElement>(
+          `[data-enum="${name}"]`
+        )) {
+          sibling.setAttribute('aria-pressed', String(sibling === button));
+        }
+        render();
+      });
+    }
+
+    for (const button of document.querySelectorAll<HTMLButtonElement>('[data-flag]')) {
+      button.addEventListener('click', () => {
+        const name = button.dataset.flag!;
+        state.flags[name] = !state.flags[name];
+        button.setAttribute('aria-pressed', String(state.flags[name]));
+        render();
+      });
+    }
+
+    document.querySelector<HTMLInputElement>('[data-pg-text]')?.addEventListener('input', (e) => {
+      state.text = (e.target as HTMLInputElement).value;
+      render();
+    });
+
+    for (const tab of document.querySelectorAll<HTMLButtonElement>('[data-tab]')) {
+      tab.addEventListener('click', () => {
+        state.tab = tab.dataset.tab as 'html' | 'react';
+        for (const sibling of document.querySelectorAll<HTMLButtonElement>('[data-tab]')) {
+          sibling.setAttribute('aria-selected', String(sibling === tab));
+        }
+        render();
+      });
+    }
+
+    const copy = document.querySelector<HTMLButtonElement>('[data-pg-copy]');
+    copy?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(codeEl.textContent ?? '');
+        copy.textContent = 'COPIED ✓';
+      } catch {
+        copy.textContent = 'COPY FAILED';
+      }
+      setTimeout(() => {
+        copy.textContent = 'COPY';
+      }, 1200);
+    });
+
+    render();
+    // Re-run once the element class lands so the first paint reflects the
+    // controls even if the registry bundle resolves after this module.
+    customElements.whenDefined(config.tag).then(render);
+  }
+</script>

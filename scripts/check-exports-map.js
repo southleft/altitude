@@ -147,13 +147,61 @@ for (const { rel, dir, pkg } of pkgMeta) {
 
 // --- 3: every specifier the workspace apps use actually resolves -------------
 console.log('\nworkspace app specifiers');
-const specRe = /(al-web-components|al-react)\/[A-Za-z0-9_./-]+/g;
+/**
+ * A PACKAGE specifier, not any text that happens to contain the package name.
+ *
+ * The `(?<![\w./-])` lookbehind is what makes this a specifier check rather
+ * than a substring search. Without it the regex matched the TAIL of relative
+ * filesystem paths — `../../../../libs/al-web-components/.storybook/ai-theme/engine`
+ * in apps/southleft reported as five UNREACHABLE package imports, when nothing
+ * there resolves through the exports map at all. It also matched package names
+ * inside error-message strings and inside template literals building display
+ * snippets, where the `${...}` truncated to nonsense like `components//.js`.
+ *
+ * Those relative deep imports ARE a real coupling problem — an app reaching
+ * into the library's .storybook internals — but that is a different defect
+ * with a different fix (export the OKLCH engine properly; see the token-debt
+ * spec), and reporting it here as an exports-map failure sent readers to the
+ * wrong file. Combined with comment stripping below, this took the gate from
+ * 14 reported problems to 0 without silencing anything real.
+ */
+const specRe = /(?<![\w./-])(al-web-components|al-react)\/[A-Za-z0-9_./-]+/g;
 const seen = new Map(); // specifier -> first file that used it
+
+/**
+ * Strip comments before scanning for specifiers.
+ *
+ * Without this the regex matches package paths written in PROSE. Three of the
+ * new docs app's JSDoc blocks explain which files the generator reads —
+ * "`libs/al-react/src/index.ts` — which components have a React wrapper" — and
+ * every one was reported as an UNREACHABLE import that no code ever performs.
+ * A gate that fails on a sentence in a comment trains people to ignore it.
+ *
+ * Deliberately crude: block comments, then line comments anchored to
+ * start-of-line or whitespace so a `//` inside a `https://` URL survives. This
+ * runs over .ts/.js/.astro/.mjs source, not arbitrary text, and the cost of a
+ * false NEGATIVE here is only a missed specifier — which the export-entry
+ * checks above would still catch.
+ */
+const stripComments = (src) =>
+  src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|\s)\/\/[^\n]*/g, '$1');
+
+/**
+ * A specifier built from a template literal — `al-web-components/components/${slug}`
+ * — reaches this scanner with the `${...}` already gone, leaving a path that
+ * ends at a separator. It cannot be resolved without knowing the runtime value,
+ * and reporting the truncated stub as UNREACHABLE is a false alarm: the
+ * wildcard entry it targets (`"./components/*"`) is present and correct.
+ * Counted and reported rather than silently dropped.
+ */
+const isInterpolated = (spec) => spec.endsWith('/') || spec.includes('//');
+let interpolatedSkipped = 0;
 
 for (const file of walkApps(APPS)) {
   let src;
   try { src = readFileSync(file, 'utf8'); } catch { continue; }
-  for (const m of src.matchAll(specRe)) {
+  for (const m of stripComments(src).matchAll(specRe)) {
+    if (isInterpolated(m[0])) { interpolatedSkipped++; continue; }
     if (!seen.has(m[0])) seen.set(m[0], relative(ROOT, file).split(sep).join('/'));
   }
 }
@@ -178,6 +226,9 @@ for (const [spec, usedIn] of seen) {
   }
 }
 console.log(`  ${checked} distinct specifier${checked === 1 ? '' : 's'} checked`);
+if (interpolatedSkipped > 0) {
+  console.log(`  ${interpolatedSkipped} template-literal specifier(s) skipped (runtime-interpolated)`);
+}
 
 console.log('');
 if (problems) {

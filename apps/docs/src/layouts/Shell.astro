@@ -1,0 +1,107 @@
+---
+/**
+ * The app shell from the design canvas: a fixed 264px sidebar beside a
+ * single scrolling `<main>`. Every page in this site renders inside it.
+ *
+ * Theming is `data-theme` on `<html>`, driven by the sidebar's pill switch —
+ * the same mechanism the canvas uses (`document.documentElement.dataset.theme`
+ * in its `toggleTheme`). It is deliberately independent of `<al-theme>`:
+ * `data-theme` styles the DOCS CHROME, while `<al-theme>` (mounted only
+ * around live component previews) styles the COMPONENTS. Mixing the two would
+ * make the docs' ink-on-paper design a hostage of whichever brand a preview
+ * happens to select.
+ */
+import 'al-web-components/css/main.css';
+import '../styles/docs.css';
+import Sidebar from '../components/Sidebar.astro';
+import LiveRuntime from '../components/LiveRuntime.astro';
+import { SITE, base } from '../lib/site.mjs';
+
+interface Props {
+  title: string;
+  description?: string;
+  active?: 'overview' | 'foundations' | 'components';
+  activeSlug?: string;
+  /** Load the component runtime (only detail pages render live elements). */
+  liveComponents?: boolean;
+}
+
+const {
+  title,
+  description = SITE.description,
+  active,
+  activeSlug,
+  liveComponents = false,
+} = Astro.props;
+
+const pageTitle = title === SITE.name ? SITE.title : `${title} · ${SITE.name}`;
+const canonical = new URL(Astro.url.pathname, SITE.url).toString();
+---
+
+<!doctype html>
+<html lang="en" data-docs-base={base}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
+
+    <!-- Restore the saved theme before first paint. -->
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('al-docs-theme');
+          if (stored === 'dark' || stored === 'light') {
+            document.documentElement.dataset.theme = stored;
+          }
+        } catch (e) {
+          /* localStorage unavailable — light (the :root default) stands. */
+        }
+      })();
+    </script>
+
+    {
+      /* Deep component imports self-register only when this flag is set at
+         module-eval time (.altitude/REGISTRATION.md — load-bearing, not a boot
+         convenience). Inline, in <head>, before the runtime module. */
+      liveComponents && <script is:inline>window.alAutoRegistry = true;</script>
+    }
+  </head>
+  <body>
+    <div class="shell">
+      <Sidebar active={active} activeSlug={activeSlug} />
+      <main class="shell__main" id="main">
+        <slot />
+      </main>
+    </div>
+
+    <script>
+      // Theme switch. Reflects into `data-theme` on <html> and persists.
+      const label = document.querySelector<HTMLElement>('[data-theme-label]');
+      const paint = () => {
+        if (label) {
+          label.textContent = document.documentElement.dataset.theme === 'dark' ? 'DARK' : 'LIGHT';
+        }
+      };
+      document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+        const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = next;
+        try {
+          localStorage.setItem('al-docs-theme', next);
+        } catch (e) {
+          /* ignore */
+        }
+        paint();
+      });
+      paint();
+    </script>
+
+    {liveComponents && <LiveRuntime />}
+  </body>
+</html>

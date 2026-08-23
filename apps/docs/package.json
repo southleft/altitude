@@ -1,0 +1,20 @@
+{
+  "name": "al-app-docs",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "The Altitude documentation site. Every component-shaped surface — sidebar taxonomy, counts, index, props tables, code snippets — is generated at build time from libs/al-web-components/custom-elements.json (see src/lib/registry.mjs). Design language is fixed by the approved canvas at .mm/specs/2026-08-22-altitude-docs-site/visuals/altitude-ds-site.dc.html.",
+  "scripts": {
+    "start": "astro dev --port 6120",
+    "build": "astro build",
+    "preview": "astro preview --port 6121",
+    "check:coverage": "node scripts/check-docs-coverage.mjs"
+  },
+  "dependencies": {
+    "al-web-components": "workspace:*",
+    "@astrojs/sitemap": "^3.7.3"
+  },
+  "devDependencies": {
+    "astro": "^7.0.3"
+  }
+}

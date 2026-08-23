@@ -1,0 +1,296 @@
+---
+/**
+ * Foundations — the canvas's `data-screen-label="Foundations"` screen.
+ *
+ * The canvas typed every swatch hex, every spacing value and every type row
+ * inline. All of them turned out to be token values, so this page reads them
+ * from `al-web-components/tokens.json` instead (see lib/tokens.mjs). The
+ * ramps, their families and their step names are discovered, not listed —
+ * retuning a ramp in the DTCG sources changes this page with no edit here.
+ */
+import Shell from '../layouts/Shell.astro';
+import {
+  TOKEN_COUNT,
+  colorRamps,
+  spacingScale,
+  radiusScale,
+  shadowScale,
+  typeScale,
+} from '../lib/tokens.mjs';
+
+const ramps = colorRamps();
+const spacing = spacingScale();
+const radii = radiusScale();
+const shadows = shadowScale();
+const type = typeScale();
+
+/** The widest spacing step sets the bar scale, so the chart is self-sizing. */
+const maxSpace = Math.max(...spacing.map((s) => s.px || 0), 1);
+---
+
+<Shell
+  title="Foundations"
+  description={`The Altitude token layer — ${TOKEN_COUNT} tokens across color, type, space, radius and elevation.`}
+  active="foundations"
+>
+  <div class="page">
+    <div class="micro">INDEX / 01</div>
+    <h1 class="t-page-title">Foundations</h1>
+    <p class="t-body-md foundations-lede">
+      Tier-1 primitives, resolved through tier-2 theme aliases. Every value below is read at build
+      time from the published token layer — all {TOKEN_COUNT} of them.
+    </p>
+
+    <div class="section-rule">
+      <span>COLOR — {ramps.length} RAMPS</span>
+      <span data-copy-note>CLICK A SWATCH TO COPY ITS HEX</span>
+    </div>
+    {
+      ramps.map((ramp) => (
+        <div class="ramp">
+          <div class="ramp__head">
+            <span class="t-heading-sm" style="font-size:14px;line-height:20px">
+              {ramp.label}
+            </span>
+            <span class="mono" style="color:var(--fg-weak)">
+              {ramp.prefix}
+            </span>
+          </div>
+          <div class="ramp__steps">
+            {ramp.steps.map((step) => (
+              <button class="ramp__step" type="button" data-hex={step.value}>
+                <span class="ramp__chip" style={`background:${step.value}`} />
+                <span class="ramp__name">{step.name}</span>
+                <span class="ramp__value">{step.value}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+
+    <div class="section-rule">
+      <span>TYPOGRAPHY — {type.length} PRESETS</span>
+      <span>IBM PLEX SANS</span>
+    </div>
+    <div class="spec-table">
+      {
+        type.map((preset) => (
+          <div class="type-row">
+            <span class="spec-table__name">{preset.name}</span>
+            <span class="spec-table__type">{preset.value.replace(', sans-serif', '')}</span>
+            <span style={`font:${preset.value}`}>Design at altitude</span>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="section-rule">
+      <span>SPACING — {spacing.length} STEPS</span>
+      <span>8PX BASE</span>
+    </div>
+    <div class="scale-list">
+      {
+        spacing.map((step) => (
+          <div class="scale-row">
+            <span class="spec-table__type">{step.name}</span>
+            <span class="spec-table__default">{step.value}</span>
+            <span class="scale-bar" style={`width:${Math.max((step.px / maxSpace) * 100, 1)}%`} />
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="foundations-split">
+      <div>
+        <div class="section-rule"><span>RADIUS</span><span>{radii.length}</span></div>
+        <div class="radius-grid">
+          {
+            radii.map((radius) => (
+              <div class="radius-cell">
+                <div class="radius-swatch" style={`border-radius:${radius.value}`} />
+                <div class="micro">
+                  {radius.name} · {radius.value}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+      <div>
+        <div class="section-rule"><span>ELEVATION</span><span>{shadows.length}</span></div>
+        <div class="shadow-grid">
+          {
+            shadows.map((shadow) => (
+              <div>
+                <div class="shadow-swatch" style={`box-shadow:${shadow.value}`} />
+                <div class="micro">{shadow.name}</div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</Shell>
+
+<style>
+  .foundations-lede {
+    margin: 0 0 44px;
+    max-width: 560px;
+  }
+
+  .ramp {
+    margin-bottom: 28px;
+  }
+
+  .ramp__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+
+  .ramp__steps {
+    display: flex;
+    gap: 2px;
+  }
+
+  .ramp__step {
+    flex: 1;
+    min-width: 0;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    text-align: left;
+  }
+
+  .ramp__chip {
+    display: block;
+    height: 60px;
+    border: 1px solid var(--line-weak);
+  }
+
+  .ramp__name {
+    display: block;
+    font: 500 10px/1 var(--mono);
+    margin-top: 6px;
+    color: var(--fg);
+  }
+
+  .ramp__value {
+    display: block;
+    font: 400 9px/1 var(--mono);
+    color: var(--fg-weak);
+    margin-top: 3px;
+  }
+
+  .type-row {
+    display: grid;
+    grid-template-columns: 150px 220px minmax(0, 1fr);
+    gap: 16px;
+    align-items: baseline;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line-weak);
+    overflow: hidden;
+  }
+
+  .scale-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-bottom: 52px;
+  }
+
+  .scale-row {
+    display: grid;
+    grid-template-columns: 110px 60px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+  }
+
+  .scale-bar {
+    height: 14px;
+    background: var(--blue);
+    display: block;
+  }
+
+  .foundations-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 64px;
+  }
+
+  .radius-grid {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  .radius-cell {
+    text-align: center;
+  }
+
+  .radius-swatch {
+    width: 52px;
+    height: 52px;
+    border: 1.5px solid var(--fg);
+  }
+
+  .radius-cell .micro {
+    margin-top: 8px;
+  }
+
+  .shadow-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    background: var(--bg2);
+    padding: 24px;
+  }
+
+  .shadow-swatch {
+    height: 56px;
+    background: var(--bg);
+  }
+
+  .shadow-grid .micro {
+    margin-top: 8px;
+  }
+
+  @media (max-width: 1000px) {
+    .foundations-split {
+      grid-template-columns: 1fr;
+    }
+
+    .type-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  // Click-to-copy, exactly as the canvas's `copyHex` behaves — including the
+  // "COPIED <hex>" readout in the section rule.
+  const note = document.querySelector<HTMLElement>('[data-copy-note]');
+  const idle = note?.textContent ?? '';
+  let timer: ReturnType<typeof setTimeout> | undefined;
+
+  for (const swatch of document.querySelectorAll<HTMLButtonElement>('[data-hex]')) {
+    swatch.addEventListener('click', async () => {
+      const hex = swatch.dataset.hex ?? '';
+      try {
+        await navigator.clipboard.writeText(hex);
+        if (note) note.textContent = `COPIED ${hex.toUpperCase()}`;
+      } catch {
+        if (note) note.textContent = `COPY BLOCKED — ${hex.toUpperCase()}`;
+      }
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (note) note.textContent = idle;
+      }, 1500);
+    });
+  }
+</script>

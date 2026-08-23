@@ -1,0 +1,915 @@
+/*
+ * Altitude docs — design language.
+ *
+ * Ported verbatim from the approved Claude Design canvas at
+ * .mm/specs/2026-08-22-altitude-docs-site/visuals/altitude-ds-site.dc.html.
+ * Every custom property below appears in that file's `<helmet>` block with
+ * the same value; the type ramp, the hairline rules, the mono uppercase
+ * micro-labels and the 264px sidebar are its measurements, not new ones.
+ *
+ * Two font families, matching the canvas: IBM Plex Sans (fetched already by
+ * al-web-components/css/main.css, styles/main.scss:11) and IBM Plex Mono
+ * (self-hosted in public/fonts/, same files and provenance as
+ * apps/southleft/public/fonts/README.md).
+ *
+ * Dark mode is `[data-theme]` on <html>, exactly as the canvas drives it.
+ */
+
+/* ------------------------------------------------------------- typefaces */
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/docs/fonts/ibm-plex-mono-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/docs/fonts/ibm-plex-mono-latin-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------- tokens */
+
+:root {
+  --bg: #ffffff;
+  --bg2: #f8f8f6;
+  --fg: #101010;
+  --fg-weak: #616161;
+  --line: #101010;
+  --line-weak: #e2e0da;
+  --blue: #4375ff;
+  --blue-hover: #6b93ff;
+  --blue-ink: #000b29;
+  --blue-soft: #dbe5ff;
+  --al-bg-default: #e9e7e2;
+  --al-bg-strong: #f2f1ee;
+  --al-bg-stronger: #f4f3f1;
+  --al-content: #101010;
+  --al-content-weak: #3a3a3a;
+  --al-border: #b0b0b0;
+  --al-border-weak: #d9d9d9;
+  --al-shadow:
+    0 8px 8px 0 rgb(217 217 217 / 20%), 0 4px 4px 0 rgb(217 217 217 / 20%),
+    0 2px 2px 0 rgb(217 217 217 / 20%);
+
+  --sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --sidebar-w: 264px;
+  --pad-x: 64px;
+  --ease: cubic-bezier(0.15, 0.99, 0.18, 0.99);
+}
+
+[data-theme='dark'] {
+  --bg: #101010;
+  --bg2: #181818;
+  --fg: #f8f8f6;
+  --fg-weak: #b0b0b0;
+  --line: #f8f8f6;
+  --line-weak: #2e2e2e;
+  --blue-soft: #0c3197;
+  --al-bg-default: #181818;
+  --al-bg-strong: #2e2e2e;
+  --al-bg-stronger: #3a3a3a;
+  --al-content: #f8f8f6;
+  --al-content-weak: #bdb39e;
+  --al-border: #8a8a8a;
+  --al-border-weak: #616161;
+  --al-shadow: 0 8px 8px rgb(0 0 0 / 60%), 0 4px 4px rgb(0 0 0 / 60%), 0 2px 2px rgb(0 0 0 / 60%);
+}
+
+/* ------------------------------------------------------------------ base */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/*
+ * `al-web-components/css/main.css` is loaded for the token layer the live
+ * component previews need, and its `styles/core/base.scss` sets
+ * `body { display:flex; color; background; font }` UNLAYERED (core/layers.scss
+ * only declares the layer ORDER; base.scss is not wrapped in one). Equal
+ * specificity means source order would decide, so the docs chrome re-asserts
+ * its own page frame at `html body` — one notch higher — rather than relying
+ * on which stylesheet the bundler happens to emit second.
+ */
+html body {
+  display: block;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 16px/24px var(--sans);
+}
+
+a {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--fg);
+}
+
+::selection {
+  background: var(--blue);
+  color: #ffffff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+input:focus {
+  outline: 2px solid var(--blue);
+  outline-offset: -2px;
+}
+
+/* --------------------------------------------------------------- type ramp
+ * Named exactly as the Foundations artboard names them, so the token page and
+ * the pages that use the ramp cannot drift apart. */
+
+.t-display-lg {
+  font: 700 clamp(44px, 6.2vw, 74px) / 0.98 var(--sans);
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.t-page-title {
+  font: 700 46px/1.05 var(--sans);
+  letter-spacing: -0.03em;
+  margin: 14px 0 8px;
+}
+
+.t-display-md {
+  font: 700 34px/1.15 var(--sans);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.t-heading-sm {
+  font: 600 18px/24px var(--sans);
+  margin: 0;
+}
+
+.t-body-lg {
+  font: 400 17px/28px var(--sans);
+  color: var(--fg-weak);
+  text-wrap: pretty;
+}
+
+.t-body-md {
+  font: 400 16px/26px var(--sans);
+  color: var(--fg-weak);
+}
+
+.t-body-sm {
+  font: 400 13px/20px var(--sans);
+  color: var(--fg-weak);
+}
+
+/* The mono uppercase micro-label — the canvas's most-repeated element. */
+.micro {
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--fg-weak);
+  text-transform: uppercase;
+}
+
+.micro--blue {
+  color: var(--blue);
+}
+
+.micro--lg {
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.2em;
+  color: var(--blue);
+}
+
+.mono {
+  font: 400 11px/18px var(--mono);
+}
+
+/* Section rule: hairline + mono label, the canvas's section divider. */
+.section-rule {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 20px;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+  margin-bottom: 16px;
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.section-rule > :last-child {
+  color: var(--fg-weak);
+}
+
+/* Import paths, tag names and token keys are case-significant — exempt them
+   from the section rule's uppercasing. */
+.section-rule__raw {
+  text-transform: none;
+}
+
+/* ----------------------------------------------------------------- shell */
+
+.shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.shell__main {
+  flex: 1;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.page {
+  padding: 48px var(--pad-x);
+  max-width: 1200px;
+}
+
+/* --------------------------------------------------------------- sidebar */
+
+.sidebar {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--line);
+}
+
+.sidebar__brand {
+  display: block;
+  padding: 22px 20px;
+  border-bottom: 1px solid var(--line);
+  color: inherit;
+}
+
+.sidebar__brand:hover {
+  color: inherit;
+}
+
+.sidebar__brand svg {
+  width: 158px;
+  display: block;
+}
+
+.sidebar__eyebrow {
+  font: 500 9px/1 var(--mono);
+  letter-spacing: 0.22em;
+  color: var(--fg-weak);
+  margin-top: 10px;
+}
+
+.sidebar__search {
+  padding: 14px 16px 0;
+}
+
+.sidebar__search-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  padding: 9px 10px;
+}
+
+.sidebar__search-field svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+
+.sidebar__search-field input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font: 400 11px/1 var(--mono);
+  letter-spacing: 0.04em;
+  padding: 0;
+}
+
+.sidebar__nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 16px 20px;
+}
+
+.sidebar__group {
+  display: flex;
+  justify-content: space-between;
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--fg-weak);
+  margin: 20px 0 6px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-weak);
+}
+
+.sidebar__group--first {
+  margin: 16px 0 6px;
+  padding-top: 0;
+  border-top: none;
+}
+
+.sidebar__index-link {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  padding: 6px 8px;
+  font: 500 14px/20px var(--sans);
+  color: var(--fg);
+}
+
+.sidebar__index-link:hover {
+  background: var(--bg2);
+  color: var(--fg);
+}
+
+.sidebar__mark {
+  font: 500 10px/1 var(--mono);
+  color: var(--blue);
+}
+
+.sidebar__link {
+  display: block;
+  padding: 4px 8px;
+  font: 400 13px/19px var(--sans);
+  color: var(--fg-weak);
+}
+
+.sidebar__link:hover {
+  color: var(--fg);
+  background: var(--bg2);
+}
+
+.sidebar__link--phase {
+  display: flex;
+  justify-content: space-between;
+  font: 400 11px/19px var(--mono);
+  letter-spacing: 0.06em;
+}
+
+.sidebar__link[aria-current='page'] {
+  color: var(--fg);
+  background: var(--bg2);
+}
+
+.sidebar__foot {
+  border-top: 1px solid var(--line);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar__foot-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar__version {
+  font: 400 9px/14px var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--fg-weak);
+}
+
+/* Theme switch — the canvas's pill toggle. */
+.switch {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  border-radius: 22px;
+  border: none;
+  padding: 0;
+  background: var(--al-bg-strong);
+  cursor: pointer;
+  transition: background 0.2s var(--ease);
+}
+
+.switch::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 18px;
+  background: var(--al-content);
+  top: 2px;
+  left: 2px;
+  transition: left 0.2s var(--ease);
+  box-shadow: 0 2px 2px 0 rgb(0 0 0 / 15%);
+}
+
+[data-theme='dark'] .switch {
+  background: var(--blue);
+}
+
+[data-theme='dark'] .switch::after {
+  left: 20px;
+}
+
+/* ------------------------------------------------------------- blueprint */
+
+.blueprint {
+  position: relative;
+  background-image:
+    linear-gradient(var(--line-weak) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line-weak) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+.blueprint--sm {
+  background-size: 40px 40px;
+}
+
+.blueprint__tick {
+  position: absolute;
+  font: 400 14px/1 var(--mono);
+  color: var(--blue);
+}
+
+.blueprint__tick--tl {
+  top: 6px;
+  left: 10px;
+}
+
+.blueprint__tick--tr {
+  top: 6px;
+  right: 10px;
+}
+
+.blueprint__tick--bl {
+  bottom: 6px;
+  left: 10px;
+}
+
+.blueprint__tick--br {
+  bottom: 6px;
+  right: 10px;
+}
+
+/* --------------------------------------------------------------- buttons */
+
+.btn {
+  font: 600 16px/24px var(--sans);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background: var(--blue);
+  color: var(--blue-ink);
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+
+.btn:hover {
+  background: var(--blue-hover);
+  color: var(--blue-ink);
+}
+
+.btn--outline {
+  border: 1px solid var(--al-border);
+  background: transparent;
+  color: var(--al-content);
+}
+
+.btn--outline:hover {
+  border-color: var(--al-border-weak);
+  background: transparent;
+  color: var(--al-content-weak);
+}
+
+/* ----------------------------------------------------------------- cards */
+
+.hard-card {
+  border: 1px solid var(--line);
+  padding: 24px;
+  background: var(--bg);
+  color: inherit;
+  display: block;
+  transition: all 0.15s ease;
+}
+
+.hard-card:hover {
+  box-shadow: 6px 6px 0 var(--blue);
+  transform: translate(-2px, -2px);
+  color: inherit;
+}
+
+.tile {
+  border: 1px solid var(--line-weak);
+  padding: 14px 12px;
+  transition: border-color 0.15s;
+  color: inherit;
+  display: block;
+}
+
+.tile:hover {
+  border-color: var(--fg);
+  color: inherit;
+}
+
+.tile__kicker {
+  font: 400 9px/1 var(--mono);
+  color: var(--blue);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.tile__name {
+  font: 500 14px/20px var(--sans);
+}
+
+.tile__meta {
+  font: 400 9px/14px var(--mono);
+  color: var(--fg-weak);
+  margin-top: 5px;
+}
+
+.grid-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: 10px;
+  margin-bottom: 44px;
+}
+
+/* --------------------------------------------------------------- top bar */
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 40px;
+  border-bottom: 1px solid var(--line);
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--fg-weak);
+}
+
+.statbar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--line);
+}
+
+.statbar__cell {
+  padding: 28px 40px;
+}
+
+.statbar__cell + .statbar__cell {
+  border-left: 1px solid var(--line-weak);
+}
+
+.statbar__value {
+  font: 600 40px/1 var(--sans);
+  letter-spacing: -0.02em;
+}
+
+/* ------------------------------------------------------------------ code */
+
+.code {
+  margin: 0;
+  font: 400 13px/22px var(--mono);
+  background: #0b0b0b;
+  color: #e9e7e2;
+  padding: 20px 22px;
+  overflow: auto;
+  white-space: pre;
+}
+
+.code--inline {
+  padding: 14px 16px;
+  font-size: 12.5px;
+  line-height: 20px;
+}
+
+.chip-tag {
+  font: 400 11px/1 var(--mono);
+  border: 1px solid var(--line);
+  padding: 6px 9px;
+  white-space: nowrap;
+}
+
+.chip-tag--weak {
+  border-color: var(--line-weak);
+  color: var(--fg-weak);
+}
+
+/* -------------------------------------------------------------- playground */
+
+.pg {
+  border: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 1fr 280px;
+}
+
+.pg__stage {
+  position: relative;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 40px 40px;
+}
+
+.pg__stage-label {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  font: 400 9px/1 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--fg-weak);
+}
+
+.pg__controls {
+  border-left: 1px solid var(--line);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  max-height: 520px;
+}
+
+.pg__control-label {
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--fg-weak);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.pg__opts {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.pg__opt {
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.06em;
+  padding: 8px 9px;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  margin: -1px 0 0 -1px;
+  background: transparent;
+  color: var(--fg);
+  text-transform: uppercase;
+}
+
+.pg__opt[aria-pressed='true'] {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.pg__text {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--fg);
+  font: 400 12px/1 var(--mono);
+  padding: 9px 10px;
+}
+
+.pg__flags {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.pg__flag {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  font: 400 11px/1 var(--mono);
+  letter-spacing: 0.08em;
+  background: none;
+  border: none;
+  color: var(--fg);
+  padding: 0;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.pg__box {
+  width: 13px;
+  height: 13px;
+  border: 1.5px solid var(--fg);
+  background: transparent;
+  display: inline-block;
+  flex: none;
+}
+
+.pg__flag[aria-pressed='true'] .pg__box {
+  background: var(--blue);
+}
+
+.pg__code {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--line);
+}
+
+.pg__tabs {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--line);
+}
+
+.pg__tab {
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.14em;
+  border: none;
+  border-right: 1px solid var(--line);
+  background: transparent;
+  color: var(--fg);
+  padding: 11px 18px;
+  cursor: pointer;
+}
+
+.pg__tab[aria-selected='true'] {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.pg__copy {
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.12em;
+  border: none;
+  border-left: 1px solid var(--line);
+  background: transparent;
+  color: var(--blue);
+  padding: 0 18px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+/* ------------------------------------------------------------ data tables */
+
+.spec-table {
+  margin-bottom: 44px;
+}
+
+.spec-table__head,
+.spec-table__row {
+  display: grid;
+  gap: 16px;
+  align-items: baseline;
+}
+
+.spec-table--props .spec-table__head,
+.spec-table--props .spec-table__row {
+  grid-template-columns: 170px minmax(0, 1fr) 130px;
+}
+
+.spec-table--pair .spec-table__head,
+.spec-table--pair .spec-table__row {
+  grid-template-columns: 170px minmax(0, 1fr);
+}
+
+.spec-table__head {
+  padding: 12px 0 8px;
+  font: 500 9px/1 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--fg-weak);
+  text-transform: uppercase;
+}
+
+.spec-table__row {
+  padding: 11px 0;
+  border-top: 1px solid var(--line-weak);
+}
+
+.spec-table__name {
+  font: 500 12px/18px var(--mono);
+  color: var(--blue);
+  word-break: break-word;
+}
+
+.spec-table__type {
+  font: 400 11px/18px var(--mono);
+  color: var(--fg-weak);
+  word-break: break-word;
+}
+
+.spec-table__default {
+  font: 400 11px/18px var(--mono);
+  word-break: break-word;
+}
+
+.spec-table__desc {
+  display: block;
+  font: 400 12px/18px var(--sans);
+  color: var(--fg-weak);
+  margin-top: 6px;
+}
+
+.empty-note {
+  font: 400 12px/20px var(--mono);
+  color: var(--fg-weak);
+  padding: 14px 0 32px;
+  border-top: 1px solid var(--line-weak);
+}
+
+/* ----------------------------------------------------------------- badges */
+
+.status {
+  font: 500 9px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid var(--al-border);
+  color: var(--fg-weak);
+  padding: 5px 7px;
+}
+
+.status--beta {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.status--deprecated {
+  border-color: #f05735;
+  color: #f05735;
+}
+
+/* ------------------------------------------------------------------ misc */
+
+.site-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 40px;
+  font: 400 10px/1 var(--mono);
+  letter-spacing: 0.12em;
+  color: var(--fg-weak);
+}
+
+.stack-56 {
+  padding: 56px var(--pad-x);
+  border-bottom: 1px solid var(--line);
+}
+
+@media (max-width: 900px) {
+  .shell {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-width: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .page {
+    padding: 32px 20px;
+  }
+
+  .pg {
+    grid-template-columns: 1fr;
+  }
+
+  .pg__controls {
+    border-left: none;
+    border-top: 1px solid var(--line);
+    max-height: none;
+  }
+
+  .statbar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
