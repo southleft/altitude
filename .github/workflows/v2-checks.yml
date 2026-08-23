@@ -197,7 +197,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: playwright-report/
+          # test-results/ carries the -actual/-diff PNGs — the artifact this
+          # step exists for (playwright-report/ alone was empty when no HTML
+          # reporter is configured, so failures uploaded nothing).
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: warn
 
   baselines-tokens:
     name: T0.1 - tokens snapshot equal
@@ -632,8 +638,6 @@ jobs:
           cache: 'pnpm'
       - name: Install
         run: pnpm install --frozen-lockfile --ignore-scripts
-      - name: DS project registry is coherent
-        run: pnpm run check:ds-projects
       - name: Southleft scope boundary
         run: pnpm run check:sl-scope
       # Warning-only until the 7 real al-header/al-footer supersession gaps it
@@ -664,6 +668,11 @@ jobs:
           }
       - name: Build tokens (brand distinctiveness reads built output)
         run: pnpm --filter @southleft/al-web-components build:tokens
+      # After build:tokens on purpose: R9 verifies each project's brand token
+      # set exists under styles/tokens-dtcg/, which is GENERATED (gitignored)
+      # and absent on a fresh clone until build:tokens produces it.
+      - name: DS project registry is coherent
+        run: pnpm run check:ds-projects
       - name: Brands are distinguishable
         run: pnpm run test:brands
       - name: No phantom tokens (read via var(), never emitted)
