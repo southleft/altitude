@@ -178,7 +178,7 @@ palette as literal (already-resolved) inline values directly onto every live
 applies here: an inline literal value inherits correctly as-is, and an inline
 declaration on `<al-theme>` itself always outranks its own `:host` rules —
 consistent with the documented "AI theme stacks on top of the preset"
-behavior (`.storybook/docs/THEMING.mdx`).
+behavior (`.storybook/with-preset.ts` and `.storybook/manager.js`).
 
 `role.control` and `role.surface` both take the personality's `lg` radius
 stop (matching the fallback every wired component reads); `role.duration.fast`

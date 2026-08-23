@@ -1,8 +1,9 @@
 import type { StoryObj } from '@storybook/react-vite';
 import { ALTestimonial, ALAvatar } from '../..';
+import { placeholderImages } from '../../../../al-web-components/.storybook/fixtures';
 
 export default {
-  title: 'Organisms/Testimonial',
+  title: 'Molecules/Testimonial',
   component: ALTestimonial,
   parameters: {
     status: { type: 'beta' }
@@ -23,7 +24,7 @@ export const WithAvatar: StoryObj<typeof ALTestimonial> = {
     <ALTestimonial {...args}>
       {args.children}
       <ALAvatar slot="avatar">
-        <img src="https://i.pravatar.cc/80" alt="Jane Doe" />
+        <img src={placeholderImages.avatar} alt="Jane Doe" />
       </ALAvatar>
     </ALTestimonial>
   )

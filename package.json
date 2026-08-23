@@ -32,9 +32,18 @@
     "build:all": "pnpm run build && pnpm run build:storybook-web-components && pnpm run build:storybook-react && pnpm run build:app-angular && pnpm run build:app-react && pnpm run build:app-svelte && pnpm run build:app-astro && pnpm run build:app-southleft && pnpm run copy:components && pnpm run build:app-home",
     "copy:components": "cp -r ./libs/al-web-components/dist ./dist/al-web-components",
     "dev:index": "npx serve ./dist",
+    "parity:seed": "node scripts/figma-parity/seed-manifest.mjs",
+    "parity:synced": "node scripts/figma-parity/mark-synced.mjs",
+    "parity:refresh": "node scripts/figma-parity/refresh-figma-digests.mjs",
+    "parity:projects": "node scripts/figma-parity/list-projects.mjs",
+    "parity:seed:sl": "node scripts/figma-parity/seed-manifest.mjs --project southleft",
+    "parity:synced:sl": "node scripts/figma-parity/mark-synced.mjs --project southleft",
+    "parity:refresh:sl": "node scripts/figma-parity/refresh-figma-digests.mjs --project southleft",
     "gate:migration": "node scripts/check-migration-gate.js",
     "gate:baselines": "node scripts/check-baselines-gate.js",
     "gate:self-test": "bash scripts/__tests__/gate-self-test.sh",
+    "check:ds-projects": "node scripts/check-ds-projects.mjs",
+    "check:sl-scope": "node scripts/check-sl-scope.mjs",
     "check:exports": "node scripts/check-exports-map.js",
     "check:changesets": "node scripts/check-changesets-config.js",
     "check:jsdoc": "node scripts/check-jsdoc-dialect.js",
@@ -49,7 +58,8 @@
     "test:vrt": "playwright test",
     "release": "pnpm run build && changeset publish",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "check:publishable": "node scripts/check-publishable.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
@@ -66,5 +76,9 @@
     "sass": "^1.101",
     "typescript": "^5.7",
     "typescript-eslint": "^8"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.15.0"
   }
 }

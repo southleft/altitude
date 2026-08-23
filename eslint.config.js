@@ -35,6 +35,12 @@ export default [
       '**/*.min.js',
       '**/*.LICENSE.txt',
       'docs/**',
+      // Figma sync exports. Machine-generated payloads pulled out of the Figma
+      // plugin API (atoms-bundle.js alone is ~22k lines) plus the scratch
+      // `tmp/patch*.mjs` one-shot scripts the sync loop writes. Only
+      // `parity-manifest.json` from this tree is durable state; none of it is
+      // hand-authored source, and linting it produced 8 errors + 293 warnings.
+      '.altitude/figma-sync/**',
     ],
   },
   js.configs.recommended,

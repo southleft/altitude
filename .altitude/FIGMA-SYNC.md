@@ -1,5 +1,15 @@
 # Figma ↔ Altitude Token Sync (Agent-Mediated)
 
+> **Multi-project note (2026-08-22).** This document describes the sync loop for
+> the **Altitude** design system and its file. The repo now drives more than one
+> design system off the same component library — see
+> [`DS-PROJECTS.md`](./DS-PROJECTS.md) and `.altitude/ds-projects.json`. The
+> method below transfers unchanged; only the target file, manifest and ops dir
+> differ, and all three come from the project record rather than from constants.
+> Southleft's file (`Southleft V5`, `rdhBS9t89V42E7EfiPjmSa`) started EMPTY, so
+> for that project every component reads `missing-in-figma` and the generated
+> prompts are build-it instructions, not reconcile instructions.
+
 > How Altitude's token source (`libs/al-web-components/styles/tokens/`) stays in
 > agreement with the Figma variables library, using the
 > [Figma Console MCP](https://github.com/southleft/figma-console-mcp) server.
@@ -103,3 +113,56 @@ Automation. The queued verification work is a **stable per-token identity and
 a differ that proves the two sides still agree** after either moves — that is
 `scripts/check-figma-drift.mjs`'s job to grow into. More automation
 (scheduled sync, write pipelines) is explicitly not the goal.
+
+---
+
+## 2026-08-20 — verified corrections to this document
+
+Learned by actually doing the sync against the live file. Where this section disagrees
+with the text above, **this section is right**.
+
+**The canonical file is `Altitude Design System` — `y83n4o9LOGs74oAoguFcGS`.**
+`Altitude DS` (`NGpu9IJj2pRhNru1QTGmuF`) is an empty scratch file; an earlier pass built
+31 component sets into it by mistake. Confirm the file key before any write.
+
+**Rule 3 is wrong about icons.** `icon/*` and `theme/icon/*` DO exist as Figma variables
+and are legitimately synced. Only `z-index` and `breakpoint` are genuinely code-only,
+alongside `animation.duration.*` / `animation.timing.*` (no Figma variable type) and
+`border.radius.round` (a `%` Figma's unitless FLOAT cannot hold).
+
+**Opacity is a FRACTION on the Figma side — `opacity/40` = `0.4`.**
+
+> **Corrected 2026-08-22.** This paragraph previously said the opposite ("`opacity/40` = `40`,
+> not `0.4` … do not 'fix' it in either direction"). That was an observation of the file
+> BEFORE `scripts/figma-var-fixes.mjs` ran; that script then deliberately rewrote the four
+> opacity variables to fractions (`:39-43`, rationale: "Figma opacity fields are 0-1 … `40`
+> bound to a layer opacity is meaningless"). Verified against the live library snapshot
+> `.altitude/figma-sync/figma-live-vars.json`: `opacity/40` → `0.4000000059604645` (float32
+> of 0.4). Fractions are correct and match the code; the old wording would have had the next
+> agent "fix" a correct value back to broken.
+
+Both sides now store fractions, so opacity is a straight value comparison, not a unit
+convention. `Southleft V5` was seeded the same way
+(`scripts/figma-southleft/push-variables.mjs`, which keeps an `--opacity-percent` escape
+hatch should this ever be revisited).
+
+**Southleft is no longer dark-only** (this doc still says it is). `presets.ts:45-47` and
+`tokens-config.v5.mjs:486-489` both give 2 brands x 2 modes. Figma additionally carries
+`Northright` and `Odyssey` brand modes that the code does not have.
+
+**Token identity must be READ, not inferred.** Matching a computed colour back to the
+token table is guesswork — many tokens share a hex, and it cannot recover spacing or
+radius at all (`16` is `theme/space/@`, `space/16`, `font-size/16` and `line-height/16`).
+The component CSS names its token in the declaration; read that.
+
+### Where the tooling lives
+
+| | |
+|---|---|
+| Full method + traps | `.claude/skills/altitude-figma-sync/SKILL.md` (**gitignored** — see below) |
+| Scripts | `scripts/audit-figma-vs-code.mjs`, `scripts/figma-var-fixes.mjs`, `scripts/figma-atoms/` |
+| History and rationale | `.mm/specs/2026-08-20-altitude-figma-atoms/spec.md` |
+
+`.claude/` is gitignored (`.gitignore:71`), so the skill survives new sessions on this
+machine but NOT a fresh clone or `git clean -xdf`. The scripts and this document are
+tracked; if the skill goes missing, regenerate it from the spec.

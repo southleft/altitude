@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://southleft.com/altitude/al-footer.schema.json",
   "title": "ALFooter (al-footer)",
-  "description": "Component: al-footer\n\nA site-wide footer organism for marketing pages. Purely compositional —\nlink columns compose with the existing `<al-list>`/`<al-link>`/`<al-menu>`\nprimitives, and every spacing decision comes from the active theme's\n`--al-theme-space-*` ramp, so the footer is automatically density-aware\nwherever it renders inside a `<al-theme density=\"...\">` scope.",
+  "description": "Component: al-footer\n\nThe site footer landmark and its vertical rhythm. Footer owns the `<footer>`\nelement, its block padding and the gap between stacked rows. Arrangement is\n`<al-layout>`'s job — link columns, legal rows and social clusters are the\npage's composition.\n\n```html\n<al-footer>\n  <al-layout direction=\"row\" justify=\"between\" wrap gap=\"xl\">\n    <al-logo></al-logo>\n    <al-layout direction=\"row\" wrap gap=\"xl\">...link columns...</al-layout>\n  </al-layout>\n  <al-divider></al-divider>\n  <al-layout direction=\"row\" justify=\"between\" align=\"center\" wrap>\n    <small>&copy; 2026 Acme</small>\n    <al-layout direction=\"row\" gap=\"sm\">...social...</al-layout>\n  </al-layout>\n</al-footer>\n```\n\nSee \"Arrangement vs. semantics\" in AGENTS.md.",
   "type": "object",
   "altitude": {
     "tagName": "al-footer",
@@ -16,25 +16,30 @@
     },
     "slots": [
       {
-        "description": "Brand mark, rendered top-left of the link-columns row.",
-        "name": "logo"
-      },
-      {
-        "description": "Link columns — arbitrary column blocks (e.g. a heading + `<al-list>` per column).",
+        "description": "The footer content. Wrap each row in an `<al-layout>` to arrange it.",
         "name": ""
-      },
-      {
-        "description": "Bottom-row legal copy (copyright, small print, legal links). Leading edge.",
-        "name": "legal"
-      },
-      {
-        "description": "Bottom-row social links/icons. Trailing edge.",
-        "name": "social"
       }
     ],
     "events": [],
     "cssParts": [],
-    "cssProperties": []
+    "cssProperties": [
+      {
+        "description": "Block gap between top-level children. Defaults to `--al-theme-space-lg`.",
+        "name": "--al-footer-gap"
+      },
+      {
+        "description": "Block padding above and below the content. Defaults to three space units.",
+        "name": "--al-footer-padding-block"
+      },
+      {
+        "description": "Footer surface. Defaults to `transparent` so the page background shows through; set it to a sunken token to separate the footer from the content above.",
+        "name": "--al-footer-background"
+      },
+      {
+        "description": "Hairline rule above the footer. Defaults to `none`.",
+        "name": "--al-footer-border-block-start"
+      }
+    ]
   },
   "properties": {
     "tagName": {

@@ -6,7 +6,7 @@ import '../icon/icons/success';
 import './tab';
 
 export default {
-  title: 'Atoms/Tab',
+  title: 'Atoms/Navigation/Tab',
   component: 'al-tab',
   tags: [ 'autodocs' ],
   parameters: {

@@ -68,7 +68,16 @@ playwright-report
 # Morning cloud workspace (Settings → Team visibility). Do not force-add past this.
 .mm/
 # <<< monday-morning:mm <<<
-/.claude
+# .claude/ is TRACKED so skills, agents, commands and CLAUDE.md survive a clone.
+# Only the machine-local parts stay ignored:
+# NOTE: .gitignore has no trailing comments - a comment on a pattern line becomes
+# part of the pattern and the rule silently matches nothing.
+# live git worktrees + full repo snapshots; never commit
+/.claude/worktrees/
+# personal overrides
+/.claude/settings.local.json
+# regenerated locally
+/.claude/.mm-manifest.json
 .mcp.json
 
 # Secrets. The AI Theme addon (.storybook/ai-theme) reads ANTHROPIC_API_KEY
@@ -79,5 +88,33 @@ playwright-report
 !.env.example
 .dev.vars
 
-# Figma sync exports (agent-mediated loop — see .altitude/FIGMA-SYNC.md)
-.altitude/figma-sync/
+# Figma sync exports (agent-mediated loop — see .altitude/FIGMA-SYNC.md).
+# The parity MANIFEST is carved out: it is durable sync state (which Figma set
+# each component maps to + last-confirmed-sync hashes), same category as the
+# tracked .altitude/migration.json — without it a fresh clone reads every
+# component as "missing in Figma" in Storybook's parity badges.
+# (`/*` not `/`: git cannot re-include a file whose parent DIRECTORY is excluded)
+.altitude/figma-sync/*
+!.altitude/figma-sync/parity-manifest.json
+# Parity is MULTI-PROJECT (.altitude/ds-projects.json): every design system other
+# than the default keeps its manifest in its own subdirectory. Re-admit those
+# directories, re-ignore their contents, then carve out each manifest — the same
+# three-step dance as above, one level deeper. `ops/` and `tmp/` are re-admitted
+# by the first line but hold no parity-manifest.json, so nothing else leaks in.
+!.altitude/figma-sync/*/
+.altitude/figma-sync/*/*
+!.altitude/figma-sync/*/parity-manifest.json
+
+# NOTE: generated parity REPORTS need no rule here. The emitter writes them all
+# into `libs/al-web-components/dist/` (`parity.json` for the default project,
+# `parity.<projectId>.json` for the others), which that package's own
+# .gitignore:7 already covers. Only the parity MANIFESTS above are tracked.
+
+# Scratch artifacts that kept landing at the repo root. These are agent/verify
+# working files and one-off screenshots, never source. Named explicitly rather
+# than by a blanket `*.png` so intentional image assets elsewhere still commit.
+/.claude-verify-tmp/
+/.mm-backup-*/
+/*.png
+/*-spec.json
+**/_*_backup.txt

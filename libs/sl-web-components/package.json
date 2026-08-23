@@ -1,0 +1,45 @@
+{
+  "name": "sl-web-components",
+  "description": "The Southleft brand design system — opinionated section components built on Altitude",
+  "version": "1.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/components/bundle/bundle.d.ts",
+      "default": "./dist/components/bundle/bundle.js"
+    },
+    "./components/*": {
+      "types": "./dist/components/*/*.d.ts",
+      "default": "./dist/components/*/*.js"
+    },
+    "./custom-elements.json": "./custom-elements.json",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "//build": "NOT yet wired into the root `build:all` — the only consumer today is the Southleft Storybook, which compiles these sources directly through its own Vite. Wire it in when apps/southleft imports the package (spec 2026-08-22-southleft-brand-design-system-as-a-linked-layer-on-altitude, T11).",
+    "build": "del-cli dist && vite build -c vite.config.mjs && tsc",
+    "build:custom-elements.json": "cem analyze --config custom-elements-manifest.config.mjs --outdir .",
+    "lint": "eslint components --ext .ts"
+  },
+  "dependencies": {
+    "al-web-components": "workspace:*",
+    "lit": "^3.3.0"
+  },
+  "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.10.4",
+    "del-cli": "^6.0.0",
+    "sass": "^1.101.0",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  },
+  "//sideEffects": "Source paths as well as dist, for the same reason as al-web-components — see the note there. Every component module here ends in a `customElements.define` guarded by `alAutoRegistry`; if the bundler thinks the module is side-effect-free it drops the whole import and the element silently never upgrades in a production Storybook build.",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss",
+    "./components/*/*.ts",
+    "./components/bundle.ts",
+    "./dist/components/**/*.js"
+  ]
+}

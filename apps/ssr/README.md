@@ -1,8 +1,18 @@
-# `apps/ssr/` — SSR placeholder fixture (T0.3)
+# `apps/ssr/` — SSR reference fixture (T5.2)
 
-Acceptance fixture for **T5.2 — SSR**. Today it emits trivial static HTML
-pages so CI can verify the fixture exists and builds; at T5.2 this turns
-into a real Lit SSR renderer with Declarative Shadow DOM.
+The reference fixture for **T5.2 — SSR**. `scripts/build.mjs` server-renders
+each pilot component with `@lit-labs/ssr`, emitting one HTML page per pilot
+under `dist/` plus a client hydration entry that loads the component
+definitions so the browser upgrades the elements without remeasuring the DOM.
+See `.altitude/SSR.md` for the browser matrix and the four-step DSD hydration
+sequence.
+
+Declarative Shadow DOM is **opt-in per pilot** (`ssr: true` in the `PILOTS`
+array). Today only `al-theme` opts in: the other five pilots throw
+`this.querySelector is not a function` under lit-ssr's DOM shim, because
+`ALElement.slotEmpty()` calls it during render — see the write-up in
+`scripts/build.mjs`. Making `slotEmpty` SSR-safe is the prerequisite for
+expanding DSD coverage, and is deliberately not this fixture's job.
 
 ## Run locally
 
@@ -11,13 +21,10 @@ pnpm --filter al-app-ssr build     # writes ./dist/*.html
 pnpm --filter al-app-ssr start     # http://localhost:5177
 ```
 
-## What changes at T5.2
+## What each page shows
 
-`scripts/build.mjs` will:
-
-1. Import the pilot components.
-2. Use `@lit-labs/ssr` to render each into a string with DSD.
-3. Serve the result and let the browser hydrate without FOUC.
-
-A Playwright test asserts hydration happens without a flash and that
-interactive behavior works after hydration.
+- Five pilots (`al-button`, `al-input`, `al-select`, `al-dialog`,
+  `al-theme-switcher`) render as plain elements that hydrate on load.
+- `al-theme` renders with real DSD: `brand="southleft" mode="dark"` serializes
+  the scoped `:host([brand])` token block, so its probe paragraph is branded
+  even with JavaScript disabled.

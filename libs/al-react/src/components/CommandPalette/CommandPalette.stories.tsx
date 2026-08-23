@@ -9,7 +9,7 @@ const actions = [
 ];
 
 export default {
-  title: 'Organisms/Command Palette',
+  title: 'Molecules/Command Palette',
   component: ALCommandPalette,
   parameters: {
     status: { type: 'beta' },

@@ -1,6 +1,7 @@
 import type { StoryObj } from '@storybook/react-vite';
-import { ALCard, ALHeading, ALButton, ALChip, ALIconDotsVertical, ALPopover, ALMenu, ALMenuItem, ALTextPassage } from '../..';
+import { ALCard, ALHeading, ALButton, ALChip, ALIconDotsVertical, ALPopover, ALMenu, ALMenuItem, ALTextBlock } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
+import { loremSentences, placeholderImage, placeholderImages } from '../../../../al-web-components/.storybook/fixtures';
 
 export default {
   title: 'Molecules/Card',
@@ -27,7 +28,7 @@ export const Default: StoryObj<typeof ALCard> = {
       <>
         <div slot="actions-start"><Fpo>Card Actions Start</Fpo></div>
         <div slot="actions-end"><Fpo>Card Actions End</Fpo></div>
-        <div slot="image"><Fpo>Card Image</Fpo></div>
+        <img slot="image" alt="" src={placeholderImage(600, 400, { text: 'Card Image' })} />
         <div slot="header"><Fpo>Card Header</Fpo></div>
         <div><Fpo>Card Content</Fpo></div>
       </>
@@ -61,9 +62,9 @@ export const WithContent: StoryObj<typeof ALCard> = {
             <ALMenuItem>List Item 3</ALMenuItem>
           </ALMenu>
         </ALPopover>
-        <img slot="image" alt="card image" src="https://placehold.co/600x400" />
+        <img slot="image" alt="card image" src={placeholderImages.card} />
         <ALHeading slot="header" tagName="h3" variant="sm">Card title</ALHeading>
-        <ALTextPassage>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dui leo, lacinia ut finibus sed, consectetur quis enim.</ALTextPassage>
+        <ALTextBlock>{loremSentences(2, 'card')}</ALTextBlock>
       </>
     ),
   },

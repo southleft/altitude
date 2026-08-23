@@ -106,44 +106,46 @@ const BANDS = [
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="sm" isBold={true}>How to score</al-heading>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {SCALE.map((s) => (
         <div class="al-u-grid__item col:12 col:6@md col:3@lg">
           <al-card style="height:100%; box-sizing:border-box;">
             <al-heading tagName="p" variant="sm" isBold={true}>{s.score}</al-heading>
-            <al-text-passage>{s.meaning}</al-text-passage>
+            <al-text-block>{s.meaning}</al-text-block>
           </al-card>
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="sm" isBold={true}>Score yourself</al-heading>
-    <form id="sc-form" class="sl-stack" style="margin-top: var(--al-theme-space-xl);">
-      {DIMENSIONS.map((d, i) => (
-        <fieldset class="sc-dim" data-dim={i} style="border: none; padding: 0;">
-          <legend class="al-u-is-vishidden">Dimension {i + 1}: {d.name}</legend>
-          <al-card>
-            <div slot="header" class="sl-section-header" style="margin-block-end: 0;">
-              <al-heading tagName="h3" variant="sm" isBold={true}>0{i + 1} / {d.name}</al-heading>
-              <al-chip data-dim-chip={i}>— / 5</al-chip>
-            </div>
-            <al-text-passage>{d.why}</al-text-passage>
-            <al-list>
-              {d.indicators.map((ind) => <al-list-item>{ind}</al-list-item>)}
-            </al-list>
-            <div class="sc-scale" role="radiogroup" aria-label={`${d.name} score, 0 to 5`} style="margin-top: var(--al-theme-space);">
-              {[0, 1, 2, 3, 4, 5].map((n) => (
-                <label class="sc-opt">
-                  <input type="radio" name={`dim-${i}`} value={n} />
-                  <span>{n}</span>
-                </label>
-              ))}
-            </div>
-          </al-card>
-        </fieldset>
-      ))}
+    <form id="sc-form" style="margin-top: var(--al-theme-space-xl);">
+      <al-layout gap="md">
+        {DIMENSIONS.map((d, i) => (
+          <fieldset class="sc-dim" data-dim={i} style="border: none; padding: 0;">
+            <legend class="al-u-is-vishidden">Dimension {i + 1}: {d.name}</legend>
+            <al-card>
+              <al-layout slot="header" direction="row" justify="between" align="end" wrap gap="lg">
+                <al-heading tagName="h3" variant="sm" isBold={true}>0{i + 1} / {d.name}</al-heading>
+                <al-chip data-dim-chip={i}>— / 5</al-chip>
+              </al-layout>
+              <al-text-block>{d.why}</al-text-block>
+              <al-list>
+                {d.indicators.map((ind) => <al-list-item>{ind}</al-list-item>)}
+              </al-list>
+              <div class="sc-scale" role="radiogroup" aria-label={`${d.name} score, 0 to 5`} style="margin-top: var(--al-theme-space);">
+                {[0, 1, 2, 3, 4, 5].map((n) => (
+                  <label class="sc-opt">
+                    <input type="radio" name={`dim-${i}`} value={n} />
+                    <span>{n}</span>
+                  </label>
+                ))}
+              </div>
+            </al-card>
+          </fieldset>
+        ))}
+      </al-layout>
     </form>
     <p class="al-u-theme-typography-body-xs" id="sc-progress" style="margin-top: var(--al-theme-space-lg);">0 of 6 dimensions scored</p>
   </div>
@@ -152,14 +154,14 @@ const BANDS = [
     <al-heading tagName="h2" variant="sm" isBold={true}>Your score</al-heading>
 
     <div id="sc-waiting" style="margin-top: var(--al-theme-space-lg);">
-      <al-text-passage maxWidth="md">
+      <al-text-block maxWidth="md">
         Score all six dimensions above and your results appear here. No email gate, no iframe — the
         math runs on this page.
-      </al-text-passage>
+      </al-text-block>
     </div>
 
     <div id="sc-results" hidden style="margin-top: var(--al-theme-space-lg);">
-      <div class="al-u-grid">
+      <al-layout variant="grid" noCollapse>
         <div class="al-u-grid__item col:12 col:5@md">
           <al-card style="height:100%; box-sizing:border-box;">
             <al-chip variant="secondary">total</al-chip>
@@ -169,29 +171,31 @@ const BANDS = [
         </div>
         <div class="al-u-grid__item col:12 col:7@md">
           <al-heading tagName="h3" variant="md" isBold={true} id="sc-band-title"></al-heading>
-          <al-text-passage id="sc-band-body" style="margin-top: var(--al-theme-space-sm);"></al-text-passage>
+          <al-text-block id="sc-band-body" style="margin-top: var(--al-theme-space-sm);"></al-text-block>
         </div>
-      </div>
+      </al-layout>
 
       <div id="sc-gaps-wrap" style="margin-top: var(--al-theme-space-xl);">
         <al-heading tagName="h3" variant="sm" isBold={true}>Your highest-leverage gaps</al-heading>
-        <al-text-passage maxWidth="md">The two or three dimensions where you scored lowest are where the leverage is.</al-text-passage>
-        <div class="al-u-grid" id="sc-gaps" style="margin-top: var(--al-theme-space);"></div>
+        <al-text-block maxWidth="md">The two or three dimensions where you scored lowest are where the leverage is.</al-text-block>
+        <div style="margin-top: var(--al-theme-space);"><al-layout variant="grid" noCollapse id="sc-gaps"></al-layout></div>
       </div>
 
-      <div class="al-u-grid" style="margin-top: var(--al-theme-space-xxl);">
+      <div style="margin-top: var(--al-theme-space-xxl);"><al-layout variant="grid" noCollapse>
         <div class="al-u-grid__item col:12 col:6@md">
           <al-heading tagName="h3" variant="sm" isBold={true}>Want an outside perspective?</al-heading>
-          <al-text-passage>
+          <al-text-block>
             We run design system audits and AI-readiness reviews for enterprise teams. No pitch —
             just a conversation about the gaps and what to do about them.
-          </al-text-passage>
-          <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
-            <al-button href={withBase('/contact')}>Start a conversation</al-button>
-            <al-button variant="tertiary" href={`mailto:${SITE.email}?subject=Scorecard results`}>Email {SITE.email}</al-button>
+          </al-text-block>
+          <div style="margin-top: var(--al-theme-space-lg);">
+            <al-layout direction="row" wrap gap="xs" align="center">
+              <al-button href={withBase('/contact')}>Start a conversation</al-button>
+              <al-button variant="tertiary" href={`mailto:${SITE.email}?subject=Scorecard results`}>Email {SITE.email}</al-button>
+            </al-layout>
           </div>
         </div>
-      </div>
+      </al-layout></div>
     </div>
   </div>
 </Base>

@@ -7,7 +7,7 @@ import '../icon/icons/warning-circle';
 import './date-time-picker';
 
 export default {
-  title: 'Molecules/Date & Time Picker',
+  title: 'Atoms/Form/Date & Time Picker',
   component: 'al-date-time-picker',
   tags: [ 'autodocs' ],
   parameters: {

@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@storybook/addon-a11y": "^10.4",
+    "@storybook/addon-docs": "^10.4",
     "@storybook/react-vite": "^10.4",
     "@types/node": "^20.11.10",
     "@types/react": "^19",
@@ -45,6 +46,7 @@
     "classnames": "^2.5.1",
     "del-cli": "^5.1.0",
     "plop": "^4.0.1",
+    "remark-gfm": "4",
     "sass": "^1.70.0",
     "storybook": "^10.4",
     "typescript": "^5.7",
@@ -53,5 +55,8 @@
   "sideEffects": [
     "**/*.css",
     "./dist/components/**"
-  ]
+  ],
+  "engines": {
+    "node": ">=22.0.0"
+  }
 }

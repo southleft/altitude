@@ -7,7 +7,7 @@ import '../icon/icons/warning-circle';
 import './date-picker';
 
 export default {
-  title: 'Molecules/Date Picker',
+  title: 'Atoms/Form/Date Picker',
   component: 'al-date-picker',
   tags: [ 'autodocs' ],
   parameters: {

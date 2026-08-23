@@ -27,11 +27,11 @@ const dateLabel = post.data.date.toLocaleDateString('en-US', { year: 'numeric', 
     </div>
   )}
   <div class="sl-media-card__body">
-    <p class="sl-media-card__meta">
+    <al-layout direction="row" gap="sm" align="center" class="sl-media-card__meta">
       <span class="sl-media-card__meta-accent">{post.data.categoryName}</span>
       <span aria-hidden="true">·</span>
       <time datetime={post.data.date.toISOString().slice(0, 10)}>{dateLabel}</time>
-    </p>
+    </al-layout>
     {/* T12 audit-3 (height closure) — v5's card title is 32px (`.text-h3`);
         al-heading's SCOPED (southleft-brand) steps are 24px (`md`) / 48px
         (`lg`) with no step between, confirmed live inside `#sl-theme`

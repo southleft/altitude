@@ -4,7 +4,7 @@ import { withActions } from 'storybook/actions/decorator';
 import './range';
 
 export default {
-  title: 'Molecules/Range',
+  title: 'Atoms/Form/Range',
   component: 'al-range',
   tags: [ 'autodocs' ],
   parameters: {

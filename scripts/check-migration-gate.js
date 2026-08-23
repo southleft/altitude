@@ -13,6 +13,9 @@
  *      the component's state in migration.json away from `legacy`.
  *   5. `dual` and `scoped-complete` components: no restriction here (other
  *      gates enforce their invariants).
+ *   6. Components DELETED by the PR (no directory left in either library) are
+ *      skipped — dropping their manifest key is correct bookkeeping, not a
+ *      missing entry.
  *
  * Usage: node scripts/check-migration-gate.js --base=origin/main
  *
@@ -94,6 +97,26 @@ function componentOf(file) {
   return null;
 }
 
+/**
+ * A component that no longer exists on disk was DELETED by this PR. Removing its
+ * key from migration.json is the correct bookkeeping for a deletion, so the gate
+ * must not read that removal as "missing from migration.json". We check the
+ * working tree rather than the diff because a component is only truly gone once
+ * both the web-component directory and the React wrapper directory are absent.
+ */
+function isDeletedComponent(component) {
+  const wcDir = path.join(REPO, WC_PREFIX, component);
+  const reactDir = path.join(REPO, REACT_PREFIX, kebabToPascal(component));
+  return !fs.existsSync(wcDir) && !fs.existsSync(reactDir);
+}
+
+function kebabToPascal(name) {
+  return name
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+}
+
 function pascalToKebab(name) {
   // Handles AccordionPanel -> accordion-panel, DateTimePicker -> date-time-picker
   return name
@@ -137,6 +160,11 @@ function main() {
     const baseEntry = baseManifest.components?.[component];
     const headEntry = headManifest.components?.[component];
     if (!headEntry) {
+      // A deleted component legitimately has no manifest entry.
+      if (isDeletedComponent(component)) {
+        console.log(`[migration-gate] note — \`${component}\` was deleted; skipping.`);
+        continue;
+      }
       violations.push({ component, reason: 'component missing from migration.json', files: [...fileSet] });
       continue;
     }

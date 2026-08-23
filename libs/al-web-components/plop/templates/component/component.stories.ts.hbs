@@ -2,14 +2,15 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './{{dashCase name}}';
 
-export default {
-  title: 'Components/{{titleCase name}}',
+// CSF3 object stories are the target for new components (see AGENTS.md
+// "Story format"). Do not copy the legacy CSF2 `Template.bind({})` pattern.
+const meta = {
+  title: '{{tier}}/{{titleCase name}}',
   component: 'al-{{dashCase name}}',
   parameters: { status: { type: 'beta' } },
-  tags: [ 'autodocs' ],
+  tags: ['autodocs'],
+  render: (args) => html`<al-{{dashCase name}} ${spread(args)} data-testid="{{dashCase name}}">Hello world</al-{{dashCase name}}>`
 };
+export default meta;
 
-const Template = (args) => html`<al-{{dashCase name}} ${spread(args)} data-testid="{{dashCase name}}">Hello world</al-{{dashCase name}}>`;
-
-export const Default = Template.bind({});
-Default.args = {};
+export const Default = { args: {} };

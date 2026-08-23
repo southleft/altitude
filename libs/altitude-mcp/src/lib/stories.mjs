@@ -11,8 +11,17 @@
 
 import { readFileSync, existsSync } from 'node:fs';
 import { WC_ROOT } from './paths.mjs';
+import { resolveProject } from './ds-project.mjs';
 
-const PRODUCTION_BASE = 'https://altitude.pages.dev/storybook/web-components';
+// The deployed Storybook base is PER DESIGN-SYSTEM PROJECT (Altitude and
+// Southleft publish to different paths), so it is read from
+// `.altitude/ds-projects.json` rather than hardcoded here. Callers that pass no
+// project get the registry default.
+const productionBaseFor = (project) =>
+  (project && typeof project === 'object' && project.storybook
+    ? project
+    : resolveProject(typeof project === 'string' ? project : null)
+  ).storybook.productionBase;
 
 /** Storybook's `sanitize()` — mirrors @storybook/csf's toId() algorithm. */
 function sanitize(part) {
@@ -35,17 +44,20 @@ function titleToKindId(title) {
 }
 
 /** `components/button/button.ts` -> `components/button/button.stories.ts` (absolute). */
-function storiesPathFor(modulePath) {
+function storiesPathFor(modulePath, libraryRoot = WC_ROOT) {
   const storiesRelative = modulePath.replace(/\.ts$/, '.stories.ts');
-  return `${WC_ROOT}/${storiesRelative}`.replace(/\\/g, '/');
+  return `${libraryRoot}/${storiesRelative}`.replace(/\\/g, '/');
 }
 
 /**
  * @param {string} modulePath CEM module path, e.g. "components/button/button.ts"
+ * @param {object|string} [project] resolved DS project, id, or omit for default —
+ *        selects which deployed Storybook `docsUrl` points at.
  * @returns {{title:string, storyId:string, docsUrl:string, storiesFile:string}|null}
  */
-export function getStoryInfo(modulePath) {
-  const storiesFile = storiesPathFor(modulePath);
+export function getStoryInfo(modulePath, project) {
+  const resolved = project && typeof project === 'object' && project.resolved ? project : null;
+  const storiesFile = storiesPathFor(modulePath, resolved?.resolved?.libraryRoot ?? WC_ROOT);
   if (!existsSync(storiesFile)) return null;
   const src = readFileSync(storiesFile, 'utf8');
   const m = /title:\s*['"]([^'"]+)['"]/.exec(src);
@@ -56,7 +68,7 @@ export function getStoryInfo(modulePath) {
   return {
     title,
     storyId,
-    docsUrl: `${PRODUCTION_BASE}/?path=/docs/${storyId}`,
+    docsUrl: `${productionBaseFor(project)}/?path=/docs/${storyId}`,
     storiesFile,
   };
 }

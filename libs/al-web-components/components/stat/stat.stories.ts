@@ -3,7 +3,7 @@ import { spread } from '../../directives/spread';
 import './stat';
 
 export default {
-  title: 'Organisms/Stat',
+  title: 'Molecules/Stat',
   component: 'al-stat',
   tags: ['autodocs'],
   parameters: {

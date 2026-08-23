@@ -6,11 +6,12 @@ import '../field-note/field-note';
 import '../icon/icons/attachment';
 import '../icon/icons/emoji';
 import '../icon/icons/help';
+import { loremSentences } from '../../.storybook/fixtures';
 import '../icon/icons/warning-circle';
 import './textarea';
 
 export default {
-  title: 'Molecules/Textarea',
+  title: 'Atoms/Form/Textarea',
   component: 'al-textarea',
   tags: [ 'autodocs' ],
   parameters: {
@@ -184,7 +185,7 @@ WithIconBeforeAfter.args = {};
 
 export const WithMaxLength = Template.bind({});
 WithMaxLength.args = {
-  value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a tellus dictum, vehicula massa a, vulputate nisl.',
+  value: loremSentences(2, 'textarea'),
   minLength: '15',
   maxLength: '250',
   rows: '4',

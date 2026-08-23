@@ -3,7 +3,7 @@ import { spread } from '../../directives/spread';
 import './heading';
 
 export default {
-  title: 'Atoms/Heading',
+  title: 'Atoms/Text/Heading',
   component: 'al-heading',
   tags: [ 'autodocs' ],
   parameters: { status: { type: 'beta' } },

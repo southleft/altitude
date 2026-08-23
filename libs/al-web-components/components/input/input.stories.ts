@@ -10,7 +10,7 @@ import '../icon/icons/warning-circle';
 import './input';
 
 export default {
-  title: 'Molecules/Input',
+  title: 'Atoms/Form/Input',
   component: 'al-input',
   tags: [ 'autodocs' ],
   parameters: {

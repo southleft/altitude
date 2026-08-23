@@ -1,7 +1,7 @@
-// `<ALTheme>` stories. Spec: 2026-07-28-react-storybook-preset-switcher (R7).
+// `<ALTheme>` stories — the scoped theme host, one story per axis.
 import type { StoryObj } from '@storybook/react-vite';
 import React from 'react';
-import { ALTheme, ALButton, ALCard, ALTextPassage } from '../..';
+import { ALTheme, ALButton, ALCard, ALTextBlock } from '../..';
 
 export default {
   title: 'Foundations/Theme',
@@ -26,9 +26,9 @@ export default {
 /** The sample every axis story renders, so a difference is attributable to the axis alone. */
 const Sample = ({ label }: { label: string }) => (
   <ALCard>
-    <ALTextPassage>
+    <ALTextBlock>
       <strong>{label}</strong>
-    </ALTextPassage>
+    </ALTextBlock>
     <ALButton>Label</ALButton>
     <ALButton variant="secondary">Label</ALButton>
   </ALCard>
@@ -49,10 +49,9 @@ export const Default: StoryObj<typeof ALTheme> = {
 
 /**
  * Brand. Two `<al-theme>` subtrees, ONE document, one `:root`, no iframes.
- * Only expressible because `2026-07-28-scoped-token-emission-brand-wiring`
- * emits `:host([brand])` blocks into the component's own styles — before it,
- * `brand` moved no computed token. Southleft builds dark only, so both are
- * shown in `dark`.
+ * Each brand's `:host([brand])` block is generated into the component's own
+ * styles, so the two subtrees genuinely compute different tokens side by side.
+ * Both are shown in `dark` here to isolate the brand axis from the mode axis.
  */
 export const Brand: StoryObj<typeof ALTheme> = {
   render: () => (
@@ -66,7 +65,7 @@ export const Brand: StoryObj<typeof ALTheme> = {
   ),
 };
 
-/** Mode. 23 generated declarations per side, not the two hardcoded ones this axis used to carry. */
+/** Mode. Each side is a generated `:host([mode])` block — 23 declarations deep, not a two-colour flip. */
 export const Mode: StoryObj<typeof ALTheme> = {
   render: () => (
     <Row>
@@ -133,9 +132,9 @@ export const Nested: StoryObj<typeof ALTheme> = {
   render: () => (
     <ALTheme brand="southleft" mode="dark">
       <ALCard>
-        <ALTextPassage>
+        <ALTextBlock>
           <strong>outer — southleft</strong>
-        </ALTextPassage>
+        </ALTextBlock>
         <ALButton>Label</ALButton>
         <ALTheme brand="altitude" mode="dark">
           <Sample label="inner — altitude" />

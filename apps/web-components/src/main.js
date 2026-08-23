@@ -9,6 +9,10 @@ import 'al-web-components/components/input';
 import 'al-web-components/components/select';
 import 'al-web-components/components/dialog';
 import 'al-web-components/components/theme-switcher';
+import 'al-web-components/components/theme';
+import 'al-web-components/components/layout';
+import 'al-web-components/components/heading';
+import 'al-web-components/components/text-block';
 
 const open = document.getElementById('open');
 const dlg = document.getElementById('dlg');

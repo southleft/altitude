@@ -9,57 +9,61 @@
   }
 
   /**
-   * Header
+   * The header bar — chrome only: surface, padding, minimum height, stacking.
+   * Arrangement belongs to the slotted `<al-layout>`.
+   *
+   * 1. A single-column grid is the whole arrangement opinion. `align-content:
+   *    center` centres the content block vertically, which is what makes it read
+   *    as a bar; the single column stretches the child to the full inline size,
+   *    so one `<al-layout>` child fills the bar without needing `grow`. It takes
+   *    no position on horizontal distribution, gaps or child widths. Grid rather
+   *    than flex because `align-content` centres the block while still
+   *    stretching the column — flex would need `align-items: center` plus a
+   *    `flex: 1` on the child, which is a rule about slotted content.
+   * 2. `min-block-size`, not `height`: a fixed height clips a header that wraps
+   *    to two rows on small screens.
+   * 3. `<al-input>` reads this to blend its floating label into the surface it
+   *    sits on. A search field in the header is common enough that dropping it
+   *    would be a visible regression.
    */
   .al-c-header {
+    display: grid; /* 1 */
+    align-content: center; /* 1 */
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-block-size: var(--al-header-min-height, var(--al-theme-layout-height-header)); /* 2 */
+    padding: var(--al-header-padding, var(--al-theme-space));
+    background-color: var(--al-header-background, var(--al-theme-color-background-default));
+    /**
+     * 4. A hairline under the bar and a blur behind it are HEADER CHROME —
+     *    the same category as the surface, the padding and the `elevated`
+     *    shadow this component already owns. A consumer cannot add either
+     *    from the outside: `:host` is `display: contents`, so this element
+     *    is the only box, and it lives in the shadow root where no page
+     *    rule can reach it. Both default to `none`, so an existing header
+     *    renders byte-identically until it opts in.
+     *
+     *    `elevated` (a shadow) and a hairline border are deliberately
+     *    separate: a translucent, blurred bar reads as a rule, not a lift.
+     */
+    border-block-end: var(--al-header-border-block-end, none); /* 4 */
+    backdrop-filter: var(--al-header-backdrop-filter, none); /* 4 */
+    --al-input-label-background: var(--al-header-background, var(--al-theme-color-background-default)); /* 3 */
+  }
+
+  .al-c-header.al-is-sticky {
     position: sticky;
     inset-block-start: 0;
     inset-inline-start: 0;
-    width: 100%;
-    height: var(--al-theme-layout-height-header);
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--al-theme-space);
-    padding: var(--al-theme-space);
-    background-color: var(--al-theme-color-background-default);
-    box-shadow: var(--al-theme-box-shadow-md);
     z-index: var(--al-z-index-400);
-    --al-input-label-background: var(--al-theme-color-background-default);
-
-    @media all and (min-width: $al-breakpoint-md) {
-      flex-direction: row;
-      flex-wrap: nowrap;
-    }
   }
 
-  .al-c-header__before,
-  .al-c-header__after {
-    width: calc(50% - #{var(--al-theme-space-xs)});
-    display: flex;
-    align-items: center;
-    gap: var(--al-theme-space);
-
-    @media all and (min-width: $al-breakpoint-md) {
-      flex: 1;
-    }
+  .al-c-header.al-is-elevated {
+    box-shadow: var(--al-theme-box-shadow-md);
   }
 
-  .al-c-header__after {
-    justify-content: flex-end;
-  }
-
-  .al-c-header__main {
-    flex: 1;
-
-    @media all and (max-width: $al-breakpoint-md) {
-      order: 3;
-    }
-  }
-
-  ::slotted(svg) {
-    max-width: 200px;
-  }
+  /**
+   * There is deliberately no `::slotted()` rule here. Sizing slotted content —
+   * a brand mark, for instance — is the consumer's call, not the header's.
+   */
 }

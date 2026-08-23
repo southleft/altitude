@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-vite';
-import { ALFocusTrap, ALButton, ALButtonGroup, ALDialog, ALTab, ALTabs, ALTabPanel } from '../..';
+import { ALFocusTrap, ALButton, ALDialog, ALTab, ALTabs, ALTabPanel, ALLayout} from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
@@ -30,10 +30,10 @@ export default {
           </ALTabPanel>
         </ALTabs>
         <ALButton slot="footer" variant="bare">Close</ALButton>
-        <ALButtonGroup slot="footer">
+        <ALLayout slot="footer" direction="row" grow>
           <ALButton variant="tertiary">Label</ALButton>
           <ALButton>Label</ALButton>
-        </ALButtonGroup>
+        </ALLayout>
       </>
     )
   },

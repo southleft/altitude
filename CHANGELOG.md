@@ -34,6 +34,27 @@ T6.4 publish time.
 - Visual parity sweep harness at `scripts/visual-parity-sweep.mjs`.
 
 ### Changed
+- **`al-header` and `al-footer` no longer own arrangement.** Both are reduced to
+  their landmark plus chrome and expose a single default slot; a page composes
+  the bar or the footer rows with `<al-layout>`. **Breaking:**
+  - `al-header` drops the `before` / `after` slots. Their stylesheet forced the
+    three regions into equal `flex: 1` thirds with `justify-content:
+    space-between`, so any header whose regions were not equal thirds (a
+    wordmark, a long nav and an action cluster) could not be built.
+  - `al-header` drops the `::slotted(svg) { max-width: 200px }` cap on brand
+    marks, and its fixed `height` becomes an overridable `min-block-size` so a
+    wrapping header grows instead of clipping.
+  - `al-header` gains `sticky` and `elevated` props. Both behaviours were
+    previously unconditional CSS with no way to opt out; **they are now off by
+    default**, so existing headers must add the attributes to keep their
+    appearance.
+  - `al-footer` drops the `logo` / `legal` / `social` slots and the fixed
+    two-row structure. The border between the rows is now an `<al-divider>` the
+    page places.
+- **`al-text-passage` is renamed `al-text-block`** (`ALTextPassage` →
+  `ALTextBlock`, `.al-c-text-passage` → `.al-c-text-block`).
+- **`al-toast`'s `onToastGroupOpen` event is renamed `onToastOpen`**, now that
+  no toast group exists to name.
 - **Package manager**: yarn 1.22 → **pnpm 9** workspaces with `link-workspace-packages=deep`
   (T2.3.a).
 - **Builder**: webpack 5 + babel + sass-loader → **Vite 5** for both libraries and
@@ -56,6 +77,13 @@ T6.4 publish time.
   breaking the styleModifier utility-class consumers (T4.3).
 
 ### Fixed
+- `<al-layout variant="constrained">` placed a `display: contents` child — which
+  is every composite in the library, `al-layout` included — into the gutter
+  track instead of the content column. `grid-column` needs a box; the host
+  generated none, its inner box became the real grid item, and `::slotted()`
+  could not reach it. Nested layouts inside a constrained measure now sit in the
+  content column, and `bleed` breakout still works. `variant="grid"` and
+  `variant="bento"` were unaffected.
 - Resource Hub demo regained its `<al-divider>` 24 px gap by routing
   utility classes through the scoped utility sheet rather than the
   removed global one.
@@ -70,6 +98,12 @@ T6.4 publish time.
   generates under pnpm's symlinked layout.
 
 ### Removed
+- `al-chip-group` and `al-toast-group`. Both owned real behaviour — the "+N"
+  overflow counter, and viewport-fixed positioning plus auto-close — but nothing
+  in the system used it. Replace `<al-chip-group>` with
+  `<al-layout direction="row" wrap>`; `<al-toast-group>` has no replacement,
+  position `<al-toast>` yourself.
+- `Resources/Theme Presets` Storybook page (`.storybook/docs/THEMING.mdx`).
 - Webpack configs and the entire babel toolchain.
 - `ALElement.getGlobalStyles()` document `<style id="al-tokens-sheet">`
   regex-strip path (T4.3).

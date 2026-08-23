@@ -32,7 +32,7 @@
         "name": "action-right"
       },
       {
-        "description": "Hero image rendered above the header. Renders flush with the card edge.",
+        "description": "Media rendered above the header, INSIDE the card's padding. Takes the full content width; an `<al-avatar>` sits here too, which is the common case across the example apps. NOT flush to the card edge — this line previously claimed it was, and it never has been: `.al-c-card` carries a single outer `padding` and `.al-c-card__image` neither resets nor negates it (card.scss). The claim was wrong rather than the code: the slot is used for avatars in `apps/angular`, `apps/astro` and `apps/svelte`, and bleeding it to the edge would wreck all of them. A card that needs edge-to-edge media wants a component that renders it, not a flag here — see `sl-media-card` in `libs/sl-web-components`.",
         "name": "image"
       },
       {
@@ -59,6 +59,10 @@
         "variant": {
           "description": "typescript: 'bare'",
           "type": "string"
+        },
+        "fill": {
+          "description": "Fill the available block size instead of hugging the content.\n\nFor a card in a grid or a stretched flex row, where a row of cards should\nshare one height and their footers should line up. Reflected, so a page can\nalso select `al-card[fill]`.\n\nIt has to be a property rather than something the page sets from outside:\n`:host` is `display: contents`, so `<al-card>` generates no box and a\n`height: 100%` written on the element is dropped entirely. `apps/southleft`\nhit exactly this and worked around it with\n`style=\"height:100%; box-sizing:border-box\"` at 25 call sites across 13\nfiles — that inline style is what this replaces.",
+          "type": "boolean"
         }
       }
     },

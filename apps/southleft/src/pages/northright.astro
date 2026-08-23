@@ -35,30 +35,32 @@ const contactMailto = `mailto:${SITE.email}?subject=${encodeURIComponent('Northr
       heading="A serious website, without the custom-build price"
       dek="Not every project needs a design system engagement. Northright is our productized web platform for smaller teams — a fixed-price website, the middle path between no-code builders and full custom development, built on WordPress by the same senior team that ships enterprise design systems."
     >
-      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
-        <al-button href={contactMailto}>Tell us about your site</al-button>
-        <al-button variant="tertiary" href={withBase('/services')}>See our main practice</al-button>
+      <div style="margin-top: var(--al-theme-space-lg);">
+        <al-layout direction="row" wrap gap="xs" align="center">
+          <al-button href={contactMailto}>Tell us about your site</al-button>
+          <al-button variant="tertiary" href={withBase('/services')}>See our main practice</al-button>
+        </al-layout>
       </div>
     </PageHero>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="sm" isBold={true}>What you get</al-heading>
-    <al-text-passage maxWidth="sm">The same senior team, the same standards — packaged as a fast, fixed-price website.</al-text-passage>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <al-text-block maxWidth="sm">The same senior team, the same standards — packaged as a fast, fixed-price website.</al-text-block>
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {features.map((f) => (
         <div class="al-u-grid__item col:12 col:6@md col:4@lg">
           <al-heading tagName="h3" variant="sm" isBold={true}>{f.name}</al-heading>
-          <al-text-passage>{f.body}</al-text-passage>
+          <al-text-block>{f.body}</al-text-block>
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="sm" isBold={true}>Fixed price. No surprises.</al-heading>
-    <al-text-passage maxWidth="sm">Every tier is built by the same designers and engineers, with hosting and maintenance included.</al-text-passage>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <al-text-block maxWidth="sm">Every tier is built by the same designers and engineers, with hosting and maintenance included.</al-text-block>
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {tiers.map((tier) => (
         <div class="al-u-grid__item col:12 col:4@md">
           <al-card style="height:100%; box-sizing:border-box;">
@@ -67,12 +69,12 @@ const contactMailto = `mailto:${SITE.email}?subject=${encodeURIComponent('Northr
               <al-heading tagName="p" variant="md" isBold={true} style="margin-top: var(--al-theme-space-xs);">{tier.price}</al-heading>
               <p class="al-u-theme-typography-body-xs">{tier.priceNote}</p>
             </div>
-            <al-text-passage><strong>{tier.pages}</strong></al-text-passage>
-            <al-text-passage>{tier.who}</al-text-passage>
+            <al-text-block><strong>{tier.pages}</strong></al-text-block>
+            <al-text-block>{tier.who}</al-text-block>
           </al-card>
         </div>
       ))}
-    </div>
+    </al-layout></div>
     <al-card style="margin-top: var(--al-theme-space-lg);">
       <p class="al-u-theme-typography-body-xs">All tiers include</p>
       <al-list>
@@ -83,11 +85,11 @@ const contactMailto = `mailto:${SITE.email}?subject=${encodeURIComponent('Northr
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="sm" isBold={true}>Need a system, not a site?</al-heading>
-    <al-text-passage maxWidth="md">
+    <al-text-block maxWidth="md">
       Northright sits alongside our main practice — AI-powered design systems for product
       organizations. If your project is a component library, token architecture, or an AI-ready
       system rather than a website, start there instead.
-    </al-text-passage>
+    </al-text-block>
     <al-link href={withBase('/services')} style="margin-top: var(--al-theme-space-sm); display: inline-block;">Explore our services →</al-link>
   </div>
 

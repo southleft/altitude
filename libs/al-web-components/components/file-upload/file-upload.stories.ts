@@ -6,7 +6,7 @@ import '../icon/icons/document';
 import './file-upload';
 
 export default {
-  title: 'Molecules/File Upload',
+  title: 'Atoms/Form/File Upload',
   component: 'al-file-upload',
   tags: [ 'autodocs' ],
   parameters: {

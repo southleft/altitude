@@ -1,0 +1,59 @@
+@use '../../../al-web-components/styles/component' as *;
+@use '../../styles/brand' as *;
+/*------------------------------------*\
+  #SL LOGO WALL
+\*------------------------------------*/
+
+@layer al.component {
+  :host {
+    display: block;
+  }
+
+  /**
+   * 1. Arrangement is `<al-layout direction="row" wrap>` — NOT a
+   *    `display: flex` of this component's own, even though the site's
+   *    `.sl-logo-wall` is one. The brand's rhythm is asymmetric (48px between
+   *    rows, 56px between marks), which looks at first like something a single
+   *    `gap` cannot express and therefore like a reason to hand-roll the flex.
+   *    It is not: CSS `gap` takes TWO values, `row-gap column-gap`, so feeding
+   *    al-layout's own custom property does it. Reaching for a bespoke flex
+   *    container here would have been the guardrail violation, and this is the
+   *    fix rather than the exception.
+   */
+  .sl-c-logo-wall {
+    --al-layout-gap: var(--sl-logo-wall-gap, 3rem 3.5rem); /* 1 */
+  }
+
+  /**
+   * 2. `brightness(0)` flattens every mark to solid black before the opacity
+   *    knock-back, which is what makes a wall of differently-coloured client
+   *    logos read as one texture rather than a ransom note. Combined with the
+   *    inverse filter in dark contexts this is the brand's standard treatment.
+   * 3. `block-size` with `inline-size: auto` normalises marks to one OPTICAL
+   *    height regardless of their intrinsic dimensions — the only reliable way
+   *    to line up logos of wildly different aspect ratios.
+   */
+  ::slotted(img) {
+    block-size: var(--sl-logo-wall-height, 1.75rem); /* 3 */
+    inline-size: auto; /* 3 */
+    display: block;
+    filter: brightness(0) invert(1); /* 2 */
+    opacity: var(--sl-logo-wall-opacity, 0.5);
+    transition: opacity var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  }
+
+  ::slotted(img:hover),
+  ::slotted(img:focus-visible) {
+    opacity: 1;
+  }
+
+  :host([vivid]) ::slotted(img) {
+    opacity: 1;
+  }
+
+  @media (min-width: 48rem) {
+    ::slotted(img) {
+      block-size: var(--sl-logo-wall-height, 2rem); /* 3 */
+    }
+  }
+}

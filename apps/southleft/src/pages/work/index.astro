@@ -72,28 +72,28 @@ const ndaClients = ['Caterpillar', 'NASDAQ', 'Novartis', 'Indeed', 'TaxAct', 'Wo
       heading="Design systems that hold up — for teams, and now for AI."
       dek="For over a decade we've helped product organizations build design systems that scale — from enterprise systems like IBM's Carbon integration and PetSmart's Sparky to AI-ready systems like CampusIQ's, where our own open-source tools give AI coding agents full awareness of the design system."
     >
-      <al-text-passage maxWidth="md" style="margin-top: var(--al-theme-space);">
+      <al-text-block maxWidth="md" style="margin-top: var(--al-theme-space);">
         Today our practice centers on AI and design systems: discovery and research, token
         architecture, component engineering, workshops, and team augmentation — backed by the deep
         front-end craft built across years of web platform work for brands like Outside Inc,
         Point72, Better.com, and Stanford's d.school.
-      </al-text-passage>
+      </al-text-block>
     </PageHero>
   </div>
 
   <!-- Featured case studies -->
   <div class="sl-container sl-section">
-    <div class="sl-section-header">
-      <div class="sl-stack sl-stack--sm">
+    <div style="margin-block-end: var(--al-theme-space-xl);">
+      <al-layout gap="sm">
         <al-heading tagName="h2" variant="lg" isBold={true}>Case studies</al-heading>
-        <al-text-passage maxWidth="sm">AI + design systems first, then the enterprise systems and long-arc partnerships that make it credible.</al-text-passage>
-      </div>
+        <al-text-block maxWidth="sm">AI + design systems first, then the enterprise systems and long-arc partnerships that make it credible.</al-text-block>
+      </al-layout>
     </div>
 
     {flagship && (
-      <a href={withBase(`/projects/${slugOf(flagship)}`)} class="sl-flagship-card" style="margin-top: var(--al-theme-space-xl); display: block;">
+      <a href={withBase(`/projects/${slugOf(flagship)}`)} style="margin-top: var(--al-theme-space-xl); display: block;">
         <al-card>
-          <div class="al-u-grid" style="align-items: center;">
+          <al-layout variant="grid" noCollapse align="center">
             {flagship.data.hero && (
               <div class="al-u-grid__item col:12 col:5@lg">
                 <img src={flagship.data.hero} alt="" loading="lazy" style="width: 100%; height: auto; display: block; border-radius: var(--al-theme-border-radius);" />
@@ -102,66 +102,70 @@ const ndaClients = ['Caterpillar', 'NASDAQ', 'Novartis', 'Indeed', 'TaxAct', 'Wo
             <div class="al-u-grid__item col:12 col:7@lg">
               <al-chip variant="secondary">flagship — {flagship.data.industry}</al-chip>
               <al-heading tagName="h3" variant="md" isBold={true} style="margin-top: var(--al-theme-space-sm);">{flagship.data.client}</al-heading>
-              <al-text-passage>{flagship.data.oneLiner}</al-text-passage>
-              <div class="sl-header__nav" style="margin-top: var(--al-theme-space-sm);">
-                {flagship.data.capabilities.map((c) => <al-chip>{c}</al-chip>)}
+              <al-text-block>{flagship.data.oneLiner}</al-text-block>
+              <div style="margin-top: var(--al-theme-space-sm);">
+                <al-layout direction="row" wrap gap="xs" align="center">
+                  {flagship.data.capabilities.map((c) => <al-chip>{c}</al-chip>)}
+                </al-layout>
               </div>
             </div>
-          </div>
+          </al-layout>
         </al-card>
       </a>
     )}
 
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space);">
+    <div style="margin-top: var(--al-theme-space);"><al-layout variant="grid" noCollapse>
       {featuredRest.map((p) => (
         <div class="al-u-grid__item col:12 col:6@md col:4@lg">
           <WorkCard project={p} />
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </div>
 
   <!-- The work we can't show -->
   <div class="sl-container sl-section">
-    <div class="al-u-grid">
+    <al-layout variant="grid" noCollapse>
       <div class="al-u-grid__item col:12 col:5@lg">
         <al-chip variant="secondary">the quiet work</al-chip>
         <al-heading tagName="h2" variant="lg" isBold={true} style="margin-top: var(--al-theme-space-sm);">Some of our biggest work never gets a case study.</al-heading>
-        <al-text-passage maxWidth="md" style="margin-top: var(--al-theme-space);">
+        <al-text-block maxWidth="md" style="margin-top: var(--al-theme-space);">
           A large share of Southleft's practice is enterprise design systems built under NDA — we
           can tell you who we've worked with, but not show you what we built. The case studies
           above are the visible tip.
-        </al-text-passage>
+        </al-text-block>
         <p class="al-u-theme-typography-body-xs" style="margin-top: var(--al-theme-space);">The redacted portfolio — ask us about it on a call.</p>
       </div>
       <div class="al-u-grid__item col:12 col:7@lg">
-        <div class="sl-header__nav" aria-label="Enterprise clients under NDA">
+        <al-layout direction="row" wrap gap="xs" align="center" aria-label="Enterprise clients under NDA">
           {ndaClients.map((name) => <al-chip>{name} · redacted</al-chip>)}
-        </div>
-        <al-text-passage maxWidth="md" style="margin-top: var(--al-theme-space-lg);">
+        </al-layout>
+        <al-text-block maxWidth="md" style="margin-top: var(--al-theme-space-lg);">
           Enterprise-scale systems: multi-brand token architectures, component libraries,
           governance, and AI enablement. We can say a lot more in private than we can in public —
           <a href={withBase('/contact')}>start a conversation</a>.
-        </al-text-passage>
+        </al-text-block>
       </div>
-    </div>
+    </al-layout>
   </div>
 
   <!-- The full ledger -->
   <div class="sl-container sl-section">
-    <div class="sl-section-header">
-      <div class="sl-stack sl-stack--sm">
+    <div style="margin-block-end: var(--al-theme-space-xl);">
+      <al-layout gap="sm">
         <al-heading tagName="h2" variant="lg" isBold={true}>The full ledger</al-heading>
-        <al-text-passage maxWidth="sm">Every engagement in the archive, newest first. Filter by the kind of work.</al-text-passage>
-      </div>
+        <al-text-block maxWidth="sm">Every engagement in the archive, newest first. Filter by the kind of work.</al-text-block>
+      </al-layout>
     </div>
 
-    <div class="sl-header__nav" role="group" aria-label="Filter projects by capability" style="margin-top: var(--al-theme-space-lg);">
-      {filters.map((f) => (
-        <button type="button" class="sl-filter-chip" data-filter={f.key} aria-pressed={f.key === 'all' ? 'true' : 'false'}>
-          <al-chip>{f.label}</al-chip>
-        </button>
-      ))}
+    <div style="margin-top: var(--al-theme-space-lg);">
+      <al-layout direction="row" wrap gap="xs" align="center" role="group" aria-label="Filter projects by capability">
+        {filters.map((f) => (
+          <button type="button" data-filter={f.key} aria-pressed={f.key === 'all' ? 'true' : 'false'}>
+            <al-chip>{f.label}</al-chip>
+          </button>
+        ))}
+      </al-layout>
     </div>
 
     <ul id="sl-ledger" style="margin-top: var(--al-theme-space-lg); list-style: none; padding: 0; border-top: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);">
@@ -179,7 +183,7 @@ const ndaClients = ['Caterpillar', 'NASDAQ', 'Novartis', 'Indeed', 'TaxAct', 'Wo
               <span class="al-u-theme-typography-body-xs" style="display: block;">{p.data.oneLiner}</span>
             </span>
             <span class="al-u-grid__item col:12 col:3@lg">
-              <span class="sl-header__nav">{p.data.capabilities.slice(0, 2).map((c) => <al-chip>{c}</al-chip>)}</span>
+              <al-layout direction="row" wrap gap="xs" align="center">{p.data.capabilities.slice(0, 2).map((c) => <al-chip>{c}</al-chip>)}</al-layout>
             </span>
             <span class="al-u-grid__item col:2@md">
               <span class="al-u-theme-typography-body-xs">{p.data.date.getFullYear()}</span>

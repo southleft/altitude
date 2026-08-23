@@ -5,7 +5,7 @@ import '../icon/icons/document';
 import './breadcrumbs-item';
 
 export default {
-  title: 'Atoms/Breadcrumbs Item',
+  title: 'Atoms/Navigation/Breadcrumbs Item',
   component: 'al-breadcrumbs-item',
   tags: [ 'autodocs' ],
   parameters: {

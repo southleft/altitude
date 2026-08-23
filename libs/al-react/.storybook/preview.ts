@@ -6,8 +6,14 @@ import type { Preview } from '@storybook/react-vite';
 // (`../../al-web-components/css/main.css`) does not exist — requires
 // `pnpm --filter al-web-components build` first, same as the WC Storybook.
 import mainStyles from 'al-web-components/css/main.css?inline';
-import { DEFAULT_PRESET_ID, PRESET_TOOLBAR_ITEMS } from '../../al-web-components/.storybook/presets';
+import { DEFAULT_PRESET_ID } from '../../al-web-components/.storybook/presets';
 import { withPreset } from './with-preset';
+// The shared autodocs page — a fork of Storybook's `DocsPage` that hangs an
+// inline `<A11yReport>` under each story. Docs blocks are React in EVERY
+// Storybook regardless of story renderer, so importing the web-components
+// copy is safe for the same reason the shared `Resources/*` MDX glob in
+// `main.ts` is. One source of truth; the two Storybooks cannot drift.
+import { AltitudeDocsPage } from '../../al-web-components/.storybook/docs-page';
 
 // The `iconFontCSS` injection that used to sit below is gone with the icon
 // webfont (`feat(icons)!: replace the 37-icon set with the full Phosphor
@@ -65,22 +71,26 @@ export const excludeRegexArray = [
 ];
 
 const preview: Preview = {
-  // Curated theme presets — the same dropdown the web-components Storybook
-  // carries, over the SAME `presets.ts`. Items are DERIVED from `PRESETS`;
-  // adding a preset there makes it appear in both Storybooks with no edit here
-  // (R3: this file contains zero literal preset ids, labels or axis values).
+  // Global autodocs switch, matching the web-components Storybook. Storybook 10
+  // dropped `docs.autodocs` from main.ts and made autodocs tag-driven; the
+  // `docs: { autodocs: true } as any` that used to sit in `main.ts` was a
+  // silent no-op, which is why this Storybook had no docs pages at all and
+  // `atoms-button--docs` returned "Couldn't find story matching…".
+  tags: ['autodocs'],
+
+  // `alPreset` is still the global the decorator reads, but it is no longer a
+  // DROPDOWN — the seven-recipe "Preset" menu is replaced by the one-click
+  // light/dark toggle registered in `./manager.js`, over the same two-entry
+  // `presets.ts` the web-components Storybook reads.
   //
-  // Storybook 10 renders `globalTypes` toolbars from core, so `main.ts`'s addon
-  // list stays a11y-only.
+  // The `toolbar` key is deliberately absent: declaring it would make core
+  // render its own dropdown alongside the toggle. The global itself must stay
+  // declared here so `updateGlobals({ alPreset })` from the manager is a
+  // recognised write rather than an ad-hoc one.
   globalTypes: {
     alPreset: {
-      name: 'Preset',
-      description: 'Brand + mode + density + contrast, snapped together',
-      toolbar: {
-        icon: 'paintbrush',
-        items: PRESET_TOOLBAR_ITEMS,
-        dynamicTitle: true,
-      },
+      name: 'Mode',
+      description: 'Altitude light / dark',
     },
   },
   // `globalTypes.defaultValue` is deprecated in SB 8+; `initialGlobals` is the
@@ -98,9 +108,27 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    // The docs page every component renders — see the import note above and
+    // `al-web-components/.storybook/docs-page.tsx`.
+    docs: {
+      page: AltitudeDocsPage,
+    },
     options: {
       storySort: {
-        order: ['Resources', 'Foundations', 'Atoms', 'Molecules', 'Organisms', 'Templates', 'Pages', 'Recipes'],
+        // Matches the web-components Storybook exactly. Nested arrays order
+        // the children of the category before them; `'*'` is "everything not
+        // named", so sub-folders sort AFTER the flat primitives. Templates /
+        // Pages / Recipes are gone — those categories were retired with the
+        // whole-screen compositions.
+        order: [
+          'Resources',
+          'Foundations',
+          'Atoms',
+          ['*', 'Form', 'Navigation', 'Text'],
+          'Molecules',
+          ['*', 'Form', 'Navigation'],
+          'Organisms',
+        ],
       },
     },
     backgrounds: { disable: true },

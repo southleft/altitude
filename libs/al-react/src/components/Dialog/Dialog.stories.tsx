@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-vite';
-import { ALDialog, ALButton, ALButtonGroup } from '../..';
+import { ALDialog, ALButton, ALLayout} from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
@@ -29,10 +29,10 @@ export default {
         <ALButton slot="trigger">Open Dialog</ALButton>
         <Fpo>Dialog content</Fpo>
         <ALButton slot="footer" variant="bare" onClick={closeDialog}>Close</ALButton>
-        <ALButtonGroup slot="footer" alignment="right">
+        <ALLayout slot="footer" direction="row" justify="end" grow>
           <ALButton variant="tertiary">Label</ALButton>
           <ALButton>Label</ALButton>
-        </ALButtonGroup>
+        </ALLayout>
       </>
     )
   }
@@ -85,10 +85,10 @@ export const WithTriggerOutside: StoryObj<typeof ALDialog> = {
       <>
         <Fpo>Dialog content</Fpo>
         <ALButton slot="footer" variant="bare" onClick={(e: MouseEvent) => closeDialog(e, 'dialog-1')}>Close</ALButton>
-        <ALButtonGroup slot="footer" alignment="right">
+        <ALLayout slot="footer" direction="row" justify="end" grow>
           <ALButton variant="tertiary">Label</ALButton>
           <ALButton>Label</ALButton>
-        </ALButtonGroup>
+        </ALLayout>
       </>
     )
   },

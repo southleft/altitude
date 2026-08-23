@@ -1,0 +1,177 @@
+---
+// Hero glyph field — spec 2026-08-22-southleft-example-1-to-1-parity, T8.
+//
+// The sparse stroke marks scattered across the hero's grid on the reference
+// site (southleft-v5 src/pages/index.astro:346-476, `#hero-murmur`). Reported
+// as "the hero bg svg accents in the grids" — they are not SVG; they are
+// canvas strokes drawn one per cell on the SAME 72px lattice as
+// `.sl-hero__texture`, which is what makes them read as marks ON the grid
+// rather than decoration floating over it.
+//
+// The previous spec deferred this as "animation-driven". It is barely
+// animated: one cell changes every 900ms. What it actually is, is the hero's
+// texture — the grid alone reads as an empty backdrop, which is the visual
+// gap being reported.
+//
+// The canvas layers ABOVE `.sl-hero__texture` and BELOW `.sl-hero__inner`
+// (which is `position: relative`), so hero copy always wins.
+---
+
+<canvas id="hero-murmur" class="sl-hero__murmur" aria-hidden="true"></canvas>
+
+<style>
+  .sl-hero__murmur {
+    position: absolute;
+    inset: 0;
+    /* Behind the hero's copy but in front of the page background. `.sl-hero`
+     * is `isolation: isolate`, so -1 cannot escape past the section. */
+    z-index: -1;
+    block-size: 100%;
+    inline-size: 100%;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('hero-murmur') as HTMLCanvasElement | null;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+
+    // 72px — the same cell as `.sl-hero__texture`'s `background-size`. If one
+    // changes the other must, or the marks stop landing on the grid.
+    const CELL = 72;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const cssVar = (n: string) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+    let cols = 0;
+    let rows = 0;
+
+    /** One mark, centred in its cell. Five forms, matching the reference. */
+    const glyph = (c: number, r: number, accent: boolean) => {
+      const x = c * CELL;
+      const y = r * CELL;
+      const cx = x + CELL / 2;
+      const cy = y + CELL / 2;
+
+      ctx.clearRect(x, y, CELL, CELL);
+      // Read colours from custom properties rather than hardcoding them, so a
+      // mode switch or a derived theme repaints correctly — and so this file
+      // stays clear of the altitude-only gate's no-hex rule.
+      ctx.strokeStyle = accent
+        ? cssVar('--al-color-brand-red-500') || cssVar('--al-theme-color-background-primary-default')
+        : cssVar('--al-theme-color-border-default-weak');
+      ctx.fillStyle = ctx.strokeStyle;
+      ctx.globalAlpha = accent ? 0.5 : 0.55;
+      ctx.lineWidth = 1.5;
+      ctx.lineCap = 'square';
+      ctx.beginPath();
+
+      switch (Math.floor(Math.random() * 5)) {
+        case 0: {
+          const d = Math.random() < 0.5 ? 1 : -1; // chevron, pointing either way
+          ctx.moveTo(cx + d * 8, cy - 11);
+          ctx.lineTo(cx - d * 8, cy);
+          ctx.lineTo(cx + d * 8, cy + 11);
+          ctx.stroke();
+          break;
+        }
+        case 1: // plus
+          ctx.moveTo(cx, cy - 9);
+          ctx.lineTo(cx, cy + 9);
+          ctx.moveTo(cx - 9, cy);
+          ctx.lineTo(cx + 9, cy);
+          ctx.stroke();
+          break;
+        case 2: // ring
+          ctx.arc(cx, cy, 8, 0, Math.PI * 2);
+          ctx.stroke();
+          break;
+        case 3: // dot
+          ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+          break;
+        default: // tick
+          ctx.moveTo(cx - 7, cy);
+          ctx.lineTo(cx + 7, cy);
+          ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    };
+
+    /** Field density, 0–1. `--sl-artifacts` lets a theme thin it out or silence it. */
+    const density = () => {
+      const v = parseFloat(cssVar('--sl-artifacts'));
+      return Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 1;
+    };
+
+    const seedAll = () => {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      if (!w || !h) return;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cols = Math.ceil(w / CELL);
+      rows = Math.ceil(h / CELL);
+      const d = density();
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          // 8.5% of cells carry a mark; 12% of those are the accent red.
+          if (Math.random() < 0.085 * d) glyph(c, r, Math.random() < 0.12);
+        }
+      }
+    };
+
+    seedAll();
+
+    const cleanup: Array<() => void> = [];
+
+    if (!reduced) {
+      const iv = setInterval(() => {
+        // Don't paint into a hidden tab or a hero that has scrolled away —
+        // this runs for the life of the page, so idling cheaply matters.
+        if (document.hidden || !canvas.isConnected) return;
+        if (canvas.getBoundingClientRect().bottom < 0) return;
+        const d = density();
+        const c = Math.floor(Math.random() * cols);
+        const r = Math.floor(Math.random() * rows);
+        if (d === 0 || Math.random() < 0.5) ctx.clearRect(c * CELL, r * CELL, CELL, CELL);
+        else if (Math.random() < d) glyph(c, r, Math.random() < 0.12);
+      }, 900);
+      cleanup.push(() => clearInterval(iv));
+    }
+
+    // Re-seed on a mode change. `<al-theme mode>` is the source of truth in
+    // this app (Base.astro), not `<html data-theme>` as on the reference site.
+    // Debounced past the token crossfade so the new colours are sampled
+    // settled rather than mid-interpolation.
+    const themeEl = document.getElementById('sl-theme');
+    if (themeEl) {
+      let t: ReturnType<typeof setTimeout>;
+      const mo = new MutationObserver(() => {
+        clearTimeout(t);
+        t = setTimeout(seedAll, 750);
+      });
+      mo.observe(themeEl, { attributeFilter: ['mode', 'brand'] });
+      cleanup.push(() => {
+        clearTimeout(t);
+        mo.disconnect();
+      });
+    }
+
+    let rt: ReturnType<typeof setTimeout>;
+    const onResize = () => {
+      clearTimeout(rt);
+      rt = setTimeout(seedAll, 200);
+    };
+    addEventListener('resize', onResize);
+    cleanup.push(() => {
+      clearTimeout(rt);
+      removeEventListener('resize', onResize);
+    });
+
+    addEventListener('pagehide', () => cleanup.forEach((fn) => fn()), { once: true });
+  });
+</script>

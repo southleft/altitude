@@ -37,9 +37,11 @@ const tags = (project.data.capabilities ?? []).slice(0, 3);
     <al-heading tagName="h3" variant="lg" isBold={true} class="sl-media-card__title">{project.data.client}</al-heading>
     {project.data.oneLiner && <p class="sl-media-card__excerpt sl-media-card__excerpt--clamp-2 al-u-theme-typography-body-sm">{project.data.oneLiner}</p>}
     {tags.length > 0 && (
-      <p class="sl-media-card__tags">
-        {tags.map((t) => <span class="sl-tag-chip al-u-theme-typography-body-xs">{t}</span>)}
-      </p>
+      <div class="sl-media-card__tags">
+        <al-layout direction="row" wrap gap="xs">
+          {tags.map((t) => <span class="sl-tag-chip al-u-theme-typography-body-xs">{t}</span>)}
+        </al-layout>
+      </div>
     )}
     <span class="sl-media-card__footer al-u-theme-typography-body-sm" aria-hidden="true">case study →</span>
   </div>

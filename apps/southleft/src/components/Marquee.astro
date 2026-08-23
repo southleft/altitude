@@ -1,0 +1,96 @@
+---
+/** Endless belt of outline display type. Decorative reinforcement of the
+ *  message — pauses on hover, static under reduced motion.
+ *
+ *  1:1 port of southleft-v5's `src/components/Marquee.astro` +
+ *  `src/styles/global.css` (~L1305-1359). v5's raw variables map onto this
+ *  app's token layer per the ALTITUDE-ONLY gate
+ *  (`scripts/check-altitude-only.mjs`):
+ *    --sl-fg-subtle    → var(--al-theme-color-content-default-weak)
+ *    --sl-accent       → var(--al-theme-color-content-primary-default)
+ *                        (same mapping `.sl-kicker--accent` uses, layout.css)
+ *    --sl-border-faint → this app's own `--sl-border-faint` (layout.css :root,
+ *                        a color-mix over --al-theme-color-border-default-weak)
+ *    --sl-font-display → var(--al-font-family-secondary, Agrandir, sans-serif)
+ *    --sl-font-mono    → this app's own `--sl-font-mono` (layout.css :root)
+ *
+ *  The items are emitted TWICE (16 spans) so the -50% translate loops
+ *  seamlessly — the second copy sits exactly where the first started. */
+const items = [
+  { t: 'Design Systems', cls: '' },
+  { t: '×', cls: 'solid' },
+  { t: 'AI', cls: '' },
+  { t: '— built by the people building the tools —', cls: 'mono' },
+  { t: 'Tokens', cls: '' },
+  { t: '<S>', cls: 'solid' },
+  { t: 'Parity', cls: '' },
+  { t: '// zero rogue divs', cls: 'mono' },
+];
+---
+
+<div class="sl-marquee" aria-hidden="true">
+  <div class="sl-marquee-track">
+    {[0, 1].map(() => items.map((i) => <span class:list={['sl-marquee-item', i.cls]}>{i.t}</span>))}
+  </div>
+</div>
+
+<style>
+  /* Marquee — outline display type on an endless belt */
+  .sl-marquee {
+    overflow: hidden;
+    border-block: var(--al-theme-border-width, 1px) solid var(--sl-border-faint);
+    padding-block: clamp(1.25rem, 3vw, 2.5rem);
+    user-select: none;
+  }
+
+  .sl-marquee-track {
+    display: flex;
+    gap: 3rem;
+    width: max-content;
+    animation: sl-marquee 36s linear infinite;
+  }
+
+  .sl-marquee:hover .sl-marquee-track {
+    animation-play-state: paused;
+  }
+
+  .sl-marquee-item {
+    font-family: var(--al-font-family-secondary, Agrandir, sans-serif);
+    font-variation-settings: 'wght' 650, 'wdth' 120;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--al-theme-color-content-default-weak);
+    text-stroke: 1.5px var(--al-theme-color-content-default-weak);
+  }
+
+  .sl-marquee-item.solid {
+    color: var(--al-theme-color-content-primary-default);
+    -webkit-text-stroke: 0;
+    text-stroke: 0;
+  }
+
+  .sl-marquee-item.mono {
+    font-family: var(--sl-font-mono);
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    align-self: center;
+    color: var(--al-theme-color-content-default-weak);
+    -webkit-text-stroke: 0;
+    text-stroke: 0;
+    text-transform: none;
+  }
+
+  @keyframes sl-marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sl-marquee-track {
+      animation: none;
+    }
+  }
+</style>

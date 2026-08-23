@@ -34,8 +34,8 @@
         "description": "Fired when the toast is dismissed. Detail: `{ active }`."
       },
       {
-        "name": "onToastGroupOpen",
-        "description": "Fired when the toast becomes visible. Detail: `{ active }`. Note the name says `Group` although this is dispatched by the individual toast — see the known-issue note on `al-toast-group`."
+        "name": "onToastOpen",
+        "description": "Fired when the toast becomes visible. Detail: `{ active }`."
       }
     ],
     "cssParts": [],
@@ -72,11 +72,11 @@
           "type": "boolean"
         },
         "autoClose": {
-          "description": "Auto close?\n- Set whether you want the toast group to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
+          "description": "Auto close?\n- Set whether you want the toast to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
           "type": "boolean"
         },
         "autoCloseDelay": {
-          "description": "Delay property\n1. Number of seconds to close the toast group when autoClose is enabled\n2. Default amount is 3",
+          "description": "Delay property\n1. Number of seconds to close the toast when autoClose is enabled\n2. Default amount is 3",
           "type": "number"
         },
         "showProgress": {

@@ -3,7 +3,6 @@ import { Router, NavigationEnd } from '@angular/router';
 
 import "al-web-components/components/avatar";
 import "al-web-components/components/badge";
-import "al-web-components/components/button-group";
 import "al-web-components/components/button";
 import "al-web-components/components/card";
 import "al-web-components/components/divider";
@@ -20,7 +19,6 @@ import "al-web-components/components/icon/icons/settings";
 import "al-web-components/components/icon/icons/sign-out";
 import "al-web-components/components/icon/icons/support";
 import "al-web-components/components/icon/icons/user";
-import "al-web-components/components/layout-container";
 import "al-web-components/components/layout";
 import "al-web-components/components/list-item";
 import "al-web-components/components/list";

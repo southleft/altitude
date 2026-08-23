@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-vite';
-import { ALDrawer, ALButton, ALIconMenu, ALButtonGroup } from '../..';
+import { ALDrawer, ALButton, ALIconMenu, ALLayout} from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
@@ -22,10 +22,10 @@ export default {
           <Fpo>Drawer Title</Fpo>
         </div>
         <Fpo>Drawer content</Fpo>
-        <ALButtonGroup slot="footer">
+        <ALLayout slot="footer" direction="row" grow>
           <ALButton variant="tertiary">Submit</ALButton>
           <ALButton>Cancel</ALButton>
-        </ALButtonGroup>
+        </ALLayout>
       </>
     )
   }

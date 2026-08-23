@@ -55,30 +55,32 @@ const logos = [
   </div>
 
   <div class="sl-container sl-section">
-    <al-split-content mediaPosition="start">
-      <div slot="media" class="sl-stack">
+    <al-layout direction="row" wrap align="center" gap="xl" class="sl-split sl-split--media-start">
+      <div class="sl-split__media">
         <al-heading tagName="h2" variant="lg" isBold={true}>No sales team. No marketing department. Our work is our pipeline.</al-heading>
       </div>
-      <div slot="content" class="sl-stack">
-        <al-text-passage>
-          We’re a small, senior team of design systems engineers, founded in 2012 and rooted in New
-          Orleans. We’ve never had a sales, advertising, or marketing department; word of mouth
-          built this company, project by project, from a one-person shop into a multi-million
-          dollar studio. Our portfolio runs from IBM, Google, Caterpillar, and PetSmart to
-          nonprofits and community organizations — the same care either way.
-        </al-text-passage>
-        <al-text-passage>
-          Through collaboration, education, and guidance, we build design systems — and the AI
-          workflows around them — that are made to last.
-        </al-text-passage>
-        <al-link href={withBase('/work')}>See the work →</al-link>
+      <div class="sl-split__content">
+        <al-layout gap="md">
+          <al-text-block>
+            We’re a small, senior team of design systems engineers, founded in 2012 and rooted in New
+            Orleans. We’ve never had a sales, advertising, or marketing department; word of mouth
+            built this company, project by project, from a one-person shop into a multi-million
+            dollar studio. Our portfolio runs from IBM, Google, Caterpillar, and PetSmart to
+            nonprofits and community organizations — the same care either way.
+          </al-text-block>
+          <al-text-block>
+            Through collaboration, education, and guidance, we build design systems — and the AI
+            workflows around them — that are made to last.
+          </al-text-block>
+          <al-link href={withBase('/work')}>See the work →</al-link>
+        </al-layout>
       </div>
-    </al-split-content>
+    </al-layout>
   </div>
 
   <!-- Trusted by (v5 section 02) -->
   <div class="sl-container sl-section--tight">
-    <al-text-passage maxWidth="sm">Fourteen years of word-of-mouth referrals, from tech giants to community organizations.</al-text-passage>
+    <al-text-block maxWidth="sm">Fourteen years of word-of-mouth referrals, from tech giants to community organizations.</al-text-block>
     <div class="sl-logo-wall" style="margin-top: var(--al-theme-space-lg);">
       {logos.map((logo) => <img src={withBase(`/logos/${logo.file}`)} alt={logo.name} loading="lazy" />)}
     </div>
@@ -86,53 +88,53 @@ const logos = [
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="lg" isBold={true}>Where we are now</al-heading>
-    <al-text-passage>
+    <al-text-block>
       In 2026, Southleft opened its next chapter — a formalized partnership with Baseline, and new
       leadership at the top. The team is the same. The clients are the same. The standards are the same.
-    </al-text-passage>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    </al-text-block>
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       <div class="al-u-grid__item col:12 col:6@md">
         <al-card style="height:100%; box-sizing:border-box;">
           <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>One path from strategy to shipped system</al-heading></div>
-          <al-text-passage>
+          <al-text-block>
             We formalized a partnership with Baseline, Joey Banks’s design systems studio. Baseline
             covers strategy, discovery, architecture, and visual design; Southleft covers design
             systems engineering, front end, and AI integration.
-          </al-text-passage>
+          </al-text-block>
         </al-card>
       </div>
       <div class="al-u-grid__item col:12 col:6@md">
         <al-card style="height:100%; box-sizing:border-box;">
           <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>Nicole Hampton, CEO</al-heading></div>
-          <al-text-passage>
+          <al-text-block>
             Nicole Hampton — twenty-plus years leading the business side of creative and technical
             agencies, and a longtime collaborator of TJ’s going back to SuperFriendly — stepped in
             as CEO. TJ, who has joined Figma, remains founder and chairman.
-          </al-text-passage>
+          </al-text-block>
           <al-link href={withBase('/insights/business/better-together-southleft-x-baseline-and-a-new-ceo')}>Read the announcement →</al-link>
         </al-card>
       </div>
-    </div>
+    </al-layout></div>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="lg" isBold={true}>Five things we won’t compromise on</al-heading>
-    <al-text-passage>The same values since 2012 — tightened for the work we do now.</al-text-passage>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <al-text-block>The same values since 2012 — tightened for the work we do now.</al-text-block>
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {values.map((v) => (
         <div class="al-u-grid__item col:12 col:6@md col:4@lg">
           <al-card style="height:100%; box-sizing:border-box;">
             <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>{v.name}</al-heading></div>
-            <al-text-passage>{v.body}</al-text-passage>
+            <al-text-block>{v.body}</al-text-block>
           </al-card>
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="lg" isBold={true}>Who’s at the wheel</al-heading>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {leaders.map((person) => (
         <div class="al-u-grid__item col:12 col:6@md">
           <al-card style="height:100%; box-sizing:border-box;">
@@ -140,23 +142,23 @@ const logos = [
               <al-heading tagName="h3" variant="sm" isBold={true}>{person.name}</al-heading>
               <p class="al-u-theme-typography-body-xs">{person.role}</p>
             </div>
-            <al-text-passage>{person.bio}</al-text-passage>
+            <al-text-block>{person.bio}</al-text-block>
           </al-card>
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="lg" isBold={true}>What working with us feels like</al-heading>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {howWeWork.map((item) => (
         <div class="al-u-grid__item col:12 col:4@md">
           <al-heading tagName="h3" variant="sm" isBold={true}>{item.name}</al-heading>
-          <al-text-passage>{item.body}</al-text-passage>
+          <al-text-block>{item.body}</al-text-block>
         </div>
       ))}
-    </div>
+    </al-layout></div>
     <al-button href={withBase(CTA.href)} style="margin-top: var(--al-theme-space-xl);">{CTA.label}</al-button>
   </div>
 

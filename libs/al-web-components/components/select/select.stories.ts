@@ -21,7 +21,7 @@ const dataSource = [
 ];
 
 export default {
-  title: 'Molecules/Select',
+  title: 'Atoms/Form/Select',
   component: 'al-select',
   tags: [ 'autodocs' ],
   parameters: {

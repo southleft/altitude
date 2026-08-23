@@ -5,7 +5,7 @@ metadata:
   type: project
 ---
 
-The authoritative plan lives at `/Users/bvoran/Sites/altitude/NEXT-GEN-UPGRADE-PLAN.md`. Phases run T0 → T6 with explicit Gate P0..P6 between them. Pilot components: button, input, combobox/select, dialog, theme-switcher.
+The authoritative plan lives at `NEXT-GEN-UPGRADE-PLAN.md` at the repo root (checkouts vary by machine — resolve relative to the repo, not an absolute path). Phases run T0 → T6 with explicit Gate P0..P6 between them. Pilot components: button, input, combobox/select, dialog, theme-switcher.
 
 Why: Brad is evolving Altitude (not rebuilding it) onto DTCG + SD v5 + Vite + Storybook 10 + React 19 + scoped `<al-theme>` host + Lit SSR, validated by a 3-AI red team.
 

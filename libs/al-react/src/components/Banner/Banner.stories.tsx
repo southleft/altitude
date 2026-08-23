@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-vite';
 import { ALBanner, ALLink } from '../..';
 
 export default {
-  title: 'Organisms/Banner',
+  title: 'Molecules/Banner',
   component: ALBanner,
   parameters: {
     status: { type: 'beta' },

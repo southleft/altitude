@@ -1,4 +1,5 @@
 import type { StoryObj } from '@storybook/react-vite';
+import { loremSentences } from '../../../../al-web-components/.storybook/fixtures';
 import { ALTextarea, ALFieldNote, ALIconEmoji, ALIconAttachment, ALIconWarningCircle, ALIconHelp } from '../..';
 
 export default {
@@ -171,7 +172,7 @@ export const WithIconBeforeAfter: StoryObj<typeof ALTextarea> = {
 };
 
 export const WithMaxLength: StoryObj<typeof ALTextarea> = { args: {
-  value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a tellus dictum, vehicula massa a, vulputate nisl.',
+  value: loremSentences(2, 'textarea'),
   minLength: 15,
   maxLength: 250,
   rows: 4,

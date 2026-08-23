@@ -67,35 +67,39 @@ const stack = ['Figma', 'Claude', 'TypeScript', 'React', 'Storybook', 'Web Compo
       heading="What we do"
       dek="One practice, end to end: we help product organizations build design systems that are ready for AI — through audits, workshops, research, and senior engineers who ship alongside your team."
     >
-      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
-        <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
-        <al-button variant="tertiary" href={withBase('/work')}>See the work</al-button>
+      <div style="margin-top: var(--al-theme-space-lg);">
+        <al-layout direction="row" wrap gap="xs" align="center">
+          <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
+          <al-button variant="tertiary" href={withBase('/work')}>See the work</al-button>
+        </al-layout>
       </div>
     </PageHero>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="lg" isBold={true}>Five ways to work with us</al-heading>
-    <div class="sl-stack sl-stack--lg" style="margin-top: var(--al-theme-space-xl);">
-      {services.map((s) => (
-        <al-card>
-          <div slot="header">
-            {s.flagship && <al-chip variant="secondary">main practice</al-chip>}
-            <al-heading tagName="h3" variant="md" isBold={true}><a href={withBase(s.href)}>{s.name}</a></al-heading>
-            <p class="al-u-theme-typography-body-sm">{s.oneLiner}</p>
-          </div>
-          <al-text-passage>{s.body}</al-text-passage>
-          <al-list>
-            {s.items.map((item) => <al-list-item>{item}</al-list-item>)}
-          </al-list>
-        </al-card>
-      ))}
+    <div style="margin-top: var(--al-theme-space-xl);">
+      <al-layout gap="lg">
+        {services.map((s) => (
+          <al-card>
+            <div slot="header">
+              {s.flagship && <al-chip variant="secondary">main practice</al-chip>}
+              <al-heading tagName="h3" variant="md" isBold={true}><a href={withBase(s.href)}>{s.name}</a></al-heading>
+              <p class="al-u-theme-typography-body-sm">{s.oneLiner}</p>
+            </div>
+            <al-text-block>{s.body}</al-text-block>
+            <al-list>
+              {s.items.map((item) => <al-list-item>{item}</al-list-item>)}
+            </al-list>
+          </al-card>
+        ))}
+      </al-layout>
     </div>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="lg" isBold={true}>How an engagement starts</al-heading>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {engage.map((e, i) => (
         <div class="al-u-grid__item col:12 col:4@md">
           <al-card style="height:100%; box-sizing:border-box;">
@@ -103,18 +107,20 @@ const stack = ['Figma', 'Claude', 'TypeScript', 'React', 'Storybook', 'Web Compo
               <p class="al-u-theme-typography-body-xs">step {String(i + 1).padStart(2, '0')}</p>
               <al-heading tagName="h3" variant="sm" isBold={true}>{e.step}</al-heading>
             </div>
-            <al-text-passage>{e.body}</al-text-passage>
+            <al-text-block>{e.body}</al-text-block>
           </al-card>
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="lg" isBold={true}>The same habits on every engagement</al-heading>
-    <al-text-passage>These aren’t aspirations — they’re how the studio has operated since 2012, on every project, at every scale.</al-text-passage>
-    <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
-      {stack.map((t) => <al-chip>{t}</al-chip>)}
+    <al-text-block>These aren’t aspirations — they’re how the studio has operated since 2012, on every project, at every scale.</al-text-block>
+    <div style="margin-top: var(--al-theme-space-lg);">
+      <al-layout direction="row" wrap gap="xs" align="center">
+        {stack.map((t) => <al-chip>{t}</al-chip>)}
+      </al-layout>
     </div>
   </div>
 

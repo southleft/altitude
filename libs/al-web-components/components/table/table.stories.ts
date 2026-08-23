@@ -26,7 +26,7 @@ const manyColumns = [
 ];
 
 const meta = {
-  title: 'Organisms/Table',
+  title: 'Molecules/Table',
   component: 'al-table',
   tags: ['autodocs'],
   parameters: {

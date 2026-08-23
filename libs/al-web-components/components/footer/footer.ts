@@ -5,16 +5,33 @@ import styles from './footer.scss';
 /**
  * Component: al-footer
  *
- * A site-wide footer organism for marketing pages. Purely compositional —
- * link columns compose with the existing `<al-list>`/`<al-link>`/`<al-menu>`
- * primitives, and every spacing decision comes from the active theme's
- * `--al-theme-space-*` ramp, so the footer is automatically density-aware
- * wherever it renders inside a `<al-theme density="...">` scope.
+ * The site footer landmark and its vertical rhythm. Footer owns the `<footer>`
+ * element, its block padding and the gap between stacked rows. Arrangement is
+ * `<al-layout>`'s job — link columns, legal rows and social clusters are the
+ * page's composition.
  *
- * @slot logo - Brand mark, rendered top-left of the link-columns row.
- * @slot - Link columns — arbitrary column blocks (e.g. a heading + `<al-list>` per column).
- * @slot legal - Bottom-row legal copy (copyright, small print, legal links). Leading edge.
- * @slot social - Bottom-row social links/icons. Trailing edge.
+ * ```html
+ * <al-footer>
+ *   <al-layout direction="row" justify="between" wrap gap="xl">
+ *     <al-logo></al-logo>
+ *     <al-layout direction="row" wrap gap="xl">...link columns...</al-layout>
+ *   </al-layout>
+ *   <al-divider></al-divider>
+ *   <al-layout direction="row" justify="between" align="center" wrap>
+ *     <small>&copy; 2026 Acme</small>
+ *     <al-layout direction="row" gap="sm">...social...</al-layout>
+ *   </al-layout>
+ * </al-footer>
+ * ```
+ *
+ * See "Arrangement vs. semantics" in AGENTS.md.
+ *
+ * @slot - The footer content. Wrap each row in an `<al-layout>` to arrange it.
+ *
+ * @cssproperty --al-footer-gap - Block gap between top-level children. Defaults to `--al-theme-space-lg`.
+ * @cssproperty --al-footer-padding-block - Block padding above and below the content. Defaults to three space units.
+ * @cssproperty --al-footer-background - Footer surface. Defaults to `transparent` so the page background shows through; set it to a sunken token to separate the footer from the content above.
+ * @cssproperty --al-footer-border-block-start - Hairline rule above the footer. Defaults to `none`.
  */
 export class ALFooter extends ALElement {
   static el = 'al-footer';
@@ -28,39 +45,7 @@ export class ALFooter extends ALElement {
 
     return html`
       <footer class="${componentClassNames}">
-        ${this.slotNotEmpty('logo') || this.slotNotEmpty()
-          ? html`
-              <div class="al-c-footer__top">
-                ${this.slotNotEmpty('logo') &&
-                html`
-                  <div class="al-c-footer__logo">
-                    <slot name="logo"></slot>
-                  </div>
-                `}
-                <div class="al-c-footer__columns">
-                  <slot></slot>
-                </div>
-              </div>
-            `
-          : ''}
-        ${this.slotNotEmpty('legal') || this.slotNotEmpty('social')
-          ? html`
-              <div class="al-c-footer__bottom">
-                ${this.slotNotEmpty('legal') &&
-                html`
-                  <div class="al-c-footer__legal">
-                    <slot name="legal"></slot>
-                  </div>
-                `}
-                ${this.slotNotEmpty('social') &&
-                html`
-                  <div class="al-c-footer__social">
-                    <slot name="social"></slot>
-                  </div>
-                `}
-              </div>
-            `
-          : ''}
+        <slot></slot>
       </footer>
     `;
   }

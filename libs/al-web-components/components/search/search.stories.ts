@@ -22,7 +22,7 @@ const dataSource = [
 ];
 
 export default {
-  title: 'Molecules/Search',
+  title: 'Molecules/Form/Search',
   component: 'al-search',
   tags: [ 'autodocs' ],
   parameters: {

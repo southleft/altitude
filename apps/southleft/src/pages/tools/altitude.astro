@@ -32,35 +32,37 @@ const aiFits = [
       heading="Altitude — our design system, and our AI laboratory"
       dek="Altitude is Southleft's in-house design system: a complete Figma-to-production ecosystem we use as the testbed for every AI integration and workflow experiment we run. It powers Story UI, FigmaLint demos, and our MCP research — and it can be the foundation your system starts from."
     >
-      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
-        <al-button href={withBase(CTA.href)}>Schedule a demo</al-button>
-        <al-button variant="tertiary" href={withBase('/tools')}>Explore all our tools</al-button>
+      <div style="margin-top: var(--al-theme-space-lg);">
+        <al-layout direction="row" wrap gap="xs" align="center">
+          <al-button href={withBase(CTA.href)}>Schedule a demo</al-button>
+          <al-button variant="tertiary" href={withBase('/tools')}>Explore all our tools</al-button>
+        </al-layout>
       </div>
     </PageHero>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="sm" isBold={true}>From Figma to final deployment</al-heading>
-    <al-text-passage maxWidth="sm">A complete ecosystem for design and development — every element aligned, from token to component to framework wrapper.</al-text-passage>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <al-text-block maxWidth="sm">A complete ecosystem for design and development — every element aligned, from token to component to framework wrapper.</al-text-block>
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {features.map((f) => (
         <div class="al-u-grid__item col:12 col:6@md col:4@lg">
           <al-card style="height:100%; box-sizing:border-box;">
             <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>{f.name}</al-heading></div>
-            <al-text-passage>{f.body}</al-text-passage>
+            <al-text-block>{f.body}</al-text-block>
           </al-card>
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="sm" isBold={true}>Why start from Altitude instead of from scratch?</al-heading>
-    <al-text-passage maxWidth="md">
+    <al-text-block maxWidth="md">
       Every pattern in Altitude has been exercised by real client work and real AI tooling. When we
       bootstrap your system from it, you skip the foundational decisions — token architecture,
       component API design, framework strategy — and start where we already landed.
-    </al-text-passage>
+    </al-text-block>
     <div style="margin-top: var(--al-theme-space-lg);">
       <al-stat value="40%" label="reduction in design-to-code time on our Big Medium engagement" />
     </div>
@@ -69,10 +71,10 @@ const aiFits = [
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="sm" isBold={true}>Structured the way AI needs</al-heading>
-    <al-text-passage maxWidth="md">
+    <al-text-block maxWidth="md">
       Altitude is the system behind our demos for a reason. If you want to see what an AI-ready
       design system feels like, this is the demo.
-    </al-text-passage>
+    </al-text-block>
     <al-list style="margin-top: var(--al-theme-space-lg);">
       {aiFits.map((t) => (
         <al-list-item>

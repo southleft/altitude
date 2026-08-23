@@ -16,7 +16,7 @@ const data = [
 ];
 
 export default {
-  title: 'Organisms/Table',
+  title: 'Molecules/Table',
   component: ALTable,
   parameters: {
     status: { type: 'beta' },

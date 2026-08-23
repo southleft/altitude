@@ -1,0 +1,134 @@
+{
+  "$schema": "./ds-projects.schema.json",
+  "$comment": "Design-system PROJECT REGISTRY. One entry per Figma-backed design system this repo drives. Read by libs/altitude-mcp/src/lib/ds-project.mjs, which resolves the active project from --project <id>, the DS_PROJECT env var, or `default` below. Everything that used to be a hardcoded 'Altitude' string in the parity tooling (Figma file key, manifest path, prompt pipeline, Storybook identity) now comes from here.",
+  "default": "altitude",
+  "projects": {
+    "altitude": {
+      "id": "altitude",
+      "name": "Altitude Design System",
+      "brand": "altitude",
+      "figma": {
+        "fileKey": "y83n4o9LOGs74oAoguFcGS",
+        "fileName": "Altitude Design System",
+        "urlBase": "https://www.figma.com/design/{fileKey}/",
+        "componentPagePrefix": "🛠 ",
+        "decoys": [
+          {
+            "fileKey": "NGpu9IJj2pRhNru1QTGmuF",
+            "fileName": "Altitude DS",
+            "why": "Empty scratch file; an earlier pass built 31 component sets into it by mistake. Refuse to write here."
+          }
+        ]
+      },
+      "paths": {
+        "figmaSyncDir": ".altitude/figma-sync",
+        "parityManifest": ".altitude/figma-sync/parity-manifest.json",
+        "opsDir": ".altitude/figma-sync/ops",
+        "instanceMap": "scripts/figma-atoms/instance-map.mjs"
+      },
+      "library": {
+        "workspace": "al-web-components",
+        "root": "libs/al-web-components",
+        "tagPrefix": "al-"
+      },
+      "storybook": {
+        "configDir": "libs/al-web-components/.storybook",
+        "port": 6006,
+        "mcpPort": 6017,
+        "brandTitle": "Altitude Design System",
+        "brandUrl": "https://altitude.pages.dev/storybook/web-components",
+        "brandImage": "./images/logo.svg",
+        "productionBase": "https://altitude.pages.dev/storybook/web-components",
+        "excludeTitlePrefixes": [
+          "Foundations/"
+        ]
+      },
+      "prompts": {
+        "skillName": "altitude-figma-sync",
+        "skillPath": ".claude/skills/altitude-figma-sync/SKILL.md",
+        "skillTrapCount": 32,
+        "atomsScriptsDir": "scripts/figma-atoms",
+        "parityScriptsDir": "scripts/figma-parity",
+        "docPath": ".altitude/FIGMA-SYNC.md",
+        "guardrailsDoc": "AGENTS.md"
+      },
+      "excluded": {
+        "al-theme-switcher": "Owns no pixels — an al-button + al-popover + al-menu composition; a Figma set would duplicate three components (altitude-figma-sync: NOT_COMPONENTS).",
+        "al-icon": "Icons live in Figma as 71 flat components on the 🛠 Icons page (resolved by name), not as a component set — there is nothing for a per-set parity check to bind to."
+      }
+    },
+    "southleft": {
+      "id": "southleft",
+      "name": "Southleft Design System",
+      "brand": "southleft",
+      "figma": {
+        "fileKey": "rdhBS9t89V42E7EfiPjmSa",
+        "fileName": "Southleft V5",
+        "urlBase": "https://www.figma.com/design/{fileKey}/",
+        "componentPagePrefix": "🛠 ",
+        "decoys": []
+      },
+      "paths": {
+        "figmaSyncDir": ".altitude/figma-sync/southleft",
+        "parityManifest": ".altitude/figma-sync/southleft/parity-manifest.json",
+        "opsDir": ".altitude/figma-sync/southleft/ops",
+        "instanceMap": null
+      },
+      "library": {
+        "workspace": "al-web-components",
+        "root": "libs/al-web-components",
+        "tagPrefix": "al-",
+        "$componentsComment": "SCOPE. Southleft's design system is the subset of al-web-components that southleft.com actually ships, not the whole 105-component Altitude catalog. Derived from `grep -rhoE '<al-[a-z0-9-]+' apps/southleft/src --include=*.astro` and re-checkable with scripts/check-sl-scope.mjs. Adding a component to the SITE is what earns it a place here; keep the two in step or the DS documents things Southleft does not use and the parity list fills with noise.",
+        "components": [
+          "al-breadcrumbs",
+          "al-breadcrumbs-item",
+          "al-button",
+          "al-card",
+          "al-chip",
+          "al-drawer",
+          "al-footer",
+          "al-header",
+          "al-heading",
+          "al-icon",
+          "al-input",
+          "al-layout",
+          "al-link",
+          "al-list",
+          "al-list-item",
+          "al-logo",
+          "al-stat",
+          "al-table",
+          "al-testimonial",
+          "al-text-block",
+          "al-theme"
+        ]
+      },
+      "storybook": {
+        "configDir": "libs/al-web-components/.storybook-sl",
+        "port": 6007,
+        "mcpPort": 6018,
+        "brandTitle": "Southleft Design System",
+        "brandUrl": "https://southleft.com",
+        "brandImage": "./images/logo.svg",
+        "productionBase": "https://altitude.pages.dev/storybook/southleft",
+        "excludeTitlePrefixes": [
+          "Foundations/"
+        ]
+      },
+      "prompts": {
+        "skillName": "altitude-figma-sync",
+        "skillPath": ".claude/skills/altitude-figma-sync/SKILL.md",
+        "skillTrapCount": 32,
+        "atomsScriptsDir": "scripts/figma-atoms",
+        "parityScriptsDir": "scripts/figma-parity",
+        "docPath": ".altitude/FIGMA-SYNC.md",
+        "guardrailsDoc": "AGENTS.md"
+      },
+      "excluded": {
+        "al-theme-switcher": "Owns no pixels — an al-button + al-popover + al-menu composition; a Figma set would duplicate three components.",
+        "al-icon": "Icons are a 1,512-glyph Phosphor catalog resolved by name, not a component set — nothing for a per-set parity check to bind to.",
+        "al-theme": "The theming HOST — sets brand/mode/density tokens on :host and owns no pixels of its own. Nothing for Figma to mirror."
+      }
+    }
+  }
+}

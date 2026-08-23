@@ -1,0 +1,68 @@
+/*------------------------------------*\
+  #SOUTHLEFT BRAND PRIMITIVES
+\*------------------------------------*/
+
+/**
+ * The four brand-level custom properties southleft.com defines on `.sl-page`
+ * (`apps/southleft/src/styles/layout.css:124-136`), restated here as Sass
+ * variables that expand to a `var()` WITH THE APP'S OWN FORMULA AS THE
+ * FALLBACK.
+ *
+ * Why fallbacks rather than declaring them on `:host`:
+ *
+ *   * Declaring `--sl-border-faint` on `:host` would SHADOW the app's value.
+ *     The custom property is set on `.sl-page`, an ancestor — a `:host`
+ *     declaration wins over an inherited one, so the app would silently lose
+ *     the ability to retune its own brand primitives.
+ *   * Consuming them as `var(--sl-border-faint, <formula>)` inverts that: the
+ *     app's value wins wherever the app sets one, and the component still
+ *     renders correctly with no app CSS loaded at all — which is exactly the
+ *     Storybook case.
+ *
+ * The fallback formulas are copied from the app deliberately and are the one
+ * duplication in this package. When these become real brand tokens in the
+ * pipeline (`styles/tokens/tier-2/brand/southleft/`), this file collapses to
+ * plain `var(--al-…)` references and the duplication goes away.
+ */
+
+/** Hairline rule/border colour — 55% of the weak border token. */
+$sl-border-faint: var(--sl-border-faint, color-mix(in srgb, var(--al-theme-color-border-default-weak) 55%, transparent));
+
+/** The 72px baseline grid line — 45% of the weak border token. */
+$sl-grid-line: var(--sl-grid-line, color-mix(in srgb, var(--al-theme-color-border-default-weak) 45%, transparent));
+
+/** The brand's mono face. Carries the same stack the app declares. */
+$sl-font-mono: var(--sl-font-mono, 'IBM Plex Mono', Menlo, Consolas, monospace);
+
+/** The fluid 18px -> 22px "lead" paragraph size. */
+$sl-text-lead: var(--sl-text-lead, clamp(1.125rem, 1rem + 0.6vw, 1.375rem));
+
+/**
+ * The mono eyebrow/kicker treatment, shared by `sl-section-header` and
+ * `sl-cta-band`. 13px, uppercase, tracked — the brand's `.kicker` preset.
+ */
+@mixin sl-kicker {
+  font-family: $sl-font-mono;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+
+/**
+ * The 72px grid texture, radially masked so it fades toward the edges.
+ * Decorative only — always behind `aria-hidden` content.
+ */
+@mixin sl-grid-texture {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(to right, #{$sl-grid-line} 1px, transparent 1px),
+    linear-gradient(to bottom, #{$sl-grid-line} 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 20%, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 20%, black 30%, transparent 75%);
+  pointer-events: none;
+}

@@ -16,7 +16,7 @@ const actions = [
 ];
 
 const meta = {
-  title: 'Organisms/Command Palette',
+  title: 'Molecules/Navigation/Command Palette',
   component: 'al-command-palette',
   tags: ['autodocs'],
   parameters: {

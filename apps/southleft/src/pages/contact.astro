@@ -13,21 +13,21 @@ import { SITE } from '../lib/site';
   </div>
 
   <div class="sl-container sl-section">
-    <div class="al-u-grid">
+    <al-layout variant="grid" noCollapse>
       <div class="al-u-grid__item col:12 col:6@md">
         <al-card style="height:100%; box-sizing:border-box;">
           <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>Book a discovery call</al-heading></div>
-          <al-text-passage>Thirty minutes on Calendly — no forms, no gatekeeping.</al-text-passage>
+          <al-text-block>Thirty minutes on Calendly — no forms, no gatekeeping.</al-text-block>
           <al-button slot="actions-start" href={SITE.calendly} target="_blank">Open Calendly</al-button>
         </al-card>
       </div>
       <div class="al-u-grid__item col:12 col:6@md">
         <al-card style="height:100%; box-sizing:border-box;">
           <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>Email us</al-heading></div>
-          <al-text-passage>Prefer email? We read every message ourselves.</al-text-passage>
+          <al-text-block>Prefer email? We read every message ourselves.</al-text-block>
           <al-button slot="actions-start" variant="tertiary" href={`mailto:${SITE.email}`}>{SITE.email}</al-button>
         </al-card>
       </div>
-    </div>
+    </al-layout>
   </div>
 </Base>

@@ -4,7 +4,7 @@ import { withActions } from 'storybook/actions/decorator';
 import './time-selector-list';
 
 export default {
-  title: 'Atoms/Time Selector List',
+  title: 'Atoms/Form/Time Selector List',
   component: 'al-time-selector-list',
   tags: [ 'autodocs' ],
   parameters: {
@@ -23,5 +23,5 @@ Default.args = {};
 
 export const Horizontal = Template.bind({});
 Horizontal.args = {
-  orientation: 'horizontal'
+  direction: 'row'
 };

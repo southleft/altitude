@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "exports": {
     ".": {
-      "types": "./dist/components/bundle/bundle.d.ts",
+      "//": "The JS chunk is RENAMED by rollup (vite.config.mjs:185 maps the `bundle` entry to components/bundle/bundle.js), but tsc emits the declaration from the SOURCE layout — components/bundle.ts -> dist/components/bundle.d.ts. `types` pointed at the renamed JS directory, where no .d.ts has ever existed, so every TypeScript consumer of the root import silently got `any`. Do not 'tidy' these two into the same directory: bundle.d.ts re-exports './ALElement' and './<component>/<component>' relative to dist/components/, and moving it one level deeper breaks all 1,652 of those paths.",
+      "types": "./dist/components/bundle.d.ts",
       "default": "./dist/components/bundle/bundle.js"
     },
     "./components/icon/icons/*": {
@@ -26,6 +27,10 @@
     "./directives/*": {
       "types": "./dist/directives/*.d.ts",
       "default": "./dist/directives/*.js"
+    },
+    "./motion": {
+      "types": "./dist/motion/index.d.ts",
+      "default": "./dist/motion/index.js"
     },
     "./controllers/*": {
       "types": "./dist/controllers/*.d.ts",
@@ -49,18 +54,25 @@
   "license": "UNLICENSED",
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "start": "storybook dev -p 6006",
+    "start": "concurrently -k -n sb,mcp -c magenta,cyan \"pnpm run start:sb\" \"pnpm run start:mcp\"",
+    "start:sb": "storybook dev -p 6006",
+    "start:mcp": "node --experimental-strip-types --no-warnings ../altitude-mcp/src/server.mjs --http 6017",
+    "//start:sl": "SOUTHLEFT Storybook — the same components under the `southleft` brand, config in .storybook-sl. Port/mcpPort/brand come from .altitude/ds-projects.json (projects.southleft.storybook). Mirrors the `start` trio above so both design systems boot the same way; `--project southleft` is what points the MCP at the Southleft Figma file, and .storybook-sl/env.ts does the equivalent for the Storybook.",
+    "start:sl": "concurrently -k -n sb-sl,mcp-sl -c magenta,cyan \"pnpm run start:sb:sl\" \"pnpm run start:mcp:sl\"",
+    "start:sb:sl": "storybook dev -p 6007 -c .storybook-sl",
+    "start:mcp:sl": "node --experimental-strip-types --no-warnings ../altitude-mcp/src/server.mjs --http 6018 --project southleft",
     "build": "npm run build:tokens && npm run build:icons && npm run build:custom-elements.json && del-cli dist && vite build -c vite.config.mjs && tsc && node ../../scripts/copy-assets-to-dist.js",
     "build:storybook": "storybook build",
+    "build:storybook:sl": "storybook build -c .storybook-sl",
     "build:tokens": "node ../../scripts/convert-tokens-to-dtcg.js && node ./styles/tokens-config.v5.mjs && node ../../scripts/emit-token-types.js && node ../../scripts/copy-tokens-to-legacy-dist.js",
     "build:tokens:v5": "pnpm run build:tokens",
     "build:vite": "vite build -c vite.config.mjs --outDir dist-vite --emptyOutDir",
     "build:vite-spike": "vite build -c vite.spike.config.mjs",
     "test:tokens": "node ../../scripts/test-tokens-contract.js",
     "build:icons": "node ./icons/icons-config.mjs",
-    "build:custom-elements.json": "cem analyze --config custom-elements-manifest.config.mjs --outdir . && node ../../scripts/generate-component-schemas.js && node ../../scripts/generate-schema-index.js",
+    "build:custom-elements.json": "cem analyze --config custom-elements-manifest.config.mjs --outdir . && node ../../scripts/generate-component-schemas.js && node ../../scripts/generate-schema-index.js && node ../../scripts/ai-readiness/build-cem-digest.mjs",
     "test": "test-storybook --url http://localhost:6006",
-    "test:ci": "concurrently -k -s first -n 'sb,test' -c 'magenta,blue' 'pnpm start --quiet' 'wait-on tcp:6006 && test-storybook --url http://localhost:6006'",
+    "test:ci": "concurrently -k -s first -n 'sb,test' -c 'magenta,blue' 'pnpm run start:sb --quiet' 'wait-on tcp:6006 && test-storybook --url http://localhost:6006'",
     "plop": "plop --plopfile plop/plop-config.js",
     "validate:usage": "node cli/validate.mjs"
   },
@@ -74,10 +86,15 @@
     "schemas",
     "styles/tokens-dtcg"
   ],
-  "//sideEffects": "ALLOWLIST of paths that DO have side effects. Everything not listed is treated as side-effect-free and may be dropped when unused. Component and chunk modules MUST stay listed: they call customElements.define at module scope, and dropping that silently renders every <al-*> tag as an unknown element. Phosphor glyph data is emitted to dist/icon-glyphs/ (see chunkFileNames in vite.config.mjs) precisely so it can be omitted here \u2014 that omission is what lets a consumer importing 3 icons from glyphs.js avoid shipping all 1,512.",
+  "//sideEffects": "Two sets of paths, and BOTH are load-bearing. The `./dist/**` entries are for consumers of the PUBLISHED package. The `./components/**` / `./directives/**` / `./.storybook/**` entries are for anything that bundles this package FROM SOURCE — which is what both Storybooks do. Without them, Rollup treats every bare `import './button'` as side-effect-free and DROPS IT, so `customElements.define` never runs and a production Storybook build renders every component as unstyled text (dev is unaffected: Vite does not tree-shake). Measured before the fix: 2 surviving `customElements.define` calls in the whole preview bundle, and `globalThis.alAutoRegistry` undefined because `./.storybook/auto-registry.ts` — a pure side effect with `export {}` — had been eliminated outright. NOTE the glob shapes: `./components/*/*.ts` and `./components/icon/icons/*.ts` are enumerated rather than a blanket `./components/**` precisely so `components/icon/phosphor/**` (1,512 generated glyph modules) stays side-effect-free and tree-shakeable, which is the same split `vite.config.mjs` maintains for the built chunks.",
   "sideEffects": [
     "**/*.css",
     "**/*.scss",
+    "./components/*/*.ts",
+    "./components/icon/icons/*.ts",
+    "./components/ALElement.ts",
+    "./directives/*.ts",
+    "./.storybook/auto-registry.ts",
     "./dist/components/**",
     "./dist/directives/**",
     "./dist/controllers/**",
@@ -100,11 +117,13 @@
     "@storybook/web-components-vite": "^10.4",
     "@types/node": "^20.11.10",
     "@types/react": "^19.2.7",
+    "axe-core": "^4.12",
     "axe-playwright": "^2",
     "concurrently": "^8",
     "del-cli": "^5.1.0",
     "plop": "^4.0.1",
     "react": "^19.2.7",
+    "remark-gfm": "4",
     "sass": "^1.101",
     "storybook": "^10.4",
     "style-dictionary": "^5.0.0",
@@ -115,5 +134,8 @@
   "resolutions": {
     "@lit/reactive-element": "^2.0.3"
   },
-  "customElements": "custom-elements.json"
+  "customElements": "custom-elements.json",
+  "engines": {
+    "node": ">=22.0.0"
+  }
 }

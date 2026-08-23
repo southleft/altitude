@@ -9,7 +9,7 @@ import './checkbox';
 import { ALCheckbox } from './checkbox';
 
 export default {
-  title: 'Atoms/Checkbox',
+  title: 'Atoms/Form/Checkbox',
   component: 'al-checkbox',
   tags: [ 'autodocs' ],
   parameters: {

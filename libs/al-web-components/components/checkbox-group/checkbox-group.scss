@@ -37,22 +37,10 @@
 
   /**
    * Checkbox list
-   * 1. The div that holds all the checkbox items
+   * - Arrangement of the slotted items is delegated to the nested
+   *   `<al-layout>`; this component owns only the fieldset semantics.
+   *   For a row, the consumer nests `<al-layout direction="row" wrap>`.
    */
-  .al-c-checkbox-group__list {
-    display: flex;
-    flex-direction: column;
-
-    /**
-     * Checkboxs in displayed in a horizontal row
-     */
-    .al-c-checkbox-group--horizontal & {
-      flex-direction: row;
-      column-gap: var(--al-theme-space);
-      row-gap: 0;
-      flex-wrap: wrap;
-    }
-  }
 
   /**
    * Checkbox field note slotted

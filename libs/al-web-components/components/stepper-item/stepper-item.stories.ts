@@ -5,7 +5,7 @@ import '../icon/icons/emoji';
 import './stepper-item';
 
 export default {
-  title: 'Atoms/Stepper Item',
+  title: 'Atoms/Navigation/Stepper Item',
   component: 'al-stepper-item',
   tags: [ 'autodocs' ],
   parameters: {

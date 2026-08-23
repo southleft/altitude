@@ -11,43 +11,53 @@
     </script>
   </head>
   <body>
-    <header>
-      <h1>Altitude pilot fixture (web components)</h1>
-      <p>
-        T0.3 — minimal Lit consumer that imports the 5 pilot components. Used
-        by CI to verify each phase ships green for native consumers.
-      </p>
-    </header>
+    <al-theme brand="altitude" mode="dark">
+      <al-layout variant="constrained" size="lg" gutter="md">
+        <header>
+          <al-heading tagName="h1" variant="lg">Altitude pilot fixture (web components)</al-heading>
+          <al-text-block>
+            <p>
+              T0.3 — minimal Lit consumer that imports the 5 pilot components. Used
+              by CI to verify each phase ships green for native consumers.
+            </p>
+          </al-text-block>
+        </header>
 
-    <main>
-      <section>
-        <h2>button</h2>
-        <al-button>Default</al-button>
-        <al-button variant="secondary">Secondary</al-button>
-        <al-button variant="danger">Danger</al-button>
-      </section>
+        <main>
+          <al-layout gap="lg">
+            <section>
+              <al-heading tagName="h2" variant="sm">button</al-heading>
+              <al-layout direction="row" gap="sm" wrap>
+                <al-button>Default</al-button>
+                <al-button variant="secondary">Secondary</al-button>
+                <al-button variant="danger">Danger</al-button>
+              </al-layout>
+            </section>
 
-      <section>
-        <h2>input</h2>
-        <al-input label="Name" placeholder="Type something" required></al-input>
-      </section>
+            <section>
+              <al-heading tagName="h2" variant="sm">input</al-heading>
+              <al-input label="Name" placeholder="Type something" required></al-input>
+            </section>
 
-      <section>
-        <h2>select</h2>
-        <al-select label="Choose"></al-select>
-      </section>
+            <section>
+              <al-heading tagName="h2" variant="sm">select</al-heading>
+              <al-select label="Choose"></al-select>
+            </section>
 
-      <section>
-        <h2>dialog</h2>
-        <al-button id="open">Open dialog</al-button>
-        <al-dialog id="dlg" heading="Hello"></al-dialog>
-      </section>
+            <section>
+              <al-heading tagName="h2" variant="sm">dialog</al-heading>
+              <al-button id="open">Open dialog</al-button>
+              <al-dialog id="dlg" heading="Hello"></al-dialog>
+            </section>
 
-      <section>
-        <h2>theme-switcher</h2>
-        <al-theme-switcher></al-theme-switcher>
-      </section>
-    </main>
+            <section>
+              <al-heading tagName="h2" variant="sm">theme-switcher</al-heading>
+              <al-theme-switcher></al-theme-switcher>
+            </section>
+          </al-layout>
+        </main>
+      </al-layout>
+    </al-theme>
 
     <script type="module" src="/src/main.js"></script>
   </body>

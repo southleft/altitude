@@ -3,6 +3,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from 'storybook/actions/decorator';
 import './tooltip';
+import { loremSentences } from '../../.storybook/fixtures';
 
 export default {
   title: 'Atoms/Tooltip',
@@ -126,7 +127,7 @@ const TemplateWithLongText = (args) => html`
   <al-tooltip ${spread(args)} data-testid="tooltip">
     <span slot="trigger">Hover me</span>
     <span slot="prefix">⌘ + C</span>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc nisi eros, maximus vel pellentesque non, iaculis ac urna.
+    ${loremSentences(2, 'tooltip')}
   </al-tooltip>
 `;
 export const WithLongText = TemplateWithLongText.bind({});

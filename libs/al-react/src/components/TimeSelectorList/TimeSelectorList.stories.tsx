@@ -10,5 +10,5 @@ export default {
 export const Default: StoryObj<typeof ALTimeSelectorList> = { args: {} };
 
 export const Horizontal: StoryObj<typeof ALTimeSelectorList> = { args: {
-  orientation: 'horizontal'
+  direction: 'row'
 } };

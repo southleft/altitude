@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-text-block.schema.json",
+  "title": "ALTextBlock (al-text-block)",
+  "description": "Component: al-text-block",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-text-block",
+    "className": "ALTextBlock",
+    "module": "components/text-block/text-block.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The text passage content",
+        "name": ""
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": [
+      {
+        "description": "The block's base typography, as a `font` shorthand. Defaults to body-md. Needed because that default compiles to a `font` shorthand, which resets `font-size`/`line-height` and so cannot be overridden by inheritance from the host — pass a typography token (e.g. `var(--al-theme-typography-body-lg)`) to set lead copy.",
+        "name": "--al-text-block-font"
+      }
+    ]
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-text-block"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maxWidth": {
+          "description": "typescript: 'sm'",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

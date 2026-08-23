@@ -36,9 +36,11 @@ const {
         an earlier wrong bump to it.) */}
     <al-heading tagName="h2" variant="display-md" isBold={true} class="sl-cta-band__heading">{heading}</al-heading>
     <p class="sl-cta-band__dek">{dek}</p>
-    <div class="sl-cta-band__actions">
-      <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
-      <al-button variant="tertiary" href={secondaryHref.startsWith('http') ? secondaryHref : withBase(secondaryHref)}>{secondaryLabel}</al-button>
+    <div style="margin-block-start: var(--al-theme-space-xl);">
+      <al-layout direction="row" wrap gap="md" align="center" justify="center">
+        <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
+        <al-button variant="tertiary" href={secondaryHref.startsWith('http') ? secondaryHref : withBase(secondaryHref)}>{secondaryLabel}</al-button>
+      </al-layout>
     </div>
   </div>
 </div>

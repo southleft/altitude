@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-vite';
-import { ALToggleButtonGroup, ALToggleButton, ALIconCalendar, ALPopover } from '../..';
+import { ALToggleButtonGroup, ALToggleButton, ALIconCalendar, ALPopover, ALLayout } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
@@ -20,14 +20,6 @@ export default {
       control: 'radio',
       options: ['default', 'background']
     },
-    orientation: {
-      control: 'radio',
-      options: ['default', 'vertical']
-    },
-    gap: {
-      control: 'radio',
-      options: ['default', 'sm']
-    }
   },
   args: {
     children: (
@@ -54,25 +46,41 @@ export const Background: StoryObj<typeof ALToggleButtonGroup> = {
   }
 };
 
+/**
+ * Arrangement belongs to `<ALLayout>` — nest the toggle buttons in an
+ * `<ALLayout>` and set the direction there.
+ */
+const verticalChildren = (
+  <ALLayout gap="none">
+    <ALToggleButton>
+      <ALIconCalendar size="lg"></ALIconCalendar>
+    </ALToggleButton>
+    <ALToggleButton>
+      <ALIconCalendar size="lg"></ALIconCalendar>
+    </ALToggleButton>
+    <ALToggleButton>
+      <ALIconCalendar size="lg"></ALIconCalendar>
+    </ALToggleButton>
+  </ALLayout>
+);
+
 export const Vertical: StoryObj<typeof ALToggleButtonGroup> = {
   args: {
-    orientation: 'vertical'
+    children: verticalChildren
   }
 };
 
 export const VerticalBackground: StoryObj<typeof ALToggleButtonGroup> = {
   args: {
-    orientation: 'vertical',
-    variant: 'background'
+    variant: 'background',
+    children: verticalChildren
   }
 };
 
 export const GapSmall: StoryObj<typeof ALToggleButtonGroup> = {
   args: {
-    orientation: 'vertical',
-    gap: 'sm',
     children: (
-      <>
+      <ALLayout gap="md">
         <ALToggleButton variant="background">
           <ALPopover position="top-left">
             <ALIconCalendar slot="trigger" size="lg"></ALIconCalendar>
@@ -91,7 +99,7 @@ export const GapSmall: StoryObj<typeof ALToggleButtonGroup> = {
             <Fpo>Content</Fpo>
           </ALPopover>
         </ALToggleButton>
-      </>
+      </ALLayout>
     )
   },
   decorators: [

@@ -111,38 +111,12 @@ function applySectionOrder(order: SectionId[]): void {
   }
 }
 
-function applyHeroComposition(composition: HeroComposition): void {
-  const hero = document.querySelector('[data-section-id="hero"] al-hero');
-  if (!hero) return;
-  if (composition === 'split') hero.removeAttribute('layout');
-  else hero.setAttribute('layout', composition);
-  hero.toggleAttribute('overlay', composition === 'poster');
-}
-
 function applyContentWidth(width: ContentWidth): void {
   document.querySelector('.sl-page')?.setAttribute('data-sl-content-width', width);
 }
 
 function applyGridDensity(density: GridDensity): void {
   document.querySelector('.sl-page')?.setAttribute('data-sl-grid-density', density);
-}
-
-/** `services` and `work` are the only sections with an asymmetric-capable
- *  grid on the home page today (see `[data-emphasis-grid]` in index.astro);
- *  anything else — including a malformed value — degrades to `'none'`. */
-function applySectionEmphasis(emphasis: SectionEmphasis): void {
-  document.querySelectorAll<HTMLElement>('[data-emphasis-grid]').forEach((grid) => {
-    const sectionId = grid.closest('[data-section-id]')?.getAttribute('data-section-id');
-    const isFlagshipSection = emphasis !== 'none' && emphasis === sectionId;
-    const items = Array.from(grid.querySelectorAll<HTMLElement>(':scope > .al-u-grid__item'));
-    items.forEach((item, i) => {
-      const flagshipClass = item.dataset.colFlagship;
-      const regularClass = item.dataset.colRegular;
-      if (!flagshipClass || !regularClass) return;
-      item.classList.remove(flagshipClass, regularClass);
-      item.classList.add(isFlagshipSection && i === 0 ? flagshipClass : regularClass);
-    });
-  });
 }
 
 /** Apply a fully-resolved (or partial/malformed) layout to the home page.
@@ -172,10 +146,8 @@ export function applyLayout(layout: Partial<ResolvedLayout> | undefined | null):
     };
 
     applySectionOrder(resolved.sectionOrder);
-    applyHeroComposition(resolved.heroComposition);
     applyContentWidth(resolved.contentWidth);
     applyGridDensity(resolved.gridDensity);
-    applySectionEmphasis(resolved.sectionEmphasis);
   } catch (err) {
     // Never throw out to the caller — log and fall back to the shipped
     // default rather than leave the page in a half-applied state.
@@ -184,11 +156,9 @@ export function applyLayout(layout: Partial<ResolvedLayout> | undefined | null):
   }
 }
 
-/** Restore the shipped default order/composition/density/width. */
+/** Restore the shipped default order/density/width. */
 export function resetLayout(): void {
   applySectionOrder(DEFAULT_LAYOUT.sectionOrder);
-  applyHeroComposition(DEFAULT_LAYOUT.heroComposition);
   applyContentWidth(DEFAULT_LAYOUT.contentWidth);
   applyGridDensity(DEFAULT_LAYOUT.gridDensity);
-  applySectionEmphasis(DEFAULT_LAYOUT.sectionEmphasis);
 }

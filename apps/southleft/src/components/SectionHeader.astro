@@ -22,13 +22,15 @@ const kickerSlug = label.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 <div class="sl-section-rule" aria-hidden="true">
   <span>{index ? `${index} / ` : ''}{label}</span>
 </div>
-<div class="sl-section-header">
-  <div class="sl-stack sl-stack--sm">
-    <p class="sl-kicker sl-kicker--accent">&lt;{kickerSlug}&gt;</p>
-    <al-heading tagName="h2" variant="lg" isBold={true}>{heading}</al-heading>
-    {dek && <p class="sl-section-header__dek">{dek}</p>}
-  </div>
-  {linkHref && (
-    <a href={withBase(linkHref)} class="sl-mono-link sl-section-header__link">{linkLabel}</a>
-  )}
+<div style="margin-block-end: var(--al-theme-space-xl);">
+  <al-layout direction="row" justify="between" align="end" wrap gap="lg">
+    <al-layout gap="sm" grow>
+      <p class="sl-kicker sl-kicker--accent">&lt;{kickerSlug}&gt;</p>
+      <al-heading tagName="h2" variant="lg" isBold={true}>{heading}</al-heading>
+      {dek && <p class="sl-section-header__dek">{dek}</p>}
+    </al-layout>
+    {linkHref && (
+      <a href={withBase(linkHref)} class="sl-mono-link sl-section-header__link">{linkLabel}</a>
+    )}
+  </al-layout>
 </div>

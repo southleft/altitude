@@ -49,10 +49,12 @@ const jsonLd = {
     <div class="sl-container--prose" style="margin-top: var(--al-theme-space-xl);">
       <al-chip variant="secondary">{project.data.client}</al-chip>
       <al-heading tagName="h1" variant="display-sm" isBold={true} style="margin-top: var(--al-theme-space-sm);">{project.data.title}</al-heading>
-      {project.data.oneLiner && <al-text-passage>{project.data.oneLiner}</al-text-passage>}
+      {project.data.oneLiner && <al-text-block>{project.data.oneLiner}</al-text-block>}
       {project.data.capabilities.length > 0 && (
-        <div class="sl-header__nav" style="margin-top: var(--al-theme-space-sm);">
-          {project.data.capabilities.map((c) => <al-chip>{c}</al-chip>)}
+        <div style="margin-top: var(--al-theme-space-sm);">
+          <al-layout direction="row" wrap gap="xs" align="center">
+            {project.data.capabilities.map((c) => <al-chip>{c}</al-chip>)}
+          </al-layout>
         </div>
       )}
     </div>
@@ -66,9 +68,9 @@ const jsonLd = {
 
   <div class="sl-container sl-section">
     <div class="sl-container--prose">
-      <al-text-passage>
+      <al-text-block>
         <Content />
-      </al-text-passage>
+      </al-text-block>
     </div>
   </div>
 </Base>

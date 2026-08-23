@@ -176,11 +176,11 @@ export const WithExpandableList = () => html`
 
 export const Horizontal = Template.bind({});
 Horizontal.args = {
-  orientation: 'horizontal'
+  direction: 'row'
 };
 
 export const HorizontalOverflow = Template.bind({});
 HorizontalOverflow.args = {
-  orientation: 'horizontal',
+  direction: 'row',
   behavior: 'overflow'
 };

@@ -35,7 +35,7 @@ export class ALList extends ALElement {
    * - **horizontal** renders the list side-by-side and wraps unless overflow is turned on
    */
   @property()
-  accessor orientation: 'horizontal';
+  accessor direction: 'row';
 
   /**
    * isStart state
@@ -173,7 +173,7 @@ export class ALList extends ALElement {
     });
 
     const componentClassName = this.componentClassNames('al-c-list', {
-      'al-c-list--horizontal': this.orientation === 'horizontal',
+      'al-c-list--row': this.direction === 'row',
       'al-c-list--overflow': this.behavior === 'overflow'
     });
 

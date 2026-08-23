@@ -3,7 +3,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from 'storybook/actions/decorator';
 import '../button/button';
-import '../text-passage/text-passage';
+import '../text-block/text-block';
 import './alert';
 import { ALAlert } from './alert';
 
@@ -60,16 +60,16 @@ function openAlert() {
 
 const Template = (args) =>
   html`<al-alert ${spread(args)} data-testid="alert">
-    <al-text-passage>
+    <al-text-block>
       This is an alert. It is used to notify the user of something important.
-    </al-text-passage>
+    </al-text-block>
   </al-alert>`;
 
 const TemplateWithAction = (args) =>
 html`<al-alert ${spread(args)} data-testid="alert">
-  <al-text-passage>
+  <al-text-block>
     This is an alert. It is used to notify the user of something important.
-  </al-text-passage>
+  </al-text-block>
   <al-button slot="action" data-testid="action" variant="tertiary">Action</al-button>
 </al-alert>`;
 
@@ -122,9 +122,9 @@ const TemplateOpenAlert = (args) => html`
   <div>
     <al-button @click=${openAlert} data-testid="open-alert">Show Alert</al-button>
     <al-alert ${spread(args)} data-testid="alert">
-      <al-text-passage>
+      <al-text-block>
         This is an alert. It is used to notify the user of something important.
-      </al-text-passage>
+      </al-text-block>
       <al-button slot="action" data-testid="action" variant="tertiary" @click=${closeAlert}>Action</al-button>
     </al-alert>
   </div>

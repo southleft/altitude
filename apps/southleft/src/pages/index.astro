@@ -8,12 +8,20 @@
 // and every section opens with v5's `.section-rule` (index/label), matching
 // v5's own numbering exactly. T12 audit-2 round (E): "04 / try-the-system"
 // (TokenPlayground.astro) is now built and wired too — see
-// components/TrySystem.astro. Still NOT reproduced (bespoke, animation-
-// driven, no al-* equivalent — deferred to a follow-up animations session):
-// the `#hero-murmur` generative canvas, `GenerativeCanvas` ("00 / the
-// canvas"), `Marquee`, the token chips' drag interaction, and the
-// terminal's typing animation. Everything else — content, IA, section
-// order, section designs — is transcribed.
+// components/TrySystem.astro.
+//
+// Spec 2026-08-22-southleft-example-1-to-1-parity closed the three biggest
+// remaining holes, all previously written off as "animation-driven": the
+// `#hero-murmur` glyph field (components/HeroMurmur.astro), `GenerativeCanvas`
+// ("00 / the-canvas") and `Marquee`. None of them turned out to be animations
+// — the canvas is a deterministic seeded generator, the murmur is the hero's
+// texture, and the ticker is one CSS keyframe — and their absence was most of
+// what made the page read as "not 1:1".
+//
+// Still NOT reproduced, and genuinely interaction/animation work: the token
+// chips' pointer drag, the terminal's type-on, the `hero-squeeze` scroll-driven
+// variable-font compression, and the `.reveal` scroll stagger. Everything else
+// — content, IA, section order, section designs — is transcribed.
 //
 // `data-section-id` on each top-level <section> is the layout resolver's
 // (src/lib/layout-resolver.ts, T5) reorder target — the AI direction panel
@@ -29,6 +37,9 @@ import CTABand from '../components/CTABand.astro';
 import AIDirectionPanel from '../components/AIDirectionPanel.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import TrySystem from '../components/TrySystem.astro';
+import GenerativeCanvas from '../components/GenerativeCanvas.astro';
+import Marquee from '../components/Marquee.astro';
+import HeroMurmur from '../components/HeroMurmur.astro';
 import { CTA } from '../lib/site';
 import { withBase } from '../lib/url';
 
@@ -115,37 +126,48 @@ const testimonials = [
        comment for why. -->
   <section class="sl-hero" data-section-id="hero">
     <div class="sl-hero__texture" aria-hidden="true"></div>
-    <!-- #hero-murmur generative canvas — sparse animated glyphs over the
-         grid texture (v5 src/pages/index.astro ~L346-476). Animation-
-         driven; deferred to a follow-up animations session
-         (spec 2026-08-20-southleft-example-app, T12). -->
-    <div class="sl-container sl-hero__inner">
-      <p class="sl-kicker sl-kicker--accent al-u-theme-typography-body-xs">&lt;southleft&gt;</p>
-      <al-heading tagName="h1" variant="display-lg" isBold={true} class="sl-hero__heading">
-        AI-powered design systems. Built by the people building the tools.
-      </al-heading>
-      <div class="sl-hero__grid">
-        <div class="sl-hero__lead">
-          <al-text-passage maxWidth="md">
-            We audit, build, and evolve design systems for teams at Caterpillar, Novartis, UPS, and
-            NASDAQ — and we build the open-source AI tooling the design systems community actually
-            uses. We don't just talk about this stuff. We build it.
-          </al-text-passage>
-          <div class="sl-hero__actions">
-            <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
-            <al-button variant="tertiary" href={withBase('/services')}>See how we work</al-button>
-          </div>
-          <div class="sl-hero__chips" aria-hidden="true">
-            <div class="sl-hero__chip-row">
-              <span class="sl-token-chip"><span class="sl-token-chip__dot"></span>--sl-color-red-500: #f05735</span>
-              <span class="sl-token-chip">--sl-font-display: Agrandir</span>
-              <span class="sl-token-chip">--sl-ease-out: cubic-bezier(.22,1,.36,1)</span>
-            </div>
-            <p class="sl-hero__chip-note al-u-theme-typography-body-xs">// loose tokens — drag them around</p>
-          </div>
-        </div>
-        <div class="sl-hero__terminal">
-          <div class="sl-terminal">
+    <!-- The sparse glyph field over the grid texture — T8. -->
+    <HeroMurmur />
+    <!-- Structure is `<al-layout>` end to end (T12): `constrained` owns the
+         page measure AND — via `--al-layout-padding`, added for this — the
+         hero's block rhythm, so the old `.sl-container` + `.sl-hero__inner`
+         pair collapses into one element. The two-column split below the
+         heading is `variant="grid"` with `--al-layout-template`, and the lead
+         column is a plain flow layout. No hand-rolled flex or grid remains in
+         this section. -->
+    <al-layout variant="constrained" class="sl-measure sl-hero__inner">
+      <al-layout gap="none" class="sl-hero__stack">
+        <p class="sl-kicker sl-kicker--accent al-u-theme-typography-body-xs">&lt;southleft&gt;</p>
+        <al-heading tagName="h1" variant="display-lg" isBold={true} class="sl-hero__heading">
+          AI-powered design systems. Built by the people building the tools.
+        </al-heading>
+        <al-layout variant="grid" noCollapse align="end" class="sl-hero__grid">
+          <al-layout gap="none" class="al-u-grid__item sl-hero__lead">
+            <!-- `maxWidth` was `"md"`, which al-text-block does not accept —
+                 its only value is `"sm"` (text-block.ts), so the attribute was
+                 a no-op. The reference caps this copy at `max-w-2xl` and sets
+                 it in the lead type size; both live in `.sl-hero__lead-copy`,
+                 reusing the same `--sl-text-lead` recipe as the section deks. -->
+            <al-text-block class="sl-hero__lead-copy">
+              We audit, build, and evolve design systems for teams at Caterpillar, Novartis, UPS, and
+              NASDAQ — and we build the open-source AI tooling the design systems community actually
+              uses. We don't just talk about this stuff. We build it.
+            </al-text-block>
+            <al-layout direction="row" wrap gap="sm" align="center" class="sl-hero__actions">
+              <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
+              <al-button variant="tertiary" href={withBase('/services')}>See how we work</al-button>
+            </al-layout>
+            <al-layout gap="sm" class="sl-hero__chips" aria-hidden="true">
+              <al-layout direction="row" wrap gap="sm" align="center">
+                <span class="sl-token-chip"><span class="sl-token-chip__dot"></span>--sl-color-red-500: #f05735</span>
+                <span class="sl-token-chip">--sl-font-display: Agrandir</span>
+                <span class="sl-token-chip">--sl-ease-out: cubic-bezier(.22,1,.36,1)</span>
+              </al-layout>
+              <p class="sl-hero__chip-note al-u-theme-typography-body-xs">// loose tokens — drag them around</p>
+            </al-layout>
+          </al-layout>
+          <div class="al-u-grid__item sl-hero__terminal">
+            <div class="sl-terminal">
             <div class="sl-terminal__bar" aria-hidden="true">
               <span class="sl-terminal__dot sl-terminal__dot--1"></span>
               <span class="sl-terminal__dot sl-terminal__dot--2"></span>
@@ -161,13 +183,17 @@ const testimonials = [
 <span class="sl-terminal__out">— every component from your library. zero rogue divs.</span></pre>
           </div>
         </div>
-      </div>
-    </div>
+      </al-layout>
+      </al-layout>
+    </al-layout>
   </section>
 
-  <!-- 00 / The canvas — GenerativeCanvas is an animation-driven centerpiece
-       (interactive, purely visual). Deferred to a follow-up animations
-       session (spec 2026-08-20-southleft-example-app, T12). -->
+  <!-- 00 / The canvas — the centerpiece. Built in spec
+       2026-08-22-southleft-example-1-to-1-parity (T7); it was deferred as
+       "animation-driven" by the previous spec, but the reference's version is
+       a deterministic seeded generator, not an animation, and the section was
+       the largest single hole in home-page parity. -->
+  <GenerativeCanvas />
 
   <!-- 01 / Proof strip -->
   <section class="sl-container sl-section" data-section-id="logos">
@@ -180,7 +206,7 @@ const testimonials = [
 
   <!-- 02 / The shift (POV) -->
   <section class="sl-container sl-section">
-    <div class="al-u-grid">
+    <al-layout variant="grid" noCollapse>
       <div class="al-u-grid__item col:12 col:7@lg">
         <div class="sl-section-rule" aria-hidden="true"><span>02 / the-shift</span></div>
         <p class="sl-kicker sl-kicker--accent" style="margin-top: 2rem;">&lt;why-now&gt;</p>
@@ -196,7 +222,7 @@ const testimonials = [
           Read: Context-Based Design Systems →
         </a>
       </div>
-    </div>
+    </al-layout>
   </section>
 
   <!-- 03 / Services -->
@@ -207,7 +233,7 @@ const testimonials = [
       heading="What we do"
       dek="AI + design systems is our main practice — audits, workshops, embedded engineering, and ongoing research at the edge of MCP, agents, and generative UI."
     />
-    <div class="al-u-grid" style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);">
+    <div style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);"><al-layout variant="grid" noCollapse>
       {services.map((s) => (
         <div class="al-u-grid__item col:12 col:6@md">
           <a href={withBase(s.href)} class="sl-service-card">
@@ -222,7 +248,7 @@ const testimonials = [
           </a>
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </section>
 
   <!-- 04 / Try the system — v5's TokenPlayground.astro, transcribed +
@@ -237,7 +263,7 @@ const testimonials = [
       heading="We publish our homework"
       dek="If we recommend a workflow, it's because we've already built and shipped it. Open-source, in production, used by real teams."
     />
-    <div class="al-u-grid" style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);">
+    <div style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);"><al-layout variant="grid" noCollapse>
       {tools.map((t) => (
         <div class="al-u-grid__item col:12 col:6@md col:4@lg">
           <a href={t.href.startsWith('http') ? t.href : withBase(t.href)} target={t.href.startsWith('http') ? '_blank' : undefined} class="sl-tool-card">
@@ -254,7 +280,7 @@ const testimonials = [
           <a href={withBase('/services/workshops-training')} class="sl-tool-card__footer">get early access →</a>
         </div>
       </div>
-    </div>
+    </al-layout></div>
   </section>
 
   <!-- 06 / Featured work -->
@@ -267,13 +293,13 @@ const testimonials = [
       linkHref="/work"
       linkLabel="all case studies →"
     />
-    <div class="al-u-grid" style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);">
+    <div style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);"><al-layout variant="grid" noCollapse>
       {featuredWork.map((w) => (
         <div class="al-u-grid__item col:12 col:4@md">
           <WorkCard project={w} />
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </section>
 
   <!-- 07 / Testimonials — rebuilt as bespoke `.sl-quote-card` markup, T12
@@ -284,7 +310,7 @@ const testimonials = [
        itself is untouched for any other consumer. -->
   <section class="sl-container sl-section" data-section-id="testimonials">
     <div class="sl-section-rule" aria-hidden="true"><span>07 / quotes-from-folks</span></div>
-    <div class="al-u-grid" style="margin-top: calc(var(--al-theme-space-xxl) * 1.5);">
+    <div style="margin-top: calc(var(--al-theme-space-xxl) * 1.5);"><al-layout variant="grid" noCollapse>
       {testimonials.map((t) => (
         <div class="al-u-grid__item col:12 col:6@md">
           <figure class="sl-quote-card">
@@ -296,8 +322,12 @@ const testimonials = [
           </figure>
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </section>
+
+  <!-- Ticker — full-bleed, deliberately unnumbered and outside any container,
+       exactly as the reference places it between 07 and 08 (T6). -->
+  <Marquee />
 
   <!-- 08 / Insights teasers -->
   <section class="sl-container sl-section" data-section-id="insights">
@@ -309,13 +339,13 @@ const testimonials = [
       linkHref="/insights"
       linkLabel="all insights →"
     />
-    <div class="al-u-grid" style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);">
+    <div style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);"><al-layout variant="grid" noCollapse>
       {posts.map((p) => (
         <div class="al-u-grid__item col:12 col:4@md">
           <ArticleCard post={p} />
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </section>
 
   <section data-section-id="cta">

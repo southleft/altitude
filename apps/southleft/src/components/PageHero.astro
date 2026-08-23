@@ -1,6 +1,9 @@
 ---
 // Interior-page hero — spec 2026-08-20-southleft-example-app, T4-1.
-// Thin al-hero wrapper (stacked, no media) for section/listing/detail pages.
+// Was a thin `<al-hero layout="stacked">` wrapper; al-hero
+// has been removed from the design system, and this only ever used its
+// stacked/no-media path — which is a vertical stack. That is `<al-layout>` plus
+// the theme's own `.sl-page-hero` band styling.
 interface Props {
   label: string;
   heading: string;
@@ -9,9 +12,13 @@ interface Props {
 const { label, heading, dek } = Astro.props;
 ---
 
-<al-hero layout="stacked" contentAlignment="start">
-  <al-chip slot="eyebrow" variant="secondary">{label}</al-chip>
-  <al-heading slot="heading" tagName="h1" variant="display-md" isBold={true}>{heading}</al-heading>
-  {dek && <al-text-passage>{dek}</al-text-passage>}
-  <slot />
-</al-hero>
+<!-- The band padding lives on this wrapper, NOT on <al-layout>: the layout's
+     host is `display: contents`, so padding declared on it would never apply. -->
+<div class="sl-page-hero">
+  <al-layout gap="md">
+    <al-chip variant="secondary" class="sl-page-hero__eyebrow">{label}</al-chip>
+    <al-heading tagName="h1" variant="display-md" isBold={true}>{heading}</al-heading>
+    {dek && <al-text-block>{dek}</al-text-block>}
+    <slot />
+  </al-layout>
+</div>

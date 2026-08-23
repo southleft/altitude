@@ -58,31 +58,33 @@ const shapes = [
       heading="Design system development"
       dek="Southleft specializes in design systems engineering: structured tokens, component libraries, and documentation ecosystems that align design and engineering, reduce redundancy, and speed up delivery. Whether you're starting from scratch, auditing a system that's drifted, or scaling one across brands and platforms, we build systems your team — and your AI tooling — can actually use."
     >
-      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
-        <al-button href={withBase(CTA.href)}>Talk to us about your system</al-button>
-        <al-button variant="tertiary" href={withBase('/projects/petsmart')}>See it at PetSmart scale</al-button>
+      <div style="margin-top: var(--al-theme-space-lg);">
+        <al-layout direction="row" wrap gap="xs" align="center">
+          <al-button href={withBase(CTA.href)}>Talk to us about your system</al-button>
+          <al-button variant="tertiary" href={withBase('/projects/petsmart')}>See it at PetSmart scale</al-button>
+        </al-layout>
       </div>
     </PageHero>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="lg" isBold={true}>Three situations we see most</al-heading>
-    <al-text-passage maxWidth="sm">Design system engagements rarely start from zero context. They start from one of these.</al-text-passage>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <al-text-block maxWidth="sm">Design system engagements rarely start from zero context. They start from one of these.</al-text-block>
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {audiences.map((a) => (
         <div class="al-u-grid__item col:12 col:4@md">
           <al-card style="height:100%; box-sizing:border-box;">
             <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>{a.title}</al-heading></div>
-            <al-text-passage>{a.body}</al-text-passage>
+            <al-text-block>{a.body}</al-text-block>
           </al-card>
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="lg" isBold={true}>Deliverables, not decks</al-heading>
-    <al-text-passage maxWidth="sm">Every engagement produces working artifacts — libraries, tokens, docs, and the governance to keep them honest.</al-text-passage>
+    <al-text-block maxWidth="sm">Every engagement produces working artifacts — libraries, tokens, docs, and the governance to keep them honest.</al-text-block>
     <al-list style="margin-top: var(--al-theme-space-xl);">
       {deliverables.map((d) => <al-list-item><strong>{d.name}</strong> — {d.desc}</al-list-item>)}
     </al-list>
@@ -90,7 +92,7 @@ const shapes = [
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="lg" isBold={true}>Scoped to where your system is</al-heading>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {shapes.map((s) => (
         <div class="al-u-grid__item col:12 col:4@md">
           <al-card style="height:100%; box-sizing:border-box;">
@@ -98,44 +100,46 @@ const shapes = [
               <al-chip>{s.label}</al-chip>
               <al-heading tagName="h3" variant="sm" isBold={true} style="margin-top: var(--al-theme-space-xs);">{s.title}</al-heading>
             </div>
-            <al-text-passage>{s.body}</al-text-passage>
+            <al-text-block>{s.body}</al-text-block>
           </al-card>
         </div>
       ))}
-    </div>
-    <al-text-passage maxWidth="md" style="margin-top: var(--al-theme-space-lg);">
+    </al-layout></div>
+    <al-text-block maxWidth="md" style="margin-top: var(--al-theme-space-lg);">
       Our own system, <a href={withBase('/tools/altitude')}>Altitude</a>, seeds client builds — it's the internal
       accelerator and AI testbed we introduced in 2024, and it means engagements start from proven architecture
       rather than a blank repo.
-    </al-text-passage>
+    </al-text-block>
   </div>
 
   {caseStudies.length > 0 && (
     <div class="sl-container sl-section">
-      <div class="sl-section-header">
-        <div class="sl-stack sl-stack--sm">
+      <div style="margin-block-end: var(--al-theme-space-xl);">
+        <al-layout gap="sm">
           <al-heading tagName="h2" variant="lg" isBold={true}>Systems in production</al-heading>
-          <al-text-passage maxWidth="sm">PetSmart's Sparky system (with Big Medium), ALPS for the Seventh-day Adventist Church's global presence, and Carbon integrated into IBM Investor Relations (with Lullabot).</al-text-passage>
-        </div>
+          <al-text-block maxWidth="sm">PetSmart's Sparky system (with Big Medium), ALPS for the Seventh-day Adventist Church's global presence, and Carbon integrated into IBM Investor Relations (with Lullabot).</al-text-block>
+        </al-layout>
       </div>
-      <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
         {caseStudies.map((w) => <div class="al-u-grid__item col:12 col:4@md"><WorkCard project={w} /></div>)}
-      </div>
+      </al-layout></div>
     </div>
   )}
 
   {relatedPosts.length > 0 && (
     <div class="sl-container sl-section">
-      <div class="sl-section-header">
-        <div class="sl-stack sl-stack--sm">
-          <al-heading tagName="h2" variant="lg" isBold={true}>How we think about systems</al-heading>
-          <al-text-passage maxWidth="sm">Tokens, theming, and multi-brand architecture — written from the build, not the sidelines.</al-text-passage>
-        </div>
-        <al-link href={withBase('/insights')}>All insights →</al-link>
+      <div style="margin-block-end: var(--al-theme-space-xl);">
+        <al-layout direction="row" justify="between" align="end" wrap gap="lg">
+          <al-layout gap="sm" grow>
+            <al-heading tagName="h2" variant="lg" isBold={true}>How we think about systems</al-heading>
+            <al-text-block maxWidth="sm">Tokens, theming, and multi-brand architecture — written from the build, not the sidelines.</al-text-block>
+          </al-layout>
+          <al-link href={withBase('/insights')}>All insights →</al-link>
+        </al-layout>
       </div>
-      <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
         {relatedPosts.map((p) => <div class="al-u-grid__item col:12 col:4@md"><ArticleCard post={p} /></div>)}
-      </div>
+      </al-layout></div>
     </div>
   )}
 

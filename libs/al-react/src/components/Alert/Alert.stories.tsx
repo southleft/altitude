@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-vite';
-import { ALAlert, ALTextPassage, ALButton } from '../..';
+import { ALAlert, ALTextBlock, ALButton } from '../..';
 
 export default {
   title: 'Atoms/Alert',
@@ -35,7 +35,7 @@ export default {
     isActive: true,
     children: (
       <>
-        <ALTextPassage>This is an alert. It is used to notify the user of something important.</ALTextPassage>
+        <ALTextBlock>This is an alert. It is used to notify the user of something important.</ALTextBlock>
       </>
     )
   }
@@ -85,7 +85,7 @@ export const WithAction: StoryObj<typeof ALAlert> = {
   args: {
     children: (
       <>
-        <ALTextPassage>This is an alert. It is used to notify the user of something important.</ALTextPassage>
+        <ALTextBlock>This is an alert. It is used to notify the user of something important.</ALTextBlock>
         <ALButton slot="action" variant="tertiary">Action</ALButton>
       </>
     )

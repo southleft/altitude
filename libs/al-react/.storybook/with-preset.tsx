@@ -37,6 +37,36 @@ function isDisabled(context: { parameters?: { alPreset?: { disable?: boolean } }
   return context.parameters?.alPreset?.disable === true;
 }
 
+/**
+ * Repaint the preview iframe's own surface to match the active preset —
+ * ported from `al-web-components/.storybook/with-preset.ts` (see that file
+ * for why neither a painted wrapper `<div>` nor a `:root` stylesheet swap is
+ * acceptable). `<al-theme>` is `display: contents`, so it paints nothing; the
+ * iframe background comes from the altitude-DARK `:root` bundle and does not
+ * move when the one-click toggle flips to light.
+ *
+ * One deliberate difference: the selector is `[data-al-preset]` alone, not
+ * `al-theme[data-al-preset]` — al-react registers with a version suffix, so
+ * the element here is `al-theme-1-0-0` and a tag-qualified selector would
+ * never match.
+ */
+const SURFACE_TOKENS = [
+  '--al-theme-color-background-default-weak',
+  '--al-theme-color-content-default',
+] as const;
+
+function syncPreviewSurface(): void {
+  requestAnimationFrame(() => {
+    const el = document.querySelector('[data-al-preset]');
+    if (!el) return;
+    const cs = getComputedStyle(el);
+    for (const token of SURFACE_TOKENS) {
+      const value = cs.getPropertyValue(token).trim();
+      if (value) document.documentElement.style.setProperty(token, value);
+    }
+  });
+}
+
 export const withPreset: Decorator = (Story, context) => {
   // Opt-out, mirroring the web-components side. `<al-theme-switcher>` walks up
   // for a theme host and takes the scoped path when it finds one, so inside a
@@ -44,6 +74,7 @@ export const withPreset: Decorator = (Story, context) => {
   if (isDisabled(context)) return <Story />;
 
   const preset: Preset = getPreset(context.globals?.alPreset);
+  syncPreviewSurface();
 
   // `density` / `contrast` / `shape` / `motion` stay OPTIONAL in the preset
   // tuple and are written only when a preset names them — copied verbatim

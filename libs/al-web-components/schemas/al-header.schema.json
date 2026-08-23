@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://southleft.com/altitude/al-header.schema.json",
   "title": "ALHeader (al-header)",
-  "description": "Component: al-header",
+  "description": "Component: al-header\n\nThe site header landmark and its chrome. Header owns the `<header>` element,\nthe opt-in sticky/elevated behaviour and the stacking context. Arrangement is\n`<al-layout>`'s job — nest one and lay the bar out there.\n\n```html\n<al-header sticky elevated>\n  <al-layout direction=\"row\" align=\"center\" justify=\"between\">\n    <al-logo></al-logo>\n    <al-menu>...</al-menu>\n    <al-layout direction=\"row\" gap=\"sm\">...actions...</al-layout>\n  </al-layout>\n</al-header>\n```\n\nSee \"Arrangement vs. semantics\" in AGENTS.md.",
   "type": "object",
   "altitude": {
     "tagName": "al-header",
@@ -16,13 +16,34 @@
     },
     "slots": [
       {
-        "description": "The components content",
+        "description": "The header content. Wrap it in an `<al-layout>` to arrange it.",
         "name": ""
       }
     ],
     "events": [],
     "cssParts": [],
-    "cssProperties": []
+    "cssProperties": [
+      {
+        "description": "Minimum bar height. Defaults to `--al-theme-layout-height-header`. A MINIMUM, not a fixed height, so a wrapping header grows instead of clipping.",
+        "name": "--al-header-min-height"
+      },
+      {
+        "description": "Inline/block padding around the content. Defaults to `--al-theme-space`.",
+        "name": "--al-header-padding"
+      },
+      {
+        "description": "Bar background. Defaults to `--al-theme-color-background-default`.",
+        "name": "--al-header-background"
+      },
+      {
+        "description": "Hairline rule under the bar. Defaults to `none`. Use instead of `elevated` when a translucent bar should read as a rule rather than a lift.",
+        "name": "--al-header-border-block-end"
+      },
+      {
+        "description": "Filter applied to what scrolls behind the bar, e.g. `blur(12px)`. Defaults to `none`. Pair with a translucent `--al-header-background`.",
+        "name": "--al-header-backdrop-filter"
+      }
+    ]
   },
   "properties": {
     "tagName": {
@@ -31,7 +52,16 @@
     "attributes": {
       "type": "object",
       "additionalProperties": false,
-      "properties": {}
+      "properties": {
+        "sticky": {
+          "description": "Stick the header to the top of its scroll container.",
+          "type": "boolean"
+        },
+        "elevated": {
+          "description": "Cast a shadow under the bar to separate it from the content it scrolls over.",
+          "type": "boolean"
+        }
+      }
     },
     "children": {
       "type": "array",

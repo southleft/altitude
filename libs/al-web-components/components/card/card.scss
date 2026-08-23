@@ -98,7 +98,27 @@
   }
 
   /**
+   * Fill the available block size — for a card in a grid cell that should share
+   * one height with its row.
+   *
+   * Declared on `.al-c-card` and not on `:host`, because the host is
+   * `display: contents` and has no box of its own; `.al-c-card` is the element
+   * that actually becomes the grid or flex item. `box-sizing: border-box` so
+   * the card's own padding stays inside the 100%, which is the other half of
+   * the inline style consumers were writing by hand.
+   */
+  :host([fill]) .al-c-card {
+    block-size: 100%;
+    box-sizing: border-box;
+  }
+
+  /**
    * Card image
+   *
+   * Sits INSIDE the card's padding, taking the full content width. It is not
+   * flush to the card edge and never has been — the slot's JSDoc used to claim
+   * otherwise (fixed). Making it bleed would break the `<al-avatar slot="image">`
+   * usages in apps/angular, apps/astro and apps/svelte.
    */
   .al-c-card__image {
     display: block;

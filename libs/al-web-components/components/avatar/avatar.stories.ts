@@ -2,6 +2,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../icon/icons/user';
 import './avatar';
+import { placeholderImages } from '../../.storybook/fixtures';
 
 export default {
   title: 'Atoms/Avatar',
@@ -36,7 +37,7 @@ const TemplateWithIcon = (args) => html`
 
 const TemplateWithImage = (args) => html`
   <al-avatar ${spread(args)} data-testid="avatar-with-image">
-    <img src="https://placehold.co/80x80" alt="Alt text" />
+    <img src=${placeholderImages.avatar} alt="Alt text" />
   </al-avatar>
 `;
 

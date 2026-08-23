@@ -118,14 +118,14 @@ const GRADES = [
   description="Nine questions on tokens, parity, drift, and rogue divs — from the people who build the tools. How fluent is your system thinking?"
 >
   <div class="sl-container sl-section--tight">
-    <div class="sl-stack" style="text-align: center;">
+    <al-layout gap="md" style="text-align: center;">
       <al-chip variant="secondary" style="align-self: center;">aptitude-test</al-chip>
       <al-heading tagName="h1" variant="display-md" isBold={true}>The Design Systems Aptitude Test</al-heading>
-      <al-text-passage maxWidth="sm" style="margin-inline: auto;">
+      <al-text-block maxWidth="sm" style="margin-inline: auto;">
         Nine questions. No time limit. Scored by the people who build design-system tooling for a
         living — so yes, we're grading on conviction.
-      </al-text-passage>
-    </div>
+      </al-text-block>
+    </al-layout>
   </div>
 
   <div class="sl-container sl-section sl-container--prose">
@@ -133,18 +133,20 @@ const GRADES = [
       <p class="al-u-theme-typography-body-xs" id="quiz-step-label">Question <span id="quiz-step">01</span> / {String(QUESTIONS.length).padStart(2, '0')}</p>
 
       {QUESTIONS.map((question, qi) => (
-        <fieldset class="sl-quiz-q sl-stack" data-q={qi} hidden={qi !== 0} style="margin-top: var(--al-theme-space-xl); border: none; padding: 0;">
-          <legend class="al-u-theme-typography-heading-sm">{question.q}</legend>
-          <div class="sl-stack sl-stack--sm">
-            {question.options.map((o, oi) => (
-              <button type="button" class="sl-quiz-opt" data-correct={o.correct ? 'true' : 'false'} data-quip={o.quip}>
-                <span class="sl-quiz-key" aria-hidden="true">{String.fromCharCode(97 + oi)}</span>
-                <span>{o.t}</span>
-              </button>
-            ))}
-          </div>
-          <p class="sl-quiz-quip al-u-theme-typography-body-sm" role="status" hidden></p>
-          <al-button class="sl-quiz-next" hidden>{qi === QUESTIONS.length - 1 ? 'See my grade' : 'Next question'}</al-button>
+        <fieldset class="sl-quiz-q" data-q={qi} hidden={qi !== 0} style="margin-top: var(--al-theme-space-xl); border: none; padding: 0;">
+          <legend class="al-u-theme-typography-heading-sm" style="margin-block-end: var(--al-theme-space);">{question.q}</legend>
+          <al-layout gap="md">
+            <al-layout gap="sm">
+              {question.options.map((o, oi) => (
+                <button type="button" class="sl-quiz-opt" data-correct={o.correct ? 'true' : 'false'} data-quip={o.quip}>
+                  <span class="sl-quiz-key" aria-hidden="true">{String.fromCharCode(97 + oi)}</span>
+                  <span>{o.t}</span>
+                </button>
+              ))}
+            </al-layout>
+            <p class="sl-quiz-quip al-u-theme-typography-body-sm" role="status" hidden></p>
+            <al-button class="sl-quiz-next" hidden>{qi === QUESTIONS.length - 1 ? 'See my grade' : 'Next question'}</al-button>
+          </al-layout>
         </fieldset>
       ))}
 
@@ -154,11 +156,13 @@ const GRADES = [
             <al-chip variant="secondary">your grade</al-chip>
             <p class="al-u-theme-typography-body-xs" style="margin-top: var(--al-theme-space-sm);">score: <span id="result-score"></span> / {QUESTIONS.length}</p>
             <al-heading tagName="h2" variant="lg" isBold={true} id="result-name" style="margin-top: var(--al-theme-space-xs);"></al-heading>
-            <al-text-passage maxWidth="sm" id="result-blurb" style="margin-inline: auto; margin-top: var(--al-theme-space-sm);"></al-text-passage>
-            <div class="sl-header__nav" style="justify-content: center; margin-top: var(--al-theme-space-lg);">
-              <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
-              <al-button variant="tertiary" id="quiz-share">Copy my result</al-button>
-              <al-button variant="tertiary" id="quiz-retake">Retake</al-button>
+            <al-text-block maxWidth="sm" id="result-blurb" style="margin-inline: auto; margin-top: var(--al-theme-space-sm);"></al-text-block>
+            <div style="margin-top: var(--al-theme-space-lg);">
+              <al-layout direction="row" wrap gap="xs" align="center" justify="center">
+                <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
+                <al-button variant="tertiary" id="quiz-share">Copy my result</al-button>
+                <al-button variant="tertiary" id="quiz-retake">Retake</al-button>
+              </al-layout>
             </div>
           </div>
         </al-card>
@@ -177,15 +181,6 @@ const GRADES = [
 </Base>
 
 <style>
-  /* `.sl-quiz-q` also carries `.sl-stack` (`display: flex`, layout.css) —
-     equal-specificity attribute vs. class selector means source order
-     decides, and layout.css loads after the UA stylesheet's own `[hidden] {
-     display: none }`, so without this the flex display wins and every
-     question renders at once regardless of the `hidden` attribute. */
-  .sl-quiz-q[hidden] {
-    display: none;
-  }
-
   .sl-quiz-opt {
     display: flex;
     align-items: baseline;

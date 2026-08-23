@@ -1,11 +1,18 @@
 # `apps/mfe/` — Micro-frontend coexistence fixture (T0.3 + T4.6)
 
-Acceptance fixture for **T4.6 — Registry modes**. Two `<section>` elements
-register the same component class under distinct suffixed custom-element
-tags using `registerAltitude({mode: 'versioned', suffix})`. Each side
-renders the suffixed tag; the Playwright test (`tests/mfe.spec.ts`)
-asserts the two tags resolve to distinct `customElements` entries — proving
-subtree isolation works for multi-version MFE deployments.
+Acceptance fixture for **T4.6 — Registry modes**. Two `<al-card>` panels
+register the same component classes (`al-button`, `al-card`, `al-heading`)
+under distinct suffixed custom-element tags using
+`registerAltitude({mode: 'versioned', suffix})`. Each side renders its
+suffixed tags; the Playwright test (`tests/mfe.spec.ts`) asserts the two
+button tags resolve to distinct `customElements` entries — proving subtree
+isolation works for multi-version MFE deployments.
+
+The page chrome (`<al-theme>`, the outer `<al-layout>`, the header
+`<al-heading>`) belongs to neither simulated app, so it gets its own
+versioned registration under a `shell` suffix — see `src/main.js`. There is
+no `window.alAutoRegistry` anywhere in this fixture: every Altitude tag on
+the page is a suffixed alias produced by `registerAltitude`.
 
 When a real second copy of `al-web-components` is published, swap the
 shared import with two version-pinned packages; the rest of this wiring

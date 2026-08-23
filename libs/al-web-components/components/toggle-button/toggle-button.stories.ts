@@ -9,9 +9,10 @@ import '../icon/icons/chevron-down';
 import '../popover/popover';
 import '../tooltip/tooltip';
 import '../../.storybook/components/f-po/f-po';
+import { placeholderImages } from '../../.storybook/fixtures';
 
 export default {
-  title: 'Atoms/Toggle Button',
+  title: 'Atoms/Form/Toggle Button',
   component: 'al-toggle-button',
   tags: [ 'autodocs' ],
   parameters: {
@@ -67,7 +68,7 @@ DefaultPrefixIcon.args = {};
 const TemplateAvatar = (args) => html`
   <al-toggle-button ${spread(args)} data-testid="toggle-button">
     <al-avatar variant="sm" ?hasBadge=${true} badgeVariant="success">
-      <img src="https://placehold.co/80x80" alt="Alt text" />
+      <img src=${placeholderImages.thumbnail} alt="Alt text" />
     </al-avatar>
   </al-toggle-button>
 `;

@@ -31,33 +31,35 @@ const categories = [...new Map(posts.map((p) => [p.data.category, p.data.categor
       dek="Design systems, AI, and the craft of building for the web — published as we learn it, from real client work and our own open-source tooling. New posts also land on our Substack."
     >
       <al-link href={SITE.substack} target="_blank" style="margin-top: var(--al-theme-space); display: inline-block;">Follow on Substack →</al-link>
-      <nav class="sl-header__nav" aria-label="Browse by category" style="margin-top: var(--al-theme-space-lg);">
-        {categories.map((c) => (
-          <al-link href={withBase(`/insights/${c.slug}`)}>{c.name} ({c.count})</al-link>
-        ))}
+      <nav aria-label="Browse by category" style="margin-top: var(--al-theme-space-lg);">
+        <al-layout direction="row" wrap gap="xs" align="center">
+          {categories.map((c) => (
+            <al-link href={withBase(`/insights/${c.slug}`)}>{c.name} ({c.count})</al-link>
+          ))}
+        </al-layout>
       </nav>
     </PageHero>
   </div>
 
   <div class="sl-container sl-section">
     <p class="al-u-theme-typography-body-xs">01 / latest</p>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-lg);">
+    <div style="margin-top: var(--al-theme-space-lg);"><al-layout variant="grid" noCollapse>
       <div class="al-u-grid__item col:12">
         <ArticleCard post={featured} featured />
       </div>
-    </div>
+    </al-layout></div>
   </div>
 
   <div class="sl-container sl-section">
     <p class="al-u-theme-typography-body-xs">02 / the archive</p>
-    <al-text-passage maxWidth="sm" style="margin-top: var(--al-theme-space-sm);">{rest.length} more posts — newest first.</al-text-passage>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-lg);">
+    <al-text-block maxWidth="sm" style="margin-top: var(--al-theme-space-sm);">{rest.length} more posts — newest first.</al-text-block>
+    <div style="margin-top: var(--al-theme-space-lg);"><al-layout variant="grid" noCollapse>
       {rest.map((p) => (
         <div class="al-u-grid__item col:12 col:6@md col:4@lg">
           <ArticleCard post={p} />
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </div>
 
       <CTABand />

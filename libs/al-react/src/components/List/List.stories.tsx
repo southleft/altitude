@@ -191,13 +191,13 @@ export const WithExpandableList: StoryObj<typeof ALList> = {
 
 export const Horizontal: StoryObj<typeof ALList> = {
   args: {
-    orientation: 'horizontal'
+    direction: 'row'
   }
 };
 
 export const HorizontalOverflow: StoryObj<typeof ALList> = {
   args: {
-    orientation: 'horizontal',
+    direction: 'row',
     behavior: 'overflow',
   }
 };

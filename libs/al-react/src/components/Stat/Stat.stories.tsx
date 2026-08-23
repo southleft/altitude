@@ -2,7 +2,7 @@ import type { StoryObj } from '@storybook/react-vite';
 import { ALStat } from '../..';
 
 export default {
-  title: 'Organisms/Stat',
+  title: 'Molecules/Stat',
   component: ALStat,
   parameters: {
     status: { type: 'beta' }

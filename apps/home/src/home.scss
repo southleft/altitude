@@ -60,21 +60,22 @@ al-theme {
    Page frame
 --------------------------------------------------------------------- */
 
+/**
+ * `<al-layout fullHeight>` owns the flex column + min-height:100vh (matches
+ * this element's own default flow — a column, gap-less — plus the
+ * `fullHeight` prop). Only the inherited text color is left to set here;
+ * `background-color` was dropped as dead code — it duplicated (same token)
+ * the `body` rule above, which paints regardless of this host's own display.
+ */
 .al-l-home {
-  min-block-size: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--al-theme-color-body-background, var(--al-theme-color-background-default));
   color: var(--al-theme-color-content-default);
 }
 
-.al-l-home__frame {
-  inline-size: 100%;
-  max-inline-size: 80rem;
-  margin-inline: auto;
-  padding-inline: calc(var(--al-theme-space) * 1.5);
-  box-sizing: border-box;
-}
+/* `.al-l-home__frame` is gone — `<al-layout variant="constrained" size="xl">`
+ * now owns the page measure. `size="xl"` resolves to
+ * `--al-theme-layout-width-container` (1260px / 78.75rem), the closest token
+ * to the original hardcoded 80rem (1280px) — 20px narrower, not pixel-exact,
+ * traded for a real design-token measure instead of a one-off magic number. */
 
 /* ---------------------------------------------------------------------
    Header
@@ -86,24 +87,7 @@ al-theme {
   z-index: 10;
 }
 
-.al-l-home__wordmark {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--al-theme-space-xs);
-  font: var(--al-typography-preset-20-bold);
-  white-space: nowrap;
-}
-
-.al-l-home__glyph {
-  color: var(--al-theme-color-content-primary-default);
-}
-
 .al-l-home__nav {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-  gap: var(--al-theme-space);
-
   /* `al-link`'s default color reads `--al-theme-color-content-primary-default`
    * (the accent-blue token) — on `al-header`'s `--al-theme-color-background-default`
    * surface in altitude/dark that measures ~4.42:1, just under the 4.5:1 AA
@@ -120,59 +104,61 @@ al-theme {
    Hero
 --------------------------------------------------------------------- */
 
+/**
+ * `<al-layout>`'s `:host` is `display: contents` (so it disappears as a box
+ * when nested in another layout/grid parent) — that also means box-model
+ * properties like padding/margin/flex-basis are no-ops on it unless
+ * something forces it to generate a box. This stylesheet is NOT layered
+ * (see file header), so an unlayered rule here always wins over the
+ * component's own `@layer al.component` `:host` rule — `display: block`
+ * below is that override, not a stray reset.
+ */
 .al-l-home__hero {
-  --al-hero-min-height: 22rem;
+  display: block;
   padding-block-start: calc(var(--al-theme-space) * 2);
 }
 
-.al-l-home__hero-media {
-  inline-size: 100%;
-  block-size: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/**
+ * Hero split — `al-layout` has no "asymmetric two-column row" variant, so
+ * the content/media ratio is expressed as plain `flex` on the two direct
+ * `al-layout` children (each forced to a real box, see above). `responsive`
+ * on the parent still collapses this to a single stacked column below the
+ * `sm` breakpoint.
+ */
+.al-l-home__hero-content {
+  display: block;
+  flex: 2 1 24rem;
 }
 
-.al-l-home__contract-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  inline-size: 100%;
-  gap: var(--al-theme-space-xs);
+.al-l-home__hero-media {
+  display: block;
+  flex: 1 1 20rem;
+  max-inline-size: 26rem;
 }
 
 .al-l-home__contract-title {
   font: var(--al-typography-preset-16-bold);
 }
 
-.al-l-home__contract-row {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--al-theme-space-xs);
-  font: var(--al-typography-preset-14);
-  padding-block: var(--al-theme-space-xxs);
-
-  al-icon-success {
-    flex: none;
-    color: var(--al-theme-color-content-success-default, var(--al-theme-color-content-primary-default));
-  }
+.al-l-home__hero-media al-icon-success {
+  flex: none;
+  color: var(--al-theme-color-content-success-default, var(--al-theme-color-content-primary-default));
 }
 
 /* ---------------------------------------------------------------------
    Sections
 --------------------------------------------------------------------- */
 
+/* `<section>` is a real block-level element, so padding/scroll-margin apply
+ * without needing the `display: block` override `al-layout`/`al-card` need
+ * above — only the spacing that `al-layout`'s `align`/`gap` props don't
+ * cover lives here. */
 .al-l-home__section {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--al-theme-space);
   padding-block: calc(var(--al-theme-space) * 3);
   scroll-margin-block-start: calc(var(--al-theme-space) * 4);
 }
 
 .al-l-home__section--teaser {
-  align-items: flex-start;
   padding-block: calc(var(--al-theme-space) * 2);
   margin-block: calc(var(--al-theme-space) * 1.5);
   padding-inline: calc(var(--al-theme-space) * 1.5);
@@ -186,61 +172,31 @@ al-theme {
   color: var(--al-theme-color-content-default-weak);
 }
 
-.al-l-home__kicker {
-  margin: 0;
-  font: var(--al-typography-preset-12-bold);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--al-theme-color-content-default-weak);
-}
-
 .al-l-home__demos-heading {
   margin-block-start: var(--al-theme-space);
 }
 
-/* Grids */
-
-.al-l-home__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-  gap: var(--al-theme-space);
-  inline-size: 100%;
-  text-align: start;
-}
+/* `.al-l-home__grid` is gone — the three grids it fed
+ * (`<al-layout variant="grid" columns="…">`) are card-count-matched at their
+ * call sites; see the comment above the Resource Hub grid in index.html for
+ * the auto-fit → fixed-column tradeoff. */
 
 /* KPI band */
 
+/**
+ * al-stat's own doc comment recommends composing several instances inside a
+ * grid (or `variant="bento"`) rather than a flex row — see the comment above
+ * this element in index.html for why `stretchItems` doesn't fit here.
+ */
 .al-l-home__stats {
-  display: flex;
-  flex-flow: row wrap;
-  gap: var(--al-theme-space-lg);
-  inline-size: 100%;
+  display: block;
   padding-block: var(--al-theme-space);
   border-block: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
 }
 
-.al-l-home__stat {
-  flex: 1 1 10rem;
-}
-
 /* Bento grid */
-
-.al-l-home__bento {
-  inline-size: 100%;
-}
 
 .al-l-home__bento-card {
   block-size: 100%;
   box-sizing: border-box;
-}
-
-/* ---------------------------------------------------------------------
-   Footer columns (composed directly into <al-footer>)
---------------------------------------------------------------------- */
-
-.al-l-home__footer-col {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--al-theme-space-sm);
 }

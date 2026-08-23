@@ -4,7 +4,7 @@ import { withActions } from 'storybook/actions/decorator';
 import './calendar';
 
 export default {
-  title: 'Atoms/Calendar',
+  title: 'Atoms/Form/Calendar',
   component: 'al-calendar',
   tags: [ 'autodocs' ],
   parameters: {

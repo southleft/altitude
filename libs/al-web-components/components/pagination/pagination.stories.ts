@@ -4,7 +4,7 @@ import { withActions } from 'storybook/actions/decorator';
 import './pagination';
 
 export default {
-  title: 'Molecules/Pagination',
+  title: 'Molecules/Navigation/Pagination',
   component: 'al-pagination',
   tags: [ 'autodocs' ],
   parameters: {

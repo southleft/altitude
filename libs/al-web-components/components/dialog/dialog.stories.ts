@@ -3,7 +3,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import { withActions } from 'storybook/actions/decorator';
 import '../../.storybook/components/f-po/f-po';
-import '../button-group/button-group';
+import '../layout/layout';
 import '../button/button';
 import './dialog';
 
@@ -61,10 +61,10 @@ const Template = (args) => html`
     <al-button slot="trigger">Open Dialog</al-button>
     <f-po >Dialog content</f-po>
     <al-button slot="footer" variant="bare" @click=${closeDialog}>Close</al-button>
-    <al-button-group slot="footer" alignment="right">
+    <al-layout slot="footer" direction="row" justify="end" grow>
       <al-button variant="tertiary">Label</al-button>
       <al-button>Label</al-button>
-    </al-button-group>
+    </al-layout>
   </al-dialog>
 `;
 
@@ -87,18 +87,18 @@ const TemplateWithTriggerOutside = () => html`
   <al-dialog id="dialog-1" heading="Dialog 1">
     <f-po>Dialog content</f-po>
     <al-button aria-controls="dialog-1" slot="footer" variant="bare" @click=${(e) => closeDialog(e, 'dialog-1')}>Close</al-button>
-    <al-button-group slot="footer" alignment="right">
+    <al-layout slot="footer" direction="row" justify="end" grow>
       <al-button variant="tertiary">Label</al-button>
       <al-button>Label</al-button>
-    </al-button-group>
+    </al-layout>
   </al-dialog>
   <al-dialog id="dialog-2" heading="Dialog 2">
     <f-po>Dialog content</f-po>
     <al-button slot="footer" variant="bare" @click=${(e) => closeDialog(e, 'dialog-2')}>Close</al-button>
-    <al-button-group slot="footer" alignment="right">
+    <al-layout slot="footer" direction="row" justify="end" grow>
       <al-button variant="tertiary">Label</al-button>
       <al-button>Label</al-button>
-    </al-button-group>
+    </al-layout>
   </al-dialog>
 `;
 

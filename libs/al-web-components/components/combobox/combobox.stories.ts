@@ -17,7 +17,7 @@ const fruits = [
 ];
 
 const meta = {
-  title: 'Molecules/Combobox',
+  title: 'Molecules/Form/Combobox',
   component: 'al-combobox',
   tags: ['autodocs'],
   parameters: {

@@ -18,7 +18,7 @@ registerIcons({ 'caret-up': caretUp, 'caret-down': caretDown });
  * directional chevron. Follows the design system's canonical stat-card
  * contract (value/label/trend/delta/invertPolarity). Composes into a "KPI
  * band" by placing several `<al-stat>` inside a grid (see the KPI Band
- * story) or an `<al-bento-grid>`.
+ * story) or an `<al-layout variant="bento">`.
  *
  * @slot icon - Optional leading icon, rendered above the value.
  * @cssproperty --al-stat-value-color - Text color of the value. Defaults to `--al-theme-color-content-default`.

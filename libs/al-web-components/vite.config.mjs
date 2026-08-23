@@ -17,6 +17,7 @@ import { defineConfig } from 'vite';
 import { resolve, dirname, join, relative } from 'node:path';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { rewriteScssImports } from './vite-plugins/rewrite-scss-imports.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -92,35 +93,22 @@ const entries = {
   _register: join(__dirname, 'directives/register.ts'),
   ALElement: join(__dirname, 'components/ALElement.ts'),
   'controllers/form': join(__dirname, 'controllers/form.ts'),
+  // Tier 3 motion runtime + its Lit delivery surface. Both are entries because
+  // both are public subpaths; the runtime's internal modules (resolve, presets,
+  // choreography, run, reduced) are deliberately NOT entries and get bundled or
+  // shared-chunked behind them.
+  'motion/index': join(__dirname, 'motion/index.ts'),
+  'controllers/motion': join(__dirname, 'controllers/motion.ts'),
   bundle: join(__dirname, 'components/bundle.ts'),
   'styles-theme': join(__dirname, 'styles/theme.ts'),
 };
 
 // ---------- SCSS import-rewrite plugin ----------
 //
-// The legacy code uses `import styles from './x.scss'` and then
-// `unsafeCSS(styles.toString())`. Under Vite, the `?inline` query gives us a
-// raw CSS string. To avoid editing 64 components in this commit (T2.2's job
-// is to swap the builder, not refactor every component), the plugin rewrites
-// the import IN MEMORY before esbuild parses the TS module.
-//
-// We also wrap the value in a `String(…)` so the legacy `styles.toString()`
-// call continues to work without modification — Vite's `?inline` resolves to
-// a literal string, but the trailing `.toString()` is still legal.
-
-function rewriteScssImports() {
-  const importRe = /(import\s+\w+\s+from\s+['"][^'"]+\.scss)(['"])/g;
-  return {
-    name: 'altitude-rewrite-scss',
-    enforce: 'pre',
-    transform(code, id) {
-      if (!/\.tsx?$/.test(id)) return null;
-      if (!/\.scss['"]/.test(code)) return null;
-      const out = code.replace(importRe, (m, before, quote) => `${before}?inline${quote}`);
-      return out === code ? null : { code: out, map: null };
-    },
-  };
-}
+// Moved to `./vite-plugins/rewrite-scss-imports.mjs` so the al-react Storybook
+// can import the SAME plugin — it now compiles the shared `Foundations/*`
+// documentation elements, which use the bare `import styles from './x.scss'`
+// form. Imported at the top of this file; see that module for the rationale.
 
 // ---------- config ----------
 
@@ -192,6 +180,8 @@ export default defineConfig({
           if (chunk.name === '_register') return 'directives/register.js';
           if (chunk.name === 'ALElement') return 'components/ALElement.js';
           if (chunk.name.startsWith('controllers/')) return `${chunk.name}.js`;
+          // `motion/index` -> motion/index.js, matching the "./motion" export.
+          if (chunk.name.startsWith('motion/')) return `${chunk.name}.js`;
           if (chunk.name === 'bundle') return 'components/bundle/bundle.js';
           // The stylesheet entry emits an (empty) JS shim; its payload is the
           // css/main.css asset above. `components/theme/theme.js` belongs to

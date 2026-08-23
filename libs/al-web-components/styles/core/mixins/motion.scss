@@ -1,0 +1,131 @@
+/* ------------------------------------*\
+  #MOTION MIXINS
+\*------------------------------------ */
+
+/**
+ * Tier 1/2 ergonomics for the motion system.
+ *
+ * WHY MIXINS AND NOT TOKENS
+ *
+ * The WP starter kit this system is ported from ships ready-made "use-case"
+ * tokens on `:root` — `--motion-use-hover: var(--motion-duration-quick)
+ * var(--motion-easing-standard)` and so on — and components apply them straight
+ * to `transition`. That works there because `:root` is the only scope, so the
+ * reduced-motion media query re-declares the durations on the SAME element that
+ * declares the use-case token, and the substitution picks up the new value.
+ *
+ * It does not work in Altitude. A custom property's `var()` references are
+ * resolved ONCE, at the element that declares it, and what inherits down the
+ * tree is the resolved VALUE, not a live formula. A `--al-theme-animation-use-*`
+ * token declared in `:root` would therefore bake in `:root`'s durations and go
+ * blind to every `<al-theme motion="reduced">` below it — exactly the bug
+ * `.altitude/AXES.md` section 2.3 documents and proves for the role tokens.
+ *
+ * A mixin sidesteps the whole class of problem: it expands at the CALL SITE, so
+ * the `var()` chain is resolved against the component's own element, where the
+ * governing `<al-theme>`'s values are in scope.
+ */
+
+/* ------------------------------------*\
+  #TRANSITIONS
+\*------------------------------------ */
+
+/**
+ * Emit a transition using the theme's motion role tokens.
+ *
+ * Expands to the `var(--role, var(--legacy))` fallback pattern that wired
+ * components already write by hand (see `accordion-panel.scss:39`), so the
+ * `<al-theme motion>` axis governs it and un-themed usage still gets a sane
+ * default.
+ *
+ * @param {list}   $properties - CSS properties to transition. Default `all`.
+ * @param {string} $role       - `fast` | `base` | `slow`. Default `base`.
+ * @param {string} $timing     - `standard` | `emphasized`. Default `standard`.
+ *
+ * @example
+ *   .al-c-thing { @include al-motion-transition(background-color border-color, fast); }
+ *   .al-c-panel { @include al-motion-transition(height, slow, emphasized); }
+ */
+@mixin al-motion-transition($properties: all, $role: base, $timing: standard) {
+  $duration: var(--al-theme-animation-duration-role-#{$role}, var(--al-theme-animation-duration));
+  $easing: var(--al-theme-animation-timing-role-#{$timing}, var(--al-theme-animation-timing));
+
+  $parts: ();
+  @each $property in $properties {
+    $parts: append($parts, #{$property} #{$duration} #{$easing}, comma);
+  }
+
+  transition: $parts;
+}
+
+/* ------------------------------------*\
+  #TEXT REVEAL
+\*------------------------------------ */
+
+/**
+ * The "invisible wall" for the `text-reveal` choreography token.
+ *
+ * This is the one piece of Tier 3 that MUST live in CSS. Every other keyframe
+ * preset animates the element itself, but a mask reveal needs an
+ * `overflow: hidden` wrapper for the text to rise out from behind — WAAPI can
+ * translate the text but it cannot clip it.
+ *
+ * Structure: each line is a static WALL wrapping a MOVER, and they have to be
+ * separate elements. Clipping the mover itself would move the clip region along
+ * with it and reveal nothing.
+ *
+ *   <h2 class="al-c-hero__heading">
+ *     <span class="al-c-hero__line"><span data-al-motion-line>Rising up</span></span>
+ *     <span class="al-c-hero__line"><span data-al-motion-line>from behind a wall</span></span>
+ *   </h2>
+ *
+ *   .al-c-hero__heading { @include al-motion-text-reveal('.al-c-hero__line'); }
+ *
+ * One `[data-al-motion-line]` rises as a single block; several cascade
+ * line-by-line, because the token collects them in DOM order.
+ *
+ * No arming rule is emitted. The MotionController arms with a paused,
+ * backwards-filled WAAPI animation instead of a CSS class, so there is no
+ * `.is-inview` contract to honour and nothing to un-hide if JS never runs.
+ *
+ * @param {string} $wall - selector for the wall element, relative to the block.
+ */
+@mixin al-motion-text-reveal($wall: '[data-al-motion-wall]') {
+  #{$wall} {
+    display: block;
+    overflow: hidden;
+
+    /**
+     * Give descenders and accents room inside the clip box — `overflow: hidden`
+     * would otherwise shave g/y/p on tight-leading display type — then cancel
+     * the padding with a matching negative margin so surrounding layout is
+     * completely unchanged.
+     */
+    padding-block: 0.12em;
+    margin-block: -0.12em;
+  }
+
+  [data-al-motion-line] {
+    display: block;
+    will-change: transform;
+  }
+}
+
+/**
+ * Word-cascade variant. Walls go inline-block so words flow and wrap naturally;
+ * `vertical-align` keeps them sitting on a shared baseline. Responsive by
+ * construction — there is no line measurement and nothing to re-split on
+ * resize.
+ *
+ * @param {string} $wall - selector for the wall element, relative to the block.
+ */
+@mixin al-motion-text-reveal-words($wall: '[data-al-motion-wall]') {
+  #{$wall} {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  [data-al-motion-line] {
+    display: inline-block;
+  }
+}

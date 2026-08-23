@@ -316,6 +316,179 @@ See `.altitude/SSR.md` for the matrix.
   manifest analyzer) are gone (T6.2). The v5 pipeline ships the same
   byte-identical `--al-*` output.
 
+## 10. Layout consolidation — one arrangement primitive
+
+v2 collapses every "where do boxes sit" concern onto a single component,
+`<al-layout>`. Before, arrangement was spread across six layout components and
+sixteen components carrying their own arrangement props under nine different
+names (`orientation`, `gap`, `alignment`, `align`, `direction`, `behavior`,
+`justify`, `verticalAlignment`, `mediaPosition`). "Row or column" alone was
+spelled three ways.
+
+### The new `<al-layout>`
+
+```html
+<al-layout
+  variant="constrained|grid|bento"             <!-- omit for flow -->
+  direction="row|column"                       <!-- default column -->
+  gap="none|xs|sm|md|lg|xl"                    <!-- default 16px -->
+  align="start|center|end|stretch"             <!-- cross axis -->
+  justify="start|center|end|between"           <!-- main axis -->
+  size="sm|md|lg|xl|xxl|full"                  <!-- constrained: the measure -->
+  gutter="none|sm|md|lg"                       <!-- constrained: track width -->
+  columns="1-12"                               <!-- grid: column count -->
+  wrap grow stretchItems responsive fullHeight noCollapse>
+```
+
+Layout owns three orthogonal jobs, chosen by `variant`:
+
+- **flow** (no variant) — stack or row content.
+- **constrained** — the page measure. Children sit in a centred content column
+  capped at `size`, with gutter tracks either side. **A child marked `bleed`
+  breaks out and runs edge-to-edge.** This is the "constrained layout" pattern —
+  the page declares its measure once and each child decides whether it lives
+  inside it, so sections no longer each need their own container wrapper.
+- **grid** — an N-column grid. Children span with the SAME
+  `al-u-grid__item col:N` classes the `.al-u-grid` utility uses; there is only
+  one span system in the design system.
+- **bento** — a 12-column auto-row grid for `<al-bento-item>` children.
+
+```html
+<al-layout variant="constrained" size="xl">
+  <al-hero bleed></al-hero>
+  <al-heading tagName="h2">Features</al-heading>
+</al-layout>
+```
+
+Two behaviours worth knowing:
+
+- **`<al-layout>`'s host is `display: contents`.** Its layout box participates
+  directly in a flex/grid parent, which is what makes it work when projected
+  into a slot. Add **`grow`** when it needs to absorb the parent's free space —
+  required for `justify` to have room to act on inside a `space-between`
+  dialog or popover footer.
+- **`min-height: 100vh` is now opt-in via `fullHeight`.** It used to be
+  unconditional, which made `<al-layout>` unusable for anything smaller than a
+  page. **Every page shell must add `fullHeight` or it will collapse to content
+  height.**
+
+### Removed components
+
+| Removed | Replacement |
+|---|---|
+| `al-button-group` | `<al-layout direction="row">` |
+| `al-layout-container` | `<al-layout variant="constrained">` |
+| `al-layout-section` | a plain child of `<al-layout>` |
+| `al-bento-grid` | `<al-layout variant="bento">` |
+| `al-split-content` | `<al-layout direction="row" wrap>` + a theme class |
+| `variant="sidebar-left\|sidebar-right"` | `<al-layout variant="grid">` + `--al-layout-template` |
+
+```diff
+- <al-button-group alignment="right">
++ <al-layout direction="row" justify="end" grow>
+- <al-button-group alignment="center">
++ <al-layout direction="row" justify="center" grow>
+- <al-button-group behavior="stacked">
++ <al-layout>
+- <al-button-group behavior="stretched">
++ <al-layout direction="row" stretchItems>
+- <al-button-group behavior="responsive">
++ <al-layout direction="row" responsive>
+
+- <al-layout-container>
++ <al-layout variant="constrained" size="xl" gutter="sm">
+
+- <al-bento-grid>
++ <al-layout variant="bento">
+```
+
+### The sidebar variants are gone
+
+`sidebar-left` / `sidebar-right` hardcoded one ratio (40% / 1fr at `md`). A page
+now declares its own track list through `--al-layout-template`, which inherits
+through the shadow boundary into `variant="grid"`. Pair it with `noCollapse` so
+the page owns the responsive story:
+
+```diff
+- <al-layout variant="sidebar-left" gap="none">
++ <al-layout variant="grid" gap="none" fullHeight noCollapse class="app-shell">
+```
+
+```css
+.app-shell { --al-layout-template: 1fr; }
+
+@media all and (min-width: 768px) {
+  .app-shell {
+    --al-layout-template: 320px minmax(0, 1fr);
+  }
+}
+```
+
+This is strictly more capable than the old variant — any track list works, not
+just 40%/1fr — and it is how `al-split-content` was retired too: the two-column
+media/content band is now theme CSS applied to an `<al-layout direction="row"
+wrap>`, because the differing column flex-bases that make it stack intrinsically
+are a page-design decision, not a design-system behaviour.
+
+### Group components kept their semantics, lost their arrangement
+
+These components still exist — they own real behaviour a layout box cannot
+express — but their arrangement props are gone. Nest the slotted content in an
+`<al-layout>` instead.
+
+| Component | Still owns | Removed prop |
+|---|---|---|
+| `al-checkbox-group` | `<fieldset>`/`<legend>`, field note, required/disabled cascade | `variant="horizontal"` |
+| `al-radio-group` | the above + arrow-key roving selection | `variant="horizontal"` |
+| `al-toggle-button-group` | single-select state, click-outside deselect | `orientation`, `gap` |
+
+`al-chip-group` and `al-toast-group` have been **removed** entirely. Replace
+`<al-chip-group>` with `<al-layout direction="row" wrap>`; the "+N" overflow
+counter has no replacement. `<al-toast-group>` has no replacement either —
+position `<al-toast>` yourself. `al-toast`'s `onToastGroupOpen` event is
+renamed `onToastOpen` now that no group exists to name.
+
+```diff
+- <al-radio-group label="Posted at" variant="horizontal">
+-   <al-radio>Any time</al-radio>
+-   <al-radio>Last 24 hours</al-radio>
+- </al-radio-group>
++ <al-radio-group label="Posted at">
++   <al-layout direction="row" wrap gap="md">
++     <al-radio>Any time</al-radio>
++     <al-radio>Last 24 hours</al-radio>
++   </al-layout>
++ </al-radio-group>
+```
+
+### Renamed for one vocabulary
+
+`al-list` and `al-time-selector-list` cannot delegate to `<al-layout>` — a
+layout box between a `<ul>` and its `<li>` children would break list semantics —
+so they keep their own arrangement but now use Layout's names.
+
+```diff
+- <al-list orientation="horizontal">
++ <al-list direction="row">
+
+- <al-time-selector-list orientation="horizontal">
++ <al-time-selector-list direction="row">
+```
+
+(`al-split-content` is not part of this rename — it was removed entirely; see
+the "Removed components" table above for its `<al-layout direction="row" wrap>`
+replacement.)
+
+Note: `orientation` on the internal menu controller is unchanged — there it
+means keyboard navigation direction, not layout.
+
+### The rule going forward
+
+**If a wrapper would own no behaviour, no ARIA relationship, and no state, it
+is not a component — it is `<al-layout>` with props.** Do not add a
+`direction`/`gap`/`align`/`justify` prop to a new component, and do not
+hand-roll flex or grid to arrange slotted children.
+
 ## Questions
 
 Open a discussion on the repo, ping `@southleft` on Twitter, or email

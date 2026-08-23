@@ -8,7 +8,7 @@ import '../icon/icons/warning-circle';
 import './radio';
 
 export default {
-  title: 'Atoms/Radio',
+  title: 'Atoms/Form/Radio',
   component: 'al-radio',
   tags: [ 'autodocs' ],
   parameters: {

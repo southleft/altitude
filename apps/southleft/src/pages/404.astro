@@ -9,19 +9,21 @@ import { withBase } from '../lib/url';
 
 <Base title="404 — Page not found" description="This page isn't in the component library. Head back home, browse insights, or get in touch.">
   <div class="sl-container sl-section">
-    <div class="sl-stack" style="text-align: center;">
+    <al-layout gap="md" style="text-align: center;">
       <al-chip variant="secondary" style="align-self: center;">not-found</al-chip>
       <p class="al-u-theme-typography-display-lg" aria-hidden="true" style="margin: 0;">404</p>
       <al-heading tagName="h1" variant="display-sm" isBold={true}>This page isn't in the component library.</al-heading>
-      <al-text-passage maxWidth="sm" style="margin-inline: auto;">
+      <al-text-block maxWidth="sm" style="margin-inline: auto;">
         We checked the tokens, the docs, and the Storybook. Whatever you were looking for either
         moved, shipped under a new name, or never made it past design review.
-      </al-text-passage>
-      <div class="sl-header__nav" style="justify-content: center; margin-top: var(--al-theme-space-lg);">
-        <al-button href={withBase('/')}>Back to home</al-button>
-        <al-button variant="tertiary" href={withBase('/insights')}>Browse insights</al-button>
-        <al-button variant="tertiary" href={withBase('/contact')}>Contact us</al-button>
+      </al-text-block>
+      <div style="margin-top: var(--al-theme-space-lg);">
+        <al-layout direction="row" wrap gap="xs" align="center" justify="center">
+          <al-button href={withBase('/')}>Back to home</al-button>
+          <al-button variant="tertiary" href={withBase('/insights')}>Browse insights</al-button>
+          <al-button variant="tertiary" href={withBase('/contact')}>Contact us</al-button>
+        </al-layout>
       </div>
-    </div>
+    </al-layout>
   </div>
 </Base>

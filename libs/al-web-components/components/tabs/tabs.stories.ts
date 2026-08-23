@@ -9,7 +9,7 @@ import '../tab/tab';
 import './tabs';
 
 export default {
-  title: 'Molecules/Tabs',
+  title: 'Molecules/Navigation/Tabs',
   component: 'al-tabs',
   tags: [ 'autodocs' ],
   parameters: {

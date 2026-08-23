@@ -1,42 +1,391 @@
 ---
-// Site footer — spec 2026-08-20-southleft-example-app, T3.
-import { NAV, SITE } from '../lib/site';
+// Site footer — 1:1 transcription of southleft-v5 `src/components/Footer.astro`
+// (spec 2026-08-22-southleft-example-1-to-1-parity).
+//
+// WHAT CHANGED vs. the previous 47-line port: the reference footer is a
+// three-column masthead (brand + sitemap + elsewhere), a pull quote and a
+// legal bar — roughly four times the content that was here. The old version
+// also invented copy the reference does not have ("By Southleft" as a logo
+// tagline, "Built exclusively on Altitude" as the copyright line) and a
+// "Connect" column with a Calendly link that does not exist in v5. All three
+// are gone.
+//
+// STRUCTURE. `<al-footer>` owns the landmark, the block padding and the
+// stacking; it deliberately has NO inline padding (footer.scss: "the page
+// measure belongs to `<al-layout variant="constrained">`"), which is why the
+// old port rendered full-bleed. The measure is the same `.sl-measure` recipe
+// the header uses (layout.css) — 79rem content column + v5's own
+// `clamp(1.25rem, 4vw, 3rem)` gutter reproduces `.container-sl` exactly.
+// The asymmetric 1.4fr/1fr/1fr masthead is `<al-layout variant="grid">`
+// driven through the documented `--al-layout-template` escape hatch
+// (layout.scss #GRID), not a bespoke grid — see "Arrangement vs. semantics"
+// in AGENTS.md.
+//
+// LINK LISTS are plain `<ul>/<li>/<a>`, not `<al-list>/<al-list-item>`, for
+// two concrete reasons. (1) `al-list-item` forwards no `rel`, so the three
+// external links could not carry `rel="noopener"`. (2) v5's footer links are
+// bare text links; `al-list-item` renders a full-width padded row with a
+// hover background, so matching the reference would mean neutralising five of
+// its custom properties — un-styling the component rather than using it. Same
+// call, same rationale, as Header.astro's nav links.
+// Carrying the previous revision's a11y lesson forward so it is not
+// relearned: `al-list-item` renders its OWN `<a>` when given `href` — if this
+// ever goes back to `al-list`, pass `href` to the item and never slot a
+// second `<a>` / `<al-link>` inside it (axe `nested-interactive`).
+//
+// The state chips are STATIC and `aria-hidden`. v5 backs them with ~62 lines
+// of inspect/grid/theme/cursor scripting against `document.documentElement`
+// attributes that this app does not implement; shipping live-looking controls
+// that toggle nothing would be worse than shipping the annotation as decor.
+import { NAV, SITE, CTA } from '../lib/site';
 import { withBase } from '../lib/url';
 
 const year = new Date().getFullYear();
+
+/**
+ * v5's sitemap column: the six shared `NAV` entries plus seven footer-only
+ * ones. "AI + Design Systems" (NAV[0]) and "AI & Design Systems" both point at
+ * /ai-design-systems — that duplicate is verbatim in the reference, so it is
+ * reproduced rather than de-duplicated.
+ */
+const SITEMAP: { label: string; href: string }[] = [
+  ...NAV,
+  { label: 'Contact', href: '/contact' },
+  { label: 'AI & Design Systems', href: '/ai-design-systems' },
+  { label: 'Figma Design Systems Guide', href: '/figma-design-systems' },
+  { label: 'Speaking & Teaching', href: '/speaking' },
+  { label: 'AI-Ready Scorecard', href: '/scorecard' },
+  { label: 'Aptitude Test', href: '/quiz' },
+  { label: 'RSS', href: '/rss.xml' },
+];
+
+const ELSEWHERE: { label: string; href: string }[] = [
+  { label: 'LinkedIn', href: SITE.linkedin },
+  { label: 'Substack', href: SITE.substack },
+  { label: 'GitHub', href: SITE.github },
+];
+
+/** Decorative "this site annotates itself" chips — see the note above. */
+const STATE_CHIPS: { label: string; value: string; key?: string }[] = [
+  { label: 'inspect:', value: 'off', key: 'i' },
+  { label: 'grid:', value: 'off', key: 'g' },
+  { label: 'theme:', value: 'brand' },
+  { label: 'cursor:', value: 'on' },
+];
 ---
 
-<al-footer>
-  <al-logo slot="logo" variant="southleft" href={withBase('/')}>By Southleft</al-logo>
-  <!-- al-list-item takes `href`/`target` directly and renders its OWN <a> —
-       slotting a separately-interactive <al-link> inside it (the previous
-       markup here) nests an <a> inside al-list-item's own <button>, an
-       axe `nested-interactive` violation (T8 a11y pass, real app-markup
-       bug, not a library one: the component already provides the correct
-       API, this just wasn't using it). -->
-  <div class="sl-stack sl-stack--sm">
-    <al-heading tagName="h3" variant="sm" isBold={true}>Site</al-heading>
-    <al-list>
-      {NAV.map((item) => <al-list-item href={withBase(item.href)}>{item.label}</al-list-item>)}
-    </al-list>
-  </div>
-  <div class="sl-stack sl-stack--sm">
-    <al-heading tagName="h3" variant="sm" isBold={true}>Connect</al-heading>
-    <al-list>
-      <al-list-item href={SITE.calendly} target="_blank">Book a call</al-list-item>
-      <al-list-item href={`mailto:${SITE.email}`}>{SITE.email}</al-list-item>
-      <al-list-item href={withBase('/contact')}>Contact</al-list-item>
-    </al-list>
-  </div>
-  <div class="sl-stack sl-stack--sm">
-    <al-heading tagName="h3" variant="sm" isBold={true}>Elsewhere</al-heading>
-    <al-list>
-      <al-list-item href={SITE.linkedin} target="_blank">LinkedIn</al-list-item>
-      <al-list-item href={SITE.github} target="_blank">GitHub</al-list-item>
-      <al-list-item href={SITE.substack} target="_blank">Substack</al-list-item>
-    </al-list>
-  </div>
-  <div slot="legal">
-    <span>&copy; {year} Southleft. Built exclusively on Altitude.</span>
-  </div>
+<al-footer class="sl-footer">
+  <al-layout variant="constrained" class="sl-measure">
+    <al-layout variant="grid" gap="xl" noCollapse class="sl-footer__cols">
+      <!-- Column A — brand -->
+      <div class="sl-footer__brand sl-measure-md">
+        <!-- `al-logo` renders its own `<a href>`; the label goes on the host,
+             never on a second wrapping anchor (axe `nested-interactive`). -->
+        <al-logo
+          variant="southleft"
+          href={withBase('/')}
+          class="sl-footer__logo"
+          aria-label="Southleft home"></al-logo>
+
+        <p class="sl-footer__blurb al-u-theme-typography-body-sm">
+          Design systems consulting, engineering, and AI integration — from the team behind Figma
+          Console MCP and Story UI. Founded in 2012 · rooted in New Orleans.
+        </p>
+
+        <div class="sl-footer__cta">
+          <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
+        </div>
+
+        <!-- `<al-layout>` owns the arrangement; the wrapper div owns the
+             box-model (margin) that a `display: contents` host cannot — the
+             same split `.sl-header__bar` and PageHero.astro document. -->
+        <div class="sl-footer__chips">
+          <al-layout direction="row" wrap gap="sm">
+            <span class="sl-token-chip al-u-theme-typography-body-xs" aria-hidden="true"><span class="sl-token-chip__dot"></span>--sl-color-red-500</span>
+            <span class="sl-token-chip al-u-theme-typography-body-xs" aria-hidden="true"><span class="sl-token-chip__dot sl-token-chip__dot--blue"></span>--sl-color-blue-500</span>
+            <a href={withBase('/tokens.json')} class="sl-token-chip sl-footer__chip-link al-u-theme-typography-body-xs">tokens.json ↗</a>
+          </al-layout>
+        </div>
+
+        <div class="sl-footer__states" aria-hidden="true">
+          <al-layout direction="row" wrap gap="sm">
+            {
+              STATE_CHIPS.map((chip) => (
+                <span class="sl-token-chip al-u-theme-typography-body-xs">
+                  {chip.label} {chip.value} {chip.key && <kbd class="sl-footer__kbd">{chip.key}</kbd>}
+                </span>
+              ))
+            }
+          </al-layout>
+        </div>
+
+        <p class="sl-footer__note al-u-theme-typography-body-xs">
+          // this site annotates itself — try inspect mode, or derive your own theme
+        </p>
+      </div>
+
+      <!-- Column B — sitemap -->
+      <nav class="sl-footer__col" aria-label="Footer">
+        <h2 class="sl-kicker">&lt;sitemap&gt;</h2>
+        <ul class="sl-footer__links al-u-theme-typography-body-sm">
+          {
+            SITEMAP.map((item) => (
+              <li>
+                <a href={withBase(item.href)} class="sl-footer__link">
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <!-- Column C — elsewhere + legacy -->
+      <div class="sl-footer__col">
+        <h2 class="sl-kicker">&lt;elsewhere&gt;</h2>
+        <ul class="sl-footer__links al-u-theme-typography-body-sm">
+          {
+            ELSEWHERE.map((item) => (
+              <li>
+                <a href={item.href} target="_blank" rel="noopener" class="sl-footer__link">
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a href={`mailto:${SITE.email}`} class="sl-footer__link">{SITE.email}</a>
+          </li>
+        </ul>
+
+        <h2 class="sl-kicker sl-footer__kicker--legacy">&lt;legacy&gt;</h2>
+        <ul class="sl-footer__links al-u-theme-typography-body-sm">
+          <li>
+            <a href={withBase('/northright')} class="sl-footer__link">Northright websites</a>
+          </li>
+        </ul>
+      </div>
+    </al-layout>
+
+    <blockquote class="sl-footer__quote al-u-theme-typography-body-sm">
+      “If I cannot do great things, I can do small things in a great way.”
+      <cite class="sl-footer__cite al-u-theme-typography-body-xs">
+        — attributed to Dr. Martin Luther King Jr.
+      </cite>
+    </blockquote>
+
+    <div class="sl-footer__bar al-u-theme-typography-body-xs">
+      <p class="sl-footer__copyright">© {year} Southleft, LLC. All rights reserved.</p>
+      <al-layout direction="row" gap="md">
+        <a href={withBase('/privacy-policy')} class="sl-footer__link">Privacy policy</a>
+        <a href={withBase('/cookie-policy')} class="sl-footer__link">Cookie policy</a>
+      </al-layout>
+    </div>
+  </al-layout>
 </al-footer>
+
+<style>
+  /* ----------------------------------------------------------------------
+   * Chrome. `al-footer`'s `:host` is `display: contents` and the component
+   * exposes hooks for gap and block padding but NOT for a background or a
+   * border, so the sunken canvas and the top hairline are painted on the host
+   * itself. Legal per the same outer-tree-wins rule layout.scss documents for
+   * `::slotted` — and doubly so here, because footer.scss lives in
+   * `@layer al.component` while this block is unlayered.
+   *
+   * v5's `--sl-bg-sunken` is ink-950 (dark) / paper-200 (light). Neither has a
+   * semantic `--al-theme-color-background-*` rung (the darkest is `-weak`), so
+   * this reaches for the brand PRIMITIVE per mode — the same escape hatch
+   * `.sl-announcement` and `.sl-terminal` already document in layout.css.
+   * -------------------------------------------------------------------- */
+  /* Chrome goes through al-footer's OWN custom properties, not through a
+   * `display: block` + paint on the host. Re-materialising the host works
+   * (document rules beat the shadow root's `:host`) but reintroduces the very
+   * box `display: contents` exists to remove, and lands the background on a
+   * different element than the block padding it is supposed to sit behind.
+   * `--al-footer-background` / `--al-footer-border-block-start` were added to
+   * footer.scss for this (spec 2026-08-22-southleft-example-1-to-1-parity),
+   * mirroring the hooks al-header grew in the same pass. */
+  .sl-footer {
+    --al-footer-background: var(--al-color-brand-ink-950);
+    --al-footer-border-block-start: var(--al-theme-border-width) solid var(--sl-border-faint);
+    /* v5 `py-14 md:py-20` */
+    --al-footer-padding-block: 3.5rem;
+  }
+
+  :global(al-theme[mode='light']) .sl-footer {
+    --al-footer-background: var(--al-color-brand-paper-200);
+  }
+
+  @media (min-width: 48rem) {
+    .sl-footer {
+      --al-footer-padding-block: 5rem;
+    }
+  }
+
+  /* ----------------------------------------------------------------------
+   * Masthead grid. `--al-layout-template` is layout.scss's documented escape
+   * hatch for an asymmetric track list, paired with `noCollapse` so the
+   * responsive story (single column below `md`) is owned here rather than by
+   * the component's default collapse.
+   *
+   * The gap needs 48px rising to 80px at `lg`; `al-layout`'s scale tops out at
+   * `gap="xl"` = `--al-theme-space-xxl` = 32px. Custom properties inherit
+   * through the shadow boundary, so retuning that token ON THIS ELEMENT
+   * retunes this one grid's gap — and restoring it on the direct children
+   * keeps the override from leaking into anything inside the columns.
+   * -------------------------------------------------------------------- */
+  .sl-footer__cols {
+    --al-layout-template: 1fr;
+    --al-theme-space-xxl: var(--al-space-48);
+  }
+
+  .sl-footer__cols > * {
+    --al-theme-space-xxl: var(--al-space-32);
+    min-width: 0;
+  }
+
+  @media (min-width: 48rem) {
+    .sl-footer__cols {
+      --al-layout-template: 1.4fr 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .sl-footer__cols {
+      /* v5 `lg:gap-20` — 80px, one step past the `--al-space-*` primitives. */
+      --al-theme-space-xxl: 5rem;
+    }
+  }
+
+  /* -------------------------------------------------------------- Column A */
+  .sl-footer__logo {
+    display: inline-flex;
+    align-items: center;
+    /* v5's `h-4` wordmark, via al-logo's documented `--al-logo-max-height`. */
+    --al-logo-max-height: 16px;
+  }
+
+  .sl-footer__blurb {
+    margin: 1.25rem 0 0;
+    line-height: 1.625;
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  .sl-footer__cta {
+    margin-block-start: 1.5rem;
+  }
+
+  .sl-footer__cta al-button {
+    /* v5's footer CTA is `size="sm"`; al-button has no size prop, so scope its
+     * padding down through the documented hook (same recipe as
+     * `.sl-header__cta` in layout.css). */
+    --al-button-padding: var(--al-theme-space-xs) var(--al-theme-space);
+  }
+
+  .sl-footer__chips {
+    margin-block-start: 2rem;
+  }
+
+  .sl-footer__states {
+    margin-block-start: 0.75rem;
+  }
+
+  .sl-token-chip__dot--blue {
+    /* Labelled `--sl-color-blue-500`; the southleft brand ships no blue ramp of
+     * its own, so this is the shared brand primitive. */
+    background: var(--al-color-brand-blue-500);
+  }
+
+  .sl-footer__chip-link {
+    text-decoration: none;
+    transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  }
+
+  .sl-footer__chip-link:hover {
+    color: var(--al-theme-color-content-default);
+  }
+
+  .sl-footer__kbd {
+    font-family: inherit;
+    font-size: inherit;
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  .sl-footer__note {
+    margin: 0.75rem 0 0;
+    font-family: var(--sl-font-mono);
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  /* ---------------------------------------------------------- Columns B / C */
+  .sl-footer__kicker--legacy {
+    margin-block-start: 2rem;
+  }
+
+  .sl-footer__links {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+  }
+
+  .sl-footer__links li + li {
+    margin-block-start: 0.5rem;
+  }
+
+  .sl-footer__link {
+    color: var(--al-theme-color-content-default-weak);
+    text-decoration: none;
+    transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  }
+
+  .sl-footer__link:hover {
+    color: var(--al-theme-color-content-default);
+  }
+
+  .sl-footer__link:focus-visible {
+    outline: 2px solid var(--al-theme-color-content-info-default);
+    outline-offset: 2px;
+  }
+
+  /* ------------------------------------------------------------ Pull quote */
+  .sl-footer__quote {
+    margin: 3.5rem 0 0;
+    max-width: 42rem;
+    border-inline-start: 2px solid var(--al-theme-color-border-primary-default);
+    padding-inline-start: 1.25rem;
+    font-style: italic;
+    line-height: 1.625;
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  .sl-footer__cite {
+    display: block;
+    margin-block-start: 0.25rem;
+    font-family: var(--sl-font-mono);
+    font-style: normal;
+  }
+
+  /* ------------------------------------------------------------ Legal bar */
+  .sl-footer__bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-block-start: 3rem;
+    padding-block-start: 1.5rem;
+    border-block-start: var(--al-theme-border-width) solid var(--sl-border-faint);
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  @media (min-width: 40rem) {
+    .sl-footer__bar {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .sl-footer__copyright {
+    margin: 0;
+  }
+</style>

@@ -5,7 +5,7 @@ import './banner';
 import '../link/link';
 
 export default {
-  title: 'Organisms/Banner',
+  title: 'Molecules/Banner',
   component: 'al-banner',
   tags: ['autodocs'],
   parameters: {

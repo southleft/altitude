@@ -74,24 +74,24 @@ try {
   </div>
 
   <div class="sl-container sl-section">
-    <div class="al-u-grid">
+    <al-layout variant="grid" noCollapse>
       {oss.map((t) => (
         <div class="al-u-grid__item col:12 col:6@md col:3@lg">
           <al-card>
             <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}><a href={t.href} target="_blank" rel="noopener">{t.name}</a></al-heading></div>
-            <al-text-passage>{t.desc}</al-text-passage>
+            <al-text-block>{t.desc}</al-text-block>
           </al-card>
         </div>
       ))}
-    </div>
+    </al-layout>
   </div>
 
   <!-- (a) Live token tree -->
   <div class="sl-container sl-section" data-section-id="tokens">
-    <div class="sl-section-header">
-      <div class="sl-stack sl-stack--sm">
+    <div style="margin-block-end: var(--al-theme-space-xl);">
+      <al-layout gap="sm">
         <al-heading tagName="h2" variant="lg" isBold={true}>Altitude — live token tree</al-heading>
-        <!-- al-text-passage's shadow root is `display: flex; flex-direction:
+        <!-- al-text-block's shadow root is `display: flex; flex-direction:
              column` over its DEFAULT-SLOT children — bare text + inline
              elements as separate top-level slotted nodes each become their
              own flex item (blockified, stacked), breaking prose into one
@@ -99,15 +99,15 @@ try {
              ONE slotted child, so everything inside it flows via normal
              inline layout instead. (T7/T8 — real app-markup bug, applies
              everywhere this page mixes text with inline links/code.) -->
-        <al-text-passage maxWidth="sm">
+        <al-text-block maxWidth="sm">
           <p class="sl-prose">
             The exact contract served at <al-link href="/tokens.json">/tokens.json</al-link> —
             Altitude's own shipped token surface, re-served verbatim, never a copy.
             {tokenEntries.length} tokens: {primitiveTokens.length} primitive (tier-1),{' '}
             {semanticTokens.length} semantic + composed (tier-2/tier-3).
           </p>
-        </al-text-passage>
-      </div>
+        </al-text-block>
+      </al-layout>
     </div>
 
     <al-input
@@ -152,17 +152,17 @@ try {
 
   <!-- (b) Tier <-> Figma collection mapping -->
   <div class="sl-container sl-section" data-section-id="figma-mapping">
-    <div class="sl-section-header">
-      <div class="sl-stack sl-stack--sm">
+    <div style="margin-block-end: var(--al-theme-space-xl);">
+      <al-layout gap="sm">
         <al-heading tagName="h2" variant="lg" isBold={true}>Figma ↔ Altitude token sync</al-heading>
-        <al-text-passage maxWidth="sm">
+        <al-text-block maxWidth="sm">
           <p class="sl-prose">
             Agent-mediated, not scheduled — a human (or an agent acting for one) initiates every
             sync via the <a href="https://github.com/southleft/figma-console-mcp" target="_blank" rel="noopener">Figma Console MCP</a>.
             Full loop and fidelity rules: <code>.altitude/FIGMA-SYNC.md</code>.
           </p>
-        </al-text-passage>
-      </div>
+        </al-text-block>
+      </al-layout>
     </div>
 
     <al-table caption="Figma collection to Altitude token source mapping">
@@ -204,7 +204,7 @@ try {
       </table>
     </al-table>
 
-    <al-text-passage maxWidth="sm" style="margin-block-start: var(--al-theme-space-lg);">
+    <al-text-block maxWidth="sm" style="margin-block-start: var(--al-theme-space-lg);">
       <p class="sl-prose">
         <strong>The sync loop:</strong> read (<code>figma_export_tokens</code>, saved to
         <code>.altitude/figma-sync/last-export.json</code>, gitignored) → diff (
@@ -212,15 +212,15 @@ try {
         <code>styles/tokens/**</code> or push variables back, direction depends on which side
         moved) → verify (re-export, re-run the drift check, expect zero findings).
       </p>
-    </al-text-passage>
+    </al-text-block>
   </div>
 
   <!-- (c) Drift-check demo -->
   <div class="sl-container sl-section" data-section-id="drift-demo">
-    <div class="sl-section-header">
-      <div class="sl-stack sl-stack--sm">
+    <div style="margin-block-end: var(--al-theme-space-xl);">
+      <al-layout gap="sm">
         <al-heading tagName="h2" variant="lg" isBold={true}>Drift-check demo</al-heading>
-        <al-text-passage maxWidth="sm">
+        <al-text-block maxWidth="sm">
           <p class="sl-prose">
             A demo of the deterministic gate — this is the REAL output of{' '}
             <code>scripts/check-figma-drift.mjs</code>, run at build time against a committed
@@ -235,8 +235,8 @@ try {
             yet cover the whole token tree reports everything it's missing, which is exactly what
             a first sync looks like.
           </p>
-        </al-text-passage>
-      </div>
+        </al-text-block>
+      </al-layout>
     </div>
 
     <al-card>
@@ -247,7 +247,7 @@ try {
         </al-chip>
       </div>
       {driftRunError ? (
-        <al-text-passage>Could not run the gate at build time: {driftRunError}</al-text-passage>
+        <al-text-block>Could not run the gate at build time: {driftRunError}</al-text-block>
       ) : (
         <pre class="sl-drift-report" tabindex="0" aria-label="check-figma-drift.mjs report, scrollable"><code>{driftReport}</code></pre>
       )}
@@ -256,10 +256,10 @@ try {
 
   <!-- (d) Altitude MCP server -->
   <div class="sl-container sl-section" data-section-id="mcp">
-    <div class="sl-section-header">
-      <div class="sl-stack sl-stack--sm">
+    <div style="margin-block-end: var(--al-theme-space-xl);">
+      <al-layout gap="sm">
         <al-heading tagName="h2" variant="lg" isBold={true}>The Altitude MCP server</al-heading>
-        <al-text-passage maxWidth="sm">
+        <al-text-block maxWidth="sm">
           <p class="sl-prose">
             A stdio <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">MCP</a>{' '}
             server exposing Altitude's already-generated token/component graph to AI agents. It
@@ -267,11 +267,11 @@ try {
             source of truth — and never calls an LLM itself. Registered in this repo's
             <code>.mcp.json</code> as <code>altitude</code>. Source: <code>libs/altitude-mcp/README.md</code>.
           </p>
-        </al-text-passage>
-      </div>
+        </al-text-block>
+      </al-layout>
     </div>
 
-    <div class="al-u-grid">
+    <al-layout variant="grid" noCollapse>
       {[
         { tool: 'altitude_list_components', reads: 'custom-elements.json + migration.json', desc: 'Lists components, filterable by name, with migration state.' },
         { tool: 'altitude_get_component', reads: 'CEM + component JSON Schema + story metadata', desc: 'Full detail for one component — attributes, slots, events, schema, Storybook docs URL.' },
@@ -283,14 +283,14 @@ try {
         <div class="al-u-grid__item col:12 col:6@md col:4@lg">
           <al-card style="height:100%; box-sizing:border-box;">
             <div slot="header"><al-heading tagName="h4" variant="sm" isBold={true}><code>{t.tool}</code></al-heading></div>
-            <al-text-passage>
+            <al-text-block>
               <p>{t.desc}</p>
               <p class="al-u-theme-typography-body-xs">Reads: {t.reads}</p>
-            </al-text-passage>
+            </al-text-block>
           </al-card>
         </div>
       ))}
-    </div>
+    </al-layout>
   </div>
 
       <CTABand />

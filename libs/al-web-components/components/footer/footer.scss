@@ -9,65 +9,43 @@
   }
 
   /**
-   * Site footer. All spacing comes from theme space tokens, so the footer
-   * is automatically density-aware wherever it renders.
+   * The footer landmark — block rhythm, block padding and content colour, all
+   * from theme tokens so the footer stays density-aware inside any
+   * `<al-theme density="...">` scope.
+   *
+   * 1. The single flex column is the one arrangement opinion, and the minimum
+   *    that makes stacked rows behave: children stack in source order with a
+   *    consistent gap. Everything WITHIN a row is the slotted `<al-layout>`'s
+   *    call, and a rule between rows is an `<al-divider>` the page places.
+   * 2. No inline padding: the page measure belongs to
+   *    `<al-layout variant="constrained">`, not to the footer.
    */
   .al-c-footer {
-    display: flex;
-    flex-direction: column;
-    gap: var(--al-theme-space-lg);
+    display: flex; /* 1 */
+    flex-direction: column; /* 1 */
+    gap: var(--al-footer-gap, var(--al-theme-space-lg));
     inline-size: 100%;
     box-sizing: border-box;
-    padding-block: calc(var(--al-theme-space) * 3);
+    padding-block: var(--al-footer-padding-block, calc(var(--al-theme-space) * 3)); /* 2 */
     color: var(--al-theme-color-content-default);
-  }
-
-  /**
-   * Top area: logo + link columns
-   */
-  .al-c-footer__top {
-    display: flex;
-    flex-flow: row wrap;
-    gap: var(--al-theme-space-xxl);
-  }
-
-  .al-c-footer__logo {
-    flex: 0 0 auto;
-  }
-
-  .al-c-footer__columns {
-    display: flex;
-    flex: 1 1 auto;
-    flex-flow: row wrap;
-    gap: var(--al-theme-space-xxl);
-  }
-
-  /**
-   * Bottom row: legal (leading) + social (trailing)
-   */
-  .al-c-footer__bottom {
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--al-theme-space);
-    padding-block-start: var(--al-theme-space-lg);
-    border-block-start: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
-  }
-
-  .al-c-footer__legal {
-    @include al-theme-typography-body-sm;
-    color: var(--al-theme-color-content-default-weak);
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    gap: var(--al-theme-space-sm);
-  }
-
-  .al-c-footer__social {
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    gap: var(--al-theme-space-sm);
+    /**
+     * 3. A sunken surface and a hairline rule separating the footer from the
+     *    page above it are FOOTER CHROME — the same category as the block
+     *    padding and content colour this component already owns. Neither can
+     *    be applied from outside: `:host` is `display: contents`, so this is
+     *    the only box, and it lives in the shadow root.
+     *
+     *    Without these hooks a consumer's only recourse is to re-materialise
+     *    the host with `display: block` from the document tree and paint
+     *    there — which works (document rules beat `:host`) but silently
+     *    reintroduces the extra box `display: contents` exists to remove, and
+     *    puts the background on a different element than the padding. Both
+     *    default to `none`/`transparent`, so existing footers are unchanged.
+     *
+     *    Mirrors `--al-header-border-block-end` / `--al-header-backdrop-filter`
+     *    on `al-header`.
+     */
+    background: var(--al-footer-background, transparent); /* 3 */
+    border-block-start: var(--al-footer-border-block-start, none); /* 3 */
   }
 }

@@ -10,7 +10,7 @@ import '../toggle-button/toggle-button';
 import './menu';
 
 export default {
-  title: 'Molecules/Menu',
+  title: 'Molecules/Navigation/Menu',
   component: 'al-menu',
   tags: [ 'autodocs' ],
   parameters: {

@@ -66,20 +66,22 @@ const interviews = [
       heading="Our main practice — and our public lab."
       dek="Open-source MCP servers, Figma tooling, workshops, talks, and research at the intersection of AI and design systems. Every tool below came out of real client work. Every recommendation we make, we've shipped first."
     >
-      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
-        <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
-        <al-button variant="tertiary" href={withBase('/scorecard')}>Is your system AI-ready?</al-button>
+      <div style="margin-top: var(--al-theme-space-lg);">
+        <al-layout direction="row" wrap gap="xs" align="center">
+          <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
+          <al-button variant="tertiary" href={withBase('/scorecard')}>Is your system AI-ready?</al-button>
+        </al-layout>
       </div>
     </PageHero>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="md" isBold={true}>AI doesn't replace design systems. It makes them more essential.</al-heading>
-    <al-text-passage maxWidth="md" style="margin-top: var(--al-theme-space);">
+    <al-text-block maxWidth="md" style="margin-top: var(--al-theme-space);">
       An AI agent is only as good as the structured context it can reach: tokens, components,
       metadata, behavioral intent. Our Context-Based Design Systems framework describes how that
       context should flow between design and engineering — and it shapes everything we build.
-    </al-text-passage>
+    </al-text-block>
     <al-list style="margin-top: var(--al-theme-space);">
       <al-list-item><al-link href={withBase('/insights/design-systems/context-based-design-systems-a-new-model-for-the-ai-driven-product-lifecycle')}>Read: Context-Based Design Systems →</al-link></al-list-item>
       <al-list-item><al-link href={withBase('/insights/design-systems/context-based-design-systems-revisited')}>Read: Context-Based Design Systems, Revisited →</al-link></al-list-item>
@@ -88,17 +90,17 @@ const interviews = [
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="sm" isBold={true}>Want this inside your organization?</al-heading>
-    <al-text-passage maxWidth="sm">Audits, discovery, workshops, and integration — the four ways teams work with us on AI and design systems.</al-text-passage>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <al-text-block maxWidth="sm">Audits, discovery, workshops, and integration — the four ways teams work with us on AI and design systems.</al-text-block>
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {offers.map((o) => (
         <div class="al-u-grid__item col:12 col:6@md">
           <al-card style="height:100%; box-sizing:border-box;">
             <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>{o.name}</al-heading></div>
-            <al-text-passage>{o.body}</al-text-passage>
+            <al-text-block>{o.body}</al-text-block>
           </al-card>
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </div>
 
   <div class="sl-container sl-section" id="scorecard">
@@ -107,47 +109,49 @@ const interviews = [
         <al-chip variant="secondary">start here</al-chip>
         <al-heading tagName="h2" variant="md" isBold={true} style="margin-top: var(--al-theme-space-xs);">Is your design system AI-ready?</al-heading>
       </div>
-      <al-text-passage maxWidth="md">
+      <al-text-block maxWidth="md">
         Our scorecard covers the six dimensions that determine how well a design system can support
         AI workflows. Score yourself in 10 minutes and find out where your leverage is.
-      </al-text-passage>
-      <div class="al-u-grid" style="margin-top: var(--al-theme-space-lg);">
+      </al-text-block>
+      <div style="margin-top: var(--al-theme-space-lg);"><al-layout variant="grid" noCollapse>
         <div class="al-u-grid__item col:6@md"><al-stat value="06" label="dimensions scored" /></div>
         <div class="al-u-grid__item col:6@md"><al-stat value="10 min" label="to score yourself" /></div>
-      </div>
-      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
-        <al-button href={withBase('/scorecard')}>Take the scorecard</al-button>
-        <al-button variant="tertiary" href={withBase(CTA.href)}>{CTA.label}</al-button>
+      </al-layout></div>
+      <div style="margin-top: var(--al-theme-space-lg);">
+        <al-layout direction="row" wrap gap="xs" align="center">
+          <al-button href={withBase('/scorecard')}>Take the scorecard</al-button>
+          <al-button variant="tertiary" href={withBase(CTA.href)}>{CTA.label}</al-button>
+        </al-layout>
       </div>
     </al-card>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="sm" isBold={true}>The tools we build in public</al-heading>
-    <al-text-passage maxWidth="sm">Open-source, in production, used by real teams. We don't just talk about this stuff — we build it.</al-text-passage>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <al-text-block maxWidth="sm">Open-source, in production, used by real teams. We don't just talk about this stuff — we build it.</al-text-block>
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {tools.map((t) => (
         <div class="al-u-grid__item col:12 col:6@md col:4@lg">
           <al-card style="height:100%; box-sizing:border-box;">
             <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}><al-link href={t.href.startsWith('http') ? t.href : withBase(t.href)} target={t.href.startsWith('http') ? '_blank' : undefined}>{t.name}</al-link></al-heading></div>
-            <al-text-passage>{t.desc}</al-text-passage>
+            <al-text-block>{t.desc}</al-text-block>
           </al-card>
         </div>
       ))}
       <div class="al-u-grid__item col:12 col:6@md col:4@lg">
         <al-card style="height:100%; box-sizing:border-box;">
           <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>All open-source tools</al-heading></div>
-          <al-text-passage>Including the five-part Figma Console MCP series and the story behind each project.</al-text-passage>
+          <al-text-block>Including the five-part Figma Console MCP series and the story behind each project.</al-text-block>
           <al-link href={withBase('/tools')}>Visit /tools →</al-link>
         </al-card>
       </div>
-    </div>
+    </al-layout></div>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="sm" isBold={true}>Workshops, talks, and the course</al-heading>
-    <al-text-passage maxWidth="sm">We teach the same workflows we run with clients — live demos, real systems, no vaporware.</al-text-passage>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <al-text-block maxWidth="sm">We teach the same workflows we run with clients — live demos, real systems, no vaporware.</al-text-block>
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {sessions.map((s) => (
         <div class="al-u-grid__item col:12 col:6@md">
           <al-card style="height:100%; box-sizing:border-box;">
@@ -155,37 +159,39 @@ const interviews = [
               <al-chip variant="secondary">{s.tag}</al-chip>
               <al-heading tagName="h3" variant="sm" isBold={true} style="margin-top: var(--al-theme-space-xs);">{s.title}</al-heading>
             </div>
-            <al-text-passage>{s.body}</al-text-passage>
+            <al-text-block>{s.body}</al-text-block>
             <al-link href={s.href.startsWith('http') ? s.href : withBase(s.href)} target={s.href.startsWith('http') ? '_blank' : undefined}>Learn more →</al-link>
           </al-card>
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="sm" isBold={true}>In conversation</al-heading>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {interviews.map((iv) => (
         <div class="al-u-grid__item col:12 col:6@md">
           <al-testimonial attribution={iv.title} data-testimonial-role={iv.outlet}>{iv.quote}</al-testimonial>
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </div>
 
   {labPosts.length > 0 && (
     <div class="sl-container sl-section">
-      <div class="sl-section-header">
-        <div class="sl-stack sl-stack--sm">
-          <al-heading tagName="h2" variant="sm" isBold={true}>Workflow demos & field notes</al-heading>
-          <al-text-passage maxWidth="sm">What happens when AI actually understands your design system — documented as we build it.</al-text-passage>
-        </div>
-        <al-link href={withBase('/insights')}>All insights →</al-link>
+      <div style="margin-block-end: var(--al-theme-space-xl);">
+        <al-layout direction="row" justify="between" align="end" wrap gap="lg">
+          <al-layout gap="sm" grow>
+            <al-heading tagName="h2" variant="sm" isBold={true}>Workflow demos & field notes</al-heading>
+            <al-text-block maxWidth="sm">What happens when AI actually understands your design system — documented as we build it.</al-text-block>
+          </al-layout>
+          <al-link href={withBase('/insights')}>All insights →</al-link>
+        </al-layout>
       </div>
-      <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
         {labPosts.map((p) => <div class="al-u-grid__item col:12 col:4@md"><ArticleCard post={p} /></div>)}
-      </div>
+      </al-layout></div>
     </div>
   )}
 

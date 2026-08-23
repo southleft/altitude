@@ -3,7 +3,7 @@ import { spread } from '../../directives/spread';
 import './field-note';
 
 export default {
-  title: 'Atoms/Field Note',
+  title: 'Atoms/Form/Field Note',
   component: 'al-field-note',
   tags: [ 'autodocs' ],
   parameters: { status: { type: 'beta' } },

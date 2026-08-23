@@ -2,6 +2,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './empty-state';
 import '../button/button';
+import { loremSentences, placeholderImage } from '../../.storybook/fixtures';
 import '../icon/icon';
 import { magnifyingGlass, tray } from '../icon/glyphs';
 import { registerIcons } from '../icon/registry';
@@ -9,7 +10,7 @@ import { registerIcons } from '../icon/registry';
 registerIcons({ 'magnifying-glass': magnifyingGlass, tray });
 
 export default {
-  title: 'Organisms/Empty State',
+  title: 'Molecules/Empty State',
   component: 'al-empty-state',
   tags: ['autodocs'],
   parameters: {
@@ -33,6 +34,17 @@ export const WithIcon = (args) => html`
 WithIcon.args = {
   heading: 'No results found',
   description: 'Try adjusting your filters or search terms.'
+};
+
+export const WithIllustration = (args) => html`
+  <al-empty-state ${spread(args)}>
+    <img slot="icon" src=${placeholderImage(96, 96)} alt="" width="96" height="96" />
+    <al-button slot="actions">Import data</al-button>
+  </al-empty-state>
+`;
+WithIllustration.args = {
+  heading: 'Nothing to show yet',
+  description: loremSentences(1, 'empty-state', false)
 };
 
 export const WithActions = (args) => html`

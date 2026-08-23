@@ -6,13 +6,15 @@ import { nanoid } from 'nanoid';
 import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { ALElement } from '../ALElement';
+import { ALLayout } from '../layout/layout';
 import { ALFieldNote } from '../field-note/field-note';
 import { ALRadio } from '../radio/radio';
 import styles from './radio-group.scss';
 
 /**
  * Component: al-radio-group
- * @slot - The radio content, a set of radio items
+ * @slot - The radio content, a set of radio items. Items stack in a column
+ *         by default; for a row, nest them in `<al-layout direction="row" wrap>`.
  * @slot field-note - If content is slotted, it will display in place of the fieldNote property
  * @slot error - If content is slotted, it will display in place of the errorNote property
  *
@@ -24,12 +26,15 @@ export class ALRadioGroup extends ALElement {
   private elementMap = register({
     elements: [
       [ALFieldNote.el, ALFieldNote],
-      [ALRadio.el, ALRadio]
+      [ALRadio.el, ALRadio],
+      [ALLayout.el, ALLayout]
     ],
     suffix: (globalThis as any).alAutoRegistry === true ? '' : PackageJson.version
   });
 
   private fieldNoteEl = unsafeStatic(this.elementMap.get(ALFieldNote.el));
+
+  private layoutEl = unsafeStatic(this.elementMap.get(ALLayout.el));
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -97,14 +102,6 @@ export class ALRadioGroup extends ALElement {
    */
   @property()
   accessor ariaDescribedBy: string;
-
-  /**
-   * Variant
-   * - **default** Displays the radio items in a column
-   * - **horizontal** Displays the radio items in a row
-   */
-  @property()
-  accessor variant: 'horizontal';
 
   /**
    * The currently checked radio in the radio group
@@ -253,16 +250,15 @@ export class ALRadioGroup extends ALElement {
     const componentClassNames = this.componentClassNames('al-c-radio-group', {
       'al-is-error': this.isError === true,
       'al-is-disabled': this.isDisabled === true,
-      'al-has-hidden-legend': this.hideLegend,
-      'al-c-radio-group--horizontal': this.variant === 'horizontal'
+      'al-has-hidden-legend': this.hideLegend
     });
 
     return html`
       <fieldset class="${componentClassNames}" @keydown=${this.handleOnKeydown}>
         ${this.label && html` <legend class="al-c-radio-group__legend" aria-describedby="${this.ariaDescribedBy}">${this.label}</legend> `}
-        <div class="al-c-radio-group__list">
+        <${this.layoutEl} gap="none">
           <slot></slot>
-        </div>
+        </${this.layoutEl}>
         ${(this.fieldNote || this.slotNotEmpty('field-note')) &&
         html`
           <slot name="field-note">

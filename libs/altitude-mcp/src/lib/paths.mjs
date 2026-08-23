@@ -28,6 +28,20 @@ export const PATHS = Object.freeze({
   iconCatalog: join(WC_ROOT, 'components', 'icon', 'catalog.ts'),
   aiThemeDir: join(WC_ROOT, '.storybook', 'ai-theme'),
   validateCli: join(WC_ROOT, 'cli', 'validate.mjs'),
+
+  // The design-system PROJECT REGISTRY. Everything below it used to be a
+  // single hardcoded Altitude path; parity is now multi-project (Altitude,
+  // Southleft) and each project names its own figma-sync dir, manifest and
+  // ops dir. See `./ds-project.mjs`.
+  dsProjects: join(REPO_ROOT, '.altitude', 'ds-projects.json'),
+
+  // DEPRECATED — the DEFAULT project's parity paths, kept so older callers keep
+  // working. New code must use `resolveProject(id).resolved.{figmaSyncDir,
+  // parityManifest, opsDir}` instead, or it will silently read Altitude's
+  // manifest while claiming to check another design system.
+  figmaSyncDir: join(REPO_ROOT, '.altitude', 'figma-sync'),
+  parityManifest: join(REPO_ROOT, '.altitude', 'figma-sync', 'parity-manifest.json'),
+  figmaOpsDir: join(REPO_ROOT, '.altitude', 'figma-sync', 'ops'),
 });
 
 /** Thrown when a generated artifact this server reads is missing. */

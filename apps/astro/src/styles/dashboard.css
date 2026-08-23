@@ -33,11 +33,28 @@ a {
   max-height: 100vh;
 }
 
+/*
+ * `.al-l-dashboard__body` stays a plain paint box on its own wrapper `<div>` —
+ * it is NOT `<al-layout>` itself. `<al-layout>`'s host is `display: contents`
+ * (layout.scss), so this padding would be a silent no-op if applied to the
+ * `<al-layout variant="constrained">` host directly (no box is generated to
+ * paint padding onto). It used to "work" only because a stray `display: flex`
+ * on this class forced a real box on the host (unlayered CSS beats
+ * `@layer al.component`, so it won the cascade over `:host { display: contents }`)
+ * — that was a bug, not a feature; removing it without also moving the class
+ * off the host made the padding disappear. Keep the class on the wrapper div.
+ */
 .al-l-dashboard__body {
-  display: flex;
   padding: var(--al-theme-space-lg) 0 var(--al-theme-space-super) 0;
 }
 
+/*
+ * `.al-l-dashboard__sidebar` stays a plain paint/position box — it is NOT
+ * `<al-layout>` itself. `<al-layout>`'s host is `display: contents` (layout.scss),
+ * so position/height/box-shadow/z-index/background applied to that host would
+ * have no box to render against. Arrangement (column, justify space-between)
+ * is owned by a nested `<al-layout>`; this class only keeps what needs a real box.
+ */
 .al-l-dashboard__sidebar {
   position: sticky;
   inset-block-start: 0;
@@ -46,9 +63,6 @@ a {
   z-index: var(--al-z-index-500);
   background-color: var(--al-theme-color-background-default);
   box-shadow: var(--al-theme-box-shadow);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 }
 
 @media all and (max-width: 768px) {
@@ -58,16 +72,12 @@ a {
 }
 
 .al-l-dashboard__sidebar-logo {
-  display: flex;
-  align-items: center;
   min-height: var(--al-theme-layout-height-header);
   padding: 0 var(--al-theme-space);
   border-bottom: 1px solid var(--al-theme-color-border-default);
 }
 
 .al-l-dashboard__sidebar-menu {
-  flex: 1;
-  display: flex;
   padding: var(--al-theme-space-super) 0;
 }
 
@@ -84,10 +94,6 @@ a {
   cursor: pointer;
   width: 100%;
   padding: var(--al-theme-space);
-  display: flex;
-  gap: var(--al-theme-space);
-  align-items: center;
-  justify-content: space-between;
 }
 
 .al-l-dashboard__user p {
@@ -132,4 +138,23 @@ a {
   padding: var(--al-theme-space);
   background-color: var(--al-theme-color-background-secondary-default);
   color: var(--al-theme-color-content-secondary-weak);
+}
+
+/**
+ * Dashboard shell - a fixed-width sidebar beside a fluid content column.
+ *
+ * This used to be `<al-layout variant="sidebar-left">`. The design system no
+ * longer ships a sidebar variant; the page owns its own track list via
+ * `--al-layout-template`, which inherits through the shadow boundary into
+ * `<al-layout variant="grid">`. `noCollapse` on the element turns off the
+ * built-in single-column collapse so the responsive story is defined here.
+ */
+.al-l-dashboard__shell {
+  --al-layout-template: 1fr;
+}
+
+@media all and (min-width: 768px) {
+  .al-l-dashboard__shell {
+    --al-layout-template: calc(var(--al-theme-layout-width-sidebar, 40%) - var(--al-theme-space-xs)) minmax(0, 1fr);
+  }
 }

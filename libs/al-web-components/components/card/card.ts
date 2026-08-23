@@ -10,7 +10,9 @@ import styles from './card.scss';
  * @slot actions-start - Trailing-action row, leading edge (bottom-left). Use for a "View" / "Open" primary action.
  * @slot actions-end - Trailing-action row, trailing edge (bottom-right). Use for the canonical bottom-right primary action.
  * @slot action-right - Top-right single control (kebab / overflow menu).
- * @slot image - Hero image rendered above the header. Renders flush with the card edge.
+ * @slot image - Media rendered above the header, INSIDE the card's padding. Takes the full content width; an `<al-avatar>` sits here too, which is the common case across the example apps.
+ *
+ *   NOT flush to the card edge — this line previously claimed it was, and it never has been: `.al-c-card` carries a single outer `padding` and `.al-c-card__image` neither resets nor negates it (card.scss). The claim was wrong rather than the code: the slot is used for avatars in `apps/angular`, `apps/astro` and `apps/svelte`, and bleeding it to the edge would wreck all of them. A card that needs edge-to-edge media wants a component that renders it, not a flag here — see `sl-media-card` in `libs/sl-web-components`.
  * @slot header - Card heading row.
  */
 export class ALCard extends ALElement {
@@ -35,6 +37,23 @@ export class ALCard extends ALElement {
    */
   @property()
   accessor variant: 'bare'
+
+  /**
+   * Fill the available block size instead of hugging the content.
+   *
+   * For a card in a grid or a stretched flex row, where a row of cards should
+   * share one height and their footers should line up. Reflected, so a page can
+   * also select `al-card[fill]`.
+   *
+   * It has to be a property rather than something the page sets from outside:
+   * `:host` is `display: contents`, so `<al-card>` generates no box and a
+   * `height: 100%` written on the element is dropped entirely. `apps/southleft`
+   * hit exactly this and worked around it with
+   * `style="height:100%; box-sizing:border-box"` at 25 call sites across 13
+   * files — that inline style is what this replaces.
+   */
+  @property({ type: Boolean, reflect: true })
+  accessor fill: boolean;
 
   render() {
     const componentClassNames = this.componentClassNames('al-c-card', {

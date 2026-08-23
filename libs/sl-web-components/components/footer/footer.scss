@@ -1,0 +1,131 @@
+@use '../../../al-web-components/styles/component' as *;
+@use '../../styles/brand' as *;
+/*------------------------------------*\
+  #SL FOOTER
+\*------------------------------------*/
+
+@layer al.component {
+  :host {
+    display: block;
+  }
+
+  /**
+   * 1. `al-footer` exposes hooks for gap and block padding, and its `:host` is
+   *    `display: contents`, so its shadow-root `<footer>` is the only box —
+   *    the top hairline has to be declared through a property it forwards or
+   *    on a box this component owns. It is declared here, on the host, because
+   *    the rule belongs to the footer's outer edge.
+   */
+  :host {
+    border-block-start: var(--al-theme-border-width) solid #{$sl-border-faint}; /* 1 */
+  }
+
+  .sl-c-footer {
+    --al-footer-padding-block: var(--sl-footer-padding-block, 3.5rem);
+  }
+
+  .sl-c-footer__measure {
+    --al-layout-measure: var(--sl-footer-measure, 79rem);
+    --al-layout-gutter: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  /**
+   * 2. The asymmetric masthead, through al-layout's documented
+   *    `--al-layout-template` escape hatch rather than a `display: grid` of
+   *    this component's own. That hook exists precisely so an unusual track
+   *    list never becomes a reason to hand-roll a grid and re-implement the
+   *    responsive collapse alongside it.
+   */
+  .sl-c-footer__masthead {
+    --al-layout-template: var(--sl-footer-template, 1.4fr 1fr 1fr); /* 2 */
+  }
+
+  /**
+   * 3. Each slotted column stacks its own contents. `display: contents` on the
+   *    slots would collapse them into the grid as loose items rather than
+   *    columns, so the slot elements are left alone and the SLOTTED elements
+   *    are made the columns.
+   */
+  ::slotted([slot='columns']) {
+    display: flex; /* 3 */
+    flex-direction: column;
+    gap: var(--al-theme-space-sm);
+  }
+
+  .sl-c-footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--al-theme-space);
+    max-inline-size: 32rem;
+  }
+
+  /**
+   * 4. The pull quote sits between two rules, in the brand's mono voice. The
+   *    opening quotation mark is content, not decoration, so it stays in the
+   *    text the page supplies rather than being forged by a pseudo-element —
+   *    a `::before` quote mark cannot be selected, copied, or read reliably.
+   */
+  .sl-c-footer__quote {
+    margin: var(--al-theme-space-xxl) 0 0;
+    padding-block-start: var(--al-theme-space-xl);
+    border-block-start: var(--al-theme-border-width) solid #{$sl-border-faint};
+    font-family: $sl-font-mono; /* 4 */
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  .sl-c-footer__cite {
+    display: block;
+    margin-block-start: var(--al-theme-space-sm);
+    font-size: 0.75rem;
+    font-style: normal;
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  /**
+   * 5. The bottom bar is the one place a stack becomes a row at width. It is a
+   *    box this component renders, holding one element it renders (the
+   *    copyright) and one `<al-layout>` — not a place a consumer arranges
+   *    anything, which is the internal-structure case AGENTS.md exempts.
+   */
+  .sl-c-footer__bar {
+    display: flex; /* 5 */
+    flex-direction: column;
+    gap: var(--al-theme-space);
+    margin-block-start: var(--al-theme-space-xl);
+    padding-block-start: var(--al-theme-space-lg);
+    border-block-start: var(--al-theme-border-width) solid #{$sl-border-faint};
+    font-size: 0.75rem;
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  @media (min-width: 48rem) {
+    .sl-c-footer__bar {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .sl-c-footer__copyright {
+    margin: 0;
+  }
+
+  /**
+   * 6. Link treatment for whatever the page slots in, so a footer link is a
+   *    plain `<a>`. Deliberately NOT `al-list-item`: it renders a full-width
+   *    padded row with a hover background and forwards no `rel`, so matching
+   *    the brand's bare text links would mean neutralising five of its custom
+   *    properties — un-styling a component rather than using it.
+   */
+  ::slotted(a[slot='legal']) {
+    color: var(--al-theme-color-content-default-weak); /* 6 */
+    text-decoration: none;
+    transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  }
+
+  ::slotted(a[slot='legal']:hover) {
+    color: var(--al-theme-color-content-default);
+  }
+}

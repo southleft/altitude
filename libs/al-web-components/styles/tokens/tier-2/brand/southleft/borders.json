@@ -3,7 +3,8 @@
     "border": {
       "width": {
         "@": {
-          "value": "{border.width.2}",
+          "comment": "1px, not 2. southleft.com draws every rule as a hairline — the header underline, the section rules, the card outlines, the footer's top border are all 1px there. The brand shipped 2px, which doubled every one of them; at 1440 the header underline measured 2px against the reference's 1px. `md` stays 4px for the deliberately heavy accents.",
+          "value": "{border.width.1}",
           "type": "borderWidth"
         },
         "md": {

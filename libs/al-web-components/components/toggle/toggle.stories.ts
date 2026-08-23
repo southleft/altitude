@@ -5,7 +5,7 @@ import { withActions } from 'storybook/actions/decorator';
 import './toggle';
 
 export default {
-  title: 'Atoms/Toggle',
+  title: 'Atoms/Form/Toggle',
   component: 'al-toggle',
   tags: [ 'autodocs' ],
   parameters: {

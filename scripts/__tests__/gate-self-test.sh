@@ -11,11 +11,24 @@ cd "$(dirname "$0")/../.."
 
 WORKTREE="$(mktemp -d)/altitude-gate-test"
 BASE_REF="$(git rev-parse HEAD)"
+SELF_TEST_BRANCH="_self-test-$$"
 TRAP_TARGETS=()
 
-trap 'for d in "${TRAP_TARGETS[@]:-}"; do git worktree remove --force "$d" >/dev/null 2>&1 || true; rm -rf "$d"; done' EXIT
+# `git worktree remove` deletes the working directory but NOT the branch that
+# `worktree add -b` created. Every run therefore left a `_self-test-<pid>`
+# branch behind: 30 of the repo's 38 branches were this leak. Delete the branch
+# explicitly, after the worktree is gone (a branch checked out in a live
+# worktree cannot be deleted).
+cleanup() {
+  for d in "${TRAP_TARGETS[@]:-}"; do
+    git worktree remove --force "$d" >/dev/null 2>&1 || true
+    rm -rf "$d"
+  done
+  git branch -D "$SELF_TEST_BRANCH" >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
 
-git worktree add -b "_self-test-$$" "$WORKTREE" "$BASE_REF" >/dev/null
+git worktree add -b "$SELF_TEST_BRANCH" "$WORKTREE" "$BASE_REF" >/dev/null
 TRAP_TARGETS+=("$WORKTREE")
 
 run_in_worktree() (

@@ -24,30 +24,32 @@
     <al-heading tagName="h2" id="sl-ai-drawer-heading" variant="sm" isBold={true}>AI art direction</al-heading>
   </div>
 
-  <div class="sl-ai-panel sl-stack">
-    <al-text-passage maxWidth="sm">
-      Describe a vibe — the model returns hue, shape, and layout dials, never colors or markup. A
-      deterministic engine derives every token and page-layout change from that, and enforces WCAG
-      AA structurally, so nothing it says can ship an inaccessible palette or a broken page.
-    </al-text-passage>
+  <div class="sl-ai-panel">
+    <al-layout gap="md">
+      <al-text-block maxWidth="sm">
+        Describe a vibe — the model returns hue, shape, and layout dials, never colors or markup. A
+        deterministic engine derives every token and page-layout change from that, and enforces WCAG
+        AA structurally, so nothing it says can ship an inaccessible palette or a broken page.
+      </al-text-block>
 
-    <al-input id="sl-ai-prompt" label="Prompt" placeholder="e.g. brutalist night" maxLengthValue={80}></al-input>
+      <al-input id="sl-ai-prompt" label="Prompt" placeholder="e.g. brutalist night" maxLengthValue={80}></al-input>
 
-    <div class="sl-ai-chips" role="group" aria-label="Example prompts">
-      <al-chip data-sl-ai-example="swiss studio">swiss studio</al-chip>
-      <al-chip data-sl-ai-example="warm editorial">warm editorial</al-chip>
-      <al-chip data-sl-ai-example="brutalist night">brutalist night</al-chip>
-      <al-chip data-sl-ai-example="calm enterprise">calm enterprise</al-chip>
-    </div>
+      <al-layout direction="row" wrap gap="sm" align="center" role="group" aria-label="Example prompts" class="sl-ai-chips">
+        <al-chip data-sl-ai-example="swiss studio">swiss studio</al-chip>
+        <al-chip data-sl-ai-example="warm editorial">warm editorial</al-chip>
+        <al-chip data-sl-ai-example="brutalist night">brutalist night</al-chip>
+        <al-chip data-sl-ai-example="calm enterprise">calm enterprise</al-chip>
+      </al-layout>
 
-    <div class="sl-ai-actions">
-      <al-button id="sl-ai-generate">Generate</al-button>
-      <al-button id="sl-ai-reset" variant="tertiary">Reset to Southleft</al-button>
-    </div>
+      <al-layout direction="row" wrap gap="sm" align="center">
+        <al-button id="sl-ai-generate">Generate</al-button>
+        <al-button id="sl-ai-reset" variant="tertiary">Reset to Southleft</al-button>
+      </al-layout>
 
-    <p id="sl-ai-status" class="sl-ai-status al-u-theme-typography-body-xs" role="status" aria-live="polite">
-      Southleft default.
-    </p>
+      <p id="sl-ai-status" class="sl-ai-status al-u-theme-typography-body-xs" role="status" aria-live="polite">
+        Southleft default.
+      </p>
+    </al-layout>
   </div>
 </al-drawer>
 

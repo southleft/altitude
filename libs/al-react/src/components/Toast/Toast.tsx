@@ -15,6 +15,6 @@ export const ALToast = createComponent({
   elementClass: ALWebToast,
   events: {
     onToastClose: 'onToastClose',
-    onToastGroupOpen: 'onToastGroupOpen'
+    onToastOpen: 'onToastOpen'
   }
 });

@@ -38,6 +38,47 @@ function isDisabled(context: { parameters?: { alPreset?: { disable?: boolean } }
   return context.parameters?.alPreset?.disable === true;
 }
 
+/**
+ * Repaint the preview iframe's own surface to match the active preset.
+ *
+ * `<al-theme>` is `display: contents`, so it resolves tokens but paints
+ * NOTHING. The iframe's background comes from `main.scss`'s `:root` bundle,
+ * which is altitude-DARK and does not move when the preset does — so switching
+ * to light left every story sitting on a black page. That was always true; the
+ * light/dark toggle in `manager.js` just made it impossible to miss.
+ *
+ * Deliberately NOT fixed by wrapping the story in a painted `<div>`: that would
+ * put an extra box between the canvas and every story, which `layout:
+ * 'fullscreen'` and grid/flex stories can feel. Deliberately NOT fixed by
+ * swapping a `:root` stylesheet either — that is the global mechanism spec
+ * `2026-07-28-scoped-token-emission-brand-wiring` removed.
+ *
+ * Instead: read the two surface tokens the theme element already computes and
+ * copy them onto `body`. No hardcoded colours, no added DOM, and it is a
+ * Storybook-only affordance — nothing here ships in the library.
+ */
+const SURFACE_TOKENS = [
+  // `styles/core/base.scss` paints `body` with `--al-theme-color-body-background`,
+  // and `styles/main.scss` paints Storybook's own `.docs-story` canvas with it
+  // too. That token is an ALIAS for `--al-theme-color-background-default-weak`
+  // (see the emitted bundles), and the alias itself is mode-invariant — so
+  // repointing the weak token is enough to move both surfaces.
+  '--al-theme-color-background-default-weak',
+  '--al-theme-color-content-default',
+] as const;
+
+function syncPreviewSurface(): void {
+  requestAnimationFrame(() => {
+    const el = document.querySelector('al-theme[data-al-preset]');
+    if (!el) return;
+    const cs = getComputedStyle(el);
+    for (const token of SURFACE_TOKENS) {
+      const value = cs.getPropertyValue(token).trim();
+      if (value) document.documentElement.style.setProperty(token, value);
+    }
+  });
+}
+
 export const withPreset: Decorator = (story, context) => {
   // Opt-out. Used by the `<al-theme-switcher>` stories: that component walks up
   // for an `<al-theme>` ancestor (`theme-switcher.ts:109-113`) and takes the
@@ -46,6 +87,7 @@ export const withPreset: Decorator = (story, context) => {
   if (isDisabled(context)) return story();
 
   const preset: Preset = getPreset(context.globals?.alPreset);
+  syncPreviewSurface();
 
   // `density` / `contrast` / `shape` / `motion` are still written only when
   // the preset names them — not because `comfortable` is dangerous any more

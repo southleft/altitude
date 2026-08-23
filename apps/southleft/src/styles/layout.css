@@ -8,6 +8,57 @@
  * file (and the build output) for violations.
  */
 
+/* ------------------------------------------------------------------ *\
+   LIGHT-DOM RESET (spec 2026-08-22-southleft-example-1-to-1-parity, T1)
+\* ------------------------------------------------------------------ */
+
+/* Altitude's `core/reset.scss` (the `box-sizing: border-box` reset) is pulled
+ * into `styles/component.scss` — i.e. into every component's SHADOW root —
+ * but NOT into `styles/main.scss`, the global bundle this app imports
+ * (Base.astro:8). So inside an `al-*` component everything is border-box,
+ * while this app's own light-DOM markup silently falls back to the browser
+ * default `content-box` plus `body { margin: 8px }`.
+ *
+ * Two measured consequences before this block existed, both reported as
+ * "the header container isn't matching the ref site":
+ *   1. `body`'s 8px UA margin inset the whole page — the sticky header
+ *      measured x=8 w=1424 in a 1440 viewport instead of the reference's
+ *      x=0 w=1440 full-bleed.
+ *   2. `.sl-header__bar` resolved as content-box, so its `max-width: 85rem`
+ *      capped the CONTENT box at 1360px and the padding pushed the border
+ *      box to 1456px — wider than the available 1424px, so the bar never
+ *      centred and its measure ran 64px wide of the reference's 1360px.
+ *
+ * `.sl-container` already carried a local `box-sizing: border-box` for
+ * exactly this reason; this generalises that one-off fix to the whole app.
+ * The library-level gap is filed separately — it affects every consumer app,
+ * not just this one, and fixing it here keeps that change out of this spec. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+/* The reference pins its footer to the bottom of short pages with
+ * `body { min-height: 100vh; display: flex; flex-direction: column }` +
+ * `main { flex: 1 }` + `footer { margin-top: auto }`. Altitude's
+ * `core/base.scss` already makes `body` a flex column, so only the height
+ * floor and the growing main are missing. `.sl-page` (this app's painted
+ * canvas, below) is the flex child that has to carry them. */
+.sl-page {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.sl-page > main {
+  flex: 1;
+}
+
 .sl-container {
   width: 100%;
   /* T12 audit-2 round (A2): exact v5 `container-sl` metrics — 1360px max,
@@ -25,7 +76,7 @@
   margin-inline: auto;
 }
 
-/* v5's `max-w-md` (28rem/448px) width cap — `al-text-passage`'s `maxWidth`
+/* v5's `max-w-md` (28rem/448px) width cap — `al-text-block`'s `maxWidth`
  * prop only exposes a binary `sm` step, not a scale, so it can't reproduce
  * this cap (T12 audit-3 round). Used on plain `<p>` elements where the
  * component's own typography isn't otherwise needed. */
@@ -57,7 +108,7 @@
    * var(--al-theme-color-content-default); }` — a regular (non-custom) CSS
    * property, so what INHERITS down from `body` is the value already
    * resolved there (against the unscoped `:root` bundle), not a live
-   * formula. Un-slotted content inside `<al-text-passage>` etc. (this app's
+   * formula. Un-slotted content inside `<al-text-block>` etc. (this app's
    * migrated markdown bodies — plain `<p>`/`<h2>` with no component of
    * their own) inherits that frozen value straight through al-theme's
    * `display: contents`, so a runtime mode toggle silently left body copy
@@ -128,31 +179,60 @@ al-theme[mode='light'] .sl-announcement {
  * start: auto`, rounded-full pill nav items (active = filled well), two
  * 36px circular icon buttons, a small pill CTA, and a numbered mobile panel.
  * -------------------------------------------------------------------- */
+/* `<al-header sticky>` (Header.astro) owns the landmark, the stacking context
+ * and the sticky behaviour now; `.sl-header` only feeds it the brand's chrome
+ * through the component's own custom properties. These have to be properties
+ * rather than plain declarations: `al-header`'s `:host` is `display: contents`,
+ * so the shadow-root `<header>` is the only box on the page and nothing out
+ * here can style it directly.
+ *
+ * `padding: 0` because the page measure is the nested
+ * `<al-layout variant="constrained">`, not the header's own padding — two
+ * sources of inline padding would double the gutter. */
 .sl-header {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  border-block-end: var(--al-theme-border-width) solid var(--sl-border-faint);
-  background: color-mix(in srgb, var(--al-theme-color-background-default-weak) 85%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.sl-header__bar {
-  display: flex;
-  align-items: center;
-  gap: var(--al-theme-space-lg);
-  max-width: 85rem; /* T12 audit-2 (A2) — matches .sl-container's 1360px */
-  margin-inline: auto;
-  padding-inline: clamp(1.25rem, 4vw, 3rem);
-  block-size: 4rem; /* 64px — mobile */
+  --al-header-padding: 0;
+  --al-header-min-height: 4rem; /* 64px — mobile, v5's `h-16` */
+  --al-header-background: color-mix(in srgb, var(--al-theme-color-background-default-weak) 85%, transparent);
+  --al-header-border-block-end: var(--al-theme-border-width) solid var(--sl-border-faint);
+  --al-header-backdrop-filter: blur(12px);
 }
 
 @media (min-width: 48rem) {
-  .sl-header__bar {
-    block-size: 5rem; /* 80px — desktop, matches v5's md:h-20 */
+  .sl-header {
+    --al-header-min-height: 5rem; /* 80px — desktop, v5's `md:h-20` */
   }
 }
+
+/* The reference's page measure, as an `<al-layout variant="constrained">`
+ * recipe rather than a bespoke max-width wrapper.
+ *
+ * v5's `.container-sl` is `max-width: 1360px` INCLUDING `padding-inline:
+ * clamp(1.25rem, 4vw, 3rem)`, so its CONTENT column is 1360 − 2×48 = 1264px
+ * at desktop. `al-layout`'s `measure` is the content column itself and its
+ * gutters are separate tracks, so 79rem (1264px) + the same clamp reproduces
+ * `.container-sl` exactly at every width — measured x=88 w=1264 at a 1440
+ * viewport, matching the reference. */
+.sl-measure {
+  --al-layout-measure: 79rem;
+  --al-layout-gutter: clamp(1.25rem, 4vw, 3rem);
+}
+
+/* `.sl-header__bar` is now the `<al-layout direction="row">` ITSELF, not a
+ * wrapper around one. Everything this rule used to declare has moved to the
+ * element that properly owns it:
+ *   - measure (max-width / margin-inline / padding-inline) → the enclosing
+ *     `<al-layout variant="constrained">` via `.sl-measure`
+ *   - bar height → `--al-header-min-height` on `<al-header>`
+ *   - row direction / centring / gap → al-layout's own props
+ *
+ * DO NOT reintroduce `display: flex` here. An `<al-layout>` host is
+ * `display: contents` (layout.scss `:host`), and a document rule targeting
+ * the host BEATS the shadow root's `:host` rule — so a `display` here would
+ * re-materialise the host box and make the layout's inner `.al-c-layout` div
+ * the single shrink-to-fit flex item of it. That was the original defect:
+ * with no free space in that box, `margin-inline-start: auto` on `.sl-header__nav`
+ * and `.sl-header__actions` became no-ops and the whole bar hugged the left
+ * gutter with ~270px of dead space at 1440px. */
 
 .sl-header__logo {
   display: inline-flex;
@@ -166,16 +246,17 @@ al-theme[mode='light'] .sl-announcement {
   --al-logo-max-height: 18px;
 }
 
+/* `<nav>` is kept purely for the landmark and its `aria-label` — the pill row
+ * inside it is an `<al-layout direction="row" gap="xs">`, so the alignment and
+ * gap that used to live here are gone. All that remains is the responsive
+ * show/hide, which is a decision about the NAV, not about arrangement. */
 .sl-header__nav {
   display: none;
-  align-items: center;
-  gap: var(--al-theme-space-xxs);
-  margin-inline-start: auto;
 }
 
 @media (min-width: 64rem) {
   .sl-header__nav {
-    display: flex;
+    display: block;
   }
 }
 
@@ -202,12 +283,18 @@ al-theme[mode='light'] .sl-announcement {
   background: var(--al-theme-color-background-default-strong);
 }
 
-.sl-header__actions {
-  display: flex;
-  align-items: center;
-  gap: var(--al-theme-space-sm);
-  margin-inline-start: auto;
-}
+/* The actions cluster is an `<al-layout direction="row" align="center"
+ * gap="sm">` and needs NO rule of its own. It used to carry
+ * `margin-inline-start: auto` to shove itself right; that could not survive
+ * the move to al-layout, because an al-layout host is `display: contents` and
+ * margins on a `display: contents` box are dropped entirely — its inner
+ * `.al-c-layout` div is the real flex item, and the margin never reaches it.
+ *
+ * Rather than reach through the shadow boundary to re-apply it, the header
+ * row now says what it means: `justify="between"` with exactly two children
+ * (the wordmark, and one group holding nav + actions). That is the same
+ * visual result the two auto margins were approximating, expressed as an
+ * al-layout prop. See Header.astro. */
 
 @media (min-width: 64rem) {
   .sl-header__actions {
@@ -278,23 +365,21 @@ al-theme[mode='light'] .sl-announcement {
   }
 }
 
+/* The panel's measure moved to the enclosing `<al-layout variant="constrained">`
+ * (`.sl-measure`); the block padding stayed here rather than moving to the
+ * inner `<al-layout>` alongside it, because that element is an al-layout host
+ * — `display: contents`, which drops padding exactly as it drops margins —
+ * and al-layout exposes no padding hook. The wrapping `<nav>` is the nearest
+ * element that actually generates a box, so the rhythm lives on it. */
 .sl-header__mobile-nav {
   border-block-start: var(--al-theme-border-width) solid var(--sl-border-faint);
+  padding-block: var(--al-theme-space);
 }
 
 @media (min-width: 64rem) {
   .sl-header__mobile-nav {
     display: none;
   }
-}
-
-.sl-header__mobile-nav-inner {
-  display: flex;
-  flex-direction: column;
-  gap: var(--al-theme-space-xxs);
-  max-width: 85rem; /* T12 audit-2 (A2) — matches .sl-container's 1360px */
-  margin-inline: auto;
-  padding: var(--al-theme-space) clamp(1.25rem, 4vw, 3rem);
 }
 
 .sl-header__mobile-nav-link {
@@ -325,7 +410,7 @@ al-theme[mode='light'] .sl-announcement {
 }
 
 /* T8 a11y pass — real finding, app-scoped fix. `al-link` (and any plain <a>
- * slotted into `al-text-passage`, which applies the same `@include al-link`
+ * slotted into `al-text-block`, which applies the same `@include al-link`
  * mixin) colors its text with `--al-theme-color-content-primary-default`,
  * which resolves to the southleft brand's FIXED red-500 in EVERY mode (the
  * brand's sparse override has no light/dark split — a token-level gap in
@@ -334,7 +419,7 @@ al-theme[mode='light'] .sl-announcement {
  * owns, and re-splitting it by mode is a bigger change than this app's
  * scope). Against the paper (light) canvas that red measures 2.77:1, well
  * under the 4.5:1 axe/WCAG AA requires — reproduced on the header nav AND
- * on plain-text-passage links (Figma/MCP prose on /tools), so this is
+ * on plain-text-block links (Figma/MCP prose on /tools), so this is
  * scoped to the WHOLE light-mode page, not just one section. On ink (dark)
  * the same pairing already passes, so it's untouched there. Re-pointing
  * the CUSTOM PROPERTY (which pierces the shadow boundary — the same
@@ -348,7 +433,7 @@ al-theme[mode='light'] {
   --al-theme-color-content-primary-strong: var(--al-theme-color-content-default-weak);
 }
 
-/* `al-text-passage`'s `::slotted(a)` / `::slotted(code)` styling (its
+/* `al-text-block`'s `::slotted(a)` / `::slotted(code)` styling (its
  * shadow root's link color + code treatment) only ever matches DIRECT
  * slotted children — a fundamental `::slotted()` limitation, not
  * something either side did wrong. `.sl-prose` marks the `<p>` wrappers
@@ -387,18 +472,33 @@ al-theme[mode='light'] {
   padding-block: calc(clamp(6rem, 8vw, 10rem) / 4);
 }
 
-.sl-stack {
-  display: flex;
-  flex-direction: column;
-  gap: var(--al-theme-space);
+/* Two-column media/content band, applied to an <al-layout direction="row" wrap>.
+ * This used to be the al-split-content component; it is theme-level layout, not
+ * design-system behaviour, so it lives here now.
+ * The two columns carry DIFFERENT flex bases on purpose - that is what makes the
+ * band stack intrinsically, at whatever width the content stops fitting, with no
+ * media query. Equal columns would lose that. */
+/* NOTE: the gap comes from the layout's own `gap="xl"` prop, not from here -
+ * <al-layout>'s host is `display: contents`, so the real flex container lives in
+ * its shadow root and a `gap` declared on this class would never apply. The
+ * flex bases below DO apply, because slotted children are styled by the
+ * document. */
+
+.sl-split > [slot='media'],
+.sl-split > .sl-split__media {
+  flex: 1 1 20rem;
+  min-inline-size: 0;
 }
 
-.sl-stack--sm {
-  gap: var(--al-theme-space-sm);
+.sl-split > [slot='content'],
+.sl-split > .sl-split__content {
+  flex: 1 1 24rem;
+  min-inline-size: 0;
 }
 
-.sl-stack--lg {
-  gap: var(--al-theme-space-lg);
+/* Media first. Default is content first, mirroring the old mediaPosition="end". */
+.sl-split--media-start > .sl-split__media {
+  order: -1;
 }
 
 .sl-logo-wall {
@@ -424,13 +524,7 @@ al-theme[mode='light'] {
   }
 }
 
-.sl-footer-columns {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-  gap: var(--al-theme-space-lg);
-}
-
-/* `al-heading` / `al-text-passage` carry no `:host` display rule of their
+/* `al-heading` / `al-text-block` carry no `:host` display rule of their
  * own (library gap, not touched here — see T8 verification notes), so the
  * UA default (`display: inline`) applies whenever this app places them as
  * direct page content rather than inside a component's flex/grid-managed
@@ -440,27 +534,8 @@ al-theme[mode='light'] {
  * its own `display`, so this changes nothing for the many places these tags
  * already sit inside a component's managed slot (al-hero, al-card, …). */
 al-heading,
-al-text-passage {
+al-text-block {
   display: block;
-}
-
-/* Section header — heading + description, optionally with a trailing
- * "view all" link. One consistent arrangement for every section that needs
- * it (home page: What we do / Proof, not promises / Latest thinking) rather
- * than three ad hoc `.al-u-grid` compositions. Wraps to a stacked layout
- * below the width a heading + description + link can share a line. */
-.sl-section-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--al-theme-space-lg);
-  margin-block-end: var(--al-theme-space-xl);
-}
-
-.sl-section-header > .sl-stack {
-  flex: 1 1 28rem;
-  min-inline-size: 0;
 }
 
 /* T12 audit-2 (A5) — v5's section dek is an 18px "lead" paragraph
@@ -565,11 +640,11 @@ al-text-passage {
   padding: var(--al-theme-space-xl);
 }
 
+/* Row arrangement now lives on the `<al-layout>` this class is applied to
+ * directly (ArticleCard.astro) — the remaining declarations are inherited
+ * typography, which still cascades through `<al-layout>`'s `display:
+ * contents` host to its slotted children. */
 .sl-media-card__meta {
-  display: flex;
-  align-items: center;
-  gap: var(--al-theme-space-sm);
-  margin: 0;
   font-family: var(--sl-font-mono);
   /* v5's meta row is the `.kicker` preset (13px), measured at 12px here
    * (T12 audit-3 height closure) because the markup carried the 12px
@@ -609,12 +684,10 @@ al-theme[mode='light'] .sl-media-card__meta {
   -webkit-line-clamp: 2;
 }
 
-.sl-media-card__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--al-theme-space-xs);
-  margin: 0;
-}
+/* Row arrangement now lives on the nested `<al-layout>` (WorkCard.astro);
+ * this div keeps only the box-model concerns (the work-card `margin-block-
+ * start` override below) `<al-layout>`'s `display: contents` host cannot
+ * express. */
 
 /* v5's WorkCard uses asymmetric gaps (excerpt `mt-2`=8px, tags `mt-4`=16px)
  * where ArticleCard uses a uniform `mt-3`=12px rhythm — T12 audit-3 height
@@ -1257,15 +1330,6 @@ al-theme[mode='light'] .sl-pg-readout {
   color: var(--al-theme-color-content-default-weak);
 }
 
-.sl-cta-band__actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: var(--al-theme-space);
-  margin-block-start: var(--al-theme-space-xl);
-}
-
 /* ------------------------------------------------------------------------
  * Tool card ("05/open-source") — spec 2026-08-20-southleft-example-app,
  * T12 audit-2 round (F). v5's real anatomy: a mono `$ cmd` line in accent
@@ -1459,11 +1523,23 @@ al-theme[mode='light'] .sl-section-rule {
  * media slot groups the WHOLE content column (including the heading)
  * alongside media, which doesn't reproduce v5's "heading spans full width,
  * two columns start below it" composition — same "stop fighting the
- * component" call as the header. `al-heading` / `al-text-passage` / `al-
+ * component" call as the header. `al-heading` / `al-text-block` / `al-
  * button` are still used as the primitives inside it.
  * -------------------------------------------------------------------- */
+/* `isolation: isolate` makes this section its own stacking context, which is
+ * what lets the decorative layers below sit at `z-index: -1` — behind the
+ * hero's content but still in front of the page background.
+ *
+ * That replaces the `position: relative` the old `.sl-hero__inner` wrapper
+ * carried purely to lift copy above the absolutely-positioned texture and
+ * canvas. Positioning cannot move onto the `<al-layout>` that replaced it (a
+ * `display: contents` host has no box to position), and inventing a
+ * `--al-layout-position` hook to work around that would be the wrong fix — a
+ * layout primitive has no business creating stacking contexts. Pushing the
+ * decorations back a layer removes the need for the wrapper entirely. */
 .sl-hero {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   border-block-end: var(--al-theme-border-width) solid var(--sl-border-faint);
 }
@@ -1475,6 +1551,7 @@ al-theme[mode='light'] .sl-section-rule {
 .sl-hero__texture {
   position: absolute;
   inset: 0;
+  z-index: -1; /* behind the content, ahead of the page — see `.sl-hero` */
   background-image:
     linear-gradient(to right, var(--sl-grid-line) 1px, transparent 1px),
     linear-gradient(to bottom, var(--sl-grid-line) 1px, transparent 1px);
@@ -1484,22 +1561,31 @@ al-theme[mode='light'] .sl-section-rule {
   pointer-events: none;
 }
 
+/* The hero's block rhythm now rides on the `<al-layout variant="constrained">`
+ * that also owns the measure, via `--al-layout-padding` — one element instead
+ * of the old `.sl-container` + `.sl-hero__inner` pair. Block-only on purpose:
+ * the inline insets under `constrained` are gutter TRACKS, and inline padding
+ * would stack on top of them and shove the content column off the measure. */
 .sl-hero__inner {
-  position: relative;
-  padding-block: 5rem; /* py-20 */
+  --al-layout-padding: 5rem 0; /* py-20 */
 }
 
 @media (min-width: 48rem) {
   .sl-hero__inner {
-    padding-block: 7rem; /* md:py-28 */
+    --al-layout-padding: 7rem 0; /* md:py-28 */
   }
 }
 
 @media (min-width: 64rem) {
   .sl-hero__inner {
-    padding-block: 8rem; /* lg:py-32 */
+    --al-layout-padding: 8rem 0; /* lg:py-32 */
   }
 }
+
+/* The kicker → heading → grid stack carries `gap="none"` in the markup rather
+ * than a rule here: each step of this rhythm is a different size (the
+ * reference's mt-5 then mt-14), which is content rhythm rather than
+ * arrangement, so the children keep their own margins. */
 
 .sl-hero__heading {
   margin-block-start: var(--al-theme-space-md);
@@ -1546,39 +1632,63 @@ al-theme[mode='light'] .sl-section-rule {
   text-wrap: balance;
 }
 
+/* Now an `<al-layout variant="grid" noCollapse align="end">`. `noCollapse`
+ * because the single-column stack below `lg` is this file's call, not the
+ * component's `md` default; `--al-layout-template` is the documented escape
+ * hatch for the asymmetric track list, and `--al-layout-gap` for a gap the
+ * `gap` prop's scale cannot name. `align="end"` is the prop, not a rule.
+ *
+ * `margin-block-start` still belongs here rather than as a parent gap: the
+ * hero stack's three steps each use a different rhythm. */
 .sl-hero__grid {
-  display: grid;
-  gap: var(--al-theme-space-xxl);
+  --al-layout-template: minmax(0, 1fr);
+  --al-layout-gap: var(--al-theme-space-xxl);
   margin-block-start: var(--al-theme-space-xxl);
-  align-items: end;
 }
 
 @media (min-width: 64rem) {
   .sl-hero__grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
-    gap: var(--al-theme-space-super);
+    --al-layout-template: minmax(0, 1fr) minmax(0, 0.85fr);
+    /* 80px — the reference's `lg:gap-20`, measured. `--al-theme-space-super`
+     * (the nearest token) is 64px, which shifted the 1fr / 0.85fr split off
+     * the reference's 640px / 544px columns by 16px each. */
+    --al-layout-gap: 5rem;
   }
 }
 
-.sl-hero__lead {
-  min-inline-size: 0;
+/* Both columns carry `.al-u-grid__item`, which supplies `min-inline-size: 0`
+ * — without it the terminal's `<pre>` sets a `min-content` floor and pushes
+ * the grid past its track. The lead column is itself an `<al-layout>`, and
+ * that class is also what gives its `display: contents` host a box, so it can
+ * be a grid item at all. Its own `gap="none"` is in the markup, for the same
+ * mixed-rhythm reason as the stack above. */
+
+/* The hero's lead copy — the reference's `.text-lead` + `max-w-2xl`, the same
+ * `--sl-text-lead` recipe the section deks use.
+ *
+ * Goes through `--al-text-block-font` rather than a plain `font-size` on the
+ * host: `al-text-block` sets its own type with a `font` SHORTHAND inside its
+ * shadow root, which resets size and line-height and beats anything inherited
+ * from out here. That hook was added for this. `color` still inherits
+ * normally, so it stays a direct declaration. */
+.sl-hero__lead-copy {
+  display: block;
+  max-width: 42rem; /* max-w-2xl */
+  --al-text-block-font: var(--sl-text-lead) / 1.55 var(--al-font-family-primary, 'IBM Plex Sans', sans-serif);
+  color: var(--al-theme-color-content-default-weak);
 }
 
+/* These two are `<al-layout>`s now, so their rhythm is `--al-layout-padding`
+ * (block-start only) rather than `margin-block-start`. A margin here would be
+ * silently dropped: the host is `display: contents` and has no box to carry
+ * it. Padding lands on the layout's own inner box instead, and looks identical
+ * — neither element paints a background or a border. */
 .sl-hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--al-theme-space-sm);
-  margin-block-start: var(--al-theme-space-xl);
+  --al-layout-padding: 2.25rem 0 0; /* the reference's `mt-9`, measured 36px */
 }
 
 .sl-hero__chips {
-  margin-block-start: var(--al-theme-space-xxl);
-}
-
-.sl-hero__chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--al-theme-space-xs);
+  --al-layout-padding: 3rem 0 0; /* the reference's `mt-12`, measured 48px */
 }
 
 .sl-hero__chip-note {
@@ -1753,11 +1863,26 @@ al-theme[mode='dark'] .sl-logo-wall img:focus-visible {
   max-width: 100rem;
 }
 
+/* These target `al-layout[variant='grid']`, not `.al-u-grid`, since spec
+ * 2026-08-22-southleft-example-1-to-1-parity (T9) moved every grid wrapper in
+ * this app onto the layout primitive — the old `.al-u-grid` selectors matched
+ * nothing afterwards, silently making generated-theme grid density a no-op.
+ *
+ * `--al-layout-gap` (added to layout.scss in the same spec) is the supported
+ * hook. The obvious alternative — redefining `--al-theme-space` on the grid —
+ * would inherit straight through the shadow boundary into everything slotted
+ * inside it, retuning the cards' internal spacing as well as the gap between
+ * them. `.al-u-grid` is kept as a second selector for the one wrapper that
+ * could not be converted (an `<a>` acting as a grid row in work/index.astro). */
+[data-sl-grid-density='airy'] al-layout[variant='grid'],
 [data-sl-grid-density='airy'] .al-u-grid {
+  --al-layout-gap: var(--al-theme-space-xl);
   grid-gap: var(--al-theme-space-xl);
 }
 
+[data-sl-grid-density='dense'] al-layout[variant='grid'],
 [data-sl-grid-density='dense'] .al-u-grid {
+  --al-layout-gap: var(--al-theme-space-xs);
   grid-gap: var(--al-theme-space-xs);
 }
 
@@ -1782,18 +1907,6 @@ al-theme[mode='dark'] .sl-logo-wall img:focus-visible {
 
 .sl-ai-panel {
   min-inline-size: 20rem;
-}
-
-.sl-ai-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--al-theme-space-xs);
-}
-
-.sl-ai-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--al-theme-space-sm);
 }
 
 .sl-ai-status {
@@ -1887,4 +2000,18 @@ al-theme[mode='dark'] .sl-logo-wall img:focus-visible {
   .sl-container {
     transition: max-width var(--al-theme-animation-duration-long, 0.4s) var(--al-theme-animation-timing);
   }
+}
+
+/* Interior-page hero band. Replaces `<al-hero layout="stacked">`, which was
+ * removed from the design system. The arrangement is an <al-layout> stack; the
+ * band's padding and the eyebrow's hug-not-stretch behaviour are page design,
+ * so they live here. */
+.sl-page-hero {
+  padding-block: clamp(3rem, 6vw, 5rem);
+}
+
+/* The chip is an intrinsic atom - keep it hugging its content instead of
+ * stretching across the stack. */
+.sl-page-hero .sl-page-hero__eyebrow {
+  align-self: start;
 }

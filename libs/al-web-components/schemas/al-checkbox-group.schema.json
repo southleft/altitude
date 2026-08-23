@@ -16,7 +16,7 @@
     },
     "slots": [
       {
-        "description": "The component content, a set of checkbox items",
+        "description": "The component content, a set of checkbox items. Items stack in a column by default; for a row, nest them in `<al-layout direction=\"row\" wrap>`.",
         "name": ""
       },
       {
@@ -74,10 +74,6 @@
         },
         "ariaDescribedBy": {
           "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
-          "type": "string"
-        },
-        "variant": {
-          "description": "typescript: 'horizontal'",
           "type": "string"
         }
       }

@@ -91,20 +91,66 @@
      never varies by brand; the `shape` axis below hit the same pattern where
      it DOES vary by brand, silently losing every brand's own radius. See
      `.altitude/AXES.md` "Why role tokens have no tier-2 default". */
+  // EVERY motion value below asserts the COMPLETE token set the axis governs,
+  // even where a value is "no change from the default". That looks redundant
+  // on a single theme host and is load-bearing the moment two nest.
+  //
+  // Custom properties INHERIT. A nested `<al-theme>` that declares only part of
+  // the set silently inherits the rest from the outer theme, so a partial rule
+  // is not "leave those alone", it is "adopt whatever my ancestor decided".
+  // Before this was made complete, three cases were broken:
+  //
+  //   reduced > full
+  //     Inner stayed 0s. `full` declared nothing at all, so it had no value
+  //     with which to override the inherited zero. This is the documented
+  //     accessibility opt-back-in (`AXES.md` 2.2), and it was inert under any
+  //     nesting — including the outer `<al-theme>` that Storybook, and most
+  //     apps, wrap everything in.
+  //
+  //   expressive > full
+  //     Inner kept the ancestor's lengthened role durations and spring curves.
+  //
+  //   reduced > expressive
+  //     Inner animated on the role tokens but stayed frozen at 0s on the legacy
+  //     pair, because `expressive` never restated it — a split-brain theme
+  //     across the 23 components still on the legacy pair.
+  //
+  // An UNSET `motion` still inherits deliberately: absent means "no opinion",
+  // which is why `motion` alone among the axes has no default initializer in
+  // `theme.ts`. Only an explicit value re-asserts.
+  //
+  // Role tokens are reset with `initial`, not with a concrete value. `initial`
+  // computes to the guaranteed-invalid value, so `var(--role, var(--legacy))`
+  // takes its FALLBACK — which is precisely the "genuinely absent, not merely
+  // equal to the legacy value" state `AXES.md` 2.3 requires. Writing the legacy
+  // value in directly would re-break the brand-awareness that section proves
+  // out.
+
   :host([motion='reduced']) {
     --al-theme-animation-duration: 0s;
     --al-theme-animation-duration-long: 0s;
     --al-theme-animation-duration-role-fast: 0s;
     --al-theme-animation-duration-role-base: 0s;
     --al-theme-animation-duration-role-slow: 0s;
+    // Moot at 0s, but asserted so a `reduced` inside an `expressive` does not
+    // carry the ancestor's spring curves.
+    --al-theme-animation-timing-role-standard: initial;
+    --al-theme-animation-timing-role-emphasized: initial;
   }
+
   :host([motion='expressive']) {
+    // Restated, NOT lengthened: `expressive` upgrades the role tokens only, so
+    // the legacy pair's correct value here is the default. Restating it is what
+    // stops an `expressive` nested inside a `reduced` from staying frozen.
+    --al-theme-animation-duration: var(--al-animation-duration-2);
+    --al-theme-animation-duration-long: var(--al-animation-duration-4);
     --al-theme-animation-duration-role-fast: var(--al-animation-duration-3);
     --al-theme-animation-duration-role-base: var(--al-animation-duration-6);
     --al-theme-animation-duration-role-slow: var(--al-animation-duration-8);
     --al-theme-animation-timing-role-standard: var(--al-animation-timing-spring);
     --al-theme-animation-timing-role-emphasized: var(--al-animation-timing-spring);
   }
+
   /* Accessibility-first: OS `prefers-reduced-motion` still wins over a
      decorative `motion='expressive'` choice, exactly as it already wins over
      the unset default — only an explicit `motion='full'` opts back in. This
@@ -118,6 +164,34 @@
       --al-theme-animation-duration-role-base: 0s;
       --al-theme-animation-duration-role-slow: 0s;
     }
+  }
+
+  // `full` — the explicit opt-back-in, and the ONLY value that survives the
+  // reduce media query above. It must come AFTER that block: both selectors
+  // compute to 0,2,0, so source order is what lets `full` win.
+  //
+  // The legacy pair is restated from tier 1 rather than "reset", because CSS
+  // has no way to say "use the value :root would have given me" — `unset` on a
+  // custom property means `inherit` (the ancestor's zero, i.e. the bug), and
+  // `revert`/`revert-layer` address cascade origins and layers, not an
+  // inherited value from a different element. Restating is the same remedy
+  // `AXES.md` 2.3 sanctions for brands, where `tokens-brand-*.scss` restates
+  // the legacy token directly per brand.
+  //
+  // These two values MUST track `tokens/tier-2/animations.json`
+  // (`theme.animation.duration.@` -> `{animation.duration.2}`, `.long` ->
+  // `{animation.duration.4}`). That duplication is guarded behaviourally, not
+  // by eye: `scripts/verify-motion-axis.mjs` asserts a `motion='full'` theme
+  // resolves to the SAME duration as a default theme, so if tier 2 is repointed
+  // and this is not, the check fails.
+  :host([motion='full']) {
+    --al-theme-animation-duration: var(--al-animation-duration-2);
+    --al-theme-animation-duration-long: var(--al-animation-duration-4);
+    --al-theme-animation-duration-role-fast: initial;
+    --al-theme-animation-duration-role-base: initial;
+    --al-theme-animation-duration-role-slow: initial;
+    --al-theme-animation-timing-role-standard: initial;
+    --al-theme-animation-timing-role-emphasized: initial;
   }
 
   /* ----- shape axis (2026-08-20-token-axes-expansion) -----

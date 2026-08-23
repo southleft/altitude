@@ -23,9 +23,20 @@ $grid-cols: 12 !default;
 
     /**
      * Grid explicit column
+     * - Deliberately NOT scoped under `.al-u-grid`: the grid container may be
+     *   an `<al-layout variant="grid">` shadow root, in which case no
+     *   `.al-u-grid` ancestor exists in the light DOM for these items to match
+     *   against. Dropping the ancestor makes the same span classes work in both
+     *   a light-DOM `.al-u-grid` and slotted into a Layout grid.
+     * - The breakpoint selector is DOUBLED (`.col\:6\@lg.col\:6\@lg`) to keep
+     *   the specificity the dropped `.al-u-grid` ancestor used to provide. The
+     *   un-suffixed `.col:N` rule is re-emitted inside every breakpoint block,
+     *   so at equal specificity a later `i` in the loop (say `col:12`) would
+     *   beat an earlier breakpoint override (`col:6@lg`) on source order alone.
+     *   The doubled class restores the old cascade without an ancestor.
      */
     .al-u-grid__item.col\:#{$i},
-    .al-u-grid .al-u-grid__item.col\:#{$i}\@#{$suffix} {
+    .al-u-grid__item.col\:#{$i}\@#{$suffix}.col\:#{$i}\@#{$suffix} {
       grid-column: span $i / span $i;
     }
 
@@ -33,7 +44,7 @@ $grid-cols: 12 !default;
      * Grid explicit row
      */
     .al-u-grid__item.row\:#{$i},
-    .al-u-grid .al-u-grid__item.row\:#{$i}\@#{$suffix} {
+    .al-u-grid__item.row\:#{$i}\@#{$suffix}.row\:#{$i}\@#{$suffix} {
       grid-row: span $i / span $i;
     }
 
@@ -124,8 +135,84 @@ $grid-cols: 12 !default;
 /**
  * Grid item
  */
+/**
+ * Grid item — a CELL. It stacks whatever it holds and lets that content fill
+ * the track it was given.
+ *
+ * `flex-direction: column` is the correction. The item was a flex ROW, with
+ * no rule about how its content should size, which produced two distinct
+ * bugs that look unrelated but share this cause:
+ *
+ * 1. A cell holding SEVERAL blocks laid them out side by side. A cell whose
+ *    content is a section rule, a kicker and a heading rendered all three in
+ *    a row, each shrink-wrapped, instead of stacked.
+ * 2. A cell holding ONE block let it size to `max-content` clamped to the
+ *    track (a row-direction flex item is `flex: 0 1 auto`), so the track
+ *    width had no effect on anything narrower than it. Six cards in six
+ *    identical 410px tracks measured 396 / 328 / 343 / 388 / 369 / 410px.
+ *    Cards whose copy happens to overflow their track look correct, which is
+ *    why this reads as "some cards are the wrong width" rather than as a
+ *    systematic bug.
+ *
+ * `display: grid` is what fixes both, because grid stretches its item on BOTH
+ * axes at once. Flex cannot: a flex item only stretches on the CROSS axis, so
+ * `row` fills the height but shrink-wraps the width (bug 2) and `column`
+ * fills the width but collapses the height. There is no direction that gets
+ * both, and pushing `flex: 1` onto the children buys the missing axis only by
+ * equalising a multi-child cell's rows — which stretches a one-line kicker to
+ * match the heading below it, i.e. bug 1 again in a new form.
+ *
+ * A `display` of SOME kind is also mandatory, which is worth stating plainly
+ * because removing it looks like an elegant simplification. This class is
+ * used two ways:
+ *
+ *   1. On a plain wrapper — `<div class="al-u-grid__item col:6">`.
+ *   2. Directly on a component — `<al-card class="al-u-grid__item col:8@md">`
+ *      (the Altitude homepage's bento tiles).
+ *
+ * In case 2 the component's `:host { display: contents }` means the host
+ * generates no box, and `grid-column` only applies to an element that
+ * generates one. Drop the `display` and the span classes stop applying
+ * entirely: the five homepage tiles auto-placed into single 1/12 columns and
+ * rendered ~120px wide instead of spanning 8 and 4 tracks. The document rule
+ * here has to beat `:host` to give the host a box for the span to act on.
+ *
+ * `align-content` is then the one thing that differs between the two cases,
+ * and it is why the selector below is a list of plain HTML wrappers rather
+ * than a `:has(> * + *)` child count. Counting children is wrong for case 2:
+ * a component's light-DOM children are its SLOTTED content, and however many
+ * of those there are, its shadow root still contributes exactly one box that
+ * should fill the cell. Counting them made the homepage tiles honour
+ * `align-content: start` and collapse to their content height inside 256px
+ * cells. Element type answers the real question — "is this cell a plain
+ * wrapper, or is it a component?" — so a wrapper packs its several blocks to
+ * the top, and a component keeps grid's default stretch.
+ *
+ * `min-inline-size: 0`: a grid item's automatic minimum size is `min-content`,
+ * so without it one long unbroken string (a URL, a code span) pushes the cell
+ * past its track and blows out the whole grid.
+ *
+ * This also covers `<al-layout variant="grid">`, which spans children with
+ * these same shared classes rather than a second system of its own.
+ */
 .al-u-grid__item {
-  display: flex;
+  display: grid;
+  min-inline-size: 0;
+}
+
+/**
+ * A plain wrapper holding more than one block stacks them at content height,
+ * packed to the top — instead of grid's default, which would share the cell's
+ * leftover height out between every row and drift them apart. Restricted to
+ * real HTML wrappers on purpose; see the note above.
+ */
+div.al-u-grid__item:has(> * + *),
+section.al-u-grid__item:has(> * + *),
+article.al-u-grid__item:has(> * + *),
+figure.al-u-grid__item:has(> * + *),
+li.al-u-grid__item:has(> * + *),
+a.al-u-grid__item:has(> * + *) {
+  align-content: start;
 }
 
 /**

@@ -20,7 +20,7 @@ import styles from './toast.scss';
  * @slot icon - Slot in an icon to override the default one
  *
  * @event onToastClose - Fired when the toast is dismissed. Detail: `{ active }`.
- * @event onToastGroupOpen - Fired when the toast becomes visible. Detail: `{ active }`. Note the name says `Group` although this is dispatched by the individual toast — see the known-issue note on `al-toast-group`.
+ * @event onToastOpen - Fired when the toast becomes visible. Detail: `{ active }`.
  */
 export class ALToast extends ALElement {
   static el = 'al-toast';
@@ -84,14 +84,14 @@ export class ALToast extends ALElement {
 
   /**
    * Auto close?
-   * - Set whether you want the toast group to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds
+   * - Set whether you want the toast to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds
    */
   @property({ type: Boolean })
   accessor autoClose: boolean;
 
   /**
    * Delay property
-   * 1. Number of seconds to close the toast group when autoClose is enabled
+   * 1. Number of seconds to close the toast when autoClose is enabled
    * 2. Default amount is 3
    */
   @property({ type: Number })
@@ -137,7 +137,7 @@ export class ALToast extends ALElement {
 
     /* 2 */
     this.dispatch({
-      eventName: 'onToastGroupOpen',
+      eventName: 'onToastOpen',
       detailObj: {
         active: this.isActive
       }
@@ -173,7 +173,7 @@ export class ALToast extends ALElement {
 
   /**
    * Mouseover event
-   * 1. On mouseover of the toast group, clear the timer to pause auto close
+   * 1. On mouseover of the toast, clear the timer to pause auto close
    */
   handleMouseOver() {
     if (this.autoClose) {

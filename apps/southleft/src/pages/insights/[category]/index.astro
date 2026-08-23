@@ -29,13 +29,13 @@ const categoryName = posts[0]?.data.categoryName ?? category;
   </div>
 
   <div class="sl-container sl-section">
-    <div class="al-u-grid">
+    <al-layout variant="grid" noCollapse>
       {posts.map((p) => (
         <div class="al-u-grid__item col:12 col:6@md col:4@lg">
           <ArticleCard post={p} />
         </div>
       ))}
-    </div>
+    </al-layout>
   </div>
 
       <CTABand />

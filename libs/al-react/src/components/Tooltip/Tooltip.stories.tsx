@@ -1,4 +1,5 @@
 import type { StoryObj } from '@storybook/react-vite';
+import { loremSentences } from '../../../../al-web-components/.storybook/fixtures';
 import { ALTooltip } from '../..';
 
 export default {
@@ -103,7 +104,7 @@ export const WithLongText: StoryObj<typeof ALTooltip> = { args: {
     <>
       <span slot="trigger">Hover me</span>
       <span slot="prefix">⌘ + C</span>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc nisi eros, maximus vel pellentesque non, iaculis ac urna.
+      {loremSentences(2, 'tooltip')}
     </>
   )
 } };

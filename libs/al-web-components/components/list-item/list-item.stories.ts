@@ -6,7 +6,7 @@ import '../list/list';
 import './list-item';
 
 export default {
-  title: 'Atoms/List Item',
+  title: 'Atoms/Text/List Item',
   component: 'al-list-item',
   tags: [ 'autodocs' ],
   parameters: {

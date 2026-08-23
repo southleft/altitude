@@ -9,9 +9,7 @@ import 'al-web-components/css/main.css';
 import './home.scss';
 import 'al-web-components/components/theme';
 
-import 'al-web-components/components/banner';
-import 'al-web-components/components/bento-grid';
-import 'al-web-components/components/bento-item';
+import 'al-web-components/components/layout';
 import 'al-web-components/components/button';
 import 'al-web-components/components/card';
 import 'al-web-components/components/chip';
@@ -19,7 +17,6 @@ import 'al-web-components/components/divider';
 import 'al-web-components/components/footer';
 import 'al-web-components/components/header';
 import 'al-web-components/components/heading';
-import 'al-web-components/components/hero';
 import 'al-web-components/components/icon/icon';
 import 'al-web-components/components/icon/icons/success';
 import 'al-web-components/components/link';
@@ -30,7 +27,7 @@ import 'al-web-components/components/stat';
 import 'al-web-components/components/tab-panel';
 import 'al-web-components/components/tab';
 import 'al-web-components/components/tabs';
-import 'al-web-components/components/text-passage';
+import 'al-web-components/components/text-block';
 
 // AI Showcase Homepage (2026-08-20-ai-showcase-homepage) — the "what's
 // under the hood" KPI band (R4). Numbers are computed from the repo by

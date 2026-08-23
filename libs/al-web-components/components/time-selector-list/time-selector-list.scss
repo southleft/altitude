@@ -26,7 +26,7 @@
     min-height: size(35.125);
     height: 100%;
 
-    .al-c-time-selector-list--horizontal & {
+    .al-c-time-selector-list--row & {
       display: flex;
       min-height: auto;
     }
@@ -36,7 +36,7 @@
    * Time selector list horizontal
    * - Displays all the content in a row
    */
-  .al-c-time-selector-list--horizontal {
+  .al-c-time-selector-list--row {
     flex-direction: row;
     max-width: none;
     height: auto;
@@ -59,7 +59,7 @@
     inset-inline-start: 0;
     z-index: 1;
 
-    .al-c-time-selector-list--horizontal & {
+    .al-c-time-selector-list--row & {
       padding: var(--al-theme-space-xs) var(--al-theme-space);
     }
   }
@@ -76,7 +76,7 @@
     justify-content: center;
     gap: var(--al-theme-space-xxs);
 
-    .al-c-time-selector-list--horizontal & {
+    .al-c-time-selector-list--row & {
       display: flex;
       align-items: center;
       padding: 0 var(--al-theme-space-xs);

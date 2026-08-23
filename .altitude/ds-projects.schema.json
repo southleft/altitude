@@ -1,0 +1,144 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/schemas/ds-projects.schema.json",
+  "title": "Design-system project registry",
+  "description": "Declares every Figma-backed design system this repo drives. Consumed by libs/altitude-mcp/src/lib/ds-project.mjs.",
+  "type": "object",
+  "required": ["default", "projects"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "$comment": { "type": "string" },
+    "default": {
+      "type": "string",
+      "description": "Project id used when neither --project nor DS_PROJECT is supplied. Must be a key of `projects`."
+    },
+    "projects": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/definitions/project" }
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "project": {
+      "type": "object",
+      "required": ["id", "name", "brand", "figma", "paths", "library", "storybook", "prompts"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "description": "Stable slug. Must equal the key this project is stored under."
+        },
+        "name": { "type": "string", "minLength": 1, "description": "Human-readable design-system name, used in prompts and reports." },
+        "brand": {
+          "type": "string",
+          "description": "The `<al-theme brand>` value this project renders under. Must exist as a tier-2 brand token set."
+        },
+        "figma": {
+          "type": "object",
+          "required": ["fileKey", "fileName", "urlBase"],
+          "additionalProperties": false,
+          "properties": {
+            "fileKey": { "type": "string", "minLength": 1, "description": "Figma file key — the canonical library file for this project." },
+            "fileName": { "type": "string", "minLength": 1, "description": "Exact file name, asserted by refresh before any write." },
+            "urlBase": {
+              "type": "string",
+              "description": "URL template. `{fileKey}` is substituted at read time.",
+              "default": "https://www.figma.com/design/{fileKey}/"
+            },
+            "componentPagePrefix": {
+              "type": "string",
+              "description": "Page-name prefix marking component pages in this Figma file (e.g. the 🛠 hammer emoji). Used by the digest snapshot to skip non-component pages."
+            },
+            "decoys": {
+              "type": "array",
+              "description": "Look-alike files that must never be written to. refresh-figma-digests refuses to run when Figma is on one of these.",
+              "items": {
+                "type": "object",
+                "required": ["fileKey", "fileName"],
+                "additionalProperties": false,
+                "properties": {
+                  "fileKey": { "type": "string" },
+                  "fileName": { "type": "string" },
+                  "why": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "paths": {
+          "type": "object",
+          "required": ["figmaSyncDir", "parityManifest", "opsDir"],
+          "additionalProperties": false,
+          "description": "Repo-root-relative. Only `parityManifest` is git-tracked; the rest of figmaSyncDir is ignored.",
+          "properties": {
+            "figmaSyncDir": { "type": "string" },
+            "parityManifest": { "type": "string" },
+            "opsDir": { "type": "string" },
+            "instanceMap": {
+              "type": ["string", "null"],
+              "description": "Module exporting INSTANCE_MAP / MISSING_IN_FIGMA (tag -> pinned Figma node id) for THIS project's file. Node ids are file-scoped, so a map from another project must never be applied. `null` = no pinned mappings yet; every component seeds as unmapped."
+            }
+          }
+        },
+        "library": {
+          "type": "object",
+          "required": ["workspace", "root", "tagPrefix"],
+          "additionalProperties": false,
+          "properties": {
+            "workspace": { "type": "string", "description": "pnpm workspace filter name, e.g. `al-web-components`." },
+            "root": { "type": "string", "description": "Repo-root-relative path to the component library." },
+            "tagPrefix": { "type": "string", "description": "Custom-element tag prefix, e.g. `al-`." },
+            "$componentsComment": { "type": "string" },
+            "components": {
+              "type": "array",
+              "items": { "type": "string" },
+              "uniqueItems": true,
+              "description": "OPTIONAL ALLOWLIST — the subset of the library that IS this design system. Omit to include every component in the library (Altitude's case: it is the library). When present, the parity report covers only these tags and the Storybook lists only their stories, so a design system that ships 21 of 105 components does not report the other 84 as missing from its Figma file."
+            }
+          }
+        },
+        "storybook": {
+          "type": "object",
+          "required": ["configDir", "port", "brandTitle", "productionBase"],
+          "additionalProperties": false,
+          "properties": {
+            "configDir": { "type": "string", "description": "Repo-root-relative Storybook config directory." },
+            "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+            "mcpPort": { "type": "integer", "minimum": 1, "maximum": 65535, "description": "Port for this project's streamable-HTTP MCP + /parity.json endpoint." },
+            "brandTitle": { "type": "string" },
+            "brandUrl": { "type": "string" },
+            "brandImage": { "type": "string" },
+            "productionBase": { "type": "string", "description": "Deployed Storybook base URL, used to build absolute docs links in reports." },
+            "excludeTitlePrefixes": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Story `title:` prefixes force-marked `excluded` in the parity report (e.g. `Foundations/`)."
+            }
+          }
+        },
+        "prompts": {
+          "type": "object",
+          "required": ["skillName", "skillPath", "atomsScriptsDir", "parityScriptsDir"],
+          "additionalProperties": false,
+          "description": "Values spliced into the copy-paste AI reconciliation prompt.",
+          "properties": {
+            "skillName": { "type": "string" },
+            "skillPath": { "type": "string" },
+            "skillTrapCount": { "type": "integer", "minimum": 0 },
+            "atomsScriptsDir": { "type": "string" },
+            "parityScriptsDir": { "type": "string" },
+            "docPath": { "type": "string" },
+            "guardrailsDoc": { "type": "string" }
+          }
+        },
+        "excluded": {
+          "type": "object",
+          "description": "tag -> reason. Components deliberately not represented in this project's Figma file.",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    }
+  }
+}

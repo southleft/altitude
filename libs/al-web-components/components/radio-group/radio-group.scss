@@ -37,22 +37,10 @@
 
   /**
    * Radio list
-   * 1. The div that holds all the radio items
+   * - Arrangement of the slotted items is delegated to the nested
+   *   `<al-layout>`; this component owns only the fieldset semantics.
+   *   For a row, the consumer nests `<al-layout direction="row" wrap>`.
    */
-  .al-c-radio-group__list {
-    display: flex;
-    flex-direction: column;
-
-    /**
-     * Radios in displayed in a horizontal row
-     */
-    .al-c-radio-group--horizontal & {
-      flex-direction: row;
-      column-gap: var(--al-theme-space);
-      row-gap: 0;
-      flex-wrap: wrap;
-    }
-  }
 
   /**
    * Radio field note slotted

@@ -38,10 +38,6 @@ export default {
     },
     ariaDescribedBy: {
       control: 'text'
-    },
-    variant: {
-      control: 'radio',
-      options: ['default', 'horizontal']
     }
   },
   args: {
@@ -78,7 +74,7 @@ export const HiddenLegend: StoryObj<typeof ALCheckboxGroup> = { args: {
 } };
 
 export const Horizontal: StoryObj<typeof ALCheckboxGroup> = { args: {
-  variant: 'horizontal',
+
 } };
 
 export const SlottedFieldNote: StoryObj<typeof ALCheckboxGroup> = {

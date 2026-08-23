@@ -1,5 +1,5 @@
 import { html, LitElement, unsafeCSS, nothing } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { state } from 'lit/decorators.js';
 import styles from './icon-catalog.scss';
 
 // The `<al-icon>` element itself, plus the lazy resolver. In `storybook dev`,
@@ -18,7 +18,19 @@ if (customElements.get(ALIcon.el) === undefined) customElements.define(ALIcon.el
 /** Render budget. 1,512 icons means 1,512 shadow roots — filter first, then render. */
 const PAGE_SIZE = 120;
 
-@customElement('icon-catalog')
+// Registered by an explicit guarded `customElements.define` at the bottom of
+// this file rather than `@customElement`, matching every sibling in
+// `.storybook/components/**`.
+//
+// This is not just consistency. The al-react Storybook now renders these same
+// documentation elements (`libs/al-react/src/foundations/`), and its Vite
+// pipeline runs `@vitejs/plugin-react`'s Babel pass over this file. Babel
+// parses with `decoratorsBeforeExport: false` and hard-errors on the
+// `@decorator export class` form that `@customElement` required here:
+//   "Decorators must be placed *after* the 'export' keyword."
+// esbuild (which is all the web-components Storybook uses) accepts either
+// form, so this only ever failed on the React side. A plain `define` call is
+// understood by both toolchains and needs no parser configuration in either.
 export class IconCatalog extends LitElement {
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -179,6 +191,10 @@ export class IconCatalog extends LitElement {
       </section>
     `;
   }
+}
+
+if (customElements.get('icon-catalog') === undefined) {
+  customElements.define('icon-catalog', IconCatalog);
 }
 
 declare global {

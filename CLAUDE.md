@@ -15,6 +15,8 @@ The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with 
 ### Development
 - Start a specific workspace: `pnpm --filter WORKSPACE_NAME start`
 - Web components Storybook: `pnpm --filter al-web-components start` (port 6006)
+  (this also starts the altitude MCP in streamable-HTTP mode on port 6017 — `POST /mcp`,
+  `GET /parity.json`; `start:sb` runs Storybook alone)
 - React Storybook: `pnpm --filter al-react start` (port 9009)
 - React app: `pnpm --filter al-app-react start`
 - Angular app: `pnpm --filter al-app-angular start`
@@ -34,6 +36,23 @@ The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with 
 - Visual regression: `pnpm test:vrt`
 - Gate self-test: `pnpm gate:self-test`
 - Lint: `pnpm lint`
+
+### Figma ↔ code parity
+- The WC Storybook sidebar shows per-component parity badges (green = 1:1 with Figma,
+  yellow code/Figma glyph = that side drifted, red = missing on the other side); each docs
+  page has a parity banner with "Open in Figma" / "Copy AI fix prompt" actions.
+- **Parity is multi-project.** One component library backs several design systems, each
+  checked against its own Figma file. The registry is `.altitude/ds-projects.json`
+  (schema alongside it) — see `.altitude/DS-PROJECTS.md`. `altitude` is the default;
+  `southleft` targets the "Southleft V5" Figma file and the `southleft` brand.
+  Select with `--project <id>` on any parity CLI, or the `DS_PROJECT` env var.
+- Manifests: `.altitude/figma-sync/parity-manifest.json` (altitude) and
+  `.altitude/figma-sync/southleft/parity-manifest.json` — both tracked. Engine:
+  `libs/altitude-mcp/src/lib/parity.mjs`; project resolution:
+  `libs/altitude-mcp/src/lib/ds-project.mjs`. MCP tools: `altitude_check_parity`
+  (takes `project`), `altitude_list_ds_projects`.
+- `pnpm run parity:projects` (what's what) / `parity:seed` / `parity:synced <tag>` /
+  `parity:refresh`, plus `:sl` variants — see `.altitude/PARITY.md`.
 
 ## Architecture
 
@@ -80,6 +99,21 @@ All components follow consistent patterns:
 - Style modifiers through `styleModifier` prop
 - Theme support via CSS custom properties
 - SCSS imported as `import styles from './X.scss'` (Vite rewrites to `?inline`)
+- **Arrangement belongs to `<al-layout>`, not to new components.** `al-layout` is
+  the single layout primitive (`direction`, `gap`, `align`, `justify`, `wrap`,
+  `grow`, `stretchItems`, `responsive`, `fullHeight`, `noCollapse`, plus the
+  `constrained` / `grid` / `bento` variants with `size` / `gutter` / `columns`). When building a new component **or page section**, nest
+  slotted content in `<al-layout>` instead of adding your own
+  `orientation`/`gap`/`alignment` prop or hand-rolling flex/grid for slotted
+  children. **Do not create new `*-group` wrapper components** — a wrapper that
+  owns no behavior, ARIA relationship, or state is `<al-layout>` with props.
+  Groups that survive (`checkbox-group`, `radio-group`,
+  `toggle-button-group`) exist for their semantics — fieldset / legend, roving
+  keyboard selection, single-select state — not their spacing.
+  `al-button-group`, `al-layout-container`, `al-layout-section`,
+  `al-bento-grid`, `al-split-content`, `al-chip-group` and `al-toast-group`
+  have been **removed**, along with the `sidebar-*` variants — a page declares
+  its own track list via `--al-layout-template`. See "Arrangement vs. semantics" in AGENTS.md.
 
 ### Registry (T4.6)
 - `registerAltitude({ mode: 'stable' | 'versioned' | 'manual' }, elements)` is the explicit API

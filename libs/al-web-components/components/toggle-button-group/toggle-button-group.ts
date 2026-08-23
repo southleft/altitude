@@ -1,15 +1,27 @@
-import { html, unsafeCSS } from 'lit';
+import { TemplateResult, unsafeCSS } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { html, unsafeStatic } from 'lit/static-html.js';
+import register from '../../directives/register';
+import PackageJson from '../../package.json';
 import { ALElement } from '../ALElement';
+import { ALLayout } from '../layout/layout';
 import { ALToggleButton } from '../toggle-button/toggle-button';
 import styles from './toggle-button-group.scss';
 
 /**
  * Component: al-toggle-button-group
- * @slot - A set of toggle buttons
+ * @slot - A set of toggle buttons. Arranged in a row by default; for a column
+ *         or a gap, nest them in `<al-layout>` with the props you need.
  */
 export class ALToggleButtonGroup extends ALElement {
   static el = 'al-toggle-button-group';
+
+  private elementMap = register({
+    elements: [[ALLayout.el, ALLayout]],
+    suffix: (globalThis as any).alAutoRegistry === true ? '' : PackageJson.version
+  });
+
+  private layoutEl = unsafeStatic(this.elementMap.get(ALLayout.el));
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -22,22 +34,6 @@ export class ALToggleButtonGroup extends ALElement {
    */
   @property()
   accessor variant: 'background';
-
-  /**
-   * Orientation
-   * - **default** renders the toggle button's in a horizontal row
-   * - **vertical** renders the toggle button's in a vertical row
-   */
-  @property()
-  accessor orientation: 'vertical';
-
-  /**
-   * Gap
-   * - **default** adds no gap between the toggle buttons
-   * - **sm** adds a 16px gap between the toggle buttons
-   */
-  @property()
-  accessor gap: 'sm';
 
   /**
    * Selected item
@@ -109,16 +105,16 @@ export class ALToggleButtonGroup extends ALElement {
 
   render() {
     const componentClassNames = this.componentClassNames('al-c-toggle-button-group', {
-      'al-c-toggle-button-group--background': this.variant === 'background',
-      'al-c-toggle-button-group--vertical': this.orientation === 'vertical',
-      'al-c-toggle-button-group--gap-sm': this.gap === 'sm'
+      'al-c-toggle-button-group--background': this.variant === 'background'
     });
 
     return html`
       <div class="${componentClassNames}">
-        <slot></slot>
+        <${this.layoutEl} direction="row" gap="none">
+          <slot></slot>
+        </${this.layoutEl}>
       </div>
-    `;
+    ` as TemplateResult<1>;
   }
 }
 

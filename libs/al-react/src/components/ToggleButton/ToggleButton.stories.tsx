@@ -1,6 +1,7 @@
 import type { StoryObj } from '@storybook/react-vite';
 import { ALToggleButton, ALIconCalendar, ALAvatar, ALTooltip, ALPopover, ALIconChevronDown } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
+import { placeholderImages } from '../../../../al-web-components/.storybook/fixtures';
 
 export default {
   title: 'Atoms/Toggle Button',
@@ -60,7 +61,7 @@ export const DefaultAvatar: StoryObj<typeof ALToggleButton> = {
     children: (
       <>
         <ALAvatar variant="sm" hasBadge={true} badgeVariant="success">
-          <img src="https://placehold.co/80x80" alt="Alt text" />
+          <img src={placeholderImages.thumbnail} alt="Alt text" />
         </ALAvatar>
       </>
     )

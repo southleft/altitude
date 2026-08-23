@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './focus-trap';
 import '../button/button';
-import '../button-group/button-group';
+import '../layout/layout';
 import '../dialog/dialog';
 import '../tab/tab';
 import '../tabs/tabs';
@@ -13,7 +13,12 @@ export default {
   title: 'Atoms/Focus Trap',
   component: 'al-focus-trap',
   parameters: { status: { type: 'beta' } },
-  tags: [ 'autodocs' ]
+  // HIDDEN FROM THE SIDEBAR. `'!autodocs'` opts this meta out of the global
+  // `tags: ['autodocs']` in `.storybook/preview.ts`, and with `docs.docsMode` on
+  // in `main.ts` the individual stories are already hidden — so dropping the docs
+  // entry removes the component from the sidebar entirely. The component itself
+  // is untouched and still exported from `bundle.ts`.
+  tags: [ '!autodocs' ]
 };
 
 const Template = (args) => html`
@@ -36,10 +41,10 @@ const Template = (args) => html`
         </al-tab-panel>
       </al-tabs>
       <al-button slot="footer" variant="bare">Close</al-button>
-      <al-button-group slot="footer" alignment="right">
+      <al-layout slot="footer" direction="row" justify="end" grow>
       <al-button variant="tertiary">Label</al-button>
       <al-button>Label</al-button>
-    </al-button-group>
+    </al-layout>
   </al-dialog>
 `;
 

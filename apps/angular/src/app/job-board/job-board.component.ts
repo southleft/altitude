@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 
 import "al-web-components/components/badge";
-import "al-web-components/components/button-group";
+import "al-web-components/components/layout";
 import "al-web-components/components/button";
 import "al-web-components/components/card";
 import "al-web-components/components/checkbox-group";
 import "al-web-components/components/checkbox";
-import "al-web-components/components/chip-group";
 import "al-web-components/components/dialog";
 import "al-web-components/components/divider";
 import "al-web-components/components/heading";
@@ -23,7 +22,14 @@ import "al-web-components/components/radio";
 import "al-web-components/components/range";
 import "al-web-components/components/search";
 import "al-web-components/components/select";
-import "al-web-components/components/text-passage";
+import "al-web-components/components/stat";
+
+interface JobListing {
+  title: string;
+  location: string;
+  tags: string[];
+  postedAgo: string;
+}
 
 @Component({
   selector: 'app-job-board',
@@ -40,4 +46,16 @@ export class JobBoardComponent {
     'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
   ];
 
+  jobs: JobListing[] = [
+    { title: 'UX Designer', location: 'New Orleans, LA', tags: ['Design', 'Remote'], postedAgo: '1 day ago' },
+    { title: 'Senior Front-end Developer', location: 'New Orleans, LA', tags: ['Front-end Developer', 'Design Systems'], postedAgo: '1 day ago' },
+    { title: 'Junior Front-end Developer', location: 'New Orleans, LA', tags: ['Front-end Developer', 'Design Systems', 'Remote'], postedAgo: '1 day ago' },
+    { title: 'Back-end Developer', location: 'New Orleans, LA', tags: ['Software', 'API'], postedAgo: '2 days ago' },
+    { title: 'UX Designer', location: 'New Orleans, LA', tags: ['Design', 'Remote'], postedAgo: '2 days ago' },
+    { title: 'Senior Front-end Developer', location: 'New Orleans, LA', tags: ['Front-end Developer', 'Design Systems'], postedAgo: '3 days ago' },
+    { title: 'Junior Front-end Developer', location: 'New Orleans, LA', tags: ['Front-end Developer', 'Design Systems', 'Remote'], postedAgo: '3 days ago' },
+    { title: 'Back-end Developer', location: 'New Orleans, LA', tags: ['Software', 'API'], postedAgo: '3 days ago' },
+    { title: 'UX Designer', location: 'New Orleans, LA', tags: ['Design', 'Remote'], postedAgo: '4 days ago' },
+    { title: 'Senior Front-end Developer', location: 'New Orleans, LA', tags: ['Front-end Developer', 'Design Systems'], postedAgo: '4 days ago' },
+  ];
 }

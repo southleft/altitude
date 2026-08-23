@@ -1,0 +1,120 @@
+import { html, unsafeCSS, nothing } from 'lit';
+import { property } from 'lit/decorators.js';
+import { ALElement } from '../../../al-web-components/components/ALElement';
+import '../../../al-web-components/components/layout/layout';
+import '../../../al-web-components/components/heading/heading';
+import styles from './section-header.scss';
+
+/**
+ * Component: sl-section-header
+ *
+ * The heading block that opens a section of a Southleft page: a mono rule
+ * carrying an index and label, an accent kicker, a heading, an optional lead,
+ * and an optional trailing link.
+ *
+ * Earned its place by repetition — two pages import it and five more had
+ * hand-re-inlined its markup (`services/design-systems.astro:132-138` and four
+ * siblings), which is the shape of a component the system was missing.
+ *
+ * ```html
+ * <sl-section-header
+ *   index="02"
+ *   label="Insights"
+ *   heading="We publish our homework"
+ *   dek="Notes from inside real design-system work."
+ *   link-href="/insights"
+ *   link-label="all insights →"
+ * ></sl-section-header>
+ * ```
+ *
+ * @slot - The trailing position, for a control the link cannot express — a filter, a segmented toggle. Use it INSTEAD of `linkHref`; both render if both are set.
+ *
+ * @csspart rule - The mono index/label rule above everything.
+ * @csspart kicker - The accent `<label>` kicker.
+ * @csspart heading - The `<al-heading>`.
+ * @csspart dek - The lead paragraph.
+ * @csspart link - The trailing mono link.
+ *
+ * @cssproperty --sl-section-header-margin-block-end - Space between the header and the section body. Defaults to `--al-theme-space-xl`.
+ */
+export class SLSectionHeader extends ALElement {
+  static el = 'sl-section-header';
+
+  static get styles() {
+    return unsafeCSS(styles.toString());
+  }
+
+  /** The ordinal shown before the label in the rule, e.g. `02`. Omit for a label-only rule. */
+  @property()
+  accessor index: string;
+
+  /** The rule's label, and the source of the kicker slug below it. */
+  @property()
+  accessor label: string;
+
+  /** The section heading. */
+  @property()
+  accessor heading: string;
+
+  /** The lead paragraph under the heading. Omit for none. */
+  @property()
+  accessor dek: string;
+
+  /** Target for the trailing link. Omit (or fill the default slot) for no link. */
+  @property({ attribute: 'link-href' })
+  accessor linkHref: string;
+
+  /** Text for the trailing link. */
+  @property({ attribute: 'link-label' })
+  accessor linkLabel: string;
+
+  /** The heading's semantic level — a document-outline concern, so not fixed. */
+  @property({ attribute: 'heading-tag' })
+  accessor headingTag: string = 'h2';
+
+  /** `<my-label>` — the brand's kicker form, derived rather than hand-passed so it cannot drift from the label. */
+  private get kickerSlug(): string {
+    return (this.label ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  }
+
+  render() {
+    const componentClassNames = this.componentClassNames('sl-c-section-header', {});
+
+    return html`
+      <div class="${componentClassNames}">
+        ${this.label
+          ? html`<div class="sl-c-section-header__rule" part="rule" aria-hidden="true">
+              <span>${this.index ? `${this.index} / ` : ''}${this.label}</span>
+            </div>`
+          : nothing}
+        <al-layout direction="row" justify="between" align="end" wrap gap="lg">
+          <al-layout gap="sm" grow>
+            ${this.label
+              ? html`<p class="sl-c-section-header__kicker" part="kicker">&lt;${this.kickerSlug}&gt;</p>`
+              : nothing}
+            ${this.heading
+              ? html`<al-heading part="heading" tagName="${this.headingTag}" variant="lg" isBold>
+                  ${this.heading}
+                </al-heading>`
+              : nothing}
+            ${this.dek ? html`<p class="sl-c-section-header__dek" part="dek">${this.dek}</p>` : nothing}
+          </al-layout>
+          <slot></slot>
+          ${this.linkHref
+            ? html`<a class="sl-c-section-header__link" part="link" href="${this.linkHref}">${this.linkLabel}</a>`
+            : nothing}
+        </al-layout>
+      </div>
+    `;
+  }
+}
+
+if ((globalThis as any).alAutoRegistry === true && customElements.get(SLSectionHeader.el) === undefined) {
+  customElements.define(SLSectionHeader.el, SLSectionHeader);
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'sl-section-header': SLSectionHeader;
+  }
+}

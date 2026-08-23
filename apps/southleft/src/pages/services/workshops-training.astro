@@ -72,9 +72,11 @@ const engagements = [
       heading="Workshops, training & speaking"
       dek="The fastest way to change how your team works is to work alongside people who've already made the shift. We run hands-on workshops on AI + design systems, MCP workflows, and design-to-code pipelines; deliver targeted training and mentorship programs; and speak at conferences, webinars, and internal events. You don't just get slides — you get working sessions built around your actual system."
     >
-      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
-        <al-button href={withBase(CTA.href)}>Book a workshop</al-button>
-        <al-button variant="tertiary" href={withBase('/contact')}>Invite us to speak</al-button>
+      <div style="margin-top: var(--al-theme-space-lg);">
+        <al-layout direction="row" wrap gap="xs" align="center">
+          <al-button href={withBase(CTA.href)}>Book a workshop</al-button>
+          <al-button variant="tertiary" href={withBase('/contact')}>Invite us to speak</al-button>
+        </al-layout>
       </div>
     </PageHero>
   </div>
@@ -85,53 +87,55 @@ const engagements = [
         <al-chip variant="secondary">new course</al-chip>
         <al-heading tagName="h2" variant="md" isBold={true} style="margin-top: var(--al-theme-space-xs);">AI &amp; Design Systems — with Brad Frost</al-heading>
       </div>
-      <al-text-passage maxWidth="md">
+      <al-text-block maxWidth="md">
         A new online course from Brad Frost and Southleft. Learn how to apply AI to design systems in
         ways that are grounded, practical, and shaped by real work with large-scale teams.
-      </al-text-passage>
+      </al-text-block>
       <al-list>
         <al-list-item>Co-taught by the author of Atomic Design</al-list-item>
         <al-list-item>Grounded in real large-scale client work</al-list-item>
         <al-list-item>Practical AI workflows, not trend theory</al-list-item>
         <al-list-item>Early access open now</al-list-item>
       </al-list>
-      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
-        <al-button href={withBase('/insights/design-systems/introducing-our-new-course-ai-design-systems')}>Get early access</al-button>
-        <al-button variant="tertiary" href={withBase('/ai-design-systems')}>Explore the practice</al-button>
+      <div style="margin-top: var(--al-theme-space-lg);">
+        <al-layout direction="row" wrap gap="xs" align="center">
+          <al-button href={withBase('/insights/design-systems/introducing-our-new-course-ai-design-systems')}>Get early access</al-button>
+          <al-button variant="tertiary" href={withBase('/ai-design-systems')}>Explore the practice</al-button>
+        </al-layout>
       </div>
     </al-card>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="lg" isBold={true}>Three ways to learn with us</al-heading>
-    <al-text-passage maxWidth="sm">For design systems and platform teams adopting AI workflows, engineering orgs that want structured upskilling over ad-hoc experimentation, and event organizers looking for practitioners.</al-text-passage>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <al-text-block maxWidth="sm">For design systems and platform teams adopting AI workflows, engineering orgs that want structured upskilling over ad-hoc experimentation, and event organizers looking for practitioners.</al-text-block>
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {formats.map((f) => (
         <div class="al-u-grid__item col:12 col:4@md">
           <al-card style="height:100%; box-sizing:border-box;">
             <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>{f.name}</al-heading></div>
-            <al-text-passage>{f.body}</al-text-passage>
+            <al-text-block>{f.body}</al-text-block>
             <al-list>
               {f.items.map((item) => <al-list-item>{item}</al-list-item>)}
             </al-list>
           </al-card>
         </div>
       ))}
-    </div>
-    <al-text-passage maxWidth="md" style="margin-top: var(--al-theme-space-lg);">
+    </al-layout></div>
+    <al-text-block maxWidth="md" style="margin-top: var(--al-theme-space-lg);">
       Every engagement ends with follow-up materials: recordings, exercise repos, and a next-steps
       roadmap — and the tooling we teach on is tooling we built:
       <a href={withBase('/ai-design-systems')}>Story UI, FigmaLint, Figma Console MCP</a>.
-    </al-text-passage>
+    </al-text-block>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="lg" isBold={true}>Recent engagements</al-heading>
-    <al-text-passage maxWidth="sm">A sustained public teaching practice — webinars, workshops, and community sessions on AI + design systems. The blog's AI series is effectively open curriculum.</al-text-passage>
+    <al-text-block maxWidth="sm">A sustained public teaching practice — webinars, workshops, and community sessions on AI + design systems. The blog's AI series is effectively open curriculum.</al-text-block>
     <div style="margin-top: var(--al-theme-space-lg);">
       <al-button variant="tertiary" href={withBase('/contact')}>Book us for your event</al-button>
     </div>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {engagements.map((e) => (
         <div class="al-u-grid__item col:12 col:6@md">
           <al-card style="height:100%; box-sizing:border-box;">
@@ -139,26 +143,28 @@ const engagements = [
               <al-chip variant="secondary">{e.venue}</al-chip>
               <al-heading tagName="h3" variant="sm" isBold={true} style="margin-top: var(--al-theme-space-xs);">{e.title}</al-heading>
             </div>
-            <al-text-passage>{e.desc}</al-text-passage>
+            <al-text-block>{e.desc}</al-text-block>
             {e.href && <al-link href={withBase(e.href)}>Read the recap →</al-link>}
           </al-card>
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </div>
 
   {relatedPosts.length > 0 && (
     <div class="sl-container sl-section">
-      <div class="sl-section-header">
-        <div class="sl-stack sl-stack--sm">
-          <al-heading tagName="h2" variant="lg" isBold={true}>Sit in before you book</al-heading>
-          <al-text-passage maxWidth="sm">Recaps, course announcements, and workflow demos — the material we teach, published as we learn it.</al-text-passage>
-        </div>
-        <al-link href={withBase('/insights')}>All insights →</al-link>
+      <div style="margin-block-end: var(--al-theme-space-xl);">
+        <al-layout direction="row" justify="between" align="end" wrap gap="lg">
+          <al-layout gap="sm" grow>
+            <al-heading tagName="h2" variant="lg" isBold={true}>Sit in before you book</al-heading>
+            <al-text-block maxWidth="sm">Recaps, course announcements, and workflow demos — the material we teach, published as we learn it.</al-text-block>
+          </al-layout>
+          <al-link href={withBase('/insights')}>All insights →</al-link>
+        </al-layout>
       </div>
-      <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
         {relatedPosts.map((p) => <div class="al-u-grid__item col:12 col:4@md"><ArticleCard post={p} /></div>)}
-      </div>
+      </al-layout></div>
     </div>
   )}
 

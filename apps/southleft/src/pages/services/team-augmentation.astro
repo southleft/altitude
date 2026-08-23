@@ -54,31 +54,33 @@ const flexPoints = [
       heading="Team augmentation & embedded engineering"
       dek="We go beyond traditional consulting to augment your in-house team's capabilities. Our engineers embed directly in your workflows — your repos, your standups, your roadmap — bringing deep design systems and front-end expertise while transferring skills to your team along the way. You gain more than delivery: you acquire skills and insights that pay dividends long after our engagement ends."
     >
-      <div class="sl-header__nav" style="margin-top: var(--al-theme-space-lg);">
-        <al-button href={withBase(CTA.href)}>Discuss an embedded engagement</al-button>
-        <al-button variant="tertiary" href={withBase('/work')}>See the track record</al-button>
+      <div style="margin-top: var(--al-theme-space-lg);">
+        <al-layout direction="row" wrap gap="xs" align="center">
+          <al-button href={withBase(CTA.href)}>Discuss an embedded engagement</al-button>
+          <al-button variant="tertiary" href={withBase('/work')}>See the track record</al-button>
+        </al-layout>
       </div>
     </PageHero>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="lg" isBold={true}>Not body-shop staffing</al-heading>
-    <al-text-passage maxWidth="sm">Augmentation here means senior engineers who raise the level of the team they join — and leave behind skills, patterns, and documentation when they go.</al-text-passage>
-    <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+    <al-text-block maxWidth="sm">Augmentation here means senior engineers who raise the level of the team they join — and leave behind skills, patterns, and documentation when they go.</al-text-block>
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
       {audiences.map((a) => (
         <div class="al-u-grid__item col:12 col:4@md">
           <al-card style="height:100%; box-sizing:border-box;">
             <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>{a.title}</al-heading></div>
-            <al-text-passage>{a.body}</al-text-passage>
+            <al-text-block>{a.body}</al-text-block>
           </al-card>
         </div>
       ))}
-    </div>
+    </al-layout></div>
   </div>
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="lg" isBold={true}>What an embed brings</al-heading>
-    <al-text-passage maxWidth="sm">Delivery is the floor. The point is what your team can do after we leave.</al-text-passage>
+    <al-text-block maxWidth="sm">Delivery is the floor. The point is what your team can do after we leave.</al-text-block>
     <al-list style="margin-top: var(--al-theme-space-xl);">
       {getItems.map((g) => <al-list-item><strong>{g.name}</strong> — {g.desc}</al-list-item>)}
     </al-list>
@@ -93,15 +95,15 @@ const flexPoints = [
 
   {caseStudies.length > 0 && (
     <div class="sl-container sl-section">
-      <div class="sl-section-header">
-        <div class="sl-stack sl-stack--sm">
+      <div style="margin-block-end: var(--al-theme-space-xl);">
+        <al-layout gap="sm">
           <al-heading tagName="h2" variant="lg" isBold={true}>Embedded, for the long haul</al-heading>
-          <al-text-passage maxWidth="sm">Ten years alongside Outside Inc. Augmenting Lullabot's team on IBM Investor Relations. Multi-faceted platform work with Better.com's internal teams.</al-text-passage>
-        </div>
+          <al-text-block maxWidth="sm">Ten years alongside Outside Inc. Augmenting Lullabot's team on IBM Investor Relations. Multi-faceted platform work with Better.com's internal teams.</al-text-block>
+        </al-layout>
       </div>
-      <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
         {caseStudies.map((w) => <div class="al-u-grid__item col:12 col:4@md"><WorkCard project={w} /></div>)}
-      </div>
+      </al-layout></div>
       <div style="margin-top: var(--al-theme-space-lg);">
         <al-testimonial attribution="Todd Hodgson" data-testimonial-role="Director of Product Management, Outside Inc.">
           Southleft was instrumental in helping us improve our user experience while simultaneously
@@ -113,16 +115,18 @@ const flexPoints = [
 
   {relatedPosts.length > 0 && (
     <div class="sl-container sl-section">
-      <div class="sl-section-header">
-        <div class="sl-stack sl-stack--sm">
-          <al-heading tagName="h2" variant="lg" isBold={true}>How the partnership model works</al-heading>
-          <al-text-passage maxWidth="sm">We've documented the agency-partner and embedded model publicly since 2023.</al-text-passage>
-        </div>
-        <al-link href={withBase('/insights')}>All insights →</al-link>
+      <div style="margin-block-end: var(--al-theme-space-xl);">
+        <al-layout direction="row" justify="between" align="end" wrap gap="lg">
+          <al-layout gap="sm" grow>
+            <al-heading tagName="h2" variant="lg" isBold={true}>How the partnership model works</al-heading>
+            <al-text-block maxWidth="sm">We've documented the agency-partner and embedded model publicly since 2023.</al-text-block>
+          </al-layout>
+          <al-link href={withBase('/insights')}>All insights →</al-link>
+        </al-layout>
       </div>
-      <div class="al-u-grid" style="margin-top: var(--al-theme-space-xl);">
+      <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
         {relatedPosts.map((p) => <div class="al-u-grid__item col:12 col:6@md"><ArticleCard post={p} /></div>)}
-      </div>
+      </al-layout></div>
     </div>
   )}
 

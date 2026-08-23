@@ -974,184 +974,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/bento-grid/bento-grid.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-bento-grid\n\nAn asymmetric feature-grid organism for marketing pages — a 12-column,\nauto-row CSS grid container. Compose it with `<al-bento-item>` children\n(each declaring `colSpan`/`rowSpan`) for the classic \"bento box\" layout,\nor drop in arbitrary content directly. Collapses to a single column below\nthe medium breakpoint so an asymmetric desktop layout never produces\nunreadably narrow tiles on small screens.",
-          "name": "ALBentoGrid",
-          "cssProperties": [
-            {
-              "description": "Gap between grid cells. Defaults to the theme space ramp.",
-              "name": "--al-bento-grid-gap"
-            },
-            {
-              "description": "Height of one implicit grid row. Defaults to the theme space ramp.",
-              "name": "--al-bento-grid-row-height"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Grid items — typically `<al-bento-item>`, but any content is accepted.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-bento-grid'"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-bento-grid",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALBentoGrid",
-          "declaration": {
-            "name": "ALBentoGrid",
-            "module": "components/bento-grid/bento-grid.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-bento-grid",
-          "declaration": {
-            "name": "ALBentoGrid",
-            "module": "components/bento-grid/bento-grid.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALBentoGrid",
-            "module": "components/bento-grid/bento-grid.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/bento-item/bento-item.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-bento-item\n\nA single tile inside `<al-bento-grid>`. Purely a grid-placement primitive —\nit owns no visual surface (no border/background/padding) so any content\n(a card, a stat, an image, a stack of copy) can be slotted in and supply\nits own chrome. `colSpan`/`rowSpan` are reflected onto the host as CSS\ncustom properties, so they can also be overridden per breakpoint from\nconsumer CSS without touching the attribute.",
-          "name": "ALBentoItem",
-          "cssProperties": [
-            {
-              "description": "Number of the 12 grid columns this tile spans. Defaults to 4.",
-              "name": "--al-bento-item-col-span"
-            },
-            {
-              "description": "Number of implicit grid rows this tile spans. Defaults to 1.",
-              "name": "--al-bento-item-row-span"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The tile's content (card, stat, image, or arbitrary markup).",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-bento-item'"
-            },
-            {
-              "kind": "field",
-              "name": "colSpan",
-              "type": {
-                "text": "number"
-              },
-              "default": "4",
-              "description": "Number of the grid's 12 columns this tile spans (1-12).",
-              "attribute": "colSpan"
-            },
-            {
-              "kind": "field",
-              "name": "rowSpan",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Number of implicit grid rows this tile spans.",
-              "attribute": "rowSpan"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "colSpan",
-              "type": {
-                "text": "number"
-              },
-              "default": "4",
-              "description": "Number of the grid's 12 columns this tile spans (1-12).",
-              "fieldName": "colSpan"
-            },
-            {
-              "name": "rowSpan",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Number of implicit grid rows this tile spans.",
-              "fieldName": "rowSpan"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-bento-item",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALBentoItem",
-          "declaration": {
-            "name": "ALBentoItem",
-            "module": "components/bento-item/bento-item.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-bento-item",
-          "declaration": {
-            "name": "ALBentoItem",
-            "module": "components/bento-item/bento-item.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALBentoItem",
-            "module": "components/bento-item/bento-item.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/breadcrumbs-item/breadcrumbs-item.ts",
       "declarations": [
         {
@@ -1498,101 +1320,6 @@
           "declaration": {
             "name": "ALBreadcrumbs",
             "module": "components/breadcrumbs/breadcrumbs.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/button-group/button-group.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-button-group",
-          "name": "ALButtonGroup",
-          "slots": [
-            {
-              "description": "The button group content, a set of buttons",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-button-group'"
-            },
-            {
-              "kind": "field",
-              "name": "behavior",
-              "type": {
-                "text": "'stacked' | 'stretched' | 'responsive'"
-              },
-              "description": "Behavior variant\n- **default** renders the buttons in a row\n- **stacked** renders the buttons stacked on top of each other\n- **stretched** renders the buttons stretched to the width of the container\n- **responsive** renders the buttons stacked on small screens and in a row when space becomes available",
-              "attribute": "behavior"
-            },
-            {
-              "kind": "field",
-              "name": "alignment",
-              "type": {
-                "text": "'center' | 'right'"
-              },
-              "description": "Alignment variant\n- **default** aligns the buttons to the left of the container\n- **center** aligns the buttons to the center of the container\n- **right** aligns the buttons to the right of the container",
-              "attribute": "alignment"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "behavior",
-              "type": {
-                "text": "'stacked' | 'stretched' | 'responsive'"
-              },
-              "description": "Behavior variant\n- **default** renders the buttons in a row\n- **stacked** renders the buttons stacked on top of each other\n- **stretched** renders the buttons stretched to the width of the container\n- **responsive** renders the buttons stacked on small screens and in a row when space becomes available",
-              "fieldName": "behavior"
-            },
-            {
-              "name": "alignment",
-              "type": {
-                "text": "'center' | 'right'"
-              },
-              "description": "Alignment variant\n- **default** aligns the buttons to the left of the container\n- **center** aligns the buttons to the center of the container\n- **right** aligns the buttons to the right of the container",
-              "fieldName": "alignment"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-button-group",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALButtonGroup",
-          "declaration": {
-            "name": "ALButtonGroup",
-            "module": "components/button-group/button-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-button-group",
-          "declaration": {
-            "name": "ALButtonGroup",
-            "module": "components/button-group/button-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALButtonGroup",
-            "module": "components/button-group/button-group.ts"
           }
         }
       ]
@@ -2555,7 +2282,7 @@
               "name": "action-right"
             },
             {
-              "description": "Hero image rendered above the header. Renders flush with the card edge.",
+              "description": "Media rendered above the header, INSIDE the card's padding. Takes the full content width; an `<al-avatar>` sits here too, which is the common case across the example apps. NOT flush to the card edge — this line previously claimed it was, and it never has been: `.al-c-card` carries a single outer `padding` and `.al-c-card__image` neither resets nor negates it (card.scss). The claim was wrong rather than the code: the slot is used for avatars in `apps/angular`, `apps/astro` and `apps/svelte`, and bleeding it to the edge would wreck all of them. A card that needs edge-to-edge media wants a component that renders it, not a flag here — see `sl-media-card` in `libs/sl-web-components`.",
               "name": "image"
             },
             {
@@ -2590,6 +2317,16 @@
               },
               "description": "Variant\n- **default** Renders a card with a background color, box shadow, or border radius\n- **bare** Renders a card without a background color, box shadow, or border radius",
               "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "fill",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Fill the available block size instead of hugging the content.\n\nFor a card in a grid or a stretched flex row, where a row of cards should\nshare one height and their footers should line up. Reflected, so a page can\nalso select `al-card[fill]`.\n\nIt has to be a property rather than something the page sets from outside:\n`:host` is `display: contents`, so `<al-card>` generates no box and a\n`height: 100%` written on the element is dropped entirely. `apps/southleft`\nhit exactly this and worked around it with\n`style=\"height:100%; box-sizing:border-box\"` at 25 call sites across 13\nfiles — that inline style is what this replaces.",
+              "attribute": "fill",
+              "reflects": true
             }
           ],
           "attributes": [
@@ -2608,6 +2345,14 @@
               },
               "description": "Variant\n- **default** Renders a card with a background color, box shadow, or border radius\n- **bare** Renders a card without a background color, box shadow, or border radius",
               "fieldName": "variant"
+            },
+            {
+              "name": "fill",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Fill the available block size instead of hugging the content.\n\nFor a card in a grid or a stretched flex row, where a row of cards should\nshare one height and their footers should line up. Reflected, so a page can\nalso select `al-card[fill]`.\n\nIt has to be a property rather than something the page sets from outside:\n`:host` is `display: contents`, so `<al-card>` generates no box and a\n`height: 100%` written on the element is dropped entirely. `apps/southleft`\nhit exactly this and worked around it with\n`style=\"height:100%; box-sizing:border-box\"` at 25 call sites across 13\nfiles — that inline style is what this replaces.",
+              "fieldName": "fill"
             }
           ],
           "superclass": {
@@ -2654,7 +2399,7 @@
           "name": "ALCheckboxGroup",
           "slots": [
             {
-              "description": "The component content, a set of checkbox items",
+              "description": "The component content, a set of checkbox items. Items stack in a column by default; for a row, nest them in `<al-layout direction=\"row\" wrap>`.",
               "name": ""
             },
             {
@@ -2684,6 +2429,11 @@
             {
               "kind": "field",
               "name": "fieldNoteEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "layoutEl",
               "privacy": "private"
             },
             {
@@ -2769,15 +2519,6 @@
             },
             {
               "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'horizontal'"
-              },
-              "description": "Variant\n- **default** Displays the checkbox items in a column\n- **horizontal** Displays the checkbox items in a row",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
               "name": "checkboxItems",
               "type": {
                 "text": "Array<ALCheckbox>"
@@ -2858,14 +2599,6 @@
               },
               "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
               "fieldName": "ariaDescribedBy"
-            },
-            {
-              "name": "variant",
-              "type": {
-                "text": "'horizontal'"
-              },
-              "description": "Variant\n- **default** Displays the checkbox items in a column\n- **horizontal** Displays the checkbox items in a row",
-              "fieldName": "variant"
             }
           ],
           "superclass": {
@@ -3205,134 +2938,6 @@
           "declaration": {
             "name": "ALCheckbox",
             "module": "components/checkbox/checkbox.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/chip-group/chip-group.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-chip-group",
-          "name": "ALChipGroup",
-          "slots": [
-            {
-              "description": "The chip group content, a set of chips",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-chip-group'"
-            },
-            {
-              "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "chipEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "chipsVisible",
-              "type": {
-                "text": "number"
-              },
-              "description": "Set the number of visible chips",
-              "attribute": "chipsVisible"
-            },
-            {
-              "kind": "field",
-              "name": "chips",
-              "type": {
-                "text": "Array<ALChip>"
-              },
-              "description": "Query all the chips"
-            },
-            {
-              "kind": "field",
-              "name": "chipGroupCounter",
-              "type": {
-                "text": "ALChip"
-              },
-              "description": "Query the chip group counter"
-            },
-            {
-              "kind": "method",
-              "name": "setChipsVisible",
-              "description": "Set visible chips\n1. If a value for visible is greater than 1 but less than the total number of chips, then loop through all the chips.\n2. If the chip index is greater or equal to the visible value, then hide those chips.\n3. Set the text inside the counter chip to how many chips are hidden."
-            },
-            {
-              "kind": "method",
-              "name": "handleOnClick",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ],
-              "description": "Handle on click events\n1. Hide the counter chip when clicked\n2. Set all the chips to be active except any that have been dismissed, when the counter chip is clicked\n3. Dispatch a custom event"
-            }
-          ],
-          "events": [
-            {
-              "description": "Fired when the group expands to reveal chips hidden behind the overflow control. Carries no detail payload.",
-              "name": "onChipGroupExpand"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "chipsVisible",
-              "type": {
-                "text": "number"
-              },
-              "description": "Set the number of visible chips",
-              "fieldName": "chipsVisible"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-chip-group",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALChipGroup",
-          "declaration": {
-            "name": "ALChipGroup",
-            "module": "components/chip-group/chip-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-chip-group",
-          "declaration": {
-            "name": "ALChipGroup",
-            "module": "components/chip-group/chip-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALChipGroup",
-            "module": "components/chip-group/chip-group.ts"
           }
         }
       ]
@@ -5232,7 +4837,7 @@
             },
             {
               "kind": "field",
-              "name": "buttonGroupEl",
+              "name": "layoutEl",
               "privacy": "private"
             },
             {
@@ -7777,24 +7382,30 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-footer\n\nA site-wide footer organism for marketing pages. Purely compositional —\nlink columns compose with the existing `<al-list>`/`<al-link>`/`<al-menu>`\nprimitives, and every spacing decision comes from the active theme's\n`--al-theme-space-*` ramp, so the footer is automatically density-aware\nwherever it renders inside a `<al-theme density=\"...\">` scope.",
+          "description": "Component: al-footer\n\nThe site footer landmark and its vertical rhythm. Footer owns the `<footer>`\nelement, its block padding and the gap between stacked rows. Arrangement is\n`<al-layout>`'s job — link columns, legal rows and social clusters are the\npage's composition.\n\n```html\n<al-footer>\n  <al-layout direction=\"row\" justify=\"between\" wrap gap=\"xl\">\n    <al-logo></al-logo>\n    <al-layout direction=\"row\" wrap gap=\"xl\">...link columns...</al-layout>\n  </al-layout>\n  <al-divider></al-divider>\n  <al-layout direction=\"row\" justify=\"between\" align=\"center\" wrap>\n    <small>&copy; 2026 Acme</small>\n    <al-layout direction=\"row\" gap=\"sm\">...social...</al-layout>\n  </al-layout>\n</al-footer>\n```\n\nSee \"Arrangement vs. semantics\" in AGENTS.md.",
           "name": "ALFooter",
+          "cssProperties": [
+            {
+              "description": "Block gap between top-level children. Defaults to `--al-theme-space-lg`.",
+              "name": "--al-footer-gap"
+            },
+            {
+              "description": "Block padding above and below the content. Defaults to three space units.",
+              "name": "--al-footer-padding-block"
+            },
+            {
+              "description": "Footer surface. Defaults to `transparent` so the page background shows through; set it to a sunken token to separate the footer from the content above.",
+              "name": "--al-footer-background"
+            },
+            {
+              "description": "Hairline rule above the footer. Defaults to `none`.",
+              "name": "--al-footer-border-block-start"
+            }
+          ],
           "slots": [
             {
-              "description": "Brand mark, rendered top-left of the link-columns row.",
-              "name": "logo"
-            },
-            {
-              "description": "Link columns — arbitrary column blocks (e.g. a heading + `<al-list>` per column).",
+              "description": "The footer content. Wrap each row in an `<al-layout>` to arrange it.",
               "name": ""
-            },
-            {
-              "description": "Bottom-row legal copy (copyright, small print, legal links). Leading edge.",
-              "name": "legal"
-            },
-            {
-              "description": "Bottom-row social links/icons. Trailing edge.",
-              "name": "social"
             }
           ],
           "members": [
@@ -7848,11 +7459,33 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-header",
+          "description": "Component: al-header\n\nThe site header landmark and its chrome. Header owns the `<header>` element,\nthe opt-in sticky/elevated behaviour and the stacking context. Arrangement is\n`<al-layout>`'s job — nest one and lay the bar out there.\n\n```html\n<al-header sticky elevated>\n  <al-layout direction=\"row\" align=\"center\" justify=\"between\">\n    <al-logo></al-logo>\n    <al-menu>...</al-menu>\n    <al-layout direction=\"row\" gap=\"sm\">...actions...</al-layout>\n  </al-layout>\n</al-header>\n```\n\nSee \"Arrangement vs. semantics\" in AGENTS.md.",
           "name": "ALHeader",
+          "cssProperties": [
+            {
+              "description": "Minimum bar height. Defaults to `--al-theme-layout-height-header`. A MINIMUM, not a fixed height, so a wrapping header grows instead of clipping.",
+              "name": "--al-header-min-height"
+            },
+            {
+              "description": "Inline/block padding around the content. Defaults to `--al-theme-space`.",
+              "name": "--al-header-padding"
+            },
+            {
+              "description": "Bar background. Defaults to `--al-theme-color-background-default`.",
+              "name": "--al-header-background"
+            },
+            {
+              "description": "Hairline rule under the bar. Defaults to `none`. Use instead of `elevated` when a translucent bar should read as a rule rather than a lift.",
+              "name": "--al-header-border-block-end"
+            },
+            {
+              "description": "Filter applied to what scrolls behind the bar, e.g. `blur(12px)`. Defaults to `none`. Pair with a translucent `--al-header-background`.",
+              "name": "--al-header-backdrop-filter"
+            }
+          ],
           "slots": [
             {
-              "description": "The components content",
+              "description": "The header content. Wrap it in an `<al-layout>` to arrange it.",
               "name": ""
             }
           ],
@@ -7865,6 +7498,44 @@
               },
               "static": true,
               "default": "'al-header'"
+            },
+            {
+              "kind": "field",
+              "name": "sticky",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Stick the header to the top of its scroll container.",
+              "attribute": "sticky",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "elevated",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Cast a shadow under the bar to separate it from the content it scrolls over.",
+              "attribute": "elevated",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "sticky",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Stick the header to the top of its scroll container.",
+              "fieldName": "sticky"
+            },
+            {
+              "name": "elevated",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Cast a shadow under the bar to separate it from the content it scrolls over.",
+              "fieldName": "elevated"
             }
           ],
           "superclass": {
@@ -8011,190 +7682,6 @@
           "declaration": {
             "name": "ALHeading",
             "module": "components/heading/heading.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/hero/hero.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-hero\n\nA page-level hero band. Purely compositional: every visual decision\n(type scale, radius, spacing, color) comes from the active theme's\ntokens, so the same hero re-skins per brand. The `layout` prop is the\nstructural lever pages flip per theme so a brand change reads as a\ndifferent site, not a recolor.",
-          "name": "ALHero",
-          "cssProperties": [
-            {
-              "description": "Max width of the contained content. Default 75rem.",
-              "name": "--al-hero-max-width"
-            },
-            {
-              "description": "Minimum block size of the main area. Default none.",
-              "name": "--al-hero-min-height"
-            },
-            {
-              "description": "Gap between content and media. Defaults to the theme space ramp.",
-              "name": "--al-hero-gap"
-            },
-            {
-              "description": "Vertical padding of the band. Defaults to the theme space ramp. Marketing-organism additions (additive, zero visual change when unset): `contentAlignment` gives the content column an explicit cross-axis alignment instead of the implicit centered default, and `overlay` adds a scrim behind poster media so text stays legible over busy imagery.",
-              "name": "--al-hero-padding-block"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The main body copy of the hero (renders below the heading).",
-              "name": ""
-            },
-            {
-              "description": "Small intro line above the heading (chip, badge, or text).",
-              "name": "eyebrow"
-            },
-            {
-              "description": "The hero heading (typically an al-heading with a display variant).",
-              "name": "heading"
-            },
-            {
-              "description": "Call-to-action row (buttons/links).",
-              "name": "actions"
-            },
-            {
-              "description": "Visual area (image, illustration, or composed cards).",
-              "name": "media"
-            },
-            {
-              "description": "Bottom strip (stats, logo row, scroll hint). Renders full-width under the main area.",
-              "name": "meta"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-hero'"
-            },
-            {
-              "kind": "field",
-              "name": "layout",
-              "type": {
-                "text": "'centered' | 'stacked' | 'poster'"
-              },
-              "description": "Layout\n- **split** (default) Content on one side, media on the other\n- **centered** Content centered, media below\n- **stacked** Left-aligned content, full-width media below\n- **poster** Media as full-bleed backdrop, oversized content on top",
-              "attribute": "layout"
-            },
-            {
-              "kind": "field",
-              "name": "mediaPosition",
-              "type": {
-                "text": "'start'"
-              },
-              "description": "Media position (split layout only)\n- **default** Media renders after the content (end)\n- **start** Media renders before the content",
-              "attribute": "mediaPosition"
-            },
-            {
-              "kind": "field",
-              "name": "contained",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "When true, constrains content to `--al-hero-max-width` and centers it.",
-              "attribute": "contained"
-            },
-            {
-              "kind": "field",
-              "name": "contentAlignment",
-              "type": {
-                "text": "'start' | 'end'"
-              },
-              "description": "Content alignment (split/centered/stacked layouts). Unset preserves the\nexisting centered-by-default behavior — set this only to opt into an\nexplicit start/end alignment.\n- **start** Aligns the content column to the block-start edge\n- **end** Aligns the content column to the block-end edge",
-              "attribute": "contentAlignment"
-            },
-            {
-              "kind": "field",
-              "name": "overlay",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "When true (poster layout only), renders a gradient scrim behind the\nbackground media so overlaid text stays legible. No-op on other layouts.\nDefaults to false — no visual change unless explicitly opted in.",
-              "attribute": "overlay"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "layout",
-              "type": {
-                "text": "'centered' | 'stacked' | 'poster'"
-              },
-              "description": "Layout\n- **split** (default) Content on one side, media on the other\n- **centered** Content centered, media below\n- **stacked** Left-aligned content, full-width media below\n- **poster** Media as full-bleed backdrop, oversized content on top",
-              "fieldName": "layout"
-            },
-            {
-              "name": "mediaPosition",
-              "type": {
-                "text": "'start'"
-              },
-              "description": "Media position (split layout only)\n- **default** Media renders after the content (end)\n- **start** Media renders before the content",
-              "fieldName": "mediaPosition"
-            },
-            {
-              "name": "contained",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "When true, constrains content to `--al-hero-max-width` and centers it.",
-              "fieldName": "contained"
-            },
-            {
-              "name": "contentAlignment",
-              "type": {
-                "text": "'start' | 'end'"
-              },
-              "description": "Content alignment (split/centered/stacked layouts). Unset preserves the\nexisting centered-by-default behavior — set this only to opt into an\nexplicit start/end alignment.\n- **start** Aligns the content column to the block-start edge\n- **end** Aligns the content column to the block-end edge",
-              "fieldName": "contentAlignment"
-            },
-            {
-              "name": "overlay",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "When true (poster layout only), renders a gradient scrim behind the\nbackground media so overlaid text stays legible. No-op on other layouts.\nDefaults to false — no visual change unless explicitly opted in.",
-              "fieldName": "overlay"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-hero",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALHero",
-          "declaration": {
-            "name": "ALHero",
-            "module": "components/hero/hero.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-hero",
-          "declaration": {
-            "name": "ALHero",
-            "module": "components/hero/hero.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALHero",
-            "module": "components/hero/hero.ts"
           }
         }
       ]
@@ -15437,133 +14924,41 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/layout-container/layout-container.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-layout-container",
-          "name": "ALLayoutContainer",
-          "slots": [
-            {
-              "description": "The container content (typically `<al-layout>` or `<al-layout-section>` children). Caps width to `--al-theme-layout-width-container` and centers horizontally.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-layout-container'"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-layout-container",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALLayoutContainer",
-          "declaration": {
-            "name": "ALLayoutContainer",
-            "module": "components/layout-container/layout-container.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-layout-container",
-          "declaration": {
-            "name": "ALLayoutContainer",
-            "module": "components/layout-container/layout-container.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALLayoutContainer",
-            "module": "components/layout-container/layout-container.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/layout-section/layout-section.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-layout-section",
-          "name": "ALLayoutSection",
-          "slots": [
-            {
-              "description": "The section content. Renders inside a `<section>` element so consumers can rely on the landmark semantics.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-layout-section'"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-layout-section",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALLayoutSection",
-          "declaration": {
-            "name": "ALLayoutSection",
-            "module": "components/layout-section/layout-section.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-layout-section",
-          "declaration": {
-            "name": "ALLayoutSection",
-            "module": "components/layout-section/layout-section.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALLayoutSection",
-            "module": "components/layout-section/layout-section.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/layout/layout.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-layout",
+          "description": "Component: al-layout\n\nThe single arrangement primitive for the design system. Layout owns three\northogonal jobs, selected by `variant`:\n\n- **flow** (default) — stack or row content with `direction` / `gap` /\n  `align` / `justify` / `wrap`.\n- **constrained** — own the page measure. Children sit in a centred content\n  column capped at `size`, with fluid gutter tracks either side. Any child\n  marked `bleed` breaks out edge-to-edge.\n- **grid** — an N-column grid (`columns`). Children span with the shared\n  `.al-u-grid__item.col:N` classes; there is no second span system.\n- **bento** — a 12-column auto-row grid for asymmetric feature tiles.\n\nSemantic components must not re-implement arrangement. A component that\ngroups things for MEANING (`al-checkbox-group`'s fieldset,\n`al-radio-group`'s roving keyboard selection) keeps only that meaning and\nnests its slotted content in an `<al-layout>`.",
           "name": "ALLayout",
+          "cssProperties": [
+            {
+              "description": "Gap between children, for a value the `gap` prop's scale cannot name. An explicit `gap` prop still wins over it. Prefer the prop.",
+              "name": "--al-layout-gap"
+            },
+            {
+              "description": "The layout's own inset. Defaults to `0`. Needed because `:host` is `display: contents`, so padding set from outside is dropped. Under `variant=\"constrained\"` use it for block padding only — inline insets there are the gutter tracks.",
+              "name": "--al-layout-padding"
+            },
+            {
+              "description": "Gutter track width under `variant=\"constrained\"`. Defaults to a fluid 20px–60px clamp.",
+              "name": "--al-layout-gutter"
+            },
+            {
+              "description": "Content column width under `variant=\"constrained\"`. Set via `size`.",
+              "name": "--al-layout-measure"
+            },
+            {
+              "description": "Column count under `variant=\"grid\"`. Set via `columns`.",
+              "name": "--al-layout-columns"
+            },
+            {
+              "description": "Height floor when `fullHeight` is set. Defaults to 100vh.",
+              "name": "--al-layout-min-height"
+            }
+          ],
           "slots": [
             {
-              "description": "The layout content (typically `<al-layout-section>` children, or arbitrary content stacked with the configured `gap`).",
+              "description": "The layout content. Under `variant=\"constrained\"`, a child carrying the `bleed` attribute breaks out of the content column.",
               "name": ""
             }
           ],
@@ -15579,39 +14974,243 @@
             },
             {
               "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'constrained' | 'grid' | 'bento'"
+              },
+              "description": "Style variant\n- **default** a flow layout — a column, or a row with `direction=\"row\"`\n- **constrained** a centred content column with gutter tracks; children\n  marked `bleed` break out edge-to-edge\n- **grid** an N-column grid, sized by `columns`\n- **bento** a 12-column auto-row grid for asymmetric feature tiles",
+              "attribute": "variant"
+            },
+            {
+              "kind": "field",
+              "name": "direction",
+              "type": {
+                "text": "'row' | 'column'"
+              },
+              "description": "Direction\n- **column** (default) stacks children vertically\n- **row** arranges children horizontally, centered on the cross axis",
+              "attribute": "direction"
+            },
+            {
+              "kind": "field",
               "name": "gap",
               "type": {
-                "text": "'none' | 'sm' | 'lg' | 'xl'"
+                "text": "'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'"
               },
-              "description": "Gap variant (Default is 16px)\n- **none** yields a layout whose layout sections are spaced without any gutter in between on large screens.\n- **sm** yields a layout whose layout sections are spaced 8px apart on large screens. Small screens gutters move to 16px between.\n- **lg** yields a layout whose layout sections are spaced 24px apart on large screens. Small screens gutters move to 16px between.\n- **xl** yields a layout whose layout sections are spaced 32px apart on large screens. Small screens gutters move to 16px between.",
+              "description": "Gap between children (default is 16px)\n- **none** removes the gap\n- **xs** 4px\n- **sm** 8px\n- **md** 16px (same as the default)\n- **lg** 24px\n- **xl** 32px",
               "attribute": "gap"
             },
             {
               "kind": "field",
-              "name": "variant",
+              "name": "align",
               "type": {
-                "text": "'sidebar-left' | 'sidebar-right'"
+                "text": "'start' | 'center' | 'end' | 'stretch'"
               },
-              "description": "Style variants\n- **sidebar-left** formats the first `layout-section` component as a left sidebar\n- **sidebar-right** formats the second `layout-section` component as a right sidebar",
-              "attribute": "variant"
+              "description": "Cross-axis alignment\n- Defaults to `stretch` for a column and `center` for a row",
+              "attribute": "align"
+            },
+            {
+              "kind": "field",
+              "name": "justify",
+              "type": {
+                "text": "'start' | 'center' | 'end' | 'between'"
+              },
+              "description": "Main-axis distribution",
+              "attribute": "justify"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'full'"
+              },
+              "description": "Measure — the width of the centred content column under\n`variant=\"constrained\"`. Defaults to the theme's container width.",
+              "attribute": "size"
+            },
+            {
+              "kind": "field",
+              "name": "gutter",
+              "type": {
+                "text": "'none' | 'sm' | 'md' | 'lg'"
+              },
+              "description": "Gutter — the width of the tracks either side of the content column under\n`variant=\"constrained\"`. Defaults to a fluid 20px–60px clamp.",
+              "attribute": "gutter"
+            },
+            {
+              "kind": "field",
+              "name": "columns",
+              "type": {
+                "text": "number"
+              },
+              "description": "Column count under `variant=\"grid\"` (1–12, default 12)",
+              "attribute": "columns"
+            },
+            {
+              "kind": "field",
+              "name": "noCollapse",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Keep the grid's columns at every width\n- By default a grid collapses to a single column below the medium\n  breakpoint so tiles never become unreadably narrow",
+              "attribute": "noCollapse"
+            },
+            {
+              "kind": "field",
+              "name": "wrap",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Allow children to wrap onto multiple lines",
+              "attribute": "wrap"
+            },
+            {
+              "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Absorb the free space of a flex parent\n- Needed when the layout is slotted into a flex container (such as a\n  dialog or popover footer) and `justify` needs room to act on",
+              "attribute": "grow"
+            },
+            {
+              "kind": "field",
+              "name": "stretchItems",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Stretch children to fill the main axis",
+              "attribute": "stretchItems"
+            },
+            {
+              "kind": "field",
+              "name": "responsive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Collapse a row into a column on small screens",
+              "attribute": "responsive"
+            },
+            {
+              "kind": "field",
+              "name": "fullHeight",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Fill at least the height of the viewport\n- Opt in for page shells. Override the height with `--al-layout-min-height`",
+              "attribute": "fullHeight"
             }
           ],
           "attributes": [
             {
+              "name": "variant",
+              "type": {
+                "text": "'constrained' | 'grid' | 'bento'"
+              },
+              "description": "Style variant\n- **default** a flow layout — a column, or a row with `direction=\"row\"`\n- **constrained** a centred content column with gutter tracks; children\n  marked `bleed` break out edge-to-edge\n- **grid** an N-column grid, sized by `columns`\n- **bento** a 12-column auto-row grid for asymmetric feature tiles",
+              "fieldName": "variant"
+            },
+            {
+              "name": "direction",
+              "type": {
+                "text": "'row' | 'column'"
+              },
+              "description": "Direction\n- **column** (default) stacks children vertically\n- **row** arranges children horizontally, centered on the cross axis",
+              "fieldName": "direction"
+            },
+            {
               "name": "gap",
               "type": {
-                "text": "'none' | 'sm' | 'lg' | 'xl'"
+                "text": "'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'"
               },
-              "description": "Gap variant (Default is 16px)\n- **none** yields a layout whose layout sections are spaced without any gutter in between on large screens.\n- **sm** yields a layout whose layout sections are spaced 8px apart on large screens. Small screens gutters move to 16px between.\n- **lg** yields a layout whose layout sections are spaced 24px apart on large screens. Small screens gutters move to 16px between.\n- **xl** yields a layout whose layout sections are spaced 32px apart on large screens. Small screens gutters move to 16px between.",
+              "description": "Gap between children (default is 16px)\n- **none** removes the gap\n- **xs** 4px\n- **sm** 8px\n- **md** 16px (same as the default)\n- **lg** 24px\n- **xl** 32px",
               "fieldName": "gap"
             },
             {
-              "name": "variant",
+              "name": "align",
               "type": {
-                "text": "'sidebar-left' | 'sidebar-right'"
+                "text": "'start' | 'center' | 'end' | 'stretch'"
               },
-              "description": "Style variants\n- **sidebar-left** formats the first `layout-section` component as a left sidebar\n- **sidebar-right** formats the second `layout-section` component as a right sidebar",
-              "fieldName": "variant"
+              "description": "Cross-axis alignment\n- Defaults to `stretch` for a column and `center` for a row",
+              "fieldName": "align"
+            },
+            {
+              "name": "justify",
+              "type": {
+                "text": "'start' | 'center' | 'end' | 'between'"
+              },
+              "description": "Main-axis distribution",
+              "fieldName": "justify"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'full'"
+              },
+              "description": "Measure — the width of the centred content column under\n`variant=\"constrained\"`. Defaults to the theme's container width.",
+              "fieldName": "size"
+            },
+            {
+              "name": "gutter",
+              "type": {
+                "text": "'none' | 'sm' | 'md' | 'lg'"
+              },
+              "description": "Gutter — the width of the tracks either side of the content column under\n`variant=\"constrained\"`. Defaults to a fluid 20px–60px clamp.",
+              "fieldName": "gutter"
+            },
+            {
+              "name": "columns",
+              "type": {
+                "text": "number"
+              },
+              "description": "Column count under `variant=\"grid\"` (1–12, default 12)",
+              "fieldName": "columns"
+            },
+            {
+              "name": "noCollapse",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Keep the grid's columns at every width\n- By default a grid collapses to a single column below the medium\n  breakpoint so tiles never become unreadably narrow",
+              "fieldName": "noCollapse"
+            },
+            {
+              "name": "wrap",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Allow children to wrap onto multiple lines",
+              "fieldName": "wrap"
+            },
+            {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Absorb the free space of a flex parent\n- Needed when the layout is slotted into a flex container (such as a\n  dialog or popover footer) and `justify` needs room to act on",
+              "fieldName": "grow"
+            },
+            {
+              "name": "stretchItems",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Stretch children to fill the main axis",
+              "fieldName": "stretchItems"
+            },
+            {
+              "name": "responsive",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Collapse a row into a column on small screens",
+              "fieldName": "responsive"
+            },
+            {
+              "name": "fullHeight",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Fill at least the height of the viewport\n- Opt in for page shells. Override the height with `--al-layout-min-height`",
+              "fieldName": "fullHeight"
             }
           ],
           "superclass": {
@@ -16245,12 +15844,12 @@
             },
             {
               "kind": "field",
-              "name": "orientation",
+              "name": "direction",
               "type": {
-                "text": "'horizontal'"
+                "text": "'row'"
               },
               "description": "Orientation\n- default renders a stacked list\n- **horizontal** renders the list side-by-side and wraps unless overflow is turned on",
-              "attribute": "orientation"
+              "attribute": "direction"
             },
             {
               "kind": "field",
@@ -16301,12 +15900,12 @@
               "fieldName": "behavior"
             },
             {
-              "name": "orientation",
+              "name": "direction",
               "type": {
-                "text": "'horizontal'"
+                "text": "'row'"
               },
               "description": "Orientation\n- default renders a stacked list\n- **horizontal** renders the list side-by-side and wraps unless overflow is turned on",
-              "fieldName": "orientation"
+              "fieldName": "direction"
             }
           ],
           "superclass": {
@@ -18471,7 +18070,7 @@
           "name": "ALRadioGroup",
           "slots": [
             {
-              "description": "The radio content, a set of radio items",
+              "description": "The radio content, a set of radio items. Items stack in a column by default; for a row, nest them in `<al-layout direction=\"row\" wrap>`.",
               "name": ""
             },
             {
@@ -18501,6 +18100,11 @@
             {
               "kind": "field",
               "name": "fieldNoteEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "layoutEl",
               "privacy": "private"
             },
             {
@@ -18583,15 +18187,6 @@
               },
               "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
               "attribute": "ariaDescribedBy"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'horizontal'"
-              },
-              "description": "Variant\n- **default** Displays the radio items in a column\n- **horizontal** Displays the radio items in a row",
-              "attribute": "variant"
             },
             {
               "kind": "field",
@@ -18736,14 +18331,6 @@
               },
               "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
               "fieldName": "ariaDescribedBy"
-            },
-            {
-              "name": "variant",
-              "type": {
-                "text": "'horizontal'"
-              },
-              "description": "Variant\n- **default** Displays the radio items in a column\n- **horizontal** Displays the radio items in a row",
-              "fieldName": "variant"
             }
           ],
           "superclass": {
@@ -21241,116 +20828,11 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/split-content/split-content.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-split-content\n\nA two-column media/content organism for marketing pages — feature call-outs,\n\"why us\" sections, alternating benefit rows. Purely compositional, like\nal-hero: all visual decisions come from theme tokens, and the two columns\nnaturally stack below their combined minimum widths (no fixed breakpoint\nis hardcoded so the collapse point tracks whatever content is slotted in).",
-          "name": "ALSplitContent",
-          "cssProperties": [
-            {
-              "description": "Gap between the media and content columns. Defaults to the theme space ramp.",
-              "name": "--al-split-content-gap"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The media column (image, illustration, embed, or composed cards).",
-              "name": "media"
-            },
-            {
-              "description": "The content column (heading, copy, actions).",
-              "name": "content"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-split-content'"
-            },
-            {
-              "kind": "field",
-              "name": "mediaPosition",
-              "type": {
-                "text": "'start' | 'end'"
-              },
-              "description": "Media position\n- **end** (default) Media renders after the content\n- **start** Media renders before the content",
-              "attribute": "mediaPosition"
-            },
-            {
-              "kind": "field",
-              "name": "verticalAlignment",
-              "type": {
-                "text": "'start' | 'center' | 'end'"
-              },
-              "description": "Vertical alignment of the two columns relative to one another\n- **center** (default) Columns are vertically centered\n- **start** Columns align to the block-start edge\n- **end** Columns align to the block-end edge",
-              "attribute": "verticalAlignment"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "mediaPosition",
-              "type": {
-                "text": "'start' | 'end'"
-              },
-              "description": "Media position\n- **end** (default) Media renders after the content\n- **start** Media renders before the content",
-              "fieldName": "mediaPosition"
-            },
-            {
-              "name": "verticalAlignment",
-              "type": {
-                "text": "'start' | 'center' | 'end'"
-              },
-              "description": "Vertical alignment of the two columns relative to one another\n- **center** (default) Columns are vertically centered\n- **start** Columns align to the block-start edge\n- **end** Columns align to the block-end edge",
-              "fieldName": "verticalAlignment"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-split-content",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALSplitContent",
-          "declaration": {
-            "name": "ALSplitContent",
-            "module": "components/split-content/split-content.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-split-content",
-          "declaration": {
-            "name": "ALSplitContent",
-            "module": "components/split-content/split-content.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALSplitContent",
-            "module": "components/split-content/split-content.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/stat/stat.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-stat\n\nA single KPI tile — value, label, and an optional trend delta with a\ndirectional chevron. Follows the design system's canonical stat-card\ncontract (value/label/trend/delta/invertPolarity). Composes into a \"KPI\nband\" by placing several `<al-stat>` inside a grid (see the KPI Band\nstory) or an `<al-bento-grid>`.",
+          "description": "Component: al-stat\n\nA single KPI tile — value, label, and an optional trend delta with a\ndirectional chevron. Follows the design system's canonical stat-card\ncontract (value/label/trend/delta/invertPolarity). Composes into a \"KPI\nband\" by placing several `<al-stat>` inside a grid (see the KPI Band\nstory) or an `<al-layout variant=\"bento\">`.",
           "name": "ALStat",
           "cssProperties": [
             {
@@ -22838,12 +22320,18 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/text-passage/text-passage.ts",
+      "path": "components/text-block/text-block.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-text-passage",
-          "name": "ALTextPassage",
+          "description": "Component: al-text-block",
+          "name": "ALTextBlock",
+          "cssProperties": [
+            {
+              "description": "The block's base typography, as a `font` shorthand. Defaults to body-md. Needed because that default compiles to a `font` shorthand, which resets `font-size`/`line-height` and so cannot be overridden by inheritance from the host — pass a typography token (e.g. `var(--al-theme-typography-body-lg)`) to set lead copy.",
+              "name": "--al-text-block-font"
+            }
+          ],
           "slots": [
             {
               "description": "The text passage content",
@@ -22858,7 +22346,7 @@
                 "text": "string"
               },
               "static": true,
-              "default": "'al-text-passage'"
+              "default": "'al-text-block'"
             },
             {
               "kind": "field",
@@ -22884,32 +22372,32 @@
             "name": "ALElement",
             "module": "/components/ALElement"
           },
-          "tagName": "al-text-passage",
+          "tagName": "al-text-block",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "ALTextPassage",
+          "name": "ALTextBlock",
           "declaration": {
-            "name": "ALTextPassage",
-            "module": "components/text-passage/text-passage.ts"
+            "name": "ALTextBlock",
+            "module": "components/text-block/text-block.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "al-text-passage",
+          "name": "al-text-block",
           "declaration": {
-            "name": "ALTextPassage",
-            "module": "components/text-passage/text-passage.ts"
+            "name": "ALTextBlock",
+            "module": "components/text-block/text-block.ts"
           }
         },
         {
           "kind": "custom-element-definition",
           "declaration": {
-            "name": "ALTextPassage",
-            "module": "components/text-passage/text-passage.ts"
+            "name": "ALTextBlock",
+            "module": "components/text-block/text-block.ts"
           }
         }
       ]
@@ -23704,12 +23192,12 @@
             },
             {
               "kind": "field",
-              "name": "orientation",
+              "name": "direction",
               "type": {
-                "text": "'horizontal'"
+                "text": "'row'"
               },
-              "description": "Determines the orientation of the time selector ('horizontal' renders items in a row).",
-              "attribute": "orientation"
+              "description": "Determines the direction of the time selector ('row' renders items in a row).",
+              "attribute": "direction"
             },
             {
               "kind": "field",
@@ -23893,12 +23381,12 @@
           ],
           "attributes": [
             {
-              "name": "orientation",
+              "name": "direction",
               "type": {
-                "text": "'horizontal'"
+                "text": "'row'"
               },
-              "description": "Determines the orientation of the time selector ('horizontal' renders items in a row).",
-              "fieldName": "orientation"
+              "description": "Determines the direction of the time selector ('row' renders items in a row).",
+              "fieldName": "direction"
             },
             {
               "name": "activeTime",
@@ -24029,136 +23517,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/toast-group/toast-group.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-toast-group",
-          "name": "ALToastGroup",
-          "slots": [
-            {
-              "description": "One or more individual toast components",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-toast-group'"
-            },
-            {
-              "kind": "field",
-              "name": "position",
-              "type": {
-                "text": "'top' | 'bottom'"
-              },
-              "description": "Position property\n- **default** Displays the toast group where ever it's placed on the page\n- **top** Displays the toast group absolutely at the top center of the screen\n- **bottom** Displays the toast group absolutely at the top center of the screen",
-              "attribute": "position"
-            },
-            {
-              "kind": "field",
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Is active?\n- **true** Displays the toast group on the screen\n- **false** Hides the toast group on the screen",
-              "attribute": "isActive"
-            },
-            {
-              "kind": "field",
-              "name": "toastList",
-              "type": {
-                "text": "Array<ALToast>"
-              },
-              "description": "Query the toast components in the toast group"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnToastClose",
-              "description": "Handle a toast closed event\n1. Find the number of currently active toasts in the group\n2. If there are no active toasts, close the toast group"
-            },
-            {
-              "kind": "method",
-              "name": "open",
-              "privacy": "public",
-              "description": "Open toast group\n1. Set active to true to show the toasts\n2. Dispatch a custom event on open of the toast group"
-            },
-            {
-              "kind": "method",
-              "name": "close",
-              "privacy": "public",
-              "description": "Close toast group\n1. Set active to true to show the toasts\n2. Dispatch a custom event on close of the toast group"
-            }
-          ],
-          "events": [
-            {
-              "description": "Fired when the group becomes visible. Detail: `{ active }`.",
-              "name": "onToastGroupOpen"
-            },
-            {
-              "description": "Fired when the group is dismissed. Detail: `{ active }`.",
-              "name": "onToastGroupClose"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "position",
-              "type": {
-                "text": "'top' | 'bottom'"
-              },
-              "description": "Position property\n- **default** Displays the toast group where ever it's placed on the page\n- **top** Displays the toast group absolutely at the top center of the screen\n- **bottom** Displays the toast group absolutely at the top center of the screen",
-              "fieldName": "position"
-            },
-            {
-              "name": "isActive",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Is active?\n- **true** Displays the toast group on the screen\n- **false** Hides the toast group on the screen",
-              "fieldName": "isActive"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-toast-group",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALToastGroup",
-          "declaration": {
-            "name": "ALToastGroup",
-            "module": "components/toast-group/toast-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-toast-group",
-          "declaration": {
-            "name": "ALToastGroup",
-            "module": "components/toast-group/toast-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALToastGroup",
-            "module": "components/toast-group/toast-group.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/toast/toast.ts",
       "declarations": [
         {
@@ -24272,7 +23630,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Auto close?\n- Set whether you want the toast group to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
+              "description": "Auto close?\n- Set whether you want the toast to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
               "attribute": "autoClose"
             },
             {
@@ -24282,7 +23640,7 @@
                 "text": "number"
               },
               "default": "3",
-              "description": "Delay property\n1. Number of seconds to close the toast group when autoClose is enabled\n2. Default amount is 3",
+              "description": "Delay property\n1. Number of seconds to close the toast when autoClose is enabled\n2. Default amount is 3",
               "attribute": "autoCloseDelay"
             },
             {
@@ -24335,7 +23693,7 @@
             {
               "kind": "method",
               "name": "handleMouseOver",
-              "description": "Mouseover event\n1. On mouseover of the toast group, clear the timer to pause auto close"
+              "description": "Mouseover event\n1. On mouseover of the toast, clear the timer to pause auto close"
             },
             {
               "kind": "method",
@@ -24349,8 +23707,8 @@
               "name": "onToastClose"
             },
             {
-              "description": "Fired when the toast becomes visible. Detail: `{ active }`. Note the name says `Group` although this is dispatched by the individual toast — see the known-issue note on `al-toast-group`.",
-              "name": "onToastGroupOpen"
+              "description": "Fired when the toast becomes visible. Detail: `{ active }`.",
+              "name": "onToastOpen"
             }
           ],
           "attributes": [
@@ -24392,7 +23750,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Auto close?\n- Set whether you want the toast group to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
+              "description": "Auto close?\n- Set whether you want the toast to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
               "fieldName": "autoClose"
             },
             {
@@ -24401,7 +23759,7 @@
                 "text": "number"
               },
               "default": "3",
-              "description": "Delay property\n1. Number of seconds to close the toast group when autoClose is enabled\n2. Default amount is 3",
+              "description": "Delay property\n1. Number of seconds to close the toast when autoClose is enabled\n2. Default amount is 3",
               "fieldName": "autoCloseDelay"
             },
             {
@@ -24456,7 +23814,7 @@
           "name": "ALToggleButtonGroup",
           "slots": [
             {
-              "description": "A set of toggle buttons",
+              "description": "A set of toggle buttons. Arranged in a row by default; for a column or a gap, nest them in `<al-layout>` with the props you need.",
               "name": ""
             }
           ],
@@ -24472,30 +23830,22 @@
             },
             {
               "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "layoutEl",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
               "name": "variant",
               "type": {
                 "text": "'background'"
               },
               "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles",
               "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "orientation",
-              "type": {
-                "text": "'vertical'"
-              },
-              "description": "Orientation\n- **default** renders the toggle button's in a horizontal row\n- **vertical** renders the toggle button's in a vertical row",
-              "attribute": "orientation"
-            },
-            {
-              "kind": "field",
-              "name": "gap",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Gap\n- **default** adds no gap between the toggle buttons\n- **sm** adds a 16px gap between the toggle buttons",
-              "attribute": "gap"
             },
             {
               "kind": "field",
@@ -24540,22 +23890,6 @@
               },
               "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles",
               "fieldName": "variant"
-            },
-            {
-              "name": "orientation",
-              "type": {
-                "text": "'vertical'"
-              },
-              "description": "Orientation\n- **default** renders the toggle button's in a horizontal row\n- **vertical** renders the toggle button's in a vertical row",
-              "fieldName": "orientation"
-            },
-            {
-              "name": "gap",
-              "type": {
-                "text": "'sm'"
-              },
-              "description": "Gap\n- **default** adds no gap between the toggle buttons\n- **sm** adds a 16px gap between the toggle buttons",
-              "fieldName": "gap"
             }
           ],
           "superclass": {

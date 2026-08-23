@@ -1,5 +1,6 @@
 import type { StoryObj } from '@storybook/react-vite';
 import { ALAvatar, ALIconUser } from '../..';
+import { placeholderImages } from '../../../../al-web-components/.storybook/fixtures';
 
 export default {
   title: 'Atoms/Avatar',
@@ -42,7 +43,7 @@ export const WithImage: StoryObj<typeof ALAvatar> = {
   args: {
     children: (
       <>
-        <img src="https://placehold.co/80x80" alt="Alt text" />
+        <img src={placeholderImages.avatar} alt="Alt text" />
       </>
     )
   }

@@ -5,6 +5,11 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { StorybookConfig } from '@storybook/react-vite';
 import { mergeConfig } from 'vite';
+import remarkGfm from 'remark-gfm';
+// @ts-expect-error — plain .mjs build glue, no type declarations by design.
+import { rewriteScssImports } from '../../al-web-components/vite-plugins/rewrite-scss-imports.mjs';
+// @ts-expect-error — plain .mjs build glue, no type declarations by design.
+import { mdxFileUrlResolver } from '../../al-web-components/vite-plugins/mdx-file-url-resolver.mjs';
 
 // R8 — al-react is a wrapper package: every one of its 66 components imports
 // from `al-web-components/dist/...`, `preview.ts` injects
@@ -54,11 +59,37 @@ const config: StorybookConfig = {
   // occupant of that directory is `Fpo/`, a placeholder component imported BY
   // other stories rather than a story itself. Storybook printed
   // "No story files found for the specified pattern" on every boot for it.
+  // The `Resources/*` documentation pages are SHARED with the web-components
+  // Storybook by pointing at that package's files rather than copying them —
+  // one source of truth, so the two Storybooks cannot drift. This is safe
+  // ONLY because those three files are prose MDX: they use `<Meta title=…/>`
+  // (a docs-only entry with no attached CSF) plus `<Markdown>`, and MDX
+  // compiles to React in every Storybook regardless of the story renderer.
+  //
+  // The `Foundations/*` pages are deliberately NOT globbed in the same way.
+  // Their CSF files return lit-html `TemplateResult`s and are typed against
+  // `@storybook/web-components`; a Storybook has exactly one renderer, and the
+  // React renderer would receive a `{_$litType$, strings, values}` object
+  // where it expects a React element. Those pages are re-authored for this
+  // renderer in `../src/foundations/` instead.
   stories: [
     '../src/**/*.stories.@(js|jsx|ts|tsx)',
+    '../../al-web-components/.storybook/docs/*.mdx',
   ],
   addons: [
     '@storybook/addon-a11y',
+    {
+      name: '@storybook/addon-docs',
+      options: {
+        // GFM tables — see the identical block in
+        // `libs/al-web-components/.storybook/main.ts` for why this is needed.
+        mdxPluginOptions: {
+          mdxCompileOptions: {
+            remarkPlugins: [remarkGfm],
+          },
+        },
+      },
+    },
   ],
   // WAS `['../dist']`, which broke EVERY story in this Storybook whenever
   // `pnpm --filter al-react build` had been run.
@@ -78,9 +109,51 @@ const config: StorybookConfig = {
   // `dist/css` is fetched over HTTP by nothing — `preview.ts` takes the global
   // stylesheet through a Vite `?inline` import instead.
   staticDirs: ['./static'],
-  docs: { autodocs: true } as any,
+  // NOTE: `docs: { autodocs: true }` used to sit here. That option no longer
+  // exists in Storybook 10 (core `DocsOptions` is only `{ defaultName, docsMode }`)
+  // and the `as any` cast was hiding the fact that it had become a no-op — which
+  // is why this Storybook had NO autodocs at all and `atoms-button--docs`
+  // 404'd. Autodocs is tag-driven now and is switched on in `preview.ts` via
+  // `tags: ['autodocs']`, matching the web-components Storybook.
+  docs: {
+    // DOCS-ONLY SIDEBAR, matching `al-web-components/.storybook/main.ts`: one
+    // node per component that opens its docs page; the individual stories are
+    // still rendered inline by autodocs. Consequence: docs entries get no
+    // addon panel, so the stock a11y tab is unreachable — the shared
+    // `AltitudeDocsPage` (wired in `preview.ts`) renders the inline
+    // `<A11yReport>` under every story instead.
+    docsMode: true,
+    defaultName: 'Docs',
+  },
   viteFinal: async (cfg) =>
     mergeConfig(cfg, {
+      // The shared SCSS import-rewrite plugin. Needed because the
+      // `Foundations/*` documentation elements live in al-web-components
+      // SOURCE (`.storybook/components/**`) and use the bare
+      // `import styles from './x.scss'` form, which Vite does not resolve to a
+      // string without `?inline`. Imported rather than copied so the two
+      // builds cannot drift.
+      //
+      // NOTE this is the one place al-react compiles al-web-components source
+      // rather than its built `dist` (see the R8 note at the top of this file).
+      // It is scoped to documentation elements only — every actual COMPONENT
+      // still comes from `dist`.
+      plugins: [rewriteScssImports(), mdxFileUrlResolver()],
+      esbuild: {
+        target: 'es2022',
+        tsconfigRaw: {
+          compilerOptions: {
+            target: 'es2022',
+            // Required by the Lit documentation elements above: they use
+            // `@customElement` / `@property` decorators, which need the legacy
+            // decorator semantics and non-standard class-field behaviour. The
+            // React wrappers in `../src` are function components and are
+            // unaffected by either flag.
+            useDefineForClassFields: false,
+            experimentalDecorators: true,
+          },
+        },
+      },
       css: {
         preprocessorOptions: {
           scss: {

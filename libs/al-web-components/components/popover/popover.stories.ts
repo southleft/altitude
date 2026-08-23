@@ -4,7 +4,7 @@ import { spread } from '../../directives/spread';
 import { withActions } from 'storybook/actions/decorator';
 import './popover';
 import '../../.storybook/components/f-po/f-po';
-import '../button-group/button-group';
+import '../layout/layout';
 import '../button/button';
 import '../icon/icons/document';
 import '../icon/icons/menu';
@@ -207,10 +207,10 @@ const TemplateWithContent = (args) => html`
         </al-tab-panel>
       </al-tabs>
       <al-button slot="footer" variant="bare" @click=${closePopover}>Close</al-button>
-      <al-button-group slot="footer" alignment="right">
+      <al-layout slot="footer" direction="row" justify="end" grow>
         <al-button variant="tertiary">Label</al-button>
         <al-button>Label</al-button>
-      </al-button-group>
+      </al-layout>
     </al-popover>
   </div>
 `;

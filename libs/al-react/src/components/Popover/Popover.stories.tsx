@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-vite';
-import { ALPopover, ALMenu, ALMenuItem, ALButton, ALButtonGroup, ALTabs, ALTab, ALTabPanel,ALToggleButton, ALIconDocument, ALIconHelp, ALIconMenu } from '../..';
+import { ALPopover, ALMenu, ALMenuItem, ALButton, ALTabs, ALTab, ALTabPanel,ALToggleButton, ALIconDocument, ALIconHelp, ALIconMenu, ALLayout} from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
 
 export default {
@@ -184,10 +184,10 @@ export const WithContent: StoryObj<typeof ALPopover> = {
           </ALTabPanel>
         </ALTabs>
         <ALButton slot="footer" variant="bare" onClick={closePopover}>Close</ALButton>
-        <ALButtonGroup slot="footer" alignment="right">
+        <ALLayout slot="footer" direction="row" justify="end" grow>
           <ALButton variant="tertiary">Label</ALButton>
           <ALButton>Label</ALButton>
-        </ALButtonGroup>
+        </ALLayout>
       </>
     )
   },

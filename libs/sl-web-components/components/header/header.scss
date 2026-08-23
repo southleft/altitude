@@ -1,0 +1,168 @@
+@use '../../../al-web-components/styles/component' as *;
+@use '../../styles/brand' as *;
+/*------------------------------------*\
+  #SL HEADER
+\*------------------------------------*/
+
+@layer al.component {
+  :host {
+    display: block;
+  }
+
+  /**
+   * The brand's chrome, fed to `<al-header>` through the custom properties it
+   * exposes.
+   *
+   * 1. These MUST be custom properties, not plain declarations. `al-header`'s
+   *    `:host` is `display: contents`, so its shadow-root `<header>` is the
+   *    only box that exists — nothing out here can select it. Altitude added
+   *    `--al-header-background` / `-backdrop-filter` / `-border-block-end`
+   *    precisely because a translucent blurred bar was otherwise unreachable
+   *    from outside the boundary.
+   * 2. `--al-header-padding: 0` because the page measure is the nested
+   *    `<al-layout variant="constrained">`. Two sources of inline padding
+   *    would double the gutter.
+   */
+  .sl-c-header {
+    --al-header-padding: 0; /* 2 */
+    --al-header-min-height: var(--sl-header-height, 4rem); /* 1 */
+    --al-header-background: var(
+      --sl-header-background,
+      color-mix(in srgb, var(--al-theme-color-background-default-weak) 85%, transparent)
+    );
+    --al-header-border-block-end: var(--al-theme-border-width) solid #{$sl-border-faint};
+    --al-header-backdrop-filter: blur(12px);
+  }
+
+  @media (min-width: 48rem) {
+    .sl-c-header {
+      --al-header-min-height: var(--sl-header-height, 5rem);
+    }
+  }
+
+  /**
+   * 3. The measure, as an al-layout recipe rather than a bespoke max-width.
+   *    al-layout's `measure` is the CONTENT column and its gutters are separate
+   *    tracks, so 79rem plus the brand's own clamp reproduces the site's
+   *    1360px border-box container exactly (1360 − 2×48 = 1264px = 79rem).
+   */
+  .sl-c-header__measure {
+    --al-layout-measure: var(--sl-header-measure, 79rem); /* 3 */
+    --al-layout-gutter: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  /**
+   * 4. The `<nav>` exists for the landmark and its label; the pill row inside
+   *    is an `<al-layout>`, so no alignment or gap lives here. All that remains
+   *    is the responsive show/hide — a decision about the NAV, not about
+   *    arrangement.
+   */
+  .sl-c-header__nav {
+    display: none; /* 4 */
+  }
+
+  @media (min-width: 64rem) {
+    .sl-c-header__nav {
+      display: block; /* 4 */
+    }
+  }
+
+  /**
+   * 5. The pill treatment, applied to whatever the page slots in, so a nav item
+   *    is a plain `<a>` and nothing more. `::slotted()` reaches only top-level
+   *    assigned nodes — which is exactly the contract here: nav links are flat.
+   * 6. `aria-current="page"` IS the active state. Styling the ARIA attribute
+   *    rather than a parallel `--active` class means the visual state cannot
+   *    drift from the announced one — there is only one source of truth.
+   */
+  ::slotted(a[slot='nav']) {
+    display: inline-flex; /* 5 */
+    align-items: center;
+    border-radius: var(--al-theme-border-radius-role-action);
+    padding: var(--al-theme-space-xs) var(--al-theme-space);
+    color: var(--al-theme-color-content-default-weak);
+    text-decoration: none;
+    font-size: var(--al-theme-typography-body-sm-font-size, 0.875rem);
+    transition:
+      background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+      color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  }
+
+  ::slotted(a[slot='nav']:hover) {
+    color: var(--al-theme-color-content-default);
+  }
+
+  ::slotted(a[slot='nav'][aria-current='page']) {
+    color: var(--al-theme-color-content-default); /* 6 */
+    background: var(--al-theme-color-background-default-strong); /* 6 */
+  }
+
+  /**
+   * 7. The circular icon button, shared by the menu trigger this component
+   *    renders and any native `<button>` the page slots into `actions`.
+   *    Matching on `button` rather than a class means a slotted `<al-button>`
+   *    CTA is untouched — a custom element never matches `::slotted(button)`.
+   */
+  ::slotted(button[slot='actions']),
+  .sl-c-header__menu-button {
+    display: inline-flex; /* 7 */
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    padding: 0;
+    border-radius: var(--al-theme-border-radius-role-action);
+    border: var(--al-theme-border-width) solid #{$sl-border-faint};
+    background: transparent;
+    color: var(--al-theme-color-content-default-weak);
+    cursor: pointer;
+    transition:
+      color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+      border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  }
+
+  ::slotted(button[slot='actions']:hover),
+  .sl-c-header__menu-button:hover {
+    color: var(--al-theme-color-content-default);
+    border-color: var(--al-theme-color-border-default-weak);
+  }
+
+  /* Non-negotiable per AGENTS.md. The slotted buttons take their ring from the
+     page's own sheet; this one is ours to give. */
+  .sl-c-header__menu-button:focus-visible {
+    @include al-focus;
+  }
+
+  /**
+   * 8. The menu button is the mobile affordance only — above the nav's
+   *    breakpoint the pills are visible and a second way in would be noise.
+   */
+  @media (min-width: 64rem) {
+    .sl-c-header__menu-button {
+      display: none; /* 8 */
+    }
+  }
+
+  .sl-c-header__panel {
+    border-block-start: var(--al-theme-border-width) solid #{$sl-border-faint};
+    padding-block: var(--al-theme-space-lg);
+  }
+
+  /**
+   * 9. `[hidden]` needs restating because the base display rule above would
+   *    otherwise win — `display` on a class beats the UA's `[hidden]` rule.
+   */
+  .sl-c-header__panel[hidden] {
+    display: none; /* 9 */
+  }
+
+  ::slotted(a[slot='mobile']) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--al-theme-space-sm);
+    color: var(--al-theme-color-content-default);
+    text-decoration: none;
+  }
+}
