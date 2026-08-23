@@ -16,7 +16,9 @@ own build already produced, or shells out to an existing script:
 | `altitude_validate` | shells to `libs/al-web-components/cli/validate.mjs --json` |
 | `altitude_get_tokens` | `libs/al-web-components/dist/css/{tokens,aliases}.json` + `styles/tokens-dtcg/**` |
 | `altitude_search_icons` | `libs/al-web-components/components/icon/catalog.ts` |
-| `altitude_generate_theme` | `libs/al-web-components/.storybook/ai-theme/{engine,types,oklch,ramps,personalities}.ts` |
+| `altitude_generate_theme` | `libs/al-web-components/dist/theme-engine/index.js` (built barrel; falls back to `theme-engine/` TS source) |
+| `altitude_check_parity` | `.altitude/ds-projects.json` + the project's parity manifest (`.altitude/figma-sync/**/parity-manifest.json`) + live source hashing |
+| `altitude_list_ds_projects` | `.altitude/ds-projects.json` |
 
 If a generated artifact is missing (fresh clone, no build yet), the tool returns a structured
 error naming the exact `pnpm` command that produces it — it does not fail silently or fabricate
@@ -31,10 +33,10 @@ OKLCH solver Storybook's token console uses. It does not call the Anthropic API
 ## Runtime
 
 Plain ESM `.mjs`, no build step — matches how `scripts/*.mjs` are authored elsewhere in this
-repo. One exception: `altitude_generate_theme` dynamically imports the deterministic theme
-engine directly from its TypeScript source
-(`libs/al-web-components/.storybook/ai-theme/engine.ts`), which is plain, erasable TypeScript
-(interfaces + type-only imports, no enums/namespaces/decorators). That's loaded via Node's
+repo. One exception: `altitude_generate_theme` prefers the built theme-engine barrel
+(`libs/al-web-components/dist/theme-engine/index.js`) and falls back to importing the engine's
+TypeScript source (`libs/al-web-components/theme-engine/`), which is plain, erasable TypeScript
+(interfaces + type-only imports, no enums/namespaces/decorators). The fallback is loaded via Node's
 built-in type-stripping loader (unflagged on Node ≥22.18; pass `--experimental-strip-types`
 explicitly for older 22.x patches — harmless no-op where it's already default) plus a 12-line
 custom resolve hook (`src/lib/ts-loader-hook.mjs`) that appends `.ts` to the engine's
@@ -52,6 +54,11 @@ node --experimental-strip-types --no-warnings libs/altitude-mcp/src/server.mjs
 ```
 
 Registered in the repo's `.mcp.json` as `altitude`, alongside `monday-morning` and `playwright`.
+
+**HTTP mode:** `pnpm --filter @southleft/al-web-components start` runs this server with
+`--http 6017` alongside the WC Storybook — stateless streamable HTTP at `POST /mcp`, plus
+`GET /parity.json[?project=<id>]`, `GET /ds-projects.json`, and `GET /healthz`. Binds loopback
+only (`ALTITUDE_MCP_HOST` to override), with Host-header and CORS guards.
 
 ## Test
 
@@ -177,6 +184,33 @@ best-effort resolved value.
 }
 ```
 
+### `altitude_check_parity`
+
+Figma ↔ code parity per component: `in-sync`, `code-drift`, `figma-drift`, `conflict`,
+`missing-in-figma`, `missing-in-code`, or `excluded`. **Multi-project:** pass `project`
+(see `altitude_list_ds_projects`) to check a design system other than the default. Code drift
+is computed live by hashing component source; Figma drift is as of the manifest's
+`figmaLastRefreshed` (updated by `scripts/figma-parity/refresh-figma-digests.mjs`). Each entry
+carries an `aiPrompt` — a ready-to-run reconciliation prompt naming that project's Figma file.
+Same data the Storybook sidebar badges and docs-site parity panels render from.
+
+```jsonc
+// request — one tag, a status filter, or nothing for the full report
+{ "tag": "al-button", "project": "southleft" }
+```
+
+### `altitude_list_ds_projects`
+
+Every design system this repo drives, from `.altitude/ds-projects.json`: id, display name,
+brand, Figma file key/name/URL, Storybook port (or `null` where the docs site replaced it),
+docs base, and parity-manifest path. Use it to discover the `project` argument accepted by
+`altitude_check_parity`.
+
+```jsonc
+// request
+{}
+```
+
 ## Files
 
 ```
@@ -195,6 +229,8 @@ libs/altitude-mcp/
 │       ├── tokens.mjs          # tokens.json/aliases.json + DTCG tier/brand/mode index
 │       ├── icons.mjs           # catalog.ts reader + import-guidance snippets
 │       ├── theme.mjs           # deterministic OKLCH engine wrapper
+│       ├── parity.mjs          # Figma <-> code parity engine (manifest + live hashing)
+│       ├── ds-project.mjs      # .altitude/ds-projects.json resolution (multi-project)
 │       └── ts-loader-hook.mjs  # extensionless-.ts-import resolve hook
 └── test/
     └── smoke.mjs                # spawns server, real MCP handshake, calls every tool

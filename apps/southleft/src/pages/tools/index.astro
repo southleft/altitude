@@ -279,6 +279,8 @@ try {
         { tool: 'altitude_get_tokens', reads: 'dist/css/{tokens,aliases}.json + tokens-dtcg/**', desc: 'Queries the resolved token set, or a specific tier/brand/mode.' },
         { tool: 'altitude_search_icons', reads: 'icon catalog', desc: 'Finds an icon by name, tag, or category, with an import snippet.' },
         { tool: 'altitude_generate_theme', reads: 'dist/theme-engine — the SAME deterministic OKLCH engine this page uses', desc: 'Generates a WCAG-AA theme from a prompt or explicit direction — never calls an LLM.' },
+        { tool: 'altitude_check_parity', reads: 'parity manifest + live source hashing', desc: 'Figma ↔ code parity per component, per design system — each drifted entry carries a ready-to-run AI fix prompt.' },
+        { tool: 'altitude_list_ds_projects', reads: 'ds-projects.json', desc: 'Every design system this repo drives — Figma file, brand, docs base, parity manifest.' },
       ].map((t) => (
         <div class="al-u-grid__item col:12 col:6@md col:4@lg">
           <al-card style="height:100%; box-sizing:border-box;">

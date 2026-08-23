@@ -7,6 +7,10 @@
 Altitude has **one registry engine and three consumer entry paths**. Pick the
 path that matches what you are building; do not mix them in one document.
 
+> Brand-layer note: `@southleft/sl-web-components` deliberately exploits first-come
+> `customElements.define` to *capture* the base `al-header`/`al-footer` tags —
+> load order is load-bearing. See `.altitude/BRAND-LAYER.md` § tag capture.
+
 ## The engine
 
 `libs/al-web-components/directives/register.ts` exposes two functions:

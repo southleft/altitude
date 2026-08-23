@@ -3,6 +3,11 @@
 Altitude follows [Semantic Versioning 2.0](https://semver.org/). Both
 `@southleft/al-web-components` and `@southleft/al-react` ship as a unit and share a version line.
 
+(`@southleft/sl-web-components`, the brand layer, is outside this policy for now — it is on
+the changeset ignore list and whether it publishes is an open decision. Note that its
+`al-header`/`al-footer` overrides capture *base* tags, so a base semver-major on those tags
+has brand-layer implications — see `.altitude/BRAND-LAYER.md`.)
+
 ## Major (X.0.0)
 
 Reserved for changes that break consumers:

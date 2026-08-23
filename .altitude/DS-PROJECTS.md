@@ -20,7 +20,8 @@ is the single place that answers "what's what". One entry per design system:
 | `paths.parityManifest` | that project's sync state (tracked) |
 | `paths.opsDir` | code-derived Figma build ops |
 | `paths.instanceMap` | pinned tag → Figma node ids, **or `null`** |
-| `library.*` | workspace, root, tag prefix |
+| `library.*` | workspace, root, tag prefix — the SHARED library, and optionally the subset of it this system ships |
+| `brandLibrary.*` | optional SECOND library belonging to this system alone, built on `library`; `supersedes` names the base components it stands in for |
 | `storybook.*` | config dir, port, branding, deployed base URL, excluded title prefixes |
 | `prompts.*` | skill, script dirs and docs spliced into the copy-paste AI prompt |
 | `excluded` | tag → why it is deliberately absent from Figma |
@@ -104,10 +105,11 @@ node -e "import('./libs/altitude-mcp/src/lib/parity.mjs').then(async m => {
 | | Altitude | Southleft |
 | --- | --- | --- |
 | Figma file | Altitude Design System | Southleft V5 |
-| Scope | all 105 components | 21 — the allowlist in `ds-projects.json` (84 omitted) |
+| Scope | all 105 components | 21 — the allowlist in `ds-projects.json` (84 omitted), plus a 9-component brand layer |
+| Brand layer | none | `@southleft/sl-web-components` — `al-hero`, `al-cta-band`, `al-marquee`, `al-media-card`, `al-logo-wall`, `al-page-hero`, `al-section-header`, plus `al-header` / `al-footer` superseding the base pair via define-order (classes remain `SL*`; see `.altitude/BRAND-LAYER.md`) |
 | Component sets mapped in Figma | 36 | **0 — the file starts empty** |
 | Parity | `in-sync + code-drift = 36`, `missing-in-figma=66`, `excluded=3` | `missing-in-figma=18 excluded=3` |
-| Storybook | port 6006 | port 6007 |
+| Storybook | port 6006 | retired 2026-08-23 — documented at `/docs/southleft` instead |
 | Brand deltas | none by design (neutral reference) | 46 of 392 properties |
 
 Southleft reporting 18 `missing-in-figma` is **correct, not a bug** — the Figma

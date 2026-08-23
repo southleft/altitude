@@ -9,9 +9,19 @@ After T2.1 / T2.2 / T2.4, both libraries and both Storybooks build through
 | Surface | Builder | Config | Output |
 |---|---|---|---|
 | `@southleft/al-web-components` library | Vite 5 (esbuild + Rollup) | `libs/al-web-components/vite.config.mjs` | `libs/al-web-components/dist/` |
+| `@southleft/sl-web-components` library — the Southleft **brand layer** | Vite 5 (esbuild + Rollup) + `tsc` | `libs/sl-web-components/vite.config.mjs` | `libs/sl-web-components/dist/` (JS under `dist/components/**`, declarations under `dist/sl-web-components/components/**` — see the `exports["."]["//"]` note in its `package.json`, not a typo) |
 | `@southleft/al-react` library | Vite 5 | `libs/al-react/` (default config) | `libs/al-react/dist/` |
 | `@southleft/al-web-components` Storybook | Storybook 10 + `@storybook/web-components-vite` | `libs/al-web-components/.storybook/main.ts` | `dist/storybook/web-components/` |
 | `@southleft/al-react` Storybook | Storybook 10 + `@storybook/react-vite` | `libs/al-react/.storybook/main.ts` | `dist/storybook/react/` |
+
+The root `build` script chains all three libraries **in order** —
+`@southleft/al-web-components` → `@southleft/sl-web-components` →
+`@southleft/al-react` (`package.json:19`) — because the brand layer imports
+Altitude's `ALElement` and other sources by **relative path**, not by package
+specifier (`libs/sl-web-components/vite.config.mjs:80-97`), and its own docs
+page (`/docs/southleft`) now depends on its build succeeding. Its **custom
+elements manifest is not part of this build** — see `.altitude/BRAND-LAYER.md`
+§ "THE TRAP" before changing a brand component's public API.
 
 The Vite config preserves **G7** (decorator semantics): `experimentalDecorators: true`,
 `useDefineForClassFields: false`, esbuild target `es2022`.

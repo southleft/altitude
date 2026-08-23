@@ -19,9 +19,23 @@ The authoritative plan lives in [`NEXT-GEN-UPGRADE-PLAN.md`](./NEXT-GEN-UPGRADE-
 nvm use                                  # Node 22 LTS (pinned in .nvmrc)
 pnpm install                             # pnpm 9 workspaces
 pnpm run build                           # build both libraries
-pnpm --filter @southleft/al-web-components start    # Storybook on :6006
+pnpm --filter @southleft/al-web-components start    # Storybook on :6006 + Altitude MCP on :6017
 pnpm --filter @southleft/al-react start             # Storybook on :9009
 ```
+
+## Find the process
+
+Don't hunt — [`.altitude/WORKFLOWS.md`](./.altitude/WORKFLOWS.md) is the process map: for
+each kind of change (component, token, brand, Figma sync, docs, release) it lists the
+commands in order, the gates that will catch you, and the doc with depth. Highlights:
+
+- **Adding/changing a component:** the `altitude-component-authoring` skill
+  (`.claude/skills/`) walks the full checklist; `node scripts/component-check.mjs <tag>`
+  verifies it.
+- **Figma ↔ code:** `.altitude/PARITY.md` + the `altitude-figma-sync` skill.
+- **The brand layer** (`libs/sl-web-components`): `.altitude/BRAND-LAYER.md`.
+- **Agents:** the Altitude MCP (`libs/altitude-mcp`, 8 tools) exposes components, tokens,
+  validation, and parity over `.mcp.json`.
 
 ## Branch model
 

@@ -27,7 +27,7 @@ So, for every component here:
    the component never anticipated into it.
 3. **`::part()` on every region** the component renders, so the arrangement and
    type can be retuned from the page without forking the component.
-4. **Reflected host attributes** for coarse variation (`<sl-media-card variant>`),
+4. **Reflected host attributes** for coarse variation (`<al-media-card variant>`),
    styled `:host([variant='…'])` — inspectable in devtools, targetable from
    both sides of the shadow boundary, and serialized through Declarative Shadow
    DOM.
@@ -37,14 +37,14 @@ So, for every component here:
 This is the failure `al-hero` shipped: six fixed named slots plus five layout
 props, abandoned mid-build by its first real consumer because the shadow DOM
 forced one composition with no opt-out. **That failure travels with the tag
-prefix.** `sl-hero` is only safe because of the rules above, not because of its
+prefix.** `al-hero` is only safe because of the rules above, not because of its
 name.
 
 ## What earns a place here
 
 Reuse, measured on the real site. `PageHero` appears on 19 of 24 pages,
 `CTABand` on 16, `SectionHeader` on 2 more plus 5 pages that hand-re-inlined its
-markup, and `.sl-media-card` is shared by the article and work cards.
+markup, and `.al-media-card` is shared by the article and work cards.
 
 What does **not** belong here: one-off page furniture and brand art. The
 generative canvas, the hero murmur field, the playground — those stay in
@@ -75,7 +75,14 @@ render correctly standalone in Storybook with no app CSS loaded.
 
 ## Build
 
-`pnpm --filter @southleft/sl-web-components build` exists but is **not** wired into the
-root `build:all`. The only consumer today is the Southleft Storybook, which
-compiles these sources directly. Wire it in when `apps/southleft` imports the
-package.
+This package **is** part of the root build: root `pnpm run build` runs
+al-web-components → **sl-web-components** → al-react (sequential, because this
+package compiles Altitude's *source*, not its dist). Consumers today:
+`apps/southleft` (header/footer overrides via `layouts/Base.astro`) and
+`apps/docs` (the whole bundle via `BrandRuntime.astro`). The Southleft Storybook
+has been retired in favour of the docs site.
+
+**After any JSDoc or API change here, regenerate the CEM** —
+`pnpm --filter @southleft/sl-web-components build:custom-elements.json` — the
+committed `custom-elements.json` is the sole source for the `/docs/southleft`
+component pages. See `.altitude/BRAND-LAYER.md` for the full process.

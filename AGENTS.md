@@ -11,6 +11,12 @@ A monorepo on **pnpm 9 workspaces** (Node 22 LTS) shipping two libraries:
   v2 refactor at `NEXT-GEN-UPGRADE-PLAN.md`).
 - `@southleft/al-react` — `@lit/react` wrappers, one per web component (React 19).
 
+Plus a brand layer: `@southleft/sl-web-components` (`libs/sl-web-components`) — Southleft's
+9 opinionated section components on top of the base library. Read
+[`.altitude/BRAND-LAYER.md`](./.altitude/BRAND-LAYER.md) before touching it.
+For the full dev-workflow map — which commands, gates, skills, and docs apply
+to each kind of change — start at [`.altitude/WORKFLOWS.md`](./.altitude/WORKFLOWS.md).
+
 ## The refactor governs everything
 
 There's an active multi-phase refactor described in
@@ -136,14 +142,18 @@ value that doesn't exist, **stop and report the gap** — don't fake it past the
 ### MCP server (T7.2)
 
 For an agent connected over MCP rather than shelling out, [`libs/altitude-mcp`](./libs/altitude-mcp)
-is a stdio server exposing the same contract surface as six tools: `altitude_list_components`,
+is a stdio server exposing the same contract surface as eight tools: `altitude_list_components`,
 `altitude_get_component`, `altitude_validate` (wraps the CLI above, same codes), `altitude_get_tokens`
-(tier/brand/mode-filtered), `altitude_search_icons` (the 1,512-glyph Phosphor catalog), and
-`altitude_generate_theme` (the deterministic OKLCH solver — never calls an LLM). It is a reader
-of the same generated artifacts as everything else on this page, never a second source of truth.
-Registered in [`.mcp.json`](./.mcp.json) as `altitude`. See
+(tier/brand/mode-filtered), `altitude_search_icons` (the 1,512-glyph Phosphor catalog),
+`altitude_generate_theme` (the deterministic OKLCH solver — never calls an LLM),
+`altitude_check_parity` (per-project Figma ↔ code parity, each entry carrying a ready-to-run
+`aiPrompt`), and `altitude_list_ds_projects` (the design systems this repo drives, from
+`.altitude/ds-projects.json`). It is a reader of the same generated artifacts as everything else
+on this page, never a second source of truth. Registered in [`.mcp.json`](./.mcp.json) as
+`altitude` (stdio); `pnpm --filter @southleft/al-web-components start` also serves it over HTTP
+on :6017 (`POST /mcp`, `GET /parity.json`). See
 [`libs/altitude-mcp/README.md`](./libs/altitude-mcp/README.md) for the full tool contract and
-example calls.
+example calls. (`pnpm run check:mcp-docs` asserts this list matches the registered tools.)
 
 ## Component authoring rules (per pilot pattern)
 
