@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Altitude is a design system created by Southleft.com. Documentation is generated from the code and published at [altitude.pages.dev/docs](https://altitude.pages.dev/docs) (source: `apps/docs`).
 
-This is a monorepo using **pnpm workspaces** (pnpm 9, Node 22 LTS) with two main library packages (`@southleft/al-web-components` and `@southleft/al-react`) and the example apps in `apps/`: `angular`, `astro` (replaced the retired Enhance fixture), `home` (the public homepage), `knapsack`, `mfe` (micro-frontend/versioned-registry fixture), `react`, `ssr`, `svelte`, and `web-components` (vanilla). Workspace filter names are `al-app-*` (e.g. `pnpm --filter al-app-astro`), except `knapsack`.
+This is a monorepo using **pnpm workspaces** (pnpm 9, Node 22 LTS) with two main library packages (`@southleft/al-web-components` and `@southleft/al-react`) and the example apps in `apps/`: `angular`, `astro` (replaced the retired Enhance fixture), `home` (the public homepage), `mfe` (micro-frontend/versioned-registry fixture), `react`, `ssr`, `svelte`, and `web-components` (vanilla). Workspace filter names are `al-app-*` (e.g. `pnpm --filter al-app-astro`). (`apps/knapsack` was retired 2026-08-24 — see `.mm/notes/`.)
 
 The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with the modern compiler API and the modern `@use`/`@forward` module system, **Lit 3.3** for the web components, **React 19** for the React wrappers, and **ESLint 9** flat config + typescript-eslint 8 for linting.
 

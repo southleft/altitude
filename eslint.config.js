@@ -29,7 +29,6 @@ export default [
       'apps/**/build/**',
       'apps/**/dist/**',
       'apps/**/.svelte-kit/**',
-      'apps/knapsack/**',
       'storybook/**',
       'storybook-static/**',
       '**/*.min.js',
