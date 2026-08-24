@@ -14,6 +14,17 @@
  * there is no second copy of the content to drift.
  */
 import { TOKEN_COUNT, colorRamps, spacingScale, radiusScale, typeScale, brandOverrides } from './tokens.mjs';
+import {
+  CHOREOGRAPHY_COUNT,
+  MOTION_TOKEN_COUNT,
+  PRESET_COUNT,
+  choreographyTokens,
+  durationScale,
+  easingCurves,
+  motionAxis,
+  presetShapes,
+  travelDistances,
+} from './motion.mjs';
 import { DEFAULT_CONTEXT } from './context.mjs';
 
 const table = (headers, rows) =>
@@ -228,6 +239,179 @@ export function foundationsMarkdown(context = DEFAULT_CONTEXT) {
       ['Step', 'Value', 'Token'],
       radiusScale().map((r) => [r.name, r.value, `\`--${r.key}\``])
     ),
+    '',
+  ].join('\n');
+}
+
+/**
+ * The Motion page, as Markdown.
+ *
+ * Same three sources as the HTML page (`lib/motion.mjs`): the built token layer
+ * for tier 1, `components/theme/theme.scss` for the axis matrix, and the
+ * published motion runtime for the choreography tokens and keyframe presets.
+ * The two renderings cannot drift because neither holds any motion data of its
+ * own.
+ */
+export function motionMarkdown(context = DEFAULT_CONTEXT) {
+  const axis = motionAxis();
+  const tokens = choreographyTokens();
+  const presets = presetShapes();
+  const columns = axis.values.map((value) => value.label);
+
+  return [
+    '# Motion',
+    '',
+    `How ${context.site.fullName} moves, under \`<al-theme brand="${context.project.brand}">\`. ` +
+      `${MOTION_TOKEN_COUNT} motion tokens, ${CHOREOGRAPHY_COUNT} choreography tokens, ` +
+      `${PRESET_COUNT} keyframe presets — read from the token layer, the theme stylesheet and the ` +
+      'published runtime, never transcribed.',
+    '',
+    '## The three tiers',
+    '',
+    '- **Tier 1** — raw values: `--al-animation-{duration,timing,distance}-*`. Pure CSS.',
+    '- **Tier 2** — theme roles: `--al-theme-animation-{duration,timing}-role-*`, repointed by the',
+    '  `<al-theme motion>` axis. This is the layer a component reads. Pure CSS.',
+    '- **Tier 3** — choreography: multi-element, multi-phase sequences run from JS',
+    '  (`@southleft/al-web-components/motion`). Use it only when more than one element has to move',
+    '  in a coordinated way.',
+    '',
+    '## Tier 1 — duration',
+    '',
+    table(
+      ['Step', 'Value', 'Token'],
+      durationScale().map((step) => [step.name, step.value, `\`--${step.key}\``])
+    ),
+    '',
+    '## Tier 1 — easing',
+    '',
+    table(
+      ['Curve', 'Value', 'Token'],
+      easingCurves().map((curve) => [
+        curve.name + (curve.overshoots ? ' (overshoots)' : ''),
+        curve.value,
+        `\`--${curve.key}\``,
+      ])
+    ),
+    '',
+    '## Tier 1 — travel distance',
+    '',
+    table(
+      ['Step', 'Value', 'Token'],
+      travelDistances().map((step) => [step.name, step.value, `\`--${step.key}\``])
+    ),
+    '',
+    '## Tier 2 — the `motion` axis',
+    '',
+    'Set `motion` on `<al-theme>`: `full`, `reduced` or `expressive`. Unset means "no opinion" —',
+    'the only state that lets `prefers-reduced-motion` decide, which is why it is the default.',
+    '',
+    '`default` below is the unset axis. The role tokens have NO `:root` default by design, so they',
+    'are genuinely absent there and a component’s `var(--role, var(--legacy))` takes its fallback.',
+    '`initial` means the same thing: it computes to the guaranteed-invalid value, so the fallback wins.',
+    '',
+    axis.available
+      ? table(
+          ['Property', 'default', ...columns],
+          axis.properties.map((property) => [
+            `\`${property.name}\``,
+            property.base ?? '_absent — fallback wins_',
+            ...property.cells.map((cell) => (cell ? cell.value : '—')),
+          ])
+        )
+      : `_${axis.reason}_`,
+    '',
+    "`OS reduce` is the media-query rule `@media (prefers-reduced-motion: reduce) { :host(:not([motion='full'])) }`,",
+    'not a value you can set. It is declared last so it beats `expressive` at equal specificity: a',
+    'decorative choice never overrides the OS preference, and only an explicit `motion="full"` opts back in.',
+    '',
+    '## Tier 2 — in CSS',
+    '',
+    'Simple state transitions never need the runtime.',
+    '',
+    '```scss',
+    "@use '@southleft/al-web-components/styles/core/mixins/motion' as motion;",
+    '',
+    '.al-c-thing { @include motion.al-motion-transition(background-color border-color, fast); }',
+    '.al-c-panel { @include motion.al-motion-transition(height, slow, emphasized); }',
+    '```',
+    '',
+    'It is a mixin and not a `--al-theme-animation-use-*` token on purpose: a custom property’s',
+    '`var()` chain resolves ONCE, at the element that declares it. A use-case token declared on',
+    '`:root` would bake in `:root`’s durations and go blind to every `<al-theme motion>` below it.',
+    'A mixin expands at the call site, where the governing theme’s values are in scope.',
+    '',
+    `## Tier 3 — choreography (${CHOREOGRAPHY_COUNT} tokens)`,
+    '',
+    'Entrances end `-enter`, exits `-exit`; discrete list sequences use `-reveal` / `-dismiss`.',
+    '',
+    table(
+      ['Token', 'Pattern', 'Keyframes', 'Offset', 'Direction', 'Max'],
+      tokens.map((token) => [
+        `\`${token.name}\``,
+        token.pattern,
+        token.keyframes
+          ? `\`${token.keyframes}\``
+          : token.tracks
+            ? token.tracks.map((track) => `\`${track.keyframes}\``).join(' + ')
+            : '—',
+        token.offset ?? '—',
+        token.direction ?? '—',
+        token.max ?? '—',
+      ])
+    ),
+    '',
+    '```js',
+    "import { run, animatePreset } from '@southleft/al-web-components/motion';",
+    '',
+    "await run('modal-exit', dialogEl);   // never rejects; no-ops on the server",
+    "await animatePreset(cardEl, 'blur-up', { delay: '80ms' });",
+    '```',
+    '',
+    'From a Lit component prefer the reactive controller — it scopes to your host, owns its',
+    '`IntersectionObserver` and disconnects it in `hostDisconnected()`:',
+    '',
+    '```ts',
+    "import { MotionController } from '@southleft/al-web-components/controllers/motion';",
+    '',
+    'protected motion = new MotionController(this);',
+    "this.motion.reveal(this.renderRoot.querySelector('.grid'), 'grid-reveal');",
+    '```',
+    '',
+    `## Tier 3 — keyframe presets (${PRESET_COUNT})`,
+    '',
+    'Named shapes, independent of timing — the vocabulary the choreography tokens compose.',
+    '',
+    table(
+      ['Preset', 'Animates', 'Frames'],
+      presets.map((preset) => [
+        `\`${preset.name}\``,
+        preset.properties.map((property) => `\`${property}\``).join(', '),
+        preset.multiFrame ? `${preset.frames} (overshoot)` : '2',
+      ])
+    ),
+    '',
+    '## Reduced motion',
+    '',
+    'There are two authorities and they do not always agree: the `<al-theme motion>` axis, and the',
+    'OS `prefers-reduced-motion` query. The axis only zeroes tokens on `:host`, so content that is',
+    'not wrapped in an `<al-theme>` gets no treatment from the token layer at all; deciding from the',
+    'OS query alone would ignore an explicit `motion="full"` opt-in.',
+    '',
+    '`isReducedMotion(el, cache)` therefore reads the TOKENS at the element first — which encodes',
+    'the whole `theme.scss` cascade without duplicating a selector in JS — and falls back to the raw',
+    'OS query only for content no theme governs. A zeroed token is authoritative; a non-zero token is',
+    'not read as "motion is fine", because an unthemed element resolves to the un-zeroed `:root`',
+    'default whatever the reader asked their OS for.',
+    '',
+    '```js',
+    "import { createCache, isReducedMotion } from '@southleft/al-web-components/motion';",
+    '',
+    'if (isReducedMotion(el, createCache())) {',
+    '  el.replaceChildren(nextView);   // jump straight to the end state',
+    '} else {',
+    "  await run('list-reveal', el);",
+    '}',
+    '```',
     '',
   ].join('\n');
 }

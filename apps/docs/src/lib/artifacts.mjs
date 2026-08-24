@@ -15,9 +15,11 @@ import { TOKEN_CONVENTIONS, TOKENS_DIGEST, DO_NOT_INVENT, allDoNotFlag } from '.
 import {
   overviewMarkdown,
   foundationsMarkdown,
+  motionMarkdown,
   componentsIndexMarkdown,
   componentMarkdown,
 } from './markdown.mjs';
+import { CHOREOGRAPHY_COUNT, MOTION_TOKEN_COUNT, PRESET_COUNT } from './motion.mjs';
 
 /* ------------------------------------------------------- prescriptive rules */
 
@@ -137,14 +139,28 @@ export function llmsTxt(context) {
     `${component.props.length} props, ${component.slots.length} slots, ${component.events.length} events` +
     `${component.summary ? `. ${component.summary}` : ''}`;
 
+  // Three cases, not two. A site is scoped, or it is the default whole-library
+  // site, or — since `docs.components: "all"` split docs scope from library
+  // scope — it is a BRANDED whole-library site: every component in the shared
+  // library, documented under this system's brand and with its brand layer
+  // leading wherever it supersedes a base component. Saying "this is the
+  // whole-library site" there would be wrong twice: there is more than one now,
+  // and the sentence that followed claimed every other system documents a
+  // subset.
   const scopeNote = registry.scope.scoped
     ? `This design system documents a DECLARED SUBSET of that shared library — the
 ${registry.count} components it ships, listed as \`library.components\` in
 \`.altitude/ds-projects.json\` and re-derived from its own site's source by a CI
 gate. A component absent from this map exists in the library and is documented
 on the whole-library site; it is not part of this system.`
-    : `This is the whole-library site. Other design systems are built on the same
-components and document a subset of them, each under its own brand.`;
+    : project.isDefault
+      ? `This site documents the whole shared library. Other design systems are built
+on the same components, each under its own brand.`
+      : `This site documents the whole shared library under the ${project.shortName}
+brand: the same ${registry.count} components, rendered with this system's tokens.
+Where ${project.shortName} ships its own implementation of a component, that is
+the one documented here — the brand layer supersedes the base component rather
+than sitting alongside it.`;
 
   return `# ${site.title}
 
@@ -175,6 +191,7 @@ ${rulesBlock(context, { self: `${url}/llms.txt` })}
 
 - [Overview](${url}/): what this design system is, in numbers
 - [Foundations](${url}/foundations): color ramps, type presets, spacing, radius, elevation — read from the token layer, plus what this brand redeclares
+- [Motion](${url}/motion): the ${MOTION_TOKEN_COUNT} motion tokens, the \`<al-theme motion>\` axis matrix, and the ${CHOREOGRAPHY_COUNT} choreography tokens over ${PRESET_COUNT} keyframe presets
 - [Components](${url}/components): the full index, filterable
 
 ${registry.tiers
@@ -411,6 +428,7 @@ export function llmsFull(context) {
     llmsA11y(context),
     overviewMarkdown(context),
     foundationsMarkdown(context),
+    motionMarkdown(context),
   ].join('\n\n---\n\n');
 }
 

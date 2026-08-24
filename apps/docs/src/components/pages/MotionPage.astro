@@ -1,0 +1,1461 @@
+---
+/**
+ * Motion — the third INDEX screen, rendered for ONE design system.
+ *
+ * Foundations documents the token layer that DESCRIBES the system; this
+ * documents the layer that MOVES it. Same rule applies: nothing here is typed.
+ * The durations, curves and travel distances are read from the built token
+ * layer, the `<al-theme motion>` matrix is parsed out of `theme.scss` (the role
+ * tokens have no `:root` default, so the stylesheet is the only place the
+ * matrix exists), and the choreography tokens and keyframe presets are imported
+ * from the published runtime. See `src/lib/motion.mjs`.
+ *
+ * WHY EVERY DEMO SITS INSIDE ONE NESTED `<al-theme>`
+ *
+ * A motion page that animates with hardcoded durations would be documenting a
+ * system it does not itself use — and, worse, would keep animating for a reader
+ * who has asked their OS for reduced motion. Instead the whole demo surface is
+ * wrapped in a single `<al-theme data-motion-scope>` whose `motion` attribute
+ * the reader controls, and every replay resolves its timing from the tokens at
+ * the element (via the shipped runtime's own `resolveValue`/`isReducedMotion`).
+ *
+ * Three things follow for free, none of which needed page-specific code:
+ *   - `prefers-reduced-motion: reduce` stops every demo, because theme.scss's
+ *     accessibility-first rule zeroes the role durations for any theme that has
+ *     not explicitly opted back in with `motion="full"`;
+ *   - the axis switcher is not a mock — it is the real attribute, and the live
+ *     readout below it is the real resolved value;
+ *   - the tier-1 demos change too, which is the honest answer to "what does
+ *     `reduced` actually do": it stops everything.
+ */
+import Shell from '../../layouts/Shell.astro';
+import {
+  CHOREOGRAPHY_COUNT,
+  MOTION_TOKEN_COUNT,
+  PRESET_COUNT,
+  brandMotionOverrides,
+  choreographyFamilies,
+  durationScale,
+  easingCurves,
+  motionAxis,
+  presetShapes,
+  travelDistances,
+} from '../../lib/motion.mjs';
+
+interface Props {
+  context: any;
+}
+
+const { context } = Astro.props;
+const { project, site } = context;
+
+const durations = durationScale();
+const curves = easingCurves();
+const distances = travelDistances();
+const axis = motionAxis();
+
+/**
+ * Does THIS brand move any of it? The matrix is parsed from the brand-agnostic
+ * `theme.scss`; this reads the brand's own partial, so the page reports
+ * brand-independence from a reading rather than asserting it.
+ */
+const brandMotion = brandMotionOverrides(project.brand);
+
+const families = choreographyFamilies();
+const presets = presetShapes();
+
+/** The duration the easing plots race over, so the curve is what differs. */
+const CURVE_MS = durations.at(-2)?.ms ?? 800;
+
+/**
+ * ONE viewBox for every curve plot, computed from the whole set, so a spring's
+ * overshoot is visibly larger than a standard curve's rather than each plot
+ * being rescaled to fill its own box and reading identically.
+ */
+const plotted = curves.filter((curve) => curve.points);
+const ys = plotted.flatMap((curve) => [curve.points[1], curve.points[3], 0, 1]);
+const top = (1 - Math.max(...ys, 1)) * 100 - 8;
+const bottom = (1 - Math.min(...ys, 0)) * 100 + 8;
+const VIEW_BOX = `-8 ${top} 116 ${bottom - top}`;
+
+/** `[x1,y1,x2,y2]` → the SVG path of the curve, y inverted. */
+const curvePath = (p: number[]) =>
+  `M 0 100 C ${p[0] * 100} ${100 - p[1] * 100} ${p[2] * 100} ${100 - p[3] * 100} 100 0`;
+
+const AXIS_CHOICES = [
+  { id: 'default', label: 'default', note: 'attribute absent' },
+  { id: 'full', label: 'full', note: 'explicit opt-back-in' },
+  { id: 'reduced', label: 'reduced', note: 'every duration → 0s' },
+  { id: 'expressive', label: 'expressive', note: 'longer, springier' },
+];
+
+/** The tokens the live readout probes, in the shape a component writes them. */
+const PROBES = [
+  { label: 'role-fast', expr: 'var(--al-theme-animation-duration-role-fast, var(--al-theme-animation-duration))' },
+  { label: 'role-base', expr: 'var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration))' },
+  { label: 'role-slow', expr: 'var(--al-theme-animation-duration-role-slow, var(--al-theme-animation-duration-long))' },
+  { label: 'timing-standard', expr: 'var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing))' },
+  { label: 'timing-emphasized', expr: 'var(--al-theme-animation-timing-role-emphasized, var(--al-theme-animation-timing))' },
+];
+
+const SCSS_SAMPLE = `@use '@southleft/al-web-components/styles/core/mixins/motion' as motion;
+
+// Arguments: properties, role, timing. The role token is
+// emitted first and its legacy fallback second, so an
+// unthemed element still gets a sane value.
+.al-c-thing {
+  @include motion.al-motion-transition(
+    background-color border-color, fast
+  );
+}
+
+.al-c-panel {
+  @include motion.al-motion-transition(height, slow, emphasized);
+}`;
+
+const CSS_SAMPLE = `/* What that expands to — no mixin required. */
+.thing {
+  transition: transform
+    var(--al-theme-animation-duration-role-base,
+        var(--al-theme-animation-duration))
+    var(--al-theme-animation-timing-role-standard,
+        var(--al-theme-animation-timing));
+}`;
+
+const CONTROLLER_SAMPLE = `import { MotionController } from '@southleft/al-web-components/controllers/motion';
+
+export class ALThing extends ALElement {
+  protected motion = new MotionController(this);
+
+  protected firstUpdated() {
+    // Arms the element paused at its first keyframe and
+    // plays it on intersection: no flash of settled
+    // content, and no CSS class contract to honour.
+    const grid = this.renderRoot.querySelector('.grid');
+    this.motion.reveal(grid, 'grid-reveal');
+  }
+}`;
+
+const RUN_SAMPLE = `import { run, animatePreset } from '@southleft/al-web-components/motion';
+
+// A named choreography against a root.
+await run('modal-exit', dialogEl);   // then tear it down
+
+// One element, one named shape. Same timing grammar,
+// so the axis governs both identically.
+await animatePreset(cardEl, 'blur-up', { delay: '80ms' });`;
+
+const REDUCED_SAMPLE = `import { createCache, isReducedMotion } from '@southleft/al-web-components/motion';
+
+// Reads the TOKENS at \`el\` first, which encodes theme.scss's
+// whole cascade including the accessibility-first
+// \`:not([motion='full'])\` rule, and only falls back to the raw
+// OS query for content no <al-theme> governs.
+if (isReducedMotion(el, createCache())) {
+  el.replaceChildren(nextView);   // jump to the end state
+} else {
+  await run('list-reveal', el);
+}`;
+
+const TEXT_REVEAL_SAMPLE = `<h2 class="al-c-hero__heading">
+  <span class="al-c-hero__line"><span data-al-motion-line>Rising up</span></span>
+  <span class="al-c-hero__line"><span data-al-motion-line>from behind a wall</span></span>
+</h2>
+
+<style lang="scss">
+  .al-c-hero__heading { @include motion.al-motion-text-reveal('.al-c-hero__line'); }
+</style>`;
+
+const TIERS = [
+  {
+    id: '1',
+    title: 'Raw values',
+    where: '--al-animation-{duration,timing,distance}-*',
+    body: 'The rungs everything else is built from. Pure CSS, no opinion about when to use which. Retuned in the DTCG token sources.',
+    count: durations.length + curves.length + distances.length,
+    unit: 'tokens',
+  },
+  {
+    id: '2',
+    title: 'Theme roles',
+    where: '--al-theme-animation-*-role-*',
+    body: 'Three duration slots (fast, base, slow) and two curves (standard, emphasized), repointed by the <al-theme motion> axis. This is the layer a component reads.',
+    count: axis.properties.filter((p) => p.role).length,
+    unit: 'role tokens',
+  },
+  {
+    id: '3',
+    title: 'Choreography',
+    where: "run('grid-reveal', el)",
+    body: 'Multi-element, multi-phase sequences a stylesheet cannot express: staggers, coordinated tracks, shared-element transitions. Reach for it only when more than one thing has to move together.',
+    count: CHOREOGRAPHY_COUNT,
+    unit: 'tokens',
+  },
+];
+---
+
+<Shell
+  context={context}
+  title="Motion"
+  description={`How ${site.fullName} moves — ${MOTION_TOKEN_COUNT} motion tokens, the <al-theme motion> axis, and ${CHOREOGRAPHY_COUNT} choreography tokens over ${PRESET_COUNT} keyframe presets.`}
+  active="motion"
+>
+  <div class="page">
+    <div class="micro">INDEX / 02</div>
+    <h1 class="t-page-title">Motion</h1>
+    <p class="t-body-md motion-lede">
+      Three tiers, each with a different job: raw values, theme roles, and choreography. Every
+      number below is read at build time from the token layer, the theme stylesheet and the
+      published motion runtime — {MOTION_TOKEN_COUNT} motion tokens, {CHOREOGRAPHY_COUNT} choreography
+      tokens, {PRESET_COUNT} keyframe presets.
+    </p>
+
+    <div class="tier-grid">
+      {
+        TIERS.map((tier) => (
+          <div class="tier-card">
+            <div class="micro micro--blue">TIER {tier.id}</div>
+            <div class="t-heading-sm tier-card__title">{tier.title}</div>
+            <code class="tier-card__where">{tier.where}</code>
+            <p class="t-body-sm tier-card__body">{tier.body}</p>
+            <div class="micro tier-card__count">
+              {tier.count} {tier.unit}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <!--
+      THE AXIS CONTROL. Not a mock: `data-axis` writes the real `motion`
+      attribute onto the real `<al-theme>` below, and every demo on the page is
+      inside it. `default` REMOVES the attribute rather than setting a value,
+      because an unset axis means "no opinion" and is the only state that lets
+      `prefers-reduced-motion` decide (theme.ts declares no default for `motion`
+      alone among the axes, for exactly this reason).
+    -->
+    <div class="section-rule">
+      <span>THE MOTION AXIS — LIVE</span>
+      <span data-reduced-note>RESOLVING…</span>
+    </div>
+    <p class="t-body-md motion-lede">
+      Every demo on this page runs inside one <code>&lt;al-theme&gt;</code>. Change its{' '}
+      <code>motion</code> attribute here and the whole page changes with it — including the tier-1
+      demos. If <code>reduced</code> appears to stop the page working, that is the axis working.
+    </p>
+
+    <div class="axis-bar">
+      <div class="axis-bar__opts" role="group" aria-label="Motion axis">
+        {
+          AXIS_CHOICES.map((choice) => (
+            <button
+              class="pg__opt"
+              type="button"
+              data-axis={choice.id}
+              aria-pressed={choice.id === 'default' ? 'true' : 'false'}
+              title={choice.note}
+            >
+              {choice.label}
+            </button>
+          ))
+        }
+      </div>
+      <code class="axis-bar__attr" data-axis-attr>&lt;al-theme&gt;</code>
+    </div>
+  </div>
+
+  <!--
+    Everything below is inside the scope. `<al-theme>` is `display: contents`,
+    so it changes the token cascade and nothing about the layout.
+  -->
+  <al-theme data-motion-scope>
+    <div class="page page--continued">
+      <div class="probe" data-motion-probe>
+        <div class="micro probe__head">RESOLVED AT THIS ELEMENT, RIGHT NOW</div>
+        <div class="probe__grid">
+          {
+            PROBES.map((probe) => (
+              <div class="probe__cell">
+                <span class="micro">{probe.label}</span>
+                <span class="mono probe__value" data-probe={probe.expr}>
+                  —
+                </span>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      {
+        axis.available && (
+          <>
+            <div class="section-rule">
+              <span>WHAT THE AXIS REPOINTS</span>
+              <span>{axis.properties.length} PROPERTIES</span>
+            </div>
+            <p class="t-body-md motion-lede">
+              Read from <code>components/theme/theme.scss</code>. Every block asserts the complete
+              set even where a value is unchanged — custom properties inherit, so a partial block
+              would mean "adopt whatever an outer <code>&lt;al-theme&gt;</code> decided" rather than
+              "leave those alone". <code>initial</code> is not a value: it computes to the
+              guaranteed-invalid value, so a component's{' '}
+              <code>var(--role, var(--legacy))</code> takes its fallback.
+            </p>
+            <div class="axis-table">
+              <div class="axis-table__head">
+                <span>PROPERTY</span>
+                <span>default</span>
+                {axis.values.map((value) => (
+                  <span>{value.label}</span>
+                ))}
+              </div>
+              {axis.properties.map((property) => (
+                <div class="axis-table__row">
+                  <span class="axis-table__name">
+                    {property.name}
+                    {property.role && <em class="axis-table__tag">role</em>}
+                  </span>
+                  <span class={`axis-table__cell${property.base === null ? ' is-absent' : ''}`}>
+                    {property.base ?? 'absent — fallback wins'}
+                  </span>
+                  {property.cells.map((cell) => (
+                    <span
+                      class={`axis-table__cell${cell === null ? ' is-absent' : ''}${
+                        cell && /^0s?$/.test(cell.value) ? ' is-zero' : ''
+                      }`}
+                    >
+                      {cell ? cell.value : '—'}
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <p class="t-body-sm motion-note">
+              <strong>This brand — {project.brand}.</strong>{' '}
+              {
+                !brandMotion.available
+                  ? brandMotion.reason
+                  : brandMotion.properties.length === 0
+                    ? `No brand block redeclares any of these, so the matrix above is what ${project.brand} actually resolves — in light and in dark alike. Motion is one of the few layers a brand does not move: brands change the look, the motion axis changes the feel.`
+                    : `Inside <al-theme brand="${project.brand}">, ${brandMotion.properties.length} of these resolve to a different value, so the matrix above is the base bundle rather than what this brand resolves.`
+              }
+            </p>
+            {
+              brandMotion.properties.length > 0 && (
+                <div class="spec-table spec-table--props">
+                  <div class="spec-table__head">
+                    <span>PROPERTY</span>
+                    <span>THIS BRAND</span>
+                    <span>BASE</span>
+                  </div>
+                  {brandMotion.properties.map((property) => (
+                    <div class="spec-table__row">
+                      <span class="spec-table__name">{property.name}</span>
+                      <span class="spec-table__type">{property.value}</span>
+                      <span class="spec-table__default">{property.base ?? '—'}</span>
+                    </div>
+                  ))}
+                </div>
+              )
+            }
+            <p class="t-body-sm motion-note">
+              <strong>OS reduce</strong> is the media-query rule, not a value you can set:{' '}
+              <code>@media (prefers-reduced-motion: reduce) &#123; :host(:not([motion='full'])) &#125;</code>.
+              It is declared last so it beats <code>expressive</code> at equal specificity — a
+              decorative choice never overrides the OS preference. Only an explicit{' '}
+              <code>motion="full"</code>, declared after it, opts back in.
+            </p>
+          </>
+        )
+      }
+
+      <div class="section-rule">
+        <span>TIER 2 — IN CSS</span>
+        <span>NO JAVASCRIPT</span>
+      </div>
+      <p class="t-body-md motion-lede">
+        Simple state transitions — hover, focus, disclosure — never need the runtime. The Sass mixin
+        expands at the call site, which is what keeps it axis-aware: a{' '}
+        <code>--al-theme-animation-use-*</code> token declared on <code>:root</code> would resolve
+        its <code>var()</code> chain once, at <code>:root</code>, and go blind to every{' '}
+        <code>&lt;al-theme motion&gt;</code> below it.
+      </p>
+      <div class="demo demo--split">
+        <div class="demo__stage">
+          <div class="css-demo" data-css-demo>
+            <div class="css-demo__box"></div>
+          </div>
+          <button class="pg__opt demo__replay" type="button" data-css-toggle>Toggle</button>
+        </div>
+        <div class="demo__code">
+          <pre class="code">{SCSS_SAMPLE}</pre>
+          <pre class="code">{CSS_SAMPLE}</pre>
+        </div>
+      </div>
+
+      <div class="section-rule">
+        <span>TIER 1 — DURATION ({durations.length} STEPS)</span>
+        <button class="pg__opt" type="button" data-play="duration">RACE THEM</button>
+      </div>
+      <p class="t-body-md motion-lede">
+        The rungs. A component should not reach for these directly — it reads a tier-2 role token,
+        which points at one of these and moves when the axis moves.
+      </p>
+      <div class="scale-list">
+        {
+          durations.map((step) => (
+            <div class="track-row" data-duration-row data-ms={step.ms}>
+              <span class="spec-table__type">{step.name}</span>
+              <span class="spec-table__default">{step.value}</span>
+              <span class="track" data-track>
+                <span class="track__dot" data-dot />
+              </span>
+              <code class="track-row__token">--{step.key}</code>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="section-rule">
+        <span>TIER 1 — EASING ({curves.length} CURVES)</span>
+        <button class="pg__opt" type="button" data-play="easing">RACE THEM</button>
+      </div>
+      <p class="t-body-md motion-lede">
+        Every curve below runs over the same {CURVE_MS}ms, so what differs is the shape. The plots
+        share one scale — a control point outside the unit box is an overshoot, and{' '}
+        <code>spring</code> is the only one that has one.
+      </p>
+      <div class="curve-grid">
+        {
+          curves.map((curve) => (
+            <div class="curve-card" data-easing-card data-easing={curve.value} data-ms={CURVE_MS}>
+              <div class="curve-card__head">
+                <span class="t-heading-sm curve-card__name">{curve.name}</span>
+                {curve.overshoots && <span class="chip-tag chip-tag--weak">OVERSHOOT</span>}
+              </div>
+              {curve.points ? (
+                <svg
+                  class="curve-card__plot"
+                  viewBox={VIEW_BOX}
+                  preserveAspectRatio="xMidYMid meet"
+                  aria-hidden="true"
+                >
+                  <rect x="0" y="0" width="100" height="100" class="curve-card__frame" />
+                  <path d={curvePath(curve.points)} class="curve-card__line" />
+                </svg>
+              ) : (
+                <div class="curve-card__plot curve-card__plot--none">
+                  <span class="micro">KEYWORD</span>
+                </div>
+              )}
+              <span class="track" data-track>
+                <span class="track__dot" data-dot />
+              </span>
+              <code class="curve-card__value">{curve.value}</code>
+              <code class="curve-card__token">--{curve.key}</code>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="section-rule">
+        <span>TIER 1 — TRAVEL ({distances.length} STEPS)</span>
+        <button class="pg__opt" type="button" data-play="distance">PLAY</button>
+      </div>
+      <p class="t-body-md motion-lede">
+        How far a thing moves. Referenced by the keyframe presets rather than baked into them, so a
+        wrapper can retune intensity locally with{' '}
+        <code>style="--al-animation-distance-md: 48px"</code> and no new preset.
+      </p>
+      <div class="scale-list">
+        {
+          distances.map((step) => (
+            <div class="track-row" data-distance-row data-px={step.px}>
+              <span class="spec-table__type">{step.name}</span>
+              <span class="spec-table__default">{step.value}</span>
+              <span class="track" data-track>
+                <span class="track__dot" data-dot />
+              </span>
+              <code class="track-row__token">--{step.key}</code>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="section-rule">
+        <span>TIER 3 — CHOREOGRAPHY ({CHOREOGRAPHY_COUNT} TOKENS)</span>
+        <span>{families.length} FAMILIES</span>
+      </div>
+      <p class="t-body-md motion-lede">
+        Named sequences, run from JS. Entrances end <code>-enter</code>, exits <code>-exit</code>;
+        discrete list sequences use <code>-reveal</code> / <code>-dismiss</code>. Each card below
+        replays the real token against a real stage — nothing is re-implemented for the docs.
+      </p>
+
+      {
+        families.map((family) => (
+          <div class="family">
+            <div class="micro family__head">{family.id.toUpperCase()}</div>
+            <div class="choreo-grid">
+              {family.tokens.map((token) => (
+                <div class="choreo-card">
+                  <div class="choreo-card__head">
+                    <code class="choreo-card__name">{token.name}</code>
+                    {token.stage === 'none' ? (
+                      <span class="chip-tag chip-tag--weak">DOC ONLY</span>
+                    ) : (
+                      <button
+                        class="pg__opt"
+                        type="button"
+                        data-replay={token.name}
+                        data-stage-kind={token.stage}
+                      >
+                        Replay
+                      </button>
+                    )}
+                  </div>
+
+                  {token.stage === 'tiles' && (
+                    <div class="choreo-stage" data-stage>
+                      {Array.from({ length: 6 }).map(() => (
+                        <span class="choreo-tile" />
+                      ))}
+                    </div>
+                  )}
+
+                  {token.stage === 'rows' && (
+                    <div class="choreo-stage choreo-stage--rows" data-stage>
+                      {Array.from({ length: 5 }).map(() => (
+                        <span class="choreo-row" data-al-motion-row />
+                      ))}
+                    </div>
+                  )}
+
+                  {token.stage === 'lines' && (
+                    <div
+                      class={`choreo-stage choreo-stage--text${
+                        token.name.endsWith('words') ? ' choreo-stage--words' : ''
+                      }`}
+                      data-stage
+                    >
+                      {(token.name.endsWith('words')
+                        ? ['Motion', 'that', 'reads', 'as', 'one', 'system']
+                        : ['Rising up', 'from behind', 'an invisible wall']
+                      ).map((line) => (
+                        <span class="choreo-wall">
+                          <span class="choreo-line" data-al-motion-line>
+                            {line}
+                          </span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {token.stage === 'card' && <div class="choreo-stage choreo-panel" data-stage />}
+
+                  {token.stage === 'modal' && (
+                    <div class="choreo-stage choreo-stage--modal" data-stage>
+                      <span class="choreo-scrim" data-al-motion="scrim" />
+                      <span class="choreo-modal" data-al-motion="card" />
+                    </div>
+                  )}
+
+                  {token.stage === 'none' && (
+                    <div class="choreo-stage choreo-stage--none">
+                      <p class="t-body-sm">
+                        <code>document.startViewTransition</code> captures the whole document, so
+                        replaying it here would animate this page. Set{' '}
+                        <code>view-transition-name</code> on{' '}
+                        <code>{token.shared?.from}</code> and <code>{token.shared?.to}</code>, then
+                        pass the DOM change as <code>update</code>.
+                      </p>
+                    </div>
+                  )}
+
+                  <dl class="choreo-card__meta">
+                    <div>
+                      <dt class="micro">pattern</dt>
+                      <dd class="mono">{token.pattern}</dd>
+                    </div>
+                    {token.keyframes && (
+                      <div>
+                        <dt class="micro">keyframes</dt>
+                        <dd class="mono">{token.keyframes}</dd>
+                      </div>
+                    )}
+                    {token.offset && (
+                      <div>
+                        <dt class="micro">offset</dt>
+                        <dd class="mono">{token.offset}</dd>
+                      </div>
+                    )}
+                    {token.direction && (
+                      <div>
+                        <dt class="micro">direction</dt>
+                        <dd class="mono">{token.direction}</dd>
+                      </div>
+                    )}
+                    {token.max && (
+                      <div>
+                        <dt class="micro">max</dt>
+                        <dd class="mono">{token.max}</dd>
+                      </div>
+                    )}
+                    {token.tracks && (
+                      <div>
+                        <dt class="micro">tracks</dt>
+                        <dd class="mono">
+                          {token.tracks.map((track) => `${track.selector} → ${track.keyframes}`).join(', ')}
+                        </dd>
+                      </div>
+                    )}
+                    {token.shared && (
+                      <div>
+                        <dt class="micro">properties</dt>
+                        <dd class="mono">{token.shared.properties.join(', ')}</dd>
+                      </div>
+                    )}
+                  </dl>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+
+      <div class="section-rule">
+        <span>TIER 3 — KEYFRAME PRESETS ({PRESET_COUNT})</span>
+        <span>CLICK A TILE TO PLAY IT</span>
+      </div>
+      <p class="t-body-md motion-lede">
+        Named SHAPES, independent of timing — the vocabulary the choreography tokens compose. Each
+        tile is an <code>overflow: hidden</code> wall around a mover, which is the structure the
+        clip-path and mask shapes need; the rest work with or without it.
+      </p>
+      <div class="preset-grid">
+        {
+          presets.map((preset) => (
+            <button class="preset-tile" type="button" data-preset={preset.name}>
+              <span class="preset-tile__wall">
+                <span class="preset-tile__mover" data-preset-mover />
+              </span>
+              <span class="preset-tile__name mono">{preset.name}</span>
+              <span class="micro preset-tile__props">
+                {preset.properties.join(' · ')}
+                {preset.multiFrame ? ` · ${preset.frames} frames` : ''}
+              </span>
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="section-rule">
+        <span>REDUCED MOTION</span>
+        <span>TWO AUTHORITIES</span>
+      </div>
+      <p class="t-body-md motion-lede">
+        There are two authorities for reduced motion and they do not always agree: the{' '}
+        <code>&lt;al-theme motion&gt;</code> axis, and the OS query itself. The OS query matters on
+        its own because the axis only zeroes tokens on <code>:host</code> — content that is not
+        wrapped in an <code>&lt;al-theme&gt;</code> gets no treatment from the token layer at all.
+        Deciding from the OS query alone would be wrong in the other direction: it would ignore an
+        explicit <code>motion="full"</code> opt-in.
+      </p>
+      <p class="t-body-md motion-lede">
+        So <code>isReducedMotion()</code> reads the tokens first — which encodes the whole cascade
+        without duplicating a selector in JS — and only falls back to the raw OS query for content
+        no theme governs. Note the asymmetry: a zeroed token is authoritative, but a non-zero token
+        is <em>not</em> read as "motion is fine", because an unthemed element resolves to the
+        un-zeroed <code>:root</code> default whatever the reader asked their OS for.
+      </p>
+      <pre class="code">{REDUCED_SAMPLE}</pre>
+
+      <div class="section-rule">
+        <span>USING IT</span>
+        <span>PICK THE LOWEST TIER THAT WORKS</span>
+      </div>
+      <p class="t-body-md motion-lede">
+        Tiers 1 and 2 are pure CSS; reach for them for hover, focus and disclosure. Use tier 3 only
+        when more than one element has to move in a coordinated way.
+      </p>
+
+      <div class="usage">
+        <div>
+          <div class="micro usage__head">FROM A LIT COMPONENT</div>
+          <p class="t-body-sm">
+            The reactive controller scopes motion to your host, owns its{' '}
+            <code>IntersectionObserver</code>, and tears it down in{' '}
+            <code>hostDisconnected()</code>. It arms a reveal with a paused, backwards-filled WAAPI
+            animation rather than a CSS class, so there is no window in which settled content
+            flashes before the animation starts — and nothing to un-hide if JS never runs.
+          </p>
+          <pre class="code">{CONTROLLER_SAMPLE}</pre>
+        </div>
+        <div>
+          <div class="micro usage__head">FROM ANY JAVASCRIPT</div>
+          <p class="t-body-sm">
+            <code>run()</code> never rejects and no-ops on the server.{' '}
+            <code>animatePreset()</code> is its single-element complement, using the same timing
+            grammar so the axis governs both identically.
+          </p>
+          <pre class="code">{RUN_SAMPLE}</pre>
+        </div>
+      </div>
+
+      <div class="micro usage__head usage__head--spaced">THE ONE PIECE THAT MUST LIVE IN CSS</div>
+      <p class="t-body-md motion-lede">
+        A mask reveal needs an <code>overflow: hidden</code> wrapper for text to rise out from
+        behind — WAAPI can translate the text but it cannot clip it. The wall and the mover have to
+        be separate elements: clipping the mover itself would move the clip region along with it and
+        reveal nothing.
+      </p>
+      <pre class="code">{TEXT_REVEAL_SAMPLE}</pre>
+    </div>
+  </al-theme>
+</Shell>
+
+<style>
+  .motion-lede {
+    margin: 0 0 24px;
+    max-width: 660px;
+  }
+
+  .motion-note {
+    margin: 12px 0 44px;
+    max-width: 720px;
+    color: var(--fg-weak);
+  }
+
+  .page--continued {
+    padding-top: 0;
+  }
+
+  /* ---------------------------------------------------------------- tiers */
+
+  .tier-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 32px 0 56px;
+  }
+
+  .tier-card {
+    border: 1px solid var(--line-weak);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tier-card__title {
+    font-size: 15px;
+  }
+
+  .tier-card__where,
+  .track-row__token,
+  .curve-card__value,
+  .curve-card__token {
+    font: 400 11px/1.5 var(--mono);
+    color: var(--fg-weak);
+    word-break: break-all;
+  }
+
+  .tier-card__body {
+    margin: 0;
+    flex: 1;
+  }
+
+  .tier-card__count {
+    color: var(--blue);
+  }
+
+  /* ----------------------------------------------------------- axis bar */
+
+  .axis-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    border: 1px solid var(--line);
+    padding: 14px 16px;
+    margin-bottom: 28px;
+  }
+
+  .axis-bar__opts {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .axis-bar__attr {
+    font: 400 12px/1 var(--mono);
+    color: var(--fg-weak);
+    margin-left: auto;
+  }
+
+  .probe {
+    background: var(--bg2);
+    border: 1px solid var(--line-weak);
+    padding: 16px;
+    margin-bottom: 56px;
+  }
+
+  .probe__head {
+    margin-bottom: 12px;
+  }
+
+  .probe__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+
+  .probe__cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .probe__value {
+    font-size: 12px;
+    color: var(--fg);
+    word-break: break-all;
+  }
+
+  /* --------------------------------------------------------- axis table */
+
+  .axis-table {
+    border-top: 1px solid var(--line);
+    margin-bottom: 8px;
+  }
+
+  .axis-table__head,
+  .axis-table__row {
+    display: grid;
+    grid-template-columns: minmax(0, 2.2fr) repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line-weak);
+    align-items: baseline;
+  }
+
+  .axis-table__head {
+    font: 500 10px/1.4 var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-weak);
+  }
+
+  .axis-table__name {
+    font: 500 11px/1.5 var(--mono);
+    color: var(--fg);
+    word-break: break-all;
+  }
+
+  .axis-table__tag {
+    font: 500 9px/1 var(--mono);
+    letter-spacing: 0.08em;
+    color: var(--blue);
+    font-style: normal;
+    margin-left: 6px;
+  }
+
+  .axis-table__cell {
+    font: 400 11px/1.5 var(--mono);
+    color: var(--fg);
+    word-break: break-all;
+  }
+
+  .axis-table__cell.is-absent {
+    color: var(--fg-weak);
+  }
+
+  .axis-table__cell.is-zero {
+    color: var(--status-gap);
+  }
+
+  /* -------------------------------------------------------------- tracks */
+
+  .scale-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 56px;
+  }
+
+  .track-row {
+    display: grid;
+    grid-template-columns: 60px 60px minmax(0, 1fr) 220px;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .track {
+    display: block;
+    position: relative;
+    height: 18px;
+    background: var(--bg2);
+    border: 1px solid var(--line-weak);
+    overflow: hidden;
+  }
+
+  .track__dot {
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 18px;
+    background: var(--blue);
+    display: block;
+  }
+
+  /* -------------------------------------------------------------- curves */
+
+  .curve-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 56px;
+  }
+
+  .curve-card {
+    border: 1px solid var(--line-weak);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .curve-card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .curve-card__name {
+    font-size: 13px;
+  }
+
+  .curve-card__plot {
+    width: 100%;
+    height: 168px;
+    display: block;
+  }
+
+  .curve-card__plot--none {
+    display: grid;
+    place-items: center;
+    background: var(--bg2);
+  }
+
+  .curve-card__frame {
+    fill: none;
+    stroke: var(--line-weak);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .curve-card__line {
+    fill: none;
+    stroke: var(--blue);
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+  }
+
+  /* --------------------------------------------------------- css demo */
+
+  .demo {
+    margin-bottom: 56px;
+  }
+
+  .demo--split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 24px;
+    align-items: start;
+  }
+
+  .demo__stage {
+    border: 1px solid var(--line-weak);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .demo__replay {
+    align-self: flex-start;
+  }
+
+  .css-demo {
+    background: var(--bg2);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  /*
+    The point of the demo: no duration and no curve is written here. Both come
+    from the role tokens, so the axis switcher above governs this box with no
+    JavaScript involved at all.
+  */
+  .css-demo__box {
+    width: 56px;
+    height: 56px;
+    background: var(--blue);
+    transition:
+      transform
+        var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration, 0.2s))
+        var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing, ease)),
+      border-radius
+        var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration, 0.2s))
+        var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing, ease));
+  }
+
+  .css-demo.is-on .css-demo__box {
+    transform: translateX(calc(100% + 24px)) rotate(90deg);
+    border-radius: 50%;
+  }
+
+  .demo__code .code + .code {
+    margin-top: 12px;
+  }
+
+  /* --------------------------------------------------------- choreography */
+
+  .family {
+    margin-bottom: 40px;
+  }
+
+  .family__head {
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+
+  .choreo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .choreo-card {
+    border: 1px solid var(--line-weak);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .choreo-card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .choreo-card__name {
+    font: 500 12px/1 var(--mono);
+  }
+
+  .choreo-stage {
+    background: var(--bg2);
+    border: 1px solid var(--line-weak);
+    min-height: 120px;
+    padding: 12px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    align-content: start;
+  }
+
+  .choreo-tile {
+    display: block;
+    height: 34px;
+    background: var(--blue);
+  }
+
+  .choreo-stage--rows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .choreo-row {
+    display: block;
+    height: 16px;
+    background: var(--blue);
+  }
+
+  .choreo-stage--text {
+    display: block;
+    font: 500 20px/1.25 var(--sans);
+    color: var(--fg);
+  }
+
+  /* The invisible wall — `al-motion-text-reveal()` in Sass, inlined here. */
+  .choreo-wall {
+    display: block;
+    overflow: hidden;
+    padding-block: 0.12em;
+    margin-block: -0.12em;
+  }
+
+  .choreo-stage--words .choreo-wall {
+    display: inline-block;
+    vertical-align: bottom;
+    margin-right: 0.28em;
+  }
+
+  .choreo-line {
+    display: block;
+    will-change: transform;
+  }
+
+  .choreo-panel {
+    display: block;
+    background: var(--blue-soft);
+    border: 1px solid var(--blue);
+  }
+
+  .choreo-stage--modal {
+    display: block;
+    position: relative;
+  }
+
+  .choreo-scrim {
+    position: absolute;
+    inset: 0;
+    display: block;
+    background: rgb(0 0 0 / 34%);
+  }
+
+  .choreo-modal {
+    position: absolute;
+    inset: 22px 30px;
+    display: block;
+    background: var(--bg);
+    border: 1px solid var(--line);
+  }
+
+  .choreo-stage--none {
+    display: block;
+    padding: 14px;
+  }
+
+  .choreo-stage--none p {
+    margin: 0;
+    color: var(--fg-weak);
+  }
+
+  .choreo-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    margin: 0;
+  }
+
+  .choreo-card__meta dt {
+    color: var(--fg-weak);
+  }
+
+  .choreo-card__meta dd {
+    margin: 0;
+    font-size: 11px;
+    word-break: break-all;
+  }
+
+  /* -------------------------------------------------------------- presets */
+
+  .preset-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 56px;
+  }
+
+  .preset-tile {
+    border: 1px solid var(--line-weak);
+    background: none;
+    padding: 12px;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .preset-tile:hover {
+    border-color: var(--blue);
+  }
+
+  .preset-tile__wall {
+    display: block;
+    height: 64px;
+    background: var(--bg2);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+
+  .preset-tile__mover {
+    display: block;
+    width: 46px;
+    height: 46px;
+    background: var(--blue);
+  }
+
+  .preset-tile__name {
+    font-size: 12px;
+    color: var(--fg);
+  }
+
+  .preset-tile__props {
+    color: var(--fg-weak);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  /* ---------------------------------------------------------------- usage */
+
+  .usage {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 48px;
+  }
+
+  .usage__head {
+    color: var(--blue);
+    margin-bottom: 10px;
+  }
+
+  .usage__head--spaced {
+    margin-top: 8px;
+  }
+
+  .usage p {
+    margin: 0 0 12px;
+  }
+
+  @media (max-width: 1000px) {
+    .tier-grid,
+    .usage,
+    .demo--split {
+      grid-template-columns: 1fr;
+    }
+
+    .track-row {
+      grid-template-columns: 50px 50px minmax(0, 1fr);
+    }
+
+    .track-row__token {
+      display: none;
+    }
+
+    .axis-table__head,
+    .axis-table__row {
+      grid-template-columns: minmax(0, 1.6fr) repeat(5, minmax(0, 1fr));
+      font-size: 10px;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Every demo on this page is driven by the SHIPPED motion runtime — the same
+   * module a consumer imports. Nothing here re-implements a duration, a curve
+   * or a preset; the page reads them out of the tokens at the element being
+   * animated, which is what makes the axis switcher real rather than a mock.
+   */
+  import {
+    animatePreset,
+    createCache,
+    isReducedMotion,
+    resolveValue,
+    run,
+  } from '@southleft/al-web-components/motion';
+
+  const scope = document.querySelector<HTMLElement>('[data-motion-scope]');
+  const probeRoot = document.querySelector<HTMLElement>('[data-motion-probe]');
+
+  /**
+   * The one gate every demo passes through. Delegates to the runtime rather
+   * than reading `matchMedia` here, so the answer accounts for the governing
+   * `<al-theme>` exactly as it does inside a component.
+   */
+  const stilled = (el: Element) => isReducedMotion(el, createCache());
+
+  /** Cancel every animation in a subtree so a demo can be replayed from rest. */
+  const reset = (root: Element) => {
+    for (const el of [root, ...root.querySelectorAll('*')]) {
+      for (const animation of el.getAnimations()) animation.cancel();
+    }
+  };
+
+  const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  /**
+   * Browsers hand back computed custom-property values in their own normalised
+   * form — `0.2s` reads as `.2s`. That is the same value, but the tables above
+   * print the token's authored spelling, and a readout that disagreed with the
+   * table two screens up would read as a bug rather than as a browser detail.
+   */
+  const spellOut = (value: string) => value.replace(/(^|[^\d])\.(\d)/g, '$10.$2');
+
+  /* ------------------------------------------------------------ axis bar */
+
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-axis]'));
+  const attrOut = document.querySelector<HTMLElement>('[data-axis-attr]');
+  const reducedNote = document.querySelector<HTMLElement>('[data-reduced-note]');
+  const probes = Array.from(document.querySelectorAll<HTMLElement>('[data-probe]'));
+
+  const paint = () => {
+    if (!scope || !probeRoot) return;
+    const value = scope.getAttribute('motion');
+    if (attrOut) {
+      attrOut.textContent = value ? `<al-theme motion="${value}">` : '<al-theme>';
+    }
+    // A fresh cache per repaint: a stale one is exactly the bug `resolve.ts`
+    // refuses to have, and an attribute flip is the case it names.
+    const cache = createCache();
+    for (const probe of probes) {
+      probe.textContent = spellOut(resolveValue(probe.dataset.probe ?? '', probeRoot, cache)) || '—';
+    }
+    if (reducedNote) {
+      reducedNote.textContent = stilled(probeRoot)
+        ? 'REDUCED — DEMOS RESOLVE INSTANTLY'
+        : 'FULL MOTION';
+    }
+  };
+
+  for (const button of buttons) {
+    button.addEventListener('click', () => {
+      const value = button.dataset.axis;
+      // `default` REMOVES the attribute. An unset axis means "no opinion",
+      // which is the only state that lets prefers-reduced-motion decide.
+      if (!value || value === 'default') scope?.removeAttribute('motion');
+      else scope?.setAttribute('motion', value);
+      for (const other of buttons) {
+        other.setAttribute('aria-pressed', String(other === button));
+      }
+      paint();
+    });
+  }
+
+  // `<al-theme>` is a custom element: its `:host` rules only exist once it has
+  // upgraded, so the first probe read has to wait for that or it reports the
+  // un-themed values.
+  customElements.whenDefined('al-theme').then(paint);
+  paint();
+
+  try {
+    window
+      .matchMedia('(prefers-reduced-motion: reduce)')
+      .addEventListener('change', paint);
+  } catch {
+    /* Safari < 14 has no addEventListener on MediaQueryList; the readout just
+       will not live-update, which is not worth an error. */
+  }
+
+  /* ------------------------------------------------------- tier 1 tracks */
+
+  /** Slide the dot the width of its track and back, over `ms`. */
+  const runTrack = (row: Element, ms: number, easing: string, distance?: number) => {
+    const track = row.querySelector<HTMLElement>('[data-track]');
+    const dot = row.querySelector<HTMLElement>('[data-dot]');
+    if (!track || !dot || stilled(dot)) return;
+    const travel = distance ?? track.clientWidth - dot.offsetWidth;
+    dot.getAnimations().forEach((animation) => animation.cancel());
+    dot.animate(
+      [{ transform: 'translateX(0px)' }, { transform: `translateX(${Math.max(travel, 0)}px)` }],
+      { duration: ms, easing, iterations: 2, direction: 'alternate' }
+    );
+  };
+
+  document.querySelector('[data-play="duration"]')?.addEventListener('click', () => {
+    for (const row of document.querySelectorAll<HTMLElement>('[data-duration-row]')) {
+      runTrack(row, Number(row.dataset.ms), 'linear');
+    }
+  });
+
+  document.querySelector('[data-play="easing"]')?.addEventListener('click', () => {
+    for (const card of document.querySelectorAll<HTMLElement>('[data-easing-card]')) {
+      runTrack(card, Number(card.dataset.ms), card.dataset.easing ?? 'linear');
+    }
+  });
+
+  for (const card of document.querySelectorAll<HTMLElement>('[data-easing-card]')) {
+    card.addEventListener('click', () =>
+      runTrack(card, Number(card.dataset.ms), card.dataset.easing ?? 'linear')
+    );
+  }
+
+  document.querySelector('[data-play="distance"]')?.addEventListener('click', () => {
+    for (const row of document.querySelectorAll<HTMLElement>('[data-distance-row]')) {
+      // Travel is the POINT of this demo, so it is the token's px value — not
+      // the track width. Duration comes from the theme so the axis still governs it.
+      const dot = row.querySelector<HTMLElement>('[data-dot]');
+      if (!dot) continue;
+      const ms =
+        parseFloat(
+          resolveValue(
+            'var(--al-theme-animation-duration-role-slow, var(--al-theme-animation-duration-long))',
+            dot,
+            createCache()
+          )
+        ) * 1000 || 400;
+      runTrack(row, ms, 'ease-in-out', Number(row.dataset.px));
+    }
+  });
+
+  /* ---------------------------------------------------------- css demo */
+
+  const cssDemo = document.querySelector<HTMLElement>('[data-css-demo]');
+  document.querySelector('[data-css-toggle]')?.addEventListener('click', () => {
+    cssDemo?.classList.toggle('is-on');
+  });
+
+  /* ------------------------------------------------------- choreography */
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-replay]')) {
+    button.addEventListener('click', async () => {
+      const name = button.dataset.replay;
+      const card = button.closest('.choreo-card');
+      const stage = card?.querySelector<HTMLElement>('[data-stage]');
+      if (!name || !stage) return;
+
+      button.disabled = true;
+      reset(stage);
+      try {
+        await run(name, stage);
+        // An exit token settles on a hidden end state. Hold it long enough to
+        // read, then drop the animations so the card returns to rest and can
+        // be replayed — the naming rule is what tells us which those are.
+        if (/-(exit|dismiss)$/.test(name)) {
+          await wait(500);
+          reset(stage);
+        }
+      } finally {
+        button.disabled = false;
+      }
+    });
+  }
+
+  /* -------------------------------------------------------------- presets */
+
+  for (const tile of document.querySelectorAll<HTMLButtonElement>('[data-preset]')) {
+    tile.addEventListener('click', async () => {
+      const mover = tile.querySelector<HTMLElement>('[data-preset-mover]');
+      const name = tile.dataset.preset;
+      if (!mover || !name) return;
+      mover.getAnimations().forEach((animation) => animation.cancel());
+      await animatePreset(mover, name);
+      // Every preset is filled `both`, so an exit shape would leave the tile
+      // blank. Settle, hold, then release back to rest — uniformly, rather
+      // than maintaining a list of which names are exits.
+      await wait(500);
+      mover.getAnimations().forEach((animation) => animation.cancel());
+    });
+  }
+</script>

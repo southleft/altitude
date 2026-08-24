@@ -24,7 +24,7 @@ const { registry, site, href } = context;
   active="components"
 >
   <div class="page">
-    <div class="micro">INDEX / 02</div>
+    <div class="micro">INDEX / 03</div>
     <div class="components-head">
       <h1 class="t-page-title">Components</h1>
       <span class="micro" data-shown-readout>
@@ -126,6 +126,13 @@ const { registry, site, href } = context;
     max-width: 560px;
   }
 
+  /* The label carries the focus affordance. Its input is borderless and
+   * edge-to-edge, so the global `input:focus` outline (docs.css) would draw a
+   * second box inside this one — suppressed on the input below. */
+  .index-search:focus-within {
+    border-color: var(--blue);
+  }
+
   .index-phases {
     display: flex;
     flex-wrap: wrap;
@@ -140,6 +147,11 @@ const { registry, site, href } = context;
     color: var(--fg);
     font: 400 13px/20px var(--mono);
     padding: 0;
+  }
+
+  .index-search input:focus,
+  .index-search input:focus-visible {
+    outline: none;
   }
 </style>
 

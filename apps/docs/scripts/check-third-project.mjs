@@ -42,7 +42,12 @@ import { docsProject, PROJECTS } from '../src/lib/projects.mjs';
 import { contextFor } from '../src/lib/context.mjs';
 import { COMPONENTS } from '../src/lib/registry.mjs';
 import { llmsTxt, llmsTokens, llmsComponents, llmsA11y, llmsFull, statusJson } from '../src/lib/artifacts.mjs';
-import { overviewMarkdown, componentsIndexMarkdown, foundationsMarkdown } from '../src/lib/markdown.mjs';
+import {
+  overviewMarkdown,
+  componentsIndexMarkdown,
+  foundationsMarkdown,
+  motionMarkdown,
+} from '../src/lib/markdown.mjs';
 
 const APP_ROOT = fileURLToPath(new URL('..', import.meta.url));
 const failures = [];
@@ -151,6 +156,7 @@ const artifacts = {
   'index.md': overviewMarkdown(context),
   'components.md': componentsIndexMarkdown(context),
   'foundations.md': foundationsMarkdown(context),
+  'motion.md': motionMarkdown(context),
 };
 
 for (const [name, body] of Object.entries(artifacts)) {
