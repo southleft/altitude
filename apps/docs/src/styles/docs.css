@@ -385,10 +385,114 @@ input:focus {
 .sidebar__search-field input:focus-visible {
   outline: none;
 }
+
+/*
+ * THE SIDEBAR SCROLLBAR — the last piece of this shell still drawn by the
+ * browser, and the one that gave away that the dark theme was paint rather
+ * than a theme: a default Chromium scrollbar is a light grey trough, so on a
+ * #101010 sidebar it read as a bright stripe down the edge of the nav.
+ *
+ * IT USES THE DESIGN SYSTEM'S OWN TOKENS, not this file's `--line` / `--fg`
+ * chrome variables, and that is the point of the rule. Those chrome variables
+ * switch on `[data-theme]` and are hard-coded per theme in this stylesheet;
+ * `--al-theme-color-*` switch on `<al-theme mode>` and are whatever the
+ * PROJECT'S BRAND says they are. So the altitude site and the southleft site
+ * get different scrollbars from this one rule, and a third design system added
+ * to the registry gets a correct one with no edit here — the same argument as
+ * the `--blue` remap on `al-theme` above.
+ *
+ * It resolves branded because `.sidebar__nav` is a DESCENDANT of `<al-theme>`
+ * (Shell.astro wraps the whole shell): the host's tokens inherit down, so the
+ * var() substitutes against the branded value. The `--blue` remap has to be
+ * declared ON the host for that reason; this does not, because it is already
+ * inside it.
+ *
+ * WHICH TOKENS, AND WHY NOT THE OBVIOUS ONE. A scrollbar thumb is a user
+ * interface component, so WCAG 1.4.11 asks 3:1 against what it sits on. That
+ * rules out the intuitive pick: `border-default` is the token a thumb "should"
+ * use by name, and it fails. Contrast measured against each site's own sidebar
+ * background, both modes, both brands:
+ *
+ *   token                       alt light  alt dark  sl light  sl dark
+ *   border-default                 2.17       5.51      1.65      2.00   ✗
+ *   border-default-strong          2.08       9.16      9.53      6.75   ✗
+ *   content-disabled-default       6.19       3.07      6.19      3.07   ✓  ← rest
+ *   content-default-weak          11.37       9.16      7.14      6.75   ✓  ← hover
+ *   content-default               19.03      17.89     17.93     18.10   ✓
+ *
+ * `border-default` and `border-default-strong` each pass in ONE brand and fail
+ * in the other, which is the trap in a multi-brand system: a token that looks
+ * right on the site you are testing is not a token that is right. The two
+ * chosen clear 3:1 in all four combinations, and 3.07 is the tight one — the
+ * resting thumb on a dark sidebar. Anything quieter than that fails somewhere.
+ *
+ * The rest/hover split is also a light-vs-dark split in the values themselves:
+ * `content-default-weak` resolves #3a3a3a on the light altitude sidebar and
+ * #bdb39e on the dark one — it darkens against white and lightens against
+ * black, which is the thing a single literal grey cannot do.
+ */
 .sidebar__nav {
   flex: 1;
   overflow-y: auto;
   padding: 6px 16px 20px;
+
+  /*
+   * NO `scrollbar-gutter: stable` HERE, and it was tried. The argument for it
+   * is real — the search field filters this nav in place, so narrowing 68 items
+   * to 3 removes the scrollbar and shifts every remaining item sideways — but
+   * the property reserves the gutter unconditionally, including on the
+   * platforms where the scrollbar is an OVERLAY and costs no layout space to
+   * begin with. Measured in this repo's Playwright Chromium: without it the
+   * nav's clientWidth is 263 whether the list overflows or not (no jump to
+   * fix); with it, 253 in both states — a permanent 10px of dead column bought
+   * to solve a shift that browser never had. It belongs here only once someone
+   * has confirmed the jump on a classic-scrollbar platform.
+   */
+
+  /*
+   * The standard properties. Chromium 121+, Firefox and Safari 18.2+ use these
+   * and IGNORE the `::-webkit-scrollbar` rules below once `scrollbar-width` is
+   * anything but `auto` — the two blocks are alternatives, not layers, which is
+   * why they are kept in sync by hand rather than one overriding the other.
+   */
+  scrollbar-width: thin;
+  scrollbar-color: var(--al-theme-color-content-disabled-default) transparent;
+}
+
+/*
+ * Hovering the NAV, not the thumb: `scrollbar-color` has no thumb-level hover
+ * state, so this is the only hover the standard properties can express. It
+ * reads well anyway — the bar stays quiet until the pointer is in the column
+ * that owns it, then becomes solid enough to aim at.
+ */
+.sidebar__nav:hover {
+  scrollbar-color: var(--al-theme-color-content-default-weak) transparent;
+}
+
+/*
+ * Safari before 18.2, which supports neither standard property. Same two
+ * tokens, so the two implementations cannot drift in colour — only in the
+ * shape, which the pseudo-elements can express and the standard ones cannot:
+ * a transparent border plus `background-clip: content-box` insets the thumb
+ * into a 4px pill instead of filling the full 10px trough.
+ */
+.sidebar__nav::-webkit-scrollbar {
+  width: 10px;
+}
+
+.sidebar__nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar__nav::-webkit-scrollbar-thumb {
+  background-color: var(--al-theme-color-content-disabled-default);
+  background-clip: content-box;
+  border: 3px solid transparent;
+  border-radius: 999px;
+}
+
+.sidebar__nav::-webkit-scrollbar-thumb:hover {
+  background-color: var(--al-theme-color-content-default-weak);
 }
 
 .sidebar__group {
