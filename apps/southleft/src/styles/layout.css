@@ -501,28 +501,10 @@ al-theme[mode='light'] {
   order: -1;
 }
 
-.sl-logo-wall {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  /* T12 audit-2 (F, 01/trusted-by) — v5's `gap-x-14 gap-y-12` (56px/48px);
-   * was a flat `--al-theme-space-xl` (28px). */
-  column-gap: 3.5rem;
-  row-gap: 3rem;
-}
-
-.sl-logo-wall img {
-  /* T12 audit-2 (F, 01/trusted-by) — v5's `h-7 md:h-8` (28px → 32px). */
-  height: 1.75rem;
-  width: auto;
-  display: block;
-}
-
-@media (min-width: 48rem) {
-  .sl-logo-wall img {
-    height: 2rem;
-  }
-}
+/* Layout REMOVED — `<al-logo-wall>` owns it now. The host is `display: block`
+ * with the wrapping row inside its shadow root, so a `display: flex` here would
+ * fight it. The gap values were identical (`3rem 3.5rem`) and are the
+ * component's own default; `--al-logo-wall-gap` is the hook if that changes. */
 
 /* `al-heading` / `al-text-block` carry no `:host` display rule of their
  * own (library gap, not touched here — see T8 verification notes), so the
@@ -1107,47 +1089,12 @@ al-theme[mode='light'] .sl-pg-readout {
 }
 
 /* ------------------------------------------------------------------------
- * CTA band — spec 2026-08-20-southleft-example-app, T12 audit-2 round (F).
- * v5's real CTABand.astro: its own grid-texture background, a `<cta>`
- * kicker, and `py-24/md:py-32` padding — none of which `<al-hero>`'s
- * centered layout provides (no texture, no kicker, less padding). Full-
- * bleed (own `.sl-container`, not nested in one — every call site's
- * previous `.sl-container.sl-section` wrapper was removed to match).
+ * CTA band — REMOVED. The band is now `<al-cta-band>` from
+ * @southleft/sl-web-components (see components/CTABand.astro). Its
+ * `.sl-c-cta-band__*` rules live in that package's cta-band.scss and
+ * reproduce these four blocks exactly; a second copy here would be one more
+ * thing to hold in step.
  * -------------------------------------------------------------------- */
-.sl-cta-band {
-  position: relative;
-  overflow: hidden;
-  border-block-start: var(--al-theme-border-width) solid var(--sl-border-faint);
-}
-
-.sl-cta-band__inner {
-  position: relative;
-  padding-block: 6rem;
-  text-align: center;
-}
-
-@media (min-width: 48rem) {
-  .sl-cta-band__inner {
-    padding-block: 8rem;
-  }
-}
-
-.sl-cta-band__heading {
-  margin-inline: auto;
-  margin-block-start: var(--al-theme-space);
-  max-width: 48rem;
-}
-
-.sl-cta-band__dek {
-  margin-inline: auto;
-  /* v5's real `mt-5` (20px) — closest single token is `--al-theme-space`
-   * (16px, T12 audit-3 height closure; was `-sm`/12px). */
-  margin-block-start: var(--al-theme-space);
-  max-width: 32rem;
-  font-size: var(--sl-text-lead);
-  line-height: 1.55;
-  color: var(--al-theme-color-content-default-weak);
-}
 
 
 /* ------------------------------------------------------------------------
@@ -1470,16 +1417,21 @@ al-theme[mode='light'] .sl-section-rule {
  * lines, and that one isn't formatted as one; this comment intentionally
  * doesn't repeat the literal color value, since THIS file is scanned
  * unconditionally, comments included). */
+/* The token chips are `<al-chip>` now, so the brand's outlined mono treatment is
+ * applied through the component's own hooks. It has to be done from out here:
+ * al-chip's :host is `display: contents`, so this box is unreachable by an app
+ * selector, and custom properties inherit through the shadow boundary. Same
+ * mechanism `--sl-*` and `--al-logo-wall-filter` already use. */
 .sl-token-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-  font-family: var(--sl-font-mono);
-  color: var(--al-theme-color-content-default-weak);
-  border: var(--al-theme-border-width) solid var(--sl-border-faint);
-  border-radius: var(--al-theme-border-radius-xs);
-  padding: var(--al-theme-space-xxs) var(--al-theme-space-xs);
-  background: color-mix(in srgb, var(--al-theme-color-background-default) 65%, transparent);
+  --al-chip-font-family: var(--sl-font-mono);
+  --al-chip-color: var(--al-theme-color-content-default-weak);
+  --al-chip-border: var(--al-theme-border-width) solid var(--sl-border-faint);
+  --al-chip-border-radius: var(--al-theme-border-radius-xs);
+  --al-chip-padding: var(--al-theme-space-xxs) var(--al-theme-space-xs);
+  --al-chip-gap: 0.5em;
+  --al-chip-background: color-mix(in srgb, var(--al-theme-color-background-default) 65%, transparent);
+  /* Decorative, not interactive — the row is aria-hidden. */
+  --al-chip-cursor: default;
 }
 
 .sl-token-chip__dot {
@@ -1580,24 +1532,23 @@ al-theme[mode='light'] .sl-section-rule {
  * fill — grayscale left it a light-gray smear on the ink canvas even after
  * `invert`; T9 round 3). `invert(1)` on the ink sheet then flips
  * black → white, same as every other silhouette. */
-.sl-logo-wall img {
-  filter: brightness(0);
-  opacity: 0.5;
-  transition: opacity var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+/* The wall is `<al-logo-wall>` now, so its treatment is set through the
+ * component's hooks rather than by reaching at the <img> elements. It has to be
+ * done from OUT HERE: mode is a runtime, persisted user toggle on `al-theme`,
+ * and a shadow root cannot see an ancestor's attribute portably. Custom
+ * properties inherit through the boundary, which is what makes this work.
+ *
+ * Light is the important one — the component's default knock-back flips marks
+ * WHITE, which is invisible on the paper canvas. */
+.sl-logo-wall {
+  --al-logo-wall-filter: brightness(0);
+  --al-logo-wall-opacity-hover: 0.85;
 }
 
-.sl-logo-wall img:hover,
-.sl-logo-wall img:focus-visible {
-  opacity: 0.85;
-}
-
-al-theme[mode='dark'] .sl-logo-wall img {
-  filter: brightness(0) invert(1);
-}
-
-al-theme[mode='dark'] .sl-logo-wall img:hover,
-al-theme[mode='dark'] .sl-logo-wall img:focus-visible {
-  filter: grayscale(0) invert(0) contrast(1);
+al-theme[mode='dark'] .sl-logo-wall {
+  --al-logo-wall-filter: brightness(0) invert(1);
+  /* Dark hover unwinds the silhouette so each mark shows its real colours. */
+  --al-logo-wall-filter-hover: grayscale(0) invert(0) contrast(1);
 }
 
 /* ------------------------------------------------------------------------
@@ -1759,12 +1710,7 @@ al-theme[mode='dark'] .sl-logo-wall img:focus-visible {
  * removed from the design system. The arrangement is an <al-layout> stack; the
  * band's padding and the eyebrow's hug-not-stretch behaviour are page design,
  * so they live here. */
-.sl-page-hero {
-  padding-block: clamp(3rem, 6vw, 5rem);
-}
-
-/* The chip is an intrinsic atom - keep it hugging its content instead of
- * stretching across the stack. */
-.sl-page-hero .sl-page-hero__eyebrow {
-  align-self: start;
-}
+/* .sl-page-hero / __eyebrow — REMOVED. The band is `<al-page-hero>` now
+ * (components/PageHero.astro); its rules live in that package's page-hero.scss.
+ * Note the eyebrow rule here was inert anyway: it sat on `<al-chip>`, whose
+ * :host is `display: contents`, so `align-self` never applied. */

@@ -189,6 +189,22 @@ const ldNodes = [organizationLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : 
        */
       import '@southleft/sl-web-components/components/card';
       import '@southleft/al-web-components/components/chip';
+      /*
+       * The closing CTA band. Southleft's own section component, adopted here so
+       * the site stops hand-rolling markup the brand package already owns (and
+       * the docs already document at /docs/southleft/components/cta-band).
+       */
+      import '@southleft/sl-web-components/components/cta-band';
+      /* The interior-page title band (components/PageHero.astro). */
+      import '@southleft/sl-web-components/components/page-hero';
+      /* The numbered section rule + kicker + heading (components/SectionHeader.astro). */
+      import '@southleft/sl-web-components/components/section-header';
+      /* The client logo band. The app restates its knock-back filter per mode
+       * (styles/layout.css) — the component's default is the dark treatment and a
+       * shadow root cannot see the mode attribute on an ancestor. */
+      import '@southleft/sl-web-components/components/logo-wall';
+      /* The display-type belt (components/Marquee.astro). */
+      import '@southleft/sl-web-components/components/marquee';
       import '@southleft/al-web-components/components/divider';
       /*
        * THE BRAND IMPLEMENTATIONS OF `al-footer` AND `al-header`.

@@ -22,7 +22,7 @@ const categoryName = posts[0]?.data.categoryName ?? category;
 ---
 
 <Base title={categoryName} description={`Insights on ${categoryName} from the Southleft team.`}>
-  <div class="sl-container sl-section--tight">
+  <div class="sl-section--tight">
     <PageHero label="insights" heading={categoryName} dek={`${posts.length} post${posts.length === 1 ? '' : 's'}`}>
       <al-link href={withBase('/insights')}>← All insights</al-link>
     </PageHero>

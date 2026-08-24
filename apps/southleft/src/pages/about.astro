@@ -46,7 +46,7 @@ const logos = [
   title="About"
   description="Founded in 2012 by TJ Pitre and rooted in New Orleans, Southleft is a senior team of design systems engineers — grown by word of mouth, now partnered with Baseline and led by CEO Nicole Hampton."
 >
-  <div class="sl-container sl-section--tight">
+  <div class="sl-section--tight">
     <PageHero
       label="about"
       heading="Built by practitioners. Run that way since 2012."
@@ -81,9 +81,9 @@ const logos = [
   <!-- Trusted by (v5 section 02) -->
   <div class="sl-container sl-section--tight">
     <al-text-block maxWidth="sm">Fourteen years of word-of-mouth referrals, from tech giants to community organizations.</al-text-block>
-    <div class="sl-logo-wall" style="margin-top: var(--al-theme-space-lg);">
+    <al-logo-wall class="sl-logo-wall" style="margin-top: var(--al-theme-space-lg);">
       {logos.map((logo) => <img src={withBase(`/logos/${logo.file}`)} alt={logo.name} loading="lazy" />)}
-    </div>
+    </al-logo-wall>
   </div>
 
   <div class="sl-container sl-section">

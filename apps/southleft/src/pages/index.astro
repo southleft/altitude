@@ -159,9 +159,9 @@ const testimonials = [
             </al-layout>
             <al-layout gap="sm" class="sl-hero__chips" aria-hidden="true">
               <al-layout direction="row" wrap gap="sm" align="center">
-                <span class="sl-token-chip"><span class="sl-token-chip__dot"></span>--sl-color-red-500: #f05735</span>
-                <span class="sl-token-chip">--sl-font-display: Agrandir</span>
-                <span class="sl-token-chip">--sl-ease-out: cubic-bezier(.22,1,.36,1)</span>
+                <al-chip class="sl-token-chip"><span class="sl-token-chip__dot"></span>--sl-color-red-500: #f05735</al-chip>
+                <al-chip class="sl-token-chip">--sl-font-display: Agrandir</al-chip>
+                <al-chip class="sl-token-chip">--sl-ease-out: cubic-bezier(.22,1,.36,1)</al-chip>
               </al-layout>
               <p class="sl-hero__chip-note al-u-theme-typography-body-xs">// loose tokens — drag them around</p>
             </al-layout>
@@ -197,11 +197,11 @@ const testimonials = [
 
   <!-- 01 / Proof strip -->
   <section class="sl-container sl-section" data-section-id="logos">
-    <div class="sl-section-rule" aria-hidden="true"><span>01 / trusted-by</span></div>
+    <al-section-header index="01" label="trusted-by" kicker=""></al-section-header>
     <p class="sl-measure-md al-u-theme-typography-body-sm" style="margin-top: 2rem; color: var(--al-theme-color-content-default-weak);">Trusted since 2012 by teams who care what's under the hood.</p>
-    <div class="sl-logo-wall" style="margin-top: 3rem;">
+    <al-logo-wall class="sl-logo-wall" style="margin-top: 3rem;">
       {logos.map((logo) => <img src={withBase(`/logos/${logo.file}`)} alt={logo.name} loading="lazy" />)}
-    </div>
+    </al-logo-wall>
   </section>
 
   <!-- 02 / The shift (POV) -->
@@ -311,7 +311,7 @@ const testimonials = [
        line) — same rationale as the other card rebuilds. `al-testimonial`
        itself is untouched for any other consumer. -->
   <section class="sl-container sl-section" data-section-id="testimonials">
-    <div class="sl-section-rule" aria-hidden="true"><span>07 / quotes-from-folks</span></div>
+    <al-section-header index="07" label="quotes-from-folks" kicker=""></al-section-header>
     <div style="margin-top: calc(var(--al-theme-space-xxl) * 1.5);"><al-layout variant="grid" noCollapse>
       {testimonials.map((t) => (
         <div class="al-u-grid__item col:12 col:6@md">
