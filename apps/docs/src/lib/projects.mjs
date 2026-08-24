@@ -44,6 +44,9 @@ const REPO_ROOT = repoRoot();
 const RESERVED_SEGMENTS = new Set([
   'components',
   'foundations',
+  'motion',
+  'icons',
+  'utilities',
   'llms.txt',
   'llms-full.txt',
   'llms-tokens.txt',

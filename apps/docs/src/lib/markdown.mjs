@@ -25,7 +25,26 @@ import {
   presetShapes,
   travelDistances,
 } from './motion.mjs';
+import {
+  ICONS,
+  ICON_CATEGORIES,
+  ICON_COUNT,
+  LEGACY_COUNT,
+  LEGACY_ELEMENTS,
+  categoryCounts,
+} from './icons.mjs';
+import {
+  breakpoints,
+  gapClasses,
+  gapModifiers,
+  gridAlignmentClasses,
+  gridPatterns,
+  typographyClasses,
+  utilityCount,
+  visibilityClasses,
+} from './utilities.mjs';
 import { DEFAULT_CONTEXT } from './context.mjs';
+import { guidanceFor, guidanceMarkdown } from './guidance.mjs';
 
 const table = (headers, rows) =>
   rows.length
@@ -36,8 +55,16 @@ const table = (headers, rows) =>
       ].join('\n')
     : '_None declared in the manifest._';
 
-/** One component, as Markdown. */
-export function componentMarkdown(component, context = DEFAULT_CONTEXT) {
+/**
+ * One component, as Markdown.
+ *
+ * `guidanceEntries` is the loaded `guidance` content collection, threaded in by
+ * the caller because `getCollection()` is only reachable from an Astro route
+ * (see `guidance.mjs`). It defaults to empty so a caller that has no collection
+ * to hand — a Node script, a test — still renders the API sections; the
+ * guidance block then states that none is authored rather than vanishing.
+ */
+export function componentMarkdown(component, context = DEFAULT_CONTEXT, guidanceEntries = []) {
   const lines = [
     `# ${component.name}`,
     '',
@@ -50,6 +77,11 @@ export function componentMarkdown(component, context = DEFAULT_CONTEXT) {
     component.summary ||
       `Generated from the custom elements manifest: ${component.props.length} properties, ${component.slots.length} slots, ${component.events.length} events.`,
     '',
+    // Guidance sits ahead of the API, mirroring the HTML page order
+    // (Playground → Guidance → Parity → Checks → Install → Props). The
+    // judgement about whether to use a component belongs before its attribute
+    // table, for an agent as much as for a reader.
+    ...guidanceMarkdown(guidanceFor(guidanceEntries, component, context.project)),
     '## Install',
     '',
     '```js',
@@ -412,6 +444,247 @@ export function motionMarkdown(context = DEFAULT_CONTEXT) {
     "  await run('list-reveal', el);",
     '}',
     '```',
+    '',
+  ].join('\n');
+}
+
+/**
+ * The Icons page, as Markdown.
+ *
+ * The HTML page's whole point is the ARTWORK, which Markdown cannot carry — so
+ * this is not a transcription of that page. It is the same data answering the
+ * question a reader of Markdown is actually asking: which names exist. That
+ * matters most for the machine artifacts, where an invented icon name is a
+ * silent failure — `<al-icon>` renders an empty box for an unknown name rather
+ * than throwing — so the CLOSED SET is listed in full, grouped by category.
+ *
+ * Tags are deliberately omitted: they are 75 KB of synonyms whose only job is
+ * fuzzy lookup, which the MCP's `altitude_search_icons` already does better
+ * than a flat list in a text file can.
+ */
+export function iconsMarkdown(context = DEFAULT_CONTEXT) {
+  const byCategory = categoryCounts();
+  const uncategorised = ICONS.filter((icon) => icon.categories.length === 0);
+
+  return [
+    '# Icons',
+    '',
+    `The ${ICON_COUNT} Phosphor glyphs ${context.site.fullName} ships, at regular weight, MIT ` +
+      'licensed. They are the PAYLOAD of `<al-icon>` — not components, and not in the custom ' +
+      'elements manifest.',
+    '',
+    'You must only use a name from the list below. An unknown name is not an error: `<al-icon>`',
+    'renders an empty box for it, so an invented name produces a page that looks broken rather than',
+    'one that fails. The set is closed, and is read at build time from',
+    '`libs/al-web-components/components/icon/catalog.ts`.',
+    '',
+    '## Registering a glyph',
+    '',
+    'Registration is explicit and per-glyph — which is why a set this large costs nothing: the',
+    'glyphs you never name are never bundled.',
+    '',
+    '```js',
+    "import { caretDown, magnifyingGlass } from '@southleft/al-web-components/components/icon/glyphs';",
+    "import { registerIcons } from '@southleft/al-web-components/components/icon/registry';",
+    '',
+    "registerIcons({ 'caret-down': caretDown, 'magnifying-glass': magnifyingGlass });",
+    '```',
+    '',
+    '```html',
+    '<al-icon name="caret-down" size="sm"></al-icon>',
+    '<al-icon name="magnifying-glass" iconTitle="Search"></al-icon>',
+    '```',
+    '',
+    '`iconTitle` becomes the accessible name. Set it when the icon carries meaning ALONE; leave it',
+    'off beside visible text and the glyph is correctly hidden from assistive technology instead of',
+    'being read twice.',
+    '',
+    'If icon names come from data you do not control, opt into the loader once — it costs ~13 KB',
+    'gzipped plus one request per glyph, and it cannot render server-side:',
+    '',
+    '```js',
+    "import '@southleft/al-web-components/components/icon/lazy';",
+    '```',
+    '',
+    `## Deprecated elements (${LEGACY_COUNT})`,
+    '',
+    'The original `<al-icon-*>` elements still work and render Phosphor artwork, but they are',
+    'deprecated. The alias table is consulted only after a lookup against the catalog MISSES, so a',
+    'legacy name can never shadow a real Phosphor icon.',
+    '',
+    table(
+      ['Deprecated element', 'Replacement', 'Note'],
+      LEGACY_ELEMENTS.map((row) => [
+        `\`<${row.element}>\``,
+        `\`<al-icon name="${row.replacement}">\``,
+        row.shadowed ? `\`name="${row.legacy}"\` is a DIFFERENT Phosphor icon` : '—',
+      ])
+    ),
+    '',
+    `## Every name (${ICON_COUNT})`,
+    '',
+    'Grouped by category; an icon in two categories is listed twice. Search by tag with the',
+    "design system's MCP server (`altitude_search_icons`) — the tags are not reproduced here.",
+    '',
+    ...byCategory.flatMap(({ category, count }) => [
+      `### ${category} (${count})`,
+      '',
+      ICONS.filter((icon) => icon.categories.includes(category))
+        .map((icon) => `\`${icon.name}\``)
+        .join(', '),
+      '',
+    ]),
+    ...(uncategorised.length
+      ? [
+          `### uncategorised (${uncategorised.length})`,
+          '',
+          uncategorised.map((icon) => `\`${icon.name}\``).join(', '),
+          '',
+        ]
+      : []),
+    `The category vocabulary is ${ICON_CATEGORIES.length} values: ` +
+      `${ICON_CATEGORIES.map((c) => `\`${c}\``).join(', ')}.`,
+    '',
+  ].join('\n');
+}
+
+/**
+ * The Utilities page, as Markdown.
+ *
+ * Same source as the HTML page (`lib/utilities.mjs`): the four stylesheets in
+ * `styles/core/utilities/` plus the breakpoint variables, parsed rather than
+ * restated. The generated grid classes are described by their RULE and not
+ * enumerated — 12 spans × 7 breakpoints × 4 families is 336 rows of the same
+ * fact, and a reader who knows the rule can build any of them.
+ */
+export function utilitiesMarkdown(context = DEFAULT_CONTEXT) {
+  const bps = breakpoints();
+  const gaps = gapClasses();
+  const mods = gapModifiers();
+  const grid = gridPatterns();
+  const alignment = gridAlignmentClasses();
+  const typography = typographyClasses();
+  const visibility = visibilityClasses();
+  const flat = (row) => row.declarations.map((d) => `${d.property}: ${d.value}`).join('; ');
+
+  return [
+    '# Utilities',
+    '',
+    `The ${utilityCount()} CSS utility classes ${context.site.fullName} publishes, shipped in ` +
+      '`css/main.css`. They style and arrange LIGHT-DOM markup; they are not components, and they ' +
+      'have no entry in the custom elements manifest.',
+    '',
+    'Use them on page markup and on children you are spanning inside a grid. Arranging sibling',
+    "COMPONENTS is `<al-layout>`'s job — do not hand-roll flex or grid on a wrapper of your own, and",
+    'do not invent a `*-group` wrapper for it.',
+    '',
+    `## Breakpoints (${bps.length})`,
+    '',
+    'Every `@suffix` on a grid class means one of these and nothing else.',
+    '',
+    table(
+      ['Suffix', 'Applies from'],
+      bps.map((bp) => [`\`@${bp.id}\``, `\`min-width: ${bp.value}\``])
+    ),
+    '',
+    `## Grid — ${grid.columns} tracks`,
+    '',
+    'Put `al-u-grid` on the container. The alignment classes go with it:',
+    '',
+    table(
+      ['Class', 'Declares'],
+      alignment.map((row) => [`\`.${row.className}\``, `\`${flat(row)}\``])
+    ),
+    '',
+    '### Generated classes',
+    '',
+    `Four families, each emitted once bare and once inside every breakpoint, for N = 1…${grid.columns}` +
+      ` and suffixes ${grid.suffixes.map((s) => `\`@${s}\``).join(', ')}. So \`col:8\` and \`col:8@md\`` +
+      ' are both real classes; breakpoints stack, and the widest matching one wins.',
+    '',
+    table(
+      ['Pattern', 'Goes on', 'Emits', 'What it does'],
+      grid.families.map((family) => [
+        `\`${family.pattern}\``,
+        `\`${family.on}\``,
+        `\`${family.emits}\``,
+        family.summary,
+      ])
+    ),
+    '',
+    '```html',
+    '<div class="al-u-grid cols:6@md cols:3@lg al-u-gap-lg">',
+    '  <div>1</div><div>2</div><div>3</div><div>4</div>',
+    '</div>',
+    '',
+    '<div class="al-u-grid">',
+    '  <div class="al-u-grid__item col:8@md">1</div>',
+    '  <div class="al-u-grid__item col:4@md row:2@md">2</div>',
+    '  <div class="al-u-grid__item col:7@md offset:2@md">3</div>',
+    '</div>',
+    '```',
+    '',
+    '`al-u-grid__item` is deliberately NOT scoped under `.al-u-grid` in the source: the container may',
+    'be an `<al-layout variant="grid">` shadow root, where no `.al-u-grid` ancestor exists in the',
+    'light DOM for the span classes to match against.',
+    '',
+    `## Spacing (${gaps.length} gap classes)`,
+    '',
+    'A gap class goes on the PARENT. It makes that element a flex column and spaces the children, so',
+    'a bare wrapper needs nothing else. Values are resolved through the same token layer Foundations',
+    'reads, so they are what this brand renders rather than what the SCSS literally says.',
+    '',
+    table(
+      ['Class', 'Token', 'Value', 'Note'],
+      gaps.map((row) => [
+        `\`.${row.className}\``,
+        row.token ? `\`--${row.token}\`` : `\`${row.declared}\``,
+        row.value,
+        row.mismatch
+          ? `the name implies \`--${row.mismatch}\`, which exists; this class reads \`--${row.token}\``
+          : '—',
+      ])
+    ),
+    '',
+    ...(mods.length
+      ? [
+          table(
+            ['Modifier', 'Declares'],
+            mods.map((row) => [`\`.${row.className}\``, `\`${flat(row)}\``])
+          ),
+          '',
+        ]
+      : []),
+    `## Typography (${typography.length} classes)`,
+    '',
+    'Two tiers. A tier-2 class names a ROLE, which a brand, a density or a contrast setting is',
+    'allowed to repoint; a tier-1 class pins a literal step of the ramp and follows nothing. Prefer',
+    'tier 2 unless you have a reason not to.',
+    '',
+    table(
+      ['Class', 'Tier', 'Token', 'Resolves to'],
+      typography.map((row) => [
+        `\`.${row.className}\``,
+        row.tier,
+        row.token ? `\`${row.token}\`` : '—',
+        row.value ?? '—',
+      ])
+    ),
+    '',
+    `## Visibility (${visibility.length})`,
+    '',
+    table(
+      ['Class', 'Declares', 'Via'],
+      visibility.map((row) => [
+        `\`.${row.className}\``,
+        `\`${flat(row)}\``,
+        row.via ? `\`${row.via}\`` : '—',
+      ])
+    ),
+    '',
+    '`.al-u-is-vishidden` keeps content in the accessibility tree while removing it visually — for a',
+    'label a screen reader needs and a sighted reader does not. It is not a way to hide content; use',
+    '`hidden` for that.',
     '',
   ].join('\n');
 }

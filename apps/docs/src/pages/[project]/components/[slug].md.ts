@@ -1,5 +1,6 @@
 // Markdown twin of one component page, on one non-default design system's site.
 import type { APIRoute } from 'astro';
+import { getCollection } from 'astro:content';
 import { componentMarkdown } from '../../../lib/markdown.mjs';
 import { SCOPED_PROJECTS } from '../../../lib/projects.mjs';
 import { contextFor } from '../../../lib/context.mjs';
@@ -13,9 +14,10 @@ export function getStaticPaths() {
   );
 }
 
-export const GET: APIRoute = ({ props }) => {
+export const GET: APIRoute = async ({ props }) => {
   const { project, component } = props as any;
-  return new Response(componentMarkdown(component, contextFor(project)), {
+  const guidance = await getCollection('guidance');
+  return new Response(componentMarkdown(component, contextFor(project), guidance), {
     headers: { 'Content-Type': 'text/markdown; charset=utf-8' },
   });
 };

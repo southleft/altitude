@@ -26,7 +26,7 @@ import SearchIcon from './SearchIcon.astro';
 interface Props {
   context: any;
   /** Which INDEX entry is current. */
-  active?: 'overview' | 'foundations' | 'motion' | 'components';
+  active?: 'overview' | 'foundations' | 'motion' | 'icons' | 'utilities' | 'components';
   /** Slug of the component detail page being viewed, if any. */
   activeSlug?: string;
 }
@@ -35,13 +35,17 @@ const { context, active, activeSlug } = Astro.props;
 const { project, registry, site, href } = context;
 
 // The INDEX order is the reading order, and it is the same order the page
-// eyebrows count in (INDEX / 00, 01, 02, 03). Motion sits beside Foundations
-// because it is the same kind of thing — a token layer that every component
-// reads — not a component of its own.
+// eyebrows count in (INDEX / 00 … 05). Motion, Icons and Utilities sit beside
+// Foundations because they are the same kind of thing — shared layers every
+// component reads — not components of their own. Icons in particular: the
+// 1,512 glyphs are the PAYLOAD of `<al-icon>`, which is why they are one INDEX
+// entry here and not 1,512 rows in the atomic groups below.
 const index = [
   { id: 'overview', label: 'Overview', path: '/' },
   { id: 'foundations', label: 'Foundations', path: '/foundations' },
   { id: 'motion', label: 'Motion', path: '/motion' },
+  { id: 'icons', label: 'Icons', path: '/icons' },
+  { id: 'utilities', label: 'Utilities', path: '/utilities' },
   { id: 'components', label: 'Components', path: '/components' },
 ] as const;
 

@@ -1,0 +1,22 @@
+---
+/**
+ * ROUTE ONLY — Utilities for one non-default project.
+ *
+ * One route per NON-DEFAULT design system in `.altitude/ds-projects.json`
+ * (`projectPaths()`), so adding a project to that file adds a whole
+ * documentation site and removing it takes one away. The body is
+ * `src/components/pages/UtilitiesPage.astro`, the same file the site at the
+ * root renders.
+ */
+import UtilitiesPage from '../../components/pages/UtilitiesPage.astro';
+import { projectPaths } from '../../lib/projects.mjs';
+import { contextFor } from '../../lib/context.mjs';
+
+export function getStaticPaths() {
+  return projectPaths();
+}
+
+const { project } = Astro.props;
+---
+
+<UtilitiesPage context={contextFor(project)} />

@@ -1,0 +1,22 @@
+---
+/**
+ * ROUTE ONLY — Icons for one non-default project.
+ *
+ * One route per NON-DEFAULT design system in `.altitude/ds-projects.json`
+ * (`projectPaths()`), so adding a project to that file adds a whole
+ * documentation site and removing it takes one away. The body is
+ * `src/components/pages/IconsPage.astro`, the same file the site at the root
+ * renders.
+ */
+import IconsPage from '../../components/pages/IconsPage.astro';
+import { projectPaths } from '../../lib/projects.mjs';
+import { contextFor } from '../../lib/context.mjs';
+
+export function getStaticPaths() {
+  return projectPaths();
+}
+
+const { project } = Astro.props;
+---
+
+<IconsPage context={contextFor(project)} />

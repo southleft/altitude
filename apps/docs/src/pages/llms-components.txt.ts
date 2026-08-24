@@ -2,10 +2,15 @@
 // same artifacts the pages render: the CEM, the published token layer, the
 // committed agent digests and the axe report. Nothing here is hand-maintained.
 import type { APIRoute } from 'astro';
+import { getCollection } from 'astro:content';
 import { llmsComponents } from '../lib/artifacts.mjs';
 import { DEFAULT_CONTEXT } from '../lib/context.mjs';
 
-export const GET: APIRoute = () =>
-  new Response(llmsComponents(DEFAULT_CONTEXT), {
+// Guidance rides along so the machine surface carries the same judgement the
+// component pages show, not just the generated API. See src/lib/guidance.mjs.
+export const GET: APIRoute = async () => {
+  const guidance = await getCollection('guidance');
+  return new Response(llmsComponents(DEFAULT_CONTEXT, guidance), {
     headers: { 'Content-Type': 'text/plain; charset=utf-8' },
   });
+};

@@ -47,6 +47,8 @@ import {
   componentsIndexMarkdown,
   foundationsMarkdown,
   motionMarkdown,
+  iconsMarkdown,
+  utilitiesMarkdown,
 } from '../src/lib/markdown.mjs';
 
 const APP_ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -157,6 +159,8 @@ const artifacts = {
   'components.md': componentsIndexMarkdown(context),
   'foundations.md': foundationsMarkdown(context),
   'motion.md': motionMarkdown(context),
+  'icons.md': iconsMarkdown(context),
+  'utilities.md': utilitiesMarkdown(context),
 };
 
 for (const [name, body] of Object.entries(artifacts)) {

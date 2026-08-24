@@ -16,10 +16,14 @@ import {
   overviewMarkdown,
   foundationsMarkdown,
   motionMarkdown,
+  iconsMarkdown,
+  utilitiesMarkdown,
   componentsIndexMarkdown,
   componentMarkdown,
 } from './markdown.mjs';
 import { CHOREOGRAPHY_COUNT, MOTION_TOKEN_COUNT, PRESET_COUNT } from './motion.mjs';
+import { ICON_COUNT } from './icons.mjs';
+import { utilityCount } from './utilities.mjs';
 
 /* ------------------------------------------------------- prescriptive rules */
 
@@ -192,6 +196,8 @@ ${rulesBlock(context, { self: `${url}/llms.txt` })}
 - [Overview](${url}/): what this design system is, in numbers
 - [Foundations](${url}/foundations): color ramps, type presets, spacing, radius, elevation — read from the token layer, plus what this brand redeclares
 - [Motion](${url}/motion): the ${MOTION_TOKEN_COUNT} motion tokens, the \`<al-theme motion>\` axis matrix, and the ${CHOREOGRAPHY_COUNT} choreography tokens over ${PRESET_COUNT} keyframe presets
+- [Icons](${url}/icons): the ${ICON_COUNT} glyph names \`<al-icon name>\` accepts — a closed set, and the payload of one component rather than components of their own
+- [Utilities](${url}/utilities): the ${utilityCount()} CSS utility classes for light-DOM markup — the grid, the gap scale, the type ramp
 - [Components](${url}/components): the full index, filterable
 
 ${registry.tiers
@@ -315,7 +321,7 @@ export function llmsTokens(context) {
  * The bodies are `componentMarkdown()`, the exact renderer behind each component
  * page and each `.md` URL, so this file cannot say something a page does not.
  */
-export function llmsComponents(context) {
+export function llmsComponents(context, guidanceEntries = []) {
   const { site, registry } = context;
   return [
     `# ${site.title} — components`,
@@ -333,7 +339,9 @@ export function llmsComponents(context) {
     '',
     componentsIndexMarkdown(context),
     '',
-    ...registry.components.map((component) => `${componentMarkdown(component, context)}\n---\n`),
+    ...registry.components.map(
+      (component) => `${componentMarkdown(component, context, guidanceEntries)}\n---\n`
+    ),
   ].join('\n');
 }
 
@@ -420,15 +428,21 @@ export function llmsA11y(context) {
  * an agent that fetched only `llms-tokens.txt` must still be told not to invent
  * names.
  */
-export function llmsFull(context) {
+export function llmsFull(context, guidanceEntries = []) {
   return [
     llmsTxt(context),
     llmsTokens(context),
-    llmsComponents(context),
+    llmsComponents(context, guidanceEntries),
     llmsA11y(context),
     overviewMarkdown(context),
     foundationsMarkdown(context),
     motionMarkdown(context),
+    // Icons and Utilities go LAST, and the order is not arbitrary: both are
+    // long closed lists (1,512 names, 62 classes) whose value is to be looked
+    // up, not read through. An agent that stops early has still read the rules,
+    // the tokens, the component APIs and the a11y position.
+    iconsMarkdown(context),
+    utilitiesMarkdown(context),
   ].join('\n\n---\n\n');
 }
 
