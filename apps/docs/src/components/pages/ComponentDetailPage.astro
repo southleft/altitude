@@ -80,19 +80,19 @@ const pairTable = (rows, nameKey = 'name') =>
       }
     </p>
 
-    <!-- Design guidance — authored, cited to source, and gate-checked. It sits
-         ABOVE the playground because it answers the question a reader arrives
-         with ("is this the right component?") before the one the playground
-         answers ("what does it do?"). Absent guidance renders as an explicit
-         note rather than nothing; see GuidancePanel.astro. -->
-    <GuidancePanel component={component} project={project} />
-
+    <!-- Playground first: the reader arrives wanting to see the component, so it
+         sits directly under the title/lede, above the authored guidance. -->
     <Playground component={component} project={project} example={example} />
 
+    <!-- Design guidance — authored, cited to source, and gate-checked. Absent
+         guidance renders as an explicit note rather than nothing; see
+         GuidancePanel.astro. -->
+    <GuidancePanel component={component} project={project} />
+
     <!-- Status panels, generated at build time from the parity manifests and
-         the axe report. They sit directly under the playground because they
-         qualify what the reader just looked at: whether the design file agrees
-         with it, and what a machine found wrong with it. -->
+         the axe report. They qualify the component the reader just played with:
+         whether the design file agrees with it, and what a machine found wrong
+         with it. -->
     <ParityPanel tag={component.tag} project={project} />
     <ChecksPanel component={component} />
 
