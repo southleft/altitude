@@ -136,10 +136,106 @@ const config = {
 </div>
 
 <div class:list={['pg', fullBleed && 'pg--stacked', controlCount === 0 && 'pg--no-controls']}>
-  <div class:list={['pg__stage', 'blueprint', 'blueprint--sm', fullBleed && 'pg__stage--full']}>
+  {/* No blueprint grid behind an organism. The grid reads as stage backdrop
+      around a shrink-wrapped atom; behind a full-bleed page section it shows
+      through the section's own background and gaps, which makes the component
+      look like it ships a grid it does not have. */}
+  {/*
+      `data-pg-loading` ships SET, in the static HTML, and is removed by the
+      inline script below once the element upgrades. That direction matters:
+      the stage's honest state on arrival is "not ready yet", because the
+      markup inside `[data-pg-mount]` is an un-upgraded custom element — bare
+      inline text in a shadow-DOM-shaped hole — until the registry bundle
+      (LiveRuntime.astro, deferred to the end of <body>) evaluates. Rendering
+      the flag rather than adding it with JS means the spinner is showing from
+      the first paint instead of after the first script runs.
+  */}
+  <div
+    class:list={[
+      'pg__stage',
+      !fullBleed && 'blueprint',
+      !fullBleed && 'blueprint--sm',
+      fullBleed && 'pg__stage--full',
+    ]}
+    data-pg-loading
+    data-pg-tag={component.tag}
+  >
     <span class="pg__stage-label">PREVIEW / {component.tag} / BRAND {project.brand.toUpperCase()}</span>
+    {/* Hand-rolled, not `<al-spinner>`: the one thing this has to survive is
+        the window in which no Altitude element has upgraded yet, so a spinner
+        that is itself an Altitude element would be the bug it exists to hide.
+        Two divs and a keyframe in docs.css, owing nothing to the runtime. */}
+    <div class="pg__loading" role="status">
+      <span class="pg__loading-spinner" aria-hidden="true"></span>
+      <span class="pg__loading-label">Loading preview</span>
+    </div>
     <div data-pg-mount data-pg-example={hasExample ? '' : undefined} set:html={mountHtml} />
   </div>
+
+  {/* No JS, no upgrade, and no reveal script either — so the loading state
+      would be permanent. Show the markup instead: a partially-styled preview
+      beats a spinner that never resolves. */}
+  <noscript>
+    {/* `is:inline` is load-bearing: without it Astro extracts this block into
+        the page's bundled stylesheet, where it applies unconditionally and
+        cancels the loading state for everyone. Inline, it stays inside the
+        <noscript> and only the no-JS reader ever parses it. */}
+    <style is:inline>
+      .pg__stage[data-pg-loading] .pg__loading { display: none !important; }
+      .pg__stage[data-pg-loading] [data-pg-mount] { visibility: visible !important; }
+    </style>
+  </noscript>
+
+  <script is:inline>
+    /*
+     * Clears the loading state when the stage is actually ready to be looked at.
+     *
+     * INLINE, and not part of this component's module script below, on purpose.
+     * The module script is bundled and deferred; if that bundle is slow, fails
+     * to parse, or is blocked, the reveal has to happen anyway. This runs as
+     * soon as the parser reaches it and owns nothing but the flag.
+     *
+     * READY means upgraded AND painted, not merely defined: `whenDefined`
+     * resolves when the class is registered, while Lit's first render lands a
+     * microtask later — revealing on `whenDefined` alone swaps the spinner for
+     * an empty box. `updateComplete` is that render, and the rAF is the frame
+     * that paints it.
+     */
+    (function () {
+      var stage = document.querySelector('.pg__stage[data-pg-loading]');
+      if (!stage) return;
+
+      var revealed = false;
+      var reveal = function () {
+        if (revealed) return;
+        revealed = true;
+        stage.removeAttribute('data-pg-loading');
+      };
+
+      var tag = stage.getAttribute('data-pg-tag');
+      if (tag && window.customElements) {
+        window.customElements
+          .whenDefined(tag)
+          .then(function () {
+            var el = stage.querySelector('[data-pg-el]');
+            return el && el.updateComplete ? el.updateComplete : null;
+          })
+          .then(function () {
+            requestAnimationFrame(reveal);
+          })
+          .catch(reveal);
+      }
+
+      /*
+       * BACKSTOP. A tag that never registers must not leave a spinner turning
+       * for the life of the page — the registry bundle can 404, a component
+       * can be documented before it is exported, an extension can block the
+       * module. After this the reader sees whatever did load, which is at
+       * least diagnosable; a permanent spinner is not.
+       */
+      setTimeout(reveal, 6000);
+    })();
+  </script>
 
   {/* Fixture styles the story ships for its slotted content. Already prefixed
        with `[data-pg-example]` by lib/examples.mjs, so `.chip` here cannot

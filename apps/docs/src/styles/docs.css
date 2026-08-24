@@ -801,6 +801,88 @@ input:focus {
   color: var(--fg-weak);
 }
 
+/*
+ * LOADING STATE.
+ *
+ * The stage is server-rendered with `data-pg-loading` set and the inline
+ * script in Playground.astro removes it once the element has upgraded AND
+ * painted. So these rules describe the page as it ARRIVES, and the default —
+ * the rules further up this file — is the finished state.
+ *
+ * What is being hidden is worth naming: an Altitude tag before its class is
+ * registered is an unknown element, which the browser lays out as an inline
+ * box containing its slotted text. A reader watching that window sees the
+ * word "Button" in body copy, then a button — which reads as a rendering bug
+ * rather than as loading. `visibility` and not `display`: the mount keeps its
+ * box, so nothing on the page moves when the preview appears.
+ */
+.pg__stage[data-pg-loading] [data-pg-mount] {
+  visibility: hidden;
+}
+
+.pg__loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  /* Above the blueprint backdrop, below nothing else — the stage has no other
+     positioned children except its label, which sits in a corner. */
+  z-index: 1;
+  pointer-events: none;
+}
+
+.pg__stage:not([data-pg-loading]) .pg__loading {
+  display: none;
+}
+
+.pg__loading-spinner {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--line-weak);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: pg-spin 0.7s linear infinite;
+}
+
+.pg__loading-label {
+  font: 400 9px/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-weak);
+}
+
+@keyframes pg-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/*
+ * Reduced motion gets a slow pulse rather than nothing at all: the spinner's
+ * whole job is to say "this is still coming", and a frozen ring says the
+ * opposite. Opacity, not rotation — no vestibular trigger.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .pg__loading-spinner {
+    animation: pg-pulse 1.6s ease-in-out infinite;
+    border-top-color: var(--line-weak);
+    background: var(--blue);
+  }
+
+  @keyframes pg-pulse {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+
 .pg__controls {
   border-left: 1px solid var(--line);
   padding: 20px;
