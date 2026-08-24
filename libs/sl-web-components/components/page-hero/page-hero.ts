@@ -78,6 +78,24 @@ export class SLPageHero extends ALElement {
   @property({ attribute: 'heading-tag' })
   accessor headingTag: string = 'h1';
 
+  /**
+   * Heading scale. `display-md` is the interior-page default; `display-sm` is what
+   * an article or project band uses inside the narrower prose measure. Without
+   * this the four hand-rolled title bands on this site could not adopt the
+   * component at all — the variant was hardcoded.
+   */
+  @property({ attribute: 'heading-variant' })
+  accessor headingVariant: string = 'display-md';
+
+  /**
+   * Horizontal alignment of the whole band. `start` is the default; `center` is
+   * what the 404 and quiz pages want, and it has to move the EYEBROW too — the
+   * chip wrapper pins `align-self: start`, so text-align alone would leave it
+   * hanging off to the left.
+   */
+  @property({ reflect: true })
+  accessor align: 'start' | 'center' = 'start';
+
   render() {
     const componentClassNames = this.componentClassNames('sl-c-page-hero', {});
 
@@ -90,7 +108,7 @@ export class SLPageHero extends ALElement {
               </div>`
             : nothing}
           ${this.heading
-            ? html`<al-heading part="heading" tagName="${this.headingTag}" variant="display-md" isBold>
+            ? html`<al-heading part="heading" tagName="${this.headingTag}" variant="${this.headingVariant}" isBold>
                 ${this.heading}
               </al-heading>`
             : nothing}

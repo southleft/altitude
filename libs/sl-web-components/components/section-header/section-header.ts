@@ -29,6 +29,7 @@ import styles from './section-header.scss';
  *
  * @slot - The trailing position, for a control the link cannot express — a filter, a segmented toggle. Use it INSTEAD of `linkHref`; both render if both are set.
  *
+ * @property kicker - Kicker text without the angle brackets. Derives from `label` when unset; pass an empty string for a rule with no kicker.
  * @csspart rule - The mono index/label rule above everything.
  * @csspart kicker - The accent `<label>` kicker.
  * @csspart heading - The `<al-heading>`.
@@ -72,8 +73,22 @@ export class SLSectionHeader extends ALElement {
   @property({ attribute: 'heading-tag' })
   accessor headingTag: string = 'h2';
 
-  /** `<my-label>` — the brand's kicker form, derived rather than hand-passed so it cannot drift from the label. */
-  private get kickerSlug(): string {
+  /**
+   * The kicker text, WITHOUT the angle brackets the component draws around it.
+   *
+   * Leave it unset and it derives from `label` so the two cannot drift — that is
+   * the common case and the original behaviour. Set it when the two genuinely
+   * differ (a `<generative>` kicker under a `00 / the-canvas` rule), and set it
+   * to the empty string to render the RULE ALONE, which several sections want and
+   * which was previously unreachable: `label` gated the rule and the kicker
+   * together, so suppressing one suppressed the other.
+   */
+  @property()
+  accessor kicker: string;
+
+  /** `<my-label>` — the brand's kicker form, derived unless `kicker` overrides it. */
+  private get kickerText(): string {
+    if (this.kicker !== undefined && this.kicker !== null) return this.kicker;
     return (this.label ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
   }
 
@@ -89,8 +104,8 @@ export class SLSectionHeader extends ALElement {
           : nothing}
         <al-layout direction="row" justify="between" align="end" wrap gap="lg">
           <al-layout gap="sm" grow>
-            ${this.label
-              ? html`<p class="sl-c-section-header__kicker" part="kicker">&lt;${this.kickerSlug}&gt;</p>`
+            ${this.kickerText
+              ? html`<p class="sl-c-section-header__kicker" part="kicker">&lt;${this.kickerText}&gt;</p>`
               : nothing}
             ${this.heading
               ? html`<al-heading part="heading" tagName="${this.headingTag}" variant="lg" isBold>

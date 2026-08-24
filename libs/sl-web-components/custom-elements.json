@@ -1281,6 +1281,18 @@
             {
               "description": "Row and column gap, in that order. Defaults to `3rem 3.5rem`.",
               "name": "--al-logo-wall-gap"
+            },
+            {
+              "description": "The knock-back treatment. Defaults to `brightness(0) invert(1)`, which silhouettes each mark and flips it white — correct on a dark canvas and INVISIBLE on a light one. Set it to `brightness(0)` in light mode; the component cannot detect mode from inside its shadow root.",
+              "name": "--al-logo-wall-filter"
+            },
+            {
+              "description": "Filter on hover/focus. Defaults to the resting filter. Set it to `grayscale(0) invert(0) contrast(1)` to reveal each mark's real colours.",
+              "name": "--al-logo-wall-filter-hover"
+            },
+            {
+              "description": "Opacity on hover/focus. Defaults to `1`.",
+              "name": "--al-logo-wall-opacity-hover"
             }
           ],
           "cssParts": [
@@ -1595,6 +1607,27 @@
               "default": "'h1'",
               "description": "The heading's semantic level. `h1` on a page's primary hero, `h2` where the\nband is a section rather than the page title — a document-outline concern,\nwhich is why it is not fixed.",
               "attribute": "heading-tag"
+            },
+            {
+              "kind": "field",
+              "name": "headingVariant",
+              "type": {
+                "text": "string"
+              },
+              "default": "'display-md'",
+              "description": "Heading scale. `display-md` is the interior-page default; `display-sm` is what\nan article or project band uses inside the narrower prose measure. Without\nthis the four hand-rolled title bands on this site could not adopt the\ncomponent at all — the variant was hardcoded.",
+              "attribute": "heading-variant"
+            },
+            {
+              "kind": "field",
+              "name": "align",
+              "type": {
+                "text": "'start' | 'center'"
+              },
+              "default": "'start'",
+              "description": "Horizontal alignment of the whole band. `start` is the default; `center` is\nwhat the 404 and quiz pages want, and it has to move the EYEBROW too — the\nchip wrapper pins `align-self: start`, so text-align alone would leave it\nhanging off to the left.",
+              "attribute": "align",
+              "reflects": true
             }
           ],
           "attributes": [
@@ -1630,6 +1663,24 @@
               "default": "'h1'",
               "description": "The heading's semantic level. `h1` on a page's primary hero, `h2` where the\nband is a section rather than the page title — a document-outline concern,\nwhich is why it is not fixed.",
               "fieldName": "headingTag"
+            },
+            {
+              "name": "heading-variant",
+              "type": {
+                "text": "string"
+              },
+              "default": "'display-md'",
+              "description": "Heading scale. `display-md` is the interior-page default; `display-sm` is what\nan article or project band uses inside the narrower prose measure. Without\nthis the four hand-rolled title bands on this site could not adopt the\ncomponent at all — the variant was hardcoded.",
+              "fieldName": "headingVariant"
+            },
+            {
+              "name": "align",
+              "type": {
+                "text": "'start' | 'center'"
+              },
+              "default": "'start'",
+              "description": "Horizontal alignment of the whole band. `start` is the default; `center` is\nwhat the 404 and quiz pages want, and it has to move the EYEBROW too — the\nchip wrapper pins `align-self: start`, so text-align alone would leave it\nhanging off to the left.",
+              "fieldName": "align"
             }
           ],
           "superclass": {
@@ -1784,12 +1835,21 @@
             },
             {
               "kind": "field",
-              "name": "kickerSlug",
+              "name": "kicker",
+              "type": {
+                "text": "string"
+              },
+              "description": "Kicker text without the angle brackets. Derives from `label` when unset; pass an empty string for a rule with no kicker.",
+              "attribute": "kicker"
+            },
+            {
+              "kind": "field",
+              "name": "kickerText",
               "type": {
                 "text": "string"
               },
               "privacy": "private",
-              "description": "`<my-label>` — the brand's kicker form, derived rather than hand-passed so it cannot drift from the label.",
+              "description": "`<my-label>` — the brand's kicker form, derived unless `kicker` overrides it.",
               "readonly": true
             }
           ],
@@ -1850,6 +1910,14 @@
               "default": "'h2'",
               "description": "The heading's semantic level — a document-outline concern, so not fixed.",
               "fieldName": "headingTag"
+            },
+            {
+              "name": "kicker",
+              "type": {
+                "text": "string"
+              },
+              "description": "Kicker text without the angle brackets. Derives from `label` when unset; pass an empty string for a rule with no kicker.",
+              "fieldName": "kicker"
             }
           ],
           "superclass": {

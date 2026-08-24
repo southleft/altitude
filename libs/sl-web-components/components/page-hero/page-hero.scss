@@ -55,6 +55,19 @@
    *    Altitude's wrappers are — so reach for a real box whenever a rule has
    *    to act on the item itself rather than on its contents.
    */
+  /*
+   * Centred variant. `text-align` alone is not enough: the eyebrow wrapper below
+   * pins `align-self: start`, so the chip would stay hard left while the heading
+   * centred around it.
+   */
+  :host([align='center']) {
+    text-align: center;
+  }
+
+  :host([align='center']) .sl-c-page-hero__eyebrow {
+    align-self: center;
+  }
+
   .sl-c-page-hero__eyebrow {
     align-self: start; /* 4 */
   }

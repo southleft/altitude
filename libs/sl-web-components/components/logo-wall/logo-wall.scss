@@ -37,14 +37,34 @@
     block-size: var(--al-logo-wall-height, 1.75rem); /* 3 */
     inline-size: auto; /* 3 */
     display: block;
-    filter: brightness(0) invert(1); /* 2 */
+    /*
+     * 4. The knock-back is a HOOK, not a constant. `brightness(0) invert(1)`
+     *    silhouettes a mark and flips it white, which is correct on the ink
+     *    canvas and WRONG on paper — white marks on a light background are
+     *    invisible. Mode is a runtime, persisted user toggle in the consuming
+     *    app, and a shadow root cannot see the mode attribute on an ancestor
+     *    (`:host-context()` is not portable), so the app restates this per mode
+     *    from outside. Custom properties inherit through the boundary, which is
+     *    the same mechanism `_brand.scss` uses for the `--sl-*` primitives.
+     *    The default stays the dark treatment: it is the brand's usual context.
+     */
+    filter: var(--al-logo-wall-filter, brightness(0) invert(1)); /* 2, 4 */
     opacity: var(--al-logo-wall-opacity, 0.5);
-    transition: opacity var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+    transition:
+      opacity var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+      filter var(--al-theme-animation-duration) var(--al-theme-animation-timing);
   }
 
   ::slotted(img:hover),
   ::slotted(img:focus-visible) {
-    opacity: 1;
+    /*
+     * Hover is its own hook because the brand's dark treatment does not just
+     * raise opacity — it UNWINDS the silhouette so the mark shows its real
+     * colours. Defaulting to the resting filter keeps the plain behaviour for
+     * anyone who does not set it.
+     */
+    filter: var(--al-logo-wall-filter-hover, var(--al-logo-wall-filter, brightness(0) invert(1)));
+    opacity: var(--al-logo-wall-opacity-hover, 1);
   }
 
   :host([vivid]) ::slotted(img) {

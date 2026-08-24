@@ -28,6 +28,9 @@ import styles from './logo-wall.scss';
  * @cssproperty --al-logo-wall-height - Optical height every mark is normalised to. Defaults to `1.75rem`, and `2rem` from the `48rem` breakpoint up.
  * @cssproperty --al-logo-wall-opacity - Resting opacity. Defaults to `0.5`.
  * @cssproperty --al-logo-wall-gap - Row and column gap, in that order. Defaults to `3rem 3.5rem`.
+ * @cssproperty --al-logo-wall-filter - The knock-back treatment. Defaults to `brightness(0) invert(1)`, which silhouettes each mark and flips it white — correct on a dark canvas and INVISIBLE on a light one. Set it to `brightness(0)` in light mode; the component cannot detect mode from inside its shadow root.
+ * @cssproperty --al-logo-wall-filter-hover - Filter on hover/focus. Defaults to the resting filter. Set it to `grayscale(0) invert(0) contrast(1)` to reveal each mark's real colours.
+ * @cssproperty --al-logo-wall-opacity-hover - Opacity on hover/focus. Defaults to `1`.
  */
 export class SLLogoWall extends ALElement {
   static el = 'al-logo-wall';
