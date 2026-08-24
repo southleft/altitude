@@ -429,6 +429,10 @@
         gap: cs.columnGap === 'normal' ? 0 : px(cs.columnGap),
         pad: [px(cs.paddingTop), px(cs.paddingRight), px(cs.paddingBottom), px(cs.paddingLeft)],
         bg: cs.backgroundColor, fc: cs.color,
+        // The hero's whole backdrop is a repeating gradient LATTICE, not a fill.
+        // Probing only background-color loses it and the section reads as flat black.
+        bgImage: cs.backgroundImage && cs.backgroundImage !== 'none' ? cs.backgroundImage : null,
+        bgSize: cs.backgroundSize && cs.backgroundSize !== 'auto' ? cs.backgroundSize : null,
         bw: px(cs.borderTopWidth), bc: cs.borderTopColor, bstyle: cs.borderTopStyle,
         r: [px(cs.borderTopLeftRadius), px(cs.borderTopRightRadius), px(cs.borderBottomRightRadius), px(cs.borderBottomLeftRadius)],
         op: parseFloat(cs.opacity),
@@ -481,19 +485,141 @@
     return sub;
   }
 
+  // Depth cap. 6 is right for a COMPONENT (its own shadow tree is shallow) and far too
+  // shallow for a PAGE SECTION: the Southleft hero nests
+  // section > layout > layout > grid > layout > text-block, so its buttons and token
+  // chips sat below the cut and vanished. __section raises it; components keep 6.
+  let MAX_DEPTH = 6;
+  window.__setMaxDepth = (n) => { MAX_DEPTH = Number(n) || 6; };
+
+
+  /**
+   * ::before / ::after that PAINT, with a derived box.
+   *
+   * A pseudo-element has no node, so a DOM walk cannot see it (skill trap 17) — which is
+   * why `.sl-section-rule`'s numbered hairline was missing from every built frame. There
+   * is no API for a pseudo's geometry either, but the common decorative case is a flex
+   * child: ::before takes the space from the parent's content edge to the first real
+   * child, ::after from the last real child to the content end. Derive exactly that, and
+   * emit nothing when the shape is not a horizontal flex row we can reason about.
+   */
+  function pseudoBoxes(el, cs) {
+    const out = [];
+    for (const which of ['::before', '::after']) {
+      let p;
+      try { p = getComputedStyle(el, which); } catch (e) { continue; }
+      if (!p || p.content === 'none' || p.display === 'none') continue;
+      const bg = p.backgroundColor;
+      const paints = (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent')
+        || (p.backgroundImage && p.backgroundImage !== 'none');
+      if (!paints) continue;
+      if (cs.display !== 'flex' && cs.display !== 'inline-flex') continue;
+      if ((cs.flexDirection || 'row').indexOf('row') !== 0) continue;
+
+      const pr = el.getBoundingClientRect();
+      const padL = parseFloat(cs.paddingLeft) || 0, padR = parseFloat(cs.paddingRight) || 0;
+      const contentL = pr.left + padL, contentR = pr.right - padR;
+      const gap = parseFloat(cs.columnGap) || 0;
+      const rects = [...el.children]
+        .map((c) => c.getBoundingClientRect())
+        .filter((r) => r.width > 0 || r.height > 0)
+        .sort((a, b) => a.left - b.left);
+      if (!rects.length) continue;
+
+      const thick = parseFloat(p.blockSize || p.height) || 1;
+      const x = which === '::before' ? contentL : rects[rects.length - 1].right + gap;
+      const right = which === '::before' ? rects[0].left - gap : contentR;
+      const w = right - x;
+      if (!(w > 0.5)) continue;
+      // RELATIVE TO THE OWNING ELEMENT. Everything else in the tree is stored relative
+      // to the section root, so emitting viewport coordinates here made the builder
+      // subtract a relative value from an absolute one — the rules landed at y=1411
+      // inside a 190px frame and were clipped out of sight.
+      out.push({
+        which,
+        x: x - pr.left, y: (pr.height - thick) / 2,
+        w, h: thick,
+        bg, bgImage: p.backgroundImage !== 'none' ? p.backgroundImage : null,
+      });
+    }
+    return out.length ? out : undefined;
+  }
+
   function tree(el, rootBox, rules, depth, arbitrate) {
-    if (depth > 6) return null;
+    if (depth > MAX_DEPTH) return null;
     const cs = getComputedStyle(el);
     if (cs.display === 'none' || cs.visibility === 'hidden') return null;
     const node = describe(el, rootBox, rules, arbitrate);
     node.kids = [];
+    node.pseudo = pseudoBoxes(el, cs);
+    // A <canvas> is PAINTED BY JS and has no CSS to read — the hero's sparse glyph field
+    // (+ o > -) is one, so a CSS-only walk sees an empty box. Export its pixels instead.
+    if (el.tagName === 'CANVAS') {
+      try { node.canvasPng = el.toDataURL('image/png'); } catch (e) { /* tainted */ }
+    }
+    // <img>/<svg> are REPLACED elements: no CSS paints them, so a style-only walk sees an
+    // empty box (the logo wall is nothing but images). Drawing them to a canvas here is
+    // unreliable — an SVG <img> may report naturalWidth 0, and it would also miss the CSS
+    // `filter` the logo wall depends on (brightness(0) invert(1) is what makes the marks
+    // white). Tag them instead and let the DRIVER screenshot the real painted element.
+    if (el.tagName === 'IMG' || el.tagName === 'SVG' || el.tagName === 'svg') {
+      const id = 'r' + (window.__rasterSeq = (window.__rasterSeq || 0) + 1);
+      try { el.setAttribute('data-fig-raster', id); node.rasterId = id; } catch (e) { /* ignore */ }
+    }
+    // A wrapped INLINE element's getBoundingClientRect is the union of its line boxes,
+    // so its x/y describe no box that exists. In a preformatted block every child is
+    // such an element; take the whole run as one text node instead.
+    if (/^pre/.test(cs.whiteSpace)) {
+      const t = (el.textContent || '').replace(/\s+$/, '');
+      if (t) {
+        // Flattening to one text node fixed the overlap but threw away the syntax
+        // colouring (green ticks, red prompt, blue agent). Keep the RUNS -- offset,
+        // length and colour -- so the builder can restore them as text ranges.
+        const runs = [];
+        let off = 0;
+        (function walkRuns(parent, inherited) {
+          for (const cn of parent.childNodes) {
+            if (cn.nodeType === 3) {
+              const len = cn.textContent.length;
+              if (len) runs.push({ start: off, end: off + len, color: inherited });
+              off += len;
+            } else if (cn.nodeType === 1) {
+              walkRuns(cn, getComputedStyle(cn).color);
+            }
+          }
+        })(el, cs.color);
+        node.text = t;
+        node.pre = true;
+        node.runs = runs.filter((r) => r.start < t.length).map((r) => ({ ...r, end: Math.min(r.end, t.length) }));
+        return node;
+      }
+    }
     for (const child of el.children) {
       if (child.tagName === 'STYLE' || child.tagName === 'SCRIPT') continue;
       if (child.tagName === 'SLOT') {
         for (const a of child.assignedNodes({ flatten: true })) {
           if (a.nodeType === 3) {
             const t = a.textContent.trim();
-            if (t) { const n = describe(child.parentElement || el, rootBox, rules, arbitrate); n.text = t; n.kids = []; n.slotted = true; node.kids.push(n); }
+            if (t) {
+              // Typography comes from the slot's parent (trap 6 — that is what slotted
+              // text actually inherits from), but the BOX must be the text's own extent.
+              // Borrowing the parent's box made a chip's label start at the chip's left
+              // edge and run underneath the dot beside it. A Range gives the real one.
+              const n = describe(child.parentElement || el, rootBox, rules, arbitrate);
+              n.text = t; n.kids = []; n.slotted = true;
+              try {
+                const rg = document.createRange();
+                rg.selectNodeContents(a);
+                const rb = rg.getBoundingClientRect();
+                if (rb.width > 0.5 && rb.height > 0.5) {
+                  n.x = +(rb.left - rootBox.left).toFixed(2);
+                  n.y = +(rb.top - rootBox.top).toFixed(2);
+                  n.w = +rb.width.toFixed(2);
+                  n.h = +rb.height.toFixed(2);
+                }
+              } catch (e) { /* keep the parent box */ }
+              node.kids.push(n);
+            }
           } else if (a.nodeType === 1) {
             // A slotted al-* component is an instance boundary, exactly like one the
             // molecule renders itself — this is how most molecules compose.
@@ -516,11 +642,77 @@
     if (!node.kids.length) {
       const t = (el.textContent || '').trim();
       if (t) node.text = t;
+    } else {
+      // MIXED CONTENT. `.sl-token-chip` is `<span class="__dot"></span>--sl-color-red-500: ...`
+      // -- an element child followed by a bare text node. Keying text off "has no kids"
+      // dropped that label and the chip rendered as an empty box with a dot in it.
+      let own = '';
+      for (const cn of el.childNodes) if (cn.nodeType === 3) own += cn.textContent;
+      own = own.trim();
+      if (own) node.ownText = own;
     }
     return node;
   }
 
   window.__debug = { expand, classifyBorder, parts, box, unwrapVar, tokenOf, spec, authored, rulesOf };
+
+  /**
+   * Rules visible to LIGHT DOM. `rulesOf` reads adoptedStyleSheets, which is right for a
+   * component's shadow root and empty for the document. A real page section is light DOM
+   * styled by linked stylesheets, so its rules come from document.styleSheets.
+   */
+  function docRules() {
+    const out = [];
+    let order = 0;
+    const visit = (rule) => {
+      if (rule.cssRules && !rule.selectorText) {
+        if (rule.media && !window.matchMedia(rule.media.mediaText).matches) return;
+        for (const r of rule.cssRules) visit(r);
+        return;
+      }
+      if (!rule.selectorText) return;
+      out.push({ sel: rule.selectorText, style: rule.style, order: order++ });
+    };
+    for (const sheet of document.styleSheets) {
+      let top;
+      try { top = sheet.cssRules; } catch (e) { continue; }   // cross-origin
+      for (const r of top) visit(r);
+    }
+    for (const sheet of document.adoptedStyleSheets || []) {
+      let top;
+      try { top = sheet.cssRules; } catch (e) { continue; }
+      for (const r of top) visit(r);
+    }
+    return out;
+  }
+
+  /**
+   * Measure a REAL PAGE SECTION, not a synthetic harness case.
+   *
+   * `__spec` walks `section[data-atom] .case` and requires a shadow root on each host —
+   * it only ever sees isolated components rendered from plan.mjs. That is how a Figma
+   * "Hero" got built from a component nobody puts on the page: the pipeline could not
+   * look at the page at all. This walks any selector on a live route instead, so the
+   * measured thing is what a visitor actually sees, with real copy.
+   */
+  window.__section = function (selector, maxDepth) {
+    const out = [];
+    const prev = MAX_DEPTH;
+    MAX_DEPTH = Number(maxDepth) || 14;
+    const rules = docRules();
+    for (const el of document.querySelectorAll(selector)) {
+      const rb = el.getBoundingClientRect();
+      if (rb.width < 1 || rb.height < 1) continue;
+      out.push({
+        selector,
+        id: el.dataset.sectionId || el.id || el.className || selector,
+        box: { x: rb.x, y: rb.y, w: rb.width, h: rb.height },
+        root: tree(el, rb, rules, 0, true),
+      });
+    }
+    MAX_DEPTH = prev;
+    return out;
+  };
 
   window.__spec = function (state) {
     state = state || 'default';
