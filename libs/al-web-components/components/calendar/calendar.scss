@@ -13,8 +13,16 @@
     min-width: size(45);
     margin-block-start: 0;
     background-color: var(--al-calendar-background-color, var(--al-theme-color-background-default));
-    border-radius: var(--al-calendar-box-shadow, var(--al-theme-border-radius-lg));
-    box-shadow: var(--al-calendar-border-radius, var(--al-theme-box-shadow-md));
+    /*
+     * These two were transposed: `border-radius` read `--al-calendar-box-shadow`
+     * and `box-shadow` read `--al-calendar-border-radius`. The swap was masked
+     * because date-time-picker sets BOTH to `none` — valid for box-shadow (so
+     * the shadow did come off, via the wrongly-named var) and invalid for
+     * border-radius (so that declaration was dropped and the embedded calendar
+     * silently kept its `lg` radius). Each property now reads its own hook.
+     */
+    border-radius: var(--al-calendar-border-radius, var(--al-theme-border-radius-lg));
+    box-shadow: var(--al-calendar-box-shadow, var(--al-theme-box-shadow-md));
     position: relative;
   }
 

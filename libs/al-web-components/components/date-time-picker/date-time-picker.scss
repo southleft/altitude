@@ -133,7 +133,8 @@
   .al-c-date-time-picker__calendar {
     --al-calendar-background-color: transparent;
     --al-calendar-box-shadow: none;
-    --al-calendar-border-radius: none;
+    /* `none` is not a border-radius value; the embedded calendar sits flush. */
+    --al-calendar-border-radius: 0;
   }
 
   /**
