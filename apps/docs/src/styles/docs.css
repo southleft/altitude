@@ -308,7 +308,7 @@ input:focus {
 
 .page {
   padding: 48px var(--pad-x);
-  max-width: 1200px;
+  max-width: 1440px;
 }
 
 /* --------------------------------------------------------------- sidebar */
@@ -356,6 +356,14 @@ input:focus {
   padding: 9px 10px;
 }
 
+/* The field itself carries the focus affordance. The inner input is
+ * borderless and edge-to-edge, so the global `input:focus` outline would draw
+ * a second box inside this one — suppress it there and recolour the wrapper
+ * instead (see `.sidebar__search-field input:focus` below). */
+.sidebar__search-field:focus-within {
+  border-color: var(--blue);
+}
+
 .sidebar__search-field svg {
   width: 13px;
   height: 13px;
@@ -373,6 +381,10 @@ input:focus {
   padding: 0;
 }
 
+.sidebar__search-field input:focus,
+.sidebar__search-field input:focus-visible {
+  outline: none;
+}
 .sidebar__nav {
   flex: 1;
   overflow-y: auto;
