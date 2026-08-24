@@ -2,6 +2,7 @@
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import globals from 'globals';
+import litA11y from 'eslint-plugin-lit-a11y';
 
 export default [
   {
@@ -78,6 +79,73 @@ export default [
       'no-control-regex': 'warn',
       'no-unsafe-finally': 'warn',
       'prefer-spread': 'warn',
+    },
+  },
+  /**
+   * ACCESSIBILITY LINTING FOR THE LIT TEMPLATES.
+   *
+   * `eslint-plugin-lit-a11y` reads the `html` tagged templates the components
+   * render, so it catches the class of defect the axe suite cannot: axe runs on
+   * a rendered STORY, and a branch no story exercises is never measured. This
+   * runs on the source.
+   *
+   * Every rule is `error` by default so a clean rule can never quietly regress.
+   * The exceptions below are each a measured decision, not a convenience — the
+   * counts come from a full run over both component libraries.
+   *
+   * Stories and tests are excluded: they are demo fixtures, and their emoji and
+   * placeholder alt text are illustrative rather than shipped.
+   */
+  {
+    files: ['libs/al-web-components/components/**/*.ts', 'libs/sl-web-components/components/**/*.ts'],
+    ignores: ['**/*.stories.ts', '**/*.test.ts', '**/*.spec.ts'],
+    plugins: { 'lit-a11y': litA11y },
+    rules: {
+      ...Object.fromEntries(Object.keys(litA11y.rules).map((rule) => [`lit-a11y/${rule}`, 'error'])),
+
+      /*
+       * OFF — a shadow-DOM blind spot, not a defect. The rule requires a `<ul>`
+       * to contain only `<li>`; these contain a `<slot>`, and the CONSUMER
+       * slots the list items in. The linter cannot see through a slot, so it
+       * reports every slotted list in the library. 6 hits, all false.
+       */
+      'lit-a11y/list': 'off',
+
+      /*
+       * OFF — deliberate, and load-bearing. `role="list"` on a `<ul>`/`<ol>` is
+       * redundant per spec, but WebKit strips list semantics from any list
+       * styled `list-style: none`, which every one of these is (verified in
+       * list, breadcrumbs, menu, pagination and stepper .scss). Restating the
+       * role is the standard workaround; removing it would cost VoiceOver users
+       * the list announcement. 7 hits, all intentional.
+       */
+      'lit-a11y/no-redundant-role': 'off',
+
+      /*
+       * OFF — public API, not a page stealing focus. Both hits are
+       * `.autofocus=${this.isFocused}`, a property binding driven by the
+       * component's own documented prop, so the consumer opts in per instance.
+       * The rule targets a hardcoded `autofocus` attribute, which neither is.
+       */
+      'lit-a11y/no-autofocus': 'off',
+
+      /*
+       * WARN, NOT OFF — these are real and unfixed, held at warn only so the
+       * gate can land today. `scripts/check-lit-a11y-ratchet.mjs` pins the
+       * count so they cannot grow, and each is a task in the
+       * accessibility-remediation spec. Promote to `error` as each reaches zero.
+       *
+       *   click-events-have-key-events (8) — several are backdrop click-to-close
+       *     on dialog/drawer/popover, which need confirming against their Escape
+       *     handling before being called defects; list-item and menu-item look real.
+       *   accessible-name (4) — a dialog and a combobox with no accessible name.
+       *     These are straightforwardly real.
+       *   mouse-events-have-key-events (1) — toast's `@mouseover` pause with no
+       *     `@focus`, so a keyboard user cannot pause the timer.
+       */
+      'lit-a11y/click-events-have-key-events': 'warn',
+      'lit-a11y/accessible-name': 'warn',
+      'lit-a11y/mouse-events-have-key-events': 'warn',
     },
   },
   {

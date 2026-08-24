@@ -626,7 +626,7 @@ jobs:
     # The four gates below existed as `pnpm run` scripts that only ever ran by
     # hand. AGENTS.md names check:ds-projects as its own enforcement mechanism,
     # so leaving it unwired meant the contract was documented but not enforced.
-    name: hand-run gates (ds-projects, sl-scope, brands, audit)
+    name: hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -640,6 +640,15 @@ jobs:
         run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Southleft scope boundary
         run: pnpm run check:sl-scope
+      # eslint-plugin-lit-a11y reads the `html` templates directly, so it sees
+      # branches no story renders — the gap the axe suite structurally cannot
+      # cover, since axe only measures what a story actually paints. Most rules
+      # are `error` and clean; three are held at `warn` with their count pinned
+      # in .altitude/baselines/lit-a11y.json so known-bad cannot grow while the
+      # fixes land. Promote each to `error` and drop it from the baseline as it
+      # reaches zero.
+      - name: Lit template accessibility (ratcheted)
+        run: pnpm run gate:lit-a11y
       # Warning-only until the 7 real al-header/al-footer supersession gaps it
       # found on day one are fixed (tracked as an .mm issue); then drop the
       # fallback so new base->brand divergence becomes a hard failure.

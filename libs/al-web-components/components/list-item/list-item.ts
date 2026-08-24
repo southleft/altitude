@@ -525,13 +525,13 @@ export class ALListItem extends ALElement {
             ? html`
                 <div class="al-c-list-item__items" role="list" @mouseenter=${this.handleMouseEnter} aria-hidden=${ifDefined(!this.isActive)}>
                   <${this.dropdownPanelEl} class="al-c-list-item__dropdown-panel" @keydown=${this.handleClose}>
-                    <slot name="items" aria-hidden=${ifDefined(this.isActive)}></slot>
+                    <slot name="items"></slot>
                   </${this.dropdownPanelEl}>
                 </div>
               `
             : html`
                 <div class="al-c-list-item__items" role="list" aria-hidden=${ifDefined(!this.isActive)}>
-                  <slot name="items" aria-hidden=${ifDefined(this.isActive)}></slot>
+                  <slot name="items"></slot>
                 </div>
               `)}
         </li>
