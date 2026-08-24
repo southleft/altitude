@@ -1,0 +1,31 @@
+---
+/**
+ * Upgrades `<al-theme>` — and ONLY `<al-theme>` — on every page of every site.
+ *
+ * WHY THIS EXISTS SEPARATELY FROM `LiveRuntime.astro`. That module imports the
+ * whole element registry and is rendered only where a page mounts live
+ * components, which is component detail pages and nothing else. Everywhere
+ * else — every project's overview, foundations and component index — the
+ * `<al-theme>` that Shell.astro wraps the shell in was never upgraded at all.
+ *
+ * That was invisible while the docs chrome was hardcoded neutral. It stopped
+ * being invisible the moment the chrome moved onto `--al-theme-color-*`:
+ * those custom properties are set by this element's `:host` rules, so a page
+ * where it never upgrades renders the base bundle's values — i.e. the DEFAULT
+ * brand's. Southleft's overview would have been Altitude grey while
+ * Southleft's Button page was Southleft brown, on the same site.
+ *
+ * It is also what the boot blur waits on (`data-booting` in Shell.astro).
+ * Without this, the pages with no live components would have had nothing to
+ * wait for and would have stayed blurred for the length of the backstop.
+ *
+ * One component, not the library: this is a deep import through the package's
+ * `./components/*` export, and `theme.ts:82` self-registers when
+ * `window.alAutoRegistry` is true — which Shell.astro sets inline in <head> on
+ * every page, live or not (.altitude/REGISTRATION.md).
+ */
+---
+
+<script>
+  import '@southleft/al-web-components/components/theme';
+</script>

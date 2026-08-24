@@ -29,6 +29,7 @@ import '@southleft/al-web-components/css/main.css';
 import '../styles/docs.css';
 import Sidebar from '../components/Sidebar.astro';
 import BrandTheme from '../components/BrandTheme.astro';
+import ThemeRuntime from '../components/ThemeRuntime.astro';
 import LiveRuntime from '../components/LiveRuntime.astro';
 import BrandRuntime from '../components/BrandRuntime.astro';
 import { SITE, base } from '../lib/site.mjs';
@@ -59,8 +60,20 @@ const canonical = new URL(Astro.url.pathname, SITE.url).toString();
 ---
 
 <!doctype html>
+{/*
+  `data-booting` ships SET and is cleared by the inline script below once
+  `<al-theme>` has upgraded. It drives the boot blur (docs.css, `.shell`).
+
+  The chrome's colours are `--al-theme-color-*` now, and those only resolve
+  per-brand once that element upgrades — so between first paint and upgrade
+  the page is drawn in the DEFAULT brand's palette. The boot palette in
+  docs.css is pinned to exactly those values, so the default project shifts by
+  nothing; every other brand shifts a little, and the blur covers the moment
+  the text, rules and previews all re-resolve at once.
+*/}
 <html
   lang="en"
+  data-booting
   data-docs-base={base}
   data-docs-project={project.id}
   data-docs-brand={project.brand}
@@ -98,6 +111,53 @@ const canonical = new URL(Astro.url.pathname, SITE.url).toString();
          every page now, not only the live ones: `<al-theme>` wraps the shell. */
     }
     <script is:inline>window.alAutoRegistry = true;</script>
+
+    {
+      /* Clears the boot blur. INLINE and in <head> so it is armed before the
+         body exists and does not depend on the bundled module graph — if that
+         fails to load, the backstop below still un-blurs rather than leaving
+         the site permanently frosted. */
+    }
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        var done = false;
+        var clear = function () {
+          if (done) return;
+          done = true;
+          root.removeAttribute('data-booting');
+        };
+
+        /* The real signal: the theme host is what sets every --al-theme-color-*
+           the chrome reads, so "upgraded" IS "the colours are final".
+           ThemeRuntime.astro guarantees this resolves on every page, not just
+           the ones that mount live components. */
+        if (window.customElements) {
+          window.customElements.whenDefined('al-theme').then(function () {
+            requestAnimationFrame(clear);
+          });
+        } else {
+          clear();
+        }
+
+        /* Backstop. A blur that never lifts is far worse than a flash, so any
+           failure mode — blocked module, 404'd bundle, an unregistered tag —
+           ends with a sharp page. */
+        setTimeout(clear, 2000);
+      })();
+    </script>
+
+    {
+      /* No JS means no upgrade, no clear, and a permanently blurred site.
+         `is:inline` keeps this inside <noscript>; without it Astro hoists the
+         block into the page stylesheet where it would disable the blur for
+         everyone. */
+    }
+    <noscript>
+      <style is:inline>
+        html[data-booting] .shell { filter: none !important; }
+      </style>
+    </noscript>
   </head>
   <body>
     <al-theme brand={project.brand} data-brand-host>
@@ -135,6 +195,15 @@ const canonical = new URL(Astro.url.pathname, SITE.url).toString();
     </script>
 
     <BrandTheme />
+
+    <!--
+      THE THEME HOST, ON EVERY PAGE. Cheap (one component, not the registry)
+      and load-bearing twice over: it is what makes the chrome resolve in this
+      project's brand on pages that mount no live components, and it is what
+      the boot blur waits on. See ThemeRuntime.astro.
+    -->
+    <ThemeRuntime />
+
     <!--
       THE BRAND LAYER GOES FIRST, AND THE ORDER IS LOAD-BEARING.
 

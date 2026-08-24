@@ -35,13 +35,32 @@
 
 /* ---------------------------------------------------------------- tokens */
 
+/*
+ * THE BOOT PALETTE, and it is no longer just "the canvas's colours".
+ *
+ * Everything below is overridden on `al-theme` (see the brand host further
+ * down) the moment that element UPGRADES — but `--al-theme-color-*` only
+ * resolve per-brand once it has, and the registry bundle is deferred to the
+ * end of <body>. So for the first paint of every page, THESE values are what
+ * the reader sees.
+ *
+ * That makes them the flash: any literal here that differs from what the
+ * brand resolves to is a colour the page visibly changes out of. They are
+ * therefore pinned to the DEFAULT PROJECT'S resolved values rather than to
+ * the canvas's originals — measured, not guessed — so the flagship site
+ * boots on exactly what it ends on and has no flash at all. A non-default
+ * brand still shifts (Southleft: #e2e0da → #f3f1eb light, #101010 → #181714
+ * dark), which is what the boot blur in `Shell.astro` is for.
+ *
+ * Changing a brand's background tokens therefore means re-checking these.
+ */
 :root {
-  --bg: #ffffff;
-  --bg2: #f8f8f6;
+  --bg: #e2e0da;
+  --bg2: #e9e7e2;
   --fg: #101010;
-  --fg-weak: #616161;
-  --line: #101010;
-  --line-weak: #e2e0da;
+  --fg-weak: #3a3a3a;
+  --line: #3a3a3a;
+  --line-weak: #d9d9d9;
   --blue: #4375ff;
   --blue-hover: #6b93ff;
   --blue-ink: #000b29;
@@ -91,13 +110,15 @@
   --ease: cubic-bezier(0.15, 0.99, 0.18, 0.99);
 }
 
+/* The dark half of the boot palette — same rule: the default brand's resolved
+   values, so its dark pages boot on their final colours. */
 [data-theme='dark'] {
   --bg: #101010;
   --bg2: #181818;
   --fg: #f8f8f6;
-  --fg-weak: #b0b0b0;
-  --line: #f8f8f6;
-  --line-weak: #2e2e2e;
+  --fg-weak: #bdb39e;
+  --line: #bdb39e;
+  --line-weak: #616161;
   --blue-soft: #0c3197;
   --al-bg-default: #181818;
   --al-bg-strong: #2e2e2e;
@@ -173,6 +194,123 @@ al-theme {
   display: contents;
   --blue: var(--al-theme-color-content-primary-default, #4375ff);
   --blue-hover: var(--al-theme-color-content-primary-strong, #6b93ff);
+
+  /*
+   * PAGE SURFACES, bound to the brand by the same mechanism and for the same
+   * reason as the accent above — declared HERE and not at `:root`, or they
+   * would resolve against the base bundle and every design system would get
+   * the reference brand's neutrals.
+   *
+   * This is what made the southleft docs render on the same #101010 as
+   * altitude while southleft.com rendered warm brown: the chrome background
+   * was a literal in this file, so the one thing a reader uses to tell two
+   * design systems apart was the one thing that could not vary.
+   *
+   * WHY `background-default-weak` IS THE PAGE COLOUR, rather than a judgement
+   * call: the token layer says so itself —
+   * `--al-theme-color-body-background: var(--al-theme-color-background-default-weak)`
+   * (styles/dist/css/theme/tokens-{light,dark}.css:436, both modes).
+   *
+   * WHY THE LEAF AND NOT THAT ALIAS. `body-background` is declared only in the
+   * unscoped `:root` bundle and is NOT restated in `<al-theme>`'s
+   * `:host([mode])` partials (verified: no match in dist-v5/scss/host/). This
+   * site TOGGLES mode at runtime, so the alias would resolve once and then sit
+   * still while the toggle moved everything around it. The `-weak` leaf is
+   * restated per mode, which is why apps/southleft/src/styles/layout.css:98
+   * reaches past the same alias for the same reason.
+   *
+   * WHAT MOVES, measured against each shell's own background:
+   *   altitude light  #ffffff → #e2e0da   body text 19.03→14.41, weak 6.19→4.69
+   *   altitude dark   #101010 → #101010   unchanged, to the byte
+   *   southleft light #ffffff → #f3f1eb   body text 19.03→16.85, weak 6.19→5.48
+   *   southleft dark  #101010 → #181714   body text 17.89→16.86, weak 8.77→8.27
+   *
+   * Every ratio still clears AA for normal text; 4.69 (weak body copy on the
+   * altitude light shell) is the tight one and the number to re-check before
+   * anything else in this file gets darker. `--fg` / `--line` stay literal on
+   * purpose — this is the backgrounds-only half of the brand, so the type
+   * ramp and hairlines keep the canvas's neutrals.
+   */
+  --bg: var(--al-theme-color-background-default-weak, #ffffff);
+  --bg2: var(--al-theme-color-background-default, #f8f8f6);
+
+  /*
+   * TYPE AND RULES, on the same footing as the surfaces above.
+   *
+   * `--line` IS A CONTENT TOKEN, and specifically the -weak one. Two wrong
+   * answers were tried first and both are instructive:
+   *
+   *   `content-default` — matches the canvas exactly, because `--line` and
+   *   `--fg` were the same literal in both modes. It survives on Altitude,
+   *   whose design language IS ink rules, and it is wrong the moment a brand
+   *   is warm: on the Southleft dark site it resolves #faf9f8, so a
+   *   near-white hairline runs down a #181714 page. Matching the canvas is
+   *   not the goal; the canvas WAS one brand.
+   *
+   *   `border-default-strong` — the name a structural rule should obviously
+   *   take, and it fails hardest: Altitude publishes #bdb39e for it in BOTH
+   *   modes, which is 1.57:1 on the light Altitude shell. The rules would all
+   *   but vanish on the flagship site. `border-default` is worse still,
+   *   failing in three of the four brand×mode combinations.
+   *
+   * Measured against each shell's own background:
+   *                          alt light  alt dark  sl light  sl dark
+   *   content-default          14.41     17.89     15.87    17.05
+   *   border-default-strong     1.57      9.16      8.44     6.36
+   *   content-default-weak      8.62      9.16      6.32     6.36   ← this
+   *
+   * It is the only candidate strong enough to read as structure in all four,
+   * and it lands #a49981 on Southleft dark — the warm brown that brand's
+   * rules are supposed to be. The cost is that `--line` and `--fg-weak` now
+   * resolve to the same value; at 1px that reads as a rule and at 16px as
+   * secondary copy, so the collision is not worth a second token.
+   *
+   * `--al-border*` below are the mid-greys, and they take the border tokens.
+   *
+   * `--fg-weak` is the one judgement call: no token matches #616161/#b0b0b0,
+   * so it takes `content-default-weak` and gets DARKER in light mode
+   * (#616161 → #3a3a3a, 4.69:1 → 8.62:1). Better contrast, slightly less
+   * separation from `--fg` — if secondary copy now reads too close to
+   * primary, that is the trade and this is the line to revisit.
+   */
+  --fg: var(--al-theme-color-content-default, #101010);
+  --fg-weak: var(--al-theme-color-content-default-weak, #3a3a3a);
+  --line: var(--al-theme-color-content-default-weak, #3a3a3a);
+  --line-weak: var(--al-theme-color-border-default-weak, #d9d9d9);
+
+  /*
+   * The `--al-*` mirrors were LITERAL COPIES of these very tokens — every one
+   * of the seven matched its token exactly, in both modes (verified against
+   * the resolved values before this edit). So this is a pure refactor for the
+   * reference brand and a real fix for every other one: the theme switch and
+   * the outline buttons were painting Altitude's greys on Southleft's site.
+   */
+  --al-bg-default: var(--al-theme-color-background-default, #e9e7e2);
+  --al-bg-strong: var(--al-theme-color-background-default-strong, #f2f1ee);
+  --al-bg-stronger: var(--al-theme-color-background-default-stronger, #f4f3f1);
+  --al-content: var(--al-theme-color-content-default, #101010);
+  --al-content-weak: var(--al-theme-color-content-default-weak, #3a3a3a);
+  --al-border: var(--al-theme-color-border-default, #b0b0b0);
+  --al-border-weak: var(--al-theme-color-border-default-weak, #d9d9d9);
+
+  /*
+   * `--status-gap` migrates and its two siblings CANNOT, which is a fact about
+   * the token set rather than a preference. The DS's status tokens do not vary
+   * by mode — `content-success-default` is #36b370 on a white page and on a
+   * black one. That is fine for the gap tone, whose literal was mode-invariant
+   * too (#f05735 in both, and identical to the token). It is fatal for the
+   * other two, whose literals DO change per mode. Measured against the light
+   * shell, migrating them would have moved:
+   *   --status-ok    #2f8f4e 3.08:1  →  #36b370 2.03:1
+   *   --status-warn  #b4761a 2.87:1  →  #ffab00 1.44:1
+   * The `-weak` variants invert the problem: 13.9:1 in light, 1.04:1 in dark.
+   * So they stay literal until the DS ships per-mode status tones.
+   *
+   * SEPARATELY, and pre-existing: 3.08 and 2.87 are already under the 4.5:1
+   * these need as TEXT (`.status--*` sets `color`). Not introduced here and
+   * not fixed here — worth its own issue.
+   */
+  --status-gap: var(--al-theme-color-content-danger-default, #f05735);
 }
 
 a {
@@ -298,6 +436,43 @@ input:focus {
   overflow: hidden;
   background: var(--bg);
   color: var(--fg);
+
+  /*
+   * THE BOOT BLUR. `<html data-booting>` ships set and is cleared once
+   * `<al-theme>` upgrades (Shell.astro), so this is the page's first-paint
+   * state and sharp is the resting one.
+   *
+   * WHAT IT ACTUALLY BUYS, stated honestly: blur hides DETAIL, not hue. A
+   * flat background moving #101010 → #181714 is still that colour underneath
+   * a 14px blur. What the blur removes is the part that reads as broken — the
+   * text, rules and component previews resolving at different moments — and
+   * what makes the residual colour shift acceptable is that the boot palette
+   * above is pinned to the default brand, so the shift only happens on
+   * non-default brands and is small when it does. Blur alone, over the old
+   * #ffffff boot value, would NOT have hidden white → beige.
+   *
+   * On `.shell` rather than `body`: `--bg` is declared on `<al-theme>`, which
+   * is `display: contents` and cannot take a filter, and `.shell` is the first
+   * real box inside it. Verified no `position: fixed` or `sticky` anywhere in
+   * this file — a filter would otherwise become their containing block and
+   * move them for the duration of the boot.
+   */
+  transition: filter 0.32s var(--ease);
+}
+
+html[data-booting] .shell {
+  filter: blur(14px);
+}
+
+/*
+ * Reduced motion keeps the blur and drops the ANIMATION. The blur is a static
+ * state, not movement, and removing it entirely would put the flash back —
+ * so what goes is the 320ms transition, leaving a clean cut to sharp.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .shell {
+    transition: none;
+  }
 }
 
 .shell__main {
@@ -1246,6 +1421,18 @@ input:focus {
     flex-direction: column;
     height: auto;
     overflow: visible;
+
+    /*
+     * The branded page colour lives on `.shell`, because `--bg` is declared on
+     * `<al-theme>` and `<body>` is that element's ANCESTOR — a custom property
+     * cannot travel upwards, so body keeps the neutral literal. At desktop
+     * that is invisible: `.shell` is `height: 100vh` and covers everything.
+     * Here it is not, and a page shorter than the viewport would show a strip
+     * of neutral #ffffff/#101010 under the brand's colour. Filling the
+     * viewport is the cheap half of the fix; moving the theme host to <body>
+     * is the other one, and is a bigger change than this rule.
+     */
+    min-height: 100vh;
   }
 
   .sidebar {
