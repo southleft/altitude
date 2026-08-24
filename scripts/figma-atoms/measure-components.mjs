@@ -16,14 +16,16 @@
  *   geometry-light.json / geometry-dark.json   window.__measure() summaries
  */
 import { spawn, execFileSync } from 'node:child_process';
-import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
+import { scope, projectArg } from './project-scope.mjs';
 
 const require = createRequire(import.meta.url);
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const OUT = join(ROOT, '.altitude/figma-sync');
+const SC = scope(projectArg());
+const OUT = SC.dirs.sync;
 const STATES = ['default', 'hover', 'focus', 'active', 'disabled'];
 
 const portArg = process.argv.indexOf('--port');
@@ -41,10 +43,34 @@ if (!NO_BUNDLE) {
   } catch {
     /* not hoisted where resolve can see it */
   }
+  // pnpm does not hoist esbuild into node_modules/, so require.resolve misses it.
+  // Fall back to scanning the store the way the README's by-hand command does.
+  if (!esbuildBin || !existsSync(esbuildBin)) {
+    const store = join(ROOT, 'node_modules/.pnpm');
+    if (existsSync(store)) {
+      const dirs = readdirSync(store).filter((d) => /^esbuild@/.test(d)).sort().reverse();
+      for (const d of dirs) {
+        const cand = join(store, d, 'node_modules/esbuild/bin/esbuild');
+        if (existsSync(cand)) { esbuildBin = cand; break; }
+      }
+    }
+  }
   if (esbuildBin && existsSync(esbuildBin)) {
+    // Tag-collision order is LOAD-BEARING. al-card / al-header / al-footer exist in
+    // BOTH packages and each guards with `customElements.get(tag) === undefined`, so
+    // FIRST definition wins. The brand layer must therefore be imported FIRST — that
+    // is what `brandLibrary.supersedes` in the registry asks for.
+    const entries = [];
+    if (SC.brandLibrary) {
+      const b = join(SC.brandLibrary.root, 'dist/components/bundle/bundle.js');
+      if (existsSync(b)) entries.push(b);
+      else console.warn('[measure] brand bundle missing (build it first):', b);
+    }
+    entries.push(join(SC.libRoots[0], 'dist/components/bundle/bundle.js'));
+    const entryFile = join(OUT, 'entry.js');
+    writeFileSync(entryFile, entries.map((e) => `import '${e.replace(/\\/g, '/')}';`).join('\n') + '\n');
     execFileSync(process.execPath, [
-      esbuildBin,
-      join(ROOT, 'libs/al-web-components/dist/components/bundle/bundle.js'),
+      esbuildBin, entryFile,
       '--bundle', '--format=esm', `--outfile=${BUNDLE}`,
     ], { stdio: 'inherit' });
   } else if (!existsSync(BUNDLE)) {
@@ -56,7 +82,7 @@ if (!NO_BUNDLE) {
 }
 
 /* ---------- 2. harness --------------------------------------------------- */
-const harness = spawn(process.execPath, [join(ROOT, 'scripts/figma-atoms/harness.mjs'), '--port', String(PORT)], {
+const harness = spawn(process.execPath, [join(ROOT, 'scripts/figma-atoms/harness.mjs'), '--port', String(PORT), '--project', SC.id], {
   stdio: ['ignore', 'pipe', 'inherit'],
 });
 harness.stdout.on('data', (d) => process.stdout.write(`[harness] ${d}`));

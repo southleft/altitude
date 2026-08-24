@@ -23,14 +23,21 @@
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { PLAN } from './plan.mjs';
-import { resolveInstance } from './instance-map.mjs';
 import { figmaVariableFor } from './token-map.mjs';
+import { scope, scopePlan, projectArg } from './project-scope.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const SYNC = join(ROOT, '.altitude/figma-sync');
-const OPS_DIR = join(SYNC, 'ops');
+const SC = scope(projectArg());
+// Node ids in an instance map are FILE-scoped. A project with no map of its own
+// gets a no-op resolver rather than another file's ids (ds-project.mjs is explicit
+// that this must never fall back).
+const { resolveInstance } = SC.instanceMapPath
+  ? await import(pathToFileURL(SC.instanceMapPath).href)
+  : { resolveInstance: () => null };
+const SYNC = SC.dirs.sync;
+const OPS_DIR = SC.dirs.ops;
 mkdirSync(OPS_DIR, { recursive: true });
 
 const specLight = JSON.parse(readFileSync(join(SYNC, 'spec-light.json'), 'utf8'));
@@ -114,6 +121,13 @@ function simplify(node, v, depth = 0) {
     },
     fill: v(t['background-color']),
     textColor: v(t['color']),
+    // MEASURED fallbacks. A declaration with no token behind it used to emit
+    // nothing at all, and build-page then left the node unpainted — text fell back
+    // to Figma's default BLACK, which is invisible on the dark canvas this brand
+    // ships. Carrying the measured colour keeps the same policy build-section uses:
+    // bind where a token exists, use the literal where one honestly does not.
+    fillLit: node.computed.bg || null,
+    textColorLit: node.computed.fc || null,   // light-tree value; roots above prefer dark
     stroke: t['border-top-color'] ? { color: v(t['border-top-color']), width: v(t['border-top-width']) } : undefined,
     radius: t['border-top-left-radius'] ? v(t['border-top-left-radius']) : undefined,
     // Focus rings (al-focus mixin = outline), disabled opacities and shadows land on
@@ -134,7 +148,7 @@ function simplify(node, v, depth = 0) {
 
 const summary = [];
 
-for (const entry of PLAN) {
+for (const entry of scopePlan(PLAN, SC)) {
   const unresolved = new Set();
   const hooks = new Set();
   const compPrefix = entry.tag.replace(/^al-/, '') + '-';
@@ -179,6 +193,7 @@ for (const entry of PLAN) {
       const root = l.root;
       const t = root.tokens || {};
       const tn = textNode(root);
+      const darkTextNode = d && d.root ? textNode(d.root) : null;
       const tt = (tn && tn.tokens) || {};
 
       // Delta detection must be DEEP: list-item's hover lands on a descendant, not the
@@ -240,6 +255,10 @@ for (const entry of PLAN) {
         differsFromDefault: isDefaultRow ? undefined : sig !== defaultSig,
         fill: v(t['background-color']),
         textColor: v(t['color'] || tt['color']),
+        // DARK is the resolution these sets are pinned to (the brand ships dark by
+        // default), so prefer the dark measurement and fall back to light.
+        textColorLit: (darkTextNode && darkTextNode.computed.fc) || (tn && tn.computed.fc) || null,
+        fillLit: (d && d.root && d.root.computed.bg) || root.computed.bg || null,
         opacity: t['opacity'] ? v(t['opacity']) : null,
         stroke: hasBorder ? { color: v(t['border-top-color']), width: v(t['border-top-width']) } : null,
         padding: {
@@ -266,6 +285,7 @@ for (const entry of PLAN) {
           family: tn.computed.ff, size: tn.computed.fs, weight: tn.computed.fw, lineHeight: tn.computed.lh,
           sizeToken: v(tt['font-size']), weightToken: v(tt['font-weight']), lineHeightToken: v(tt['line-height']),
           colorToken: v(tt['color']),
+          colorLit: (darkTextNode && darkTextNode.computed.fc) || tn.computed.fc || null,
         } : null,
         // Computed values are only trustworthy when the browser actually rendered the
         // state (Default rows, and attribute-driven stateCases rows). Pseudo rows'

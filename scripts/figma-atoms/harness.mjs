@@ -19,9 +19,15 @@ import { readFileSync, existsSync } from 'node:fs';
 import { join, extname, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { PLAN } from './plan.mjs';
+import { scope, scopePlan, brandCssHref, projectArg } from './project-scope.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const LIB = join(ROOT, 'libs/al-web-components');
+const SC = scope(projectArg());
+// Serving roots: the shared library, plus the brand layer package when the
+// project has one. Both are needed or the brand components cannot load.
+const LIB_ROOTS = SC.libRoots.map((r) => join(r, 'dist'));
+const LIB = LIB_ROOTS[0];
+const ATOMS = scopePlan(PLAN, SC);
 
 const portArg = process.argv.indexOf('--port');
 const PORT = portArg > -1 ? Number(process.argv[portArg + 1]) : 7331;
@@ -42,17 +48,26 @@ function renderCase(tag, c) {
     .map((s) => (s.name ? `<${s.el || 'span'} slot="${s.name}">${s.html}</${s.el || 'span'}>` : s.html))
     .join('');
   const fill = c.fill ? ' data-fill="1"' : '';
+  // A filling case may declare its own width; 320px (the CSS default) is mobile.
+  const fw = c.fill && c.fillWidth ? ` style="width:${Number(c.fillWidth)}px"` : '';
   // Array/object inputs (table columns+data, command-palette actions, combobox items)
   // are JS PROPERTIES, not attributes. Without them these components render their empty
   // state and the measurement is of nothing. Ship them as JSON and assign after upgrade.
   const props = c.props && Object.keys(c.props).length
     ? ` data-alprops="${esc(JSON.stringify(c.props))}"`
     : '';
-  return `<div class="case" data-case="${esc(c.id)}"${fill}><${tag}${attrs}${props}>${slots}</${tag}></div>`;
+  return `<div class="case" data-case="${esc(c.id)}"${fill}${fw}><${tag}${attrs}${props}>${slots}</${tag}></div>`;
 }
 
+// main.css bakes DARK into :root. A branded project overrides BOTH modes with its
+// own complete brand bundle; an unbranded one only needs the light override.
+const TOKENS_HREF = {
+  light: brandCssHref(SC, 'light', SC.libRoots[0]),
+  dark: brandCssHref(SC, 'dark', SC.libRoots[0]),
+};
+
 function page(mode) {
-  const blocks = PLAN.filter((a) => !a.skip)
+  const blocks = ATOMS
     .map((a) => `<section data-atom="${a.key || a.tag}">${a.cases.map((c) => renderCase(a.tag, c)).join('\n')}</section>`)
     .join('\n');
 
@@ -64,7 +79,7 @@ function page(mode) {
 <meta charset="utf-8">
 <script>window.alAutoRegistry = true;</script>
 <link rel="stylesheet" href="/css/main.css">
-${mode === 'light' ? '<link rel="stylesheet" href="/css/css/theme/tokens-light.css">' : ''}
+${TOKENS_HREF[mode] ? `<link rel="stylesheet" href="${TOKENS_HREF[mode]}">` : ''}
 <style>
   html, body { margin: 0; padding: 0; }
   body { background: var(--al-theme-color-background-default, #fff); }
@@ -81,9 +96,10 @@ ${mode === 'light' ? '<link rel="stylesheet" href="/css/css/theme/tokens-light.c
 ${blocks}
 </div>
 <script src="/__measure-lib.js"></script>
+<script>window.FIRST_TAG = ${JSON.stringify(ATOMS[0] ? ATOMS[0].tag : 'al-button')};</script>
 <script type="module">
   import '/__bundle.js';
-  await customElements.whenDefined('al-button');
+  await customElements.whenDefined(FIRST_TAG);
   // Assign JS properties BEFORE the settle frames, then await each element's own
   // updateComplete — a Lit render triggered by a property is asynchronous, and measuring
   // between the assignment and the re-render captures the pre-render layout.
@@ -173,7 +189,7 @@ createServer((req, res) => {
   if (url === '/__bundle.js') {
     // dist/ ships bare `lit` specifiers the browser cannot resolve; serve the
     // esbuild-bundled copy instead (see README in this folder).
-    const b = join(ROOT, '.altitude/figma-sync/atoms-bundle.js');
+    const b = join(SC.dirs.sync, 'atoms-bundle.js');
     if (!existsSync(b)) { res.writeHead(500); return res.end('run the esbuild step first'); }
     res.writeHead(200, { 'content-type': 'text/javascript' });
     return res.end(readFileSync(b));
@@ -185,8 +201,13 @@ createServer((req, res) => {
     return res.end(readFileSync(join(ROOT, 'scripts/figma-atoms/measure-lib.js')));
   }
   if (url === '/favicon.ico') { res.writeHead(204); return res.end(); }
-  const file = join(LIB, 'dist', url);
-  if (!file.startsWith(join(LIB, 'dist')) || !existsSync(file)) {
+  // Try each package root in turn; the brand layer's dist/ is a second root.
+  let file = null;
+  for (const root of LIB_ROOTS) {
+    const cand = join(root, url);
+    if (cand.startsWith(root) && existsSync(cand)) { file = cand; break; }
+  }
+  if (!file) {
     res.writeHead(404);
     return res.end('not found: ' + url);
   }

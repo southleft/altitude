@@ -55,6 +55,10 @@ function atom(tag, figmaName, axes, opts = {}) {
       // JS properties (arrays/objects) — attributes cannot carry them. See harness.
       props: opts.props ? opts.props(r) : undefined,
       fill: opts.fill ? opts.fill(r) : false,
+      // How wide to render a filling case. The harness defaults to 320px, which is a
+      // MOBILE width: a page section measured there reports its stacked mobile layout
+      // (the hero came out 1371px tall). Page sections declare a desktop width.
+      fillWidth: opts.fillWidth || undefined,
     };
   });
 
@@ -90,6 +94,10 @@ function atom(tag, figmaName, axes, opts = {}) {
     // Which State variants (Default/Hover/Active/Focus/Disabled) the Figma set carries.
     // Omit -> build-component-ops emits all five and flags which ones actually differ.
     states: opts.states,
+    // Belongs to a BRAND layer package, not the shared library. A project without
+    // that brand must not build it: the tag may not even exist there, and where it
+    // does (card/header/footer) the brand API is a different component.
+    brandOnly: opts.brandOnly || undefined,
   };
 }
 
@@ -604,6 +612,162 @@ export const PLAN = [
         Disabled: { isdisabled: true },
       },
       note: 'Closed state only — the open dropdown needs al-dropdown-panel + al-list in Figma.',
+    }),
+
+
+  /* --- southleft scope: base components tiered but never planned --- */
+
+  atom('al-list', 'List',
+    { Direction: enumAxis('direction', ['row']) },
+    {
+      slots: () => [{ html: '<al-list-item>First item</al-list-item><al-list-item>Second item</al-list-item><al-list-item>Third item</al-list-item>' }],
+      states: ['Default'],
+      note: 'Deps: al-list-item. The list itself paints nothing; it owns direction and overflow only.',
+    }),
+
+  atom('al-stat', 'Stat',
+    { Trend: enumAxis('trend', ['up', 'down']) },
+    {
+      always: { value: '128', label: 'Deployments', delta: '12%' },
+      states: ['Default'],
+      note: 'trend=none is the implicit default. delta only renders alongside a trend.',
+    }),
+
+  atom('al-testimonial', 'Testimonial',
+    {},
+    {
+      always: { attribution: 'Jane Cooper', 'attribution-role': 'Design Lead', company: 'Northwind' },
+      slots: () => [{ html: 'Altitude let us ship a coherent product surface in a quarter, not a year.' }],
+      states: ['Default'],
+    }),
+
+  // al-layout owns ARRANGEMENT for everything else (AGENTS.md, 'Arrangement vs.
+  // semantics'), so it has no paint of its own. Only the variants that change the
+  // TRACK MODEL are worth a Figma variant; gap/align/justify are props on an instance.
+  atom('al-layout', 'Layout',
+    {
+      Variant: enumAxis('variant', ['constrained', 'grid', 'bento']),
+      Direction: enumAxis('direction', ['column']),
+    },
+    {
+      always: { gap: 'md' },
+      slots: () => [{ html: '<al-card>One</al-card><al-card>Two</al-card><al-card>Three</al-card>' }],
+      states: ['Default'],
+      note: 'Layout paints nothing. Variants exist for the track model only.',
+    }),
+
+  /* --- southleft BRAND layer (@southleft/sl-web-components) --- */
+
+  atom('al-card', 'Card',
+    { Variant: enumAxis('variant', ['bare', 'service', 'tool', 'article', 'work']) },
+    {
+      brandOnly: true,
+      slots: () => [
+        { name: 'header', html: 'Design systems' },
+        { html: 'A single source of truth for product surface, shipped as code.' },
+        { name: 'footer', html: 'Read more' },
+      ],
+      states: ['Default', 'Hover', 'Focus'],
+      note: 'Brand implementation — supersedes the base al-card for this project.',
+    }),
+
+  atom('al-section-header', 'Section Header',
+    { Link: { values: ['default', 'with-link'], attrs: (v) => (v === 'with-link' ? { 'link-href': '/insights', 'link-label': 'All insights' } : {}) } },
+    {
+      brandOnly: true,
+      always: { index: '01', label: 'Insights', heading: 'What we have been thinking about', dek: 'Notes from the studio on design systems, tooling and craft.' },
+      states: ['Default'],
+      note: 'The rule is a ::before/::after background using a BORDER token at full strength.',
+    }),
+
+  atom('al-cta-band', 'CTA Band',
+    {},
+    {
+      brandOnly: true,
+      always: { kicker: '<cta>', heading: 'Ready to build a system your team will actually use?', dek: 'Tell us what you are working on.' },
+      slots: () => [{ html: '<al-button>Start a project</al-button>' }],
+      states: ['Default'],
+      fill: () => true,
+      fillWidth: 1280,
+      note: 'Transparent — its only surface is the sl-grid-texture 72px lattice + radial mask.',
+    }),
+
+  atom('al-page-hero', 'Page Hero',
+    {},
+    {
+      brandOnly: true,
+      always: { label: 'Work', heading: 'Selected work', dek: 'A few of the systems we have designed, built and handed over.' },
+      states: ['Default'],
+      fill: () => true,
+      fillWidth: 1280,
+    }),
+
+  atom('al-hero', 'Hero',
+    {},
+    {
+      brandOnly: true,
+      always: { kicker: 'Southleft', heading: 'Design systems that ship', lead: 'We design, build and hand over the system your product team builds on.' },
+      slots: () => [
+        { name: 'actions', el: 'al-button', html: 'Start a project' },
+        { name: 'chips', html: '<al-chip>Design systems</al-chip><al-chip>Tooling</al-chip>' },
+      ],
+      states: ['Default'],
+      fill: () => true,
+      fillWidth: 1280,
+      note: 'Transparent; texture is the grid mixin. The __murmur canvas is JS-painted and has no CSS paint.',
+    }),
+
+  atom('al-marquee', 'Marquee',
+    { Paused: boolAxis('paused', 'running', 'paused') },
+    {
+      brandOnly: true,
+      slots: () => [{ html: '<span>Design systems</span><span data-variant="solid">/</span><span>Tooling</span><span data-variant="mono">est. 2011</span>' }],
+      states: ['Default'],
+      fill: () => true,
+      fillWidth: 1280,
+      note: 'Items are read off slotted elements; the belt renders two copies for the seamless loop.',
+    }),
+
+  atom('al-logo-wall', 'Logo Wall',
+    { Vivid: boolAxis('vivid', 'default', 'vivid') },
+    {
+      brandOnly: true,
+      slots: () => [{ html: ['a', 'b', 'c', 'd'].map(() => `<img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='28'><rect width='120' height='28' fill='%23888'/></svg>" alt="Client">`).join('') }],
+      states: ['Default'],
+      fill: () => true,
+      fillWidth: 1280,
+      note: 'filter: brightness(0) invert(1) hardcodes a DARK context — no light-mode branch exists.',
+    }),
+
+  atom('al-header', 'Header',
+    { Menu: boolAxis('menuOpen', 'closed', 'open') },
+    {
+      brandOnly: true,
+      slots: () => [
+        { name: 'brand', html: '<al-logo></al-logo>' },
+        { name: 'nav', html: '<a href="/work" aria-current="page">Work</a><a href="/insights">Insights</a><a href="/about">About</a>' },
+        { name: 'actions', el: 'al-button', html: 'Contact' },
+      ],
+      states: ['Default'],
+      fill: () => true,
+      fillWidth: 1280,
+      note: 'Brand implementation. Translucent bar (85% color-mix) + backdrop-filter; active nav pill is an [aria-current] rule.',
+    }),
+
+  atom('al-footer', 'Footer',
+    {},
+    {
+      brandOnly: true,
+      always: { quote: 'Build the system once. Ship on it for years.', cite: 'Southleft', copyright: '(c) 2026 Southleft, LLC' },
+      slots: () => [
+        { name: 'brand', html: '<al-logo></al-logo>' },
+        { name: 'columns', html: '<a href="/work">Work</a><a href="/insights">Insights</a><a href="/about">About</a>' },
+        { name: 'legal', html: '<a href="/privacy">Privacy</a>' },
+      ],
+      states: ['Default'],
+      fill: () => true,
+      fillWidth: 1280,
+      note: 'Brand implementation. Three hairlines, all $sl-border-faint (55% of border-default-weak).',
     }),
 
 ];

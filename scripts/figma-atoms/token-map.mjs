@@ -17,12 +17,15 @@
  *   3. Figma renamed some Tier 1 groups under `typography/`, so the code path and the
  *      Figma path differ. ALIASES bridges them (same table as audit-figma-vs-code.mjs).
  */
-import { readFileSync } from 'node:fs';
-import { join, dirname, resolve } from 'node:path';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { join, dirname, resolve, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { scope, projectArg } from './project-scope.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const TOKENS = join(ROOT, 'libs/al-web-components/styles/tokens');
+// Which brand's overrides count as real tokens. Resolved from the active project.
+const BRAND = (() => { try { return scope(projectArg()).brand; } catch { return null; } })();
 
 /** code token prefix -> Figma variable prefix */
 const ALIASES = [
@@ -35,6 +38,8 @@ const ALIASES = [
   ['animation.distance.', 'animation/distance/'],
   ['color.brand.paper.', 'color/neutral/paper/'],
   ['color.brand.ink.', 'color/neutral/ink/'],
+  // Figma nests the role radii as a FOLDER; the code spells them with a dash.
+  ['theme.border.radius.role-', 'theme/border/radius/role/'],
 ];
 
 const readJson = (p) => JSON.parse(readFileSync(join(TOKENS, p), 'utf8'));
@@ -47,6 +52,20 @@ const FILES = [
   'tier-2/theme/light/colors.json', 'tier-3/theme/light/colors.json',
   'tier-2/theme/dark/colors.json', 'tier-3/theme/dark/colors.json',
 ];
+
+// A BRAND may introduce tokens the base tiers never declare (southleft's
+// theme.border.radius.role-surface / role-action are brand-only). Without these the
+// component ops report them 'unresolved' and the variant silently loses the binding.
+const brandDir = join(TOKENS, 'tier-2/brand', BRAND || '');
+if (BRAND && existsSync(brandDir)) {
+  const walk = (dir) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      if (e.isDirectory()) walk(join(dir, e.name));
+      else if (e.name.endsWith('.json')) FILES.push(relative(TOKENS, join(dir, e.name)).split(sep).join('/'));
+    }
+  };
+  walk(brandDir);
+}
 
 function flatten(node, prefix, out) {
   for (const [k, v] of Object.entries(node)) {
