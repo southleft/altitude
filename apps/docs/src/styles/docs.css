@@ -786,11 +786,25 @@ html[data-booting] .shell {
 
 /* ------------------------------------------------------------- blueprint */
 
+/*
+ * The grid is drawn at 60% of `--line-weak` rather than at full strength.
+ *
+ * `color-mix` and not `opacity`: the grid is a background-image ON the element,
+ * so an `opacity` here would fade the hero copy, the buttons and — on the
+ * playground stage, which is also a `.blueprint` — the live component sitting
+ * on top of it. Mixing toward transparent moves only the paint.
+ *
+ * It is 60% of a token rather than a fourth hardcoded grey, so it still tracks
+ * the brand: Altitude dark mixes from #616161, Southleft dark from #4a453a.
+ * The tick marks at the grid corners are the ACCENT (`.blueprint__tick`) and
+ * are deliberately left at full strength — they are the one part of this
+ * backdrop meant to be legible.
+ */
 .blueprint {
   position: relative;
   background-image:
-    linear-gradient(var(--line-weak) 1px, transparent 1px),
-    linear-gradient(90deg, var(--line-weak) 1px, transparent 1px);
+    linear-gradient(color-mix(in srgb, var(--line-weak) 60%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--line-weak) 60%, transparent) 1px, transparent 1px);
   background-size: 56px 56px;
 }
 
