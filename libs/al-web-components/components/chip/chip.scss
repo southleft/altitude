@@ -11,20 +11,29 @@
   /**
    * Chip
    */
+  /**
+   * The chip surface is HOOKED rather than fixed. `:host` is `display: contents`, so a
+   * consumer cannot reach this box with its own selector, and the component exposes no
+   * parts — so an app wanting a differently-treated chip (Southleft's outlined mono
+   * token chips) had to hand-roll a <span> and lose the component entirely. Every
+   * default below is the value that was hardcoded here; nothing changes for an
+   * existing consumer.
+   */
   .al-c-chip {
     @include al-theme-typography-body-sm;
     display: inline-flex;
-    cursor: pointer;
-    gap: var(--al-theme-space-xs);
+    cursor: var(--al-chip-cursor, pointer);
+    gap: var(--al-chip-gap, var(--al-theme-space-xs));
     justify-content: center;
     align-items: center;
     white-space: nowrap;
     margin: 0;
-    padding: var(--al-theme-space-xxs) var(--al-theme-space-sm);
-    border: none;
-    border-radius: size(4);
-    background-color: var(--al-theme-color-background-default-strong);
-    color: var(--al-theme-color-content-default-weak);
+    padding: var(--al-chip-padding, var(--al-theme-space-xxs) var(--al-theme-space-sm));
+    border: var(--al-chip-border, none);
+    border-radius: var(--al-chip-border-radius, #{size(4)});
+    background: var(--al-chip-background, var(--al-theme-color-background-default-strong));
+    color: var(--al-chip-color, var(--al-theme-color-content-default-weak));
+    font-family: var(--al-chip-font-family, inherit);
 
     /**
      * Focus state

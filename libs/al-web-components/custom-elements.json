@@ -2351,7 +2351,7 @@
               "name": "action-right"
             },
             {
-              "description": "Media rendered above the header, INSIDE the card's padding. Takes the full content width; an `<al-avatar>` sits here too, which is the common case across the example apps. NOT flush to the card edge — this line previously claimed it was, and it never has been: `.al-c-card` carries a single outer `padding` and `.al-c-card__image` neither resets nor negates it (card.scss). The claim was wrong rather than the code: the slot is used for avatars in `apps/angular`, `apps/astro` and `apps/svelte`, and bleeding it to the edge would wreck all of them. A card that needs edge-to-edge media wants a component that renders it, not a flag here — see `sl-media-card` in `libs/sl-web-components`.",
+              "description": "Media rendered above the header, INSIDE the card's padding. Takes the full content width; an `<al-avatar>` sits here too, which is the common case across the example apps. NOT flush to the card edge — this line previously claimed it was, and it never has been: `.al-c-card` carries a single outer `padding` and `.al-c-card__image` neither resets nor negates it (card.scss). The claim was wrong rather than the code: the slot is used for avatars in `apps/angular`, `apps/astro` and `apps/svelte`, and bleeding it to the edge would wreck all of them. A card that needs edge-to-edge media wants a card that owns its own padding, not a flag here — see the `article` / `work` variants on Southleft's `al-card` in `libs/sl-web-components`, which move the padding onto the content column.",
               "name": "image"
             },
             {
@@ -3038,6 +3038,40 @@
           "kind": "class",
           "description": "Component: al-chip",
           "name": "ALChip",
+          "cssProperties": [
+            {
+              "description": "Chip surface. Defaults to `--al-theme-color-background-default-strong`.",
+              "name": "--al-chip-background"
+            },
+            {
+              "description": "Label colour. Defaults to `--al-theme-color-content-default-weak`.",
+              "name": "--al-chip-color"
+            },
+            {
+              "description": "Border shorthand. Defaults to `none`.",
+              "name": "--al-chip-border"
+            },
+            {
+              "description": "Corner radius. Defaults to `4px`.",
+              "name": "--al-chip-border-radius"
+            },
+            {
+              "description": "Padding shorthand. Defaults to `space-xxs space-sm`.",
+              "name": "--al-chip-padding"
+            },
+            {
+              "description": "Gap between label and icon. Defaults to `space-xs`.",
+              "name": "--al-chip-gap"
+            },
+            {
+              "description": "Label family. Defaults to `inherit`.",
+              "name": "--al-chip-font-family"
+            },
+            {
+              "description": "Defaults to `pointer`; set `default` for a non-interactive chip.",
+              "name": "--al-chip-cursor"
+            }
+          ],
           "slots": [
             {
               "description": "The chip content",
