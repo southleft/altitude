@@ -54,6 +54,48 @@ pnpm --filter al-app-docs build && pnpm run gate:docs-panels   # built output: n
 pnpm --filter al-app-docs build && pnpm run gate:guidance      # the authored guidance half
 ```
 
+## The Southleft example app
+
+`apps/southleft` is the reference consumer: southleft.com v5 rebuilt **exclusively**
+from Altitude components plus the Southleft brand layer (`@southleft/sl-web-components`),
+with the real insights + work content migrated in. It is the app the brand layer exists
+for, and the place a change to either library gets proved against a real site.
+
+```bash
+pnpm install
+pnpm run build                             # required — see below
+pnpm --filter al-app-southleft start       # http://localhost:4188/southleft
+```
+
+`pnpm run build` is not optional here either. `apps/southleft` imports
+`@southleft/al-web-components` and `@southleft/sl-web-components` through their exports
+maps (`src/layouts/Base.astro`), so it renders against `dist/`, not source — rebuild the
+library after changing it.
+
+```bash
+pnpm --filter al-app-southleft build       # static build to dist/southleft (or pnpm run build:app-southleft)
+pnpm --filter al-app-southleft preview     # preview that build on :4188
+```
+
+**Images.** The migrated content points at `https://southleft.pages.dev/media`, which sits
+behind Cloudflare Access — those images will not load in a plain browser. If a local
+checkout of southleft-v5 exists at `../southleft-v5/public/media` (sibling of this repo),
+or `MEDIA_LOCAL_DIR` points at another directory that exists, `astro dev` serves it at
+`/media` and rewrites the remote URLs client-side. Dev only; the production build is
+unaffected (`src/lib/media.mjs`, `src/lib/vite-plugin-local-media.mjs`).
+
+**The gate.** Page styling in this app may only use `.al-u-*` utilities, semantic
+`--al-theme-*` tokens, and the minimal layout CSS in `src/styles/layout.css` — no hardcoded
+colors, px font sizes, or untokenized shadows:
+
+```bash
+pnpm --filter al-app-southleft check:altitude-only
+```
+
+Southleft is also a **design-system project** in its own right (`.altitude/ds-projects.json`):
+its docs are at `/docs/southleft`, and the parity CLIs take `--project southleft` or the
+`:sl` script variants. See `.altitude/DS-PROJECTS.md` and `.altitude/BRAND-LAYER.md`.
+
 ## Storybook
 
 The two component Storybooks are still the **component development** surface — they are
