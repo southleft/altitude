@@ -16,6 +16,11 @@ import {
   spacingScale,
   radiusScale,
   shadowScale,
+  borderWidthScale,
+  breakpointScale,
+  layoutScale,
+  opacityScale,
+  zIndexScale,
   typeScale,
   brandOverrides,
 } from '../../lib/tokens.mjs';
@@ -40,6 +45,30 @@ const ramps = colorRamps();
 const spacing = spacingScale();
 const radii = radiusScale();
 const shadows = shadowScale();
+
+/*
+ * Restored 2026-08-25. These five had their only visual home in
+ * `.storybook/components/tokens/`, which went with Storybook. The DATA was
+ * never lost — all of them were already in llms-tokens.txt — so this is
+ * rendering, not recovery.
+ *
+ * Rendered two ways on purpose. `borders` and `opacities` get a specimen,
+ * because a width and an alpha are things you judge by eye. `breakpoints`,
+ * `layouts` and `zIndexes` get a plain table: a 1440px bar and a `z-index: 400`
+ * have no useful visual, and a fake one would imply a relationship that is not
+ * there.
+ */
+const borders = borderWidthScale();
+const breakpoints = breakpointScale();
+const layouts = layoutScale();
+const opacities = opacityScale();
+const zIndexes = zIndexScale();
+
+const scaleTables = [
+  { label: 'BREAKPOINTS', rows: breakpoints },
+  { label: 'LAYOUT WIDTHS', rows: layouts },
+  { label: 'Z-INDEX', rows: zIndexes },
+];
 const type = typeScale();
 
 /** The widest spacing step sets the bar scale, so the chart is self-sizing. */
@@ -180,11 +209,86 @@ const maxSpace = Math.max(...spacing.map((s) => s.px || 0), 1);
           }
         </div>
       </div>
+      <div>
+        <div class="section-rule"><span>BORDER WIDTH</span><span>{borders.length}</span></div>
+        <div class="border-grid">
+          {
+            borders.map((border) => (
+              <div class="border-cell">
+                <div class="border-specimen" style={`border-top-width:${border.value}`} />
+                <div class="micro">
+                  {border.name} · {border.value}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+      <div>
+        <div class="section-rule"><span>OPACITY</span><span>{opacities.length}</span></div>
+        <div class="border-grid">
+          {
+            opacities.map((step) => (
+              <div class="border-cell">
+                <div class="opacity-specimen" style={`opacity:${step.value}`} />
+                <div class="micro">
+                  {step.name} · {step.value}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+      {
+        scaleTables.map((group) => (
+          <div>
+            <div class="section-rule">
+              <span>{group.label}</span>
+              <span>{group.rows.length}</span>
+            </div>
+            <div class="spec-table spec-table--pair">
+              <div class="spec-table__head">
+                <span>STEP</span>
+                <span>VALUE</span>
+              </div>
+              {group.rows.map((row) => (
+                <div class="spec-table__row">
+                  <span class="spec-table__name">{row.name}</span>
+                  <span class="spec-table__type">{row.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      }
     </div>
   </div>
 </Shell>
 
 <style>
+  .border-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .border-cell {
+    min-width: 96px;
+  }
+
+  /* Top border only — the specimen IS the line being measured. */
+  .border-specimen {
+    border-top-style: solid;
+    border-top-color: var(--al-theme-color-border-default);
+    margin-bottom: 8px;
+  }
+
+  .opacity-specimen {
+    block-size: 32px;
+    margin-bottom: 8px;
+    background: var(--al-theme-color-content-default);
+  }
+
   .foundations-lede {
     margin: 0 0 44px;
     max-width: 560px;

@@ -101,6 +101,45 @@ export function shadowScale() {
   );
 }
 
+/*
+ * THE FIVE SCALES BELOW restore what `.storybook/components/tokens/` used to
+ * show. Foundations already rendered colour, typography, spacing, radius and
+ * shadow; border-width, breakpoints, layout widths, opacity and z-index had
+ * their only visual home in Storybook, which was deleted 2026-08-25. The DATA
+ * was never lost — every one of these was already in `llms-tokens.txt` — so
+ * this is a rendering gap, and each is four lines because `group()` does the
+ * work.
+ *
+ * All five sort NUMERICALLY on the resolved value, not lexically. A lexical
+ * sort puts `al-z-index-1000` before `al-z-index-200` and makes a scale look
+ * arbitrary, which is the one thing a scale must not do.
+ */
+
+/** Border widths, thinnest first. */
+export function borderWidthScale() {
+  return group('al-border-width').sort((a, b) => parseFloat(a.value) - parseFloat(b.value));
+}
+
+/** Responsive breakpoints, narrowest first. */
+export function breakpointScale() {
+  return group('al-breakpoint').sort((a, b) => parseFloat(a.value) - parseFloat(b.value));
+}
+
+/** Layout max-widths, narrowest first. */
+export function layoutScale() {
+  return group('al-layout').sort((a, b) => parseFloat(a.value) - parseFloat(b.value));
+}
+
+/** Opacity steps, 0 to 100. */
+export function opacityScale() {
+  return group('al-opacity').sort((a, b) => parseFloat(a.value) - parseFloat(b.value));
+}
+
+/** Stacking order, lowest first. */
+export function zIndexScale() {
+  return group('al-z-index').sort((a, b) => parseFloat(a.value) - parseFloat(b.value));
+}
+
 /** The type ramp — one row per `al-typography-preset-*`. */
 export function typeScale() {
   return group('al-typography-preset')

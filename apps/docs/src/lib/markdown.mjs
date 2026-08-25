@@ -13,7 +13,19 @@
  * agent fetches and the HTML a human reads are the same facts rendered twice —
  * there is no second copy of the content to drift.
  */
-import { TOKEN_COUNT, colorRamps, spacingScale, radiusScale, typeScale, brandOverrides } from './tokens.mjs';
+import {
+  TOKEN_COUNT,
+  borderWidthScale,
+  breakpointScale,
+  brandOverrides,
+  colorRamps,
+  layoutScale,
+  opacityScale,
+  radiusScale,
+  spacingScale,
+  typeScale,
+  zIndexScale,
+} from './tokens.mjs';
 import {
   CHOREOGRAPHY_COUNT,
   MOTION_TOKEN_COUNT,
@@ -282,6 +294,24 @@ export function foundationsMarkdown(context = DEFAULT_CONTEXT) {
       radiusScale().map((r) => [r.name, r.value, `\`--${r.key}\``])
     ),
     '',
+    // The five below had their only visual home in `.storybook/components/
+    // tokens/`, deleted 2026-08-25. The data was always here — every one of
+    // them was already in llms-tokens.txt — so only the rendering was missing.
+    ...[
+      ['Border width', borderWidthScale()],
+      ['Breakpoints', breakpointScale()],
+      ['Layout widths', layoutScale()],
+      ['Opacity', opacityScale()],
+      ['Z-index', zIndexScale()],
+    ].flatMap(([heading, rows]) => [
+      `## ${heading}`,
+      '',
+      table(
+        ['Step', 'Value', 'Token'],
+        rows.map((r) => [r.name, r.value, `\`--${r.key}\``])
+      ),
+      '',
+    ]),
   ].join('\n');
 }
 
