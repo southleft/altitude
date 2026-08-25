@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../icon/icons/user';
 import './avatar';
-import { placeholderImages } from '../../.storybook/fixtures';
+import { placeholderImages } from '../../fixtures';
 
 export default {
   title: 'Atoms/Avatar',

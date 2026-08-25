@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './header';
 import '../../fixtures/f-po/f-po';
-import { placeholderImages } from '../../.storybook/fixtures';
+import { placeholderImages } from '../../fixtures';
 import '../../components/button/button';
 import '../../components/layout/layout';
 import '../../components/logo/logo';

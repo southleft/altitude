@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './testimonial';
 import '../avatar/avatar';
-import { placeholderImages } from '../../.storybook/fixtures';
+import { placeholderImages } from '../../fixtures';
 
 export default {
   title: 'Molecules/Testimonial',

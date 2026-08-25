@@ -15,10 +15,10 @@
 // Every export mirrors the SHAPE of its `lorem.ts` / `images.ts` counterpart,
 // signature for signature, so swapping is an import change and nothing else:
 //
-//     import { loremSentences, placeholderImages } from '../../.storybook/fixtures';
+//     import { loremSentences, placeholderImages } from '../../fixtures';
 //     // becomes
 //     import { southleftSentences as loremSentences,
-//              southleftImages   as placeholderImages } from '../../.storybook/fixtures';
+//              southleftImages   as placeholderImages } from '../../fixtures';
 //
 //   lorem.ts                          southleft.ts
 //   --------------------------------  -------------------------------------

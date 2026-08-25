@@ -1,7 +1,7 @@
 import type { StoryObj } from '@storybook/react-vite';
 import { ALToggleButton, ALIconCalendar, ALAvatar, ALTooltip, ALPopover, ALIconChevronDown } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
-import { placeholderImages } from '../../../../al-web-components/.storybook/fixtures';
+import { placeholderImages } from '../../../../al-web-components/fixtures';
 
 export default {
   title: 'Atoms/Toggle Button',

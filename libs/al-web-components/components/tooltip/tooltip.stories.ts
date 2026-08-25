@@ -2,7 +2,7 @@ import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './tooltip';
-import { loremSentences } from '../../.storybook/fixtures';
+import { loremSentences } from '../../fixtures';
 
 export default {
   title: 'Atoms/Tooltip',

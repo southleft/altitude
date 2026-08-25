@@ -15,6 +15,26 @@ const frames = (n = 3) =>
     step();
   });
 
+/**
+ * Fire a keydown AT a tab.
+ *
+ * tabs.ts:285-288 requires BOTH that `e.target` is the ALTab and that
+ * `document.activeElement` is one - so the tab has to really hold focus, not
+ * merely receive a synthetic event. Focusing the inner <button> retargets
+ * document.activeElement to the <al-tab> host, which is what the guard reads.
+ */
+const pressOn = async (tab: any, key: string) => {
+  (tab.shadowRoot.querySelector('.al-c-tab') as HTMLElement).focus();
+  tab.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, composed: true }));
+};
+
+const manyTabs = () => fixture<ALTabs>(html`
+  <al-tabs style="width: 120px">
+    ${Array.from({ length: 9 }, (_, i) => html`<al-tab>Tab number ${i}</al-tab>`)}
+    ${Array.from({ length: 9 }, (_, i) => html`<al-tab-panel slot="panel">Panel ${i}</al-tab-panel>`)}
+  </al-tabs>
+`);
+
 const twoTabs = () => fixture<ALTabs>(html`
   <al-tabs>
     <al-tab>One</al-tab>
@@ -111,5 +131,189 @@ describe('al-tabs', () => {
       expect(panels[i].ariaLabelledBy).toBe(tabs[i].ariaId);
       expect(panels[i].ariaLabelledBy).toBeTruthy();
     }
+  });
+  it('moves the active tab with ArrowRight/ArrowLeft and wraps at both ends', async () => {
+    // Ported from tabs.stories.ts WithActiveIndex. That play function sent
+    // every key from `firstTab` regardless of what was actually active, so it
+    // never really proved the walk is relative to the CURRENT tab. Here each
+    // press comes from the tab that holds focus.
+    const el = await manyTabs();
+    await el.updateComplete;
+    await tick();
+    await frames();
+    const tabs = [...el.querySelectorAll('al-tab')] as any[];
+
+    (tabs[0].shadowRoot.querySelector('.al-c-tab') as HTMLElement).click();
+    await el.updateComplete;
+    await tick();
+    expect(tabs[0].isActive).toBe(true);
+
+    await pressOn(tabs[0], 'ArrowRight');
+    await el.updateComplete;
+    await tick();
+    expect(tabs[1].isActive).toBe(true);
+    expect(tabs[0].isActive, 'only one tab may be active').toBe(false);
+
+    await pressOn(tabs[1], 'ArrowLeft');
+    await el.updateComplete;
+    await tick();
+    expect(tabs[0].isActive).toBe(true);
+
+    await pressOn(tabs[0], 'ArrowLeft');
+    await el.updateComplete;
+    await tick();
+    expect(tabs[8].isActive, 'ArrowLeft on the first tab must wrap to the last').toBe(true);
+
+    await pressOn(tabs[8], 'ArrowRight');
+    await el.updateComplete;
+    await tick();
+    expect(tabs[0].isActive, 'ArrowRight on the last tab must wrap to the first').toBe(true);
+  });
+
+  it('jumps to the last tab on End and the first on Home', async () => {
+    const el = await manyTabs();
+    await el.updateComplete;
+    await tick();
+    await frames();
+    const tabs = [...el.querySelectorAll('al-tab')] as any[];
+
+    await pressOn(tabs[0], 'End');
+    await el.updateComplete;
+    await tick();
+    expect(tabs[8].isActive).toBe(true);
+
+    await pressOn(tabs[8], 'Home');
+    await el.updateComplete;
+    await tick();
+    expect(tabs[0].isActive).toBe(true);
+  });
+
+  it('skips a disabled tab when arrowing past it', async () => {
+    // tabs.ts:347-356 - the `while (isDisabled)` loop. Landing on a disabled
+    // tab would show its panel while its control cannot be operated.
+    const el = await fixture<ALTabs>(html`
+      <al-tabs>
+        <al-tab>One</al-tab>
+        <al-tab isDisabled>Two</al-tab>
+        <al-tab>Three</al-tab>
+        <al-tab-panel slot="panel">1</al-tab-panel>
+        <al-tab-panel slot="panel">2</al-tab-panel>
+        <al-tab-panel slot="panel">3</al-tab-panel>
+      </al-tabs>
+    `);
+    await el.updateComplete;
+    await tick();
+    await frames();
+    const tabs = [...el.querySelectorAll('al-tab')] as any[];
+
+    await pressOn(tabs[0], 'ArrowRight');
+    await el.updateComplete;
+    await tick();
+    expect(tabs[2].isActive, 'the disabled tab must be stepped over').toBe(true);
+    expect(tabs[1].isActive).toBeFalsy();
+  });
+
+  it('reports the new tab index through onTabsChange', async () => {
+    const el = await manyTabs();
+    await el.updateComplete;
+    await tick();
+    await frames();
+    const tabs = [...el.querySelectorAll('al-tab')] as any[];
+    const seen: unknown[] = [];
+    el.addEventListener('onTabsChange', (e) => seen.push((e as CustomEvent).detail.activeTabIdx));
+
+    await pressOn(tabs[0], 'ArrowRight');
+    await el.updateComplete;
+    await tick();
+    expect(seen.at(-1)).toBe(1);
+  });
+
+  it('shows scroll arrows only when the tab list actually overflows', async () => {
+    // Ported from tabs.stories.ts WithScroll. tabs.ts:242-250 compares
+    // scrollWidth against clientWidth - which is exactly why these tests run in
+    // a real browser: under a DOM shim both are 0, `isScrollable` is always
+    // false, the arrows silently never render, and the test is still green.
+    const narrow = await manyTabs();
+    await narrow.updateComplete;
+    await tick();
+    await frames();
+    expect(narrow.isScrollable).toBe(true);
+    expect(narrow.shadowRoot!.querySelectorAll('.al-c-tabs__arrow')).toHaveLength(2);
+    expect(narrow.shadowRoot!.querySelector('.al-c-tabs')!.className).toContain('al-is-scrollable');
+
+    const roomy = await twoTabs();
+    await roomy.updateComplete;
+    await tick();
+    await frames();
+    expect(roomy.isScrollable).toBe(false);
+    expect(roomy.shadowRoot!.querySelectorAll('.al-c-tabs__arrow')).toHaveLength(0);
+  });
+
+  it('steps the active tab forwards and backwards from the scroll arrows', async () => {
+    const el = await manyTabs();
+    await el.updateComplete;
+    await tick();
+    await frames();
+    const tabs = [...el.querySelectorAll('al-tab')] as any[];
+    const [prev, next] = [...el.shadowRoot!.querySelectorAll('.al-c-tabs__arrow')] as any[];
+
+    expect(tabs[0].isActive).toBe(true);
+
+    next.shadowRoot.querySelector('button').click();
+    await el.updateComplete;
+    await tick();
+    expect(tabs[1].isActive).toBe(true);
+
+    prev.shadowRoot.querySelector('button').click();
+    await el.updateComplete;
+    await tick();
+    expect(tabs[0].isActive).toBe(true);
+  });
+
+  it('DEFECT: the scroll arrows have no accessible name at all', async () => {
+    // Two icon-only buttons that announce as an unnamed "button" - WCAG 4.1.2.
+    //
+    // Root cause, and it is one line: button.ts:153 takes the FIRST text node
+    // out of the default slot (`.find(node => node.nodeType === 3)`), and the
+    // arrow templates at tabs.ts:394-402 / 416-424 put the icon on its own line,
+    // so the first text node is the whitespace before it. `.trim()` turns that
+    // into '' and every arrow ships `aria-label=""`. The fix is to find the
+    // first NON-EMPTY text node.
+    //
+    // Second, latent bug behind it: the prev arrow's text is "Next" and the
+    // next arrow's is "Previous" - the two are swapped. Fixing the label
+    // derivation alone would replace "no name" with "wrong name", so both need
+    // to move together.
+    //
+    // The Storybook play function (tabs.stories.ts WithScroll) clicked both
+    // arrows by array INDEX and never read a name, which is why neither was
+    // ever caught. This test asserts the CURRENT behavior so the gap is
+    // recorded; when it is fixed this fails and should be flipped to
+    // toBe('Previous') / toBe('Next').
+    const el = await manyTabs();
+    await el.updateComplete;
+    await tick();
+    await frames();
+    const [prev, next] = [...el.shadowRoot!.querySelectorAll('.al-c-tabs__arrow')] as any[];
+    // button.ts:151-158 derives the label 10ms after connectedCallback, and
+    // these arrows are only created once `isScrollable` flips - so they are
+    // newer than the awaits above.
+    await tick(80);
+    await prev.updateComplete;
+    await next.updateComplete;
+
+    expect(prev.className).toContain('al-c-tabs__arrow--prev');
+    expect(next.className).toContain('al-c-tabs__arrow--next');
+
+    for (const [name, arrow] of [['prev', prev], ['next', next]] as const) {
+      expect(
+        arrow.shadowRoot.querySelector('button').getAttribute('aria-label'),
+        `${name} arrow: if this is no longer empty the naming was fixed - update this test`
+      ).toBe('');
+    }
+
+    // The swapped source text, pinned so the second half of the fix is visible.
+    expect(prev.textContent.trim()).toBe('Next');
+    expect(next.textContent.trim()).toBe('Previous');
   });
 });

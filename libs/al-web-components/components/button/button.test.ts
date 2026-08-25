@@ -1,6 +1,8 @@
 import { fixture, html } from '@open-wc/testing-helpers';
 import { describe, expect, it } from 'vitest';
 import './button';
+import '../icon/icons/success';
+import '../icon/icons/send';
 import type { ALButton } from './button';
 
 const q = (el: ALButton, sel: string) => el.shadowRoot!.querySelector(sel);
@@ -108,5 +110,40 @@ describe('al-button', () => {
   it('appends styleModifier to the rendered class list', async () => {
     const el = await fixture<ALButton>(html`<al-button styleModifier="al-u-mt-sm">x</al-button>`);
     expect(q(el, '.al-c-button')!.className).toContain('al-u-mt-sm');
+  });
+
+  it('renders the icon wrapper only for the slot that is actually filled', async () => {
+    // Ported from button.stories.ts DefaultIconBefore / DefaultIconAfter, which
+    // only checked that a slotted icon rendered its own glyph. The assertion
+    // that matters here is button.ts:184-188: each wrapper is gated on
+    // `slotNotEmpty()`, so an unfilled slot must render NO `__icon` box — an
+    // empty one still occupies the button's gap.
+    const before = await fixture<ALButton>(html`
+      <al-button><al-icon-success slot="before"></al-icon-success>Label</al-button>
+    `);
+    await before.updateComplete;
+    await new Promise((r) => setTimeout(r, 40));
+    const beforeIcons = [...before.shadowRoot!.querySelectorAll('.al-c-button__icon')];
+    expect(beforeIcons).toHaveLength(1);
+    expect(beforeIcons[0].querySelector('slot')!.getAttribute('name')).toBe('before');
+    expect(
+      (beforeIcons[0].querySelector('slot') as HTMLSlotElement).assignedElements()[0].tagName.toLowerCase()
+    ).toBe('al-icon-success');
+
+    const after = await fixture<ALButton>(html`
+      <al-button>Label<al-icon-send slot="after"></al-icon-send></al-button>
+    `);
+    await after.updateComplete;
+    await new Promise((r) => setTimeout(r, 40));
+    const afterIcons = [...after.shadowRoot!.querySelectorAll('.al-c-button__icon')];
+    expect(afterIcons).toHaveLength(1);
+    expect(afterIcons[0].querySelector('slot')!.getAttribute('name')).toBe('after');
+  });
+
+  it('renders no icon wrapper at all when neither slot is filled', async () => {
+    const el = await fixture<ALButton>(html`<al-button>Label</al-button>`);
+    await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 40));
+    expect(el.shadowRoot!.querySelectorAll('.al-c-button__icon')).toHaveLength(0);
   });
 });

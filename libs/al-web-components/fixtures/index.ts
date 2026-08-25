@@ -4,8 +4,8 @@
 // for it, matching how it already shares `.storybook/presets` and the
 // `vite-plugins/*` glue (see `libs/al-react/.storybook/main.ts:10-12`):
 //
-//   @southleft/al-web-components story:  import { loremSentences } from '../../.storybook/fixtures';
-//   @southleft/al-react story:           import { loremSentences } from '../../../../al-web-components/.storybook/fixtures';
+//   @southleft/al-web-components story:  import { loremSentences } from '../../fixtures';
+//   @southleft/al-react story:           import { loremSentences } from '../../../../al-web-components/fixtures';
 //
 // `./southleft.ts` is the BRAND-FLAVOURED alternative to `./lorem.ts` +
 // `./images.ts`: the same export shapes filled with real Southleft copy, for

@@ -5,7 +5,7 @@ import '../field-note/field-note';
 import '../icon/icons/attachment';
 import '../icon/icons/emoji';
 import '../icon/icons/help';
-import { loremSentences } from '../../.storybook/fixtures';
+import { loremSentences } from '../../fixtures';
 import '../icon/icons/warning-circle';
 import './textarea';
 

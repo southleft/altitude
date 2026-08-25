@@ -1,6 +1,6 @@
 import type { StoryObj } from '@storybook/react-vite';
 import { ALTestimonial, ALAvatar } from '../..';
-import { placeholderImages } from '../../../../al-web-components/.storybook/fixtures';
+import { placeholderImages } from '../../../../al-web-components/fixtures';
 
 export default {
   title: 'Molecules/Testimonial',

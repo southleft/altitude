@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../link/link';
 import './text-block';
-import { loremParagraph, loremSentences, loremWords } from '../../.storybook/fixtures';
+import { loremParagraph, loremSentences, loremWords } from '../../fixtures';
 
 export default {
   title: 'Atoms/Text/Text Block',

@@ -216,7 +216,7 @@ function isolate(source, storyDir) {
   /*
    * FIXTURES ARE KEPT, NOT DROPPED.
    *
-   * `.storybook/fixtures` is this library's shared CONTENT module — deterministic
+   * `fixtures/` is this library's shared CONTENT module — deterministic
    * lorem, placeholder image URLs, the Southleft site data. It is plain
    * TypeScript with no DOM and no side effects, it is what most stories put on
    * screen, and stubbing it would mean inventing the words a story chose. Five

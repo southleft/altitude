@@ -7,7 +7,7 @@ import '../list-item/list-item';
 import '../logo/logo';
 import '../layout/layout';
 import '../divider/divider';
-import { placeholderImages } from '../../.storybook/fixtures';
+import { placeholderImages } from '../../fixtures';
 
 export default {
   title: 'Organisms/Footer',

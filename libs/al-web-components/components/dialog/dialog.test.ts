@@ -166,4 +166,47 @@ describe('al-dialog', () => {
     expect(target, 'aria-labelledby must resolve to a real node').not.toBeNull();
     expect(target!.textContent).toContain('Delete file?');
   });
+  it('opens and closes from the KEYBOARD, with no Enter handler of its own', async () => {
+    // Ported from dialog.stories.ts Default, which sent `{Enter}` at the
+    // trigger and at the close button. Worth keeping, and worth naming why it
+    // works: dialog.ts:259-264 handles ONLY Escape. Enter opens the dialog
+    // because the slotted trigger is a real <button>, the platform turns Enter
+    // into a click, and that composed click reaches the
+    // `.al-c-dialog__trigger` wrapper's @click (dialog.ts:378).
+    //
+    // The consequence, and the reason this is not redundant with the pointer
+    // tests: swap the slotted trigger for a non-button element and the whole
+    // keyboard path silently disappears, because nothing in this component
+    // listens for Enter.
+    const el = await fixture<ALDialog>(html`
+      <al-dialog heading="Hi" transitionDelay="0"><al-button slot="trigger">Open</al-button></al-dialog>
+    `);
+    await tick(40);
+    const triggerBtn = el.querySelector('al-button')!.shadowRoot!.querySelector('button') as HTMLButtonElement;
+
+    triggerBtn.focus();
+    await userEvent.keyboard('{Enter}');
+    await el.updateComplete;
+    await tick(30);
+    expect(el.isActive).toBe(true);
+
+    const closeBtn = el.shadowRoot!.querySelector('.al-c-dialog__close-button')!.shadowRoot!.querySelector('button') as HTMLButtonElement;
+    closeBtn.focus();
+    await userEvent.keyboard('{Enter}');
+    await el.updateComplete;
+    await tick(30);
+    expect(el.isActive).toBe(false);
+  });
+
+  it('ignores Escape while it is already closed', async () => {
+    // dialog.ts:261 gates on `isActive === true`. Without it, an Escape meant
+    // for something else on the page fires a spurious onDialogClose.
+    const el = await fixture<ALDialog>(html`<al-dialog heading="Hi" transitionDelay="0"></al-dialog>`);
+    let closes = 0;
+    el.addEventListener('onDialogClose', () => closes++);
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', bubbles: true }));
+    await el.updateComplete;
+    expect(closes).toBe(0);
+  });
 });

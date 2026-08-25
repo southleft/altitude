@@ -2,7 +2,7 @@
 // stories (`libs/al-web-components/components/footer/footer.stories.ts`).
 import type { StoryObj } from '@storybook/react-vite';
 import { ALDivider, ALFooter, ALHeading, ALLayout, ALLink, ALList, ALListItem, ALLogo } from '../..';
-import { placeholderImages } from '../../../../al-web-components/.storybook/fixtures';
+import { placeholderImages } from '../../../../al-web-components/fixtures';
 
 export default {
   title: 'Organisms/Footer',

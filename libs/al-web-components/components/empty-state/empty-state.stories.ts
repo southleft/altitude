@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './empty-state';
 import '../button/button';
-import { loremSentences, placeholderImage } from '../../.storybook/fixtures';
+import { loremSentences, placeholderImage } from '../../fixtures';
 import '../icon/icon';
 import { magnifyingGlass, tray } from '../icon/glyphs';
 import { registerIcons } from '../icon/registry';

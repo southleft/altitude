@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-vite';
-import { loremParagraphs } from '../../../../al-web-components/.storybook/fixtures';
+import { loremParagraphs } from '../../../../al-web-components/fixtures';
 import { ALTabPanel, ALTextBlock, ALButton } from '../..';
 
 export default {

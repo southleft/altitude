@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './card';
 import '../../fixtures/f-po/f-po';
-import { loremSentences, placeholderImage, placeholderImages } from '../../.storybook/fixtures';
+import { loremSentences, placeholderImage, placeholderImages } from '../../fixtures';
 import '../chip/chip';
 import '../heading/heading';
 import '../icon/icons/dots-vertical';

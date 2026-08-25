@@ -1,7 +1,7 @@
 import type { StoryObj } from '@storybook/react-vite';
 import { ALCard, ALHeading, ALButton, ALChip, ALIconDotsVertical, ALPopover, ALMenu, ALMenuItem, ALTextBlock } from '../..';
 import { Fpo } from '../../../.storybook/components/Fpo/Fpo';
-import { loremSentences, placeholderImage, placeholderImages } from '../../../../al-web-components/.storybook/fixtures';
+import { loremSentences, placeholderImage, placeholderImages } from '../../../../al-web-components/fixtures';
 
 export default {
   title: 'Molecules/Card',

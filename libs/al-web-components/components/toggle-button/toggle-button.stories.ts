@@ -8,7 +8,7 @@ import '../icon/icons/chevron-down';
 import '../popover/popover';
 import '../tooltip/tooltip';
 import '../../fixtures/f-po/f-po';
-import { placeholderImages } from '../../.storybook/fixtures';
+import { placeholderImages } from '../../fixtures';
 
 export default {
   title: 'Atoms/Form/Toggle Button',

@@ -1,6 +1,6 @@
 import type { StoryObj } from '@storybook/react-vite';
 import { ALEmptyState, ALButton } from '../..';
-import { loremSentences, placeholderImage } from '../../../../al-web-components/.storybook/fixtures';
+import { loremSentences, placeholderImage } from '../../../../al-web-components/fixtures';
 
 export default {
   title: 'Molecules/Empty State',

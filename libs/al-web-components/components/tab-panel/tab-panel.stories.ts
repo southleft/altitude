@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './tab-panel';
-import { loremParagraphs } from '../../.storybook/fixtures';
+import { loremParagraphs } from '../../fixtures';
 import '../button/button';
 
 export default {

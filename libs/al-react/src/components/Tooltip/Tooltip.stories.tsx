@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/react-vite';
-import { loremSentences } from '../../../../al-web-components/.storybook/fixtures';
+import { loremSentences } from '../../../../al-web-components/fixtures';
 import { ALTooltip } from '../..';
 
 export default {

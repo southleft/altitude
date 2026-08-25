@@ -2,7 +2,7 @@
 // stories (`libs/al-web-components/components/header/header.stories.ts`).
 import type { StoryObj } from '@storybook/react-vite';
 import { ALButton, ALHeader, ALLayout, ALLink, ALLogo } from '../..';
-import { placeholderImages } from '../../../../al-web-components/.storybook/fixtures';
+import { placeholderImages } from '../../../../al-web-components/fixtures';
 
 export default {
   title: 'Organisms/Header',
