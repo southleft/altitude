@@ -27,7 +27,7 @@
     "build:app-southleft": "pnpm --filter al-app-southleft build",
     "build:app-docs": "pnpm --filter al-app-docs build",
     "build:app-home": "pnpm --filter al-app-home build",
-    "build:fixtures": "pnpm run build:app-web-components && pnpm run build:app-react && pnpm run build:app-mfe && pnpm run build:app-ssr",
+    "build:fixtures": "pnpm run build:app-web-components && pnpm run build:app-react && pnpm run build:app-mfe && pnpm run build:app-ssr && pnpm run build:story-fixture",
     "build:all": "pnpm run build && pnpm run build:app-angular && pnpm run build:app-react && pnpm run build:app-svelte && pnpm run build:app-astro && pnpm run build:app-southleft && pnpm run build:app-docs && pnpm run copy:components && pnpm run build:app-home",
     "copy:components": "cp -r ./libs/al-web-components/dist ./dist/al-web-components",
     "dev:index": "npx serve ./dist",

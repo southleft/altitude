@@ -46,6 +46,7 @@ export default defineConfig({
   //   5176 — al-app-mfe            (tests/mfe.spec.ts)
   //   5177 — al-app-ssr            (tests/ssr.spec.ts); rooted at the REPO ROOT
   //          so the generated pages' ../../../libs/... references resolve.
+  //   5178 — story-fixture          (tests/components.vrt.spec.ts)
   // All three serve pre-built output: run `pnpm run build:fixtures` first.
   webServer: [
     {
@@ -63,6 +64,17 @@ export default defineConfig({
     {
       command: 'pnpm --filter al-app-ssr start',
       url: 'http://localhost:5177/apps/ssr/dist/index.html',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+    },
+    // 5178 - the story fixture, which renders every component's stories with
+    // real Lit. It already backs the accessibility sweep; pointing VRT at it
+    // too means the two measure the SAME rendered states rather than two
+    // separately-maintained fixtures that can drift apart. Built by
+    // `pnpm run build:story-fixture` (part of build:fixtures).
+    {
+      command: 'pnpm --dir libs/al-web-components/story-fixture exec vite preview --port 5178',
+      url: 'http://localhost:5178/iframe.html?id=button--Default',
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
     },

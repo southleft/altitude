@@ -160,7 +160,7 @@ jobs:
         run: pnpm run gate:self-test
 
   baselines-vrt:
-    name: T0.1 - VRT vs committed baselines
+    name: T0.1 - VRT vs committed baselines (5 pilots + 65 components)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -178,8 +178,12 @@ jobs:
       # mfe :5176, ssr :5177 serving a prebuilt dist/index.html) — every one of
       # their fixtures must be built or config.webServer dies on a missing dist
       # and the run collects 0 tests.
-      - name: Build libraries + fixtures (web-components, mfe, ssr)
-        run: pnpm run build && pnpm --filter al-app-web-components build && pnpm --filter al-app-mfe build && pnpm --filter al-app-ssr build
+      # `build:fixtures` rather than three named filters: it now also builds the
+      # story fixture, which tests/components.vrt.spec.ts serves on 5178 and
+      # reads its index.json from. Naming the apps individually is what left the
+      # new fixture unbuilt and the server unable to start.
+      - name: Build libraries + every VRT fixture
+        run: pnpm run build && pnpm run build:fixtures
       - name: Run VRT against baselines
         run: pnpm run test:vrt
       # Scoped `<al-theme brand>` regression guard. Deliberately NOT a pixel
