@@ -2,7 +2,7 @@ import { html, LitElement, unsafeCSS } from 'lit';
 import tokens from '../../../styles/dist/tokens.json';
 import styles from './utilities.scss';
 import '../token-specimen/token-specimen';
-import '../f-po/f-po';
+import '../../../fixtures/f-po/f-po';
 
 const codeGap = String.raw`<div class="al-u-gap">
   <div>Item</div>

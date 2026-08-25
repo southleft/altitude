@@ -1,7 +1,6 @@
 import { expect, fireEvent, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import '../field-note/field-note';
 import '../icon/icons/attachment';
 import '../icon/icons/emoji';
@@ -21,7 +20,6 @@ export default {
       handles: ['onTextareaChange']
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     rows: {
       control: 'number',

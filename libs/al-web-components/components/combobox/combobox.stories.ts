@@ -1,5 +1,4 @@
 import { html } from 'lit';
-import { withActions } from 'storybook/actions/decorator';
 import { spread } from '../../directives/spread';
 import './combobox';
 
@@ -25,7 +24,6 @@ const meta = {
     layout: 'centered',
     actions: { handles: ['onComboboxOpen', 'onComboboxClose', 'onComboboxChange', 'onComboboxFilter'] }
   },
-  decorators: [withActions],
   args: {
     label: 'Fruit',
     placeholder: 'Search fruits…',

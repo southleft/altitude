@@ -1,7 +1,6 @@
 import { expect, userEvent, within, waitFor } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import '../button/button';
 import '../icon/icons/document';
 import '../icon/icons/menu';
@@ -30,7 +29,6 @@ export default {
       ]
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     variant: {
       type: 'radio',

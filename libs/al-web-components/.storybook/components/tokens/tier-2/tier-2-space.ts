@@ -2,7 +2,7 @@ import { html, LitElement, unsafeCSS } from 'lit';
 import tokens from '../../../../styles/dist/tokens.json';
 import styles from '../tokens.scss';
 import '../../token-specimen/token-specimen';
-import '../../f-po/f-po';
+import '../../../../fixtures/f-po/f-po';
 
 export class Tier2Space extends LitElement {
   static get styles() {

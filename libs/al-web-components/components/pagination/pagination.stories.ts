@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import './pagination';
 
 export default {
@@ -14,7 +13,6 @@ export default {
     },
     layout: 'centered'
   },
-  decorators: [ withActions ],
   args: {
     totalRecords: '200',
     pageSize: '20'

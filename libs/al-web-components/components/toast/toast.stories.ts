@@ -1,7 +1,6 @@
 import { expect, userEvent, within, waitFor } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import '../button/button';
 import '../alert/alert';
 import '../icon/icons/success';
@@ -17,7 +16,6 @@ export default {
       handles: ['onToastClose']
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     variant: {
       control: { type: 'radio' },

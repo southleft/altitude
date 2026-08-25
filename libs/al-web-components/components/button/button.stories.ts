@@ -1,8 +1,7 @@
 import { expect, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
-import '../../.storybook/components/f-po/f-po';
+import '../../fixtures/f-po/f-po';
 import '../icon/icons/success';
 import '../icon/icons/send';
 import './button';
@@ -18,7 +17,6 @@ export default {
       handles: ['click']
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     type: {
       options: ['button', 'submit', 'reset'],

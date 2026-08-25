@@ -1,7 +1,6 @@
 import { expect, userEvent, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import './toggle';
 
 export default {
@@ -15,7 +14,6 @@ export default {
       handles: ['onToggleChange']
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     label: {
       control: 'text'

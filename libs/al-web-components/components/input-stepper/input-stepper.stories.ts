@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
 import './input-stepper';
@@ -16,7 +15,6 @@ export default {
       handles: ['onInputStepperChange']
     }
   },
-  decorators: [ withActions ],
   args: {
     count: '1',
     min: '0',

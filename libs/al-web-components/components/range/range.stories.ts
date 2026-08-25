@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import './range';
 
 export default {
@@ -13,7 +12,6 @@ export default {
       handles: ['onRangeDrag', 'onRangeOutputValueChange']
     }
   },
-  decorators: [ withActions ],
   args: {
     label: 'Label',
     fieldNote: 'This is a field note.'

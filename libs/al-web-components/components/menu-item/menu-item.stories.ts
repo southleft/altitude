@@ -1,7 +1,6 @@
 import { expect, userEvent, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import '../icon/icons/add';
 import '../icon/icons/chevron-down';
 import './menu-item';
@@ -20,7 +19,6 @@ export default {
       exclude: ['isFocused', 'idx', 'ariaControls', 'menuItemLink', 'menuItemControl', 'menuItemLinkEl', 'menuItemControlEl']
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     href: {
       control: 'text'

@@ -1,14 +1,13 @@
 import { expect, userEvent, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import './toggle-button';
 import '../avatar/avatar';
 import '../icon/icons/emoji';
 import '../icon/icons/chevron-down';
 import '../popover/popover';
 import '../tooltip/tooltip';
-import '../../.storybook/components/f-po/f-po';
+import '../../fixtures/f-po/f-po';
 import { placeholderImages } from '../../.storybook/fixtures';
 
 export default {
@@ -25,7 +24,6 @@ export default {
       exclude: ['isSmall', 'slottedEls', 'toggleButton', 'toggleButtonContent', 'hasPanel']
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     variant: {
       control: 'radio',

@@ -1,7 +1,6 @@
 import { expect, userEvent, within, waitFor } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import '../field-note/field-note';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
@@ -17,7 +16,6 @@ export default {
       handles: ['onRadioChange']
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     isChecked: {
       control: 'boolean'

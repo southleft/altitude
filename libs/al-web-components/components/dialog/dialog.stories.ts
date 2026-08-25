@@ -1,8 +1,7 @@
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
-import '../../.storybook/components/f-po/f-po';
+import '../../fixtures/f-po/f-po';
 import '../layout/layout';
 import '../button/button';
 import './dialog';
@@ -20,7 +19,6 @@ export default {
       exclude: ['ariaLabelledBy', 'transitionDelay', 'dialogContainer', 'dialogHeading', 'closeButton', 'slottedTrigger', 'externalTrigger', 'handleOnClickOutside']
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     heading: {
       type: 'text'

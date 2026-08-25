@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import '../checkbox/checkbox';
 import '../field-note/field-note';
 import '../icon/icons/help';
@@ -18,7 +17,6 @@ export default {
       handles: ['onCheckboxChange']
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     isError: {
       control: 'boolean'

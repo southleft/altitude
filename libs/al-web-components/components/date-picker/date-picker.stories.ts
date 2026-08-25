@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import '../field-note/field-note';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
@@ -16,7 +15,6 @@ export default {
       handles: ['onDatePickerOpen', 'onDatePickerClose', 'onDatePickerChange']
     },
   },
-  decorators: [ withActions ],
   args: {
     label: 'Select a Date',
     fieldNote: 'This is a field note.',

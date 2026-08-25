@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import '../checkbox/checkbox';
 import '../list/list';
 import './list-item';
@@ -15,7 +14,6 @@ export default {
       handles: ['select']
     }
   },
-  decorators: [ withActions ],
 };
 
 const Template = (args) => html`<al-list-item ${spread(args)}>List Item</al-list-item>`;

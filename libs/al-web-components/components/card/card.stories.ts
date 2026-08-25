@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './card';
-import '../../.storybook/components/f-po/f-po';
+import '../../fixtures/f-po/f-po';
 import { loremSentences, placeholderImage, placeholderImages } from '../../.storybook/fixtures';
 import '../chip/chip';
 import '../heading/heading';

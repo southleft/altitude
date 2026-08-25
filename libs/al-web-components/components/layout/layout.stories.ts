@@ -3,7 +3,7 @@ import { spread } from '../../directives/spread';
 import './layout';
 import '../card/card';
 import '../heading/heading';
-import '../../.storybook/components/f-po/f-po';
+import '../../fixtures/f-po/f-po';
 
 /**
  * Layout is the single arrangement primitive. Rather than a story per

@@ -1,7 +1,6 @@
 import { expect, userEvent, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import '../icon/icons/success';
 import './tab';
 
@@ -18,7 +17,6 @@ export default {
       exclude: ['ariaId', 'ariaControls', 'idx', 'tabEl']
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     isActive: {
       control: 'boolean',

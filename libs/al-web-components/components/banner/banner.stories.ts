@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import './banner';
 import '../link/link';
 
@@ -13,7 +12,6 @@ export default {
     layout: 'fullscreen',
     actions: { handles: ['onBannerClose'] }
   },
-  decorators: [withActions],
   argTypes: {
     variant: {
       control: 'radio',

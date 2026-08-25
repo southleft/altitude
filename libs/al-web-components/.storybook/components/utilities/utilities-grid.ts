@@ -2,7 +2,7 @@ import { html, LitElement, unsafeCSS } from 'lit';
 import styles from './utilities.scss';
 import spacingStyles from '../../../styles/core/utilities/spacing.scss';
 import '../token-specimen/token-specimen';
-import '../f-po/f-po';
+import '../../../fixtures/f-po/f-po';
 
 const codeResonsiveColumns1 = String.raw`<div class="al-u-grid cols:6@md cols:3@lg al-u-gap-lg">
   <div>1</div>

@@ -1,7 +1,6 @@
 import { expect, userEvent, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import '../badge/badge';
 import '../icon/icons/success';
 import '../tab-panel/tab-panel';
@@ -21,7 +20,6 @@ export default {
       exclude: ['activeTab', 'isScrollable', 'tabsList', 'tabPanels', 'tabItems', 'isLTR', 'handleOnScroll', 'handleOnResize']
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     variant: {
       control: { type: 'radio' },

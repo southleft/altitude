@@ -1,5 +1,4 @@
 import { html } from 'lit';
-import { withActions } from 'storybook/actions/decorator';
 import '../button/button';
 import './command-palette';
 
@@ -23,7 +22,6 @@ const meta = {
     status: { type: 'beta' },
     actions: { handles: ['onCommandPaletteOpen', 'onCommandPaletteClose', 'onCommandPaletteAction'] }
   },
-  decorators: [withActions]
 };
 
 export default meta;

@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import './theme-switcher';
 
 export default {
@@ -23,7 +22,6 @@ export default {
     // toolbar at all. Use the toolbar preset on any other story.
     alPreset: { disable: true }
   },
-  decorators: [ withActions ],
 };
 
 const Template = (args) => html`<al-theme-switcher ${spread(args)} data-testid="theme-switcher">Hello world</al-theme-switcher>`;

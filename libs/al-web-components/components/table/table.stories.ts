@@ -1,5 +1,4 @@
 import { html } from 'lit';
-import { withActions } from 'storybook/actions/decorator';
 import './table';
 
 const columns = [
@@ -33,7 +32,6 @@ const meta = {
     status: { type: 'beta' },
     actions: { handles: ['onTableSort', 'onTableRowSelect', 'onTableSelectAll'] }
   },
-  decorators: [withActions]
 };
 
 export default meta;

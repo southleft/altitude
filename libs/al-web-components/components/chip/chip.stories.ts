@@ -1,7 +1,6 @@
 import { expect, userEvent, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import './chip';
 import '../icon/icons/warning-triangle';
 
@@ -15,7 +14,6 @@ export default {
       handles: ['click', 'onChipClose']
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     variant: {
       control: { type: 'radio' },

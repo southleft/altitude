@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './divider';
-import '../../.storybook/components/f-po/f-po';
+import '../../fixtures/f-po/f-po';
 
 export default {
   title: 'Atoms/Divider',

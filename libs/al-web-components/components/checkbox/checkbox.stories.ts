@@ -1,7 +1,6 @@
 import { expect, userEvent, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import '../field-note/field-note';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
@@ -18,7 +17,6 @@ export default {
       handles: ['onCheckboxChange']
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     isChecked: {
       control: 'boolean'

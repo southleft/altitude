@@ -7,7 +7,7 @@ import '../dialog/dialog';
 import '../tab/tab';
 import '../tabs/tabs';
 import '../tab-panel/tab-panel';
-import '../../.storybook/components/f-po/f-po';
+import '../../fixtures/f-po/f-po';
 
 export default {
   title: 'Atoms/Focus Trap',

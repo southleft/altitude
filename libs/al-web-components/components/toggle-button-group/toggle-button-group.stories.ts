@@ -1,12 +1,11 @@
 import { expect, userEvent, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import './toggle-button-group';
 import '../layout/layout';
 import '../toggle-button/toggle-button';
 import '../icon/icons/emoji';
-import '../../.storybook/components/f-po/f-po';
+import '../../fixtures/f-po/f-po';
 
 export default {
   title: 'Molecules/Form/Toggle Button Group',
@@ -21,7 +20,6 @@ export default {
       exclude: ['selectedItem', 'toggleButtons']
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     variant: {
       control: 'radio',

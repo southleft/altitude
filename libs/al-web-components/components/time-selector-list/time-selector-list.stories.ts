@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import './time-selector-list';
 
 export default {
@@ -13,7 +12,6 @@ export default {
       handles: ['onTimeSelectorListChange']
     }
   },
-  decorators: [ withActions ],
 };
 
 const Template = (args) => html`<al-time-selector-list ${spread(args)} data-testid="time-selector-list">Hello world</al-time-selector-list>`;

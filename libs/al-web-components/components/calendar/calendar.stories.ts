@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import './calendar';
 
 export default {
@@ -13,7 +12,6 @@ export default {
       handles: ['onCalendarChange']
     }
   },
-  decorators: [ withActions ],
 };
 
 export const Default = (args) => html` <al-calendar ${spread(args)}></al-calendar> `;

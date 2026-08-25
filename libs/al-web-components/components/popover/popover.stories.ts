@@ -1,9 +1,8 @@
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import './popover';
-import '../../.storybook/components/f-po/f-po';
+import '../../fixtures/f-po/f-po';
 import '../layout/layout';
 import '../button/button';
 import '../icon/icons/document';
@@ -30,7 +29,6 @@ export default {
       exclude: ['ariaLabelledBy', 'popoverTrigger', 'popoverTriggerButton', 'handleOnClickOutside', 'transitionDelay']
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     variant: {
       options: ['default', 'menu'],

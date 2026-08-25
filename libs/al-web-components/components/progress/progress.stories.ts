@@ -1,7 +1,6 @@
 import { within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import './progress';
 
 export default {
@@ -14,7 +13,6 @@ export default {
       handles: ['onProgressChange' ]
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     isCircle: {
       control: 'boolean'

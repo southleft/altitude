@@ -1,7 +1,6 @@
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from 'storybook/actions/decorator';
 import './tooltip';
 import { loremSentences } from '../../.storybook/fixtures';
 
@@ -19,7 +18,6 @@ export default {
       exclude: ['ariaDescribedBy']
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     hasArrow: {
       type: 'boolean'
