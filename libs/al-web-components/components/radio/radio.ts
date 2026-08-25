@@ -171,7 +171,7 @@ export class ALRadio extends ALElement {
               class="al-c-radio__input"
               type="radio"
               id="${this.fieldId}"
-              name="${this.name}"
+              name="${ifDefined(this.name)}"
               .value="${this.value}"
               .checked="${this.isChecked}"
               ?disabled="${this.isDisabled}"

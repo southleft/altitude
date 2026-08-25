@@ -207,4 +207,33 @@ describe('al-radio-group', () => {
     expect(items(el)[1].isChecked).toBe(true);
     expect(new FormData(form).get('size'), 'current behavior — not form-associated').toBeNull();
   });
+  it('does not hang when every item in the group is disabled', async () => {
+    // radio-group.ts:199 walked `while (this.radioItems[newIndex].isDisabled)`
+    // looking for an enabled item, and the wrap immediately below it kept the
+    // index cycling rather than running off the end — so an all-disabled group
+    // span-locked the browser tab on the first arrow key. It was found by the
+    // Vitest port and deliberately left UNTESTED at the time, because the test
+    // would have frozen the suite instead of failing it.
+    //
+    // Bounded to one full pass 2026-08-24, so this is now safe to assert. The
+    // timeout is the real assertion: if the guard regresses, this test hangs
+    // and vitest kills it rather than the whole run going quiet.
+    const el = await fixture<ALRadioGroup>(html`
+      <al-radio-group label="Size" name="size">
+        <al-radio isDisabled value="s">S</al-radio>
+        <al-radio isDisabled value="m">M</al-radio>
+      </al-radio-group>
+    `);
+    await el.updateComplete;
+
+    const before = items(el).map((item) => item.isChecked);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
+    await tick();
+    await el.updateComplete;
+
+    // Nothing legal to land on, so selection must not move — and in particular
+    // must not settle on a disabled item, which would then have `.focus()`
+    // called on a `:not(:disabled)` selector that matches nothing.
+    expect(items(el).map((item) => item.isChecked)).toEqual(before);
+  }, 5000);
 });

@@ -1,3 +1,12 @@
+/* eslint-disable lit-a11y/mouse-events-have-key-events --
+ * The rule wants a literal `@focus` beside `@mouseover`. This component pairs
+ * `@mouseover`/`@mouseleave` with `@focusin`/`@focusout` instead, which is the
+ * keyboard equivalent the rule is asking for and the ONLY form that works
+ * here: focus does not bubble, so `@focus` on a non-focusable wrapper never
+ * fires from the close button or a slotted action, and a keyboard user would
+ * get no pause at all. The disable is file-level because an inline one cannot
+ * live inside a Lit template literal.
+ */
 import { TemplateResult, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
@@ -196,6 +205,10 @@ export class ALAlert extends ALElement {
       <div
         role="alert"
         class=${componentClassNames}
+        @focusin=${this.handleMouseOver}
+        @focusout=${this.handleMouseLeave}
+        @mouseover=${this.handleMouseOver}
+        @mouseleave=${this.handleMouseLeave}
       >
         <div class="al-c-alert__icon">${this.slotNotEmpty('icon') ?
           html` <slot name="icon"></slot> ` : html` ${alertIcon} `}

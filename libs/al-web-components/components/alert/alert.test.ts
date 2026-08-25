@@ -84,24 +84,27 @@ describe('al-alert', () => {
     expect(el.isActive).toBe(true);
   });
 
-  it('DEFECT: hovering an auto-closing alert does NOT pause the timer', async () => {
-    // alert.ts:113 and alert.ts:123 define `handleMouseOver` / `handleMouseLeave`
-    // to pause and resume auto-close — but alert.ts:render() never binds them.
-    // Compare toast.ts:217-218, which does bind exactly this pair. The
-    // Storybook play function (alert.stories.ts WithAutoClose) hovered and
-    // unhovered and then only asserted the alert eventually closed, which is
-    // true whether or not the pause works, so it never caught this.
+  it('pauses the auto-close timer while the pointer is over it, and resumes on leave', async () => {
+    // `handleMouseOver` / `handleMouseLeave` existed since the component was
+    // written and `render()` never bound them, so an auto-closing alert
+    // vanished out from under whoever was reading it. Fixed 2026-08-24 by
+    // binding the pair the same way toast.ts:217-218 does.
     //
-    // This test asserts the CURRENT (wrong) behavior so the suite stays green
-    // and the gap is recorded. When the handlers are wired up, this test will
-    // fail — that is the signal to flip it to `toBe(true)`.
+    // The Storybook play function this replaces hovered, unhovered, and then
+    // asserted only that the alert eventually closed — true whether the pause
+    // worked or not, which is why it never caught this. Both halves are
+    // asserted here instead: still open well past the delay while hovered,
+    // and actually closing once the pointer leaves.
     const el = await fixture<ALAlert>(html`<al-alert isActive autoClose .autoCloseDelay=${0.1}>Saved</al-alert>`);
     await el.updateComplete;
 
     box(el).dispatchEvent(new MouseEvent('mouseover', { bubbles: true, composed: true }));
     await tick(200);
+    expect(el.isActive, 'hover must hold the alert open past its delay').toBe(true);
 
-    expect(el.isActive, 'if this is true the mouseover binding was added — update this test').toBe(false);
+    box(el).dispatchEvent(new MouseEvent('mouseleave', { bubbles: true, composed: true }));
+    await tick(200);
+    expect(el.isActive, 'leaving must let the timer finish the close').toBe(false);
   });
 
   it('announces itself as an alert to assistive technology', async () => {

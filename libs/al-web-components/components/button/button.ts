@@ -150,7 +150,22 @@ export class ALButton extends ALElement {
     /* 1 */
     if (!this.label) {
       setTimeout(() => {
-        const textNode = [...this.slotNodes].find((node) => node.nodeType === 3);
+        /*
+         * The first NON-EMPTY text node, not simply the first.
+         *
+         * A template that puts an icon on its own line leaves whitespace as the
+         * first text node, which trimmed to `''` and produced `label=""` — an
+         * icon-only button with no accessible name at all (WCAG 4.1.2). Both
+         * `al-tabs` scroll arrows shipped that way, and nothing caught it
+         * because the story clicked them by index and never read a name.
+         *
+         * Filtering here rather than at each call site fixes the whole class:
+         * any button whose slotted text is not the very first node now derives
+         * the name a reader actually sees.
+         */
+        const textNode = [...this.slotNodes].find(
+          (node) => node.nodeType === 3 && node.textContent.trim() !== ''
+        );
         if (textNode) {
           this.label = textNode.textContent.trim();
         }

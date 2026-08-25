@@ -176,7 +176,7 @@ export class ALCheckbox extends ALElement {
               class="al-c-checkbox__input"
               type="checkbox"
               id="${this.fieldId}"
-              name="${this.name}"
+              name="${ifDefined(this.name)}"
               .value="${this.value}"
               .checked="${this.isChecked}"
               ?disabled="${this.isDisabled}"

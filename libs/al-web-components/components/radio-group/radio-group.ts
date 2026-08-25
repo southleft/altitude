@@ -195,9 +195,22 @@ export class ALRadioGroup extends ALElement {
     } else if (newIndex > radioListLength) {
       newIndex = 0;
     }
-    /* 6 */
-    while (this.radioItems[newIndex].isDisabled) {
+    /*
+     * 6. Bounded, because the unbounded form hung the browser.
+     *
+     * This walked until it found an enabled item, which never terminates when
+     * EVERY item is disabled — an arrow key on such a group span-locked the tab.
+     * The wrap in step 7 is what makes it infinite rather than merely wrong:
+     * the index keeps cycling instead of running off the end.
+     *
+     * One full pass is enough to prove there is nothing to land on. The
+     * `<= radioListLength` bound (not `<`) matches step 5's wrap, which treats
+     * `radioListLength` as a valid index rather than the length.
+     */
+    let stepsRemaining = radioListLength + 1;
+    while (this.radioItems[newIndex].isDisabled && stepsRemaining > 0) {
       newIndex = isPrevious ? newIndex - 1 : newIndex + 1;
+      stepsRemaining -= 1;
       /* 7 */
       if (newIndex < 0) {
         newIndex = radioListLength;
@@ -205,6 +218,13 @@ export class ALRadioGroup extends ALElement {
         newIndex = 0;
       }
     }
+    /*
+     * Every item disabled: there is no legal target, so leave selection and
+     * focus exactly where they are. Returning beats landing on a disabled item
+     * — step 8 would set `isChecked` on it and then call `.focus()` on a
+     * `:not(:disabled)` selector that matches nothing, throwing on null.
+     */
+    if (this.radioItems[newIndex].isDisabled) return;
     /* 8 */
     this.checkedItem = this.radioItems[newIndex];
     this.checkedItem.isChecked = true;

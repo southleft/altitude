@@ -270,34 +270,27 @@ describe('al-tabs', () => {
     expect(tabs[0].isActive).toBe(true);
   });
 
-  it('DEFECT: the scroll arrows have no accessible name at all', async () => {
-    // Two icon-only buttons that announce as an unnamed "button" - WCAG 4.1.2.
+  it('gives each scroll arrow a correct accessible name', async () => {
+    // Two bugs sat here and had to move together, which is why the earlier
+    // pinned test asserted both halves at once.
     //
-    // Root cause, and it is one line: button.ts:153 takes the FIRST text node
-    // out of the default slot (`.find(node => node.nodeType === 3)`), and the
-    // arrow templates at tabs.ts:394-402 / 416-424 put the icon on its own line,
-    // so the first text node is the whitespace before it. `.trim()` turns that
-    // into '' and every arrow ships `aria-label=""`. The fix is to find the
-    // first NON-EMPTY text node.
+    // 1. Both arrows rendered `aria-label=""`. button.ts:153 derived its
+    //    fallback from the FIRST text node, and the arrow templates put the
+    //    icon on its own line, so that node was whitespace and trimmed to ''.
+    //    Fixed generally in button.ts (first NON-EMPTY text node) and belt-and
+    //    -braces here with an explicit `label`, which is what the icon-only
+    //    pattern documents anyway: set hideText, supply label.
+    // 2. The text was SWAPPED — the prev arrow said "Next" and the next arrow
+    //    said "Previous". Fixing the derivation alone would have turned "no
+    //    name" into a confidently wrong one, which is worse.
     //
-    // Second, latent bug behind it: the prev arrow's text is "Next" and the
-    // next arrow's is "Previous" - the two are swapped. Fixing the label
-    // derivation alone would replace "no name" with "wrong name", so both need
-    // to move together.
-    //
-    // The Storybook play function (tabs.stories.ts WithScroll) clicked both
-    // arrows by array INDEX and never read a name, which is why neither was
-    // ever caught. This test asserts the CURRENT behavior so the gap is
-    // recorded; when it is fixed this fails and should be flipped to
-    // toBe('Previous') / toBe('Next').
+    // Never caught before because tabs.stories.ts WithScroll clicked the arrows
+    // by array INDEX and never read a name.
     const el = await manyTabs();
     await el.updateComplete;
     await tick();
     await frames();
     const [prev, next] = [...el.shadowRoot!.querySelectorAll('.al-c-tabs__arrow')] as any[];
-    // button.ts:151-158 derives the label 10ms after connectedCallback, and
-    // these arrows are only created once `isScrollable` flips - so they are
-    // newer than the awaits above.
     await tick(80);
     await prev.updateComplete;
     await next.updateComplete;
@@ -305,15 +298,12 @@ describe('al-tabs', () => {
     expect(prev.className).toContain('al-c-tabs__arrow--prev');
     expect(next.className).toContain('al-c-tabs__arrow--next');
 
-    for (const [name, arrow] of [['prev', prev], ['next', next]] as const) {
-      expect(
-        arrow.shadowRoot.querySelector('button').getAttribute('aria-label'),
-        `${name} arrow: if this is no longer empty the naming was fixed - update this test`
-      ).toBe('');
-    }
+    expect(prev.shadowRoot.querySelector('button').getAttribute('aria-label')).toBe('Previous');
+    expect(next.shadowRoot.querySelector('button').getAttribute('aria-label')).toBe('Next');
 
-    // The swapped source text, pinned so the second half of the fix is visible.
-    expect(prev.textContent.trim()).toBe('Next');
-    expect(next.textContent.trim()).toBe('Previous');
+    // The visible text must agree with the name, or the two disagree for
+    // anyone who turns hideText off.
+    expect(prev.textContent.trim()).toBe('Previous');
+    expect(next.textContent.trim()).toBe('Next');
   });
 });

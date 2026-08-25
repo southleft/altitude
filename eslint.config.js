@@ -140,12 +140,15 @@ export default [
        *     handling before being called defects; list-item and menu-item look real.
        *   accessible-name (4) — a dialog and a combobox with no accessible name.
        *     These are straightforwardly real.
-       *   mouse-events-have-key-events (1) — toast's `@mouseover` pause with no
-       *     `@focus`, so a keyboard user cannot pause the timer.
+       *
+       * mouse-events-have-key-events reached zero on 2026-08-24 and is now
+       * `error`: alert and toast both pair their hover pause with
+       * `@focusin`/`@focusout`, each carrying a file-level disable explaining
+       * why that is the correct form rather than the literal `@focus` the rule
+       * looks for.
        */
       'lit-a11y/click-events-have-key-events': 'warn',
       'lit-a11y/accessible-name': 'warn',
-      'lit-a11y/mouse-events-have-key-events': 'warn',
     },
   },
   {

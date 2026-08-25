@@ -395,10 +395,11 @@ export class ALTabs extends ALElement {
                   class="al-c-tabs__arrow al-c-tabs__arrow--prev"
                   variant="bare"
                   ?hideText=${true}
+                  label="Previous"
                   @click=${(e: Event) => this.setActiveAdjacentTab(this.activeTab, true, false, e)}
                 >
                   <${this.iconChevronLeftEl} slot="before"></${this.iconChevronLeftEl}>
-                  Next
+                  Previous
                 </${this.buttonEl}>
               `
             : null}
@@ -417,10 +418,11 @@ export class ALTabs extends ALElement {
                   class="al-c-tabs__arrow al-c-tabs__arrow--next"
                   variant="bare"
                   ?hideText=${true}
+                  label="Next"
                   @click=${(e: Event) => this.setActiveAdjacentTab(this.activeTab, false, false, e)}
                 >
                   <${this.iconChevronRightEl} slot="before"></${this.iconChevronRightEl}>
-                  Previous
+                  Next
                 </${this.buttonEl}>
               `
             : null}
