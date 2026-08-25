@@ -53,9 +53,99 @@
     --al-theme-space-lg: var(--al-space-16);
   }
 
-  /* ----- contrast axis (T4.4) ----- */
+  /* ----- contrast axis (T4.4, opacity remedy added
+     2026-08-22-token-debt-and-machine-readable-metadata) -----
+
+     WCAG 2.x SC 1.4.3 (and 1.4.11) explicitly EXEMPT inactive/disabled UI
+     components from contrast requirements — axe flags them anyway because it
+     cannot see intent, it can only measure pixels. `.altitude/a11y/report.json`
+     currently carries 18 `contrastViolations`, 15 of which are exclusively
+     `--Disabled` stories. Nothing below "fixes" those 18 — they stay
+     WCAG-exempt and the report is unmoved by this change, because the report
+     measures the DEFAULT (`contrast` unset) story. `contrast='more'` is a
+     real, user-facing remedy for the low-vision case, offered as an explicit
+     opt-in on top of a baseline the spec is allowed to leave alone.
+
+     `--al-theme-opacity-disabled` is where those 15 findings concentrate: 29
+     component call sites dim disabled content to `{opacity.40}` (0.4) instead
+     of switching to a distinct disabled colour (the semantic
+     `content.disabled-default` / `border.disabled-default` /
+     `background.disabled-default` tokens exist in tier-2 but are DEAD —
+     nothing reads them; a separate finding, not fixed here). At 0.4, the
+     worst realistic pairing in the codebase — `field-note.scss`'s disabled
+     text, `content.default-weak` (`#3A3A3A`) opacity-dimmed over
+     `--al-theme-color-body-background` (`background.default-weak`,
+     `#E2E0DA`) — blends to 2.03:1, clearing neither AA text (4.5:1) nor
+     AA large-text/UI (3:1). Raised to 0.8 (`tier-1/opacity.json`'s new `80`
+     leaf) it blends to 5.13:1, clearing AA text with margin, while every
+     other disabled pairing measured (`content-default` text, any surface)
+     clears comfortably at 0.8 too (8.6:1+) and 0.8 is still visibly dimmer
+     than the fully-enabled 1.0. Computed with the WCAG relative-luminance /
+     contrast-ratio formulas `theme-engine/oklch.ts` exports
+     (`luminance()`/`contrast()`), replicated rather than imported so the
+     measurement script has no build-order dependency on the library;
+     verified behaviourally (not just computed) by
+     `scripts/verify-contrast-axis.mjs`.
+
+     Nesting: NOT `:host([contrast='normal'])`. `contrast` carries a default
+     initializer (`theme.ts`), but — like every axis here — the `@property()`
+     decorator never sets `reflect: true`, so Lit does not write that default
+     back to the DOM attribute. Verified live: a freshly created `<al-theme>`
+     with no attributes set at all still reports
+     `getAttribute('contrast') === null`, even though the JS property reads
+     `'normal'`. A `[contrast='normal']` rule would therefore only ever match
+     a caller who wrote the attribute by hand — every other consumer (the
+     overwhelming majority) would stay unmatched and, exactly like the
+     motion bug below, silently INHERIT `--al-theme-opacity-disabled` from
+     whatever ancestor `<al-theme>` last set it directly. Reproduced live
+     before this fix: a bare inner `<al-theme>` nested inside
+     `<al-theme contrast="more">`, with no `contrast` attribute of its own,
+     inherited the ancestor's raised value with nothing to override it —
+     the SAME bug class §"motion" documents at length below, just via a
+     different root cause (never-reflected default vs. no default at all).
+     `:host(:not([contrast='more']))` is the fix: it matches the bare case
+     AND an explicit `contrast="normal"` in one rule, the same technique the
+     `prefers-reduced-motion` block below already uses
+     (`:host(:not([motion='full']))`).
+
+     `--al-theme-color-border-default` is DELIBERATELY left with no reset
+     rule — same "an axis may omit a state rather than write an unsafe one"
+     call the density axis above makes for `comfortable`, for a harder reason:
+     this token varies by BOTH mode (`tier-2/theme/{light,dark}/colors.json`)
+     AND brand (`tier-2/brand/southleft/mode/{light,dark}/colors.json`
+     overrides `border.default` directly — southleft is NOT the brand-neutral
+     case `border-default` was assumed to be), and every consumer reads it
+     with no `var(…, fallback)` (`border: … solid
+     var(--al-theme-color-border-default)`, and on divider/stepper-item/tabs
+     `background-color: var(--al-theme-color-border-default)` — no second
+     argument anywhere). That rules out both remedies this file uses
+     elsewhere: `initial` computes to the guaranteed-invalid value with no
+     fallback to fall back TO, so a consumer with no `var()` fallback doesn't
+     recover the tier-1 default, it gets `unset` — CSS's OWN initial value
+     for that specific property, `transparent` for `background-color`, which
+     would make the divider/stepper-item/tabs usages disappear. And a single
+     restated value bakes in one brand+mode's colour for every other
+     brand+mode, exactly the self-reference bug `.altitude/AXES.md` §2.3
+     documents for the shape/motion role tokens. The role-token-with-fallback
+     redesign that fixed it there (`var(--role, var(--legacy))`) is the real
+     fix here too, but it means touching every consumer file listed above —
+     out of this axis's scope. Measured, not assumed, that `more` is ALREADY
+     a no-op for this property on any branded, moded host: with
+     `brand="southleft" mode="dark" contrast="more"` set explicitly,
+     `--al-theme-color-border-default` resolves to southleft's own `#4a453a`,
+     not `currentColor` — the generated brand+mode partial
+     (`:host([brand='southleft'][mode='dark'])`, 0,3,0) already outranks
+     `[contrast='more']` (0,2,0) by specificity, regardless of source order.
+     Pre-existing, unrelated to the opacity fix; left as a follow-up. */
   :host([contrast='more']) {
     --al-theme-color-border-default: currentColor;
+    --al-theme-opacity-disabled: var(--al-opacity-80);
+  }
+
+  :host(:not([contrast='more'])) {
+    // Only opacity resets here — see the comment above for why
+    // --al-theme-color-border-default has no safe reset in this axis today.
+    --al-theme-opacity-disabled: var(--al-opacity-40);
   }
 
   /* ----- motion axis (T4.4, expanded 2026-08-20-token-axes-expansion) -----

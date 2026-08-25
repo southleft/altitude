@@ -116,11 +116,53 @@ export const MODE_SEMANTICS = {
   },
 } as const;
 
-/** WCAG targets the solver enforces, per role pairing. */
+/**
+ * WCAG targets the solver enforces, per role pairing.
+ *
+ * `content`, `contentWeak`, `accent` and `onAccent` were reverse-engineered
+ * from the committed baseline (see the module comment) rather than lifted
+ * directly off a single Success Criterion — they are stricter than the SC
+ * minimums they're closest to (AA normal text is 4.5:1; AAA is 7:1; these
+ * ship at 12 and 5.2). `border` is the one pre-existing exception: 1.5:1 is
+ * BELOW every WCAG threshold on purpose — it is a "still visibly a line, not
+ * invisible" floor for a decorative content divider, not a claim that
+ * `border/default` satisfies SC 1.4.11. Measured light-mode output sits at
+ * ~1.75:1 (real headroom above 1.5, still well under 1.4.11's 3:1) — see
+ * engine.ts's `border/default` receipt. Bumping this to a true 3:1 would be a
+ * real, opinionated visual change to every shipped light-mode divider and is
+ * left as a design decision, not made unilaterally here.
+ *
+ * `statusText` and `focusRing` are new (2026-08-25): both map to a real SC
+ * with a real threshold, both apply to tokens the engine already derives,
+ * and both were confirmed against real generated palettes to be new,
+ * previously-unchecked risk (see the pairing's call site in engine.ts for
+ * the receipt and the spec's before/after diff for measured numbers).
+ */
 export const TARGETS = {
   content: 12,
   contentWeak: 5.2,
   accent: 4.5,
   border: 1.5,
   onAccent: 4.5,
+  /**
+   * WCAG SC 1.4.3 Contrast (Minimum) — normal text, 4.5:1. Applies to
+   * `content/{danger,warning,success}-default` (tier-2), which alias the
+   * same red/orange/green-500 ramp peaks the engine already derives for
+   * `background/{danger,warning,success}-default`. Unenforced, these peaks
+   * measured as low as 2.97:1 in light mode across sampled prompts — below
+   * even the 3:1 non-text floor, on a token whose primary job is to render
+   * as legible status TEXT.
+   */
+  statusText: 4.5,
+  /**
+   * WCAG SC 1.4.11 Non-text Contrast (matches the 3:1 floor SC 2.4.11 Focus
+   * Appearance also sets for a focus indicator's area). Applies to
+   * `theme.color.focus-ring`, which aliases `border.primary-default` ->
+   * `color.brand.blue.500` — the SAME token already solved for `accent`
+   * (4.5, stricter) against the page background. This target covers the
+   * SECOND surface a focus ring is drawn against in practice: a control
+   * sitting on `background.default-weak` (cards, inputs) rather than the
+   * page background directly.
+   */
+  focusRing: 3,
 } as const;

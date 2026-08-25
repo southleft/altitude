@@ -45,7 +45,7 @@
     padding-block-end: var(--al-list-item-link-padding-block-end, var(--al-theme-space-xs));
     padding-inline-end: var(--al-list-item-link-padding-inline-end, var(--al-theme-space-xs));
     color: inherit;
-    transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+    transition: background-color var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
     background-color: transparent;
     cursor: pointer;
     text-align: start;
@@ -176,7 +176,7 @@
     --al-icon-width: #{var(--al-theme-icon)};
 
     margin-inline-start: auto;
-    transition: transform var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+    transition: transform var(--al-theme-animation-duration-role-fast, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
 
     /**
      * Items icon within active list item

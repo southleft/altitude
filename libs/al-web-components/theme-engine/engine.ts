@@ -275,6 +275,13 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
   const neutralLightC = NEUTRAL_LIGHT_L.map((_, i) => tint * (0.5 + i / 16));
   const neutralDarkC = NEUTRAL_DARK_L.map((_, i) => tint * (1.2 - i / 20));
 
+  // 500-stop chroma for the three status hues — named so the WCAG enforcement
+  // below can re-solve at the exact C/H `ramp()` painted them with, instead
+  // of duplicating the `Math.max(chroma, …)` floor a second time.
+  const dangerC500 = Math.max(chroma, 0.12);
+  const successC500 = Math.max(chroma, 0.11);
+  const warningC500 = Math.max(chroma, 0.13);
+
   const palette: Record<string, string> = {
     ...ramp('--al-color-neutral-light', NEUTRAL_LIGHT_L, neutralLightC, neutralHue),
     ...ramp('--al-color-neutral-dark', NEUTRAL_DARK_L, neutralDarkC, neutralHue),
@@ -286,10 +293,12 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
       secondaryHue
     ),
     // Status hues stay semantically legible (red/green/orange) but take the
-    // theme's saturation so they sit in the same world as the accent.
-    ...ramp('--al-color-brand-red', ACCENT_L, scaleChroma(ACCENT_C, ACCENT_PEAK_C, Math.max(chroma, 0.12)), 25),
-    ...ramp('--al-color-brand-green', ACCENT_L, scaleChroma(ACCENT_C, ACCENT_PEAK_C, Math.max(chroma, 0.11)), 148),
-    ...ramp('--al-color-brand-orange', ACCENT_L, scaleChroma(ACCENT_C, ACCENT_PEAK_C, Math.max(chroma, 0.13)), 62),
+    // theme's saturation so they sit in the same world as the accent. The
+    // 500-stop chroma is named below too — `enforce()` re-solves at that
+    // same C/H so a WCAG fix never drifts off the hue `ramp()` just painted.
+    ...ramp('--al-color-brand-red', ACCENT_L, scaleChroma(ACCENT_C, ACCENT_PEAK_C, dangerC500), 25),
+    ...ramp('--al-color-brand-green', ACCENT_L, scaleChroma(ACCENT_C, ACCENT_PEAK_C, successC500), 148),
+    ...ramp('--al-color-brand-orange', ACCENT_L, scaleChroma(ACCENT_C, ACCENT_PEAK_C, warningC500), 62),
   };
 
   // Pin the semantic layer to the derived mode. Only one theme sheet is ever
@@ -305,34 +314,114 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
 
   const bgVar = `${rampKey(roles.bg.ramp)}-${roles.bg.stop}`;
   const bg = palette[bgVar];
+  const bgWeakVar = `${rampKey(roles.bgWeak.ramp)}-${roles.bgWeak.stop}`;
+  const bgWeak = palette[bgWeakVar];
 
   const record = (label: string, hex: string, vs: string, target: number) =>
     receipts.push({ label, hex, vs, ratio: Math.round(contrast(hex, vs) * 100) / 100, target });
 
-  /** Re-solve a stop against `bg` if it misses its target. */
-  const enforce = (varName: string, target: number, label: string, C: number, H: number) => {
+  /** Re-solve a stop against `against` (defaults to `bg`) if it misses its target. */
+  const enforce = (
+    varName: string,
+    target: number,
+    label: string,
+    C: number,
+    H: number,
+    against: string = bg
+  ) => {
     const current = palette[varName];
-    if (contrast(current, bg) < target) {
-      const dir: 1 | -1 = luminanceOf(current) >= luminanceOf(bg) ? 1 : -1;
-      palette[varName] = solve(C, H, bg, target, dir);
+    if (contrast(current, against) < target) {
+      const dir: 1 | -1 = luminanceOf(current) >= luminanceOf(against) ? 1 : -1;
+      palette[varName] = solve(C, H, against, target, dir);
     }
-    record(label, palette[varName], bg, target);
+    record(label, palette[varName], against, target);
+  };
+
+  /**
+   * Re-solve ONE stop against SEVERAL (background, target) pairings at once.
+   *
+   * A naive sequence of independent `enforce()` calls on the same `varName`
+   * would let a later, looser fix silently undo an earlier, stricter one —
+   * `solve()` always returns the CLOSEST-to-background passing lightness for
+   * whichever single pairing it was called for, with no memory of any pairing
+   * solved before it. Instead: solve each pairing that currently fails
+   * independently (same C/H throughout — one token, one hue/chroma), then
+   * keep whichever candidate sits furthest along the shared direction. Every
+   * constraint here shares the same background FAMILY (bg/bgWeak are
+   * adjacent stops on the same neutral ramp, so `current` is reliably on the
+   * same side of both), so "furthest along the direction that fixed the
+   * hardest pairing" also clears every looser pairing on that same side —
+   * confirmed against real generated palettes rather than assumed (see the
+   * spec's before/after diff).
+   */
+  const enforceAll = (
+    varName: string,
+    constraints: Array<{ against: string; target: number; label: string }>,
+    C: number,
+    H: number
+  ) => {
+    const original = palette[varName];
+    let bestHex = original;
+    let bestL = luminanceOf(original);
+    for (const { against, target } of constraints) {
+      if (contrast(original, against) >= target) continue;
+      const dir: 1 | -1 = luminanceOf(original) >= luminanceOf(against) ? 1 : -1;
+      const candidate = solve(C, H, against, target, dir);
+      const candL = luminanceOf(candidate);
+      if (dir === 1 ? candL > bestL : candL < bestL) {
+        bestHex = candidate;
+        bestL = candL;
+      }
+    }
+    palette[varName] = bestHex;
+    for (const { against, target, label } of constraints) record(label, palette[varName], against, target);
   };
 
   const contentVar = `${rampKey(roles.content.ramp)}-${roles.content.stop}`;
   const contentWeakVar = `${rampKey(roles.contentWeak.ramp)}-${roles.contentWeak.stop}`;
+  const borderVar = `${rampKey(roles.border.ramp)}-${roles.border.stop}`;
   const contentIdx = stopIndex(roles.content.stop);
   const contentWeakIdx = stopIndex(roles.contentWeak.stop);
+  const borderIdx = stopIndex(roles.border.stop);
   const contentC =
     roles.content.ramp === 'neutralLight' ? neutralLightC[contentIdx] : neutralDarkC[contentIdx];
   const contentWeakC =
     roles.contentWeak.ramp === 'neutralLight'
       ? neutralLightC[contentWeakIdx]
       : neutralDarkC[contentWeakIdx];
+  // `ROLE_STOPS.border` is 'neutralDark' in BOTH modes (see ramps.ts) — unlike
+  // content/contentWeak, whose ramp genuinely differs by mode — so TS narrows
+  // `roles.border.ramp` to the single literal 'neutralDark' and flags a
+  // `=== 'neutralLight'` comparison as unreachable. Widen to `string` to keep
+  // this generic (matching `rampKey`'s own signature just above) rather than
+  // special-casing border to skip a comparison that is correct today only
+  // because of a coincidence in the data, not a structural guarantee.
+  const borderC =
+    (roles.border.ramp as string) === 'neutralLight' ? neutralLightC[borderIdx] : neutralDarkC[borderIdx];
 
   enforce(contentVar, TARGETS.content, 'content/default', contentC, neutralHue);
   enforce(contentWeakVar, TARGETS.contentWeak, 'content/weak', contentWeakC, neutralHue);
-  enforce('--al-color-brand-blue-500', TARGETS.accent, 'primary/500', chroma, accentHue);
+  // Not a WCAG SC threshold — see TARGETS.border's comment in ramps.ts. Wired
+  // here for the first time; ROLE_STOPS.border existed and was measured
+  // against nothing (T of 2026-08-22-token-debt-and-machine-readable-metadata).
+  enforce(borderVar, TARGETS.border, 'border/default', borderC, neutralHue);
+  // content/{danger,warning,success}-default (tier-2) read these same
+  // red/orange/green-500 peaks as TEXT — see TARGETS.statusText in ramps.ts.
+  enforce('--al-color-brand-red-500', TARGETS.statusText, 'content/danger', dangerC500, 25);
+  enforce('--al-color-brand-orange-500', TARGETS.statusText, 'content/warning', warningC500, 62);
+  enforce('--al-color-brand-green-500', TARGETS.statusText, 'content/success', successC500, 148);
+  // primary/500 (page bg, 4.5 — text-level, stricter) and focus-ring/bg-weak
+  // (a card/input surface, 3 — non-text) both live on brand-blue-500, so they
+  // go through enforceAll rather than two independent enforce() calls.
+  enforceAll(
+    '--al-color-brand-blue-500',
+    [
+      { against: bg, target: TARGETS.accent, label: 'primary/500' },
+      { against: bgWeak, target: TARGETS.focusRing, label: 'focus-ring/bg-weak' },
+    ],
+    chroma,
+    accentHue
+  );
 
   // The ink that rides on top of a filled accent surface.
   const accent = palette['--al-color-brand-blue-500'];

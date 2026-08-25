@@ -14,7 +14,7 @@
     padding: var(--al-theme-space-xs);
     background: var(--al-theme-color-background-transparent-default);
     border: none;
-    border-radius: var(--al-theme-border-radius-lg);
+    border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius-lg));
     text-decoration: none;
     cursor: pointer;
   }
@@ -40,9 +40,9 @@
     width: var(--al-toggle-button-content-width, auto);
     color: var(--al-theme-color-content-default);
     background: var(--al-theme-color-background-transparent-default);
-    border-radius: var(--al-theme-border-radius);
+    border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius));
     padding: var(--al-theme-space-xs);
-    transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing), background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+    transition: color var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing)), background-color var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
     white-space: nowrap;
     position: relative;
 

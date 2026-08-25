@@ -13,7 +13,14 @@
 //   brand=<id>           — selects the brand bundle to ingest.
 //   mode=light|dark      — color mode.
 //   density=compact|cozy|comfortable — spacing density axis (T4.4).
-//   contrast=normal|more — contrast axis (T4.4).
+//   contrast=normal|more — contrast axis (T4.4). `more` raises
+//     `theme.opacity.disabled` (0.4 -> 0.8, spec
+//     2026-08-22-token-debt-and-machine-readable-metadata) so disabled
+//     content clears WCAG AA text contrast (4.5:1) — a real low-vision
+//     remedy, NOT a fix for the axe report's disabled-state findings, which
+//     WCAG explicitly exempts from contrast requirements regardless (see
+//     theme.scss's contrast-axis comment for the measured ratios and the
+//     documented gap on `--al-theme-color-border-default`).
 //   motion=full|reduced|expressive — respects prefers-reduced-motion if
 //     absent; `expressive` lengthens/springs the role duration + easing
 //     tokens (spec 2026-08-20-token-axes-expansion).

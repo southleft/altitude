@@ -61,7 +61,7 @@
     height: 100%;
     cursor: pointer;
     z-index: var(--al-z-index-100);
-    border-radius: var(--al-theme-border-radius-round);
+    border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius-round));
 
     /**
      * Disabled state
@@ -90,8 +90,8 @@
     width: 100%;
     height: 100%;
     transform: scale(0);
-    border-radius: var(--al-theme-border-radius-round);
-    transition: all var(--al-theme-animation-duration-long) var(--al-theme-animation-timing);
+    border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius-round));
+    transition: all var(--al-theme-animation-duration-role-slow, var(--al-theme-animation-duration-long)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
     background-color: var(--al-theme-color-background-transparent-default);
 
     /**
@@ -116,9 +116,9 @@
     height: size(3);
     overflow: hidden;
     background-color: var(--al-theme-color-background-transparent-default);
-    border-radius: var(--al-theme-border-radius-round);
+    border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius-round));
     border: var(--al-theme-border-width-md) solid var(--al-theme-color-content-default);
-    transition: all var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+    transition: all var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
 
     /**
      * Custom radio on native input checked

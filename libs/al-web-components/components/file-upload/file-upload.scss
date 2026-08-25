@@ -42,11 +42,11 @@
     gap: var(--al-theme-space-xs);
     padding: var(--al-theme-space-md) var(--al-theme-space-lg) var(--al-theme-space-sm) var(--al-theme-space-lg);
     text-align: center;
-    border-radius: var(--al-theme-border-radius);
+    border-radius: var(--al-theme-border-radius-role-surface, var(--al-theme-border-radius));
     color: var(--al-theme-color-content-default);
     background-color: var(--al-theme-color-background-transparent-default);
     border: var(--al-theme-border-width) dashed var(--al-theme-color-border-default);
-    transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing), border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+    transition: background-color var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing)), border-color var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
 
     /**
      * Dragging state
@@ -91,7 +91,7 @@
   .al-c-file-upload__item {
     display: flex;
     flex-direction: column;
-    border-radius: var(--al-theme-border-radius);
+    border-radius: var(--al-theme-border-radius-role-surface, var(--al-theme-border-radius));
     overflow: hidden;
     --al-icon-width: #{var(--al-theme-icon-lg)};
     --al-icon-height: #{var(--al-theme-icon-lg)};

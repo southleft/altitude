@@ -26,7 +26,7 @@
     ::slotted(a) {
       text-decoration: none;
       color: inherit;
-      transition: all var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+      transition: all var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
     }
 
     /**

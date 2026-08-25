@@ -36,7 +36,7 @@
     border-radius: var(--al-toggle-height);
     background-color: var(--al-theme-color-background-default-strong);
     cursor: pointer;
-    transition: all var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+    transition: all var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
 
     /**
      * If the toggle state is checked, changes the background color of the label
@@ -74,7 +74,7 @@
     inset-block-start: var(--al-theme-space-xxxs);
     inset-inline-start: var(--al-theme-space-xxxs);
     box-shadow: var(--al-theme-box-shadow-xs);
-    transition: all var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+    transition: all var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
 
     /**
      * If the toggle state is checked, moves the pill to the right
