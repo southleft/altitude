@@ -20,6 +20,13 @@
 // it here — before any tool is registered — means every `PATHS.*` read
 // inside `./lib/*.mjs` (always call-time, never snapshotted at another
 // module's top level; see `./lib/paths.mjs`) sees the override.
+//
+// PROCESS-GLOBAL, NOT PER-SERVER: `configurePaths()` mutates module-level
+// state shared by every `McpServer` in the process. The LAST configured
+// root wins for ALL of them — building two servers against two different
+// `repoRoot`s in one process silently redirects the first server's reads
+// to the second server's checkout. One artifact root per process; run a
+// separate process per checkout if you need more than one.
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
@@ -42,7 +49,10 @@ export { configurePaths };
  */
 function selectTools(opts = {}) {
   const { include, exclude } = opts;
-  if (Array.isArray(include) && include.length) {
+  // An explicitly-passed `include` is an allowlist even when EMPTY — a
+  // caller writing `include: []` means "register nothing", not "register
+  // everything". Only an absent/non-array `include` falls through.
+  if (Array.isArray(include)) {
     return TOOLS.filter((t) => include.includes(t.name));
   }
   if (Array.isArray(exclude) && exclude.length) {
@@ -65,8 +75,8 @@ function selectTools(opts = {}) {
  *
  * @param {import('@modelcontextprotocol/sdk/server/mcp.js').McpServer} server
  * @param {object} [opts]
- * @param {string} [opts.repoRoot] Override the artifact root (default: `ALTITUDE_REPO_ROOT` env, else this package's own checkout). See `./lib/paths.mjs`.
- * @param {string[]} [opts.include] Only register tools whose name is in this list. Wins over `exclude` when both are given.
+ * @param {string} [opts.repoRoot] Override the artifact root (default: `ALTITUDE_REPO_ROOT` env, else this package's own checkout). PROCESS-GLOBAL: the last configured root wins for every server in this process — one root per process. See `./lib/paths.mjs` and this file's header.
+ * @param {string[]} [opts.include] Only register tools whose name is in this list — an explicit empty array registers NOTHING. Wins over `exclude` when both are given.
  * @param {string[]} [opts.exclude] Register every tool EXCEPT the ones named here. Ignored when `include` is also given.
  */
 export function registerAltitudeTools(server, opts = {}) {

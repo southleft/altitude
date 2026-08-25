@@ -46,18 +46,22 @@ export class UnknownProjectError extends Error {
 }
 
 let cachedRegistry = null;
+let cachedRegistryPath = null;
 
 /**
  * Read `.altitude/ds-projects.json`.
  *
- * Cached for the life of the process — the registry is checked-in config, not
- * something that changes under a running dev server. Pass `{ reload: true }`
- * from a test that rewrites it.
+ * Cached per registry PATH — the registry file itself is checked-in config
+ * that doesn't change under a running dev server, but `configurePaths()`
+ * (../lib/paths.mjs, the R3 `repoRoot` override) can repoint
+ * `PATHS.dsProjects` at a different checkout mid-process. Keying the cache
+ * by the resolved path makes a root switch invalidate it naturally; an
+ * unkeyed cache served the FIRST root's registry forever. Pass
+ * `{ reload: true }` from a test that rewrites the file in place.
  */
 export function loadRegistry({ reload = false } = {}) {
-  if (cachedRegistry && !reload) return cachedRegistry;
-
   const path = registryPath();
+  if (cachedRegistry && !reload && path === cachedRegistryPath) return cachedRegistry;
   if (!existsSync(path)) {
     throw new UnknownProjectError(
       `Design-system registry not found at ${path}. It is a tracked file — restore it from git.`,
@@ -87,6 +91,7 @@ export function loadRegistry({ reload = false } = {}) {
   }
 
   cachedRegistry = parsed;
+  cachedRegistryPath = path;
   return cachedRegistry;
 }
 

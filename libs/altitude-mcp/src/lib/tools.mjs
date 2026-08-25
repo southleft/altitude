@@ -43,6 +43,16 @@ export function json(data) {
  * useful in a description), on failure the description degrades to prose and the
  * error resurfaces where it belongs — inside the handler, as structured JSON the
  * agent can act on.
+ *
+ * LAZY BY CONSTRUCTION: `altitude_check_parity`'s `inputSchema` exposes the
+ * `project` field through a GETTER, so this function runs when the tool is
+ * REGISTERED (the SDK reads the schema at `registerTool()` time), not when
+ * this module is imported. A plain property on the `TOOLS` array literal
+ * would evaluate it at module-eval time — a filesystem read as an import
+ * side effect (violates the index.mjs zero-side-effect contract), baked in
+ * before any consumer `repoRoot` override could apply. The getter also means
+ * a server registered after `configurePaths(repoRoot)` names THAT root's
+ * project ids, not this checkout's.
  */
 function describeProjectArg() {
   try {
@@ -266,10 +276,11 @@ export const TOOLS = [
           .enum(Object.values(STATUS))
           .optional()
           .describe('Only return components with this status.'),
-        project: z
-          .string()
-          .optional()
-          .describe(describeProjectArg()),
+        // Getter, not a plain property: defers the registry read to
+        // registerTool() time — see describeProjectArg()'s header.
+        get project() {
+          return z.string().optional().describe(describeProjectArg());
+        },
       },
     },
     handler: toolHandler(({ tag, status, project }) => {

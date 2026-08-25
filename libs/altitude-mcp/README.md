@@ -112,9 +112,18 @@ dependency elsewhere, or wrapped by a brand layer with its own checkout. Two way
 elsewhere, in precedence order:
 
 - `registerAltitudeTools(server, { repoRoot: '/path/to/checkout' })` /
-  `buildServer({ repoRoot: '/path/to/checkout' })` — explicit, per-call.
+  `buildServer({ repoRoot: '/path/to/checkout' })` — explicit.
 - `ALTITUDE_REPO_ROOT` env var — picked up once at module load if no explicit `repoRoot` is
   passed.
+
+**One root per process.** `repoRoot` is **process-global**, not per-server: under the hood it
+mutates shared module state (`configurePaths()` in `src/lib/paths.mjs`) that every `McpServer`
+in the process reads through. The last configured root wins for all of them — building two
+servers against two different `repoRoot`s in one process silently redirects the first server's
+tool reads to the second server's checkout. If you need to serve more than one checkout, run a
+separate process per checkout (which is also what the stateless HTTP mode's
+fresh-server-per-request pattern assumes: every request's server shares the one process-wide
+root).
 
 **This pairing is not optional for an npm-installed copy.** If neither is set and this package is
 not physically sitting inside an Altitude checkout, `repoRoot` resolves to wherever
@@ -137,7 +146,9 @@ registerAltitudeTools(server, { exclude: ['altitude_validate'] });
 ```
 
 `include` wins when both are given — an explicit allowlist is a stronger statement of intent than
-an excludelist, so there's no ambiguous case to reject, only a redundant `exclude` to ignore.
+an excludelist, so there's no ambiguous case to reject, only a redundant `exclude` to ignore. An
+explicitly-passed `include: []` is honored as an empty allowlist and registers **nothing** — only
+omitting `include` altogether means "no filter".
 
 **`buildServer(opts)`** is the all-in-one convenience: it calls `registerAltitudeTools(server,
 opts)` on a fresh `McpServer` named `"altitude"` and additionally registers every resource and
