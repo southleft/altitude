@@ -34,13 +34,16 @@
  *
  * Usage — pick exactly one mode:
  *   node scripts/contracts/emit-contracts.mjs --seed                  # bootstrap NEW components only; refuses to overwrite an existing contract file
+ *   node scripts/contracts/emit-contracts.mjs --seed --component al-button  # bootstrap ONE tag only (must already be parity-tracked)
  *   node scripts/contracts/emit-contracts.mjs --seed --force          # ...unless --force (re-seed on purpose, discards hand edits)
  *   node scripts/contracts/emit-contracts.mjs --check-drift           # re-derive every tracked component in memory, diff vs. on-disk (status/version excluded); exit 1 on any drift
- *   node scripts/contracts/emit-contracts.mjs --check                 # ajv-validate the on-disk contracts against contract.schema.json, read-only
+ *   node scripts/contracts/emit-contracts.mjs --check                 # ajv-validate the on-disk contracts against contract.schema.json, read-only — refuses an illegal contract file BY NAME (path + failing rule)
+ *   node scripts/contracts/emit-contracts.mjs --check-determinism     # T15 CI gate: re-derive every tracked contract TWICE in memory, byte-compare the two serializations; exit 1 + names any component whose two derivations differ
  *   node scripts/contracts/emit-contracts.mjs --adopt                 # ONE-OFF: flip status derived -> source and bump version 0.1.0 -> 1.0.0 on every on-disk contract (the T10 adoption pass; safe to re-run, idempotent)
  *   node scripts/contracts/emit-contracts.mjs                         # no mode flag: prints this usage note, does nothing, exit 1
  *   ... any of the above + --project southleft / DS_PROJECT
- *   pnpm run contracts:seed / contracts:seed:sl / contracts:check
+ *   pnpm run contracts:seed / contracts:seed:sl / contracts:check / contracts:validate / contracts:check-determinism
+ *   pnpm run gate:contracts   # T15 — all three legs, both projects (CI)
  */
 import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
@@ -59,23 +62,51 @@ const SCHEMA_PATH = join(CONTRACTS_DIR, 'contract.schema.json');
 const SEED = process.argv.includes('--seed');
 const CHECK_DRIFT = process.argv.includes('--check-drift');
 const CHECK = process.argv.includes('--check');
+const CHECK_DETERMINISM = process.argv.includes('--check-determinism');
 const ADOPT = process.argv.includes('--adopt');
 const FORCE = process.argv.includes('--force');
+const STATES = ['hover', 'focus', 'active', 'disabled'];
+
+/** `--flag value` or `--flag=value` -> `value`; absent -> null. Mirrors extract-canvas.mjs's argOf(). */
+function argOf(flag) {
+  const eq = process.argv.find((a) => a.startsWith(`${flag}=`));
+  if (eq) return eq.slice(flag.length + 1) || null;
+  const i = process.argv.indexOf(flag);
+  return i > -1 && process.argv[i + 1] && !process.argv[i + 1].startsWith('-') ? process.argv[i + 1] : null;
+}
+
+/** `--seed --component al-button` — bootstrap ONE tag only (T16: what the WC plop generator's
+ * documented follow-up command runs once a freshly-scaffolded component has a CEM entry). */
+const COMPONENT = argOf('--component');
+
 // Curation metadata, not a derived fact — a hand-adopted contract's status
 // and version are never expected to match what re-derivation would produce.
 const DRIFT_IGNORED_FIELDS = new Set(['status', 'version']);
-const STATES = ['hover', 'focus', 'active', 'disabled'];
+
+/** Fields whose derivation depends entirely on scripts/figma-atoms/measure-components.mjs
+ * output (spec-light.json / spec-dark.json under each project's GITIGNORED figma-sync dir —
+ * see README.md "Anatomy availability is best-effort"). That file is a local measurement
+ * artifact that is never committed, and a fresh clone / CI runner has no path to produce it
+ * without a full headless-browser measurement pass first. When it's absent, buildAnatomy()
+ * honestly derives `anatomy: null` / `anatomySource: "unavailable"` — comparing that against
+ * an on-disk contract that WAS seeded on a machine with measured data is an environment
+ * capability gap, not a contract<->code disagreement, so runCheckDrift() excludes these
+ * fields from a run where measuredSpec is unavailable (never globally — a local run that DOES
+ * have spec-light.json still checks them in full). */
+const ANATOMY_DEPENDENT_FIELDS = ['anatomy', 'anatomySource', 'anatomyCase', 'tokens', 'states', 'semantics'];
 
 const USAGE = `[contracts] no mode flag given — emit-contracts.mjs no longer overwrites .altitude/contracts/**/*.contract.json by default (T10: contracts are edited source of truth, see .altitude/contracts/README.md).
 
 Pick one:
-  --seed [--force]   bootstrap contracts for NEW components only; refuses an existing file unless --force
-  --check-drift       re-derive every tracked component and diff it against the on-disk contract (status/version excluded); exit 1 on drift
-  --check             ajv-validate the on-disk contracts against contract.schema.json, read-only
+  --seed [--component al-button] [--force]   bootstrap contracts for NEW components only (or one tag); refuses an existing file unless --force
+  --check-drift       re-derive every tracked component and diff it against the on-disk contract (status/version excluded; anatomy/tokens/states/semantics also excluded when spec-light.json is unavailable in this environment); exit 1 on drift
+  --check             ajv-validate the on-disk contracts against contract.schema.json, read-only — refuses an illegal contract file BY NAME
+  --check-determinism re-derive every tracked contract TWICE in memory and byte-compare the two serializations; exit 1 + names any component whose two derivations differ
   --adopt             one-off: flip status derived -> source, bump version 0.1.0 -> 1.0.0 (idempotent)
 
   pnpm run contracts:seed / contracts:seed:sl
-  pnpm run contracts:check
+  pnpm run contracts:check / contracts:validate / contracts:check-determinism
+  pnpm run gate:contracts   # T15 CI gate — all three legs, both projects
   node scripts/contracts/emit-contracts.mjs --check --project <id>
 `;
 
@@ -384,8 +415,20 @@ function deriveOne({ tag, manifest, byTag, project, measuredSpec }) {
 // ── --seed: bootstrap NEW components only ──────────────────────────────────
 
 function runSeed() {
-  const { project, manifest, byTag, measuredSpec, outDir, trackedTags } = loadContext();
+  const { project, manifest, byTag, measuredSpec, outDir, trackedTags: allTrackedTags } = loadContext();
   mkdirSync(outDir, { recursive: true });
+
+  let trackedTags = allTrackedTags;
+  if (COMPONENT) {
+    if (!allTrackedTags.includes(COMPONENT)) {
+      console.error(
+        `[contracts] "${COMPONENT}" is not a parity-tracked component for project "${project.id}" — ` +
+          `run \`pnpm run parity:seed${project.isDefault ? '' : ` --project ${project.id}`}\` first so it has a manifest entry.`,
+      );
+      process.exit(2);
+    }
+    trackedTags = [COMPONENT];
+  }
 
   const emitted = [];
   const skippedExcluded = [];
@@ -417,7 +460,7 @@ function runSeed() {
   }
 
   console.log(
-    `[contracts] --seed ${project.id}: seeded ${emitted.length}, already-sourced ${skippedExisting.length}, excluded ${skippedExcluded.length}, no-CEM ${skippedNoCem.length} (manifest tracked ${trackedTags.length})`,
+    `[contracts] --seed ${project.id}: seeded ${emitted.length}, already-sourced ${skippedExisting.length}, excluded ${skippedExcluded.length}, no-CEM ${skippedNoCem.length} (manifest tracked ${allTrackedTags.length}${COMPONENT ? `, scoped to "${COMPONENT}"` : ''})`,
   );
 
   if (CHECK && !validateWithAjv(emitted)) process.exit(1);
@@ -425,12 +468,12 @@ function runSeed() {
 
 // ── --check-drift: on-disk contract vs. what the repo's own sources derive ─
 
-/** Field names present on either side, minus curation metadata, whose JSON differs. */
-function driftedFields(disk, derived) {
+/** Field names present on either side, minus the given ignore-set, whose JSON differs. */
+function driftedFields(disk, derived, ignoredFields) {
   const fields = new Set([...Object.keys(disk ?? {}), ...Object.keys(derived ?? {})]);
   const drifted = [];
   for (const field of fields) {
-    if (DRIFT_IGNORED_FIELDS.has(field)) continue;
+    if (ignoredFields.has(field)) continue;
     if (JSON.stringify(disk?.[field]) !== JSON.stringify(derived?.[field])) drifted.push(field);
   }
   return drifted;
@@ -438,6 +481,19 @@ function driftedFields(disk, derived) {
 
 function runCheckDrift() {
   const { project, manifest, byTag, measuredSpec, outDir, trackedTags } = loadContext();
+
+  // See ANATOMY_DEPENDENT_FIELDS above — only excluded from THIS run's comparison when
+  // this environment has no measured spec to derive anatomy from at all.
+  const ignoredThisRun = measuredSpec
+    ? DRIFT_IGNORED_FIELDS
+    : new Set([...DRIFT_IGNORED_FIELDS, ...ANATOMY_DEPENDENT_FIELDS]);
+  if (!measuredSpec) {
+    console.log(
+      `[contracts] --check-drift ${project.id}: no measured spec (spec-light.json) in this environment — ` +
+        `${ANATOMY_DEPENDENT_FIELDS.join(', ')} excluded from this run's comparison ` +
+        `(see .altitude/contracts/README.md "Anatomy availability is best-effort").`,
+    );
+  }
 
   let ok = 0;
   let drifted = 0;
@@ -467,7 +523,7 @@ function runCheckDrift() {
       continue;
     }
 
-    const fields = driftedFields(disk, derived);
+    const fields = driftedFields(disk, derived, ignoredThisRun);
     if (fields.length) {
       drifted++;
       console.error(`[contracts] DRIFT — ${tag}: ${fields.join(', ')}`);
@@ -480,6 +536,50 @@ function runCheckDrift() {
     `[contracts] --check-drift ${project.id}: ${ok} match, ${drifted} drifted, ${missing} missing, ${skipped} skipped (excluded/no-CEM) — ${trackedTags.length} tracked.`,
   );
   if (drifted || missing) process.exit(1);
+}
+
+// ── --check-determinism: same contract inputs -> byte-identical output ────
+//
+// T15 (spec 2026-08-25-contract-backed-figma-parity-and-generation) — the
+// "same input -> same output" leg of R7's "deterministic regeneration (same
+// contract -> byte-identical ops/spec output)". Scoped to CONTRACT DERIVATION
+// today: re-derives every tracked component's contract TWICE, in the same
+// process, from the exact same in-memory sources (CEM, manifest, token-map,
+// measured spec — nothing re-read from disk between the two derivations), and
+// byte-compares the two `JSON.stringify(contract, null, 2)` serializations.
+// This needs no git diff and no on-disk contract at all — it proves the
+// EMITTER itself is deterministic, independent of whether the on-disk file
+// has drifted (that's --check-drift's job). TODO(T12): once Figma ops
+// generation lands, its output joins this gate as the "ops" half of R7's
+// byte-identical claim — today this only covers contract derivation.
+
+function runCheckDeterminism() {
+  const { project, manifest, byTag, measuredSpec, trackedTags } = loadContext();
+
+  let checked = 0;
+  let mismatched = 0;
+  const failedTags = [];
+
+  for (const tag of trackedTags) {
+    const first = deriveOne({ tag, manifest, byTag, project, measuredSpec });
+    if (first.reason) continue; // excluded / no-cem — nothing to derive twice
+    const second = deriveOne({ tag, manifest, byTag, project, measuredSpec });
+
+    const a = JSON.stringify(first.contract, null, 2);
+    const b = JSON.stringify(second.contract, null, 2);
+    checked++;
+    if (a !== b) {
+      mismatched++;
+      failedTags.push(tag);
+      console.error(`[contracts] NONDETERMINISTIC — ${tag}: two in-memory derivations of the same contract produced different serialized output.`);
+    }
+  }
+
+  console.log(
+    `[contracts] --check-determinism ${project.id}: ${checked} checked, ${mismatched} nondeterministic` +
+      `${failedTags.length ? ` (${failedTags.join(', ')})` : ''} — ${trackedTags.length} tracked.`,
+  );
+  if (mismatched) process.exit(1);
 }
 
 // ── --check: ajv-validate the on-disk contracts, read-only ────────────────
@@ -553,6 +653,7 @@ function runAdopt() {
 function main() {
   if (ADOPT) return runAdopt();
   if (CHECK_DRIFT) return runCheckDrift();
+  if (CHECK_DETERMINISM) return runCheckDeterminism();
   if (SEED) return runSeed();
   if (CHECK) return runCheckOnly();
   console.log(USAGE);

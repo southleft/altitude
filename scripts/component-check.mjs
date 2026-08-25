@@ -31,6 +31,8 @@
  *   WARNINGS (listed, exit 0 unless --strict) — AGENTS.md grades these
  *   `medium`, or they are steps the checklist omits entirely today:
  *     - a parity manifest entry (.altitude/figma-sync/parity-manifest.json)
+ *     - a component contract (.altitude/contracts/altitude/<tag>.contract.json —
+ *       T15/T16, spec 2026-08-25-contract-backed-figma-parity-and-generation)
  *     - a React wrapper (libs/al-react/src/components/<Pascal>/)
  *     - guidance YAML (apps/docs/src/content/guidance/<slug>.yaml)
  *     - the tag appears in the generated root llms.txt
@@ -60,6 +62,7 @@ const BUNDLE = join(COMPONENTS_DIR, 'bundle.ts');
 const MIGRATION = join(REPO, '.altitude/migration.json');
 const CEM = join(REPO, 'libs/al-web-components/custom-elements.json');
 const PARITY_MANIFEST = join(REPO, '.altitude/figma-sync/parity-manifest.json');
+const CONTRACTS_DIR = join(REPO, '.altitude/contracts/altitude');
 const REACT_COMPONENTS_DIR = join(REPO, 'libs/al-react/src/components');
 const GUIDANCE_DIR = join(REPO, 'apps/docs/src/content/guidance');
 const LLMS_TXT = join(REPO, 'llms.txt');
@@ -239,6 +242,26 @@ function checkComponent(name) {
       pass,
       detail,
       fix: `Run: pnpm run parity:seed (merges new components into .altitude/figma-sync/parity-manifest.json — it will NOT mark it in-sync; that needs a deliberate \`pnpm run parity:synced ${tag}\` once Figma actually matches)`,
+    });
+  }
+
+  // --- WARNING: contract file (T15/T16, spec 2026-08-25-contract-backed- --
+  // --- figma-parity-and-generation) --------------------------------------
+  // Same severity as the parity manifest entry above: a contract can only be
+  // seeded for a PARITY-TRACKED tag (emit-contracts.mjs --seed reads the
+  // manifest's key list), so a missing parity entry already implies a
+  // missing contract — this check just makes that specific gap nameable on
+  // its own, rather than folded silently into the parity item above.
+  {
+    const contractPath = join(CONTRACTS_DIR, `${tag}.contract.json`);
+    const pass = existsSync(contractPath);
+    items.push({
+      key: 'contract',
+      severity: 'warning',
+      label: 'component contract (.altitude/contracts/altitude)',
+      pass,
+      detail: pass ? `.altitude/contracts/altitude/${tag}.contract.json present` : `no .altitude/contracts/altitude/${tag}.contract.json`,
+      fix: `Run: node scripts/contracts/emit-contracts.mjs --seed --component ${tag} (needs a CEM entry and a parity-manifest entry for "${tag}" first). Gated in CI by \`pnpm run gate:contracts\`.`,
     });
   }
 

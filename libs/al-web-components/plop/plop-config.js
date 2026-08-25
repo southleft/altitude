@@ -150,6 +150,13 @@ module.exports = (plop) => {
               '         imported first wins customElements.define permanently.',
               '       - omit the HTMLElementTagNameMap block: the base library already declares',
               '         that key, and two types for one tag is a TS2717 build error.',
+              '  4. Contract (T15/T16, spec 2026-08-25-contract-backed-figma-parity-and-generation) —',
+              '       once the CEM above is regenerated AND this tag has a parity-manifest entry',
+              '       (`pnpm run parity:seed:sl` or the registry\'s project id for this layer), seed it:',
+              `         node scripts/contracts/emit-contracts.mjs --seed --component al-${dash} --project <ds-project-id>`,
+              '       Cannot run automatically here — the CEM does not exist yet at scaffold time.',
+              '       `pnpm run gate:contracts` (CI) fails a parity-tracked component with no contract,',
+              '       or one that drifts from the CEM.',
               '  REMINDER: arrangement of slotted content = <al-layout>; never add direction/gap/align props here.'
             ].join('\n');
           }
@@ -159,6 +166,13 @@ module.exports = (plop) => {
             '  2. .altitude/migration.json — new entry, state "scoped-complete", inserted alphabetically',
             '  3. CEM — pnpm --filter @southleft/al-web-components build:custom-elements.json (after JSDoc is final)',
             '  4. React wrapper — pnpm --filter @southleft/al-react plop',
+            '  5. Contract (T15/T16, spec 2026-08-25-contract-backed-figma-parity-and-generation) —',
+            '       once the CEM above is regenerated AND this tag has a parity-manifest entry',
+            '       (`pnpm run parity:seed`), seed its contract:',
+            `         node scripts/contracts/emit-contracts.mjs --seed --component al-${dash}`,
+            '       Cannot run automatically here — the CEM does not exist yet at scaffold time.',
+            '       `pnpm run gate:contracts` (CI) fails a parity-tracked component with no contract,',
+            '       or one that drifts from the CEM.',
             '  REMINDER: arrangement of slotted content = <al-layout>; never add direction/gap/align props here.'
           ].join('\n');
         }

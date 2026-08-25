@@ -77,6 +77,26 @@ export * from './{{pascalCase name}}';`
           type: 'append',
           path: './../src/index.ts',
           template: "export * from './components/{{pascalCase name}}';"
+        },
+        () => {
+          const pascal = String(data.name).trim();
+          // PascalCase -> al-dash-case, same algorithm the WC side's contract note uses in
+          // reverse (dash -> Pascal) — see libs/al-web-components/plop/plop-config.js.
+          const dash = pascal.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+          const tag = `al-${dash}`;
+          return [
+            `Scaffolded AL${pascal} wrapping <${tag}>.`,
+            '',
+            'Contract (T15/T16, spec 2026-08-25-contract-backed-figma-parity-and-generation) — this',
+            'wrapper does NOT mint a second contract. Contracts are keyed by the underlying WEB',
+            `COMPONENT tag, one per project: .altitude/contracts/<project-id>/${tag}.contract.json.`,
+            `Confirm it already exists — it should have been seeded on the @southleft/al-web-components`,
+            'side (that plop generator prints its own contract step; scripts/component-check.mjs',
+            `warns if it is missing). If it genuinely does not exist yet:`,
+            `  node scripts/contracts/emit-contracts.mjs --seed --component ${tag} [--project <ds-project-id>]`,
+            '`pnpm run gate:contracts` (CI) fails a parity-tracked tag with no contract, or one that',
+            'drifts from the CEM — never from this wrapper.'
+          ].join('\n');
         }
       ];
     }

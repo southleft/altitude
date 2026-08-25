@@ -192,6 +192,42 @@ contract vs. a live Figma extraction — is `contracts:diff`
 (`scripts/contracts/diff-contracts.mjs`), documented under "Canvas
 contracts", above.
 
+## CI gate
+
+T15 (spec 2026-08-25-contract-backed-figma-parity-and-generation) wires the
+code side of R7 — "the code side is validated against contracts" — into CI as
+`pnpm run gate:contracts`, three legs, run for **both** projects
+(`altitude` and `southleft`):
+
+1. **Schema validation** (`contracts:validate[:sl]`, `--check`) — every
+   on-disk contract must satisfy `contract.schema.json`. An illegal contract
+   is refused **by name**: the offending file's path and the exact failing
+   rule (e.g. `/status: must be equal to one of the allowed values`), not a
+   bare exit code.
+2. **Drift** (`contracts:check[:sl]`, `--check-drift`) — the CEM-derived API
+   (props/events/slots/a11y/bindings, from `custom-elements.json` + the
+   parity manifest + `token-map.mjs`) is re-derived and diffed against the
+   on-disk contract on every run; `status`/`version` (curation metadata) are
+   always excluded, and the anatomy-dependent fields (`anatomy`,
+   `anatomySource`, `anatomyCase`, `tokens`, `states`, `semantics`) are
+   additionally excluded **only** when this environment has no measured spec
+   (`spec-light.json` — see "Anatomy availability is best-effort" below); a
+   CI runner never has one, so it checks CEM-derived facts only, exactly the
+   part of R7 this leg names.
+3. **Determinism** (`contracts:check-determinism[:sl]`, `--check-determinism`)
+   — every tracked contract is derived TWICE in memory, in the same process,
+   from the same sources, and the two serializations are byte-compared. This
+   proves the emitter itself is deterministic (same contract inputs -> same
+   output) independent of git or the on-disk file — R7's "deterministic
+   regeneration (same contract -> byte-identical ops/spec output)" leg.
+   Scoped to **contract derivation** today; once Figma ops generation (T12)
+   lands, its output joins this same gate as the "ops" half of that claim.
+
+Any of the three failing fails the build. See `package.json`'s `gate:contracts`
+script for the exact command chain, and `.github/workflows/v2-checks.yml`
+(`repo-hygiene` job) for where it runs — after both the base and Southleft-
+brand CEMs are built, since `--check-drift` needs both.
+
 ## Anatomy availability is best-effort
 
 `scripts/figma-atoms/measure-components.mjs` writes `spec-light.json` /
@@ -233,8 +269,7 @@ renamed, or narrowed for that reason — not by oversight.
 
 ### What's next (explicitly out of scope here)
 
-- Contract-level validation wired into CI (this phase ships the schema +
-  emitter + a `--check` validation pass you can run by hand).
+- ~~Contract-level validation wired into CI~~ — DONE, see "CI gate" above (T15).
 - Per-part (not just root) state overrides.
 - A "code" adapter that reads the contract back and asserts the live
   component still matches it — **this is now `--check-drift`** (T10), so

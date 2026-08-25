@@ -721,6 +721,15 @@ jobs:
             echo "Run: pnpm --filter @southleft/sl-web-components build:custom-elements.json and commit the result."
             exit 1
           }
+      # T15 (spec 2026-08-25-contract-backed-figma-parity-and-generation), R7 —
+      # the code side is validated against contracts. Both CEMs (base + brand)
+      # are built and fresh at this point in the job, which --check-drift needs
+      # for the southleft project's roster. Three legs, both projects: schema
+      # validation (illegal contracts refused BY NAME), CEM<->contract drift,
+      # and same-input->byte-identical-output determinism. See
+      # .altitude/contracts/README.md "CI gate".
+      - name: Contract gate (schema + CEM drift + determinism, both projects)
+        run: pnpm run gate:contracts
       - name: Build tokens (brand distinctiveness reads built output)
         run: pnpm --filter @southleft/al-web-components build:tokens
       # After build:tokens on purpose: R9 verifies each project's brand token

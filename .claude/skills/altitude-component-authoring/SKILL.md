@@ -9,7 +9,7 @@ The end-to-end flow for shipping a component in Altitude — scaffold through
 release-ready PR — plus the traps that are not written down anywhere else.
 
 Verify with `node scripts/component-check.mjs <al-tag>` at every stage; it is
-the mechanical half of this skill (see step 9). This document is the prose
+the mechanical half of this skill (see step 10). This document is the prose
 half: order, rationale, and the non-obvious failure modes.
 
 ---
@@ -238,7 +238,47 @@ it asserts a fact you should have just checked, not a wish.
 
 ---
 
-## 8. Machine docs regeneration
+## 8. Component contract
+
+```bash
+node scripts/contracts/emit-contracts.mjs --seed --component al-<name>
+```
+
+Seeds `.altitude/contracts/altitude/al-<name>.contract.json` (or
+`.altitude/contracts/southleft/...` with `--project southleft` / the
+`:sl`-suffixed `pnpm run` scripts, for a brand-layer component) — the
+canvas-expressible API surface derived from the CEM you just regenerated
+(step 3) plus the parity-manifest entry you just seeded (step 7): props,
+events, slots, states, anatomy (best-effort, see
+`.altitude/contracts/README.md`), a11y facts, code/Figma bindings. See
+`.altitude/contracts/README.md` for the full model.
+
+**Run this AFTER step 7 (parity), not before** — `--seed` reads the active
+project's parity manifest for the list of tracked tags; a component with no
+manifest entry yet has nothing to seed against. Both plop generators print
+this exact command in their completion output, so it doesn't need to be
+re-derived here.
+
+### Trap: the React wrapper does NOT get a second contract
+
+A contract is keyed by the underlying **web-component tag**, one per
+project — not by which package's plop generator you ran. Running
+`@southleft/al-react`'s plop generator never seeds a second contract for the
+same tag; it only prints a reminder to confirm the WC-side one already
+exists.
+
+### Trap: this is a WARNING today, not a blocker
+
+`scripts/component-check.mjs` reports a missing contract the same severity
+as a missing parity-manifest entry — a warning, not a blocker (see step 10).
+The gate that actually enforces it is CI: `pnpm run gate:contracts` fails
+the build if a parity-tracked tag has no contract, an invalid one, or one
+that has drifted from the CEM (see `.altitude/contracts/README.md` "CI
+gate").
+
+---
+
+## 9. Machine docs regeneration
 
 ```bash
 pnpm run llms:build
@@ -274,7 +314,7 @@ pnpm run a11y:report
 
 ---
 
-## 9. Verify mechanically
+## 10. Verify mechanically
 
 ```bash
 node scripts/component-check.mjs <al-tag>
@@ -282,17 +322,17 @@ node scripts/component-check.mjs <al-tag>
 
 Checks the blocker items (bundle.ts export, migration.json entry, CEM
 present-and-not-stale, component source files) and lists warnings (parity
-manifest entry, React wrapper, guidance YAML, llms.txt mention, a changeset
-that mentions the tag). `--json` for machine consumption, `--strict` to fail
-on warnings too, `--all` to sweep every component in the library. Exit 0 =
-blockers clear.
+manifest entry, component contract, React wrapper, guidance YAML, llms.txt
+mention, a changeset that mentions the tag). `--json` for machine
+consumption, `--strict` to fail on warnings too, `--all` to sweep every
+component in the library. Exit 0 = blockers clear.
 
 This does **not** replace the gates below — it's the fast, component-scoped
 subset a dev runs before pushing.
 
 ---
 
-## 10. Changeset (release notes)
+## 11. Changeset (release notes)
 
 ```bash
 pnpm dlx changeset
@@ -305,7 +345,7 @@ search over `.changeset/*.md` and can only find it if you did.
 
 ---
 
-## 11. The gates that will catch what you missed
+## 12. The gates that will catch what you missed
 
 Run locally before pushing, or let CI tell you (slower feedback loop):
 
@@ -315,6 +355,7 @@ Run locally before pushing, or let CI tell you (slower feedback loop):
 | `node scripts/check-bundle-completeness.js` | Missing `bundle.ts` export |
 | `pnpm lint` | ESLint 9 flat config, typescript-eslint 8 |
 | `pnpm run check:llms` | `llms.txt` drifted from the CEM/digests/registry |
+| `pnpm run gate:contracts` | Missing/invalid contract for a parity-tracked tag, contract drifted from the CEM, non-deterministic contract derivation |
 | `pnpm test:vrt` | Visual regression (Playwright) |
 | `pnpm gate:self-test` | The P0 migration/baseline gates themselves |
 | `node scripts/component-check.mjs <tag> --strict` | Every item in this skill, mechanically, warnings included |
@@ -338,8 +379,9 @@ pnpm --filter @southleft/al-react plop                                       # 4
 # 5. stories already required in step 2 — nothing extra to run
 # 6. apps/docs/src/content/guidance/<name>.yaml — 7 required sections + sources[]
 pnpm run parity:seed                                                         # 7. Figma manifest entry (not sync)
-pnpm run llms:build                                                          # 8. regenerate llms.txt
-pnpm run a11y:report                                                         # 8. regenerate a11y report (static build first)
-node scripts/component-check.mjs al-<name>                                   # 9. verify
-pnpm dlx changeset                                                           # 10. release notes
+node scripts/contracts/emit-contracts.mjs --seed --component al-<name>       # 8. seed the contract
+pnpm run llms:build                                                          # 9. regenerate llms.txt
+pnpm run a11y:report                                                         # 9. regenerate a11y report (static build first)
+node scripts/component-check.mjs al-<name>                                   # 10. verify
+pnpm dlx changeset                                                           # 11. release notes
 ```
