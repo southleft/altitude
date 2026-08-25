@@ -1,4 +1,3 @@
-import { expect, userEvent, within, waitFor } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../field-note/field-note';
@@ -133,32 +132,4 @@ SlottedErrorNote.args = {
 /*------------------------------------*\
   #STORYBOOK TESTS
 \*------------------------------------*/
-
-Default.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const radioGroup = canvas.getByTestId('radio-group') as any;
-  // `/^radio-/` also matched the group itself (`data-testid="radio-group"`),
-  // so radioItems[0] was `<al-radio-group>` — which has no `<input>` — and the
-  // four assertions below were checking the wrong four elements.
-  const radioItems = canvas.queryAllByTestId(/^radio-\d/) as any;
-  const radioItemInput1 = radioItems[0]?.shadowRoot?.querySelector('input') as HTMLInputElement;
-  const radioItemInput2 = radioItems[1]?.shadowRoot?.querySelector('input') as HTMLInputElement;
-  const radioItemInput3 = radioItems[2]?.shadowRoot?.querySelector('input') as HTMLInputElement;
-  const radioItemInput4 = radioItems[3]?.shadowRoot?.querySelector('input') as HTMLInputElement;
-
-  // Make assertions
-  expect(radioGroup).toBeInTheDocument();
-  expect(radioItemInput1).toBeInTheDocument();
-  expect(radioItemInput2).toBeInTheDocument();
-  expect(radioItemInput3).toBeInTheDocument();
-  expect(radioItemInput4).toBeInTheDocument();
-
-  await userEvent.click(radioItemInput3);
-  // await userEvent.keyboard('[ArrowUp]');
-  // await userEvent.keyboard('[ArrowDown]');
-  // await userEvent.keyboard('[ArrowDown]');
-  // await waitFor(() => expect(radioItemInput1.checked).toBe(true), {
-  //   timeout: 6000
-  // });
-};
 

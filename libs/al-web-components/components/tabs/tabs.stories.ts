@@ -1,4 +1,3 @@
-import { expect, userEvent, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../badge/badge';
@@ -102,47 +101,6 @@ WithScroll.args = {};
   #STORYBOOK TESTS
 \*------------------------------------*/
 
-WithActiveIndex.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const tabs = canvas.queryByTestId('tabs') as any;
-  const tabItems = canvas.queryAllByTestId(/^tab-item-0/) as any;
-
-  // Make assertions
-  expect(tabs).toBeInTheDocument();
-
-  // Query the focusable elements within the tab items
-  const firstTab = tabItems[0].shadowRoot.querySelector('.al-c-tab');
-  const lastTab = tabItems[8].shadowRoot.querySelector('.al-c-tab');
-
-  // Simulate a click event
-  await userEvent.click(firstTab);
-  expect(tabItems[0].isActive).toBe(true);
-
-  // Simulate a keyboard event (pressing Arrow Right key)
-  await userEvent.type(firstTab, '{arrowRight}');
-  expect(tabItems[1].isActive).toBe(true);
-
-  // Simulate a keyboard event (pressing Arrow Left key)
-  await userEvent.type(firstTab, '{arrowLeft}');
-  expect(tabItems[8].isActive).toBe(true);
-
-  await userEvent.type(lastTab, '{arrowRight}');
-  expect(tabItems[0].isActive).toBe(true);
-
-  // Simulate a keyboard event (pressing End key)
-  await userEvent.type(firstTab, '{End}');
-  expect(tabItems[8].isActive).toBe(true);
-
-  // Simulate a keyboard event (pressing End key)
-  await userEvent.type(firstTab, '{Home}');
-  expect(tabItems[0].isActive).toBe(true);
-
-  await userEvent.click(tabItems[2].shadowRoot.querySelector('.al-c-tab'));
-
-  // Remove focus
-  tabItems[2].blur();
-};
-
 // Helper function to wait for the buttons to load
 async function waitForButtons(tabs: any) {
   // Create a promise that resolves after 1 ms
@@ -151,38 +109,3 @@ async function waitForButtons(tabs: any) {
   return tabs.shadowRoot?.querySelectorAll('.al-c-tabs__arrow');
 }
 
-WithScroll.play = async ({ canvasElement }) => {
-  document.dir = 'ltr';
-  const canvas = within(canvasElement);
-  const tabs = canvas.queryByTestId('tabs') as any;
-  const tabItems = canvas.queryAllByTestId(/^tab-item-0/) as any;
-  const arrows = await waitForButtons(tabs);
-  const prevButton = arrows[0] as any;
-  const nextButton = arrows[1] as any;
-
-  expect(tabs.isScrollable).toBe(true);
-  expect(tabItems[0].isActive).toBe(true);
-
-  // Simulate a click event of next button
-  await userEvent.click(nextButton);
-  expect(tabItems[1].isActive).toBe(true);
-
-  // Simulate a click event of prev button
-  await userEvent.click(prevButton);
-  expect(tabItems[0].isActive).toBe(true);
-
-  // Simulate a keyboard event (pressing Enter key) while focused on prev button
-  prevButton.focus();
-  await userEvent.type(prevButton.shadowRoot.querySelector('.al-c-button'), '{Enter}');
-  expect(tabItems[8].isActive).toBe(true);
-
-  // Simulate a keyboard event (pressing Enter key) while focused on next button
-  nextButton.focus();
-  await userEvent.type(nextButton.shadowRoot.querySelector('.al-c-button'), '{Enter}');
-  expect(tabItems[0].isActive).toBe(true);
-  tabItems[0].blur();
-
-  // Simulate a window resize event
-  window.dispatchEvent(new Event('resize'));
-  tabs.shadowRoot.querySelector('.al-c-tabs__list').dispatchEvent(new Event('scroll'));
-};

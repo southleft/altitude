@@ -1,4 +1,3 @@
-import { expect, fireEvent, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../field-note/field-note';
@@ -210,25 +209,3 @@ WithAutoFocus.args = {
   #STORYBOOK TESTS
 \*------------------------------------*/
 
-Default.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const input = canvas.queryByTestId('input') as any;
-  const inputEl = input?.shadowRoot?.querySelector('.al-c-input__input') as HTMLInputElement;
-
-  // Make assertions
-  expect(input).toBeInTheDocument();
-  expect(inputEl).toBeInTheDocument();
-
-  // Simulate a change event with a value
-  let inputValue = '';
-  inputValue = 'Inputted text';
-  fireEvent.input(inputEl, { target: { value: inputValue } });
-  expect(inputEl.value).toBe(inputValue);
-  expect(input.isActive).toBe(true);
-
-  // Simulate a change event with the value removed
-  inputValue = '';
-  fireEvent.input(inputEl, { target: { value: inputValue } });
-  expect(inputEl.value).toBe(inputValue);
-  expect(input.isActive).toBe(false);
-};

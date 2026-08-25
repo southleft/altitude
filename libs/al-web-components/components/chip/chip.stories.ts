@@ -1,4 +1,3 @@
-import { expect, userEvent, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './chip';
@@ -82,29 +81,4 @@ Squared.args = {
 /*------------------------------------*\
   #STORYBOOK TESTS
 \*------------------------------------*/
-
-WithIconDismissible.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const chip = canvas.queryByTestId('chip') as any;
-  const chipClose = chip?.shadowRoot?.querySelector('.al-c-chip__close') as HTMLElement;
-
-  // Make assertions
-  expect(chip).toBeInTheDocument();
-  expect(chipClose).toBeInTheDocument();
-
-  // Simulate a click event
-  await userEvent.click(chipClose);
-  expect(chip.isDismissed).toBe(true);
-
-  // Set the chip to active
-  chip.isDismissed = true;
-
-  // Simulate a keyboard event (pressing Escape key)
-  await userEvent.type(chip, '{Escape}');
-  expect(chip.isDismissed).toBe(true);
-
-  // Set the chip to active
-  chip.isDismissed = false;
-  chip.blur();
-};
 

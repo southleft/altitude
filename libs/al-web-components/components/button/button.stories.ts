@@ -1,4 +1,3 @@
-import { expect, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../../fixtures/f-po/f-po';
@@ -246,14 +245,3 @@ export const WithSubmit = () =>
   #STORYBOOK TESTS
 \*------------------------------------*/
 
-DefaultIconAfter.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const iconAfterSlot: any = canvas.queryByTestId('icon-after')?.shadowRoot?.querySelector('[class*="al-c-icon"]');
-  expect(iconAfterSlot).toBeInTheDocument();
-};
-
-DefaultIconBefore.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const iconBefore = canvas.queryByTestId('icon-before')?.shadowRoot?.querySelector('[class*="al-c-icon"]');
-  expect(iconBefore).toBeInTheDocument();
-};

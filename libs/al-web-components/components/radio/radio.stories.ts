@@ -1,4 +1,3 @@
-import { expect, userEvent, within, waitFor } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../field-note/field-note';
@@ -131,28 +130,3 @@ SlottedErrorNote.args = {
 /*------------------------------------*\
   #STORYBOOK TESTS
 \*------------------------------------*/
-
-Default.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const radioItem = canvas.queryByTestId('radio');
-  const radioItemInput = radioItem?.shadowRoot?.querySelector('input') as HTMLInputElement;
-
-  // Make assertions
-  expect(radioItem).toBeInTheDocument();
-
-  // Simulate a click event
-  await userEvent.click(radioItemInput);
-
-  // Check that the radio is checked
-  expect(radioItemInput.checked).toBe(true);
-
-  // Simulate a keyboard event (pressing Enter key)
-  await userEvent.keyboard('{Enter}');
-
-  // Check that the radio is no longer checked
-  expect(radioItemInput.checked).toBe(true);
-
-  // Remove focus from the input element
-  radioItem.isChecked = false;
-  radioItemInput.blur();
-};

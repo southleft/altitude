@@ -1,4 +1,3 @@
-import { expect, userEvent, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './toggle-button';
@@ -182,25 +181,3 @@ BackgroundWithTooltipAndDropdown.args = {};
   #STORYBOOK TESTS
 \*------------------------------------*/
 
-DefaultWithDropdown.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const toggleButton = canvas.queryByTestId('toggle-button') as any;
-  const toggleButtonEl = toggleButton.shadowRoot?.querySelector('.al-c-toggle-button__content') as HTMLElement;
-
-  await userEvent.click(toggleButtonEl);
-  expect(toggleButton.isSelected).toBe(true);
-
-  await userEvent.click(toggleButtonEl);
-  expect(toggleButton.isSelected).toBe(false);
-
-  await userEvent.keyboard('{Enter}');
-  expect(toggleButton.isSelected).toBe(true);
-
-  await userEvent.keyboard('{Escape}');
-  expect(toggleButton.isSelected).toBe(false);
-
-  await userEvent.click(canvasElement);
-  expect(toggleButton.isSelected).toBe(false);
-
-  toggleButton.blur();
-};

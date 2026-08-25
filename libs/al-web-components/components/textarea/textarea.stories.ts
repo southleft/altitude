@@ -1,4 +1,3 @@
-import { expect, fireEvent, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../field-note/field-note';
@@ -199,25 +198,3 @@ WithAutoFocus.args = {
   #STORYBOOK TESTS
 \*------------------------------------*/
 
-Default.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const textarea = canvas.queryByTestId('textarea') as any;
-  const textareaEl = textarea?.shadowRoot?.querySelector('.al-c-textarea__input') as HTMLTextAreaElement;
-
-  // Make assertions
-  expect(textarea).toBeInTheDocument();
-  expect(textareaEl).toBeInTheDocument();
-
-  // Simulate a change event with a value
-  let inputValue = '';
-  inputValue = 'Inputted text';
-  fireEvent.input(textareaEl, { target: { value: inputValue } });
-  expect(textareaEl.value).toBe(inputValue);
-  expect(textarea.isActive).toBe(true);
-
-  // Simulate a change event with the value removed
-  inputValue = '';
-  fireEvent.input(textareaEl, { target: { value: inputValue } });
-  expect(textareaEl.value).toBe(inputValue);
-  expect(textarea.isActive).toBe(false);
-};

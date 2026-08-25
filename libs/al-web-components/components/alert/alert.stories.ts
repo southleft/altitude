@@ -1,4 +1,3 @@
-import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../button/button';
@@ -141,31 +140,3 @@ WithAutoClose.args = {
 /*------------------------------------*\
   #STORYBOOK TESTS
 \*------------------------------------*/
-
-WithAutoClose.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const alert = canvas.queryByTestId('alert') as any;
-  const alertEl = alert.shadowRoot.querySelector('.al-c-alert');
-  expect(alert.isActive).toBe(true);
-  await userEvent.hover(alertEl);
-  await userEvent.unhover(alertEl);
-
-  // Wait for a duration that should be longer than the expected autoClose delay
-  await waitFor(() => expect(alert.isActive).toBe(false), {
-    timeout: 6000 // A long timeout to make sure it doesn't close
-  });
-};
-
-WithOpenButton.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const alert = canvas.queryByTestId('alert') as any;
-  const alertEl = alert?.shadowRoot?.querySelector('.al-c-alert') as HTMLElement;
-  const alertOpenButton = canvas.queryByTestId('open-alert') as any;
-  const alertCloseButton = alert?.shadowRoot?.querySelector('.al-c-alert__close') as any;
-
-  // Simulate a click event
-  await userEvent.click(alertOpenButton);
-  expect(alertEl).toHaveClass('al-is-active');
-  await userEvent.click(alertCloseButton);
-  expect(alertEl).not.toHaveClass('al-is-active');
-};

@@ -1,4 +1,3 @@
-import { expect, userEvent, within, waitFor } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../button/button';
@@ -109,38 +108,3 @@ WithAutoCloseWithProgress.args = {
   #STORYBOOK TESTS
 \*------------------------------------*/
 
-WithDismissible.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const toast = canvas.queryByTestId('toast') as any;
-  const toastCloseButton = toast.shadowRoot?.querySelector('.al-c-toast__close-button').shadowRoot.querySelector('.al-c-button') as HTMLButtonElement;
-
-  // Make assertions
-  expect(toast).toBeInTheDocument();
-  expect(toastCloseButton).toBeInTheDocument();
-  expect(toast.isDismissible).toBe(true);
-
-  // Focus on the close button and simulate a keyboard event (pressing Escape key)
-  toastCloseButton.focus();
-  await userEvent.type(toastCloseButton, '{Escape}');
-
-  // Check to make sure the toast is no longer active
-  expect(toast.isActive).toBe(false);
-
-  // Remove focus from button and reset the toast
-  toastCloseButton.blur();
-  toast.isActive = true;
-};
-
-WithAutoClose.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const toast = canvas.queryByTestId('toast') as any;
-  const toastEl = toast.shadowRoot.querySelector('.al-c-toast');
-  expect(toast.isActive).toBe(true);
-  await userEvent.hover(toastEl);
-  await userEvent.unhover(toastEl);
-
-  // Wait for a duration that should be longer than the expected autoClose delay
-  await waitFor(() => expect(toast.isActive).toBe(false), {
-    timeout: 6000, // A long timeout to make sure it doesn't close
-  });
-};

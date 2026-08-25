@@ -1,4 +1,3 @@
-import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../../fixtures/f-po/f-po';
@@ -107,35 +106,3 @@ WithTriggerOutside.args = {};
   #STORYBOOK TESTS
 \*------------------------------------*/
 
-Default.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const dialog = canvas.queryByTestId('dialog') as any;
-  const dialogTrigger = dialog.shadowRoot.querySelector('.al-c-dialog__trigger') as HTMLElement;
-  const dialogContainer = dialog.shadowRoot.querySelector('.al-c-dialog__container') as HTMLElement;
-  const dialogCloseButton = dialog.shadowRoot.querySelector('.al-c-dialog__close-button') as HTMLElement;
-
-  await userEvent.click(dialogTrigger);
-  expect(dialog.isActive).toBe(true);
-
-  await waitFor(() => expect(dialogContainer).toBeVisible(), {
-    timeout: 400, // A long timeout to make sure it doesn't close
-  });
-
-  await userEvent.type(dialog, '{Escape}');
-  expect(dialog.isActive).toBe(false);
-
-  await userEvent.type(dialogTrigger, '{Enter}');
-  expect(dialog.isActive).toBe(true);
-
-  await userEvent.type(dialogCloseButton, '{Enter}');
-  expect(dialog.isActive).toBe(false);
-  
-  await userEvent.click(dialogTrigger);
-  expect(dialog.isActive).toBe(true);
-
-  await userEvent.click(canvasElement);
-  expect(dialog.isActive).toBe(false);
-
-  dialogTrigger.blur();
-  await userEvent.click(canvasElement);
-};

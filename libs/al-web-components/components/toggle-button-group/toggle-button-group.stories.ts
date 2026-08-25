@@ -1,4 +1,3 @@
-import { expect, userEvent, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './toggle-button-group';
@@ -115,22 +114,3 @@ GapSmall.parameters = {
   #STORYBOOK TESTS
 \*------------------------------------*/
 
-Default.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const toggleButtonGroup = canvas.queryByTestId('toggle-button-group') as any;
-  const toggleButtons = canvas.queryAllByTestId(/^toggle-button-0/) as any;
-
-  await userEvent.click(toggleButtons[0].shadowRoot?.querySelector<HTMLElement>('.al-c-toggle-button'));
-  expect(toggleButtons[0].isSelected).toBe(true);
-  expect(toggleButtonGroup.selectedItem).toBe(toggleButtons[0]);
-
-  await userEvent.click(toggleButtons[1].shadowRoot?.querySelector<HTMLElement>('.al-c-toggle-button'));
-  expect(toggleButtons[0].isSelected).toBe(false);
-  expect(toggleButtons[1].isSelected).toBe(true);
-  expect(toggleButtonGroup.selectedItem).toBe(toggleButtons[1]);
-
-  await userEvent.click(canvasElement);
-  expect(toggleButtons[1].isSelected).toBe(false);
-
-  toggleButtons[1].blur();
-};

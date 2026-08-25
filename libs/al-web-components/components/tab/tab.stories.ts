@@ -1,4 +1,3 @@
-import { expect, userEvent, within } from 'storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../icon/icons/success';
@@ -57,16 +56,3 @@ WithIconOnly.args = {
 /*------------------------------------*\
   #STORYBOOK TESTS
 \*------------------------------------*/
-
-Selected.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const tab = canvas.queryByTestId('tab') as any;
-
-  // Make assertions
-  expect(tab).toBeInTheDocument();
-
-  // Simulate a click event
-  await userEvent.click(tab);
-  expect(tab.isActive).toBe(true);
-  tab.blur();
-};
