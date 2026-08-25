@@ -65,6 +65,10 @@
           "description": "Accessible label for the dialog surface.",
           "type": "string"
         },
+        "searchLabel": {
+          "description": "Accessible name for the search input.\n\nNOT the placeholder. A placeholder is not an accessible name — it is\nremoved from the accessibility tree the moment the user types, so the field\na screen-reader user is mid-way through becomes an unnamed combobox. The\ntwo are set separately for that reason.",
+          "type": "string"
+        },
         "transitionDelay": {
           "description": "Number of ms of the palette's open/close CSS transition delay, used to delay\nfocus trap activation. Mirrors al-dialog's `transitionDelay`.",
           "type": "number"

@@ -646,7 +646,7 @@ export class ALDateTimePicker extends ALElement {
             <${this.iconCalendarEl} slot="before"></${this.iconCalendarEl}>
             <${this.iconChevronDownEl} size="lg" slot="after" class="al-c-date-time-picker__icon-arrow"></${this.iconChevronDownEl}>
           </${this.inputEl}>
-          <div class="al-c-date-time-picker__popup" ?hidden="${!this.isActiveCalendar}" role="dialog">
+          <div class="al-c-date-time-picker__popup" ?hidden="${!this.isActiveCalendar}" role="dialog" aria-label=${this.label}>
             <div class="al-c-date-time-picker__popup-body">
               <div class="al-c-date-time-picker__calendar-container">
                 <${this.calendarEl}

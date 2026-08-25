@@ -118,6 +118,10 @@
         "startOnMonday": {
           "description": "Start the day of the week on Monday",
           "type": "boolean"
+        },
+        "monthSelectorLabel": {
+          "description": "Accessible name for the month/year picker popup.\n\nThe popup is `role=\"dialog\"` and its content is a grid of year headings and\nmonth buttons, so it had no accessible name at all — a screen reader\nannounced \"dialog\" and nothing else. Settable rather than hardcoded so it\ncan be localised, matching `timeSelectorLabel` / `cancelLabel` on\nal-date-time-picker.",
+          "type": "string"
         }
       }
     },

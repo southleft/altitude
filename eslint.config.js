@@ -138,8 +138,16 @@ export default [
        *   click-events-have-key-events (8) — several are backdrop click-to-close
        *     on dialog/drawer/popover, which need confirming against their Escape
        *     handling before being called defects; list-item and menu-item look real.
-       *   accessible-name (4) — a dialog and a combobox with no accessible name.
-       *     These are straightforwardly real.
+       *
+       * accessible-name reached zero on 2026-08-25 and is now `error`. Three
+       * were real and fixed — al-calendar's month/year popup (new settable
+       * `monthSelectorLabel`), al-date-time-picker's popup (named from its
+       * existing `label` prop), and al-command-palette's combobox input (new
+       * `searchLabel`, because a placeholder is NOT an accessible name: it
+       * leaves the tree the moment the user types). The fourth, al-tooltip, was
+       * a shadow-DOM false positive — its name IS its slotted content — and
+       * carries a file-level disable explaining why appeasing the rule there
+       * would have made the announcement wrong.
        *
        * mouse-events-have-key-events reached zero on 2026-08-24 and is now
        * `error`: alert and toast both pair their hover pause with
@@ -148,7 +156,6 @@ export default [
        * looks for.
        */
       'lit-a11y/click-events-have-key-events': 'warn',
-      'lit-a11y/accessible-name': 'warn',
     },
   },
   {

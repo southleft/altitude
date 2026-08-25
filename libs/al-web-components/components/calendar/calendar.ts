@@ -653,6 +653,18 @@ export class ALCalendar extends ALElement {
     }
   }
 
+  /**
+   * Accessible name for the month/year picker popup.
+   *
+   * The popup is `role="dialog"` and its content is a grid of year headings and
+   * month buttons, so it had no accessible name at all — a screen reader
+   * announced "dialog" and nothing else. Settable rather than hardcoded so it
+   * can be localised, matching `timeSelectorLabel` / `cancelLabel` on
+   * al-date-time-picker.
+   */
+  @property()
+  accessor monthSelectorLabel: string = 'Choose month and year';
+
   render() {
     const componentClassNames = this.componentClassNames('al-c-calendar', {});
 
@@ -737,7 +749,7 @@ export class ALCalendar extends ALElement {
           </table>
         </div>
 
-        <div class="al-c-calendar__month-selector-popup" role="dialog" ?hidden="${!this.showMonthPopup}" @keydown=${this.handleOnKeydown}>
+        <div class="al-c-calendar__month-selector-popup" role="dialog" aria-label=${this.monthSelectorLabel} ?hidden="${!this.showMonthPopup}" @keydown=${this.handleOnKeydown}>
           <div class="al-c-month-selector">
             <ul class="al-c-month-selector__list">
               ${this.years.map((year: any) => {

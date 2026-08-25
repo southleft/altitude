@@ -2129,6 +2129,16 @@
                 }
               ],
               "description": "Handle keydown\n1. Close the month calendar popup when escape is hit when the user is focused within the popup\n2. Return focus back to the month selector button"
+            },
+            {
+              "kind": "field",
+              "name": "monthSelectorLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Choose month and year'",
+              "description": "Accessible name for the month/year picker popup.\n\nThe popup is `role=\"dialog\"` and its content is a grid of year headings and\nmonth buttons, so it had no accessible name at all — a screen reader\nannounced \"dialog\" and nothing else. Settable rather than hardcoded so it\ncan be localised, matching `timeSelectorLabel` / `cancelLabel` on\nal-date-time-picker.",
+              "attribute": "monthSelectorLabel"
             }
           ],
           "events": [
@@ -2289,6 +2299,15 @@
               "default": "false",
               "description": "Start the day of the week on Monday",
               "fieldName": "startOnMonday"
+            },
+            {
+              "name": "monthSelectorLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Choose month and year'",
+              "description": "Accessible name for the month/year picker popup.\n\nThe popup is `role=\"dialog\"` and its content is a grid of year headings and\nmonth buttons, so it had no accessible name at all — a screen reader\nannounced \"dialog\" and nothing else. Settable rather than hardcoded so it\ncan be localised, matching `timeSelectorLabel` / `cancelLabel` on\nal-date-time-picker.",
+              "fieldName": "monthSelectorLabel"
             }
           ],
           "superclass": {
@@ -4015,6 +4034,16 @@
             },
             {
               "kind": "field",
+              "name": "searchLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Search commands'",
+              "description": "Accessible name for the search input.\n\nNOT the placeholder. A placeholder is not an accessible name — it is\nremoved from the accessibility tree the moment the user types, so the field\na screen-reader user is mid-way through becomes an unnamed combobox. The\ntwo are set separately for that reason.",
+              "attribute": "searchLabel"
+            },
+            {
+              "kind": "field",
               "name": "transitionDelay",
               "type": {
                 "text": "number"
@@ -4246,6 +4275,15 @@
               "default": "'Command palette'",
               "description": "Accessible label for the dialog surface.",
               "fieldName": "ariaLabel"
+            },
+            {
+              "name": "searchLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Search commands'",
+              "description": "Accessible name for the search input.\n\nNOT the placeholder. A placeholder is not an accessible name — it is\nremoved from the accessibility tree the moment the user types, so the field\na screen-reader user is mid-way through becomes an unnamed combobox. The\ntwo are set separately for that reason.",
+              "fieldName": "searchLabel"
             },
             {
               "name": "transitionDelay",

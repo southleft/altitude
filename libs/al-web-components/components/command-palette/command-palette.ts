@@ -89,6 +89,17 @@ export class ALCommandPalette extends ALElement {
   accessor ariaLabel: string = 'Command palette';
 
   /**
+   * Accessible name for the search input.
+   *
+   * NOT the placeholder. A placeholder is not an accessible name — it is
+   * removed from the accessibility tree the moment the user types, so the field
+   * a screen-reader user is mid-way through becomes an unnamed combobox. The
+   * two are set separately for that reason.
+   */
+  @property()
+  accessor searchLabel: string = 'Search commands';
+
+  /**
    * Number of ms of the palette's open/close CSS transition delay, used to delay
    * focus trap activation. Mirrors al-dialog's `transitionDelay`.
    */
@@ -337,6 +348,7 @@ export class ALCommandPalette extends ALElement {
                 class="al-c-command-palette__input"
                 type="text"
                 role="combobox"
+                aria-label=${this.searchLabel}
                 aria-expanded="true"
                 aria-controls=${this.listboxId}
                 aria-autocomplete="list"

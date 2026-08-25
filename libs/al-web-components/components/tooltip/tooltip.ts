@@ -1,3 +1,15 @@
+/* eslint-disable lit-a11y/accessible-name --
+ * `role="tooltip"` here wraps `<slot></slot>`: the tooltip's accessible name IS
+ * its slotted content, supplied by the consumer, and at runtime it has one. The
+ * rule cannot see through a shadow slot, so it reports every slotted tooltip —
+ * the same blind spot that makes `lit-a11y/list` unusable on this library (see
+ * eslint.config.js).
+ *
+ * Adding an `aria-label` to satisfy it would be actively WRONG: it would
+ * override the visible text with a generic string, so the tooltip would be
+ * announced as something other than what it says on screen. A false positive is
+ * better suppressed than appeased.
+ */
 import { html, unsafeCSS } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { nanoid } from 'nanoid';

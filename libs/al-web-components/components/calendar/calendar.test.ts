@@ -152,4 +152,22 @@ describe('al-calendar', () => {
     expect(dayFor(el, '2026-03-15')!.hasAttribute('aria-pressed')).toBe(false);
     expect(days(el).filter((d) => d.tabIndex === 0)).toHaveLength(1);
   });
+
+  it('names the month/year picker so it is not announced as a bare dialog', async () => {
+    // The popup is role="dialog" and its content is a grid of year headings and
+    // month buttons — no heading it could be named from, so a screen reader
+    // announced "dialog" and stopped. Found by lit-a11y/accessible-name and
+    // fixed 2026-08-25 with a settable `monthSelectorLabel`, so the name can be
+    // localised rather than hardcoded English.
+    const el = await fixture<ALCalendar>(html`<al-calendar></al-calendar>`);
+    await el.updateComplete;
+
+    const popup = el.shadowRoot!.querySelector('.al-c-calendar__month-selector-popup')!;
+    expect(popup.getAttribute('role')).toBe('dialog');
+    expect(popup.getAttribute('aria-label')).toBe('Choose month and year');
+
+    el.monthSelectorLabel = 'Mois et année';
+    await el.updateComplete;
+    expect(popup.getAttribute('aria-label'), 'must be settable, not baked in').toBe('Mois et année');
+  });
 });
