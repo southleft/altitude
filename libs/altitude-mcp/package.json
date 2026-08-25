@@ -16,6 +16,10 @@
   "bin": {
     "altitude-mcp": "./src/server.mjs"
   },
+  "exports": {
+    ".": "./src/index.mjs",
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "start": "node --experimental-strip-types --no-warnings ./src/server.mjs",
     "test": "node --experimental-strip-types --no-warnings ./test/smoke.mjs && node --experimental-strip-types --no-warnings ./test/mark-synced.mjs && node --experimental-strip-types --no-warnings ./test/worker-smoke.mjs",
