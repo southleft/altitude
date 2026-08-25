@@ -210,11 +210,16 @@ async function main() {
     const res = await client.callTool({ name: 'altitude_check_parity', arguments: { project: 'southleft' } });
     const data = parseToolJson(res);
     // .altitude/ds-projects.json southleft.brandLibrary declares @southleft/sl-web-components:
-    // 9 brand CEM components total, 7 of which are brand-only (hero, cta-band, marquee,
-    // logo-wall, media-card, page-hero, section-header); al-header/al-footer SUPERSEDE the
+    // 9 brand CEM components total, 6 of which are brand-only (hero, cta-band, marquee,
+    // logo-wall, page-hero, section-header). al-header, al-footer and al-card SUPERSEDE the
     // base library's under the same tag rather than adding new ones.
+    //
+    // Was 7 brand-only until `media-card` was retired and `card` promoted to the brand layer
+    // (commit 8ca1fd0). The TOTAL stayed at 9, which is why only the brand-only count moved:
+    // media-card was brand-only, and card supersedes a base component instead. Asserting the
+    // total alone would not have noticed the swap — that is the point of checking both.
     ok(data.scope?.brandComponents === 9, `southleft reports 9 brand components (got ${data.scope?.brandComponents})`);
-    ok(data.scope?.brandOnly === 7, `southleft reports 7 brand-only components (got ${data.scope?.brandOnly})`);
+    ok(data.scope?.brandOnly === 6, `southleft reports 6 brand-only components (got ${data.scope?.brandOnly})`);
     ok(
       data.components.every((c) => c.origin === 'base' || c.origin === 'brand'),
       'every southleft entry carries an origin of "base" or "brand"'

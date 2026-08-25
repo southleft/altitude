@@ -371,7 +371,13 @@ export function motionMarkdown(context = DEFAULT_CONTEXT) {
     'Simple state transitions never need the runtime.',
     '',
     '```scss',
-    "@use '@southleft/al-web-components/styles/core/mixins/motion' as motion;",
+    // In-repo path, deliberately. The SCSS sources are not packed (`files`
+    // ships `dist`, and the build copies only `styles/dist` -> `dist/css`), so
+    // the package specifier this used to print resolves to nothing for a
+    // consumer — `check:exports` fails on it, correctly. The CSS block below is
+    // the consumer-facing form.
+    '// Inside the library — the mixins are not published.',
+    "@use '../../styles/core/mixins/motion' as motion;",
     '',
     '.al-c-thing { @include motion.al-motion-transition(background-color border-color, fast); }',
     '.al-c-panel { @include motion.al-motion-transition(height, slow, emphasized); }',

@@ -98,7 +98,24 @@ const PROBES = [
   { label: 'timing-emphasized', expr: 'var(--al-theme-animation-timing-role-emphasized, var(--al-theme-animation-timing))' },
 ];
 
-const SCSS_SAMPLE = `@use '@southleft/al-web-components/styles/core/mixins/motion' as motion;
+/*
+ * LIBRARY-INTERNAL, and labelled as such — the mixin is NOT reachable from the
+ * published package. `files` ships `dist`, and the build copies only
+ * `styles/dist` -> `dist/css`; the SCSS sources under `styles/core/` are never
+ * packed, so `@use '@southleft/al-web-components/styles/core/mixins/motion'`
+ * resolves to nothing for a consumer.
+ *
+ * This sample previously wrote exactly that specifier, and `check:exports`
+ * caught it — the gate scans source for package specifiers and does not care
+ * that this one lives in a template literal, which is the right call: a docs
+ * page teaching a broken import is a broken import. The path is now the in-repo
+ * one, and CSS_SAMPLE below is what a consumer actually writes.
+ *
+ * Whether the mixins SHOULD be public API is a separate question, filed as an
+ * issue rather than settled here — packing them changes what the package ships.
+ */
+const SCSS_SAMPLE = `// Inside the library (components/*/*.scss) — the mixins are not published.
+@use '../../styles/core/mixins/motion' as motion;
 
 // Arguments: properties, role, timing. The role token is
 // emitted first and its legacy fallback second, so an
@@ -375,6 +392,8 @@ const TIERS = [
       </div>
       <p class="t-body-md motion-lede">
         Simple state transitions — hover, focus, disclosure — never need the runtime. The Sass mixin
+        is how the library itself authors them and is not part of the published package; the CSS
+        beside it is what a consumer writes, and needs no mixin. Either way it
         expands at the call site, which is what keeps it axis-aware: a{' '}
         <code>--al-theme-animation-use-*</code> token declared on <code>:root</code> would resolve
         its <code>var()</code> chain once, at <code>:root</code>, and go blind to every{' '}
