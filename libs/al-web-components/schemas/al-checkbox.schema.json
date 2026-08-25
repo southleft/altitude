@@ -50,7 +50,7 @@
           "type": "boolean"
         },
         "isIndeterminate": {
-          "description": "Indeterminate state\n- Changes the component's treatment to represent an indeterminate state",
+          "description": "Indeterminate state\n- Changes the component's treatment to represent an indeterminate state\n\nRendered as BOTH `.indeterminate` and `aria-checked=\"mixed\"`. It used to be\nneither — only an `al-is-indeterminate` class — so a tri-state \"select all\"\nlooked mixed and announced as plain unchecked. `.indeterminate` has no\ncontent attribute at all (there is no `?indeterminate` that could work) and\nis what paints the native glyph; `aria-checked` is what a screen reader\nreads. Left undefined when not indeterminate, so the input's own checked\nstate is announced rather than shadowed by a stale value.",
           "type": "boolean"
         },
         "isError": {

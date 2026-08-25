@@ -680,7 +680,7 @@
       {
         "name": "isIndeterminate",
         "type": "boolean",
-        "description": "Indeterminate state\n- Changes the component's treatment to represent an indeterminate state"
+        "description": "Indeterminate state\n- Changes the component's treatment to represent an indeterminate state\n\nRendered as BOTH `.indeterminate` and `aria-checked=\"mixed\"`. It used to be\nneither — only an `al-is-indeterminate` class — so a tri-state \"select all\"\nlooked mixed and announced as plain unchecked. `.indeterminate` has no\ncontent attribute at all (there is no `?indeterminate` that could work) and\nis what paints the native glyph; `aria-checked` is what a screen reader\nreads. Left undefined when not indeterminate, so the input's own checked\nstate is announced rather than shadowed by a stale value."
       },
       {
         "name": "isError",
@@ -5018,7 +5018,7 @@
       {
         "name": "isChecked",
         "type": "boolean",
-        "description": "Checked attribute\n- If true, sets the treatment to represent an on state\n- If false, sets the treatment to represent an off state"
+        "description": "Checked attribute\n- If true, sets the treatment to represent an on state\n- If false, sets the treatment to represent an off state\n\nRendered with a PROPERTY binding (`.checked`), not `?checked`, matching\ncheckbox.ts. The content attribute only seeds the initial state: a user\nclick sets the input's dirty-checkedness flag, after which the attribute\nno longer drives `.checked`. Bound as an attribute, setting `isChecked`\nfrom code updated the host class and left the native input alone, so form\nresets and state-driven toggles silently stopped working after one click."
       },
       {
         "name": "isDisabled",

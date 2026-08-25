@@ -2780,7 +2780,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Indeterminate state\n- Changes the component's treatment to represent an indeterminate state",
+              "description": "Indeterminate state\n- Changes the component's treatment to represent an indeterminate state\n\nRendered as BOTH `.indeterminate` and `aria-checked=\"mixed\"`. It used to be\nneither — only an `al-is-indeterminate` class — so a tri-state \"select all\"\nlooked mixed and announced as plain unchecked. `.indeterminate` has no\ncontent attribute at all (there is no `?indeterminate` that could work) and\nis what paints the native glyph; `aria-checked` is what a screen reader\nreads. Left undefined when not indeterminate, so the input's own checked\nstate is announced rather than shadowed by a stale value.",
               "attribute": "isIndeterminate"
             },
             {
@@ -2874,6 +2874,25 @@
               "attribute": "ariaDescribedBy"
             },
             {
+              "kind": "field",
+              "name": "errorNoteId",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "description": "Generated id for the ERROR note.\n\nSeparate from `ariaDescribedBy`, which is public API and names the field\nnote. Both can render at once, and `aria-describedby` takes a LIST, so the\nerror needs an id of its own rather than borrowing the field note's."
+            },
+            {
+              "kind": "field",
+              "name": "describedBy",
+              "type": {
+                "text": "string | undefined"
+              },
+              "privacy": "private",
+              "description": "The ids `aria-describedby` should point at, in reading order.\n\nOnly the notes actually RENDERED are listed — the error note is conditional\non `isError`, and pointing at an element that is not in the DOM makes the\nwhole attribute unreliable rather than merely incomplete.",
+              "readonly": true
+            },
+            {
               "kind": "method",
               "name": "handleOnChange",
               "description": "Handle on change events\n1. Toggle the checked state\n2. If isIndeterminate is true, then on change set it to false\n3. Dispatch the custom event"
@@ -2912,7 +2931,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Indeterminate state\n- Changes the component's treatment to represent an indeterminate state",
+              "description": "Indeterminate state\n- Changes the component's treatment to represent an indeterminate state\n\nRendered as BOTH `.indeterminate` and `aria-checked=\"mixed\"`. It used to be\nneither — only an `al-is-indeterminate` class — so a tri-state \"select all\"\nlooked mixed and announced as plain unchecked. `.indeterminate` has no\ncontent attribute at all (there is no `?indeterminate` that could work) and\nis what paints the native glyph; `aria-checked` is what a screen reader\nreads. Left undefined when not indeterminate, so the input's own checked\nstate is announced rather than shadowed by a stale value.",
               "fieldName": "isIndeterminate"
             },
             {
@@ -14836,6 +14855,25 @@
               "description": "Queries content before the input label"
             },
             {
+              "kind": "field",
+              "name": "errorNoteId",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "description": "Generated id for the ERROR note.\n\nSeparate from `ariaDescribedBy`, which is public API and names the field\nnote. Both can render at once, and `aria-describedby` takes a LIST, so the\nerror needs an id of its own rather than borrowing the field note's."
+            },
+            {
+              "kind": "field",
+              "name": "describedBy",
+              "type": {
+                "text": "string | undefined"
+              },
+              "privacy": "private",
+              "description": "The ids `aria-describedby` should point at, in reading order.\n\nOnly the notes actually RENDERED are listed — the error note is conditional\non `isError`, and pointing at an element that is not in the DOM makes the\nwhole attribute unreliable rather than merely incomplete.",
+              "readonly": true
+            },
+            {
               "kind": "method",
               "name": "handleOnChange",
               "parameters": [
@@ -22983,6 +23021,25 @@
               "attribute": "maxLengthValue"
             },
             {
+              "kind": "field",
+              "name": "errorNoteId",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "description": "Generated id for the ERROR note.\n\nSeparate from `ariaDescribedBy`, which is public API and names the field\nnote. Both can render at once, and `aria-describedby` takes a LIST, so the\nerror needs an id of its own rather than borrowing the field note's."
+            },
+            {
+              "kind": "field",
+              "name": "describedBy",
+              "type": {
+                "text": "string | undefined"
+              },
+              "privacy": "private",
+              "description": "The ids `aria-describedby` should point at, in reading order.\n\nOnly the notes actually RENDERED are listed — the error note is conditional\non `isError`, and pointing at an element that is not in the DOM makes the\nwhole attribute unreliable rather than merely incomplete.",
+              "readonly": true
+            },
+            {
               "kind": "method",
               "name": "handleOnChange",
               "parameters": [
@@ -24533,7 +24590,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Checked attribute\n- If true, sets the treatment to represent an on state\n- If false, sets the treatment to represent an off state",
+              "description": "Checked attribute\n- If true, sets the treatment to represent an on state\n- If false, sets the treatment to represent an off state\n\nRendered with a PROPERTY binding (`.checked`), not `?checked`, matching\ncheckbox.ts. The content attribute only seeds the initial state: a user\nclick sets the input's dirty-checkedness flag, after which the attribute\nno longer drives `.checked`. Bound as an attribute, setting `isChecked`\nfrom code updated the host class and left the native input alone, so form\nresets and state-driven toggles silently stopped working after one click.",
               "attribute": "isChecked"
             },
             {
@@ -24604,7 +24661,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Checked attribute\n- If true, sets the treatment to represent an on state\n- If false, sets the treatment to represent an off state",
+              "description": "Checked attribute\n- If true, sets the treatment to represent an on state\n- If false, sets the treatment to represent an off state\n\nRendered with a PROPERTY binding (`.checked`), not `?checked`, matching\ncheckbox.ts. The content attribute only seeds the initial state: a user\nclick sets the input's dirty-checkedness flag, after which the attribute\nno longer drives `.checked`. Bound as an attribute, setting `isChecked`\nfrom code updated the host class and left the native input alone, so form\nresets and state-driven toggles silently stopped working after one click.",
               "fieldName": "isChecked"
             },
             {

@@ -33,7 +33,7 @@
       "additionalProperties": false,
       "properties": {
         "isChecked": {
-          "description": "Checked attribute\n- If true, sets the treatment to represent an on state\n- If false, sets the treatment to represent an off state",
+          "description": "Checked attribute\n- If true, sets the treatment to represent an on state\n- If false, sets the treatment to represent an off state\n\nRendered with a PROPERTY binding (`.checked`), not `?checked`, matching\ncheckbox.ts. The content attribute only seeds the initial state: a user\nclick sets the input's dirty-checkedness flag, after which the attribute\nno longer drives `.checked`. Bound as an attribute, setting `isChecked`\nfrom code updated the host class and left the native input alone, so form\nresets and state-driven toggles silently stopped working after one click.",
           "type": "boolean"
         },
         "isDisabled": {

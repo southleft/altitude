@@ -19,6 +19,8 @@ export class ALToggle extends ALElement {
 
   /**
    * Checked attribute
+   * - If true, sets the treatment to represent an on state
+   * - If false, sets the treatment to represent an off state
    *
    * Rendered with a PROPERTY binding (`.checked`), not `?checked`, matching
    * checkbox.ts. The content attribute only seeds the initial state: a user
@@ -26,8 +28,6 @@ export class ALToggle extends ALElement {
    * no longer drives `.checked`. Bound as an attribute, setting `isChecked`
    * from code updated the host class and left the native input alone, so form
    * resets and state-driven toggles silently stopped working after one click.
-   * - If true, sets the treatment to represent an on state
-   * - If false, sets the treatment to represent an off state
    */
   @property({ type: Boolean })
   accessor isChecked: boolean;
