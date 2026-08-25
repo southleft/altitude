@@ -181,6 +181,9 @@ const storybookCovered = new Set(Object.keys(storybookReport?.components ?? {}))
  * component. The question has to be "was THIS component's library measured?".
  */
 const MEASURED_LIBRARY = (() => {
+  const stated = storybookReport?.source?.measuredLibrary;
+  if (stated) return stated;
+  // Pre-2026-08-25 reports: derive it the old way.
   const gateConfig = storybookReport?.source?.gateConfig ?? '';
   const [root] = gateConfig.split('/.storybook/');
   return root && root !== gateConfig ? root : null;

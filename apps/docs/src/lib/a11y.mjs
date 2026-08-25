@@ -99,12 +99,16 @@ function manualFor(slug) {
 /**
  * WHICH LIBRARY THE AXE RUN ACTUALLY COVERED.
  *
- * The report records the test-runner config it ran against
- * (`source.gateConfig`, e.g. `libs/al-web-components/.storybook/test-runner.ts`).
- * The library root is the part before `/.storybook/` — derived, so this module
- * still names no library of its own.
+ * The report STATES it, in `source.measuredLibrary`. It used to be derived by
+ * splitting `source.gateConfig` on `/.storybook/`, which tied these panels to a
+ * directory being deleted and to the assumption that a fixture always lives
+ * inside a Storybook. The fallback below keeps an older report readable rather
+ * than silently attributing it to nothing.
  */
 const MEASURED_LIBRARY = (() => {
+  const stated = report.data?.source?.measuredLibrary;
+  if (stated) return stated;
+  // Pre-2026-08-25 reports: derive it the old way.
   const gateConfig = report.data?.source?.gateConfig ?? '';
   const [root] = gateConfig.split('/.storybook/');
   return root && root !== gateConfig ? root : null;

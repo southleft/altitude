@@ -347,7 +347,29 @@ const report = {
     contrastEnabled: true,
     /** Kept explicit so the docs panel can SAY what the gate excludes. */
     gateExcludes: [CONTRAST_RULE],
-    gateConfig: 'libs/al-web-components/.storybook/test-runner.ts',
+    /**
+     * WHICH LIBRARY THIS RUN COVERED, stated rather than encoded in a path.
+     *
+     * Consumers used to derive it by splitting `gateConfig` on `/.storybook/`
+     * — which silently tied the docs accessibility panels to a directory that
+     * is being deleted, and to the assumption that a fixture always lives
+     * inside a Storybook. Emitting the fact directly removes both.
+     *
+     * Derived from the served directory: a fixture at
+     * `libs/al-web-components/story-fixture/dist` covers
+     * `libs/al-web-components`. `null` when the directory sits outside the
+     * repo, which is the honest answer — an external build cannot be
+     * attributed to a workspace.
+     */
+    measuredLibrary: (() => {
+      const abs = resolve(STORYBOOK_DIR).replace(/\\/g, '/');
+      const root = REPO_ROOT.replace(/\\/g, '/');
+      if (!abs.startsWith(`${root}/`)) return null;
+      const rel = abs.slice(root.length + 1);
+      const marker = rel.match(/^(.*?)\/(?:story-fixture|\.storybook|storybook-static)/);
+      return marker ? marker[1] : null;
+    })(),
+    gateConfig: 'libs/al-web-components/story-fixture/src/main.ts',
   },
   totals: {
     stories: results.length,
