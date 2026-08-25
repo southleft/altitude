@@ -127,7 +127,7 @@
         "children": {
           "type": "array",
           "items": { "$ref": "#/definitions/canvasNode" },
-          "description": "Named layers, one or two levels deep only (see extract-canvas.mjs ANATOMY_DEPTH) — this is a landmark read, not a full tree dump."
+          "description": "Named layers, walked `--depth` child levels deep from the default variant root (see extract-canvas.mjs DEFAULT_ANATOMY_DEPTH/--depth), capped at MAX_ANATOMY_NODES total visited nodes across the whole tree — this is a landmark read, not a guaranteed full tree dump. A walk the cap cut short is named in `degradations`, never silently truncated."
         }
       }
     }

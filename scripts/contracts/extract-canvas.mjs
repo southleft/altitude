@@ -8,9 +8,13 @@
  * their legal values, every component property (VARIANT/BOOLEAN/TEXT/
  * INSTANCE_SWAP), bound-variable NAMES per node (fills/strokes/spacing/
  * radius...), bound text-style names, interaction states expressed as a
- * "State" variant axis, and a shallow (1-2 level) named-layer anatomy of the
- * default variant. Output is shaped to mirror contract.schema.json as closely
- * as a canvas-only read honestly can — see .altitude/contracts/
+ * "State" variant axis, and a named-layer anatomy of the default variant,
+ * walked `--depth` child levels deep (default DEFAULT_ANATOMY_DEPTH, T17 —
+ * was a fixed 2; see `--depth`). A per-set visited-node cap
+ * (MAX_ANATOMY_NODES) guards against pathologically large trees; a walk the
+ * cap actually cut short is recorded as a `degradations` entry, never
+ * silently truncated. Output is shaped to mirror contract.schema.json as
+ * closely as a canvas-only read honestly can — see .altitude/contracts/
  * canvas-contract.schema.json for exactly where the two diverge and why.
  *
  * NAME EVERY DEGRADATION. A canvas read cannot know a code attribute name, a
@@ -29,6 +33,7 @@
  *   node scripts/contracts/extract-canvas.mjs                        # every mapped set, DS_PROJECT/registry default
  *   node scripts/contracts/extract-canvas.mjs --project southleft
  *   node scripts/contracts/extract-canvas.mjs --component al-button  # one set — the reconciliation-loop path
+ *   node scripts/contracts/extract-canvas.mjs --component al-button --depth 6  # deeper anatomy walk (default 5)
  *   node scripts/contracts/extract-canvas.mjs --from-fixture scripts/contracts/__fixtures__/canvas-sample.json
  *   node scripts/contracts/extract-canvas.mjs --self-test            # offline: decoy-guard logic only
  *   pnpm run contracts:canvas / contracts:canvas:sl
@@ -52,9 +57,21 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(HERE, '..', '..');
 const SCHEMA_PATH = join(REPO_ROOT, '.altitude', 'contracts', 'canvas-contract.schema.json');
 
-/** How many child levels to walk from the default-variant root — a landmark
- * read (named layers + their bound variables), not a full tree dump. */
-const ANATOMY_DEPTH = 2;
+/** How many child levels to walk from the default-variant root, by default
+ * (T17 — was a fixed 2; several token-binding disagreements against the
+ * FIRST live al-button run turned out to be nodes the depth-2 walk simply
+ * never reached). Override with `--depth N`. Still a landmark read (named
+ * layers + their bound variables), not a guaranteed full tree dump — see
+ * MAX_ANATOMY_NODES. */
+const DEFAULT_ANATOMY_DEPTH = 5;
+
+/** Total nodes visitable in one set's anatomy walk, across the whole tree
+ * (not per level) — a guard against a pathologically large/deep component
+ * set turning one extraction into a slow, huge dump. Once reached, the walk
+ * stops descending; a set that hit the cap gets a `degradations` entry
+ * naming it, never a silently-truncated tree. */
+const MAX_ANATOMY_NODES = 500;
+
 const STATE_NAMES = ['hover', 'focus', 'active', 'disabled'];
 
 // ── argv ─────────────────────────────────────────────────────────────────
@@ -71,6 +88,7 @@ const FROM_FIXTURE = argOf('--from-fixture');
 const SELF_TEST = process.argv.includes('--self-test');
 const PORT = Number(argOf('--port') ?? 9401);
 const SHIM = `http://127.0.0.1:${PORT}/call`;
+const ANATOMY_DEPTH = Number(argOf('--depth') ?? DEFAULT_ANATOMY_DEPTH);
 
 // ── small, dependency-free helpers ─────────────────────────────────────────
 
@@ -167,7 +185,8 @@ function snapshotCode(wanted) {
       return out;
     }
 
-    async function anatomyNode(n, depth) {
+    async function anatomyNode(n, depth, budget) {
+      budget.visited += 1;
       const boundVariables = await collectBoundVariables(n);
       let textStyle = null;
       if (n.type === 'TEXT' && n.textStyleId && typeof n.textStyleId === 'string') {
@@ -176,7 +195,10 @@ function snapshotCode(wanted) {
       }
       let children = [];
       if (depth > 0 && 'children' in n && n.children) {
-        for (const c of n.children) children.push(await anatomyNode(c, depth - 1));
+        for (const c of n.children) {
+          if (budget.visited >= budget.max) { budget.truncated = true; break; }
+          children.push(await anatomyNode(c, depth - 1, budget));
+        }
       }
       return { name: n.name, type: n.type, boundVariables, textStyle, children };
     }
@@ -208,7 +230,8 @@ function snapshotCode(wanted) {
         ? node.children.map((c) => ({ name: c.name }))
         : [{ name: node.name }];
       const base = node.type === 'COMPONENT_SET' ? node.defaultVariant : node;
-      const anatomy = base ? await anatomyNode(base, ${ANATOMY_DEPTH}) : null;
+      const budget = { visited: 0, max: ${MAX_ANATOMY_NODES}, truncated: false };
+      const anatomy = base ? await anatomyNode(base, ${ANATOMY_DEPTH}, budget) : null;
 
       out.push({
         tag: w.tag,
@@ -219,6 +242,7 @@ function snapshotCode(wanted) {
         variants,
         defaultVariantName: base ? base.name : null,
         anatomy,
+        anatomyTruncated: budget.truncated,
       });
     }
     return JSON.stringify({ fileKey: figma.fileKey || null, sets: out });
@@ -298,6 +322,13 @@ export function buildCanvasContract(tag, raw, project, manifestEntry) {
   ];
   if (!states.length) degradations.push('states — no "State" variant axis found on this set.');
   if (missing) degradations.push('anatomy, variantAxes, componentProperties — the set was not found live (missing, renamed, or deleted in Figma).');
+  // T17: the anatomy walk stops at MAX_ANATOMY_NODES total visited nodes,
+  // not just `--depth` levels — named here, never a silent truncation, so a
+  // reader (or contract-diff.mjs's token-binding comparison) knows this
+  // anatomy is a PARTIAL read of a set too large to walk in full.
+  if (raw?.anatomyTruncated) {
+    degradations.push(`anatomy — node visit cap (${MAX_ANATOMY_NODES}) reached before the full tree was walked; anatomy/tokens is a partial read.`);
+  }
 
   const figmaName = raw?.name ?? manifestEntry?.figma?.name ?? null;
   const nodeId = raw?.nodeId ?? manifestEntry?.figma?.nodeId ?? null;

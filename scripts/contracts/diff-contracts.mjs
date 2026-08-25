@@ -114,7 +114,23 @@ function runSelfTest() {
       'the degraded "state" fact was SKIPPED, not flagged (zero state disagreements, one state skip)',
       disagreements.filter((d) => d.dimension === 'state').length === 0 && skipped.some((s) => s.dimension === 'state'),
     ],
-    ['no other disagreements were fabricated (exactly 3 total)', disagreements.length === 3],
+    [
+      'T17 (a) name-normalized pair that AGREES (isChecked <-> canvas "Checked") produces NO disagreement',
+      !disagreements.some((d) => d.key === 'isChecked' || d.key === 'Checked'),
+    ],
+    [
+      'T17 (b) name-normalized pair with a type mismatch (isSelected <-> canvas "Selected") produces exactly ONE disagreement',
+      find('variant-axis', 'value-mismatch').length === 1 && find('variant-axis', 'value-mismatch')[0].key === 'isSelected',
+    ],
+    [
+      'T17 (c) paired slot convention (code slot "before" <-> canvas "Slot Before") produces NO disagreement',
+      !disagreements.some((d) => d.dimension === 'slot' && d.key === 'slot:before'),
+    ],
+    [
+      'T17 (d) unpaired canvas slot property ("Slot After", no code "after" slot) produces exactly ONE slot-unpaired disagreement',
+      find('slot', 'slot-unpaired').length === 1 && find('slot', 'slot-unpaired')[0].key === 'Slot After',
+    ],
+    ['no other disagreements were fabricated (exactly 5 total)', disagreements.length === 5],
   ];
 
   let ok = true;

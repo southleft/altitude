@@ -1,5 +1,5 @@
 {
-  "$comment": "Fixture CODE contract for contract-diff.mjs --self-test — see diff-canvas-sample.canvas.json for its paired CANVAS contract and diff-contracts.mjs for the planted disagreements this pair is designed to produce.",
+  "$comment": "Fixture CODE contract for contract-diff.mjs --self-test — see diff-canvas-sample.canvas.json for its paired CANVAS contract and diff-contracts.mjs for the planted disagreements this pair is designed to produce. T17 (spec 2026-08-25-contract-backed-figma-parity-and-generation) added props isChecked/isSelected and slot 'before' — planted cases (a)-(d), see their own descriptions below.",
   "$schema": "../contract.schema.json",
   "id": "al-self-test",
   "name": "Self Test",
@@ -31,10 +31,36 @@
         "code": { "attribute": "variant" },
         "figma": { "kind": "VARIANT", "property": "Variant", "options": ["Secondary", "Tertiary"] }
       }
+    },
+    {
+      "name": "isChecked",
+      "description": "T17 planted case (a) — name-normalized pair that AGREES: propNameKeys strips the leading 'is' so this pairs with the paired canvas fixture's boolean property \"Checked\", and the paired comparison finds nothing wrong — this must produce NO disagreement.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": { "attribute": "isChecked" },
+        "figma": null
+      }
+    },
+    {
+      "name": "isSelected",
+      "description": "T17 planted case (b) — name-normalized pair WITH a type mismatch: propNameKeys pairs this with the paired canvas fixture's \"Selected\" property, but that property is type BOOLEAN, not VARIANT (this code prop is an enum) — the PAIRED comparison must still report exactly ONE disagreement (dimension:'variant-axis', kind:'value-mismatch'), not a missing-in-canvas/missing-in-code split.",
+      "type": "enum",
+      "rawType": "'one' | 'two'",
+      "values": ["one", "two"],
+      "bindings": {
+        "code": { "attribute": "isSelected" },
+        "figma": null
+      }
     }
   ],
   "events": [],
-  "slots": [],
+  "slots": [
+    {
+      "name": "before",
+      "description": "T17 planted case (c) — a code slot the slot<->property pairing convention must pair with the paired canvas fixture's \"Slot Before\" property, satisfied, with NO disagreement (no \"after\" slot here on purpose — see the canvas fixture's unpaired \"Slot After\", planted case (d))."
+    }
+  ],
   "states": ["hover", "focus", "active", "disabled"],
   "anatomySource": "measured",
   "anatomyCase": "Variant=secondary",

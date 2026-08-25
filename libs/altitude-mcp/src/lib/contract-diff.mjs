@@ -51,6 +51,163 @@ function sortDisagreements(list) {
 }
 
 /**
+ * T17 (spec 2026-08-25-contract-backed-figma-parity-and-generation): the
+ * live al-button run surfaced pairing gaps that read as drift but aren't —
+ * `normKey` alone treats canvas "Is Full Width" and code `fullWidth` as
+ * unrelated strings. `NAME_ALIAS_PREFIXES` lists normalized-key prefixes
+ * stripped from EITHER side before a prop/variant-axis name pairing is
+ * attempted, so "Is Full Width" -> "isfullwidth" -> "fullwidth" meets
+ * "fullWidth" -> "fullwidth", and "Disabled" meets "isDisabled" the same
+ * way. One row per prefix; add here, not as a scattered `if`.
+ */
+const NAME_ALIAS_PREFIXES = ['is'];
+
+/** Every normalized-key candidate a prop/variant-axis name could pair
+ * under — the plain normalized key, plus one per matched alias-prefix
+ * strip. Order doesn't matter; callers test set membership. */
+function propNameKeys(rawName) {
+  const base = normKey(rawName);
+  const keys = new Set([base]);
+  for (const prefix of NAME_ALIAS_PREFIXES) {
+    if (base.startsWith(prefix) && base.length > prefix.length) keys.add(base.slice(prefix.length));
+  }
+  return keys;
+}
+
+/**
+ * PAIRING_CONVENTIONS — canvas <-> code pairings this differ recognizes
+ * beyond the straight normalized-name match `propNameKeys` gives every
+ * prop for free. Two shapes, dispatched on which key is present:
+ *
+ * - SLOT rows (`codeSlot` set): one or more canvas `componentProperties`
+ *   matching `canvasPattern` are the canvas-side ENCODING of one code
+ *   SLOT (Figma has no slot concept — a set author expresses "there's a
+ *   slot here" as a BOOLEAN "Slot Before"/"Slot After" toggle, sometimes
+ *   paired with an INSTANCE_SWAP "Icon Before"/"Icon After" for the
+ *   default fill). Both sides present -> satisfied, presence-only, no
+ *   disagreement. Either side alone -> one `slot-unpaired` disagreement,
+ *   dimension `slot`.
+ * - PROP rows (`codeProp` set): a canvas property matching `canvasPattern`
+ *   (and `canvasType`, when given) pairs by PRESENCE ONLY with the named
+ *   code prop when it exists; else with `fallbackCodeSlot` (a code slot
+ *   name) when THAT exists; else it is left unclaimed and falls through to
+ *   the generic "missing-in-code" report — a genuine gap, not a pairing
+ *   miss.
+ *
+ * A new convention is one row here; `applyPairingConventions()` below is
+ * the whole generic engine over this table — see T17 (spec
+ * 2026-08-25-contract-backed-figma-parity-and-generation) and T15's future
+ * eval, which enumerates this table rather than re-deriving it.
+ */
+export const PAIRING_CONVENTIONS = [
+  { id: 'slot-before', dimension: 'slot', codeSlot: 'before', canvasPattern: /^(slot|icon)\s+before$/i },
+  { id: 'slot-after', dimension: 'slot', codeSlot: 'after', canvasPattern: /^(slot|icon)\s+after$/i },
+  { id: 'text-label', dimension: 'prop', codeProp: 'label', canvasPattern: /^(text|label)$/i, canvasType: 'TEXT', fallbackCodeSlot: '' },
+];
+
+/**
+ * Run every PAIRING_CONVENTIONS row against one codeContract/canvasContract
+ * pair. Pure, no mutation of either input.
+ *
+ * @returns {{claimedCanvasProps: Set<object>, handledCodeSlots: Set<string>,
+ *            skipCodePropNames: Set<string>, conventionDisagreements: Array,
+ *            comparedSlots: number}}
+ */
+function applyPairingConventions({ codeContract, canvasContract }) {
+  const claimedCanvasProps = new Set();
+  const handledCodeSlots = new Set();
+  const skipCodePropNames = new Set();
+  const conventionDisagreements = [];
+  let comparedSlots = 0;
+
+  const canvasProps = canvasContract.componentProperties ?? [];
+  const slotByName = new Map((codeContract.slots ?? []).map((s) => [s.name, s]));
+  const codePropByName = new Map((codeContract.props ?? []).map((p) => [p.name, p]));
+
+  for (const conv of PAIRING_CONVENTIONS) {
+    const canvasMatches = canvasProps.filter(
+      (cp) => conv.canvasPattern.test(cp.name) && (!conv.canvasType || cp.type === conv.canvasType),
+    );
+
+    if (conv.codeSlot) {
+      const codeSlot = slotByName.get(conv.codeSlot);
+      if (!codeSlot && !canvasMatches.length) continue; // neither side expresses this slot — convention doesn't apply
+      comparedSlots += 1;
+      if (codeSlot && canvasMatches.length) {
+        handledCodeSlots.add(conv.codeSlot);
+        for (const cp of canvasMatches) claimedCanvasProps.add(cp);
+      } else if (codeSlot) {
+        handledCodeSlots.add(conv.codeSlot);
+        conventionDisagreements.push({
+          dimension: 'slot',
+          key: `slot:${conv.codeSlot}`,
+          code: conv.codeSlot,
+          canvas: null,
+          kind: 'slot-unpaired',
+          detail: `code slot "${conv.codeSlot}" has no matching canvas "Slot ${conv.codeSlot === 'before' ? 'Before' : 'After'}"/"Icon ${conv.codeSlot === 'before' ? 'Before' : 'After'}" property.`,
+        });
+      } else {
+        const names = canvasMatches.map((c) => c.name).sort();
+        for (const cp of canvasMatches) claimedCanvasProps.add(cp);
+        conventionDisagreements.push({
+          dimension: 'slot',
+          key: names.join(', '),
+          code: null,
+          canvas: names,
+          kind: 'slot-unpaired',
+          detail: `canvas exposes ${names.map((n) => `"${n}"`).join(', ')} with no matching code slot "${conv.codeSlot}".`,
+        });
+      }
+      continue;
+    }
+
+    if (conv.codeProp) {
+      if (!canvasMatches.length) continue; // nothing on the canvas side to pair — generic path decides
+      const codeProp = codePropByName.get(conv.codeProp);
+      if (codeProp) {
+        for (const cp of canvasMatches) claimedCanvasProps.add(cp);
+        skipCodePropNames.add(codeProp.name);
+        continue;
+      }
+      const fallbackSlot = conv.fallbackCodeSlot != null ? slotByName.get(conv.fallbackCodeSlot) : null;
+      if (fallbackSlot) {
+        for (const cp of canvasMatches) claimedCanvasProps.add(cp);
+        handledCodeSlots.add(conv.fallbackCodeSlot);
+        comparedSlots += 1;
+        continue;
+      }
+      // Neither the named prop nor the fallback slot exists in the code
+      // contract — leave canvasMatches unclaimed; the generic prop loop's
+      // "missing-in-code" report below is correct here, not a pairing miss.
+    }
+  }
+
+  return { claimedCanvasProps, handledCodeSlots, skipCodePropNames, conventionDisagreements, comparedSlots };
+}
+
+/** Canvas componentProperties index for the generic name-pairing pass,
+ * keyed by every `propNameKeys` candidate, EXCLUDING props already claimed
+ * by a PAIRING_CONVENTIONS row (they're spoken for). */
+function buildCanvasPropIndex(canvasProps, excluded) {
+  const byKey = new Map();
+  for (const cp of canvasProps) {
+    if (excluded.has(cp)) continue;
+    for (const key of propNameKeys(cp.name)) {
+      if (!byKey.has(key)) byKey.set(key, cp);
+    }
+  }
+  return byKey;
+}
+
+function findCanvasProp(index, name) {
+  for (const key of propNameKeys(name)) {
+    const cp = index.get(key);
+    if (cp) return cp;
+  }
+  return null;
+}
+
+/**
  * Walk a contract.schema.json `anatomy` tree, collecting every REFERENCED
  * Figma variable name -> the set of `--al-*` code token names bound to it.
  * Covers `anatomy.root` and every `anatomy.stateOverrides.*` delta — a code
@@ -90,13 +247,13 @@ function collectCodeFigmaTokens(anatomy) {
  *   common case (canvas dumps are OBSERVATIONS, gitignored, extracted on
  *   demand). This must degrade gracefully, never throw.
  * @returns {{disagreements: Array<{dimension:string,key:string,code:*,canvas:*,kind:string,detail:string}>,
- *            compared: {props:number,variants:number,states:number,tokens:number,anatomy:number},
+ *            compared: {props:number,variants:number,states:number,tokens:number,anatomy:number,slots:number},
  *            skipped: Array<{dimension:string|null,reason:string,[k:string]:*}>}}
  */
 export function diffContracts({ codeContract, canvasContract } = {}) {
   const disagreements = [];
   const skipped = [];
-  const compared = { props: 0, variants: 0, states: 0, tokens: 0, anatomy: 0 };
+  const compared = { props: 0, variants: 0, states: 0, tokens: 0, anatomy: 0, slots: 0 };
 
   if (!codeContract) {
     skipped.push({ dimension: null, reason: 'no code contract provided — nothing to diff.' });
@@ -122,6 +279,17 @@ export function diffContracts({ codeContract, canvasContract } = {}) {
     return { disagreements, compared, skipped };
   }
 
+  // Slot<->property pairing convention (T17) — Figma has no slot concept,
+  // so a set author expresses "there's a slot here" as componentProperties
+  // (Slot Before/After, Icon Before/After) or a TEXT property (Text/Label
+  // <-> the `label` prop, falling back to the default slot). Run this
+  // BEFORE the NOT_CANVAS_EXPRESSIBLE bookkeeping below, so slots this
+  // convention actually paired no longer count toward the blanket "slots —
+  // not canvas-expressible" skip.
+  const conventionResult = applyPairingConventions({ codeContract, canvasContract });
+  disagreements.push(...conventionResult.conventionDisagreements);
+  compared.slots = conventionResult.comparedSlots;
+
   // Facts a canvas read can never express, named rather than silently
   // skipped — see canvas-contract.schema.json's own `degradations` field and
   // extract-canvas.mjs's unconditional degradation lines. Not dimensions
@@ -129,7 +297,7 @@ export function diffContracts({ codeContract, canvasContract } = {}) {
   // recorded here so "silent truncation" cannot happen for them either.
   const NOT_CANVAS_EXPRESSIBLE = [
     ['events', codeContract.events?.length ?? 0],
-    ['slots', codeContract.slots?.length ?? 0],
+    ['slots', Math.max(0, (codeContract.slots?.length ?? 0) - conventionResult.handledCodeSlots.size)],
     ['a11y.ariaAttributes', codeContract.a11y?.ariaAttributes?.length ?? 0],
     ['a11y.cssParts', codeContract.a11y?.cssParts?.length ?? 0],
     ['semantics.role', codeContract.semantics?.role ? 1 : 0],
@@ -145,17 +313,26 @@ export function diffContracts({ codeContract, canvasContract } = {}) {
   // Every code prop is matched to a canvas componentProperty by name — via
   // the OBSERVED Figma binding when the contract has one
   // (`prop.bindings.figma.property`), else by the prop's own name — both
-  // normalised. `type: 'enum'` code props are the variant-axis case; every
-  // other type (`boolean`/`string`/`number`) is a plain `prop` existence
-  // check, since canvas cannot pair a free-text/boolean code type to a
-  // Figma property type with any confidence beyond "a property with this
-  // name exists".
-  const canvasPropsByKey = new Map((canvasContract.componentProperties ?? []).map((p) => [normKey(p.name), p]));
-  const matchedCanvasKeys = new Set();
+  // sides run through `propNameKeys` (normalised, plus alias-prefix strips
+  // — see NAME_ALIAS_PREFIXES) so e.g. canvas "Is Full Width" pairs with
+  // code `fullWidth`. `type: 'enum'` code props are the variant-axis case;
+  // every other type (`boolean`/`string`/`number`) is a plain `prop`
+  // existence check, since canvas cannot pair a free-text/boolean code type
+  // to a Figma property type with any confidence beyond "a property with
+  // this name exists". Props/canvas properties already claimed by a
+  // PAIRING_CONVENTIONS row above are excluded from this generic pass —
+  // they're already spoken for.
+  const canvasPropsByKey = buildCanvasPropIndex(canvasContract.componentProperties ?? [], conventionResult.claimedCanvasProps);
+  const matchedCanvasProps = new Set(conventionResult.claimedCanvasProps);
 
   for (const prop of codeContract.props ?? []) {
+    if (conventionResult.skipCodePropNames.has(prop.name)) {
+      // Paired by presence via a PAIRING_CONVENTIONS row (e.g. `label` <-> canvas "Text").
+      compared.props += 1;
+      continue;
+    }
     const figmaPropName = prop.bindings?.figma?.property ?? prop.name;
-    const canvasProp = canvasPropsByKey.get(normKey(figmaPropName)) ?? canvasPropsByKey.get(normKey(prop.name));
+    const canvasProp = findCanvasProp(canvasPropsByKey, figmaPropName) ?? findCanvasProp(canvasPropsByKey, prop.name);
     const isEnumVariant = prop.type === 'enum';
 
     if (isEnumVariant) {
@@ -171,7 +348,7 @@ export function diffContracts({ codeContract, canvasContract } = {}) {
         });
         continue;
       }
-      matchedCanvasKeys.add(normKey(canvasProp.name));
+      matchedCanvasProps.add(canvasProp);
       if (canvasProp.type !== 'VARIANT') {
         disagreements.push({
           dimension: 'variant-axis',
@@ -218,7 +395,7 @@ export function diffContracts({ codeContract, canvasContract } = {}) {
         });
         continue;
       }
-      matchedCanvasKeys.add(normKey(canvasProp.name));
+      matchedCanvasProps.add(canvasProp);
     }
   }
 
@@ -228,11 +405,12 @@ export function diffContracts({ codeContract, canvasContract } = {}) {
   // prop; see parity.mjs's diffFigmaContract() comment), and it is already
   // compared on its own terms below, via the dedicated 'state' dimension.
   // Flagging it here too would double-report the exact same non-drift case
-  // parity.mjs already documents as curation, not drift.
+  // parity.mjs already documents as curation, not drift. Props already
+  // claimed by a PAIRING_CONVENTIONS row (Slot/Icon Before-After, Text) are
+  // excluded too — they were compared, and found satisfied, above.
   for (const cp of canvasContract.componentProperties ?? []) {
-    const key = normKey(cp.name);
-    if (matchedCanvasKeys.has(key)) continue;
-    if (key === normKey('state')) continue;
+    if (matchedCanvasProps.has(cp)) continue;
+    if (normKey(cp.name) === normKey('state')) continue;
     const dimension = cp.type === 'VARIANT' ? 'variant-axis' : 'prop';
     if (dimension === 'variant-axis') compared.variants += 1; else compared.props += 1;
     disagreements.push({
