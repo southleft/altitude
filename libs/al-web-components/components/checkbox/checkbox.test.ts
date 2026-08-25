@@ -124,17 +124,29 @@ describe('al-checkbox', () => {
     expect((el.shadowRoot!.querySelector('label') as HTMLLabelElement).htmlFor).toBe('terms');
   });
 
-  it('renders the mixed state visually but never on the native input', async () => {
-    // FINDING, documented not endorsed. checkbox.ts:175-188 binds `.checked` but
-    // has no `.indeterminate` binding and no aria-checked="mixed", so
-    // `isIndeterminate` is a CSS treatment only: assistive tech announces a
-    // tri-state "select all" box as plain unchecked. The fix is one line —
-    // `.indeterminate=${this.isIndeterminate}` on the input.
+  it('renders the mixed state on the native input and announces it', async () => {
+    // `isIndeterminate` used to be a CSS treatment only — the class and nothing
+    // else — so a tri-state "select all" looked mixed and announced as plain
+    // unchecked. Fixed 2026-08-24 with both halves: `.indeterminate` (a
+    // property with no content attribute, and what paints the native glyph)
+    // and `aria-checked="mixed"` (what a screen reader actually reads).
     const el = await fixture<ALCheckbox>(html`<al-checkbox isIndeterminate>All</al-checkbox>`);
     await el.updateComplete;
 
     expect(box(el).className).toContain('al-is-indeterminate');
-    expect(inner(el).indeterminate, 'current behavior — see comment').toBe(false);
+    expect(inner(el).indeterminate).toBe(true);
+    expect(inner(el).getAttribute('aria-checked')).toBe('mixed');
+  });
+
+  it('drops aria-checked once the mixed state resolves, so it cannot shadow the real one', async () => {
+    // A stale `aria-checked="mixed"` would keep announcing "mixed" over a box
+    // the user has since checked, which is worse than never having set it.
+    const el = await fixture<ALCheckbox>(html`<al-checkbox isIndeterminate>All</al-checkbox>`);
+    await el.updateComplete;
+    el.isIndeterminate = false;
+    await el.updateComplete;
+
+    expect(inner(el).indeterminate).toBe(false);
     expect(inner(el).getAttribute('aria-checked')).toBeNull();
   });
 

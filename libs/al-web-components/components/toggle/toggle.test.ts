@@ -83,18 +83,20 @@ describe('al-toggle', () => {
     expect(el.isChecked).toBeFalsy();
   });
 
-  it('stops tracking isChecked on the native input once the user has clicked it', async () => {
-    // FINDING, documented not endorsed. toggle.ts:108 uses the boolean
-    // ATTRIBUTE binding `?checked=${this.isChecked}` where checkbox.ts:181 uses
-    // the PROPERTY binding `.checked=`. A user click sets the input's dirty
-    // checkedness flag, after which the content attribute no longer drives
-    // `.checked` — so a consumer that resets `isChecked` programmatically (a
-    // failed save, a cancelled dialog) is left with a switch whose native
-    // checked state disagrees with the component's own.
+  it('keeps the native input in step with isChecked, even after a user click', async () => {
+    // toggle.ts used `?checked=` — the boolean ATTRIBUTE — where checkbox.ts
+    // uses the property. The content attribute only seeds initial state: a
+    // click sets the input's dirty-checkedness flag and the attribute stops
+    // driving `.checked` from then on. So a consumer resetting `isChecked`
+    // after a failed save or a cancelled dialog was left with a switch whose
+    // native state disagreed with the component's own. Fixed 2026-08-24 by
+    // binding `.checked`.
+    //
+    // The click in the middle is the whole point — before it, the old binding
+    // passed this test too.
     const el = await fixture<ALToggle>(html`<al-toggle label="Wi-Fi"></al-toggle>`);
     await el.updateComplete;
 
-    // Before any interaction the attribute binding still drives the input.
     el.isChecked = true;
     await el.updateComplete;
     expect(inner(el).checked).toBe(true);
@@ -109,8 +111,8 @@ describe('al-toggle', () => {
 
     el.isChecked = false;
     await el.updateComplete;
-    expect(box(el).className, 'the CSS treatment does follow the property').not.toContain('al-is-checked');
-    expect(inner(el).checked, 'current behavior — the native input is now stuck on').toBe(true);
+    expect(box(el).className, 'the CSS treatment follows the property').not.toContain('al-is-checked');
+    expect(inner(el).checked, 'and so does the native input, post-click').toBe(false);
   });
 
   it('contributes nothing to the owning form', async () => {

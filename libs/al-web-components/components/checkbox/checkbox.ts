@@ -41,6 +41,14 @@ export class ALCheckbox extends ALElement {
   /**
    * Indeterminate state
    * - Changes the component's treatment to represent an indeterminate state
+   *
+   * Rendered as BOTH `.indeterminate` and `aria-checked="mixed"`. It used to be
+   * neither — only an `al-is-indeterminate` class — so a tri-state "select all"
+   * looked mixed and announced as plain unchecked. `.indeterminate` has no
+   * content attribute at all (there is no `?indeterminate` that could work) and
+   * is what paints the native glyph; `aria-checked` is what a screen reader
+   * reads. Left undefined when not indeterminate, so the input's own checked
+   * state is announced rather than shadowed by a stale value.
    */
   @property({ type: Boolean })
   accessor isIndeterminate: boolean;
@@ -184,6 +192,8 @@ export class ALCheckbox extends ALElement {
               @change=${this.handleOnChange}
               @keydown=${this.handleOnKeydown}
               aria-describedby="${ifDefined(this.ariaDescribedBy)}"
+              .indeterminate=${this.isIndeterminate === true}
+              aria-checked=${ifDefined(this.isIndeterminate === true ? 'mixed' : undefined)}
               tabindex="0"
             />
             <span class="al-c-checkbox__custom-check"></span>
