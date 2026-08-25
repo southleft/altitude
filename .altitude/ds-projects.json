@@ -11,7 +11,7 @@
         "fileKey": "y83n4o9LOGs74oAoguFcGS",
         "fileName": "Altitude Design System",
         "urlBase": "https://www.figma.com/design/{fileKey}/",
-        "componentPagePrefix": "🛠 ",
+        "componentPagePrefix": "\ud83d\udee0 ",
         "decoys": [
           {
             "fileKey": "NGpu9IJj2pRhNru1QTGmuF",
@@ -35,15 +35,6 @@
           "Foundations/"
         ]
       },
-      "storybook": {
-        "configDir": "libs/al-web-components/.storybook",
-        "port": 6006,
-        "mcpPort": 6017,
-        "brandTitle": "Altitude Design System",
-        "brandUrl": "https://altitude.pages.dev/storybook/web-components",
-        "brandImage": "./images/logo.svg",
-        "productionBase": "https://altitude.pages.dev/storybook/web-components"
-      },
       "prompts": {
         "skillName": "altitude-figma-sync",
         "skillPath": ".claude/skills/altitude-figma-sync/SKILL.md",
@@ -54,10 +45,11 @@
         "guardrailsDoc": "AGENTS.md"
       },
       "excluded": {
-        "al-theme-switcher": "Owns no pixels — an al-button + al-popover + al-menu composition; a Figma set would duplicate three components (altitude-figma-sync: NOT_COMPONENTS).",
-        "al-icon": "Icons live in Figma as 71 flat components on the 🛠 Icons page (resolved by name), not as a component set — there is nothing for a per-set parity check to bind to."
+        "al-theme-switcher": "Owns no pixels \u2014 an al-button + al-popover + al-menu composition; a Figma set would duplicate three components (altitude-figma-sync: NOT_COMPONENTS).",
+        "al-icon": "Icons live in Figma as 71 flat components on the \ud83d\udee0 Icons page (resolved by name), not as a component set \u2014 there is nothing for a per-set parity check to bind to."
       },
       "docs": {
+        "//": "Altitude's Storybook was retired (2026-08-25), following Southleft's (2026-08-23). The generated docs site at apps/docs is the canonical surface for both, and the axe sweep that used to need a Storybook build now runs against libs/al-web-components/story-fixture, verified at exact parity. `route` is empty because altitude is the default project and serves at the site root.",
         "route": "",
         "productionBase": "https://altitude.pages.dev/docs"
       }
@@ -70,7 +62,7 @@
         "fileKey": "rdhBS9t89V42E7EfiPjmSa",
         "fileName": "Southleft V5",
         "urlBase": "https://www.figma.com/design/{fileKey}/",
-        "componentPagePrefix": "🛠 ",
+        "componentPagePrefix": "\ud83d\udee0 ",
         "decoys": []
       },
       "paths": {
@@ -112,12 +104,12 @@
           "Foundations/"
         ]
       },
-      "$brandLibraryComment": "THE SECOND LAYER. `library` above is SHARED — Altitude documents all of @southleft/al-web-components and Southleft documents 21 of it — so nothing brand-specific can live there. The page sections that ARE Southleft (hero, cta band, marquee, media card, logo wall, section header, page hero, and the brand header/footer) are a separate package, @southleft/sl-web-components, built on top of Altitude. They had their own Storybook until it was retired on 2026-08-23, which is when they stopped being documented anywhere: apps/docs read one manifest. Declaring the layer here is what puts them back on /docs/southleft, and it is generic — any project may declare one.",
+      "$brandLibraryComment": "THE SECOND LAYER. `library` above is SHARED \u2014 Altitude documents all of @southleft/al-web-components and Southleft documents 21 of it \u2014 so nothing brand-specific can live there. The page sections that ARE Southleft (hero, cta band, marquee, media card, logo wall, section header, page hero, and the brand header/footer) are a separate package, @southleft/sl-web-components, built on top of Altitude. They had their own Storybook until it was retired on 2026-08-23, which is when they stopped being documented anywhere: apps/docs read one manifest. Declaring the layer here is what puts them back on /docs/southleft, and it is generic \u2014 any project may declare one.",
       "brandLibrary": {
         "workspace": "@southleft/sl-web-components",
         "root": "libs/sl-web-components",
         "tagPrefix": "al-",
-        "$supersedesComment": "SAME TAG, BRAND IMPLEMENTATION. A brand layer publishes al-* tags like everything else â one namespace, so a page is authored in al-* and never mixes two (spec 2026-08-23-one-al-namespace-across-brand-and-base). Where a brand component MODIFIES a base one they share the tag outright: `al-header` and `al-footer` here are Southleft's, and the app imports this package's module instead of the base one, so exactly one definition exists at runtime. `supersedes` maps the tag to itself to say that this is deliberate override rather than an accidental collision â the docs site documents the brand implementation under that tag and drops the base record for this project.",
+        "$supersedesComment": "SAME TAG, BRAND IMPLEMENTATION. A brand layer publishes al-* tags like everything else \u00e2\u0080\u0094 one namespace, so a page is authored in al-* and never mixes two (spec 2026-08-23-one-al-namespace-across-brand-and-base). Where a brand component MODIFIES a base one they share the tag outright: `al-header` and `al-footer` here are Southleft's, and the app imports this package's module instead of the base one, so exactly one definition exists at runtime. `supersedes` maps the tag to itself to say that this is deliberate override rather than an accidental collision \u00e2\u0080\u0094 the docs site documents the brand implementation under that tag and drops the base record for this project.",
         "supersedes": {
           "al-card": "al-card",
           "al-header": "al-header",
@@ -134,14 +126,14 @@
         "guardrailsDoc": "AGENTS.md"
       },
       "excluded": {
-        "al-theme-switcher": "Owns no pixels — an al-button + al-popover + al-menu composition; a Figma set would duplicate three components.",
-        "al-icon": "Icons are a 1,512-glyph Phosphor catalog resolved by name, not a component set — nothing for a per-set parity check to bind to.",
-        "al-theme": "The theming HOST — sets brand/mode/density tokens on :host and owns no pixels of its own. Nothing for Figma to mirror."
+        "al-theme-switcher": "Owns no pixels \u2014 an al-button + al-popover + al-menu composition; a Figma set would duplicate three components.",
+        "al-icon": "Icons are a 1,512-glyph Phosphor catalog resolved by name, not a component set \u2014 nothing for a per-set parity check to bind to.",
+        "al-theme": "The theming HOST \u2014 sets brand/mode/density tokens on :host and owns no pixels of its own. Nothing for Figma to mirror."
       },
       "docs": {
         "//": "Southleft's Storybook was retired (2026-08-23). The multi-brand docs site at apps/docs serves this project at /docs/southleft/, generated from the same CEM, so a second Storybook was duplicating it. `route` is what apps/docs already derives for a non-default project; `productionBase` is where that lands when deployed.",
         "route": "/southleft",
-        "$componentsComment": "DOCS SCOPE, and deliberately NOT the same thing as `library.components` above. Southleft's docs now show every component in the shared library, so a reader browsing /docs/southleft sees the same catalog Altitude documents, rendered under the Southleft brand. `library.components` is untouched and still means what it always meant — the subset southleft.com actually ships — which is what Figma parity builds its list from (the Southleft V5 file has sets for those, not for all 70), what scripts/check-sl-scope.mjs re-derives from apps/southleft/src, and what scripts/check-brand-conformance.mjs reads. Collapsing the two would have flooded the Southleft parity manifest with 50 components that file has never contained and switched the scope gate off entirely. Two fields, two questions: what this system SHIPS vs. what its docs SHOW.",
+        "$componentsComment": "DOCS SCOPE, and deliberately NOT the same thing as `library.components` above. Southleft's docs now show every component in the shared library, so a reader browsing /docs/southleft sees the same catalog Altitude documents, rendered under the Southleft brand. `library.components` is untouched and still means what it always meant \u2014 the subset southleft.com actually ships \u2014 which is what Figma parity builds its list from (the Southleft V5 file has sets for those, not for all 70), what scripts/check-sl-scope.mjs re-derives from apps/southleft/src, and what scripts/check-brand-conformance.mjs reads. Collapsing the two would have flooded the Southleft parity manifest with 50 components that file has never contained and switched the scope gate off entirely. Two fields, two questions: what this system SHIPS vs. what its docs SHOW.",
         "components": "all",
         "productionBase": "https://altitude.pages.dev/docs/southleft"
       }

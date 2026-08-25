@@ -74,11 +74,6 @@ export * from './{{pascalCase name}}';`
           templateFile: 'templates/component/Component.tsx.hbs'
         },
         {
-          type: 'add',
-          path: './../src/components/{{pascalCase name}}/{{pascalCase name}}.stories.tsx',
-          templateFile: 'templates/component/Component.stories.tsx.hbs'
-        },
-        {
           type: 'append',
           path: './../src/index.ts',
           template: "export * from './components/{{pascalCase name}}';"
@@ -87,54 +82,16 @@ export * from './{{pascalCase name}}';`
     }
   });
 
-  plop.setGenerator('recipe', {
-    description: 'Create a recipe',
-    prompts: [
-      {
-        type: 'input',
-        name: 'name',
-        message: 'What is the recipe name? Note: Name must be in pascal case. (e.g. RecipeName)'
-      }
-    ],
-    actions: [
-      {
-        type: 'add',
-        path: './../.storybook/recipe/{{pascalCase name}}/{{pascalCase name}}.tsx',
-        templateFile: 'templates/recipe/Recipe.tsx.hbs'
-      },
-      {
-        type: 'add',
-        path: './../.storybook/recipe/{{pascalCase name}}/{{pascalCase name}}.stories.tsx',
-        templateFile: 'templates/recipe/Recipe.stories.tsx.hbs'
-      },
-      {
-        type: 'add',
-        path: './../.storybook/recipe/{{pascalCase name}}/{{pascalCase name}}.scss',
-        templateFile: 'templates/recipe/Recipe.scss.hbs'
-      }
-    ]
-  });
-
-  plop.setGenerator('page', {
-    description: 'Create a page (compose sections with <ALLayout>, not bespoke flex/grid wrappers)',
-    prompts: [
-      {
-        type: 'input',
-        name: 'name',
-        message: 'What is the page name? Note: Name must be in pascal case. (e.g. PageName)'
-      }
-    ],
-    actions: [
-      {
-        type: 'add',
-        path: './../.storybook/page/{{pascalCase name}}/{{pascalCase name}}.tsx',
-        templateFile: 'templates/page/Page.tsx.hbs'
-      },
-      {
-        type: 'add',
-        path: './../.storybook/page/{{pascalCase name}}/{{pascalCase name}}.stories.tsx',
-        templateFile: 'templates/page/Page.stories.tsx.hbs'
-      }
-    ]
-  });
+  /*
+   * The `recipe` and `page` generators were removed with Storybook (2026-08-25).
+   * Every action they had wrote into `./../.storybook/{recipe,page}/…`, so with
+   * that directory gone they could only scaffold files into nothing. The
+   * `component` generator's `.stories.tsx` action went for the same reason: the
+   * React stories were deleted because nothing outside the React Storybook ever
+   * read them.
+   *
+   * Their templates are still on disk under `plop/templates/{recipe,page}/` and
+   * in git history — restoring a generator is a paste, not a rewrite, if a React
+   * documentation surface ever comes back.
+   */
 };

@@ -15,6 +15,7 @@
  */
 import { html, render, type TemplateResult } from 'lit';
 import { ALTheme } from '../../components/theme/theme';
+import { DEFAULT_PRESET_ID, getPreset } from '../../theme-presets';
 
 /*
  * THEME WRAPPER — fidelity, not decoration.
@@ -46,8 +47,13 @@ if (customElements.get(ALTheme.el) === undefined) {
   customElements.define(ALTheme.el, ALTheme);
 }
 
-const BRAND = 'altitude';
-const MODE = 'dark';
+/*
+ * Read from `theme-presets.ts`, not hardcoded. `DEFAULT_PRESET_ID` is what every
+ * committed accessibility number was measured under, so deriving it here means
+ * the two cannot drift: change the default and the sweep follows, rather than
+ * this file quietly continuing to measure the old one.
+ */
+const { brand: BRAND, mode: MODE } = getPreset(DEFAULT_PRESET_ID);
 
 /* Every story module, eagerly — this page exists to render all of them. */
 const modules = import.meta.glob('../../components/*/*.stories.ts', { eager: true }) as Record<

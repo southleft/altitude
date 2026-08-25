@@ -73,12 +73,12 @@ function countBrands() {
  *  Parsed via regex, not imported — the module is TypeScript, and this
  *  script runs on bare Node without a TS loader. */
 function countPresets() {
-  const presetsPath = path.join(AL_WEB_COMPONENTS, '.storybook/presets.ts');
+  const presetsPath = path.join(AL_WEB_COMPONENTS, 'theme-presets.ts');
   const src = fs.readFileSync(presetsPath, 'utf8');
   const block = src.match(/export const PRESETS: Preset\[\] = \[([\s\S]*?)\n\];/);
-  if (!block) throw new Error('generate-stats: could not find `PRESETS` array in .storybook/presets.ts');
+  if (!block) throw new Error('generate-stats: could not find `PRESETS` array in theme-presets.ts');
   const matches = block[1].match(/\{\s*id:\s*'[^']+'/g);
-  if (!matches) throw new Error('generate-stats: parsed 0 presets from .storybook/presets.ts');
+  if (!matches) throw new Error('generate-stats: parsed 0 presets from theme-presets.ts');
   return matches.length;
 }
 

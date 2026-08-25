@@ -140,6 +140,18 @@
   box-sizing: border-box;
 }
 
+/*
+ * Every filter on this site (sidebar component filter, components index,
+ * icons search) hides misses by setting the `hidden` ATTRIBUTE. The UA's
+ * `[hidden] { display: none }` has attribute-selector specificity, so any
+ * author `display:` on the same element (`.sidebar__link { display: block }`,
+ * `.icon-tile { display: flex }`) silently wins and nothing disappears.
+ * Re-assert it once, with !important, so `hidden` always means hidden.
+ */
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   margin: 0;

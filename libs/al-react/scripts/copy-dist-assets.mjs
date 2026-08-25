@@ -3,7 +3,6 @@
  *
  * WHY THIS FILE EXISTS. The `build` script used to do this with:
  *
- *   cp -r ./.storybook/static/images ./dist/images 2>/dev/null || true
  *   cp -r ../al-web-components/dist/css ./dist     2>/dev/null || true
  *
  * `cp` is not available in the shell npm uses on Windows, so BOTH copies
@@ -17,9 +16,6 @@
  * The rules here, deliberately:
  *   - `fs.cpSync` — cross-platform, no new dependency.
  *   - A missing source is a HARD FAILURE with a message naming the fix.
- *     Neither of these directories is optional: `dist/images/logo.svg` is the
- *     manager `brandImage` and `dist/css` is the whole global stylesheet.
- *   - Non-zero exit on any failure, so `pnpm build` stops.
  *
  * There is intentionally no "optional source" escape hatch. If a future asset
  * really is optional, give it an explicit `optional: true` below and say why —
@@ -38,12 +34,9 @@ const DIST = join(PKG, 'dist');
  * @type {{ from: string, to: string, why: string, fix: string }[]}
  */
 const COPIES = [
-  {
-    from: join(PKG, '.storybook/static/images'),
-    to: join(DIST, 'images'),
-    why: 'the Storybook manager brandImage (dist/images/logo.svg)',
-    fix: 'This directory is checked into the repo — if it is missing, the working tree is incomplete.',
-  },
+  // The `.storybook/static/images -> dist/images` copy lived here too, for the
+  // Storybook manager's brandImage. Both Storybooks were deleted 2026-08-25 and
+  // nothing else referenced `dist/images`, so the copy went with them.
   {
     from: join(PKG, '../al-web-components/dist/css'),
     to: join(DIST, 'css'),

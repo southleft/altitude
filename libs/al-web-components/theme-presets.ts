@@ -1,18 +1,26 @@
-// The Storybook theme preset — brand + mode, as one named tuple.
-//
-// A preset is nothing more than a NAMED TUPLE OF VALUES `<al-theme>` already
-// accepts. No "preset" concept exists in the token layer, the emitter, the DTCG
-// source, or the component API — the tuples live here and nowhere else. Both
-// Storybooks read this one array: the web-components manager renders it as a
-// light/dark toggle (`.storybook/manager.js`), @southleft/al-react renders it as a
-// toolbar dropdown, and both share the `withPreset` decorator shape.
-//
-// SCOPE: this list is deliberately just Altitude light and Altitude dark.
-// Storybook documents the design system; it is not the showcase for every
-// brand x axis combination the token pipeline can emit. Other brands
-// (southleft) and the density / contrast / shape / motion axes are still fully
-// supported by `<al-theme>` and are documented in `.altitude/AXES.md` and
-// `.altitude/BRANDS.md` — they are just not toolbar switches.
+/**
+ * The shipped THEME RECIPES — every brand x mode pair the token pipeline emits,
+ * plus the vocabulary of the other `<al-theme>` axes.
+ *
+ * Lived at `.storybook/presets.ts` until 2026-08-25, where it powered the
+ * Storybook toolbar. Both Storybooks were deleted; this file was NOT, because
+ * two things outside them read it:
+ *
+ *   * `apps/home/scripts/generate-stats.js` counts `PRESETS` for the homepage's
+ *     "recipes shipped" KPI — a number on the public site, generated rather
+ *     than hardcoded.
+ *   * `story-fixture/src/main.ts` takes the brand and mode the accessibility
+ *     sweep renders under, which MUST stay `DEFAULT_PRESET_ID` or every
+ *     committed accessibility number silently changes meaning.
+ *
+ * The Storybook-only `PRESET_TOOLBAR_ITEMS` export went with the toolbar.
+ *
+ * The brand x mode UNION below is the load-bearing part, and a compile-time
+ * guard rather than decoration: `brand` is a `:host` rule, so a brand with no
+ * build for a mode has no scoped block for it either, and the pair would render
+ * that brand's mode-independent identity over the wrong mode's colours. Keep it
+ * in step with the `brands` array in `styles/tokens-config.v5.mjs`.
+ */
 
 /** `<al-theme density>` values (`components/theme/theme.scss`). */
 export type PresetDensity = 'compact' | 'cozy' | 'comfortable';
@@ -49,13 +57,13 @@ export type Preset = PresetBundle & {
   motion?: PresetMotion;
 };
 
-/** The two modes of the reference brand. Order matters: `manager.js` toggles between index 0 and 1. */
+/** The two modes of the reference brand. Counted by the homepage's recipes KPI. */
 export const PRESETS: Preset[] = [
   { id: 'altitude-light', label: 'Light', brand: 'altitude', mode: 'light' },
   { id: 'altitude-dark', label: 'Dark', brand: 'altitude', mode: 'dark' },
 ];
 
-/** Ids the mode toggle flips between, so `manager.js` never hardcodes a string. */
+/** Named ids, so a consumer selecting a mode never hardcodes the string. */
 export const LIGHT_PRESET_ID = 'altitude-light';
 export const DARK_PRESET_ID = 'altitude-dark';
 
@@ -68,32 +76,28 @@ export const DEFAULT_PRESET_ID = DARK_PRESET_ID;
 // ---------------------------------------------------------------------------
 // SOUTHLEFT
 // ---------------------------------------------------------------------------
-// The SCOPE note at the top of this file still holds for the ALTITUDE
-// Storybook: its toolbar is altitude-light / altitude-dark and nothing else.
-// The pairs below exist for the SECOND Storybook (`.storybook-sl/`, port
-// 6007), which documents the same components under the `southleft` brand.
+// `PRESETS` above is the REFERENCE brand only. The pairs below are Southleft's,
+// kept in their own array so the two are countable and selectable separately.
 //
 // WHY A SEPARATE ARRAY RATHER THAN TWO MORE ENTRIES IN `PRESETS`:
-// `manager.js` does not read `PRESETS` as a list at all — it imports
-// `LIGHT_PRESET_ID` / `DARK_PRESET_ID` and toggles between those two strings
-// (`manager.js:212-220`), and @southleft/al-react renders `PRESET_TOOLBAR_ITEMS`, which is
-// `PRESETS.map(...)`. So appending here would silently grow @southleft/al-react's dropdown
-// to four entries and put two brands in a Storybook that documents one. Keeping
-// `PRESETS` byte-identical means every existing consumer — `manager.js`,
-// `preview.ts`, `with-preset.ts`, @southleft/al-react's dropdown — is provably unchanged,
-// and the SL config opts in explicitly by importing the `SOUTHLEFT_*` names.
+// originally because the Storybook toolbars rendered `PRESETS` directly, so
+// appending here would have put two brands in a Storybook that documented one.
+// Those toolbars are gone (2026-08-25), but the split still earns its keep:
+// `PRESETS` is what the homepage counts as "recipes shipped" for the REFERENCE
+// brand, and folding Southleft in would change a published number to mean
+// something else. A consumer that wants everything imports `ALL_PRESETS`.
 //
-// (The earlier `PRESETS[0]` / `PRESETS[1]` reading of "manager toggles between
-// index 0 and 1" is not what the code does; it is id-based. Either way, an
-// append would have been the risky move.)
+// NOTE `PRESETS[0]` is LIGHT and looks like the default. It is not:
+// `DEFAULT_PRESET_ID` is DARK, and reading the array order instead cost a full
+// re-measure of the accessibility baseline once already.
 
-/** The two modes of the Southleft brand. Consumed only by `.storybook-sl/`. */
+/** The two modes of the Southleft brand. */
 export const SOUTHLEFT_PRESETS: Preset[] = [
   { id: 'southleft-light', label: 'Light', brand: 'southleft', mode: 'light' },
   { id: 'southleft-dark', label: 'Dark', brand: 'southleft', mode: 'dark' },
 ];
 
-/** Ids the SL mode toggle flips between (`.storybook-sl/manager.js`). */
+/** Named ids for the Southleft modes. */
 export const SOUTHLEFT_LIGHT_PRESET_ID = 'southleft-light';
 export const SOUTHLEFT_DARK_PRESET_ID = 'southleft-dark';
 
@@ -103,23 +107,18 @@ export const SOUTHLEFT_DARK_PRESET_ID = 'southleft-dark';
  */
 export const SOUTHLEFT_DEFAULT_PRESET_ID = SOUTHLEFT_DARK_PRESET_ID;
 
-/** Every preset either Storybook can select. Lookup surface for `getPreset`. */
+/** Every shipped recipe, across brands. Lookup surface for `getPreset`. */
 export const ALL_PRESETS: Preset[] = [...PRESETS, ...SOUTHLEFT_PRESETS];
 
 /**
  * Resolve a `globals.alPreset` value, falling back to `fallbackId`.
  *
- * The lookup spans `ALL_PRESETS` so the one shared `withPreset` decorator can
- * serve both Storybooks; ids are unique across the two arrays, so for every
- * value the Altitude Storybook can produce this returns exactly what it
- * returned before. `fallbackId` defaults to `DEFAULT_PRESET_ID` — the SL
- * preview passes `SOUTHLEFT_DEFAULT_PRESET_ID` so an unrecognised global there
- * lands on a Southleft preset rather than silently on Altitude.
+ * The lookup spans `ALL_PRESETS`, and ids are unique across both arrays, so one
+ * resolver serves either brand. `fallbackId` defaults to `DEFAULT_PRESET_ID`; a
+ * Southleft caller passes `SOUTHLEFT_DEFAULT_PRESET_ID` so an unrecognised value
+ * lands on a Southleft recipe rather than silently on Altitude.
  */
 export function getPreset(id: unknown, fallbackId: string = DEFAULT_PRESET_ID): Preset {
   const found = typeof id === 'string' ? ALL_PRESETS.find((p) => p.id === id) : undefined;
   return found ?? ALL_PRESETS.find((p) => p.id === fallbackId) ?? PRESETS[0];
 }
-
-/** Toolbar items, derived — never hand-written. Consumed by @southleft/al-react's dropdown. */
-export const PRESET_TOOLBAR_ITEMS = PRESETS.map((p) => ({ value: p.id, title: p.label }));

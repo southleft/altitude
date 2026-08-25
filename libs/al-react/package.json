@@ -19,13 +19,11 @@
       "default": "./dist/components/*/index.js"
     },
     "./css/*": "./dist/css/*",
-    "./images/*": "./dist/images/*",
     "./package.json": "./package.json"
   },
   "scripts": {
-    "start": "storybook dev -p 9009",
+    "start": "pnpm --dir ../.. exec vitest run --project react",
     "build": "pnpm exec del-cli dist && tsc && node scripts/copy-dist-assets.mjs",
-    "build:storybook": "storybook build",
     "plop": "plop --plopfile plop/plop-config.js"
   },
   "files": [
@@ -39,9 +37,6 @@
     "react-dom": "^19"
   },
   "devDependencies": {
-    "@storybook/addon-a11y": "^10.4",
-    "@storybook/addon-docs": "^10.4",
-    "@storybook/react-vite": "^10.4",
     "@types/node": "^20.11.10",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -51,7 +46,6 @@
     "plop": "^4.0.1",
     "remark-gfm": "4",
     "sass": "^1.70.0",
-    "storybook": "^10.4",
     "typescript": "^5.7",
     "vite": "^7.1.12"
   },
