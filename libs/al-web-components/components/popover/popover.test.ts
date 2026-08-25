@@ -169,4 +169,36 @@ describe('al-popover', () => {
     await tick();
     expect(closes).toBe(0);
   });
+
+  it('opens from a NON-focusable slotted trigger by keyboard', async () => {
+    // The trigger wrapper is a plain <div> carrying @click. A focusable slotted
+    // control produces a click on Enter that bubbles up to it; an inert one had
+    // NO keyboard path at all, so the component could not be opened without a
+    // mouse (WCAG 2.1.1). Fixed 2026-08-25 with al-tooltip's existing pattern.
+    const el = await fixture<ALPopover>(html`
+      <al-popover><span slot="trigger">Open</span><p>Body</p></al-popover>
+    `);
+    await el.updateComplete;
+    await tick();
+
+    const trigger = el.shadowRoot!.querySelector('.al-c-popover__trigger') as HTMLElement;
+    expect(trigger.getAttribute('tabindex'), 'an inert trigger needs its own tab stop').toBe('0');
+
+    trigger.focus();
+    await userEvent.keyboard('{Enter}');
+    await el.updateComplete;
+    await tick();
+    expect(el.isActive, 'Enter must open it').toBe(true);
+  });
+
+  it('does NOT add a second tab stop when the slotted trigger is already focusable', async () => {
+    const el = await fixture<ALPopover>(html`
+      <al-popover><al-button slot="trigger">Open</al-button><p>Body</p></al-popover>
+    `);
+    await el.updateComplete;
+    await tick();
+
+    const trigger = el.shadowRoot!.querySelector('.al-c-popover__trigger') as HTMLElement;
+    expect(trigger.hasAttribute('tabindex'), 'the slotted button is the tab stop').toBe(false);
+  });
 });

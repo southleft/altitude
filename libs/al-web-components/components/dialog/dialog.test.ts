@@ -209,4 +209,41 @@ describe('al-dialog', () => {
     await el.updateComplete;
     expect(closes).toBe(0);
   });
+
+  it('opens from a NON-focusable slotted trigger by keyboard', async () => {
+    // The trigger wrapper is a plain <div> carrying @click. With a focusable
+    // slotted control (<al-button slot="trigger">) a keyboard press produces a
+    // click that bubbles and everything works. With an inert one there was NO
+    // keyboard path at all — measured before the fix: wrapper not tabbable,
+    // Enter did nothing, so the dialog could not be opened without a mouse
+    // (WCAG 2.1.1). al-tooltip already solved this; the same shape is used here.
+    const el = await fixture<ALDialog>(html`
+      <al-dialog><span slot="trigger">Open</span><p>Body</p></al-dialog>
+    `);
+    await el.updateComplete;
+    await tick();
+
+    const trigger = el.shadowRoot!.querySelector('.al-c-dialog__trigger') as HTMLElement;
+    expect(trigger.getAttribute('tabindex'), 'an inert trigger needs its own tab stop').toBe('0');
+
+    trigger.focus();
+    await userEvent.keyboard('{Enter}');
+    await el.updateComplete;
+    await tick();
+    expect(el.isActive, 'Enter must open it').toBe(true);
+  });
+
+  it('does NOT add a second tab stop when the slotted trigger is already focusable', async () => {
+    // The other half, and the reason this is conditional rather than always on:
+    // an unconditional tabindex="0" on the wrapper produced TWO tab stops for
+    // one control.
+    const el = await fixture<ALDialog>(html`
+      <al-dialog><al-button slot="trigger">Open</al-button><p>Body</p></al-dialog>
+    `);
+    await el.updateComplete;
+    await tick();
+
+    const trigger = el.shadowRoot!.querySelector('.al-c-dialog__trigger') as HTMLElement;
+    expect(trigger.hasAttribute('tabindex'), 'the slotted button is the tab stop').toBe(false);
+  });
 });

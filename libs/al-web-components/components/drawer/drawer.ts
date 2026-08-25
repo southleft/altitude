@@ -1,5 +1,6 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property, queryAsync, queryAssignedElements } from 'lit/decorators.js';
+import { state, property, queryAsync, queryAssignedElements } from 'lit/decorators.js';
+import getFocusableElements from '../../directives/getFocusableElements';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import { nanoid } from 'nanoid';
 import register from '../../directives/register';
@@ -132,7 +133,41 @@ export class ALDrawer extends ALElement {
    * 2. Set aria-expanded on the trigger for A11y
    * 3. Set the width of the drawer container
    */
+  /**
+   * A11y — true when the slotted trigger contains its own focusable control, in
+   * which case the trigger wrapper must not add a second tab stop.
+   */
+  @state()
+  accessor triggerHasOwnFocusable: boolean = false;
+
+  /**
+   * A11y — decide whether the trigger wrapper needs its own tab stop.
+   *
+   * The wrapper is a plain `<div>` carrying `@click`. When the consumer slots a
+   * control that is already focusable (`<al-button slot="trigger">`) the click
+   * a keyboard press produces bubbles up to it and everything works. When they
+   * slot something inert (`<span slot="trigger">`) there was NO keyboard path
+   * at all — measured before this fix: the wrapper was not tabbable and Enter
+   * did nothing, so the component could not be opened without a mouse (WCAG
+   * 2.1.1). al-tooltip already solved this; the same shape is used here.
+   */
+  private syncTriggerFocusability() {
+    const slotted = Array.from(this.querySelectorAll('[slot="trigger"]'));
+    this.triggerHasOwnFocusable = slotted.some((el) => getFocusableElements(el).length > 0);
+  }
+
+  /** A11y — Enter/Space on the wrapper, for the inert-trigger case above. */
+  private handleTriggerKeydown(e: KeyboardEvent) {
+    if (this.triggerHasOwnFocusable) return;
+    if (e.code === 'Enter' || e.code === 'Space') {
+      e.preventDefault();
+      this.toggleActive();
+    }
+  }
+
   async firstUpdated() {
+    await this.updateComplete;
+    this.syncTriggerFocusability();
     await this.updateComplete; /* 1 */
     this.setAria(); /* 2 */
     this.setWidth(); /* 3 */
@@ -350,7 +385,12 @@ export class ALDrawer extends ALElement {
       <div class="${componentClassName}" @keydown=${this.handleOnKeydown}>
       ${this.slotNotEmpty('trigger') &&
         html`
-          <div class="al-c-drawer__trigger" @click=${this.toggleActive}>
+          <div
+            class="al-c-drawer__trigger"
+            tabindex=${ifDefined(this.triggerHasOwnFocusable ? undefined : '0')}
+            @click=${this.toggleActive}
+            @keydown=${this.handleTriggerKeydown}
+          >
             <slot name="trigger"></slot>
           </div>
         `}

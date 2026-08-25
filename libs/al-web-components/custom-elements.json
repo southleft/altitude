@@ -6045,6 +6045,35 @@
               "readonly": true
             },
             {
+              "kind": "field",
+              "name": "triggerHasOwnFocusable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "A11y — true when the slotted trigger contains its own focusable control, in\nwhich case the trigger wrapper must not add a second tab stop."
+            },
+            {
+              "kind": "method",
+              "name": "syncTriggerFocusability",
+              "privacy": "private",
+              "description": "A11y — decide whether the trigger wrapper needs its own tab stop.\n\nThe wrapper is a plain `<div>` carrying `@click`. When the consumer slots a\ncontrol that is already focusable (`<al-button slot=\"trigger\">`) the click\na keyboard press produces bubbles up to it and everything works. When they\nslot something inert (`<span slot=\"trigger\">`) there was NO keyboard path\nat all — measured before this fix: the wrapper was not tabbable and Enter\ndid nothing, so the component could not be opened without a mouse (WCAG\n2.1.1). al-tooltip already solved this; the same shape is used here."
+            },
+            {
+              "kind": "method",
+              "name": "handleTriggerKeydown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "A11y — Enter/Space on the wrapper, for the inert-trigger case above."
+            },
+            {
               "kind": "method",
               "name": "setAria",
               "description": "Set aria-expanded to the trigger button\n1. Dynamically sets the aria-labelledby for A11y\n2. Set isExpanded to this.isActive if it's truthy, otherwise, set it to false"
@@ -6446,6 +6475,35 @@
               },
               "description": "Query the drawer trigger inner element",
               "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "triggerHasOwnFocusable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "A11y — true when the slotted trigger contains its own focusable control, in\nwhich case the trigger wrapper must not add a second tab stop."
+            },
+            {
+              "kind": "method",
+              "name": "syncTriggerFocusability",
+              "privacy": "private",
+              "description": "A11y — decide whether the trigger wrapper needs its own tab stop.\n\nThe wrapper is a plain `<div>` carrying `@click`. When the consumer slots a\ncontrol that is already focusable (`<al-button slot=\"trigger\">`) the click\na keyboard press produces bubbles up to it and everything works. When they\nslot something inert (`<span slot=\"trigger\">`) there was NO keyboard path\nat all — measured before this fix: the wrapper was not tabbable and Enter\ndid nothing, so the component could not be opened without a mouse (WCAG\n2.1.1). al-tooltip already solved this; the same shape is used here."
+            },
+            {
+              "kind": "method",
+              "name": "handleTriggerKeydown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "A11y — Enter/Space on the wrapper, for the inert-trigger case above."
             },
             {
               "kind": "method",
@@ -17928,6 +17986,35 @@
               },
               "description": "Query the popover trigger inner element",
               "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "triggerHasOwnFocusable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "A11y — true when the slotted trigger contains its own focusable control, in\nwhich case the trigger wrapper must not add a second tab stop."
+            },
+            {
+              "kind": "method",
+              "name": "syncTriggerFocusability",
+              "privacy": "private",
+              "description": "A11y — decide whether the trigger wrapper needs its own tab stop.\n\nThe wrapper is a plain `<div>` carrying `@click`. When the consumer slots a\ncontrol that is already focusable (`<al-button slot=\"trigger\">`) the click\na keyboard press produces bubbles up to it and everything works. When they\nslot something inert (`<span slot=\"trigger\">`) there was NO keyboard path\nat all — measured before this fix: the wrapper was not tabbable and Enter\ndid nothing, so the component could not be opened without a mouse (WCAG\n2.1.1). al-tooltip already solved this; the same shape is used here."
+            },
+            {
+              "kind": "method",
+              "name": "handleTriggerKeydown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "A11y — Enter/Space on the wrapper, for the inert-trigger case above."
             },
             {
               "kind": "method",

@@ -1,6 +1,8 @@
 import { fixture, html } from '@open-wc/testing-helpers';
+import { userEvent } from '@vitest/browser/context';
 import { describe, expect, it } from 'vitest';
 import './drawer';
+import '../button/button';
 import type { ALDrawer } from './drawer';
 
 const tick = (ms = 30) => new Promise((r) => setTimeout(r, ms));
@@ -100,5 +102,37 @@ describe('al-drawer', () => {
     await el.updateComplete;
     await tick();
     expect(seen).toEqual(['open', 'close']);
+  });
+
+  it('opens from a NON-focusable slotted trigger by keyboard', async () => {
+    // The trigger wrapper is a plain <div> carrying @click. A focusable slotted
+    // control produces a click on Enter that bubbles up to it; an inert one had
+    // NO keyboard path at all, so the component could not be opened without a
+    // mouse (WCAG 2.1.1). Fixed 2026-08-25 with al-tooltip's existing pattern.
+    const el = await fixture<ALDrawer>(html`
+      <al-drawer><span slot="trigger">Open</span><p>Body</p></al-drawer>
+    `);
+    await el.updateComplete;
+    await tick();
+
+    const trigger = el.shadowRoot!.querySelector('.al-c-drawer__trigger') as HTMLElement;
+    expect(trigger.getAttribute('tabindex'), 'an inert trigger needs its own tab stop').toBe('0');
+
+    trigger.focus();
+    await userEvent.keyboard('{Enter}');
+    await el.updateComplete;
+    await tick();
+    expect(el.isActive, 'Enter must open it').toBe(true);
+  });
+
+  it('does NOT add a second tab stop when the slotted trigger is already focusable', async () => {
+    const el = await fixture<ALDrawer>(html`
+      <al-drawer><al-button slot="trigger">Open</al-button><p>Body</p></al-drawer>
+    `);
+    await el.updateComplete;
+    await tick();
+
+    const trigger = el.shadowRoot!.querySelector('.al-c-drawer__trigger') as HTMLElement;
+    expect(trigger.hasAttribute('tabindex'), 'the slotted button is the tab stop').toBe(false);
   });
 });
