@@ -1,0 +1,293 @@
+---
+/**
+ * Migration — the seventh INDEX screen, rendered for ONE design system.
+ *
+ * `MIGRATION.md` at the repo root is the v1 → v2 guide, and until now this site
+ * CITED it without ever rendering it: the theme-switcher guidance entry names
+ * it as a source, `AGENTS.md` points at it, and a reader who had only the
+ * published site had no way to follow either. This page is that file, compiled.
+ *
+ * COMPILED, NOT COPIED. The body comes from a one-entry content collection
+ * whose `glob()` loader is based at the monorepo root (`src/content.config.ts`),
+ * so Astro's own markdown pipeline renders the same bytes the repo ships —
+ * which is also why the app added no markdown dependency for a 500-line guide
+ * full of fenced diffs. Pasting the prose into this component would have made
+ * the site the second copy, and the second copy is the one that goes stale.
+ *
+ * THE GUIDE KEEPS ITS OWN `<h1>`. This page adds an eyebrow and a contents rail
+ * and then gets out of the way; giving it a second "Migration" heading would
+ * have put two `<h1>`s in one document to say the same thing twice. The tab
+ * title still reads "Migration" because that is the nav label, not the
+ * document's name.
+ */
+import { getCollection, render } from 'astro:content';
+import Shell from '../../layouts/Shell.astro';
+import { MIGRATION } from '../../lib/migration.mjs';
+
+interface Props {
+  context: any;
+}
+
+const { context } = Astro.props;
+const { site, href } = context;
+
+const [entry] = await getCollection('migration');
+
+/*
+ * The file is on disk (migration.mjs read it) but the collection is empty —
+ * the loader's base or pattern stopped matching. Failing the build is the only
+ * honest response: the alternative is publishing a migration page with no
+ * migration guide on it, which reads as "there is nothing to migrate".
+ */
+if (MIGRATION.available && !entry) {
+  throw new Error(
+    `${MIGRATION.path} exists but the "migration" content collection is empty. Its glob() loader ` +
+      'in src/content.config.ts is based at the monorepo root; check that base still resolves.',
+  );
+}
+
+const rendered = entry ? await render(entry) : null;
+const Guide = rendered?.Content ?? null;
+
+/**
+ * The contents rail. Level 2 only — the level-3 headings are sub-cases inside a
+ * step ("Legacy fallback", "Removed components"), and listing them made the
+ * guide look like twice as many steps as it has. Slugs are the ones Astro's
+ * pipeline actually emitted, so every link resolves to a heading that exists.
+ */
+const sections = (rendered?.headings ?? []).filter((heading: any) => heading.depth === 2);
+---
+
+<Shell
+  context={context}
+  title="Migration"
+  description={`Moving a ${site.fullName} consumer from 1.x to 2.x: the scoped theming host, the explicit registry modes, React 19, and what was removed.`}
+  active="migration"
+>
+  <div class="page">
+    <div class="micro">INDEX / 07</div>
+
+    {
+      MIGRATION.available ? (
+        <>
+          <p class="t-body-md mig-provenance">
+            Rendered at build time from <code class="mono">{MIGRATION.path}</code> in the repository
+            — the same file the repo's own guardrails cite, so this page cannot say something the
+            source does not. Examples on it resolve under{' '}
+            <code class="mono">&lt;al-theme brand="{context.project.brand}"&gt;</code>, and the
+            component names they use are the ones in{' '}
+            <a href={href('/components')}>this system's index</a>.
+          </p>
+
+          {sections.length > 0 && (
+            <nav class="mig-toc" aria-label="Migration guide contents">
+              <div class="micro mig-toc__head">{sections.length} SECTIONS</div>
+              {/*
+                Unordered, and the markers are off: the guide numbers its own
+                steps in the heading text ("1. Wrap your tree in <al-theme>",
+                "4b. Icons"). An <ol> rendered those twice — "3. 2. Switch to
+                the explicit registry modes" — and renumbered `4b` as 6.
+              */}
+              <ul class="mig-toc__list">
+                {sections.map((heading: any) => (
+                  <li>
+                    <a href={`#${heading.slug}`}>{heading.text}</a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+
+          <article class="mig-body">
+            <Guide />
+          </article>
+
+          <p class="t-body-sm mig-foot">
+            Where a component named in this guide still exists, its current API is on its own page;
+            where the guide says one was removed, the{' '}
+            <a href={href('/components')}>component index</a> is the authority on what replaced it.
+            Component-by-component progress against this migration is on the{' '}
+            <a href={href('/maturity')}>maturity matrix</a>.
+          </p>
+        </>
+      ) : (
+        <>
+          <h1 class="t-page-title">Migration</h1>
+          <p class="empty-note">{MIGRATION.reason}</p>
+        </>
+      )
+    }
+  </div>
+</Shell>
+
+<style>
+  .mig-provenance {
+    margin: 0 0 28px;
+    max-width: 640px;
+    color: var(--fg-weak);
+  }
+
+  .mig-toc {
+    border: 1px solid var(--line-weak);
+    padding: 18px 22px 22px;
+    margin-bottom: 44px;
+    background: var(--bg2);
+  }
+
+  .mig-toc__head {
+    margin-bottom: 12px;
+  }
+
+  .mig-toc__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    columns: 2;
+    column-gap: 32px;
+  }
+
+  .mig-toc__list li {
+    font: 400 12px/22px var(--sans);
+    break-inside: avoid;
+  }
+
+  .mig-toc__list a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .mig-toc__list a:hover {
+    color: var(--blue);
+  }
+
+  .mig-foot {
+    margin: 32px 0 64px;
+    color: var(--fg-weak);
+    max-width: 640px;
+  }
+
+  /*
+   * `<Guide />` is HTML produced by the markdown pipeline at build time, so
+   * Astro's scoping attribute is never applied to it — these have to be
+   * :global() under one wrapper rather than plain element selectors. Scoped to
+   * `.mig-body` so they cannot leak onto the generated pages, which style their
+   * own markup.
+   */
+  .mig-body {
+    max-width: 780px;
+  }
+
+  .mig-body :global(h1) {
+    font: 600 34px/40px var(--sans);
+    letter-spacing: -0.02em;
+    margin: 0 0 20px;
+  }
+
+  .mig-body :global(h2) {
+    font: 600 20px/28px var(--sans);
+    letter-spacing: -0.01em;
+    margin: 52px 0 12px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+
+  .mig-body :global(h3) {
+    font: 600 14px/22px var(--sans);
+    margin: 32px 0 10px;
+  }
+
+  .mig-body :global(p),
+  .mig-body :global(li) {
+    font: 400 14px/24px var(--sans);
+  }
+
+  .mig-body :global(p) {
+    margin: 0 0 16px;
+  }
+
+  .mig-body :global(ul),
+  .mig-body :global(ol) {
+    margin: 0 0 18px;
+    padding-left: 22px;
+  }
+
+  .mig-body :global(li) {
+    margin-bottom: 6px;
+  }
+
+  .mig-body :global(a) {
+    color: var(--blue);
+  }
+
+  .mig-body :global(code) {
+    font: 400 12px/1.5 var(--mono);
+    background: var(--bg2);
+    border: 1px solid var(--line-weak);
+    padding: 1px 5px;
+  }
+
+  /*
+   * The guide is mostly `diff` blocks, and a diff only reads if the leading
+   * `-` / `+` column is preserved — hence `white-space: pre` and a horizontal
+   * scroller rather than wrapping. The inner <code> drops the inline chip
+   * styling it would otherwise inherit from the rule above.
+   */
+  .mig-body :global(pre) {
+    margin: 0 0 20px;
+    font: 400 12px/20px var(--mono);
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 18px 20px;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .mig-body :global(pre code) {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+  }
+
+  .mig-body :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 20px;
+    font: 400 12px/20px var(--mono);
+  }
+
+  .mig-body :global(th),
+  .mig-body :global(td) {
+    border-bottom: 1px solid var(--line-weak);
+    padding: 8px 10px 8px 0;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .mig-body :global(th) {
+    font: 500 9px/1 var(--mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fg-weak);
+  }
+
+  .mig-body :global(blockquote) {
+    margin: 0 0 18px;
+    padding-left: 16px;
+    border-left: 2px solid var(--line);
+    color: var(--fg-weak);
+  }
+
+  .mig-body :global(hr) {
+    border: 0;
+    border-top: 1px solid var(--line-weak);
+    margin: 32px 0;
+  }
+
+  @media (max-width: 900px) {
+    .mig-toc__list {
+      columns: 1;
+    }
+  }
+</style>

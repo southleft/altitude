@@ -1,0 +1,14 @@
+---
+/**
+ * ROUTE ONLY — the migration guide for the registry’s DEFAULT project.
+ *
+ * The body is `src/components/pages/MigrationPage.astro`, shared with the
+ * `src/pages/[project]/` routes. The GUIDE is the same repo file for every
+ * design system — it documents the shared library — but the shell around it is
+ * that system's, so the page still binds one context like every other route.
+ */
+import MigrationPage from '../components/pages/MigrationPage.astro';
+import { DEFAULT_CONTEXT } from '../lib/context.mjs';
+---
+
+<MigrationPage context={DEFAULT_CONTEXT} />

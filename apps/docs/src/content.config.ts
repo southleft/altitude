@@ -33,6 +33,7 @@
  *      `scripts/ai-readiness/fixtures/canonical-contracts.md`, not elements the
  *      library ships.
  */
+import { pathToFileURL } from 'node:url';
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 // @ts-expect-error — plain ESM module, no type declarations. It is the same
@@ -41,6 +42,11 @@ import { glob } from 'astro/loaders';
 import { COMPONENTS, libraryRecords } from './lib/registry.mjs';
 // @ts-expect-error — plain ESM module, as above.
 import { PROJECTS } from './lib/projects.mjs';
+// @ts-expect-error — plain ESM module, as above. The guide's path is exported
+// by the module that reads it, so the file is named once in this app.
+import { MIGRATION_PATH } from './lib/migration.mjs';
+// @ts-expect-error — plain ESM module, as above.
+import { repoRoot } from './lib/repo-root.mjs';
 
 /** Live component slugs in the SHARED library, from the CEM. */
 const SLUGS: Set<string> = new Set(
@@ -183,5 +189,31 @@ function assertPointsAtRealComponents(
   if (problems.length) throw new Error(`Component guidance:\n  - ${problems.join('\n  - ')}`);
 }
 
-export const collections = { guidance };
+/**
+ * THE MIGRATION GUIDE — the repo's own `MIGRATION.md`, compiled and not copied.
+ *
+ * A collection of exactly one entry, whose `base` is the MONOREPO ROOT rather
+ * than anywhere under `src/`. That is the whole point: the v1 → v2 guide is a
+ * repo document that `AGENTS.md`, `CLAUDE.md` and the theme-switcher guidance
+ * all cite, and the site used to cite it too without ever rendering it. Pulling
+ * it in through the loader means the page compiles the file that other readers
+ * already follow — pasting the prose into an `.astro` component would have been
+ * wrong the first time someone edited the root.
+ *
+ * It carries no schema because it has no frontmatter and needs none; what the
+ * page wants from it is `render()`, Astro's own markdown pipeline. Routing it
+ * through the content layer is also why this app added no markdown dependency
+ * for a 500-line guide full of fenced diffs and tables.
+ */
+const migration = defineCollection({
+  // A file URL, not the bare absolute path `repoRoot()` returns: the loader
+  // hands `base` straight to `fileURLToPath()`, which reads a Windows path as a
+  // URL with an unknown scheme and fails the build with "The URL must be of
+  // scheme file". A relative string would work too, but it would have to be
+  // counted from this app up to the monorepo root — one more thing to get wrong
+  // the day either moves.
+  loader: glob({ pattern: MIGRATION_PATH, base: pathToFileURL(`${repoRoot()}/`) }),
+});
+
+export const collections = { guidance, migration };
 export { assertPointsAtRealComponents, SLUGS };

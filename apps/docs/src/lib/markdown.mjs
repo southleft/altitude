@@ -43,6 +43,16 @@ import {
   utilityCount,
   visibilityClasses,
 } from './utilities.mjs';
+import {
+  MANIFEST_PATH,
+  MIGRATION_CAPABILITIES,
+  MIGRATION_MANIFEST,
+  MIGRATION_STATES,
+  SCHEMA_PATH,
+  maturityRows,
+  maturitySummary,
+} from './maturity.mjs';
+import { MIGRATION, migrationSource } from './migration.mjs';
 import { DEFAULT_CONTEXT } from './context.mjs';
 import { guidanceFor, guidanceMarkdown } from './guidance.mjs';
 
@@ -445,6 +455,142 @@ export function motionMarkdown(context = DEFAULT_CONTEXT) {
     '}',
     '```',
     '',
+  ].join('\n');
+}
+
+/**
+ * The Maturity matrix, as Markdown.
+ *
+ * The join `lib/maturity.mjs` describes — the registry's lifecycle phase, the
+ * v2 migration manifest, and the axe position — flattened into one table. The
+ * capability columns are generated from the manifest SCHEMA's boolean
+ * properties, so this table widens by itself when a fourth flag is tracked.
+ *
+ * The three-value cells are `yes` / `no` / `—`, and the third is not a typo for
+ * the second: a component the manifest does not track has no answer, and
+ * printing `no` for it would invent a measurement.
+ */
+export function maturityMarkdown(context = DEFAULT_CONTEXT) {
+  const rows = maturityRows(context);
+  const summary = maturitySummary(context);
+  const cell = (value) => (value === null ? '—' : value ? 'yes' : 'no');
+
+  return [
+    '# Maturity',
+    '',
+    `Where every component ${context.site.fullName} documents actually stands, on the four axes ` +
+      'this repo already measures: its lifecycle phase, its v2 migration state, the capabilities ' +
+      'that migration tracks, and whether accessibility has been measured at all. Nothing here is ' +
+      `restated — the phases come from the registry, the migration columns from \`${MANIFEST_PATH}\` ` +
+      `with their vocabulary from \`${SCHEMA_PATH}\`, and the accessibility column from the same ` +
+      'axe report the component pages read.',
+    '',
+    '## Totals',
+    '',
+    `- Components documented: ${summary.total}`,
+    `- Tracked by the migration manifest: ${summary.tracked}`,
+    ...(summary.layered
+      ? [`- In a brand layer, so outside the v1→v2 migration: ${summary.layered}`]
+      : []),
+    ...(summary.untracked ? [`- Documented but absent from the manifest: ${summary.untracked}`] : []),
+    ...summary.states.map((state) => `- Migration state \`${state.id}\`: ${state.count}`),
+    ...summary.capabilities.map(
+      (capability) => `- \`${capability.id}\`: ${capability.count} of ${capability.of} tracked`,
+    ),
+    `- Accessibility measured: ${summary.a11y.measured} of ${summary.total}; clean: ${summary.a11y.clean}; open violations: ${summary.a11y.open}`,
+    ...(summary.deprecateAliasesBy
+      ? [`- Legacy aliases may be removed in: ${summary.deprecateAliasesBy}`]
+      : []),
+    '',
+    '## The vocabulary',
+    '',
+    MIGRATION_MANIFEST.available
+      ? table(
+          ['State', 'Means'],
+          MIGRATION_STATES.map((state) => [`\`${state.id}\``, state.note ?? '—']),
+        )
+      : `_${MIGRATION_MANIFEST.reason}_`,
+    '',
+    ...(MIGRATION_CAPABILITIES.length
+      ? [
+          table(
+            ['Capability', 'True when'],
+            MIGRATION_CAPABILITIES.map((capability) => [`\`${capability.id}\``, capability.note ?? '—']),
+          ),
+          '',
+        ]
+      : []),
+    '## Every component',
+    '',
+    'A `—` means the row has no answer, not a negative one. Lifecycle `undeclared` means the',
+    "component's story declares no `status` parameter — which is the honest label for it, and the",
+    'one that makes the gap countable.',
+    '',
+    table(
+      [
+        'Component',
+        'Tier',
+        'Lifecycle',
+        'Migration',
+        ...MIGRATION_CAPABILITIES.map((capability) => capability.id),
+        'Accessibility',
+      ],
+      rows.map((row) => [
+        `[${row.name}](${context.site.url}/components/${row.slug})`,
+        row.tier,
+        row.status ?? 'undeclared',
+        row.state ?? '—',
+        ...MIGRATION_CAPABILITIES.map((capability) => cell(row.capabilities[capability.id])),
+        row.a11y.measured
+          ? row.a11y.open
+            ? `${row.a11y.open} open`
+            : `clean${row.a11y.unrecorded ? `, ${row.a11y.unrecorded} unrecorded` : ''}`
+          : 'not measured',
+      ]),
+    ),
+    '',
+    ...(summary.untracked || summary.layered
+      ? [
+          '## Rows with no migration answer',
+          '',
+          table(
+            ['Component', 'Why'],
+            rows
+              .filter((row) => !row.tracked)
+              .map((row) => [`\`<${row.tag}>\``, row.untrackedReason]),
+          ),
+          '',
+        ]
+      : []),
+    ...(summary.manifestOnly.length
+      ? [
+          `The manifest also tracks ${summary.manifestOnly.length} component(s) this design system ` +
+            'does not document. For a system that ships a declared subset of the shared library that ' +
+            'is the normal case, not a gap.',
+          '',
+        ]
+      : []),
+  ].join('\n');
+}
+
+/**
+ * The migration guide, as Markdown — the repo's own file, verbatim.
+ *
+ * Every other renderer in this module BUILDS its Markdown from generated data.
+ * This one does not, and must not: `/migration.md` is what an agent fetches
+ * when it is about to rewrite a consumer's imports, and a paraphrase of a
+ * migration instruction is a broken build. One provenance line is added on top
+ * so a reader who arrived here from `llms-full.txt` knows which file this is
+ * and which brand the examples resolve under; the guide keeps its own `<h1>`.
+ */
+export function migrationMarkdown(context = DEFAULT_CONTEXT) {
+  const { site, project } = context;
+  return [
+    `_The v1 → v2 migration guide for the component library behind ${site.fullName}, served` +
+      ` verbatim from \`${MIGRATION.path}\` in the repository. Rendered examples resolve under` +
+      ` \`<al-theme brand="${project.brand}">\`._`,
+    '',
+    migrationSource(),
   ].join('\n');
 }
 

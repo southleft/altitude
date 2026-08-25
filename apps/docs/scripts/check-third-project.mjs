@@ -49,6 +49,7 @@ import {
   motionMarkdown,
   iconsMarkdown,
   utilitiesMarkdown,
+  maturityMarkdown,
 } from '../src/lib/markdown.mjs';
 
 const APP_ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -161,6 +162,13 @@ const artifacts = {
   'motion.md': motionMarkdown(context),
   'icons.md': iconsMarkdown(context),
   'utilities.md': utilitiesMarkdown(context),
+  // `migration.md` is deliberately ABSENT. It is the repo's own MIGRATION.md
+  // served verbatim — the same bytes for every design system, because the
+  // migration is the shared library's — so the two assertions below ("names
+  // the fixture", "names no other system") would be testing the provenance
+  // line and nothing else. What generalises about that page is its ROUTE, and
+  // routes are proved by check-docs-coverage.mjs against a real build.
+  'maturity.md': maturityMarkdown(context),
 };
 
 for (const [name, body] of Object.entries(artifacts)) {

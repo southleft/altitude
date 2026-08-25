@@ -1,0 +1,23 @@
+---
+/**
+ * ROUTE ONLY — Maturity for one non-default project.
+ *
+ * One route per NON-DEFAULT design system in `.altitude/ds-projects.json`
+ * (`projectPaths()`), so adding a project to that file adds a whole
+ * documentation site and removing it takes one away. The body is
+ * `src/components/pages/MaturityPage.astro`, the same file the site at the root
+ * renders — and it re-derives every count from the scoped registry, so a system
+ * that ships a subset quotes its own numbers.
+ */
+import MaturityPage from '../../components/pages/MaturityPage.astro';
+import { projectPaths } from '../../lib/projects.mjs';
+import { contextFor } from '../../lib/context.mjs';
+
+export function getStaticPaths() {
+  return projectPaths();
+}
+
+const { project } = Astro.props;
+---
+
+<MaturityPage context={contextFor(project)} />

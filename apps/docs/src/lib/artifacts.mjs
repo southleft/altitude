@@ -20,6 +20,8 @@ import {
   utilitiesMarkdown,
   componentsIndexMarkdown,
   componentMarkdown,
+  maturityMarkdown,
+  migrationMarkdown,
 } from './markdown.mjs';
 import { CHOREOGRAPHY_COUNT, MOTION_TOKEN_COUNT, PRESET_COUNT } from './motion.mjs';
 import { ICON_COUNT } from './icons.mjs';
@@ -199,6 +201,8 @@ ${rulesBlock(context, { self: `${url}/llms.txt` })}
 - [Icons](${url}/icons): the ${ICON_COUNT} glyph names \`<al-icon name>\` accepts — a closed set, and the payload of one component rather than components of their own
 - [Utilities](${url}/utilities): the ${utilityCount()} CSS utility classes for light-DOM markup — the grid, the gap scale, the type ramp
 - [Components](${url}/components): the full index, filterable
+- [Maturity](${url}/maturity): every component against its lifecycle phase, its v2 migration state and whether accessibility has been measured — joined from \`.altitude/migration.json\` and the axe report
+- [Migration](${url}/migration): the 1.x → 2.x guide, rendered from the repository's own \`MIGRATION.md\`
 
 ${registry.tiers
   .map(
@@ -437,6 +441,13 @@ export function llmsFull(context, guidanceEntries = []) {
     overviewMarkdown(context),
     foundationsMarkdown(context),
     motionMarkdown(context),
+    // Maturity and the migration guide sit ahead of the two lookup lists
+    // because both change what an agent WRITES rather than what it looks up:
+    // maturity says which components are deprecated or un-migrated, and the
+    // guide is the v1 vocabulary it must stop emitting. An agent that stops
+    // reading early should have met them.
+    maturityMarkdown(context),
+    migrationMarkdown(context),
     // Icons and Utilities go LAST, and the order is not arbitrary: both are
     // long closed lists (1,512 names, 62 classes) whose value is to be looked
     // up, not read through. An agent that stops early has still read the rules,

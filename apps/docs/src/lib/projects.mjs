@@ -47,6 +47,8 @@ const RESERVED_SEGMENTS = new Set([
   'motion',
   'icons',
   'utilities',
+  'maturity',
+  'migration',
   'llms.txt',
   'llms-full.txt',
   'llms-tokens.txt',

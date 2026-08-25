@@ -26,7 +26,15 @@ import SearchIcon from './SearchIcon.astro';
 interface Props {
   context: any;
   /** Which INDEX entry is current. */
-  active?: 'overview' | 'foundations' | 'motion' | 'icons' | 'utilities' | 'components';
+  active?:
+    | 'overview'
+    | 'foundations'
+    | 'motion'
+    | 'icons'
+    | 'utilities'
+    | 'components'
+    | 'maturity'
+    | 'migration';
   /** Slug of the component detail page being viewed, if any. */
   activeSlug?: string;
 }
@@ -35,11 +43,16 @@ const { context, active, activeSlug } = Astro.props;
 const { project, registry, site, href } = context;
 
 // The INDEX order is the reading order, and it is the same order the page
-// eyebrows count in (INDEX / 00 … 05). Motion, Icons and Utilities sit beside
+// eyebrows count in (INDEX / 00 … 07). Motion, Icons and Utilities sit beside
 // Foundations because they are the same kind of thing — shared layers every
 // component reads — not components of their own. Icons in particular: the
 // 1,512 glyphs are the PAYLOAD of `<al-icon>`, which is why they are one INDEX
 // entry here and not 1,512 rows in the atomic groups below.
+//
+// Maturity and Migration come AFTER Components, and the order is the reason
+// they were added last rather than a ranking: both are about the STATE of the
+// catalog — where each component has got to, and how to move a consumer onto
+// it — so neither means anything until you have met the catalog itself.
 const index = [
   { id: 'overview', label: 'Overview', path: '/' },
   { id: 'foundations', label: 'Foundations', path: '/foundations' },
@@ -47,6 +60,8 @@ const index = [
   { id: 'icons', label: 'Icons', path: '/icons' },
   { id: 'utilities', label: 'Utilities', path: '/utilities' },
   { id: 'components', label: 'Components', path: '/components' },
+  { id: 'maturity', label: 'Maturity', path: '/maturity' },
+  { id: 'migration', label: 'Migration', path: '/migration' },
 ] as const;
 
 /** Every design system's site, so any of them is one click from any other. */
