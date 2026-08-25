@@ -53,12 +53,98 @@ pnpm --filter @southleft/altitude-mcp start
 node --experimental-strip-types --no-warnings libs/altitude-mcp/src/server.mjs
 ```
 
+`src/server.mjs` is a thin bin — argv parsing and the two transports (stdio, Node
+`http.createServer`) — built on top of the library entry documented in "Extending" below. It is
+the only thing in this package that calls `buildServer()` and connects a transport; importing
+`@southleft/altitude-mcp` itself never does either.
+
 Registered in the repo's `.mcp.json` as `altitude`, alongside `monday-morning` and `playwright`.
 
 **HTTP mode:** `pnpm --filter @southleft/al-web-components start` runs this server with
 `--http 6017` alongside the WC Storybook — stateless streamable HTTP at `POST /mcp`, plus
 `GET /parity.json[?project=<id>]`, `GET /ds-projects.json`, and `GET /healthz`. Binds loopback
 only (`ALTITUDE_MCP_HOST` to override), with Host-header and CORS guards.
+
+## Extending
+
+The supported way to extend this server is **composition, not a fork**: build your own
+`McpServer`, register Altitude's tools onto it with `registerAltitudeTools()`, then register your
+own tools on the same instance. There is deliberately no plugin-loader / tool-discovery mechanism
+(scanning directories for tool modules, a manifest of third-party tools, etc.) — composition via
+the exported API covers every known extension case, and adding a discovery layer would be
+speculative machinery for a caller that doesn't exist yet.
+
+`@southleft/altitude-mcp`'s `exports["."]` (`src/index.mjs`) is the library entry:
+
+```js
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { z } from 'zod';
+import { registerAltitudeTools } from '@southleft/altitude-mcp';
+
+// 1. Build a server you own — any name/version you like.
+const server = new McpServer({ name: 'my-design-system-mcp', version: '1.0.0' });
+
+// 2. Register Altitude's tools onto it (see "repoRoot", below, if this
+//    package is npm-installed rather than living inside the Altitude repo).
+registerAltitudeTools(server, { repoRoot: '/path/to/altitude/checkout' });
+
+// 3. Register your own tools on the SAME server instance.
+server.registerTool(
+  'my_tool',
+  { title: 'My tool', description: '...', inputSchema: { query: z.string() } },
+  async ({ query }) => ({ content: [{ type: 'text', text: `handled: ${query}` }] }),
+);
+
+// 4. Connect whichever transport you need — stdio, streamable HTTP, your own.
+await server.connect(new StdioServerTransport());
+```
+
+`registerAltitudeTools(server, opts)` only ever calls `server.registerTool(...)` in a loop — it
+never connects a transport and never touches `process`, so it composes cleanly inside a larger
+server that also has its own resources, prompts, and lifecycle.
+
+**`repoRoot`.** Every tool here reads a generated artifact off disk (CEM, tokens, schemas, the
+icon catalog, `.altitude/ds-projects.json`, …) relative to a repo root that defaults to this
+package's own location on disk (`import.meta.url`-derived). That default is correct when this
+package runs from inside the Altitude monorepo, but wrong the moment it's `npm install`ed as a
+dependency elsewhere, or wrapped by a brand layer with its own checkout. Two ways to point it
+elsewhere, in precedence order:
+
+- `registerAltitudeTools(server, { repoRoot: '/path/to/checkout' })` /
+  `buildServer({ repoRoot: '/path/to/checkout' })` — explicit, per-call.
+- `ALTITUDE_REPO_ROOT` env var — picked up once at module load if no explicit `repoRoot` is
+  passed.
+
+**This pairing is not optional for an npm-installed copy.** If neither is set and this package is
+not physically sitting inside an Altitude checkout, `repoRoot` resolves to wherever
+`node_modules/@southleft/altitude-mcp` happens to live — which has no `libs/al-web-components`,
+no `.altitude/`, nothing the tools expect. That is not a crash: every tool degrades to the same
+structured `{ error, code: 'ERR_MISSING_ARTIFACT', path, hint }` response an unbuilt local clone
+already returns (see "What this is" above) — the `hint` names the exact command that would
+produce the missing file, which is meaningless advice against the wrong checkout. The degradation
+is deliberate and matches this server's existing fail-structured-not-crash discipline; the fix is
+always to set `repoRoot` / `ALTITUDE_REPO_ROOT` to a real Altitude checkout (or a build that ships
+the same generated artifacts) before registering, not to change the tools.
+
+**Subset filter.** `registerAltitudeTools` (and therefore `buildServer`) accepts `include` /
+`exclude` to register fewer than all eight tools:
+
+```js
+registerAltitudeTools(server, { include: ['altitude_list_components', 'altitude_get_component'] });
+// or
+registerAltitudeTools(server, { exclude: ['altitude_validate'] });
+```
+
+`include` wins when both are given — an explicit allowlist is a stronger statement of intent than
+an excludelist, so there's no ambiguous case to reject, only a redundant `exclude` to ignore.
+
+**`buildServer(opts)`** is the all-in-one convenience: it calls `registerAltitudeTools(server,
+opts)` on a fresh `McpServer` named `"altitude"` and additionally registers every resource and
+prompt this package ships (see "Resources" and "Prompts" below). It's what `src/server.mjs` (this
+package's own bin) calls — reach for it when you want the full stock server as a starting point
+rather than building tool-by-tool; reach for `registerAltitudeTools` directly when you're
+composing Altitude's tools into a server that already has its own resources/prompts/identity.
 
 ## Hosted endpoint (R9 — "an agent can reach the MCP server without a local checkout")
 
