@@ -32,6 +32,6 @@ Return strict JSON matching this exact shape (these key names are the contract â
 }
 ```
 
-`template` must be a Lit html template body. Every tag / attribute / slot / event you list in `usedComponents` MUST match the ground-truth manifest at `/tmp/ai-readiness-cem-digest.json`. Every CSS custom property name you reference MUST exist in `/tmp/ai-readiness-tokens-digest.json`. If you're unsure, Read those files.
+`template` must be a Lit html template body. Every tag / attribute / slot / event you list in `usedComponents` MUST match the ground-truth manifest at `{{TMPDIR}}/ai-readiness-cem-digest.json`. Every CSS custom property name you reference MUST exist in `{{TMPDIR}}/ai-readiness-tokens-digest.json`. If you're unsure, Read those files.
 
 If you have to fall back to reading source code under `libs/al-web-components/components/`, list every file in `sourceUsed`. Otherwise put `["docs only"]`.

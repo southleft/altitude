@@ -1,0 +1,160 @@
+{
+  "taskId": "A-composition",
+  "model": "claude",
+  "attempt": 1,
+  "label": "A-composition-claude-1",
+  "exitCode": 0,
+  "durationMs": 96614,
+  "raw": "{\"is_error\":false,\"duration_api_ms\":89549,\"num_turns\":19,\"stop_reason\":\"tool_use\",\"session_id\":\"c840aca5-7ae0-4b05-a235-8424b6027c93\",\"total_cost_usd\":1.3468699999999998,\"usage\":{\"input_tokens\":20,\"cache_creation_input_tokens\":84941,\"cache_read_input_tokens\":622914,\"output_tokens\":7346,\"output_tokens_details\":{\"thinking_tokens\":2899},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":84941,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"not_available\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":4099,\"cache_read_input_tokens\":81192,\"cache_creation_input_tokens\":3749,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":3749},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-haiku-4-5-20251001\":{\"inputTokens\":2193,\"outputTokens\":12,\"cacheReadInputTokens\":0,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.0022530000000000002,\"contextWindow\":200000,\"maxOutputTokens\":32000,\"canonicalModel\":\"claude-haiku-4-5\",\"provider\":\"firstParty\"},\"claude-opus-5[1m]\":{\"inputTokens\":20,\"outputTokens\":7346,\"cacheReadInputTokens\":622914,\"cacheCreationInputTokens\":84941,\"webSearchRequests\":0,\"costUSD\":1.344617,\"contextWindow\":1000000,\"maxOutputTokens\":64000,\"canonicalModel\":\"claude-opus-5\",\"provider\":\"firstParty\"}},\"permission_denials\":[{\"tool_name\":\"Bash\",\"tool_use_id\":\"toolu_01G8eL1oZNUYda7LaVsZe8ev\",\"tool_input\":{\"command\":\"node -e \\\"const d=require('C:/Users/angel/AppData/Local/Temp/ai-readiness-cem-digest.json'); const keys=Object.keys(d); console.log(keys.length); console.log(keys.join(' '));\\\"\",\"description\":\"List tags in CEM digest\"}},{\"tool_name\":\"Bash\",\"tool_use_id\":\"toolu_01DCFQgGNAxS7qMYBNx7VJZF\",\"tool_input\":{\"command\":\"node -e \\\"const d=require('C:/Users/angel/AppData/Local/Temp/ai-readiness-tokens-digest.json'); console.log(Object.keys(d)); console.log(JSON.stringify(d.conventions,null,1).slice(0,3000));\\\"\",\"description\":\"Inspect tokens digest shape\"}}],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"{\\\"template\\\":\\\"<al-theme brand=\\\\\\\"altitude\\\\\\\" mode=\\\\\\\"light\\\\\\\">\\\\n  <al-card>\\\\n    <al-layout slot=\\\\\\\"header\\\\\\\" direction=\\\\\\\"row\\\\\\\" gap=\\\\\\\"sm\\\\\\\" align=\\\\\\\"center\\\\\\\">\\\\n      <al-avatar>\\\\n        <img src=${user.avatarUrl} alt=${user.name} />\\\\n      </al-avatar>\\\\n      <al-heading tagName=\\\\\\\"h3\\\\\\\" variant=\\\\\\\"md\\\\\\\">${user.name}</al-heading>\\\\n      <al-badge variant=\\\\\\\"success\\\\\\\">Active</al-badge>\\\\n    </al-layout>\\\\n\\\\n    <al-popover slot=\\\\\\\"action-right\\\\\\\" variant=\\\\\\\"menu\\\\\\\" position=\\\\\\\"bottom-right\\\\\\\">\\\\n      <al-button\\\\n        slot=\\\\\\\"trigger\\\\\\\"\\\\n        variant=\\\\\\\"tertiary\\\\\\\"\\\\n        hideText\\\\n        label=\\\\\\\"Open profile actions\\\\\\\"\\\\n        ariaControls=\\\\\\\"profile-actions-menu\\\\\\\"\\\\n      >\\\\n        <al-icon slot=\\\\\\\"before\\\\\\\" name=\\\\\\\"dots-three-vertical\\\\\\\" iconTitle=\\\\\\\"Actions\\\\\\\"></al-icon>\\\\n      </al-button>\\\\n      <al-menu\\\\n        id=\\\\\\\"profile-actions-menu\\\\\\\"\\\\n        label=\\\\\\\"Profile actions\\\\\\\"\\\\n        @onMenuItemSelect=${(e) => this.handleProfileAction(e.detail.value)}\\\\n      >\\\\n        <al-menu-item value=\\\\\\\"edit\\\\\\\">Edit profile</al-menu-item>\\\\n        <al-menu-item value=\\\\\\\"message\\\\\\\">Send message</al-menu-item>\\\\n        <al-menu-item value=\\\\\\\"block\\\\\\\">Block user</al-menu-item>\\\\n      </al-menu>\\\\n    </al-popover>\\\\n\\\\n    <al-text-block>${user.bio}</al-text-block>\\\\n\\\\n    <al-button slot=\\\\\\\"actions-end\\\\\\\">View profile</al-button>\\\\n  </al-card>\\\\n</al-theme>\\\",\\\"usedComponents\\\":[{\\\"tag\\\":\\\"al-theme\\\",\\\"attributes\\\":[\\\"brand\\\",\\\"mode\\\"],\\\"slots\\\":[\\\"(default)\\\"],\\\"events\\\":[]},{\\\"tag\\\":\\\"al-card\\\",\\\"attributes\\\":[],\\\"slots\\\":[\\\"header\\\",\\\"action-right\\\",\\\"(default)\\\",\\\"actions-end\\\"],\\\"events\\\":[]},{\\\"tag\\\":\\\"al-layout\\\",\\\"attributes\\\":[\\\"direction\\\",\\\"gap\\\",\\\"align\\\"],\\\"slots\\\":[\\\"(default)\\\"],\\\"events\\\":[]},{\\\"tag\\\":\\\"al-avatar\\\",\\\"attributes\\\":[],\\\"slots\\\":[\\\"(default)\\\"],\\\"events\\\":[]},{\\\"tag\\\":\\\"al-heading\\\",\\\"attributes\\\":[\\\"tagName\\\",\\\"variant\\\"],\\\"slots\\\":[\\\"(default)\\\"],\\\"events\\\":[]},{\\\"tag\\\":\\\"al-badge\\\",\\\"attributes\\\":[\\\"variant\\\"],\\\"slots\\\":[\\\"(default)\\\"],\\\"events\\\":[]},{\\\"tag\\\":\\\"al-popover\\\",\\\"attributes\\\":[\\\"variant\\\",\\\"position\\\"],\\\"slots\\\":[\\\"trigger\\\",\\\"(default)\\\"],\\\"events\\\":[]},{\\\"tag\\\":\\\"al-button\\\",\\\"attributes\\\":[\\\"variant\\\",\\\"hideText\\\",\\\"label\\\",\\\"ariaControls\\\"],\\\"slots\\\":[\\\"before\\\",\\\"(default)\\\"],\\\"events\\\":[]},{\\\"tag\\\":\\\"al-icon\\\",\\\"attributes\\\":[\\\"name\\\",\\\"iconTitle\\\"],\\\"slots\\\":[],\\\"events\\\":[]},{\\\"tag\\\":\\\"al-menu\\\",\\\"attributes\\\":[\\\"id\\\",\\\"label\\\"],\\\"slots\\\":[\\\"(default)\\\"],\\\"events\\\":[\\\"onMenuItemSelect\\\"]},{\\\"tag\\\":\\\"al-menu-item\\\",\\\"attributes\\\":[\\\"value\\\"],\\\"slots\\\":[\\\"(default)\\\"],\\\"events\\\":[]},{\\\"tag\\\":\\\"al-text-block\\\",\\\"attributes\\\":[],\\\"slots\\\":[\\\"(default)\\\"],\\\"events\\\":[]}],\\\"assumptions\\\":[\\\"The \\\\\\\"View profile\\\\\\\" button is primary, so `variant` is OMITTED — \\\\\\\"primary\\\\\\\" is not in al-button's variant enum ('secondary' | 'tertiary' | 'bare' | 'danger'); the unset value is the primary state (al-button.doNotFlag: no-variant-attribute-for-primary).\\\",\\\"al-avatar renders as a circle by default — no shape/variant attribute is needed for the circular form, per the digest's default-slot description.\\\",\\\"The status badge is a textual `<al-badge variant=\\\\\\\"success\\\\\\\">Active</al-badge>` next to the name rather than al-avatar's `hasBadge`/`badgeVariant` dot, because the pattern asks for a labeled \\\\\\\"Active\\\\\\\" badge. `position` is deliberately unset so the badge flows inline instead of absolutely positioning against the card.\\\",\\\"The header cluster uses `<al-layout direction=\\\\\\\"row\\\\\\\" gap=\\\\\\\"sm\\\\\\\" align=\\\\\\\"center\\\\\\\">` rather than a raw `<div>`: al-u-* utilities do not adopt into light-DOM slot content, and arrangement belongs to al-layout. Note a conflict in the docs — cem-digest.json's al-card `header` slot description calls an inline-styled `<div slot=\\\\\\\"header\\\\\\\" style=\\\\\\\"display:flex;…\\\\\\\">` the \\\\\\\"sanctioned shape\\\\\\\", while AGENTS.md \\\\\\\"Header row / atom cluster inside a slot\\\\\\\" (rule 2) and CLAUDE.md's \\\\\\\"Arrangement belongs to al-layout\\\\\\\" both mandate al-layout. I followed AGENTS.md/CLAUDE.md; the digest line looks stale.\\\",\\\"The kebab lives in al-card's `action-right` slot with `position=\\\\\\\"bottom-right\\\\\\\"` so the menu opens downward and inward, per AGENTS.md's anchoring rule. The popover's `trigger` slot auto-wires open/close, so no manual `isActive` binding is used.\\\",\\\"`onMenuItemSelect` is bound once on `<al-menu>` (it bubbles + composes from the items) and read via `e.detail.value`; `this.handleProfileAction` is the host component's handler, to be supplied by the consumer.\\\",\\\"Menu items rely on their default slot for both visible and accessible name, so `label` is intentionally omitted — setting both `label` and matching slot text would produce a duplicate accessible name.\\\",\\\"`<al-icon name=\\\\\\\"dots-three-vertical\\\\\\\">` is the current canonical Phosphor form (the legacy `<al-icon-dots-vertical>` alias is deprecated). The button is icon-only via `hideText` + `label`, with no visible text node in the default slot.\\\",\\\"`user.avatarUrl` / `user.name` / `user.bio` are host-component properties; the bio is passed as a text expression into al-text-block rather than wrapped in a `<p>` to avoid nesting assumptions about the slot.\\\",\\\"`<al-theme>` composes on top of the base `dist/css/main.css` bundle, which the app is assumed to load. brand=\\\\\\\"altitude\\\\\\\" and mode=\\\\\\\"light\\\\\\\" are explicit; density/contrast/motion/shape are left unset so they inherit the defaults.\\\"],\\\"sourceUsed\\\":[\\\"docs only\\\"]}\",\"structured_output\":{\"template\":\"<al-theme brand=\\\"altitude\\\" mode=\\\"light\\\">\\n  <al-card>\\n    <al-layout slot=\\\"header\\\" direction=\\\"row\\\" gap=\\\"sm\\\" align=\\\"center\\\">\\n      <al-avatar>\\n        <img src=${user.avatarUrl} alt=${user.name} />\\n      </al-avatar>\\n      <al-heading tagName=\\\"h3\\\" variant=\\\"md\\\">${user.name}</al-heading>\\n      <al-badge variant=\\\"success\\\">Active</al-badge>\\n    </al-layout>\\n\\n    <al-popover slot=\\\"action-right\\\" variant=\\\"menu\\\" position=\\\"bottom-right\\\">\\n      <al-button\\n        slot=\\\"trigger\\\"\\n        variant=\\\"tertiary\\\"\\n        hideText\\n        label=\\\"Open profile actions\\\"\\n        ariaControls=\\\"profile-actions-menu\\\"\\n      >\\n        <al-icon slot=\\\"before\\\" name=\\\"dots-three-vertical\\\" iconTitle=\\\"Actions\\\"></al-icon>\\n      </al-button>\\n      <al-menu\\n        id=\\\"profile-actions-menu\\\"\\n        label=\\\"Profile actions\\\"\\n        @onMenuItemSelect=${(e) => this.handleProfileAction(e.detail.value)}\\n      >\\n        <al-menu-item value=\\\"edit\\\">Edit profile</al-menu-item>\\n        <al-menu-item value=\\\"message\\\">Send message</al-menu-item>\\n        <al-menu-item value=\\\"block\\\">Block user</al-menu-item>\\n      </al-menu>\\n    </al-popover>\\n\\n    <al-text-block>${user.bio}</al-text-block>\\n\\n    <al-button slot=\\\"actions-end\\\">View profile</al-button>\\n  </al-card>\\n</al-theme>\",\"usedComponents\":[{\"tag\":\"al-theme\",\"attributes\":[\"brand\",\"mode\"],\"slots\":[\"(default)\"],\"events\":[]},{\"tag\":\"al-card\",\"attributes\":[],\"slots\":[\"header\",\"action-right\",\"(default)\",\"actions-end\"],\"events\":[]},{\"tag\":\"al-layout\",\"attributes\":[\"direction\",\"gap\",\"align\"],\"slots\":[\"(default)\"],\"events\":[]},{\"tag\":\"al-avatar\",\"attributes\":[],\"slots\":[\"(default)\"],\"events\":[]},{\"tag\":\"al-heading\",\"attributes\":[\"tagName\",\"variant\"],\"slots\":[\"(default)\"],\"events\":[]},{\"tag\":\"al-badge\",\"attributes\":[\"variant\"],\"slots\":[\"(default)\"],\"events\":[]},{\"tag\":\"al-popover\",\"attributes\":[\"variant\",\"position\"],\"slots\":[\"trigger\",\"(default)\"],\"events\":[]},{\"tag\":\"al-button\",\"attributes\":[\"variant\",\"hideText\",\"label\",\"ariaControls\"],\"slots\":[\"before\",\"(default)\"],\"events\":[]},{\"tag\":\"al-icon\",\"attributes\":[\"name\",\"iconTitle\"],\"slots\":[],\"events\":[]},{\"tag\":\"al-menu\",\"attributes\":[\"id\",\"label\"],\"slots\":[\"(default)\"],\"events\":[\"onMenuItemSelect\"]},{\"tag\":\"al-menu-item\",\"attributes\":[\"value\"],\"slots\":[\"(default)\"],\"events\":[]},{\"tag\":\"al-text-block\",\"attributes\":[],\"slots\":[\"(default)\"],\"events\":[]}],\"assumptions\":[\"The \\\"View profile\\\" button is primary, so `variant` is OMITTED — \\\"primary\\\" is not in al-button's variant enum ('secondary' | 'tertiary' | 'bare' | 'danger'); the unset value is the primary state (al-button.doNotFlag: no-variant-attribute-for-primary).\",\"al-avatar renders as a circle by default — no shape/variant attribute is needed for the circular form, per the digest's default-slot description.\",\"The status badge is a textual `<al-badge variant=\\\"success\\\">Active</al-badge>` next to the name rather than al-avatar's `hasBadge`/`badgeVariant` dot, because the pattern asks for a labeled \\\"Active\\\" badge. `position` is deliberately unset so the badge flows inline instead of absolutely positioning against the card.\",\"The header cluster uses `<al-layout direction=\\\"row\\\" gap=\\\"sm\\\" align=\\\"center\\\">` rather than a raw `<div>`: al-u-* utilities do not adopt into light-DOM slot content, and arrangement belongs to al-layout. Note a conflict in the docs — cem-digest.json's al-card `header` slot description calls an inline-styled `<div slot=\\\"header\\\" style=\\\"display:flex;…\\\">` the \\\"sanctioned shape\\\", while AGENTS.md \\\"Header row / atom cluster inside a slot\\\" (rule 2) and CLAUDE.md's \\\"Arrangement belongs to al-layout\\\" both mandate al-layout. I followed AGENTS.md/CLAUDE.md; the digest line looks stale.\",\"The kebab lives in al-card's `action-right` slot with `position=\\\"bottom-right\\\"` so the menu opens downward and inward, per AGENTS.md's anchoring rule. The popover's `trigger` slot auto-wires open/close, so no manual `isActive` binding is used.\",\"`onMenuItemSelect` is bound once on `<al-menu>` (it bubbles + composes from the items) and read via `e.detail.value`; `this.handleProfileAction` is the host component's handler, to be supplied by the consumer.\",\"Menu items rely on their default slot for both visible and accessible name, so `label` is intentionally omitted — setting both `label` and matching slot text would produce a duplicate accessible name.\",\"`<al-icon name=\\\"dots-three-vertical\\\">` is the current canonical Phosphor form (the legacy `<al-icon-dots-vertical>` alias is deprecated). The button is icon-only via `hideText` + `label`, with no visible text node in the default slot.\",\"`user.avatarUrl` / `user.name` / `user.bio` are host-component properties; the bio is passed as a text expression into al-text-block rather than wrapped in a `<p>` to avoid nesting assumptions about the slot.\",\"`<al-theme>` composes on top of the base `dist/css/main.css` bundle, which the app is assumed to load. brand=\\\"altitude\\\" and mode=\\\"light\\\" are explicit; density/contrast/motion/shape are left unset so they inherit the defaults.\"],\"sourceUsed\":[\"docs only\"]},\"ttft_ms\":2645,\"ttft_stream_ms\":1900,\"time_to_request_ms\":648,\"type\":\"result\",\"duration_ms\":91960,\"uuid\":\"c2934f63-aa80-4ff6-b36a-2622bd1b4650\"}\n",
+  "stderrTail": "",
+  "parsed": {
+    "template": "<al-theme brand=\"altitude\" mode=\"light\">\n  <al-card>\n    <al-layout slot=\"header\" direction=\"row\" gap=\"sm\" align=\"center\">\n      <al-avatar>\n        <img src=${user.avatarUrl} alt=${user.name} />\n      </al-avatar>\n      <al-heading tagName=\"h3\" variant=\"md\">${user.name}</al-heading>\n      <al-badge variant=\"success\">Active</al-badge>\n    </al-layout>\n\n    <al-popover slot=\"action-right\" variant=\"menu\" position=\"bottom-right\">\n      <al-button\n        slot=\"trigger\"\n        variant=\"tertiary\"\n        hideText\n        label=\"Open profile actions\"\n        ariaControls=\"profile-actions-menu\"\n      >\n        <al-icon slot=\"before\" name=\"dots-three-vertical\" iconTitle=\"Actions\"></al-icon>\n      </al-button>\n      <al-menu\n        id=\"profile-actions-menu\"\n        label=\"Profile actions\"\n        @onMenuItemSelect=${(e) => this.handleProfileAction(e.detail.value)}\n      >\n        <al-menu-item value=\"edit\">Edit profile</al-menu-item>\n        <al-menu-item value=\"message\">Send message</al-menu-item>\n        <al-menu-item value=\"block\">Block user</al-menu-item>\n      </al-menu>\n    </al-popover>\n\n    <al-text-block>${user.bio}</al-text-block>\n\n    <al-button slot=\"actions-end\">View profile</al-button>\n  </al-card>\n</al-theme>",
+    "usedComponents": [
+      {
+        "tag": "al-theme",
+        "attributes": [
+          "brand",
+          "mode"
+        ],
+        "slots": [
+          "(default)"
+        ],
+        "events": []
+      },
+      {
+        "tag": "al-card",
+        "attributes": [],
+        "slots": [
+          "header",
+          "action-right",
+          "(default)",
+          "actions-end"
+        ],
+        "events": []
+      },
+      {
+        "tag": "al-layout",
+        "attributes": [
+          "direction",
+          "gap",
+          "align"
+        ],
+        "slots": [
+          "(default)"
+        ],
+        "events": []
+      },
+      {
+        "tag": "al-avatar",
+        "attributes": [],
+        "slots": [
+          "(default)"
+        ],
+        "events": []
+      },
+      {
+        "tag": "al-heading",
+        "attributes": [
+          "tagName",
+          "variant"
+        ],
+        "slots": [
+          "(default)"
+        ],
+        "events": []
+      },
+      {
+        "tag": "al-badge",
+        "attributes": [
+          "variant"
+        ],
+        "slots": [
+          "(default)"
+        ],
+        "events": []
+      },
+      {
+        "tag": "al-popover",
+        "attributes": [
+          "variant",
+          "position"
+        ],
+        "slots": [
+          "trigger",
+          "(default)"
+        ],
+        "events": []
+      },
+      {
+        "tag": "al-button",
+        "attributes": [
+          "variant",
+          "hideText",
+          "label",
+          "ariaControls"
+        ],
+        "slots": [
+          "before",
+          "(default)"
+        ],
+        "events": []
+      },
+      {
+        "tag": "al-icon",
+        "attributes": [
+          "name",
+          "iconTitle"
+        ],
+        "slots": [],
+        "events": []
+      },
+      {
+        "tag": "al-menu",
+        "attributes": [
+          "id",
+          "label"
+        ],
+        "slots": [
+          "(default)"
+        ],
+        "events": [
+          "onMenuItemSelect"
+        ]
+      },
+      {
+        "tag": "al-menu-item",
+        "attributes": [
+          "value"
+        ],
+        "slots": [
+          "(default)"
+        ],
+        "events": []
+      },
+      {
+        "tag": "al-text-block",
+        "attributes": [],
+        "slots": [
+          "(default)"
+        ],
+        "events": []
+      }
+    ],
+    "assumptions": [
+      "The \"View profile\" button is primary, so `variant` is OMITTED — \"primary\" is not in al-button's variant enum ('secondary' | 'tertiary' | 'bare' | 'danger'); the unset value is the primary state (al-button.doNotFlag: no-variant-attribute-for-primary).",
+      "al-avatar renders as a circle by default — no shape/variant attribute is needed for the circular form, per the digest's default-slot description.",
+      "The status badge is a textual `<al-badge variant=\"success\">Active</al-badge>` next to the name rather than al-avatar's `hasBadge`/`badgeVariant` dot, because the pattern asks for a labeled \"Active\" badge. `position` is deliberately unset so the badge flows inline instead of absolutely positioning against the card.",
+      "The header cluster uses `<al-layout direction=\"row\" gap=\"sm\" align=\"center\">` rather than a raw `<div>`: al-u-* utilities do not adopt into light-DOM slot content, and arrangement belongs to al-layout. Note a conflict in the docs — cem-digest.json's al-card `header` slot description calls an inline-styled `<div slot=\"header\" style=\"display:flex;…\">` the \"sanctioned shape\", while AGENTS.md \"Header row / atom cluster inside a slot\" (rule 2) and CLAUDE.md's \"Arrangement belongs to al-layout\" both mandate al-layout. I followed AGENTS.md/CLAUDE.md; the digest line looks stale.",
+      "The kebab lives in al-card's `action-right` slot with `position=\"bottom-right\"` so the menu opens downward and inward, per AGENTS.md's anchoring rule. The popover's `trigger` slot auto-wires open/close, so no manual `isActive` binding is used.",
+      "`onMenuItemSelect` is bound once on `<al-menu>` (it bubbles + composes from the items) and read via `e.detail.value`; `this.handleProfileAction` is the host component's handler, to be supplied by the consumer.",
+      "Menu items rely on their default slot for both visible and accessible name, so `label` is intentionally omitted — setting both `label` and matching slot text would produce a duplicate accessible name.",
+      "`<al-icon name=\"dots-three-vertical\">` is the current canonical Phosphor form (the legacy `<al-icon-dots-vertical>` alias is deprecated). The button is icon-only via `hideText` + `label`, with no visible text node in the default slot.",
+      "`user.avatarUrl` / `user.name` / `user.bio` are host-component properties; the bio is passed as a text expression into al-text-block rather than wrapped in a `<p>` to avoid nesting assumptions about the slot.",
+      "`<al-theme>` composes on top of the base `dist/css/main.css` bundle, which the app is assumed to load. brand=\"altitude\" and mode=\"light\" are explicit; density/contrast/motion/shape are left unset so they inherit the defaults."
+    ],
+    "sourceUsed": [
+      "docs only"
+    ]
+  },
+  "void": false
+}

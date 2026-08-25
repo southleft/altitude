@@ -452,6 +452,53 @@ jobs:
       - name: Lint repo
         run: pnpm run lint
 
+  ai-readiness-dry-run:
+    # R7 / eval-harness-with-treatments spec — runs on EVERY PR (this
+    # workflow's own `on:` trigger), unlike the label-gated real-spend
+    # workflow (.github/workflows/ai-readiness-eval.yml). This is
+    # deliberate: the mcp-smoke job's own comment two jobs up records that a
+    # test which "existed but nothing ran it" rotted silently (asserted 6 of
+    # 8 tools, queried a pruned brand) — the SAME fate would hit
+    # run-probe.mjs's --dry-run path if it only ever ran behind a label. It
+    # spends zero dollars (see run-probe.mjs's DRY_RUN branch — no child
+    # process spawned) so there is no cost reason to gate it.
+    name: ai-readiness harness — dry-run job-list explosion + deterministic tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      # Deterministic grader / cost+latency / treatment-axis unit tests —
+      # R4 and R6's whole point is that these are regression-testable for
+      # $0. No claude/codex binary needed; all fixtures are recorded or
+      # explicitly-synthetic (see each test file's header).
+      - name: Deterministic grader tests (R4)
+        run: node scripts/ai-readiness/test/grader.test.mjs
+      - name: Metrics extraction tests (R6 cost/latency)
+        run: node scripts/ai-readiness/test/metrics.test.mjs
+      - name: Treatment axis + MCP tool-call trace tests (R3/R5)
+        run: node scripts/ai-readiness/test/treatment.test.mjs
+      # Only these three above are guaranteed $0 + no browser. axe-check.test.mjs
+      # needs a built libs/al-web-components/dist AND Playwright's Chromium —
+      # neither is provisioned in this lightweight job on purpose (a11y /
+      # story-fixture-a11y jobs already cover real axe-in-CI elsewhere in
+      # this workflow); it self-skips cleanly when its dependencies are
+      # absent rather than failing, so it is safe to leave out here.
+      - name: Dry-run job-list explosion across the FULL treatment matrix (spends $0 — see run-probe.mjs DRY_RUN branch)
+        run: node scripts/ai-readiness/run-probe.mjs --dry-run --fleet=2 --tasks=A,B,C,G --models=claude --treatments=all
+      - name: node --check every harness file (catches syntax errors eslint's parser would also catch, but faster / no config needed)
+        run: |
+          set -e
+          for f in $(git ls-files 'scripts/ai-readiness/**/*.mjs'); do
+            node --check "$f"
+          done
+
   story-fixture-a11y:
     name: T2.4 axe sweep over every story (story fixture)
     runs-on: ubuntu-latest

@@ -25,4 +25,4 @@ Your scaffolding MUST follow Altitude conventions:
 
 In `patternChoices` explicitly list each convention you chose to follow (e.g. "extends ALElement", "uses cascade layer al.component", etc.) so the judge can verify. In `unknowns` list anything the docs left ambiguous.
 
-Every CSS custom property you reference MUST exist in `/tmp/ai-readiness-tokens-digest.json`. Do not invent token names.
+Every CSS custom property you reference MUST exist in `{{TMPDIR}}/ai-readiness-tokens-digest.json`. Do not invent token names.

@@ -1,0 +1,95 @@
+name: ai-readiness eval (real spend, label-gated)
+
+# R7 — the eval-harness-with-treatments spec's hardest requirement: this
+# workflow spends real API dollars (every other job in this repo's CI does
+# not), so it must NEVER run on a bare push/PR trigger. It only runs when a
+# human deliberately applies the `run-ai-readiness` label to a PR — a
+# reviewed, visible, one-click-to-undo action, not something a contributor
+# can trigger by accident with a normal push.
+#
+# BUDGET, DERIVED FROM THE MEASURED NUMBER, NOT THE README'S STALE ONE:
+# wave 1 measured one real opus-class Task-A attempt at $1.3469 — 5-13x the
+# README's old ~$0.10-0.20/invocation estimate (see spec Findings). This
+# workflow does NOT run a full treatment matrix (that would be N-figure
+# money — explicitly out of scope per this spec's hard budget rule). It runs
+# exactly ONE real attempt: Task A, mcp-on (the treatment axis this spec's
+# R3 exists to prove), pinned to a cheap model, with a hard --max-budget-usd
+# cap enforced BY THE CLAUDE CLI ITSELF (not just by this workflow's own
+# bookkeeping) — see run-probe.mjs's --max-budget-usd flag.
+#
+# MODEL PIN (defect 5, wave-1 Findings — "the harness does not pin a model,
+# so cost is account-dependent... fix this before R7"): this workflow
+# EXPLICITLY overrides run-probe.mjs's own default (claude-opus-5, kept as
+# the default there for continuity with the wave-1 baseline measurement) to
+# claude-haiku-4-5 — haiku real invocations this wave measured $0.0740 /
+# $0.1265 / $0.1995 / $0.2793, all comfortably inside the $1 per-invocation
+# cap below. Using opus here would make the "hard cap" a much closer thing
+# and cost meaningfully more per run for no verification benefit.
+#
+# NOT YET EXECUTED IN CI — this workflow was authored and reviewed against
+# the same real `claude` CLI flags this wave verified locally
+# (--model, --max-budget-usd, --mcp-config, --strict-mcp-config,
+# --output-format stream-json --verbose), but has not been triggered via a
+# real GitHub Actions run (no mechanism to do that from this session). The
+# `claude` CLI install step in particular is unverified in a CI runner.
+
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  real-eval-smoke:
+    name: One real Task-A / mcp-on attempt, budget-capped
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'run-ai-readiness'
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install root deps
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      # The digests (refreshDigests() inside run-probe.mjs, non-dry-run
+      # path) need styles/dist/tokens.json, which is build output and
+      # gitignored (README "Bootstrap" section). The axe check (R6) for
+      # Task A additionally needs the full component bundle. Both come from
+      # one build.
+      - name: Build al-web-components (tokens + custom-elements.json + bundle, for the digests and the axe render)
+        run: pnpm --filter @southleft/al-web-components build
+      - name: Install Playwright Chromium (R6 axe render)
+        run: pnpm exec playwright install --with-deps chromium
+      # UNVERIFIED THIS WAVE — see header comment. Adjust to whatever the
+      # project's actual CI-supported install path for the Claude Code CLI
+      # turns out to be; this is the npm-published package name as of this
+      # wave's authoring.
+      - name: Install claude CLI
+        run: npm install -g @anthropic-ai/claude-code
+      - name: Real eval smoke — Task A, mcp-on, haiku, hard-capped at $1/invocation
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          node scripts/ai-readiness/run-probe.mjs \
+            --fleet=1 \
+            --tasks=A \
+            --models=claude \
+            --treatments=mcp-on \
+            --model=claude-haiku-4-5 \
+            --max-budget-usd=1 \
+            --concurrency=1
+      - name: Distill + append to score history (R8)
+        run: |
+          RUN_DIR=$(ls -td .altitude/ai-readiness/runs/run-* | head -1)
+          node scripts/ai-readiness/build-scorecard.mjs "$RUN_DIR" --append-history
+      - name: Upload run artifacts (attempts + scorecard, for inspection — NOT committed)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-readiness-eval-run
+          path: .altitude/ai-readiness/runs/run-*/
+          retention-days: 14

@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "description": "Compact, diffable AI-readiness scorecard. Written by build-scorecard.mjs, tracked at .altitude/ai-readiness/runs/baseline/scorecard.json. Every score field is a real measured number from a completed run, or null (\"not measured\") — never fabricated.",
+  "required": ["schemaVersion", "runId", "generatedAt", "harnessVersion", "status", "overallReadinessScore", "taskScores"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "runId": { "type": "string", "description": "The run-probe.mjs runId this scorecard was distilled from, e.g. run-2026-08-25T14-32-06-494Z" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "harnessVersion": { "type": "string", "description": "Short git SHA of the commit the scorecard was built at, or \"unknown\"" },
+    "config": {
+      "type": "object",
+      "description": "The run-probe.mjs invocation config: fleetSize, models, tasks"
+    },
+    "status": { "type": "string", "enum": ["judged", "unjudged"], "description": "\"judged\" = run-judge.mjs completed and overallReadinessScore/taskScores are real. \"unjudged\" = only the fleet phase ran; scores are null." },
+    "overallReadinessScore": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+    "taskScores": {
+      "type": "object",
+      "description": "taskId -> score (0-100) or null if that task wasn't judged. Legacy/blended field kept for schemaVersion-1 consumers; prefer treatmentScores (R3/R8) for anything treatment-aware.",
+      "additionalProperties": { "type": ["number", "null"], "minimum": 0, "maximum": 100 }
+    },
+    "treatmentScores": {
+      "type": "object",
+      "description": "taskId -> treatment ('mcp-off'|'mcp-on'|'with-skill') -> judged score (0-100). Added schemaVersion 2 (R3/R8) so treatment arms are comparable, not blended into one number.",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": { "type": ["number", "null"], "minimum": 0, "maximum": 100 }
+      }
+    },
+    "deterministicByTreatment": {
+      "type": "object",
+      "description": "treatment -> non-LLM rollups straight from attempt files (R4 grader score, R6 cost/latency/axe, R5 process-assertion pass rate) — available even on an unjudged scorecard. Added schemaVersion 2.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "avgCostUsd": { "type": ["number", "null"] },
+          "avgLatencyMs": { "type": ["number", "null"] },
+          "avgGraderScore": { "type": ["number", "null"] },
+          "avgAxeViolationCount": { "type": ["number", "null"] },
+          "processAssertionPassRate": { "type": ["number", "null"], "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "fleetSummary": {
+      "type": "object",
+      "description": "Pass-through of run.json's summary block: total/gradeable/void/noParse/retried counts, byModel + byTreatment breakdown"
+    },
+    "note": { "type": "string", "description": "Present only on unjudged/partial scorecards — explains what's missing and why" }
+  },
+  "additionalProperties": false
+}

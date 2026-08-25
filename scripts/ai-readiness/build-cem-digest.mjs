@@ -4,12 +4,14 @@
 // The digest is a thin JSON map of every real <al-*> tag with its real
 // attributes, slots, events, cssParts, and cssProperties — including the
 // JSDoc literal-union type strings the AI agents need to use enum values
-// correctly. The fleet agents are pointed at /tmp/ai-readiness-cem-digest.json
-// during the probe; this script regenerates that file from the canonical CEM.
+// correctly. The fleet agents are pointed at the tmp-dir mirror (see TMPDIR
+// below) during the probe; this script regenerates that file from the canonical CEM.
 //
-// Description truncation: full multiline JSDoc is preserved up to 600 chars
-// per field (v11 raised from the previous 100 — the cap was silently cutting
-// off the disambiguating clauses the prose docs kept adding).
+// Description truncation: full multiline JSDoc is preserved up to
+// DESC_MAX (currently 1200) chars per field — a low cap here silently cuts
+// off the disambiguating clauses the prose docs keep adding. (This comment
+// previously said 600, drifted from the code — keep it in sync with
+// DESC_MAX below, not the other way around.)
 //
 // Machine-readable carve-outs: `doNotFlag` is a per-tag list of sanctioned
 // patterns that reviewer agents must NOT treat as violations (e.g.
@@ -18,16 +20,19 @@
 // table below.
 //
 // Usage:  node scripts/ai-readiness/build-cem-digest.mjs
-// Writes: /tmp/ai-readiness-cem-digest.json
+// Writes: <os.tmpdir()>/ai-readiness-cem-digest.json (see lib.mjs TMPDIR —
+//           NOT a literal /tmp; that resolves to a different directory than
+//           os.tmpdir() on Windows)
 //         .altitude/ai-readiness/cem-digest.json (durable copy)
 
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { TMPDIR } from './lib.mjs';
 
 const ROOT = resolve(fileURLToPath(import.meta.url), '..', '..', '..');
 const CEM_PATH = resolve(ROOT, 'libs/al-web-components/custom-elements.json');
-const TMP_OUT = '/tmp/ai-readiness-cem-digest.json';
+const TMP_OUT = resolve(TMPDIR, 'ai-readiness-cem-digest.json');
 const REPO_OUT = resolve(ROOT, '.altitude/ai-readiness/cem-digest.json');
 
 const DESC_MAX = 1200;

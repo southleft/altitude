@@ -2,20 +2,24 @@
 // Build the AI-readiness tokens digest from libs/al-web-components/styles/dist/tokens.json.
 //
 // The digest groups every --al-* token by family and emits a `conventions`
-// block documenting the suffix scheme. Pointed at /tmp by the fleet probe so
-// agents can verify token names without source-tree exploration.
+// block documenting the suffix scheme. Pointed at the OS tmp dir by the
+// fleet probe so agents can verify token names without source-tree
+// exploration.
 //
 // Usage:  node scripts/ai-readiness/build-tokens-digest.js
-// Writes: /tmp/ai-readiness-tokens-digest.json
+// Writes: <os.tmpdir()>/ai-readiness-tokens-digest.json (see lib.mjs TMPDIR —
+//           NOT a literal /tmp; that resolves to a different directory than
+//           os.tmpdir() on Windows)
 //         .altitude/ai-readiness/tokens-digest.json (durable copy)
 
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { TMPDIR } from './lib.mjs';
 
 const ROOT = resolve(fileURLToPath(import.meta.url), '..', '..', '..');
 const TOKENS_PATH = resolve(ROOT, 'libs/al-web-components/styles/dist/tokens.json');
-const TMP_OUT = '/tmp/ai-readiness-tokens-digest.json';
+const TMP_OUT = resolve(TMPDIR, 'ai-readiness-tokens-digest.json');
 const REPO_OUT = resolve(ROOT, '.altitude/ai-readiness/tokens-digest.json');
 
 const t = JSON.parse(readFileSync(TOKENS_PATH, 'utf8'));

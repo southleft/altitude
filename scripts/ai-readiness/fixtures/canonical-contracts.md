@@ -1,12 +1,45 @@
-# Eval-fixture contracts — `al-stat-card` and `al-tag`
+# Eval answer keys — Task A, `al-stat-card`, and `al-tag`
 
-> **Neither component exists.** They are not in
+> **`al-stat-card` and `al-tag` do not exist.** They are not in
 > `libs/al-web-components/components/`, not in `custom-elements.json`, and not
 > in `.altitude/migration.json`. They are the *subjects of the AI-readiness
 > eval* — Task B scaffolds `<al-stat-card>`, Task C reviews a deliberately
 > non-conformant `<al-tag>` PR (see `../tasks/B-scaffold.md`,
 > `../tasks/C-violation.md`). `build-cem-digest.mjs` emits them as
 > `FORWARD_STUBS` so cross-references do not dangle.
+
+## Task A answer key — "user profile card" composition
+
+Task A (`../tasks/A-composition.md`) is not scored by a fixture contract —
+it composes *real* `<al-*>` components — so its pinned answer key is the
+tag list a correct answer is expected to contain, for
+`../lib/grader.mjs`'s deterministic component-usage grader (`matched −
+missing − unexpected`, R4). Sourced verbatim from AGENTS.md's "Composition
+recipes" section (the "Header row / atom cluster inside a slot", "Kebab
+menu", and "Card with a primary action in the corner" recipes, ~lines
+437-522) — not invented for the eval, since the task prompt IS that
+recipe with a story wrapped around it:
+
+| Tag | Why it's expected |
+|---|---|
+| `al-theme` | Task explicitly requires wrapping the pattern in `<al-theme>` |
+| `al-card` | The card surface itself |
+| `al-layout` | Arranges the avatar/name/badge header cluster (AGENTS.md "arrangement belongs to al-layout") |
+| `al-avatar` | Header avatar |
+| `al-heading` | Display name |
+| `al-badge` | Status badge ("Active") |
+| `al-popover` | Kebab menu trigger-and-floating-content composite |
+| `al-button` | Kebab trigger AND the primary "View profile" action (same tag, one set entry) |
+| `al-icon` | Kebab dots-three-vertical glyph |
+| `al-menu` | Kebab menu list |
+| `al-menu-item` | The three menu actions |
+
+`grader.mjs`'s `EXPECTED_TASK_A` constant is this table's tag column.
+`test/grader.test.mjs` asserts every one of these tags is present (and not
+an `eval-fixture` stub) in the committed CEM digest
+(`.altitude/ai-readiness/cem-digest.json`) — if a future component rename
+or removal breaks that assertion, THIS table (and `EXPECTED_TASK_A`) is
+what's stale, not the digest.
 
 ## Do not build these
 
