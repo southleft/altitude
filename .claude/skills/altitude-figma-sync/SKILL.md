@@ -197,6 +197,42 @@ Useful tools: `figma_analyze_component_set` (variant axes + per-state diffs + pr
 
 ---
 
+## External refs — giorris.dev (load on signal)
+
+These are transport-neutral reference docs — written for the same figma-console/Desktop
+Bridge plugin API this skill drives, not tied to any particular project. They are not
+mirrored into this repo; fetch the one you need via `WebFetch` when its signal fires below,
+rather than loading all seven up front. Adapted from
+https://www.giorris.dev/figma/refs/refs-map.md.
+
+| Ref | URL | Load when |
+|---|---|---|
+| Sizing Modes | https://www.giorris.dev/figma/refs/rules/sizing-modes.md | Building or repairing ANY component set — auto-layout sizing (hug/fill/fixed), and the "call `resize()` before setting sizing properties" ordering trap. |
+| Icon Recoloring | https://www.giorris.dev/figma/refs/rules/icon-recoloring.md | The component uses `al-icon` / `Icon Before` / `Icon After` INSTANCE_SWAP props, or an icon needs to pick up a semantic colour token instead of its baked-in fill. |
+| Token Seeding | https://www.giorris.dev/figma/refs/rules/token-seeding.md | Bulk-creating or backfilling Figma variables from code (the `scripts/figma-var-fixes.mjs` / `audit-figma-vs-code.mjs` flow in §1) rather than fixing one binding at a time. |
+| Nested Components | https://www.giorris.dev/figma/refs/rules/nested-components.md | A molecule has a repeated per-item child that is itself a component set — `al-menu`'s menu-items, `al-tabs`' tab instances, `al-list`'s list-items, `al-checkbox-group`'s checkboxes (see trap 20's state-leak problem). |
+| Slots | https://www.giorris.dev/figma/refs/rules/slots.md | The component's item count is unbounded at authoring time — `al-table` rows, `al-command-palette` actions, `al-combobox` items — the "N instances hand-placed" pattern breaks down. |
+| Floating Overlays | https://www.giorris.dev/figma/refs/rules/floating-overlays.md | Building/repairing `al-dialog`, `al-drawer`, `al-popover`, `al-dropdown-panel`, `al-command-palette`, or a tooltip — anything that is `position: fixed`/`absolute` in the browser and needs a `measureRoot` (see trap 31, still unimplemented as of this writing). |
+| Figma Variables and Libraries | https://www.giorris.dev/figma/refs/figma-variables-and-libraries.md | Working across the four variable collections in §1 (Tier 1/2/2 Theme/2 Brand), or anything touching library publishing rather than a single file's local variables. |
+
+**Cheat sheet — source-code signal → refs to load:**
+
+- Starting ANY component build or repair (new set, `figma_add_component_property`, variant
+  axis work) → **Sizing Modes**.
+- Component template renders `<al-icon>` or has an icon-swap prop → **Icon Recoloring**.
+- About to run the variable audit/fix scripts, or hand-authoring a batch of new Figma
+  variables → **Token Seeding** + **Figma Variables and Libraries**.
+- Molecule has a repeated per-item state that is its own component set (menu-item, tab,
+  list-item, chip, checkbox in a group) → **Nested Components**.
+- Component's content is open-ended (table rows, palette actions, combobox/select options)
+  rather than a fixed small set of named slots → **Slots**.
+- Component shape is a dropdown/popover/tooltip/dialog/drawer — anything overlay-positioned
+  outside normal flow → **Floating Overlays**.
+- Auditing or seeding variables across Tier 1/2/2 Theme/2 Brand collections, or anything
+  about how the library is published/consumed → **Figma Variables and Libraries**.
+
+---
+
 ## 5. Known state (2026-08-20)
 
 - Variables: **360 matching, 0 code tokens missing from Figma**. Six remaining mismatches
