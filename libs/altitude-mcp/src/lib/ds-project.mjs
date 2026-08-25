@@ -22,9 +22,17 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join, isAbsolute } from 'node:path';
 
-import { REPO_ROOT } from './paths.mjs';
+import { REPO_ROOT, PATHS } from './paths.mjs';
 
-export const REGISTRY_PATH = join(REPO_ROOT, '.altitude', 'ds-projects.json');
+// NOT a top-level `const` computed from REPO_ROOT — that would snapshot the
+// path at THIS module's first import and go stale the moment a caller
+// invoked `configurePaths(repoRoot)` afterward (R3, spec
+// 2026-08-25-mcp-library-first-refactor). `PATHS.dsProjects` already does
+// this same join, live, off the current `PATHS` binding; read it at call
+// time instead of caching it here.
+function registryPath() {
+  return PATHS.dsProjects;
+}
 
 /** Thrown when the registry is missing, malformed, or names an unknown project. */
 export class UnknownProjectError extends Error {
@@ -49,24 +57,25 @@ let cachedRegistry = null;
 export function loadRegistry({ reload = false } = {}) {
   if (cachedRegistry && !reload) return cachedRegistry;
 
-  if (!existsSync(REGISTRY_PATH)) {
+  const path = registryPath();
+  if (!existsSync(path)) {
     throw new UnknownProjectError(
-      `Design-system registry not found at ${REGISTRY_PATH}. It is a tracked file — restore it from git.`,
+      `Design-system registry not found at ${path}. It is a tracked file — restore it from git.`,
       { code: 'ERR_MISSING_DS_REGISTRY' },
     );
   }
 
   let parsed;
   try {
-    parsed = JSON.parse(readFileSync(REGISTRY_PATH, 'utf8'));
+    parsed = JSON.parse(readFileSync(path, 'utf8'));
   } catch (err) {
-    throw new UnknownProjectError(`Design-system registry at ${REGISTRY_PATH} is not valid JSON: ${err.message}`, {
+    throw new UnknownProjectError(`Design-system registry at ${path} is not valid JSON: ${err.message}`, {
       code: 'ERR_INVALID_DS_REGISTRY',
     });
   }
 
   if (!parsed?.projects || typeof parsed.projects !== 'object') {
-    throw new UnknownProjectError(`Design-system registry at ${REGISTRY_PATH} has no \`projects\` object.`, {
+    throw new UnknownProjectError(`Design-system registry at ${path} has no \`projects\` object.`, {
       code: 'ERR_INVALID_DS_REGISTRY',
     });
   }
