@@ -57,6 +57,16 @@ export const PATHS = Object.freeze({
   figmaSyncDir: join(REPO_ROOT, '.altitude', 'figma-sync'),
   parityManifest: join(REPO_ROOT, '.altitude', 'figma-sync', 'parity-manifest.json'),
   figmaOpsDir: join(REPO_ROOT, '.altitude', 'figma-sync', 'ops'),
+
+  // AI-readiness digests (scripts/ai-readiness/build-{cem,tokens}-digest.mjs) —
+  // committed, tmpdir-mirrored copies of the CEM and token set shaped for the
+  // fleet probe. Exposed as MCP resources: ./resources.mjs.
+  aiReadinessCemDigest: join(REPO_ROOT, '.altitude', 'ai-readiness', 'cem-digest.json'),
+  aiReadinessTokensDigest: join(REPO_ROOT, '.altitude', 'ai-readiness', 'tokens-digest.json'),
+
+  // The axe accessibility sweep, written by build-a11y-report.mjs. Exposed as
+  // a resource: ./resources.mjs.
+  a11yReport: join(REPO_ROOT, '.altitude', 'a11y', 'report.json'),
 });
 
 /** Thrown when a generated artifact this server reads is missing. */
@@ -80,4 +90,8 @@ export const HINTS = Object.freeze({
   cem: 'pnpm --filter @southleft/al-web-components build:custom-elements.json',
   tokens: 'pnpm --filter @southleft/al-web-components build:tokens',
   storybook: "pnpm --filter @southleft/al-web-components build:storybook --output-dir ../../dist/storybook/web-components",
+  aiReadinessCemDigest: 'node scripts/ai-readiness/build-cem-digest.mjs',
+  aiReadinessTokensDigest: 'node scripts/ai-readiness/build-tokens-digest.mjs',
+  a11yReport: 'pnpm run a11y:report',
+  dsProjects: 'git checkout -- .altitude/ds-projects.json (it is a tracked file)',
 });

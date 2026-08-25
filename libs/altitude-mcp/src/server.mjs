@@ -32,6 +32,8 @@ import { generateTheme } from './lib/theme.mjs';
 import { computeParity, STATUS } from './lib/parity.mjs';
 import { resolveProject, listProjectIds } from './lib/ds-project.mjs';
 import { MissingArtifactError } from './lib/paths.mjs';
+import { STATIC_RESOURCES, parityManifestTemplate, readParityManifest } from './lib/resources.mjs';
+import { PROMPTS } from './lib/prompts.mjs';
 
 /** Uniform JSON tool response, with MissingArtifactError surfaced as structured data (not a thrown protocol error) so an agent can read `hint` and self-heal. */
 function json(data) {
@@ -343,6 +345,36 @@ server.registerTool(
     }),
   }))
 );
+
+// ── resources ────────────────────────────────────────────────────────────
+// Six fixed-URI artifacts (one instance each) plus one ResourceTemplate for
+// the per-design-system parity manifest. See ./lib/resources.mjs for the
+// full URI-scheme rationale and the failure-degradation discipline (mirrors
+// toolHandler() above — never a crash, always structured JSON on a miss).
+for (const [name, uri, config, read] of STATIC_RESOURCES) {
+  server.registerResource(name, uri, config, (u) => read(u));
+}
+
+server.registerResource(
+  'altitude-parity-manifest',
+  parityManifestTemplate(),
+  {
+    title: 'Figma <-> code parity manifest (per project)',
+    description:
+      'One design system\'s parity manifest (.altitude/figma-sync/**/parity-manifest.json) — the ' +
+      'source of truth altitude_check_parity reads before hashing live source. `{project}` is any id ' +
+      'from altitude_list_ds_projects / altitude://ds-projects.',
+    mimeType: 'application/json',
+  },
+  (uri, variables) => readParityManifest(uri, variables)
+);
+
+// ── prompts ──────────────────────────────────────────────────────────────
+// Four, each grounded in a real engine/skill/gate this repo already has —
+// see ./lib/prompts.mjs for what backs each one and why the set stops there.
+for (const p of PROMPTS) {
+  server.registerPrompt(p.name, p.config, (args) => p.callback(args));
+}
 
   return server;
 }

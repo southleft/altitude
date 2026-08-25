@@ -27,6 +27,26 @@ const EXPECTED_TOOLS = [
   'altitude_list_ds_projects',
 ];
 
+// Must stay in lockstep with STATIC_RESOURCES in ../src/lib/resources.mjs
+// (the templated parity-manifest resource is checked separately, via
+// resources/templates/list, since it has no single fixed URI).
+const EXPECTED_RESOURCES = [
+  'altitude://components',
+  'altitude://tokens',
+  'altitude://a11y-report',
+  'altitude://ai-readiness/cem-digest',
+  'altitude://ai-readiness/tokens-digest',
+  'altitude://ds-projects',
+];
+
+// Must stay in lockstep with PROMPTS in ../src/lib/prompts.mjs.
+const EXPECTED_PROMPTS = [
+  'audit_component_parity',
+  'generate_brand_theme',
+  'check_snippet_convention',
+  'scaffold_component',
+];
+
 let failures = 0;
 function ok(cond, label) {
   if (cond) {
@@ -273,6 +293,111 @@ async function main() {
     const data = parseToolJson(res);
     ok(data.code === 'ERR_UNKNOWN_DS_PROJECT', 'unknown project reported with a stable error code');
     ok(Array.isArray(data.knownProjects) && data.knownProjects.length > 0, 'error names the known projects');
+  }
+
+  // ── resources ────────────────────────────────────────────────────────
+  console.log('\nresources/list');
+  let resourceUris = [];
+  {
+    const { resources } = await client.listResources();
+    resourceUris = resources.map((r) => r.uri);
+    for (const uri of EXPECTED_RESOURCES) ok(resourceUris.includes(uri), `server exposes resource ${uri}`);
+    ok(
+      resources.every((r) => r.mimeType === 'application/json'),
+      'every static resource declares application/json'
+    );
+  }
+
+  console.log('\nresources/templates/list');
+  {
+    const { resourceTemplates } = await client.listResourceTemplates();
+    ok(
+      resourceTemplates.some((t) => t.uriTemplate === 'altitude://parity-manifest/{project}'),
+      'server exposes the altitude://parity-manifest/{project} template'
+    );
+    // The template's own `list` callback enumerates ds-projects.json at LIST
+    // time and should surface both real projects as concrete resources.
+    ok(resourceUris.includes('altitude://parity-manifest/altitude'), 'template lists altitude://parity-manifest/altitude');
+    ok(resourceUris.includes('altitude://parity-manifest/southleft'), 'template lists altitude://parity-manifest/southleft');
+  }
+
+  console.log('\nresources/read altitude://components');
+  {
+    const res = await client.readResource({ uri: 'altitude://components' });
+    ok(res.contents?.[0]?.mimeType === 'application/json', 'CEM resource declares application/json');
+    let cem;
+    try {
+      cem = JSON.parse(res.contents[0].text);
+    } catch (e) {
+      ok(false, `CEM resource body is valid JSON (${e.message})`);
+    }
+    ok(Array.isArray(cem?.modules) && cem.modules.length > 0, 'CEM resource body has modules[]');
+  }
+
+  console.log('\nresources/read altitude://parity-manifest/southleft');
+  {
+    const res = await client.readResource({ uri: 'altitude://parity-manifest/southleft' });
+    const data = JSON.parse(res.contents[0].text);
+    ok(!data.error, 'southleft parity manifest read cleanly (no structured error)');
+  }
+
+  console.log('\nresources/read altitude://parity-manifest/not-a-project — expect a structured error, not a thrown protocol error');
+  {
+    const res = await client.readResource({ uri: 'altitude://parity-manifest/not-a-project' });
+    const data = JSON.parse(res.contents[0].text);
+    ok(data.code === 'ERR_UNKNOWN_DS_PROJECT', 'unknown project reported with a stable error code');
+    ok(Array.isArray(data.knownProjects) && data.knownProjects.length > 0, 'error names the known projects');
+  }
+
+  // ── prompts ──────────────────────────────────────────────────────────
+  console.log('\nprompts/list');
+  {
+    const { prompts } = await client.listPrompts();
+    const names = prompts.map((p) => p.name);
+    for (const name of EXPECTED_PROMPTS) ok(names.includes(name), `server exposes prompt ${name}`);
+    ok(names.length === EXPECTED_PROMPTS.length, `server exposes exactly ${EXPECTED_PROMPTS.length} prompts (got ${names.length})`);
+  }
+
+  console.log('\nprompts/get audit_component_parity({ tag: "al-button" })');
+  {
+    const res = await client.getPrompt({ name: 'audit_component_parity', arguments: { tag: 'al-button' } });
+    ok(Array.isArray(res.messages) && res.messages.length === 1, 'returned one message');
+    ok(res.messages[0]?.content?.text?.includes('al-button'), 'message references the requested tag');
+  }
+
+  console.log('\nprompts/get audit_component_parity({ tag: "al-not-a-real-tag" }) — expect a structured error');
+  {
+    const res = await client.getPrompt({ name: 'audit_component_parity', arguments: { tag: 'al-not-a-real-tag' } });
+    const data = JSON.parse(res.messages[0].content.text);
+    ok(data.code === 'ERR_UNKNOWN_COMPONENT', 'unknown tag reported with a stable error code');
+  }
+
+  console.log('\nprompts/get generate_brand_theme({ prompt: "ocean sunset" })');
+  {
+    const res = await client.getPrompt({ name: 'generate_brand_theme', arguments: { prompt: 'ocean sunset' } });
+    ok(res.messages[0]?.content?.text?.includes('altitude_generate_theme'), 'guidance names the tool to call');
+  }
+
+  console.log('\nprompts/get check_snippet_convention({ markup: "<al-button>Click</al-button>" })');
+  {
+    const res = await client.getPrompt({
+      name: 'check_snippet_convention',
+      arguments: { markup: '<al-button>Click</al-button>' },
+    });
+    ok(res.messages[0]?.content?.text?.includes('altitude_validate'), 'guidance names the tool to call');
+  }
+
+  console.log('\nprompts/get scaffold_component({ name: "card-group" }) — LAYOUT_SUSPECT gate should fire');
+  {
+    const res = await client.getPrompt({ name: 'scaffold_component', arguments: { name: 'card-group' } });
+    const data = JSON.parse(res.messages[0].content.text);
+    ok(data.code === 'ERR_LAYOUT_SUSPECT', 'layout-suspect name flagged with a stable error code');
+  }
+
+  console.log('\nprompts/get scaffold_component({ name: "stat-tile", tier: "atom" }) — real component name');
+  {
+    const res = await client.getPrompt({ name: 'scaffold_component', arguments: { name: 'stat-tile', tier: 'atom' } });
+    ok(res.messages[0]?.content?.text?.includes('altitude-component-authoring'), 'guidance points at the authoring skill');
   }
 
   await client.close();

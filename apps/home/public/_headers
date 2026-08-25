@@ -13,6 +13,21 @@
 # `scripts/check-llms-content-type.mjs <base-url>` asserts it against a running
 # deployment.
 #
+# WHY THERE ARE NO PER-PROJECT RULES. An earlier version of this file also
+# listed `/docs/*/llms.txt`, `/docs/*/llms-full.txt` and so on, to spell out the
+# scoped design systems (`/docs/southleft/...`). Those rules were redundant and
+# actively harmful: in Cloudflare `_headers`, `*` matches ACROSS `/`, so
+# `/docs/*.txt` already covers `/docs/southleft/llms.txt`. Both rules matched,
+# Cloudflare applied both, and the response carried the value twice --
+# `content-type: text/plain; charset=utf-8, text/plain; charset=utf-8` --
+# observed live on every southleft artifact while the unscoped `/docs/llms.txt`
+# was clean. That is a malformed field (RFC 9110 s8.3 allows exactly one
+# Content-Type, and the joined value is not a valid media type), so a strict
+# agent HTTP client may reject or mis-sniff it -- precisely the "does it arrive
+# as text" failure this file exists to prevent. One rule per extension is both
+# sufficient and correct; check-llms-content-type.mjs now fails on a
+# comma-joined content-type so the class cannot come back silently.
+#
 # Vite copies apps/home/public/ verbatim into dist/, which IS the published
 # root (apps/home/vite.config.js:build.outDir), so this lands at dist/_headers.
 
@@ -21,26 +36,6 @@
   X-Content-Type-Options: nosniff
 
 /docs/*.md
-  Content-Type: text/plain; charset=utf-8
-  X-Content-Type-Options: nosniff
-
-/docs/*/llms.txt
-  Content-Type: text/plain; charset=utf-8
-  X-Content-Type-Options: nosniff
-
-/docs/*/llms-full.txt
-  Content-Type: text/plain; charset=utf-8
-  X-Content-Type-Options: nosniff
-
-/docs/*/llms-tokens.txt
-  Content-Type: text/plain; charset=utf-8
-  X-Content-Type-Options: nosniff
-
-/docs/*/llms-components.txt
-  Content-Type: text/plain; charset=utf-8
-  X-Content-Type-Options: nosniff
-
-/docs/*/llms-a11y.txt
   Content-Type: text/plain; charset=utf-8
   X-Content-Type-Options: nosniff
 

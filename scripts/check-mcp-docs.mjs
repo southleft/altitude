@@ -15,11 +15,23 @@
  *   2. every `altitude_<word>` token in the doc names a registered tool
  *      (catches renamed/removed tools lingering in prose).
  *
+ * A THIRD check, not per-doc: libs/altitude-mcp/CAPABILITY-MATRIX.md (the
+ * intent -> tool/resource/prompt -> required filters -> expected result
+ * fields -> common failure mode table, R8/T-"Adopt Carbon's Capability
+ * Matrix format") is itself GENERATED from a real MCP handshake against the
+ * live server (libs/altitude-mcp/scripts/build-capability-matrix.mjs) rather
+ * than hand-written — so instead of re-deriving that gate here, this script
+ * just runs the generator's own `--check` mode and propagates its result.
+ * Same principle as check:llms (scripts/build-root-llms.mjs --check):
+ * a generated artifact is gated by re-running its generator, not by a
+ * second, independently-drifting parser.
+ *
  * Run: node scripts/check-mcp-docs.mjs   (alias: pnpm run check:mcp-docs)
  * Exit: 1 on any mismatch, 0 when all surfaces agree with the server.
  */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
 
 const ROOT = resolve(import.meta.dirname, '..');
 
@@ -68,6 +80,28 @@ for (const rel of DOCS) {
   if (missing.length === 0 && stale.length === 0) {
     console.log(`OK   ${rel} — all ${registered.length} tools documented, no stale names`);
   }
+}
+
+// ── the generated capability matrix ─────────────────────────────────────
+// Re-run its own generator in --check mode rather than re-implementing the
+// comparison here (see module docstring). `--experimental-strip-types` is a
+// harmless no-op on Node versions where type stripping is unflagged, and the
+// generator lives inside libs/altitude-mcp/ so it resolves
+// @modelcontextprotocol/sdk from that workspace's own node_modules.
+const matrixGenerator = resolve(ROOT, 'libs/altitude-mcp/scripts/build-capability-matrix.mjs');
+const matrixCheck = spawnSync(
+  process.execPath,
+  ['--experimental-strip-types', '--no-warnings', matrixGenerator, '--check'],
+  { encoding: 'utf8' }
+);
+if (matrixCheck.error || matrixCheck.status !== 0) {
+  console.error('FAIL libs/altitude-mcp/CAPABILITY-MATRIX.md: generator --check failed');
+  if (matrixCheck.stdout) console.error(matrixCheck.stdout.trim());
+  if (matrixCheck.stderr) console.error(matrixCheck.stderr.trim());
+  if (matrixCheck.error) console.error(String(matrixCheck.error));
+  failures++;
+} else {
+  console.log(`OK   libs/altitude-mcp/CAPABILITY-MATRIX.md — ${matrixCheck.stdout.trim()}`);
 }
 
 if (failures > 0) {

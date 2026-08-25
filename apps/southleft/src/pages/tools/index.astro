@@ -209,7 +209,7 @@ try {
         <strong>The sync loop:</strong> read (<code>figma_export_tokens</code>, saved to
         <code>.altitude/figma-sync/last-export.json</code>, gitignored) → diff (
         <code>node scripts/check-figma-drift.mjs &lt;export&gt;</code>) → reconcile (edit
-        <code>styles/tokens/**</code> or push variables back, direction depends on which side
+        <code>styles/tokens-dtcg/**</code> or push variables back, direction depends on which side
         moved) → verify (re-export, re-run the drift check, expect zero findings).
       </p>
     </al-text-block>
@@ -266,6 +266,12 @@ try {
             reads generated artifacts that already exist elsewhere in the repo — never a second
             source of truth — and never calls an LLM itself. Registered in this repo's
             <code>.mcp.json</code> as <code>altitude</code>. Source: <code>libs/altitude-mcp/README.md</code>.
+            Beyond the 8 tools below it also exposes <strong>resources</strong> (subscribable-by-URI
+            pulls of the same generated artifacts, under an <code>altitude://</code> scheme) and{' '}
+            <strong>prompts</strong> (reusable workflows — auditing Figma parity, drafting a brand
+            theme, checking a snippet, scaffolding a component). Full intent → tool/resource/prompt →
+            required filters → expected fields → common failure mode table, generated from a live
+            handshake against the server: <code>libs/altitude-mcp/CAPABILITY-MATRIX.md</code>.
           </p>
         </al-text-block>
       </al-layout>
@@ -289,6 +295,25 @@ try {
               <p>{t.desc}</p>
               <p class="al-u-theme-typography-body-xs">Reads: {t.reads}</p>
             </al-text-block>
+          </al-card>
+        </div>
+      ))}
+    </al-layout>
+
+    <div style="margin-block-start: var(--al-theme-space-xl);">
+      <al-heading tagName="h3" variant="sm" isBold={true}>Prompts</al-heading>
+    </div>
+    <al-layout variant="grid" noCollapse style="margin-block-start: var(--al-theme-space-md);">
+      {[
+        { prompt: 'audit_component_parity', desc: 'Draft a Figma ↔ code reconciliation plan for one component, grounded in the live parity engine and the altitude-figma-sync skill.' },
+        { prompt: 'generate_brand_theme', desc: 'Draft an altitude_generate_theme call from a short prompt/mode/personality, and how to apply the result.' },
+        { prompt: 'check_snippet_convention', desc: 'Draft an altitude_validate call for a proposed snippet, plus the code → fix self-heal loop.' },
+        { prompt: 'scaffold_component', desc: 'Pre-flight a proposed component name against the layout-primitive gate, then walk the authoring checklist.' },
+      ].map((p) => (
+        <div class="al-u-grid__item col:12 col:6@md col:3@lg">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header"><al-heading tagName="h4" variant="sm" isBold={true}><code>{p.prompt}</code></al-heading></div>
+            <al-text-block><p>{p.desc}</p></al-text-block>
           </al-card>
         </div>
       ))}

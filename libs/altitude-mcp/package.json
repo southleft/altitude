@@ -18,7 +18,9 @@
   },
   "scripts": {
     "start": "node --experimental-strip-types --no-warnings ./src/server.mjs",
-    "test": "node --experimental-strip-types --no-warnings ./test/smoke.mjs && node --experimental-strip-types --no-warnings ./test/mark-synced.mjs"
+    "test": "node --experimental-strip-types --no-warnings ./test/smoke.mjs && node --experimental-strip-types --no-warnings ./test/mark-synced.mjs && node --experimental-strip-types --no-warnings ./test/worker-smoke.mjs",
+    "capability-matrix": "node --experimental-strip-types --no-warnings ./scripts/build-capability-matrix.mjs",
+    "capability-matrix:check": "node --experimental-strip-types --no-warnings ./scripts/build-capability-matrix.mjs --check"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",

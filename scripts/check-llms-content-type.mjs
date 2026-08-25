@@ -87,6 +87,18 @@ for (const target of targets) {
   const problems = [];
 
   if (response.status !== 200) problems.push(`status ${response.status}`);
+  // A REPEATED Content-Type field, which `fetch` surfaces comma-joined
+  // ("text/plain; charset=utf-8, text/plain; charset=utf-8"). RFC 9110 s8.3
+  // permits exactly one, and the joined value is not a valid media type, so a
+  // strict client may reject it or fall back to content sniffing. This runs
+  // BEFORE the media-type test below, because that test is anchored with `^`
+  // and so passes a duplicated header happily -- which is exactly how this
+  // shipped unnoticed on every `/docs/southleft/*` artifact until it was
+  // observed on a live deployment. The cause was two overlapping rules in
+  // apps/home/public/_headers, where `*` matches across `/`; see that file.
+  if (type.includes(',')) {
+    problems.push(`content-type "${type}" repeats the field (RFC 9110 permits one); two _headers rules probably match this path`);
+  }
   if (!/^text\/plain\b/.test(type) && !(alsoAllow && alsoAllow.test(type))) {
     problems.push(`content-type "${type}", expected text/plain${alsoAllow ? ' or text/markdown' : ''}`);
   }

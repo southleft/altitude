@@ -101,6 +101,12 @@ playwright-report
 !.env.example
 .dev.vars
 
+# Cloudflare Workers/Pages local dev state — `pnpm dlx wrangler pages dev`
+# (used to verify libs/altitude-mcp/src/worker.mjs + functions/api/mcp.js
+# under real workerd, see libs/altitude-mcp/README.md "Hosted endpoint")
+# writes this in the CWD it's run from. Local-only, machine-specific.
+.wrangler/
+
 # Figma sync exports (agent-mediated loop — see .altitude/FIGMA-SYNC.md).
 # The parity MANIFEST is carved out: it is durable sync state (which Figma set
 # each component maps to + last-confirmed-sync hashes), same category as the

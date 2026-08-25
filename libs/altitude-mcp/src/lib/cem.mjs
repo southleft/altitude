@@ -10,32 +10,11 @@
 
 import { readFileSync } from 'node:fs';
 import { PATHS, HINTS, requireFile } from './paths.mjs';
+import { parseCem } from './cem-parse.mjs';
+
+export { parseCem };
 
 const cacheByPath = new Map();
-
-/** Parse one CEM's `modules[].declarations[]` into the flat shape this module returns. */
-function parseCem(cem) {
-  const out = [];
-  for (const mod of cem.modules ?? []) {
-    for (const d of mod.declarations ?? []) {
-      if (!d.customElement || !d.tagName) continue;
-      out.push({
-        tag: d.tagName,
-        className: d.name,
-        description: d.description ?? '',
-        summary: d.summary ?? '',
-        modulePath: mod.path,
-        slots: d.slots ?? [],
-        events: d.events ?? [],
-        cssParts: d.cssParts ?? [],
-        cssProperties: d.cssProperties ?? [],
-        attributes: d.attributes ?? [],
-        members: d.members ?? [],
-      });
-    }
-  }
-  return out;
-}
 
 /**
  * Load and flatten an arbitrary CEM file, cached per path.
