@@ -34,6 +34,7 @@
  *   node scripts/contracts/extract-canvas.mjs --project southleft
  *   node scripts/contracts/extract-canvas.mjs --component al-button  # one set — the reconciliation-loop path
  *   node scripts/contracts/extract-canvas.mjs --component al-button --depth 6  # deeper anatomy walk (default 5)
+ *   node scripts/contracts/extract-canvas.mjs --component al-button --node-id 3487:3382  # T12: extract a DIFFERENT set (e.g. a generate-figma.mjs pilot) by node id, bypassing the manifest mapping -> writes <tag>.pilot.canvas.json, never the tracked <tag>.canvas.json
  *   node scripts/contracts/extract-canvas.mjs --from-fixture scripts/contracts/__fixtures__/canvas-sample.json
  *   node scripts/contracts/extract-canvas.mjs --self-test            # offline: decoy-guard logic only
  *   pnpm run contracts:canvas / contracts:canvas:sl
@@ -89,6 +90,15 @@ const SELF_TEST = process.argv.includes('--self-test');
 const PORT = Number(argOf('--port') ?? 9401);
 const SHIM = `http://127.0.0.1:${PORT}/call`;
 const ANATOMY_DEPTH = Number(argOf('--depth') ?? DEFAULT_ANATOMY_DEPTH);
+// T12 escape hatch: extract a set by NODE ID instead of the parity manifest's
+// mapping — the manifest deliberately keeps pointing at the tracked set (e.g.
+// the real al-button), so a one-off extraction of a DIFFERENT set for the
+// same tag (a Figma-generation pilot on a scratch page, a candidate replacement
+// before it is promoted) needs somewhere else to land. Requires --component;
+// writes to `<tag>.pilot.canvas.json`, never the tracked `<tag>.canvas.json`,
+// so it can never be mistaken for — or silently overwrite — the real cached
+// extraction that `contracts:diff`'s default path reads.
+const NODE_ID = argOf('--node-id');
 
 // ── small, dependency-free helpers ─────────────────────────────────────────
 
@@ -426,16 +436,16 @@ function parsePayload(text) {
 
 // ── output ──────────────────────────────────────────────────────────────
 
-function writeContract(canvasDir, tag, contract) {
+function writeContract(canvasDir, tag, contract, fileTag = tag) {
   mkdirSync(canvasDir, { recursive: true });
-  const outPath = join(canvasDir, `${tag}.canvas.json`);
+  const outPath = join(canvasDir, `${fileTag}.canvas.json`);
   writeFileSync(outPath, JSON.stringify(contract, null, 2) + '\n', 'utf8');
   return outPath;
 }
 
-function writeMeta(canvasDir, project, digests) {
+function writeMeta(canvasDir, project, digests, metaFile = 'canvas-extraction-meta.json') {
   mkdirSync(canvasDir, { recursive: true });
-  const metaPath = join(canvasDir, 'canvas-extraction-meta.json');
+  const metaPath = join(canvasDir, metaFile);
   const meta = {
     project: project.id,
     extractedAt: new Date().toISOString(),
@@ -474,6 +484,38 @@ async function main() {
     console.log(`[canvas] ${project.id}: extracted ${tag} from fixture -> ${relative(REPO_ROOT, outPath)}`);
     console.log(`[canvas] meta -> ${relative(REPO_ROOT, metaPath)}`);
 
+    if (!validateWithAjv([{ path: outPath, contract }])) process.exit(1);
+    return;
+  }
+
+  if (NODE_ID) {
+    if (!COMPONENT) {
+      console.error('[canvas] --node-id requires --component <tag>.');
+      process.exit(2);
+    }
+    // Bypass the manifest mapping entirely — this reads whatever node id is
+    // given, decoy-guarded the same as the normal path, and never touches the
+    // tracked `<tag>.canvas.json` (see the flag's doc comment above).
+    const status = parsePayload(await call('figma_get_status', {}));
+    const guard = checkDecoyGuard(project, JSON.stringify(status));
+    if (guard.blocked) {
+      console.error(
+        `Refusing to extract: Figma is on the "${guard.decoy.fileName}" DECOY file. Open "${project.figma.fileName}" (${project.figma.fileKey}).`,
+      );
+      process.exit(1);
+    }
+    const payload = parsePayload(await call('figma_execute', { code: snapshotCode([{ tag: COMPONENT, name: null, nodeId: NODE_ID }]) }));
+    if (payload.fileKey && payload.fileKey !== project.figma.fileKey) {
+      console.error(`Refusing to extract: connected file is ${payload.fileKey}, expected ${project.figma.fileKey}.`);
+      process.exit(1);
+    }
+    const raw = (payload.sets ?? [])[0] ?? null;
+    const contract = buildCanvasContract(COMPONENT, raw, project, null);
+    const fileTag = `${COMPONENT}.pilot`;
+    const outPath = writeContract(canvasDir, COMPONENT, contract, fileTag);
+    const metaPath = writeMeta(canvasDir, project, { [COMPONENT]: digestOf(contract) }, 'canvas-extraction-meta.pilot.json');
+    console.log(`[canvas] ${project.id}: extracted ${COMPONENT} from node ${NODE_ID} -> ${relative(REPO_ROOT, outPath)}`);
+    console.log(`[canvas] meta -> ${relative(REPO_ROOT, metaPath)}`);
     if (!validateWithAjv([{ path: outPath, contract }])) process.exit(1);
     return;
   }

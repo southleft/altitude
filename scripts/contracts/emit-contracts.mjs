@@ -549,9 +549,11 @@ function runCheckDrift() {
 // byte-compares the two `JSON.stringify(contract, null, 2)` serializations.
 // This needs no git diff and no on-disk contract at all — it proves the
 // EMITTER itself is deterministic, independent of whether the on-disk file
-// has drifted (that's --check-drift's job). TODO(T12): once Figma ops
-// generation lands, its output joins this gate as the "ops" half of R7's
-// byte-identical claim — today this only covers contract derivation.
+// has drifted (that's --check-drift's job). T12 (DONE, pilot-scoped): the
+// "ops" half of the same R7 claim now runs as its own gate leg,
+// `contracts:ops-determinism` (scripts/contracts/generate-figma.mjs
+// --check-determinism) — see .altitude/contracts/README.md "Generating
+// Figma sets from contracts (pilot)".
 
 function runCheckDeterminism() {
   const { project, manifest, byTag, measuredSpec, trackedTags } = loadContext();

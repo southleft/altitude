@@ -220,13 +220,73 @@ code side of R7 — "the code side is validated against contracts" — into CI a
    proves the emitter itself is deterministic (same contract inputs -> same
    output) independent of git or the on-disk file — R7's "deterministic
    regeneration (same contract -> byte-identical ops/spec output)" leg.
-   Scoped to **contract derivation** today; once Figma ops generation (T12)
-   lands, its output joins this same gate as the "ops" half of that claim.
+   Scoped to **contract derivation**.
+4. **Ops determinism** (`contracts:ops-determinism`, T12) — the "ops" half of
+   the same R7 claim: `generate-figma.mjs`'s `buildOps()` derives the
+   al-button contract's Figma ops artifact TWICE in memory and byte-compares
+   the two serializations. Pilot-scoped (al-button, altitude only) — no Figma
+   connection needed, since this checks the ops DERIVATION, not a live build;
+   generalising to the full roster is follow-up once more than one component
+   has been driven through `generate-figma.mjs`. See "Generating Figma sets
+   from contracts (pilot)", below.
 
-Any of the three failing fails the build. See `package.json`'s `gate:contracts`
+Any of the four failing fails the build. See `package.json`'s `gate:contracts`
 script for the exact command chain, and `.github/workflows/v2-checks.yml`
 (`repo-hygiene` job) for where it runs — after both the base and Southleft-
 brand CEMs are built, since `--check-drift` needs both.
+
+## Generating Figma sets from contracts (pilot)
+
+T12 (this spec) closes the loop the other direction: a contract can drive the
+**generation** of a Figma component set, not just describe one that already
+exists. `scripts/contracts/generate-figma.mjs` reads a contract
+(`.altitude/contracts/<project>/<tag>.contract.json`), derives a deterministic
+intermediate **ops** artifact (`buildOps()` — stable key order, no timestamps,
+same contract in -> byte-identical bytes out), and executes it over
+`scripts/figma-atoms/mcp-shim.mjs` to build a real component set: the State
+and Variant axes, the Text/Is Full Width/Slot Before/Slot After component
+properties the contract's props/slots warrant, and token-bound
+fills/strokes/spacing from the contract's anatomy — nothing fabricated
+beyond what the contract states.
+
+```bash
+node scripts/figma-atoms/mcp-shim.mjs                          # keep running (Figma Desktop open, Bridge plugin running)
+node scripts/contracts/generate-figma.mjs --component al-button              # build/rebuild
+node scripts/contracts/generate-figma.mjs --component al-button --ops-only   # ops artifact only, no Figma call
+node scripts/contracts/generate-figma.mjs --component al-button --check-determinism  # same contract, ops derived twice in memory, byte-compared
+```
+
+**Scratch-page policy.** Every generated set lands on a dedicated page —
+`--page` (default `"Contract Pilot"`) — never on the tag's real, tracked page.
+The page is created if absent, or REUSED with only its own children cleared
+on a re-run (idempotent); no other page is ever read-write touched, and a
+decoy-file guard runs before anything mutates. This is deliberate and
+permanent, not a pilot-only training wheel: **promoting a generated set to
+replace a tag's real Figma mapping — retargeting the parity manifest's
+`figma.nodeId`/`figma.name`, deleting the old set — is an operator decision
+made outside this script**, after a human has reviewed the generated set
+(this is exactly why the pilot is verified against a copy of the code
+contract via `extract-canvas.mjs --node-id <pilot set id>` +
+`diff-contracts.mjs --canvas-file <pilot dump>` — see both scripts' `--node-id`
+/ `--canvas-file` flags — rather than by overwriting the tag's tracked
+canvas dump or manifest entry).
+
+Ops artifacts land at `.altitude/figma-sync/<project's figma-sync
+dir>/generated-ops/<tag>.ops.json` — gitignored, same zone as every other
+figma-sync artifact (a build INPUT derived entirely from the tracked
+contract, not durable state).
+
+**Known, honest limits of a contract-driven build**, all named in the ops
+artifact's own `degradations` array: a contract's `anatomy` captures exactly
+ONE measured case (see `anatomyCase`), so every Variant value renders with
+the SAME root/state tokens — per-Variant visual differences (e.g. Danger's
+red vs. Bare's transparent background) are simply not in the contract yet,
+and are absent from the generated set rather than guessed. Anatomy also
+carries no literal text content (`contract.schema.json`'s anatomyNode has no
+`text` field), so the Text property's default is a placeholder. Icon
+Before/After (INSTANCE_SWAP) is deliberately not built — the contract's
+`before`/`after` slots are generic, not a reference to a specific icon
+component to bind.
 
 ## Anatomy availability is best-effort
 

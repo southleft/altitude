@@ -12,6 +12,7 @@
  *   node scripts/contracts/diff-contracts.mjs --project southleft --component al-button
  *   node scripts/contracts/diff-contracts.mjs --all [--project <id>]
  *   node scripts/contracts/diff-contracts.mjs --component al-button --json
+ *   node scripts/contracts/diff-contracts.mjs --component al-button --canvas-file .altitude/figma-sync/canvas-contracts/al-button.pilot.canvas.json  # T12: diff against a candidate dump (e.g. a generate-figma.mjs pilot), not the tracked mapping
  *   node scripts/contracts/diff-contracts.mjs --self-test   # offline, fixtures only — see __fixtures__/
  *
  * Reads:
@@ -47,6 +48,11 @@ const COMPONENT = argOf('--component');
 const ALL = process.argv.includes('--all');
 const JSON_OUT = process.argv.includes('--json');
 const SELF_TEST = process.argv.includes('--self-test');
+// T12: diff the CODE contract against an arbitrary canvas dump instead of the
+// tracked `<tag>.canvas.json` — the reconciliation-loop path for a candidate
+// set (e.g. extract-canvas.mjs --node-id's `<tag>.pilot.canvas.json`) that is
+// not the tag's tracked Figma mapping and must never be confused with it.
+const CANVAS_FILE = argOf('--canvas-file');
 
 // ── io ──────────────────────────────────────────────────────────────────
 
@@ -55,9 +61,12 @@ function loadJson(path) {
   return JSON.parse(readFileSync(path, 'utf8'));
 }
 
-function diffOne(project, tag) {
+function diffOne(project, tag, canvasFileOverride = null) {
   const codeContract = loadJson(join(CONTRACTS_DIR, project.id, `${tag}.contract.json`));
-  const canvasContract = loadJson(join(project.resolved.figmaSyncDir, 'canvas-contracts', `${tag}.canvas.json`));
+  const canvasPath = canvasFileOverride
+    ? join(REPO_ROOT, canvasFileOverride)
+    : join(project.resolved.figmaSyncDir, 'canvas-contracts', `${tag}.canvas.json`);
+  const canvasContract = loadJson(canvasPath);
   return { tag, codeContract, canvasContract, diff: diffContracts({ codeContract, canvasContract }) };
 }
 
@@ -194,7 +203,7 @@ function main() {
     process.exit(2);
   }
 
-  const result = diffOne(project, COMPONENT);
+  const result = diffOne(project, COMPONENT, CANVAS_FILE);
   if (JSON_OUT) {
     console.log(
       JSON.stringify(

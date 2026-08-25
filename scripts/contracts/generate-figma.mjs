@@ -1,0 +1,595 @@
+#!/usr/bin/env node
+/**
+ * generate-figma.mjs — build a Figma component set FROM A CONTRACT (T12, spec
+ * 2026-08-25-contract-backed-figma-parity-and-generation). Pilot: al-button.
+ *
+ * Pipeline: contract JSON (.altitude/contracts/<project>/<tag>.contract.json)
+ *   -> a deterministic intermediate OPS artifact (buildOps(), below)
+ *   -> executed over scripts/figma-atoms/mcp-shim.mjs into a SCRATCH page.
+ *
+ * This is deliberately a NEW, small builder, not a re-drive of
+ * build-component-ops.mjs / build-page.mjs: those consume measured DOM PIXEL
+ * specs (measure-components.mjs's spec-light/dark.json — real x/y/w/h boxes,
+ * real rendered characters). A contract carries none of that — anatomy is
+ * COARSE (display/direction/align/justify only, no pixel geometry, no text
+ * content — see contract.schema.json's anatomyNode) by design (it documents
+ * what canvas-expressible facts the contract can honestly assert, not a
+ * layout DSL a renderer consumes). So the reusable parts of the existing
+ * pipeline are its CONVENTIONS, not its input shape:
+ *   - token binding: a contract token already carries `.figma` (the resolved
+ *     Figma variable NAME) directly — token-map.mjs's job is already done.
+ *   - the plugin-side primitives (bindNum/boundSolid/font resolution) mirror
+ *     scripts/figma-atoms/build-page.mjs almost verbatim.
+ *   - library conventions (State axis, Title Case values, "Primary" not
+ *     "default", Text/Is Full Width/Slot Before/Slot After component
+ *     properties, a 2px stroke focus ring) come straight from
+ *     .claude/skills/altitude-figma-sync/SKILL.md.
+ * Auto-layout is HUG on both axes throughout (no pixel geometry to target a
+ * fixed size against) — see the Sizing Modes reference in the skill's
+ * "External refs" table: dimension is never set via resize() here at all, so
+ * the "resize() after sizing modes" trap cannot fire.
+ *
+ * SAFETY (hard constraint, not a default): every mutating operation targets
+ * ONLY the scratch page named by --page (default "Contract Pilot"). The page
+ * is created if absent, or REUSED with only its own children cleared if it
+ * already exists from a prior run — never deleted, never rebuilt from
+ * scratch as a new page object, and no other page is ever read-write
+ * touched. A decoy-file guard (matching scripts/contracts/extract-canvas.mjs)
+ * runs before anything else.
+ *
+ * Usage:
+ *   node scripts/contracts/generate-figma.mjs --component al-button
+ *   node scripts/contracts/generate-figma.mjs --component al-button --project southleft
+ *   node scripts/contracts/generate-figma.mjs --component al-button --page "Contract Pilot"
+ *   node scripts/contracts/generate-figma.mjs --component al-button --ops-only     # write the ops artifact only, never touch Figma
+ *   node scripts/contracts/generate-figma.mjs --component al-button --check-determinism  # same contract, derive ops TWICE in memory, byte-compare; exit 1 on mismatch
+ *
+ * Ops artifact: .altitude/figma-sync/<project's figma-sync dir>/generated-ops/
+ * <tag>.ops.json — gitignored (same zone as every other figma-sync artifact,
+ * see .gitignore:110-125), because it is a build INPUT derived entirely from
+ * the tracked contract, not durable state. Deterministic: stable key order
+ * (fixed by construction, not sorted-then-hoped), no timestamps — the same
+ * contract produces byte-identical bytes every run (`--check-determinism`
+ * proves this without touching disk).
+ */
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { join, dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { scope, projectArg } from '../figma-atoms/project-scope.mjs';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const REPO_ROOT = resolve(HERE, '..', '..');
+const CONTRACTS_DIR = join(REPO_ROOT, '.altitude', 'contracts');
+
+// ── argv ────────────────────────────────────────────────────────────────
+
+function argOf(flag) {
+  const eq = process.argv.find((a) => a.startsWith(`${flag}=`));
+  if (eq) return eq.slice(flag.length + 1) || null;
+  const i = process.argv.indexOf(flag);
+  return i > -1 && process.argv[i + 1] && !process.argv[i + 1].startsWith('-') ? process.argv[i + 1] : null;
+}
+
+const COMPONENT = argOf('--component') || 'al-button';
+const PAGE_NAME = argOf('--page') || 'Contract Pilot';
+const SHIM_PORT = Number(argOf('--shim') ?? 9401);
+const OPS_ONLY = process.argv.includes('--ops-only');
+const CHECK_DETERMINISM = process.argv.includes('--check-determinism');
+
+// ── ops derivation (pure — no fs/network beyond the caller-supplied contract) ──
+
+/** Interaction-state axis order, the library's own convention (SKILL.md §3,
+ * confirmed against the REAL al-button set's "State" VARIANT options). */
+const STATE_ORDER = ['Default', 'Hover', 'Active', 'Focus', 'Disabled'];
+
+/** Anatomy node (contract.schema.json shape) -> build-tree node carrying only
+ * resolved Figma variable NAMES (contract tokens already carry `.figma`). */
+function convertAnatomyNode(node) {
+  if (!node) return null;
+  const tokens = {};
+  for (const [cssProp, binding] of Object.entries(node.tokens || {})) {
+    if (binding && binding.figma) tokens[cssProp] = binding.figma;
+  }
+  return {
+    tag: node.tag,
+    cls: node.cls || null,
+    layout: node.layout || null,
+    tokens,
+    children: (node.children || []).map(convertAnatomyNode).filter(Boolean),
+  };
+}
+
+/** contract.anatomy.stateOverrides (node path -> cssProp -> tokenBinding) ->
+ * the same shape with each binding collapsed to its Figma variable NAME. */
+function convertStateOverrides(stateOverrides) {
+  const out = {};
+  for (const [state, byPath] of Object.entries(stateOverrides || {})) {
+    const paths = {};
+    for (const [path, props] of Object.entries(byPath || {})) {
+      const resolved = {};
+      for (const [cssProp, binding] of Object.entries(props || {})) {
+        if (binding && binding.figma) resolved[cssProp] = binding.figma;
+      }
+      if (Object.keys(resolved).length) paths[path] = resolved;
+    }
+    if (Object.keys(paths).length) out[state] = paths;
+  }
+  return out;
+}
+
+/**
+ * contract JSON -> deterministic intermediate ops artifact.
+ *
+ * Pure function: same `contract` object -> byte-identical
+ * `JSON.stringify(ops, null, 2)` every call (proven by --check-determinism).
+ */
+export function buildOps(contract, { projectId = 'altitude', pageName = 'Contract Pilot' } = {}) {
+  const tag = contract.id;
+
+  // Variant axis: the contract's OWN Figma-side option list already IS "the
+  // enum plus its stated default" — bindings.figma.options for the `variant`
+  // prop lists Bare/Danger/Secondary/Tertiary (the code enum) PLUS "Primary"
+  // (the code-default rendering when no `variant` attribute is set at all;
+  // the library calls that variant "Primary", never "default" — SKILL.md
+  // §3). Reusing it verbatim avoids re-guessing a pairing the contract
+  // README (Deviations) explicitly says is fragile to invent.
+  const variantProp = (contract.props || []).find((p) => p.name === 'variant');
+  const variantValues = variantProp && variantProp.bindings && variantProp.bindings.figma && Array.isArray(variantProp.bindings.figma.options)
+    ? [...variantProp.bindings.figma.options].sort()
+    : [];
+  const variantAxis = variantValues.length
+    ? { name: 'Variant', values: variantValues, default: variantValues.includes('Primary') ? 'Primary' : variantValues[0] }
+    : null;
+
+  // State axis: Default always, plus whichever of the contract's declared
+  // `states` this component has (contract.states is lowercase; canvas/Figma
+  // spells them Title Case).
+  const declaredStates = new Set((contract.states || []).map((s) => String(s).toLowerCase()));
+  const stateValues = STATE_ORDER.filter((s) => s === 'Default' || declaredStates.has(s.toLowerCase()));
+  const stateAxis = { name: 'State', values: stateValues, default: 'Default' };
+
+  const axes = [stateAxis, variantAxis].filter(Boolean);
+
+  // Component properties: only for props/slots the contract actually
+  // declares — never fabricated. Icon Before/After (INSTANCE_SWAP) is
+  // deliberately NOT added: the contract's `before`/`after` slots are
+  // generic ("typically an icon"), not a reference to a specific icon
+  // component, and INSTANCE_SWAP needs a real default instance to point at.
+  const componentProperties = [{ name: 'Text', type: 'TEXT', default: contract.name || tag }];
+  if ((contract.props || []).some((p) => p.name === 'fullWidth')) {
+    componentProperties.push({ name: 'Is Full Width', type: 'BOOLEAN', default: false });
+  }
+  const slotNames = new Set((contract.slots || []).map((s) => s.name));
+  if (slotNames.has('before')) componentProperties.push({ name: 'Slot Before', type: 'BOOLEAN', default: false });
+  if (slotNames.has('after')) componentProperties.push({ name: 'Slot After', type: 'BOOLEAN', default: false });
+
+  const root = contract.anatomy ? convertAnatomyNode(contract.anatomy.root) : null;
+  const stateOverrides = convertStateOverrides(contract.anatomy && contract.anatomy.stateOverrides);
+
+  // Cross-product, State x Variant (or State alone when the component has no
+  // variant axis) — sorted by name for a stable, readable ops file.
+  const variants = [];
+  for (const state of stateAxis.values) {
+    for (const variant of variantAxis ? variantAxis.values : [null]) {
+      variants.push({
+        name: variant ? `State=${state}, Variant=${variant}` : `State=${state}`,
+        state,
+        variant,
+      });
+    }
+  }
+  variants.sort((a, b) => a.name.localeCompare(b.name));
+
+  const degradations = [];
+  if (!root) degradations.push('anatomy unavailable on this contract — no structural/token facts to build from.');
+  if (variantAxis) {
+    degradations.push(
+      'per-Variant token deltas are not in the contract (anatomySource captured exactly one case, ' +
+      `"${contract.anatomyCase}") — every Variant value renders with the SAME root/state tokens; only ` +
+      'the State axis carries a measured delta.',
+    );
+  }
+  degradations.push(
+    'anatomy carries no literal text content (contract.schema.json\'s anatomyNode has no `text` field) — ' +
+    'the Text component property default is a placeholder (the contract\'s display name), not measured copy.',
+  );
+  if (slotNames.has('before') || slotNames.has('after')) {
+    degradations.push(
+      'Slot Before/Slot After are declared as booleans only (presence, per SKILL.md\'s pairing convention) — ' +
+      'the contract does not name an icon component to bind, so no INSTANCE_SWAP property or icon instance is built.',
+    );
+  }
+
+  return {
+    schemaVersion: 1,
+    generator: 'scripts/contracts/generate-figma.mjs',
+    project: projectId,
+    contract: { id: tag, name: contract.name, version: contract.version },
+    page: pageName,
+    componentSetName: contract.name,
+    axes,
+    componentProperties,
+    anatomySource: contract.anatomySource,
+    anatomyCase: contract.anatomyCase,
+    root,
+    stateOverrides,
+    variants,
+    degradations,
+  };
+}
+
+function serialize(ops) {
+  return `${JSON.stringify(ops, null, 2)}\n`;
+}
+
+// ── plugin code (runs inside Figma Desktop via figma_execute) ─────────────
+
+/**
+ * Build the code string figma_execute runs. Mirrors
+ * scripts/figma-atoms/build-page.mjs's guard/variable/font conventions, but
+ * builds from OPS (coarse layout + resolved variable names) instead of a
+ * measured pixel tree, and is HUG-only throughout — never calls resize(), so
+ * the "resize() undoes sizing modes" ordering trap (Sizing Modes ref) cannot
+ * fire.
+ */
+function buildPluginCode(ops, SC) {
+  return String.raw`
+    // GUARD — refuse to write into any file but the one this project names.
+    // Positive allow-list (not a decoy deny-list) so an unrecognised file is
+    // refused the same way a known decoy is; the Node-side decoy check below
+    // also runs BEFORE this code is ever sent.
+    if (figma.fileKey !== ${JSON.stringify(SC.fileKey)}) {
+      throw new Error(
+        'REFUSING TO WRITE: expected file ' + ${JSON.stringify(SC.fileKey)} + ' (' + ${JSON.stringify(SC.fileName)} +
+        ') but the Desktop Bridge is focused on "' + figma.root.name + '" (' + figma.fileKey + ').'
+      );
+    }
+    const OPS = ${JSON.stringify(ops)};
+    const PAGE_NAME = ${JSON.stringify(ops.page)};
+
+    await figma.loadAllPagesAsync();
+    const V = {};
+    for (const v of await figma.variables.getLocalVariablesAsync()) V[v.name] = v;
+    const misses = new Set();
+
+    async function rawOf(v) {
+      const c = await figma.variables.getVariableCollectionByIdAsync(v.variableCollectionId);
+      let val = v.valuesByMode[c.defaultModeId];
+      let g = 0;
+      while (val && val.type === 'VARIABLE_ALIAS' && g++ < 8) {
+        const nv = await figma.variables.getVariableByIdAsync(val.id);
+        const nc = await figma.variables.getVariableCollectionByIdAsync(nv.variableCollectionId);
+        val = nv.valuesByMode[nc.defaultModeId];
+      }
+      return val;
+    }
+    async function boundSolid(name) {
+      if (!name) return null;
+      const vv = V[name];
+      if (!vv) { misses.add(name); return null; }
+      const val = await rawOf(vv);
+      const color = val && val.r !== undefined ? { r: val.r, g: val.g, b: val.b } : { r: 0, g: 0, b: 0 };
+      const paint = { type: 'SOLID', color };
+      if (val && val.a !== undefined && val.a < 1) paint.opacity = val.a;
+      return figma.variables.setBoundVariableForPaint(paint, 'color', vv);
+    }
+    function bindNum(node, field, name) {
+      if (!name) return false;
+      const vv = V[name];
+      if (!vv) { misses.add(name); return false; }
+      try { node.setBoundVariable(field, vv); return true; } catch (e) { return false; }
+    }
+
+    // Fonts — this contract has no font-size/family token on al-button (they are
+    // inherited, not custom-property-bound, so anatomy never captured one); IBM
+    // Plex Sans / 14px is the library's own base default (SKILL.md "Known state").
+    const FAMILY = 'IBM Plex Sans';
+    const FAMILY_STYLES = {};
+    for (const fnt of await figma.listAvailableFontsAsync()) {
+      (FAMILY_STYLES[fnt.fontName.family] = FAMILY_STYLES[fnt.fontName.family] || []).push(fnt.fontName.style);
+    }
+    const NEAR = { Bold: ['Bold', 'SemiBold', 'Medium', 'Regular'], Regular: ['Regular', 'Book', 'Medium'] };
+    function pickStyle(style) {
+      const have = FAMILY_STYLES[FAMILY] || [];
+      if (have.indexOf(style) !== -1) return style;
+      const chain = NEAR[style] || [style, 'Regular'];
+      return chain.filter((s) => have.indexOf(s) !== -1)[0] || have[0] || 'Regular';
+    }
+    const loadedFonts = new Set();
+    async function font(style) {
+      const real = pickStyle(style);
+      const k = FAMILY + '/' + real;
+      if (!loadedFonts.has(k)) {
+        try { await figma.loadFontAsync({ family: FAMILY, style: real }); }
+        catch (e) { await figma.loadFontAsync({ family: 'Inter', style: 'Regular' }); loadedFonts.add('Inter/Regular'); return { family: 'Inter', style: 'Regular' }; }
+        loadedFonts.add(k);
+      }
+      return { family: FAMILY, style: real };
+    }
+
+    // PAGE — scoped strictly to PAGE_NAME. Reuse if present (clear only ITS
+    // children); otherwise create it. Never delete/recreate the page object,
+    // never touch any other page.
+    let page = figma.root.children.find((p) => p.name === PAGE_NAME);
+    const reusedPage = !!page;
+    if (!page) {
+      page = figma.createPage();
+      page.name = PAGE_NAME;
+    } else {
+      await page.loadAsync();
+      for (const c of [...page.children]) c.remove();
+    }
+    await figma.setCurrentPageAsync(page);
+
+    const root = OPS.root;
+    const rootTokens = (root && root.tokens) || {};
+    const textNodes = [];
+
+    function overrideFor(state, path, cssProp) {
+      const st = OPS.stateOverrides[state.toLowerCase()];
+      if (!st) return null;
+      const at = st[path];
+      return at ? at[cssProp] || null : null;
+    }
+
+    async function buildVariant(state, variant) {
+      const comp = figma.createComponent();
+      comp.name = variant ? ('State=' + state + ', Variant=' + variant) : ('State=' + state);
+      page.appendChild(comp); // combineAsVariants requires siblings already on the target page
+      comp.fills = [];
+
+      const isFlex = !!(root && root.layout && (root.layout.display === 'flex' || root.layout.display === 'inline-flex'));
+      if (isFlex) {
+        comp.layoutMode = root.layout.direction === 'column' ? 'VERTICAL' : 'HORIZONTAL';
+        comp.counterAxisAlignItems = root.layout.align === 'center' ? 'CENTER' : root.layout.align === 'flex-end' ? 'MAX' : 'MIN';
+        comp.primaryAxisAlignItems = root.layout.justify === 'center' ? 'CENTER' : root.layout.justify === 'flex-end' ? 'MAX' : root.layout.justify === 'space-between' ? 'SPACE_BETWEEN' : 'MIN';
+        // HUG both axes — no pixel geometry exists to target a FIXED size
+        // against, and resize() is never called (Sizing Modes ref trap).
+        comp.primaryAxisSizingMode = 'AUTO';
+        comp.counterAxisSizingMode = 'AUTO';
+        bindNum(comp, 'itemSpacing', rootTokens['column-gap'] || rootTokens['gap']);
+        bindNum(comp, 'paddingTop', rootTokens['padding-top'] || rootTokens['padding']);
+        bindNum(comp, 'paddingBottom', rootTokens['padding-bottom'] || rootTokens['padding']);
+        bindNum(comp, 'paddingLeft', rootTokens['padding-left'] || rootTokens['padding']);
+        bindNum(comp, 'paddingRight', rootTokens['padding-right'] || rootTokens['padding']);
+      }
+
+      { const p = await boundSolid(rootTokens['background-color']); if (p) comp.fills = [p]; }
+      const radiusVar = rootTokens['border-radius'] || rootTokens['border-top-left-radius'];
+      if (radiusVar) {
+        for (const f of ['topLeftRadius', 'topRightRadius', 'bottomRightRadius', 'bottomLeftRadius']) bindNum(comp, f, radiusVar);
+      }
+
+      // Label — anatomy's nested text-only wrapper spans (al-c-button__text x2)
+      // carry no tokens/layout facts beyond the leaf's own, so they collapse
+      // into one text node appended directly to the component.
+      const fontName = await font('Bold');
+      const t = figma.createText();
+      t.fontName = fontName;
+      const textProp = OPS.componentProperties.find((p) => p.name === 'Text');
+      t.characters = (textProp && textProp.default) || 'Label';
+      t.fontSize = 14;
+      comp.appendChild(t);
+      textNodes.push(t);
+
+      const hoverColor = overrideFor('hover', '0', 'color');
+      const colorVar = state === 'Hover' && hoverColor ? hoverColor : rootTokens['color'];
+      { const p = await boundSolid(colorVar); if (p) t.fills = [p]; }
+
+      if (state === 'Disabled') {
+        const opacityVar = overrideFor('disabled', '0', 'opacity');
+        if (opacityVar) bindNum(comp, 'opacity', opacityVar);
+      }
+
+      if (state === 'Focus') {
+        // Library convention: focus renders as a 2px outside stroke, not a CSS
+        // outline (SKILL.md §3 + build-page.mjs's focusRing handling).
+        const focusColor = overrideFor('focus', '0', 'outline-color');
+        const focusWidth = overrideFor('focus', '0', 'outline-width');
+        if (focusColor) {
+          const ring = figma.createRectangle();
+          ring.name = 'Focus Outline';
+          ring.fills = [];
+          const p = await boundSolid(focusColor);
+          if (p) ring.strokes = [p];
+          ring.strokeWeight = 2;
+          if (focusWidth) bindNum(ring, 'strokeWeight', focusWidth);
+          ring.cornerRadius = 6;
+          comp.appendChild(ring);
+          if (comp.layoutMode !== 'NONE') ring.layoutPositioning = 'ABSOLUTE';
+          ring.resize(comp.width + 8, comp.height + 8);
+          ring.x = -4; ring.y = -4;
+        }
+      }
+      return comp;
+    }
+
+    const hasVariantAxis = OPS.axes.some((a) => a.name === 'Variant');
+    const comps = [];
+    for (const v of OPS.variants) comps.push(await buildVariant(v.state, hasVariantAxis ? v.variant : null));
+
+    // Grid layout: columns = Variant (or a single column when there is no
+    // Variant axis), rows = State. Sizes are hug/content-driven (no pixel
+    // geometry to plan a grid from ahead of time), so the pitch is computed
+    // from the components AFTER building, same pattern as build-page.mjs.
+    const variantAxisDef = OPS.axes.find((a) => a.name === 'Variant');
+    const stateAxisDef = OPS.axes.find((a) => a.name === 'State');
+    const cols = variantAxisDef ? variantAxisDef.values : [null];
+    const rows = stateAxisDef ? stateAxisDef.values : ['Default'];
+    const maxW = Math.max(...comps.map((c) => c.width), 60);
+    const maxH = Math.max(...comps.map((c) => c.height), 24);
+    const pitchX = Math.ceil((maxW + 40) / 2) * 2;
+    const pitchY = Math.ceil((maxH + 40) / 2) * 2;
+    for (let i = 0; i < OPS.variants.length; i++) {
+      const v = OPS.variants[i];
+      const comp = comps[i];
+      const gx = hasVariantAxis ? cols.indexOf(v.variant) : 0;
+      const gy = rows.indexOf(v.state);
+      comp.x = 40 + Math.max(gx, 0) * pitchX;
+      comp.y = 40 + Math.max(gy, 0) * pitchY;
+    }
+
+    const set = figma.combineAsVariants(comps, page);
+    set.name = OPS.componentSetName;
+    set.x = 0; set.y = 0;
+
+    const addedProps = [];
+    for (const prop of OPS.componentProperties) {
+      try {
+        if (prop.type === 'TEXT') {
+          const propRef = set.addComponentProperty(prop.name, 'TEXT', prop.default || '');
+          for (const variant of set.children) {
+            const tn = variant.findOne((n) => n.type === 'TEXT');
+            if (tn) tn.componentPropertyReferences = { characters: propRef };
+          }
+          addedProps.push(prop.name);
+        } else if (prop.type === 'BOOLEAN') {
+          set.addComponentProperty(prop.name, 'BOOLEAN', !!prop.default);
+          addedProps.push(prop.name);
+        }
+      } catch (e) { misses.add('component-property:' + prop.name); }
+    }
+
+    // Best-effort text-style linkage (link-text-styles.mjs walks EVERY page in
+    // the file, which would break this page's scratch-only guarantee — so this
+    // is scoped to just the text nodes THIS run created).
+    const styles = await figma.getLocalTextStylesAsync();
+    const styleKey = (fam, sty, size) => fam + '|' + sty + '|' + Math.round(size);
+    const byKey = new Map();
+    for (const s of styles) {
+      const k = styleKey(s.fontName.family, s.fontName.style, s.fontSize);
+      if (!byKey.has(k)) byKey.set(k, s);
+    }
+    let linked = 0;
+    for (const t of textNodes) {
+      const fn = t.fontName;
+      if (!fn || fn === figma.mixed) continue;
+      const st = byKey.get(styleKey(fn.family, fn.style, t.fontSize));
+      if (st) { try { await t.setTextStyleIdAsync(st.id); linked++; } catch (e) { /* leave literal */ } }
+    }
+
+    return JSON.stringify({
+      page: page.name,
+      reusedPage,
+      set: set.id,
+      componentSetName: set.name,
+      variants: set.children.length,
+      componentProperties: addedProps,
+      missingVars: [...misses],
+      textStylesLinked: linked,
+      textNodesTotal: textNodes.length,
+    });
+  `;
+}
+
+// ── decoy guard (mirrors scripts/contracts/extract-canvas.mjs's checkDecoyGuard) ──
+
+function checkDecoyGuard(project, statusText) {
+  for (const decoy of (project.figma && project.figma.decoys) || []) {
+    if (statusText.includes(decoy.fileKey)) return { blocked: true, decoy };
+  }
+  return { blocked: false, decoy: null };
+}
+
+// ── shim transport ─────────────────────────────────────────────────────────
+
+async function call(port, name, args) {
+  let res;
+  try {
+    res = await fetch(`http://127.0.0.1:${port}/call`, { method: 'POST', body: JSON.stringify({ name, arguments: args }) });
+  } catch {
+    console.error(
+      `Cannot reach the figma-console shim on :${port}.\n` +
+      'Start it first:  node scripts/figma-atoms/mcp-shim.mjs\n' +
+      "(Figma Desktop must be open with the Desktop Bridge plugin running, on the project's file.)",
+    );
+    process.exit(1);
+  }
+  const body = await res.json();
+  if (body.error || body.isError) throw new Error(`${name} failed: ${JSON.stringify(body.error ?? body.text).slice(0, 500)}`);
+  return body.text;
+}
+
+function parsePayload(text) {
+  try {
+    const outer = JSON.parse(text);
+    if (typeof outer === 'string') return JSON.parse(outer);
+    if (outer && typeof outer.result === 'string') return JSON.parse(outer.result);
+    return (outer && outer.result) ?? outer;
+  } catch {
+    const start = text.indexOf('{');
+    const end = text.lastIndexOf('}');
+    if (start === -1 || end <= start) throw new Error(`unparseable figma_execute payload: ${text.slice(0, 300)}`);
+    return JSON.parse(text.slice(start, end + 1));
+  }
+}
+
+// ── main ────────────────────────────────────────────────────────────────
+
+function loadContract(projectId, tag) {
+  const path = join(CONTRACTS_DIR, projectId, `${tag}.contract.json`);
+  return { path, contract: JSON.parse(readFileSync(path, 'utf8')) };
+}
+
+function writeOps(SC, tag, ops) {
+  const dir = join(SC.dirs.sync, 'generated-ops');
+  mkdirSync(dir, { recursive: true });
+  const outPath = join(dir, `${tag}.ops.json`);
+  writeFileSync(outPath, serialize(ops), 'utf8');
+  return outPath;
+}
+
+async function main() {
+  const SC = scope(projectArg());
+  const { contract } = loadContract(SC.id, COMPONENT);
+
+  if (CHECK_DETERMINISM) {
+    // T15's TODO(T12): same contract inputs -> byte-identical ops output,
+    // independent of Figma/disk — mirrors emit-contracts.mjs's
+    // --check-determinism exactly, one level down the pipeline.
+    const first = serialize(buildOps(contract, { projectId: SC.id, pageName: PAGE_NAME }));
+    const second = serialize(buildOps(contract, { projectId: SC.id, pageName: PAGE_NAME }));
+    const ok = first === second;
+    console.log(`[generate-figma] --check-determinism ${SC.id}/${COMPONENT}: ${ok ? 'DETERMINISTIC' : 'NONDETERMINISTIC'}`);
+    if (!ok) {
+      console.error('[generate-figma] two in-memory ops derivations of the same contract produced different bytes.');
+      process.exit(1);
+    }
+    return;
+  }
+
+  const ops = buildOps(contract, { projectId: SC.id, pageName: PAGE_NAME });
+  const outPath = writeOps(SC, COMPONENT, ops);
+  console.log(`[generate-figma] ${SC.id}/${COMPONENT}: wrote ${ops.variants.length} variant ops -> ${outPath}`);
+
+  if (OPS_ONLY) return;
+
+  // Confirm the shim is reachable and NOT pointed at a decoy — before
+  // sending anything that mutates.
+  const status = parsePayload(await call(SHIM_PORT, 'figma_get_status', {}));
+  const statusStr = JSON.stringify(status);
+  const guard = checkDecoyGuard(SC.project, statusStr);
+  if (guard.blocked) {
+    console.error(
+      `Refusing to generate: Figma is on the "${guard.decoy.fileName}" DECOY file. Open "${SC.fileName}" (${SC.fileKey}).` +
+      (guard.decoy.why ? `\n  ${guard.decoy.why}` : ''),
+    );
+    process.exit(1);
+  }
+
+  const code = buildPluginCode(ops, SC);
+  const text = await call(SHIM_PORT, 'figma_execute', { code, fileKey: SC.fileKey, timeout: 60000 });
+  let payload;
+  try { payload = JSON.parse(text); } catch { console.error(text); process.exit(1); }
+  if (payload.success === false || payload.error) {
+    console.error('[generate-figma] BUILD FAILED:', payload.error || payload);
+    process.exit(1);
+  }
+  const result = typeof payload.result === 'string' ? JSON.parse(payload.result) : payload.result;
+  console.log(JSON.stringify(result, null, 2));
+}
+
+if (import.meta.url === `file://${process.argv[1]}`.replace(/\\/g, '/') || process.argv[1]?.endsWith('generate-figma.mjs')) {
+  await main();
+}
