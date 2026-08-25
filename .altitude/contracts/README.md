@@ -36,6 +36,7 @@ do not generate it (yet — see "What's next").
 ```
 .altitude/contracts/
   contract.schema.json        # the schema every contract below is validated against
+  canvas-contract.schema.json # the schema CANVAS contracts (below) validate against — see "Canvas contracts"
   README.md                   # this file
   altitude/
     al-button.contract.json
@@ -45,6 +46,40 @@ do not generate it (yet — see "What's next").
     al-button.contract.json
     ...
 ```
+
+## Canvas contracts
+
+The CODE-side contracts above are one leg of a three-way comparison
+(contract ↔ code ↔ Figma canvas). The CANVAS leg is extracted live from
+Figma, over `scripts/figma-atoms/mcp-shim.mjs`, by
+`scripts/contracts/extract-canvas.mjs`:
+
+```bash
+pnpm run contracts:canvas                                    # altitude, every mapped set
+pnpm run contracts:canvas:sl                                 # southleft
+node scripts/contracts/extract-canvas.mjs --component al-button   # one set — the cheap reconciliation-loop path
+node scripts/contracts/extract-canvas.mjs --from-fixture scripts/contracts/__fixtures__/canvas-sample.json  # offline
+```
+
+Output lands at `.altitude/figma-sync/<project-subdir>/canvas-contracts/
+<tag>.canvas.json` — gitignored, like every other artifact under
+`figma-sync/` (a canvas dump is an OBSERVATION, not durable sync state; the
+parity manifest remains the only tracked file in that tree). A canvas
+contract validates against **`canvas-contract.schema.json`**, not
+`contract.schema.json` — the two are deliberately different schemas, not the
+same one with optional fields, because what a canvas read can honestly know
+(variant axes, component properties, bound Figma variable *names*, text-style
+names, states expressed as a variant axis, a shallow named-layer anatomy)
+differs from what the code side knows (attribute names, `--al-*` token
+names, ARIA attributes, CSS parts). Every canvas contract carries a
+`degradations` array naming each contract.schema.json fact it could not
+express, rather than omitting it silently — the convention this borrows from
+`ds-contracts-poc`'s provenance/degradation fields.
+
+`extractedAt` is deliberately not in the contract body, so the same inputs
+produce a byte-identical file every run; the run timestamp and a per-set
+digest live in one sidecar per project,
+`canvas-contracts/canvas-extraction-meta.json`.
 
 One subdirectory per `.altitude/ds-projects.json` project id. A tag that is
 shared between projects (e.g. `al-button`) gets **one contract per project**

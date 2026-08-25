@@ -1,0 +1,57 @@
+{
+  "$comment": "A realistic minimal RAW dump for one Figma COMPONENT_SET, in the shape scripts/contracts/extract-canvas.mjs's in-sandbox SNAPSHOT_CODE returns from figma_execute (see refresh-figma-digests.mjs SNAPSHOT_CODE for the sibling `defs`/`variants` shape this extends, and repairs/badge.js for the boundVariables.color read pattern `anatomy` mirrors). Used by `--from-fixture` to exercise the transform pipeline (buildCanvasContract) with no live Figma connection.",
+  "tag": "al-button",
+  "fileKey": "y83n4o9LOGs74oAoguFcGS",
+  "name": "Button",
+  "nodeId": "2626:100",
+  "defs": {
+    "Variant": { "type": "VARIANT", "options": ["Primary", "Secondary", "Tertiary"] },
+    "Width": { "type": "VARIANT", "options": ["Hug", "Fill"] },
+    "State": { "type": "VARIANT", "options": ["Default", "Hover", "Focus", "Disabled"] },
+    "Icon Leading#123:0": { "type": "INSTANCE_SWAP", "options": null },
+    "Show Icon#123:1": { "type": "BOOLEAN", "options": null },
+    "Label#123:2": { "type": "TEXT", "options": null }
+  },
+  "variants": [
+    { "name": "Variant=Primary, Width=Hug, State=Default" },
+    { "name": "Variant=Primary, Width=Hug, State=Hover" },
+    { "name": "Variant=Primary, Width=Hug, State=Focus" },
+    { "name": "Variant=Primary, Width=Hug, State=Disabled" },
+    { "name": "Variant=Primary, Width=Fill, State=Default" },
+    { "name": "Variant=Secondary, Width=Hug, State=Default" },
+    { "name": "Variant=Tertiary, Width=Hug, State=Default" }
+  ],
+  "defaultVariantName": "Variant=Primary, Width=Hug, State=Default",
+  "anatomy": {
+    "name": "Variant=Primary, Width=Hug, State=Default",
+    "type": "COMPONENT",
+    "boundVariables": {
+      "fills[0].color": "theme/color/background/primary-default",
+      "cornerRadius": "theme/border/radius/round",
+      "itemSpacing": "theme/space/xs",
+      "paddingLeft": "theme/space/md",
+      "paddingRight": "theme/space/md"
+    },
+    "textStyle": null,
+    "children": [
+      {
+        "name": "Icon Leading",
+        "type": "INSTANCE",
+        "boundVariables": {
+          "fills[0].color": "theme/color/content/on-primary"
+        },
+        "textStyle": null,
+        "children": []
+      },
+      {
+        "name": "Label",
+        "type": "TEXT",
+        "boundVariables": {
+          "fills[0].color": "theme/color/content/on-primary"
+        },
+        "textStyle": "body-sm-bold",
+        "children": []
+      }
+    ]
+  }
+}
