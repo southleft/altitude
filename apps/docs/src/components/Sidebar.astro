@@ -90,10 +90,22 @@ const systems = PROJECTS.map((candidate) => ({
         id="sidebar-search"
         type="search"
         autocomplete="off"
-        aria-label={`Search ${registry.count} components`}
+        aria-label={`Search ${registry.count} components and the rest of the docs`}
         data-total={registry.count}
-        placeholder={`SEARCH ${registry.count} COMPONENTS`}
+        placeholder={`SEARCH ${registry.count} COMPONENTS + DOCS`}
       />
+    </div>
+    {/*
+      Site-wide results, distinct from the component filter above. The input
+      does two things at once on purpose: the component list filters instantly
+      and locally (no network, no index load), while everything the list cannot
+      cover — Foundations, Motion, Icons, Utilities, Maturity, Migration,
+      guidance prose — comes from Pagefind. Labelled so the two are not confused
+      for one ranked list.
+    */}
+    <div class="sidebar__results" data-search-results hidden>
+      <p class="micro sidebar__results-label">ELSEWHERE IN THE DOCS</p>
+      <ul class="sidebar__results-list" data-search-results-list></ul>
     </div>
   </div>
 
@@ -250,6 +262,112 @@ const systems = PROJECTS.map((candidate) => ({
     };
 
     input.addEventListener('input', apply);
+
+    /*
+     * SITE-WIDE SEARCH, layered on top of the local filter above.
+     *
+     * Pagefind is loaded LAZILY on first keystroke and never on page load: the
+     * index is ~1.8MB and most visits never search. The import specifier is
+     * built at runtime rather than written literally because Vite would
+     * otherwise try to resolve `/pagefind/pagefind.js` at BUILD time, when it
+     * does not exist yet — Pagefind runs after `astro build`, over its output.
+     *
+     * The project filter is what keeps one index serving several design
+     * systems: `dist/docs` holds every project's site, so an unfiltered query
+     * from /docs/southleft/ would surface Altitude pages. `data-docs-project`
+     * on <html> is the same value the Shell tags each page with.
+     */
+    const resultsBox = document.querySelector<HTMLElement>('[data-search-results]');
+    const resultsList = document.querySelector<HTMLElement>('[data-search-results-list]');
+    const projectId = document.documentElement.dataset.docsProject ?? '';
+    const docsBase = (document.documentElement.dataset.docsBase ?? '').replace(/\/$/, '');
+
+    let pagefind: any = null;
+    let loadFailed = false;
+    let seq = 0;
+
+    async function getPagefind() {
+      if (pagefind || loadFailed) return pagefind;
+      try {
+        const url = `${docsBase}/pagefind/pagefind.js`;
+        /*
+         * `new Function`, not a bare `import(url)`, and not `@vite-ignore`.
+         *
+         * Vite rewrites every dynamic import it can see — including one it has
+         * been told to ignore — and injects its preload helper. The index does
+         * not exist at build time (Pagefind runs AFTER astro build, over its
+         * output), so the rewritten call reached the browser as
+         * `ReferenceError: __VITE_PRELOAD__` and search silently returned
+         * nothing for every query. Building the import inside a Function body
+         * puts it beyond static analysis, which is the only reliable way to
+         * hand the browser an import Vite must not touch.
+         */
+        pagefind = await new Function('u', 'return import(u)')(url);
+        await pagefind.options({ excerptLength: 18 });
+      } catch (error) {
+        /*
+         * SAY SO. A silent catch here is the exact failure this site is built
+         * to avoid: search would appear to work, return nothing for every
+         * query, and look like "no matches" rather than "the index never
+         * loaded". The local component filter keeps working either way — that
+         * is why this degrades rather than throws — but the reason is stated.
+         *
+         * The common causes are both legitimate: `astro dev` serves no index
+         * (Pagefind runs after `astro build`), and a build that skipped the
+         * indexing step has none either.
+         */
+        loadFailed = true;
+        // eslint-disable-next-line no-console
+        console.warn(
+          `[docs] site-wide search is unavailable: could not load ${docsBase}/pagefind/pagefind.js. ` +
+            'Component filtering still works. Run `pnpm run build:app-docs` to generate the index.',
+          error
+        );
+      }
+      return pagefind;
+    }
+
+    async function runSearch() {
+      const q = input.value.trim();
+      const mine = ++seq;
+      if (q.length < 2) {
+        if (resultsBox) resultsBox.hidden = true;
+        return;
+      }
+      const pf = await getPagefind();
+      if (!pf || !resultsBox || !resultsList) return;
+
+      const search = await pf.search(q, { filters: { project: projectId } });
+      // A slower earlier query must not overwrite a newer one's results.
+      if (mine !== seq) return;
+
+      const top = await Promise.all(search.results.slice(0, 6).map((r: any) => r.data()));
+      resultsList.innerHTML = '';
+      for (const hit of top) {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = hit.url;
+        a.className = 'sidebar__result';
+        const title = document.createElement('span');
+        title.className = 'sidebar__result-title';
+        title.textContent = hit.meta?.title ?? hit.url;
+        const excerpt = document.createElement('span');
+        excerpt.className = 'micro sidebar__result-excerpt';
+        // Pagefind returns the excerpt with <mark> around the match; it is
+        // generated from the indexed text, not from user input.
+        excerpt.innerHTML = hit.excerpt;
+        a.append(title, excerpt);
+        li.append(a);
+        resultsList.append(li);
+      }
+      resultsBox.hidden = top.length === 0;
+    }
+
+    let debounce: ReturnType<typeof setTimeout>;
+    input.addEventListener('input', () => {
+      clearTimeout(debounce);
+      debounce = setTimeout(runSearch, 140);
+    });
     // A query typed on any page should be able to escalate to the full index —
     // this design system's index, which is what `data-docs-site` carries (the
     // base plus this project's route prefix).

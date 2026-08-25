@@ -1486,3 +1486,60 @@ html[data-booting] .shell {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* --------------------------------------------------- site-wide search results
+ *
+ * Distinct from the component filter above them in the sidebar. The input
+ * drives both: the component list filters instantly and locally, while these
+ * come from the Pagefind index and cover what the list cannot — Foundations,
+ * Motion, Icons, Utilities, Maturity, Migration and the guidance prose.
+ */
+.sidebar__results {
+  margin-top: 10px;
+  border-top: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+  padding-top: 10px;
+}
+
+.sidebar__results-label {
+  margin: 0 0 6px;
+  color: var(--al-theme-color-content-default-weak);
+}
+
+.sidebar__results-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar__result {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.sidebar__result:hover .sidebar__result-title,
+.sidebar__result:focus-visible .sidebar__result-title {
+  text-decoration: underline;
+}
+
+/* One line of context, not a preview pane. */
+.sidebar__result-excerpt {
+  color: var(--al-theme-color-content-default-weak);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Pagefind wraps the matched term in <mark>; the default yellow highlight is
+   wrong here, so it is re-expressed as weight rather than background. */
+.sidebar__result-excerpt mark {
+  background: none;
+  color: var(--al-theme-color-content-default);
+  font-weight: 600;
+}

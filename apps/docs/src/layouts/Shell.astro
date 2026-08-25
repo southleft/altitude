@@ -171,7 +171,24 @@ const canonical = new URL(Astro.url.pathname, SITE.url).toString();
     <al-theme brand={project.brand} data-brand-host>
       <div class="shell">
         <Sidebar context={context} active={active} activeSlug={activeSlug} />
-        <main class="shell__main" id="main">
+        {/*
+          SEARCH INDEXING — `data-pagefind-body` marks what Pagefind indexes,
+          and scoping it to <main> keeps the sidebar's 68 component links out of
+          every single page's index (without it, every page matches every
+          component name and the results are noise).
+
+          `data-pagefind-filter` carries the design system. One `dist/docs`
+          holds every project's site, so a single index spans all of them —
+          searching from /docs/southleft/ must not surface Altitude pages. The
+          filter is read from the project record, never hardcoded, so a third
+          design system is indexed and filterable with no edit here.
+        */}
+        <main
+          class="shell__main"
+          id="main"
+          data-pagefind-body
+          data-pagefind-filter={`project:${project.id}`}
+        >
           <slot />
         </main>
       </div>
