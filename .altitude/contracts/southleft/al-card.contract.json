@@ -1,0 +1,592 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-card",
+  "name": "Card",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-card\n\nSouthleft's implementation of the card, and a SUPERSET of Altitude's: the\nsame regions (`image`, `header`, `actions-start`, `actions-end`, the default\nbody), the same `layout`, `variant=\"bare\"` and `fill` behaviour, plus the\nfour card treatments southleft.com ships.\n\nONE COMPONENT, FIVE TREATMENTS. Every one of them is a bounded surface\ngrouping a single subject, with a heading, a body and a trailing cue. They\ndiffer in padding, typography, whether the media bleeds to the edge, and\nwhich regions they use — presentation decisions, which is what `variant` is\nfor. They are not different components, and splitting them into some would\nmean four tags a consumer has to choose between before they can render a\ncard.\n\n  * (unset) — the base surface: background, shadow, radius.\n  * `bare`    — the regions without the surface.\n  * `service` — the \"what we do\" card. A bordered well on the 40px padding\n    step, a display-face heading with a corner glyph opposite it, and a mono\n    supporting list.\n  * `tool`    — the \"we publish our homework\" card. A mono command line for a\n    title and a footer cue pinned to the bottom edge.\n  * `article` / `work` — the linked media card. Media flush to the card edge,\n    then a padded column: a mono meta row, a heading, a clamped excerpt, tag\n    chips and a mono footer cue. `work` is the case-study cut of the same\n    anatomy — a wider media ratio, a shallower clamp, a tighter rhythm.\n\nWHY THE MEDIA VARIANTS CAN LIVE HERE AT ALL. Altitude's `al-card` carries a\nsingle outer `padding` that wraps its image region, so its media can never\nsit flush to the edge — which is why the brand layer used to ship a separate\n`al-media-card`. This component owns its own padding (`--al-card-padding`,\nmoved onto the content column under `article`/`work`), so the constraint that\nforced a second component does not apply. That is a brand-layer decision and\nit stays here: the base card's behaviour is unchanged for every other design\nsystem built on the same library.\n\n```html\n<al-card variant=\"service\" fill href=\"/services/audits\">\n  <h3 slot=\"header\">Design system audits</h3>\n  <span slot=\"cue\" aria-hidden=\"true\">&#8599;</span>\n  <p>Where the system is costing you velocity, and what to do first.</p>\n  <ul slot=\"list\"><li>Token audit</li><li>Component inventory</li></ul>\n</al-card>\n\n<al-card variant=\"work\" fill href=\"/projects/petsmart\"\n         image=\"/img/petsmart.webp\" heading=\"PetSmart\"\n         excerpt=\"A design system for 1,600 stores.\"\n         footer-label=\"case study &#8594;\">\n  <span slot=\"tags\">Design systems</span>\n</al-card>\n```",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "command",
+      "description": "The mono command line that titles a `tool` card — `npx altitude init`.\n\nA property rather than a slot because the prefix glyph is styled\nseparately from the command, and `::slotted()` reaches direct children\nonly: a slotted `<p><span>$</span> npx …</p>` puts the span out of reach.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "command"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "command-prefix",
+      "description": "The muted glyph before `command`. `$` for a shell line, `//` for a note.",
+      "type": "string",
+      "rawType": "string",
+      "default": "'$'",
+      "bindings": {
+        "code": {
+          "attribute": "command-prefix",
+          "member": "commandPrefix"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "dashed",
+      "description": "Dashed rather than solid border — the brand's \"coming soon\" tool card.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "dashed"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "excerpt",
+      "description": "The clamped summary under the heading.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "excerpt"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "fallback",
+      "description": "Stand-in shown when there is no image — the brand uses `<P>`, the client initial in angle brackets.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "fallback"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "featured",
+      "description": "The larger treatment used for a lead card that spans two grid columns.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "featured"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "fill",
+      "description": "Fill the available block size instead of hugging the content.\n\nReflected, so a page can also select `al-card[fill]`. It has to be a\nproperty rather than something the page sets from outside: `:host` is\n`display: contents`, so a `height: 100%` written on `<al-card>` is dropped\nentirely.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "fill"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "footer-label",
+      "description": "The mono cue in the footer, e.g. `read →`. Omit for no footer.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "footer-label",
+          "member": "footerLabel"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "heading",
+      "description": "The card's heading. Rendered as an `<al-heading>`, in place of the `header` slot.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "heading"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "heading-variant",
+      "description": "Heading scale override. Left unset, it follows the anatomy: `lg` for work\ncards and featured articles (short client names and lead treatments), `md`\nfor a standard article card, whose long sentence titles overwrap badly at\n`lg`. Altitude's scoped steps here are 24px and 48px with nothing between —\na real gap in `al-heading`, documented rather than papered over.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "heading-variant",
+          "member": "headingVariant"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "href",
+      "description": "Make the whole card one link target.\n\nThe brand's `service`, `tool`, `article` and `work` cards are links in\ntheir entirety, which is why this is a property and not a slotted `<a>`:\none target, one focus ring, and no nested interactive regions for a\nkeyboard user to get lost between. Do not combine it with buttons inside\nthe card.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "href"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "image",
+      "description": "Media source for the `article` / `work` variants. Omit to render `fallback`.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "image"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "image-alt",
+      "description": "Alt text. Empty by default: the heading already names the destination, so the image is decorative.",
+      "type": "string",
+      "rawType": "string",
+      "default": "''",
+      "bindings": {
+        "code": {
+          "attribute": "image-alt",
+          "member": "imageAlt"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "layout",
+      "description": "Layout\n- **default** Displays the slotted items stacked in a column\n- **row** Displays the slotted items inline in a row",
+      "type": "string",
+      "rawType": "'inline'",
+      "bindings": {
+        "code": {
+          "attribute": "layout"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "rel",
+      "description": "Link `rel`. Defaults to `noopener` whenever `target=\"_blank\"`, so an\nexternal card cannot be opened without it by forgetting to pass it.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "rel"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "target",
+      "description": "Link target, when `href` is set. `_blank` for the off-site tool cards.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "target"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "variant",
+      "description": "Variant\n- **default** A card with a background color, box shadow and border radius\n- **bare** No background color, box shadow or border radius\n- **service** The brand's \"what we do\" card: a bordered well, the 40px padding step, a display-face heading and a mono list\n- **tool** The brand's \"we publish our homework\" card: a mono command line and a footer cue pinned to the bottom\n- **article** The linked media card: flush-to-edge media, a meta row, a heading, a clamped excerpt and a mono footer cue\n- **work** The case-study cut of the media card: a wider media ratio, a two-line clamp and a tighter rhythm",
+      "type": "enum",
+      "rawType": "'bare' | 'service' | 'tool' | 'article' | 'work'",
+      "values": [
+        "article",
+        "bare",
+        "service",
+        "tool",
+        "work"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "variant"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Variant",
+          "options": [
+            "Article",
+            "Bare",
+            "Default",
+            "Service",
+            "Tool",
+            "Work"
+          ]
+        }
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The card's body."
+    },
+    {
+      "name": "action-right",
+      "description": "Top-right single control (kebab / overflow menu). Altitude's card documents this slot but renders no matching `<slot>` element, so anything assigned to it there disappears; this implementation actually renders it, in the header row's trailing cluster beside `cue`."
+    },
+    {
+      "name": "actions-end",
+      "description": "Trailing-action row, trailing edge — the canonical primary action."
+    },
+    {
+      "name": "actions-start",
+      "description": "Trailing-action row, leading edge."
+    },
+    {
+      "name": "cue",
+      "description": "A trailing cue on the header row — the corner glyph under `variant=\"service\"`. Decorative; mark it `aria-hidden` when the card is already a link."
+    },
+    {
+      "name": "footer",
+      "description": "A footer cue pinned to the bottom of the card, whatever the body's height. Ignored when the `footer-label` property is set."
+    },
+    {
+      "name": "header",
+      "description": "The card's heading row. Ignored when the `heading` property is set, which is how the media variants supply theirs."
+    },
+    {
+      "name": "image",
+      "description": "Media above the header. Under the base variants it sits INSIDE the card's padding, exactly as Altitude's card does; under `article`/`work` the media region is flush to the card edge. The `image` property is the usual way to fill it for the media variants; this slot is for anything else, an `<al-avatar>` included."
+    },
+    {
+      "name": "list",
+      "description": "A supporting list below the body. Under `variant=\"service\"` a slotted `<ul>` gets the brand's mono treatment."
+    },
+    {
+      "name": "meta",
+      "description": "A mono meta row above the heading — category, date. Each slotted node is its own item in a row. Collapses entirely when empty."
+    },
+    {
+      "name": "tags",
+      "description": "Tag chips under the body. Each slotted node gets the brand's square-cornered chip treatment, so plain `<span>`s are enough. Collapses entirely when empty."
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Variant=article",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "al-c-card al-c-card--media",
+      "layout": {
+        "display": "flex",
+        "direction": "column",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {
+        "background": {
+          "code": "--al-theme-color-background-default-strong",
+          "figma": "theme/color/background/default-strong"
+        },
+        "background-color": {
+          "code": "--al-theme-color-background-default-strong",
+          "figma": "theme/color/background/default-strong"
+        },
+        "border": {
+          "code": "--al-theme-border-width",
+          "figma": "theme/border/width/@"
+        },
+        "border-bottom-left-radius": {
+          "code": "--al-theme-border-radius",
+          "figma": "theme/border/radius/@"
+        },
+        "border-bottom-right-radius": {
+          "code": "--al-theme-border-radius",
+          "figma": "theme/border/radius/@"
+        },
+        "border-radius": {
+          "code": "--al-theme-border-radius",
+          "figma": "theme/border/radius/@"
+        },
+        "border-top-color": {
+          "code": "--al-theme-color-border-default-weak",
+          "figma": "theme/color/border/default-weak"
+        },
+        "border-top-left-radius": {
+          "code": "--al-theme-border-radius",
+          "figma": "theme/border/radius/@"
+        },
+        "border-top-right-radius": {
+          "code": "--al-theme-border-radius",
+          "figma": "theme/border/radius/@"
+        },
+        "border-top-width": {
+          "code": "--al-theme-border-width",
+          "figma": "theme/border/width/@"
+        },
+        "color": {
+          "code": "--al-theme-color-content-default",
+          "figma": "theme/color/content/default"
+        },
+        "padding": {
+          "code": "--al-card-padding",
+          "figma": null
+        },
+        "padding-bottom": {
+          "code": "--al-card-padding",
+          "figma": null
+        },
+        "padding-left": {
+          "code": "--al-card-padding",
+          "figma": null
+        },
+        "padding-right": {
+          "code": "--al-card-padding",
+          "figma": null
+        },
+        "padding-top": {
+          "code": "--al-card-padding",
+          "figma": null
+        }
+      },
+      "children": [
+        {
+          "tag": "div",
+          "cls": "al-c-card__content",
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "padding": {
+              "code": "--al-theme-space-lg",
+              "figma": "theme/space/lg"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space-lg",
+              "figma": "theme/space/lg"
+            },
+            "padding-left": {
+              "code": "--al-theme-space-lg",
+              "figma": "theme/space/lg"
+            },
+            "padding-right": {
+              "code": "--al-theme-space-lg",
+              "figma": "theme/space/lg"
+            },
+            "padding-top": {
+              "code": "--al-theme-space-lg",
+              "figma": "theme/space/lg"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-card__header",
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "flex-start",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "",
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-card__body",
+              "layout": {
+                "display": "flex",
+                "direction": "column",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__body",
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-card__footer",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-primary-default",
+                  "figma": "theme/color/content/primary-default"
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "",
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "stateOverrides": {
+      "hover": {
+        "0": {
+          "border-color": {
+            "code": "--al-theme-color-border-default-weak",
+            "figma": "theme/color/border/default-weak"
+          }
+        }
+      }
+    }
+  },
+  "tokens": [
+    "--al-card-padding",
+    "--al-theme-border-radius",
+    "--al-theme-border-width",
+    "--al-theme-color-background-default-strong",
+    "--al-theme-color-border-default-weak",
+    "--al-theme-color-content-default",
+    "--al-theme-color-content-primary-default",
+    "--al-theme-space-lg",
+    "--al-theme-space-sm",
+    "--al-theme-space-xs"
+  ],
+  "a11y": {
+    "ariaAttributes": [
+      "heading-variant",
+      "variant"
+    ],
+    "cssParts": [
+      "body",
+      "card",
+      "excerpt",
+      "footer",
+      "heading",
+      "image",
+      "meta"
+    ]
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/sl-web-components/components/card/card.ts",
+      "tagName": "al-card",
+      "workspace": "@southleft/sl-web-components"
+    },
+    "figma": {
+      "fileKey": "rdhBS9t89V42E7EfiPjmSa",
+      "componentSetName": "Card",
+      "nodeId": "10:3289",
+      "url": "https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-3289"
+    }
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-logo-wall",
+  "name": "Logo Wall",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-logo-wall\n\nThe client logo band — a wrapping row of monochrome marks that come up to\nfull strength on hover.\n\n```html\n<al-logo-wall>\n  <img src=\"/logos/ibm.webp\" alt=\"IBM\" />\n  <img src=\"/logos/google.webp\" alt=\"Google\" />\n</al-logo-wall>\n```\n\nThe marks are slotted, because which clients appear is the page's business.\nWhat the component owns is the treatment: the uniform optical height, the\nknock-back-and-reveal, and the asymmetric row/column rhythm the brand uses.",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "vivid",
+      "description": "Render the marks at full strength instead of knocked back. For a page where\nthe logos are the subject rather than social proof in passing.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "vivid"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Vivid",
+          "options": [
+            "Default",
+            "Vivid"
+          ]
+        }
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The logo images. Sized and treated by the component; pass them at their natural dimensions."
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Vivid=default",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "sl-c-logo-wall",
+      "layout": {
+        "display": "block",
+        "direction": "row",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {},
+      "children": [
+        {
+          "tag": "div",
+          "cls": "al-c-layout al-c-layout--row al-c-layout--align-center al-c-layout--wrap",
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-layout-gap",
+              "figma": null
+            },
+            "gap": {
+              "code": "--al-layout-gap",
+              "figma": null
+            },
+            "row-gap": {
+              "code": "--al-layout-gap",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "img",
+              "cls": "",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            },
+            {
+              "tag": "img",
+              "cls": "",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            },
+            {
+              "tag": "img",
+              "cls": "",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            },
+            {
+              "tag": "img",
+              "cls": "",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "tokens": [
+    "--al-layout-gap"
+  ],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": [
+      "wall"
+    ]
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/sl-web-components/components/logo-wall/logo-wall.ts",
+      "tagName": "al-logo-wall",
+      "workspace": "@southleft/sl-web-components"
+    },
+    "figma": {
+      "fileKey": "rdhBS9t89V42E7EfiPjmSa",
+      "componentSetName": "Logo Wall",
+      "nodeId": "10:3386",
+      "url": "https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-3386"
+    }
+  }
+}

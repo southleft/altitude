@@ -1,0 +1,354 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-section-header",
+  "name": "Section Header",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-section-header\n\nThe heading block that opens a section of a Southleft page: a mono rule\ncarrying an index and label, an accent kicker, a heading, an optional lead,\nand an optional trailing link.\n\nEarned its place by repetition — two pages import it and five more had\nhand-re-inlined its markup (`services/design-systems.astro:132-138` and four\nsiblings), which is the shape of a component the system was missing.\n\n```html\n<al-section-header\n  index=\"02\"\n  label=\"Insights\"\n  heading=\"We publish our homework\"\n  dek=\"Notes from inside real design-system work.\"\n  link-href=\"/insights\"\n  link-label=\"all insights →\"\n></al-section-header>\n```",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "dek",
+      "description": "The lead paragraph under the heading. Omit for none.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "dek"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "heading",
+      "description": "The section heading.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "heading"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "heading-tag",
+      "description": "The heading's semantic level — a document-outline concern, so not fixed.",
+      "type": "string",
+      "rawType": "string",
+      "default": "'h2'",
+      "bindings": {
+        "code": {
+          "attribute": "heading-tag",
+          "member": "headingTag"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "index",
+      "description": "The ordinal shown before the label in the rule, e.g. `02`. Omit for a label-only rule.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "index"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "kicker",
+      "description": "Kicker text without the angle brackets. Derives from `label` when unset; pass an empty string for a rule with no kicker.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "kicker"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "label",
+      "description": "The rule's label, and the source of the kicker slug below it.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "label"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "link-href",
+      "description": "Target for the trailing link. Omit (or fill the default slot) for no link.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "link-href",
+          "member": "linkHref"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "link-label",
+      "description": "Text for the trailing link.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "link-label",
+          "member": "linkLabel"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The trailing position, for a control the link cannot express — a filter, a segmented toggle. Use it INSTEAD of `linkHref`; both render if both are set."
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Link=default",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "sl-c-section-header",
+      "layout": {
+        "display": "block",
+        "direction": "row",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {},
+      "children": [
+        {
+          "tag": "div",
+          "cls": "sl-c-section-header__rule",
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default-weak",
+              "figma": "theme/color/content/default-weak"
+            },
+            "column-gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "row-gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            }
+          },
+          "children": [
+            {
+              "tag": "span",
+              "cls": "",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "div",
+          "cls": "al-c-layout al-c-layout--row al-c-layout--gap-lg al-c-layout--align-end al-c-layout--justify-between al-c-layout--wrap",
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "flex-end",
+            "justify": "space-between"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-lg",
+              "figma": "theme/space/lg"
+            },
+            "gap": {
+              "code": "--al-theme-space-lg",
+              "figma": "theme/space/lg"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-lg",
+              "figma": "theme/space/lg"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-layout al-c-layout--gap-sm al-c-layout--grow",
+              "layout": {
+                "display": "flex",
+                "direction": "column",
+                "align": "stretch",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "p",
+                  "cls": "sl-c-section-header__kicker",
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "h2",
+                  "cls": "al-c-heading al-c-heading--lg al-is-bold",
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "font": {
+                      "code": "--al-theme-typography-heading-lg",
+                      "figma": null
+                    },
+                    "font-weight": {
+                      "code": "--al-font-weight-bold",
+                      "figma": "typography/font-weight/bold"
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-heading-lg-bold-letter-spacing",
+                      "figma": null
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "h2",
+                      "cls": "al-c-heading al-c-heading--lg al-is-bold",
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-heading-lg",
+                          "figma": null
+                        },
+                        "font-weight": {
+                          "code": "--al-font-weight-bold",
+                          "figma": "typography/font-weight/bold"
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-heading-lg-bold-letter-spacing",
+                          "figma": null
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "p",
+                  "cls": "sl-c-section-header__dek",
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "tokens": [
+    "--al-font-weight-bold",
+    "--al-theme-color-content-default",
+    "--al-theme-color-content-default-weak",
+    "--al-theme-space",
+    "--al-theme-space-lg",
+    "--al-theme-space-xs",
+    "--al-theme-typography-heading-lg",
+    "--al-theme-typography-heading-lg-bold-letter-spacing"
+  ],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": [
+      "dek",
+      "heading",
+      "kicker",
+      "link",
+      "rule"
+    ]
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/sl-web-components/components/section-header/section-header.ts",
+      "tagName": "al-section-header",
+      "workspace": "@southleft/sl-web-components"
+    },
+    "figma": {
+      "fileKey": "rdhBS9t89V42E7EfiPjmSa",
+      "componentSetName": "Section Header",
+      "nodeId": "10:3310",
+      "url": "https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-3310"
+    }
+  }
+}

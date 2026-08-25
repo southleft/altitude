@@ -1,0 +1,322 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-search",
+  "name": "Search",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-search",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [
+    {
+      "name": "ariaActiveDescendantId",
+      "description": "Active element in the dropdown panel\n1. This is used to read out the active value to the user",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "ariaActiveDescendantId"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "ariaControlsId",
+      "description": "The unique id of the field",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "ariaControlsId"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "ariaDescribedBy",
+      "description": "Aria describedby\n1. Used to connect the field note and errorNote for accessibility",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "ariaDescribedBy"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "buttonText",
+      "description": "Search button text",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "buttonText"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "clearButtonText",
+      "description": "Clear button text",
+      "type": "string",
+      "rawType": "string",
+      "default": "'Clear text'",
+      "bindings": {
+        "code": {
+          "attribute": "clearButtonText"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "errorNote",
+      "description": "Error message for the field",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "errorNote"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "fieldId",
+      "description": "The unique id of the field",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "fieldId"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "fieldNote",
+      "description": "Description for the field",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "fieldNote"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "hideLabel",
+      "description": "Visually hide the label from the UI",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "hideLabel"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isActive",
+      "description": "Active state",
+      "type": "boolean",
+      "rawType": "boolean",
+      "default": "false",
+      "bindings": {
+        "code": {
+          "attribute": "isActive"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isActiveDropdown",
+      "description": "Active state",
+      "type": "boolean",
+      "rawType": "boolean",
+      "default": "false",
+      "bindings": {
+        "code": {
+          "attribute": "isActiveDropdown"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isDisabled",
+      "description": "Disabled attribute",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDisabled"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isDynamic",
+      "description": "is Dynamic",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDynamic"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isEmpty",
+      "description": "Use this Flag along with emptyMessage named slot to report error message",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isEmpty"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isError",
+      "description": "Error state",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isError"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isFocusedIn",
+      "description": "Focused in menu toggle",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isFocusedIn"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "label",
+      "description": "Label of the form field",
+      "type": "string",
+      "rawType": "string",
+      "default": "'Search'",
+      "bindings": {
+        "code": {
+          "attribute": "label"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "maxlength",
+      "description": "Maxlength of characters for the search",
+      "type": "number",
+      "rawType": "number",
+      "bindings": {
+        "code": {
+          "attribute": "maxlength"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "placeholder",
+      "description": "Placeholder text",
+      "type": "string",
+      "rawType": "string",
+      "default": "'Find asset'",
+      "bindings": {
+        "code": {
+          "attribute": "placeholder"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "position",
+      "description": "Position property",
+      "type": "enum",
+      "rawType": "'bottom' | 'top'",
+      "values": [
+        "bottom",
+        "top"
+      ],
+      "default": "'bottom'",
+      "bindings": {
+        "code": {
+          "attribute": "position"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "value",
+      "description": "Input value",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "value"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "onSearchChange",
+      "description": "Fired when the search query changes. Detail: `{ value }`."
+    }
+  ],
+  "slots": [
+    {
+      "name": "",
+      "description": "The search's dropdown content"
+    },
+    {
+      "name": "error",
+      "description": "If content is slotted, it will display in place of the errorNote property"
+    },
+    {
+      "name": "field-note",
+      "description": "If content is slotted, it will display in place of the fieldNote property"
+    }
+  ],
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [
+      "ariaActiveDescendantId",
+      "ariaControlsId",
+      "ariaDescribedBy"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/search/search.ts",
+      "tagName": "al-search",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

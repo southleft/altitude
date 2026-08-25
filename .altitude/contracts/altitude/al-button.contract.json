@@ -1,0 +1,409 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-button",
+  "name": "Button",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-button",
+  "semantics": {
+    "element": "button",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "ariaControls",
+      "description": "aria-controls attribute on the button\n1. Used for items like the buttons attached drawers",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "ariaControls"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "fullWidth",
+      "description": "Full width button",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "fullWidth"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "hideText",
+      "description": "Visually hide button text (but text is still accessible to assistive technology)\n1. Use this for icon-only buttons for accessibility",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "hideText"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "href",
+      "description": "URL if this is an <a> element - this swaps <button> for <a>",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "href"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isAriaDisabled",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isAriaDisabled"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isDisabled",
+      "description": "Disabled attribute",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDisabled"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isExpanded",
+      "description": "Indicates this button is a toggle button and whether it is pressed or not.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isExpanded"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isPressed",
+      "description": "Indicates this button is a toggle button and whether it is pressed or not.",
+      "type": "string",
+      "rawType": "boolean | 'mixed'",
+      "bindings": {
+        "code": {
+          "attribute": "isPressed"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "label",
+      "description": "Indicates the aria label to apply to the button.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "label"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "name",
+      "description": "Indicates the name when submitted with form data.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "name"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "target",
+      "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
+      "type": "enum",
+      "rawType": "'_blank' | '_self' | '_parent' | '_top'",
+      "values": [
+        "_blank",
+        "_parent",
+        "_self",
+        "_top"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "target"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "type",
+      "description": "Type of button",
+      "type": "enum",
+      "rawType": "'button' | 'submit' | 'reset'",
+      "values": [
+        "button",
+        "reset",
+        "submit"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "type"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "value",
+      "description": "Indicates the value associated with the name when submitted with form data.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "value"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "variant",
+      "description": "Style variant\n- **default** renders the button used for primary actions\n- **secondary** renders the button used for secondary actions\n- **tertiary** renders the button with an outlined style\n- **bare** renders the button with a bare style\n- **danger** renders the button used for caution actions",
+      "type": "enum",
+      "rawType": "'secondary' | 'tertiary' | 'bare' | 'danger'",
+      "values": [
+        "bare",
+        "danger",
+        "secondary",
+        "tertiary"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "variant"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Variant",
+          "options": [
+            "Bare",
+            "Danger",
+            "Primary",
+            "Secondary",
+            "Tertiary"
+          ]
+        }
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The button text content. Omit when rendering an icon-only button (set `hideText` + `label` instead)."
+    },
+    {
+      "name": "after",
+      "description": "Content to display after the button text, typically an icon. Icon-only button pattern: set `hideText` + provide an accessible name via `label`, then place the icon in the `before` slot. Do NOT also include a visible text node — the slot's default text content is hidden but still present in the layout, and a duplicate label produces a redundant accessible name. Example: <al-button hideText label=\"Open actions menu\" ariaControls=\"menu-id\"> <al-icon-dots-vertical slot=\"before\" iconTitle=\"Actions\"></al-icon-dots-vertical> </al-button>"
+    },
+    {
+      "name": "before",
+      "description": "Content to display before the button text, typically an icon."
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Variant=bare,Width=fill",
+  "anatomy": {
+    "root": {
+      "tag": "button",
+      "cls": "al-c-button al-c-button--bare al-c-button--full-width",
+      "layout": {
+        "display": "inline-flex",
+        "direction": "row",
+        "align": "center",
+        "justify": "center"
+      },
+      "tokens": {
+        "background-color": {
+          "code": "--al-theme-color-background-transparent-default",
+          "figma": "theme/color/background/transparent-default"
+        },
+        "border-bottom-left-radius": {
+          "code": "--al-theme-border-radius",
+          "figma": "theme/border/radius/@"
+        },
+        "border-bottom-right-radius": {
+          "code": "--al-theme-border-radius",
+          "figma": "theme/border/radius/@"
+        },
+        "border-radius": {
+          "code": "--al-theme-border-radius",
+          "figma": "theme/border/radius/@"
+        },
+        "border-top-left-radius": {
+          "code": "--al-theme-border-radius",
+          "figma": "theme/border/radius/@"
+        },
+        "border-top-right-radius": {
+          "code": "--al-theme-border-radius",
+          "figma": "theme/border/radius/@"
+        },
+        "color": {
+          "code": "--al-theme-color-content-default",
+          "figma": "theme/color/content/default"
+        },
+        "column-gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "font-weight": {
+          "code": "--al-font-weight-bold",
+          "figma": "typography/font-weight/bold"
+        },
+        "gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "padding": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "padding-bottom": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "padding-left": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        },
+        "padding-right": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        },
+        "padding-top": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "row-gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        }
+      },
+      "children": [
+        {
+          "tag": "span",
+          "cls": "al-c-button__text",
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "span",
+              "cls": "al-c-button__text",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stateOverrides": {
+      "hover": {
+        "0": {
+          "color": {
+            "code": "--al-theme-color-content-default-weak",
+            "figma": "theme/color/content/default-weak"
+          }
+        }
+      },
+      "focus": {
+        "0": {
+          "outline": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-color": {
+            "code": "--al-theme-color-border-primary-default",
+            "figma": "theme/color/border/primary-default"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-width": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        }
+      },
+      "disabled": {
+        "0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        }
+      }
+    }
+  },
+  "tokens": [
+    "--al-font-weight-bold",
+    "--al-theme-border-radius",
+    "--al-theme-border-width-md",
+    "--al-theme-color-background-transparent-default",
+    "--al-theme-color-border-primary-default",
+    "--al-theme-color-content-default",
+    "--al-theme-color-content-default-weak",
+    "--al-theme-opacity-disabled",
+    "--al-theme-space",
+    "--al-theme-space-xs"
+  ],
+  "a11y": {
+    "ariaAttributes": [
+      "ariaControls",
+      "isAriaDisabled",
+      "variant"
+    ],
+    "cssParts": [
+      "button"
+    ]
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/button/button.ts",
+      "tagName": "al-button",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": "Button",
+      "nodeId": "4271:9562",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=4271-9562"
+    }
+  }
+}

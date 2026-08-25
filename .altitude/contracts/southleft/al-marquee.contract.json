@@ -1,0 +1,244 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-marquee",
+  "name": "Marquee",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-marquee\n\nAn endless belt of outline display type. Decorative reinforcement of the\npage's message — it pauses on hover and stands still under reduced motion.\n\nItems are given as slotted elements and the component renders the belt\nitself, twice:\n\n```html\n<al-marquee>\n  <span>Design Systems</span>\n  <span data-variant=\"solid\">×</span>\n  <span>AI</span>\n  <span data-variant=\"mono\">— built by the people building the tools —</span>\n</al-marquee>\n```\n\nWHY THE SLOT IS A DATA SOURCE, NOT THE RENDERED CONTENT. A seamless loop\nneeds the sequence present twice, so the `-50%` translate lands the second\ncopy exactly where the first began. A slot can only project its nodes ONCE —\nthere is no way to show the same light-DOM node in two places — so the\ncomponent reads the slotted elements, hides the slot, and renders two copies\ninto the shadow root. Styling then lives in ordinary shadow CSS rather than\nbeing split between `::slotted()` for the originals and normal rules for the\nclones.\n\nThis is arrangement the component genuinely owns: the belt is a single\nanimated track, not a place a consumer arranges boxes.",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "paused",
+      "description": "Pause the belt. Reflected so a page can stop it from outside\n(`al-marquee[paused]`) without reaching into the shadow root.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "paused"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Paused",
+          "options": [
+            "Paused",
+            "Running"
+          ]
+        }
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The items. Each element's text becomes one item; `data-variant=\"solid\"` fills it in the accent colour and `data-variant=\"mono\"` renders it as small mono type."
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Paused=paused",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "sl-c-marquee",
+      "layout": {
+        "display": "block",
+        "direction": "row",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {},
+      "children": [
+        {
+          "tag": "div",
+          "cls": "sl-c-marquee__track",
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "span",
+              "cls": "sl-c-marquee__item sl-c-marquee__item--outline",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "font-family": {
+                  "code": "--al-font-family-secondary",
+                  "figma": "typography/font-family/secondary"
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "span",
+              "cls": "sl-c-marquee__item sl-c-marquee__item--solid",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-primary-default",
+                  "figma": "theme/color/content/primary-default"
+                },
+                "font-family": {
+                  "code": "--al-font-family-secondary",
+                  "figma": "typography/font-family/secondary"
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "span",
+              "cls": "sl-c-marquee__item sl-c-marquee__item--outline",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "font-family": {
+                  "code": "--al-font-family-secondary",
+                  "figma": "typography/font-family/secondary"
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "span",
+              "cls": "sl-c-marquee__item sl-c-marquee__item--mono",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "span",
+              "cls": "sl-c-marquee__item sl-c-marquee__item--outline",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "font-family": {
+                  "code": "--al-font-family-secondary",
+                  "figma": "typography/font-family/secondary"
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "span",
+              "cls": "sl-c-marquee__item sl-c-marquee__item--solid",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-primary-default",
+                  "figma": "theme/color/content/primary-default"
+                },
+                "font-family": {
+                  "code": "--al-font-family-secondary",
+                  "figma": "typography/font-family/secondary"
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "span",
+              "cls": "sl-c-marquee__item sl-c-marquee__item--outline",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "font-family": {
+                  "code": "--al-font-family-secondary",
+                  "figma": "typography/font-family/secondary"
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "span",
+              "cls": "sl-c-marquee__item sl-c-marquee__item--mono",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "tokens": [
+    "--al-font-family-secondary",
+    "--al-theme-color-content-default-weak",
+    "--al-theme-color-content-primary-default"
+  ],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": [
+      "track"
+    ]
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/sl-web-components/components/marquee/marquee.ts",
+      "tagName": "al-marquee",
+      "workspace": "@southleft/sl-web-components"
+    },
+    "figma": {
+      "fileKey": "rdhBS9t89V42E7EfiPjmSa",
+      "componentSetName": "Marquee",
+      "nodeId": "10:3372",
+      "url": "https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-3372"
+    }
+  }
+}

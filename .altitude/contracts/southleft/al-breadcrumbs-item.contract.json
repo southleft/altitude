@@ -1,0 +1,358 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-breadcrumbs-item",
+  "name": "Breadcrumbs Item",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-breadcrumbs-item",
+  "semantics": {
+    "element": "li",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "hasSeparator",
+      "description": "Indicates whether or not to add a separator icon after the breadcrumb item",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "hasSeparator"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "href",
+      "description": "Link URL",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "href"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isCurrent",
+      "description": "Indicates if this the is the currently active breadcrumb item\n- **true** This is the current breadcrumb\n- **false** This is not the current breadcrumb",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isCurrent"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isTruncated",
+      "description": "Truncated attribute\n- Dynamically set by the ALBreadcrumbs\n- **true** The slotted content does not display in an <a></a> or <button></button>\n- **false** The slotted content does displays in an <a></a> or <button></button>",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isTruncated"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "target",
+      "description": "Target attribute for a link (i.e. set to _blank to open in new tab)",
+      "type": "enum",
+      "rawType": "'_blank' | '_self' | '_parent' | '_top'",
+      "values": [
+        "_blank",
+        "_parent",
+        "_self",
+        "_top"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "target"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The breadcrumb item's content, typically text"
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Current=No,Separator=no",
+  "anatomy": {
+    "root": {
+      "tag": "li",
+      "cls": "al-c-breadcrumbs-item",
+      "layout": {
+        "display": "flex",
+        "direction": "row",
+        "align": "center",
+        "justify": "flex-start"
+      },
+      "tokens": {
+        "color": {
+          "code": "--al-theme-color-content-default-weak",
+          "figma": "theme/color/content/default-weak"
+        },
+        "column-gap": {
+          "code": "--al-theme-space-xxs",
+          "figma": "theme/space/xxs"
+        },
+        "font": {
+          "code": "--al-theme-typography-body-lg",
+          "figma": null
+        },
+        "gap": {
+          "code": "--al-theme-space-xxs",
+          "figma": "theme/space/xxs"
+        },
+        "letter-spacing": {
+          "code": "--al-theme-typography-body-lg-letter-spacing",
+          "figma": null
+        },
+        "row-gap": {
+          "code": "--al-theme-space-xxs",
+          "figma": "theme/space/xxs"
+        }
+      },
+      "children": [
+        {
+          "tag": "a",
+          "cls": "al-c-breadcrumbs-item__label",
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "normal"
+          },
+          "tokens": {
+            "background-color": {
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
+            },
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius-md",
+              "figma": "theme/border/radius/md"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius-md",
+              "figma": "theme/border/radius/md"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius-md",
+              "figma": "theme/border/radius/md"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius-md",
+              "figma": "theme/border/radius/md"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius-md",
+              "figma": "theme/border/radius/md"
+            },
+            "color": {
+              "code": "--al-theme-color-content-default-weak",
+              "figma": "theme/color/content/default-weak"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "font": {
+              "code": "--al-theme-typography-body-lg",
+              "figma": null
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-body-lg-letter-spacing",
+              "figma": null
+            },
+            "padding": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "padding-left": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-right": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-top": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "a",
+              "cls": "al-c-breadcrumbs-item__label",
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "background-color": {
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
+                },
+                "border-bottom-left-radius": {
+                  "code": "--al-theme-border-radius-md",
+                  "figma": "theme/border/radius/md"
+                },
+                "border-bottom-right-radius": {
+                  "code": "--al-theme-border-radius-md",
+                  "figma": "theme/border/radius/md"
+                },
+                "border-radius": {
+                  "code": "--al-theme-border-radius-md",
+                  "figma": "theme/border/radius/md"
+                },
+                "border-top-left-radius": {
+                  "code": "--al-theme-border-radius-md",
+                  "figma": "theme/border/radius/md"
+                },
+                "border-top-right-radius": {
+                  "code": "--al-theme-border-radius-md",
+                  "figma": "theme/border/radius/md"
+                },
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "font": {
+                  "code": "--al-theme-typography-body-lg",
+                  "figma": null
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-lg-letter-spacing",
+                  "figma": null
+                },
+                "padding": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stateOverrides": {
+      "hover": {
+        "0.0": {
+          "background": {
+            "code": "--al-theme-color-background-default",
+            "figma": "theme/color/background/default"
+          },
+          "background-color": {
+            "code": "--al-theme-color-background-default",
+            "figma": "theme/color/background/default"
+          },
+          "color": {
+            "code": "--al-theme-color-content-default",
+            "figma": "theme/color/content/default"
+          }
+        },
+        "0.0.0": {
+          "background": {
+            "code": "--al-theme-color-background-default",
+            "figma": "theme/color/background/default"
+          },
+          "background-color": {
+            "code": "--al-theme-color-background-default",
+            "figma": "theme/color/background/default"
+          },
+          "color": {
+            "code": "--al-theme-color-content-default",
+            "figma": "theme/color/content/default"
+          }
+        }
+      }
+    }
+  },
+  "tokens": [
+    "--al-theme-border-radius-md",
+    "--al-theme-color-background-default",
+    "--al-theme-color-background-transparent-default",
+    "--al-theme-color-content-default",
+    "--al-theme-color-content-default-weak",
+    "--al-theme-space-xs",
+    "--al-theme-space-xxs",
+    "--al-theme-typography-body-lg",
+    "--al-theme-typography-body-lg-letter-spacing"
+  ],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/breadcrumbs-item/breadcrumbs-item.ts",
+      "tagName": "al-breadcrumbs-item",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "rdhBS9t89V42E7EfiPjmSa",
+      "componentSetName": "Breadcrumbs Item",
+      "nodeId": "10:2126",
+      "url": "https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-2126"
+    }
+  }
+}

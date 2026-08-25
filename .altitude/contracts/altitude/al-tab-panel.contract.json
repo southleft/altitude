@@ -1,0 +1,205 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-tab-panel",
+  "name": "Tab Panel",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-tab-panel",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "ariaId",
+      "description": "ID used to connect the tab panel to the tab aria-controls",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "ariaId"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "ariaLabelledBy",
+      "description": "Aria labelledby property\n- Used to connect tab trigger and tab panel for accessibility",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "ariaLabelledBy"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "idx",
+      "description": "Index to track tab panel",
+      "type": "number",
+      "rawType": "number",
+      "default": "0",
+      "bindings": {
+        "code": {
+          "attribute": "idx"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isActive",
+      "description": "Active state\n- **true** Renders a tab panel with selected/active state\n- **false** Renders a tab panel without selected/active state",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isActive"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The tab panel content"
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Active=Yes",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "al-c-tab-panel al-is-active",
+      "layout": {
+        "display": "flex",
+        "direction": "column",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {
+        "column-gap": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        },
+        "font": {
+          "code": "--al-typography-preset-16",
+          "figma": null
+        },
+        "gap": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        },
+        "row-gap": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        }
+      },
+      "children": [
+        {
+          "tag": "div",
+          "cls": "al-c-tab-panel al-is-active",
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "font": {
+              "code": "--al-typography-preset-16",
+              "figma": null
+            },
+            "gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "row-gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    "stateOverrides": {
+      "focus": {
+        "0": {
+          "outline": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-color": {
+            "code": "--al-theme-color-border-primary-default",
+            "figma": "theme/color/border/primary-default"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-width": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.0": {
+          "outline": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-color": {
+            "code": "--al-theme-color-border-primary-default",
+            "figma": "theme/color/border/primary-default"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-width": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        }
+      }
+    }
+  },
+  "tokens": [
+    "--al-theme-border-width-md",
+    "--al-theme-color-border-primary-default",
+    "--al-theme-space",
+    "--al-typography-preset-16"
+  ],
+  "a11y": {
+    "ariaAttributes": [
+      "ariaId",
+      "ariaLabelledBy"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/tab-panel/tab-panel.ts",
+      "tagName": "al-tab-panel",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": "Tab Panel",
+      "nodeId": "3436:2090",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3436-2090"
+    }
+  }
+}

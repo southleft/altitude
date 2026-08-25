@@ -1,0 +1,148 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-pagination-item",
+  "name": "Pagination Item",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-pagination-item",
+  "semantics": {
+    "element": "li",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "ariaLabel",
+      "description": "Aria label for the link for accessibility",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "ariaLabel"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "href",
+      "description": "Href for link",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "href"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isDisabled",
+      "description": "Disabled state",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDisabled"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isExpandable",
+      "description": "Expandable\n- **true** the item contains a popover with a list of page links\n- **false** the item contains a single page link",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isExpandable"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isSelected",
+      "description": "Selected state",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isSelected"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The pagination item's content"
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Selected=No,Kind=expandable",
+  "anatomy": {
+    "root": {
+      "tag": "li",
+      "cls": "al-c-pagination-item",
+      "layout": {
+        "display": "list-item",
+        "direction": "row",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {
+        "font": {
+          "code": "--al-typography-preset-14",
+          "figma": null
+        }
+      },
+      "children": [
+        {
+          "tag": "li",
+          "cls": "al-c-pagination-item",
+          "layout": {
+            "display": "list-item",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "font": {
+              "code": "--al-typography-preset-14",
+              "figma": null
+            }
+          },
+          "children": []
+        }
+      ]
+    }
+  },
+  "tokens": [
+    "--al-typography-preset-14"
+  ],
+  "a11y": {
+    "ariaAttributes": [
+      "ariaLabel"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/pagination-item/pagination-item.ts",
+      "tagName": "al-pagination-item",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": "Pagination Item",
+      "nodeId": "3436:1807",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3436-1807"
+    }
+  }
+}

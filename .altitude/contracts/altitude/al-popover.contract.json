@@ -1,0 +1,157 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-popover",
+  "name": "Popover",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-popover",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [
+    {
+      "name": "ariaLabelledBy",
+      "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "ariaLabelledBy"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "heading",
+      "description": "Heading text that appears in the header region",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "heading"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isActive",
+      "description": "Is active?\n- **true** Shows the popover container\n- **false** Hides the popover container",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isActive"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isDismissible",
+      "description": "Is dismissible?\n- **true** Shows the popover close button\n- **false** Hides the popover close button",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDismissible"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "position",
+      "description": "Positions the dropdown popover absolutely to the trigger.\n- **default** places the popover to the bottom left\n- **bottom-center** places the popover to the bottom center\n- **bottom-right** places the popover to the bottom right\n- **bottom-left** places the popover to the bottom left\n- **top-center** places the popover to the top center\n- **top-right** places the popover to the top right\n- **top-left** places the popover to the top left\n- **left** places the popover to the left\n- **left-top** places the popover to the left top\n- **right** places the popover to the right\n- **right-top** places the popover to the right top",
+      "type": "string",
+      "rawType": "| 'bottom-center' | 'bottom-right' | 'bottom-left' | 'top-center' | 'top-right' | 'top-left' | 'left' | 'left-top' | 'right' | 'right-top'",
+      "default": "'bottom-left'",
+      "bindings": {
+        "code": {
+          "attribute": "position"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "transitionDelay",
+      "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
+      "type": "number",
+      "rawType": "number",
+      "default": "400",
+      "bindings": {
+        "code": {
+          "attribute": "transitionDelay"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "variant",
+      "description": "Variants\n- **default** Displays the popover panel with padding\n- **menu** Displays the popover panel without padding",
+      "type": "string",
+      "rawType": "'menu'",
+      "bindings": {
+        "code": {
+          "attribute": "variant"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "onPopoverClose",
+      "description": "Fired when the popover closes by any means. Detail: `{ active }`."
+    },
+    {
+      "name": "onPopoverCloseButton",
+      "description": "Fired only when the popover's close button is activated. Detail: `{ active }`. Use `onPopoverClose` to catch every close path."
+    },
+    {
+      "name": "onPopoverOpen",
+      "description": "Fired when the popover opens. Detail: `{ active }` — the new open state."
+    }
+  ],
+  "slots": [
+    {
+      "name": "",
+      "description": "The main body of the popover"
+    },
+    {
+      "name": "footer",
+      "description": "The footer of the popover that appears below the main slot"
+    },
+    {
+      "name": "header",
+      "description": "The header of the popover that appears above the main slot"
+    },
+    {
+      "name": "trigger",
+      "description": "The trigger that opens/closes the popover"
+    }
+  ],
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [
+      "ariaLabelledBy",
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/popover/popover.ts",
+      "tagName": "al-popover",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

@@ -1,0 +1,328 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-chip",
+  "name": "Chip",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-chip",
+  "semantics": {
+    "element": "button",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "isDismissed",
+      "description": "Is dismissed property\n- **true** Hides the chip\n- **false** Shows the chip",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDismissed"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isDismissible",
+      "description": "Dismissible property\n- **true** Adds an X to hide the chip on click\n- **false** Hides the X so the chip can not be hidden",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDismissible"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "type",
+      "description": "Type variant\n- **default** A chip with rounded corners\n- **squared** A chip with squared corners",
+      "type": "string",
+      "rawType": "'squared'",
+      "bindings": {
+        "code": {
+          "attribute": "type"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "variant",
+      "description": "Variant\n- **default** A chip with a strong contrast background\n- **secondary** A chip with a outline\n- **info** A chip with a info background\n- **success** A chip with a success background\n- **warning** A chip with a warning background\n- **danger** A chip with a danger background",
+      "type": "enum",
+      "rawType": "'secondary' | 'info' | 'success' | 'warning' | 'danger'",
+      "values": [
+        "danger",
+        "info",
+        "secondary",
+        "success",
+        "warning"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "variant"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Variant",
+          "options": [
+            "Danger",
+            "Default",
+            "Info",
+            "Secondary",
+            "Success",
+            "Warning"
+          ]
+        }
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "onChipClose",
+      "description": "Fired when the chip's remove control is activated. Carries no detail payload; read the chip's own properties from `event.target`."
+    }
+  ],
+  "slots": [
+    {
+      "name": "",
+      "description": "The chip content"
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Variant=danger,Shape=default,Dismissible=no",
+  "anatomy": {
+    "root": {
+      "tag": "button",
+      "cls": "al-c-chip al-c-chip--danger",
+      "layout": {
+        "display": "inline-flex",
+        "direction": "row",
+        "align": "center",
+        "justify": "center"
+      },
+      "tokens": {
+        "background-color": {
+          "code": "--al-theme-color-background-danger-default",
+          "figma": "theme/color/background/danger-default"
+        },
+        "border-bottom-left-radius": {
+          "code": "--al-base-space",
+          "figma": "base/space"
+        },
+        "border-bottom-right-radius": {
+          "code": "--al-base-space",
+          "figma": "base/space"
+        },
+        "border-radius": {
+          "code": "--al-base-space",
+          "figma": "base/space"
+        },
+        "border-top-left-radius": {
+          "code": "--al-base-space",
+          "figma": "base/space"
+        },
+        "border-top-right-radius": {
+          "code": "--al-base-space",
+          "figma": "base/space"
+        },
+        "color": {
+          "code": "--al-theme-color-content-danger-weak",
+          "figma": "theme/color/content/danger-weak"
+        },
+        "column-gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "font": {
+          "code": "--al-theme-typography-body-sm",
+          "figma": null
+        },
+        "gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "letter-spacing": {
+          "code": "--al-theme-typography-body-sm-letter-spacing",
+          "figma": null
+        },
+        "padding": {
+          "code": "--al-theme-space-xxs",
+          "figma": "theme/space/xxs"
+        },
+        "padding-bottom": {
+          "code": "--al-theme-space-xxs",
+          "figma": "theme/space/xxs"
+        },
+        "padding-left": {
+          "code": "--al-theme-space-sm",
+          "figma": "theme/space/sm"
+        },
+        "padding-right": {
+          "code": "--al-theme-space-sm",
+          "figma": "theme/space/sm"
+        },
+        "padding-top": {
+          "code": "--al-theme-space-xxs",
+          "figma": "theme/space/xxs"
+        },
+        "row-gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        }
+      },
+      "children": [
+        {
+          "tag": "button",
+          "cls": "al-c-chip al-c-chip--danger",
+          "layout": {
+            "display": "inline-flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "center"
+          },
+          "tokens": {
+            "background-color": {
+              "code": "--al-theme-color-background-danger-default",
+              "figma": "theme/color/background/danger-default"
+            },
+            "border-bottom-left-radius": {
+              "code": "--al-base-space",
+              "figma": "base/space"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-base-space",
+              "figma": "base/space"
+            },
+            "border-radius": {
+              "code": "--al-base-space",
+              "figma": "base/space"
+            },
+            "border-top-left-radius": {
+              "code": "--al-base-space",
+              "figma": "base/space"
+            },
+            "border-top-right-radius": {
+              "code": "--al-base-space",
+              "figma": "base/space"
+            },
+            "color": {
+              "code": "--al-theme-color-content-danger-weak",
+              "figma": "theme/color/content/danger-weak"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "font": {
+              "code": "--al-theme-typography-body-sm",
+              "figma": null
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-body-sm-letter-spacing",
+              "figma": null
+            },
+            "padding": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "padding-left": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "padding-right": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "padding-top": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    "stateOverrides": {
+      "focus": {
+        "0": {
+          "outline": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-color": {
+            "code": "--al-theme-color-focus-ring",
+            "figma": "theme/color/focus-ring"
+          },
+          "outline-width": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.0": {
+          "outline": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-color": {
+            "code": "--al-theme-color-focus-ring",
+            "figma": "theme/color/focus-ring"
+          },
+          "outline-width": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        }
+      }
+    }
+  },
+  "tokens": [
+    "--al-base-space",
+    "--al-theme-border-width-md",
+    "--al-theme-color-background-danger-default",
+    "--al-theme-color-content-danger-weak",
+    "--al-theme-color-focus-ring",
+    "--al-theme-space-sm",
+    "--al-theme-space-xs",
+    "--al-theme-space-xxs",
+    "--al-theme-typography-body-sm",
+    "--al-theme-typography-body-sm-letter-spacing"
+  ],
+  "a11y": {
+    "ariaAttributes": [
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/chip/chip.ts",
+      "tagName": "al-chip",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "rdhBS9t89V42E7EfiPjmSa",
+      "componentSetName": "Chip",
+      "nodeId": "10:1896",
+      "url": "https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-1896"
+    }
+  }
+}

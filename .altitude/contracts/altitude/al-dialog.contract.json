@@ -1,0 +1,155 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-dialog",
+  "name": "Dialog",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-dialog",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [
+    {
+      "name": "ariaLabelledBy",
+      "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "ariaLabelledBy"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "dialogTrigger",
+      "description": "The modal trigger if it not slotted in the 'trigger' slot\n- Must be set by the trigger's click callback when it calls the modal's open method",
+      "type": "string",
+      "rawType": "any",
+      "bindings": {
+        "code": {
+          "attribute": "dialogTrigger"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "disableClickOutside",
+      "description": "Disable click outside\n- **true** Disables closing the dialog on click outside of the dialog container\n- **false** Enables closing the dialog on click outside of the dialog container",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "disableClickOutside"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "heading",
+      "description": "Heading text that appears in the header region",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "heading"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isActive",
+      "description": "Is active?\n- **true** Shows the dialog container\n- **false** Hides the dialog container",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isActive"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "transitionDelay",
+      "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
+      "type": "number",
+      "rawType": "number",
+      "default": "400",
+      "bindings": {
+        "code": {
+          "attribute": "transitionDelay"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "width",
+      "description": "The width of the dialog container\n- If no value is entered, it defaults to 432px",
+      "type": "number",
+      "rawType": "number",
+      "bindings": {
+        "code": {
+          "attribute": "width"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "onDialogClose",
+      "description": "Fired when the dialog closes by any means, including backdrop click and Escape. Detail: `{ active, item }`."
+    },
+    {
+      "name": "onDialogCloseButton",
+      "description": "Fired only when the dialog's close button is activated. Detail: `{ active, item }`. Use `onDialogClose` to catch every close path."
+    },
+    {
+      "name": "onDialogOpen",
+      "description": "Fired when the dialog opens. Detail: `{ active, item }` — the new open state and the dialog element itself."
+    }
+  ],
+  "slots": [
+    {
+      "name": "",
+      "description": "The main body of the dialog"
+    },
+    {
+      "name": "footer",
+      "description": "The footer of the dialog that appears below the main slot"
+    },
+    {
+      "name": "header",
+      "description": "The header of the dialog that appears above the main slot"
+    },
+    {
+      "name": "trigger",
+      "description": "The trigger that opens/closes the dialog"
+    }
+  ],
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [
+      "ariaLabelledBy"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/dialog/dialog.ts",
+      "tagName": "al-dialog",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

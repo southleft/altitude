@@ -1,0 +1,68 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-focus-trap",
+  "name": "Focus Trap",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-focus-trap",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [
+    {
+      "name": "isActive",
+      "description": "Is the focus trap active?",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isActive"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "transitionDelay",
+      "description": "Delay in milliseconds before the focus trap is activated.\n- Can be set by the component using focus trap, when there is a css transition that needs to complete before the focus trap activates.",
+      "type": "number",
+      "rawType": "number",
+      "default": "0",
+      "bindings": {
+        "code": {
+          "attribute": "transitionDelay"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The content to trap in the focus trap"
+    }
+  ],
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/focus-trap/focus-trap.ts",
+      "tagName": "al-focus-trap",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

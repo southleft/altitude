@@ -1,0 +1,351 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-toast",
+  "name": "Toast",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-toast",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "autoClose",
+      "description": "Auto close?\n- Set whether you want the toast to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "autoClose"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "autoCloseDelay",
+      "description": "Delay property\n1. Number of seconds to close the toast when autoClose is enabled\n2. Default amount is 3",
+      "type": "number",
+      "rawType": "number",
+      "default": "3",
+      "bindings": {
+        "code": {
+          "attribute": "autoCloseDelay"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "description",
+      "description": "The toast description text",
+      "type": "string",
+      "rawType": "string",
+      "default": "''",
+      "bindings": {
+        "code": {
+          "attribute": "description"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isActive",
+      "description": "Is active?\n- **true** Displays the toast on the screen\n- **false** Hides the toast on the screen",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isActive"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isDismissible",
+      "description": "Is dismissible?\n- **false** If false, the toast will auto close after a delay\n- **true**  If true, this disables auto close and adds the ability for the user close the toast",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDismissible"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "showProgress",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "showProgress"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "variant",
+      "description": "Variants\n- **default** renders a toast that represents an informative state\n- **success** renders a toast that represents a success state\n- **warning** renders a toast that represents a warning state\n- **danger** renders a toast that represents an danger state",
+      "type": "enum",
+      "rawType": "'info' | 'success' | 'warning' | 'danger'",
+      "values": [
+        "danger",
+        "info",
+        "success",
+        "warning"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "variant"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "onToastClose",
+      "description": "Fired when the toast is dismissed. Detail: `{ active }`."
+    },
+    {
+      "name": "onToastOpen",
+      "description": "Fired when the toast becomes visible. Detail: `{ active }`."
+    }
+  ],
+  "slots": [
+    {
+      "name": "",
+      "description": "The toast title or primary text"
+    },
+    {
+      "name": "actions",
+      "description": "Actions to optionally display in the toast"
+    },
+    {
+      "name": "icon",
+      "description": "Slot in an icon to override the default one"
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Variant=danger,Dismissible=no",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "al-c-toast al-c-toast--danger al-is-active",
+      "layout": {
+        "display": "block",
+        "direction": "row",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {
+        "background-color": {
+          "code": "--al-theme-color-background-default",
+          "figma": "theme/color/background/default"
+        },
+        "border-bottom-left-radius": {
+          "code": "--al-theme-border-radius-md",
+          "figma": "theme/border/radius/md"
+        },
+        "border-bottom-right-radius": {
+          "code": "--al-theme-border-radius-md",
+          "figma": "theme/border/radius/md"
+        },
+        "border-radius": {
+          "code": "--al-theme-border-radius-md",
+          "figma": "theme/border/radius/md"
+        },
+        "border-top-left-radius": {
+          "code": "--al-theme-border-radius-md",
+          "figma": "theme/border/radius/md"
+        },
+        "border-top-right-radius": {
+          "code": "--al-theme-border-radius-md",
+          "figma": "theme/border/radius/md"
+        },
+        "box-shadow": {
+          "code": "--al-theme-box-shadow-lg",
+          "figma": "theme/box-shadow/lg"
+        },
+        "font-weight": {
+          "code": "--al-font-weight-bold",
+          "figma": "typography/font-weight/bold"
+        }
+      },
+      "children": [
+        {
+          "tag": "div",
+          "cls": "al-c-toast__wrapper",
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "space-between"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "row-gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-toast__icon",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "al-c-icon",
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "svg",
+                      "cls": "",
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "height": {
+                          "code": "--al-icon-height",
+                          "figma": null
+                        },
+                        "width": {
+                          "code": "--al-icon-width",
+                          "figma": null
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "path",
+                          "cls": "",
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-toast__body",
+              "layout": {
+                "display": "flex",
+                "direction": "column",
+                "align": "normal",
+                "justify": "center"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-toast__body",
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "tokens": [
+    "--al-font-weight-bold",
+    "--al-icon-height",
+    "--al-icon-width",
+    "--al-theme-border-radius-md",
+    "--al-theme-box-shadow-lg",
+    "--al-theme-color-background-default",
+    "--al-theme-space",
+    "--al-theme-space-xxs"
+  ],
+  "a11y": {
+    "ariaAttributes": [
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/toast/toast.ts",
+      "tagName": "al-toast",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

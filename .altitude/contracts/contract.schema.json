@@ -1,0 +1,283 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://altitude.pages.dev/schemas/contract.schema.json",
+  "title": "Altitude component contract",
+  "description": "Per-component, per-project contract: the canvas-expressible API surface (props, events, slots, states, anatomy, token bindings, a11y facts, Figma/code bindings) emitted from the repo's own generated artifacts (CEM, token-map, measure-components output, parity manifest). Adapted from southleft/ds-contracts-poc's contracts/contract.schema.json — see .altitude/contracts/README.md § Deviations for every field dropped or reshaped. Contracts REFERENCE design tokens by their `--al-*` custom-property name; they never define token values.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "id", "name", "version", "status", "semantics", "props", "bindings"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Relative path back to this schema, e.g. \"../contract.schema.json\"."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^al-[a-z0-9-]+$",
+      "description": "The custom-element tag name, e.g. \"al-button\". Doubles as the contract's stable identifier."
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable display name — the Figma component-set name when mapped, else a title-cased derivation of the tag."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Contract schema-instance version, independent of the component's own package version. Emitted contracts start at 0.1.0 (Phase D is expected to promote this)."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["derived", "draft", "stable", "deprecated"],
+      "description": "\"derived\" — machine-generated, not yet hand-reviewed (every contract emitted by scripts/contracts/emit-contracts.mjs today). \"draft\" / \"stable\" / \"deprecated\" are reserved for a future phase that promotes reviewed contracts to editable status."
+    },
+    "description": {
+      "type": "string",
+      "description": "The CEM's class-level description. Currently boilerplate (\"Component: al-button\") for every Altitude component — see README § Deviations."
+    },
+    "semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["element"],
+      "properties": {
+        "element": {
+          "type": ["string", "null"],
+          "description": "The rendered host HTML element (e.g. \"button\"), read from measured anatomy. `null` when anatomy is unavailable."
+        },
+        "role": {
+          "type": ["string", "null"],
+          "description": "ARIA role, when the CEM or measured anatomy names one. `null` when not determinable from canvas-expressible facts (no live accessibility-tree read is performed)."
+        }
+      }
+    },
+    "props": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "type", "bindings"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The HTML attribute name, as CEM records it (component authors use camelCase attribute names directly, e.g. \"isDisabled\")."
+          },
+          "description": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["boolean", "string", "number", "enum"],
+            "description": "Normalized from the CEM's TypeScript type text. A type that is a clean union of quoted string literals becomes \"enum\" with `values` populated; everything else falls back to \"boolean\" / \"number\" / \"string\" by best-effort text match, or \"string\" as the default."
+          },
+          "rawType": {
+            "type": "string",
+            "description": "The CEM's original TypeScript type text, preserved verbatim (e.g. \"boolean | 'mixed'\") for cases the normalized `type` cannot represent losslessly."
+          },
+          "values": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Present only when type is \"enum\" — the legal literal values, sorted."
+          },
+          "default": {
+            "description": "The prop's default value, when the CEM records one."
+          },
+          "bindings": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["code"],
+            "properties": {
+              "code": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["attribute"],
+                "properties": {
+                  "attribute": { "type": "string", "description": "HTML attribute name." },
+                  "member": { "type": "string", "description": "The backing class field name, when it differs from the attribute name." }
+                }
+              },
+              "figma": {
+                "type": ["object", "null"],
+                "additionalProperties": false,
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": ["VARIANT", "BOOLEAN", "TEXT", "INSTANCE_SWAP", "NONE"],
+                    "description": "The Figma component-property type, as observed by scripts/figma-parity/refresh-figma-digests.mjs."
+                  },
+                  "property": { "type": "string", "description": "The Figma component-property name (Title Case, e.g. \"Variant\")." },
+                  "options": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "The raw Figma option labels for a VARIANT property, as observed — NOT mapped value-for-value onto `values` (see README § Deviations: label pairing across the two sides is not attempted here)."
+                  }
+                },
+                "description": "`null` when this prop has no matched, OBSERVED Figma component property (never-refreshed manifest, or a prop the Figma set does not expose)."
+              }
+            }
+          }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string", "description": "Empty string for the default (unnamed) slot." },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "states": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["hover", "focus", "active", "disabled"] },
+      "description": "Interaction states actually captured by scripts/figma-atoms/measure-components.mjs for this component. Empty when anatomy is unavailable — see `anatomySource`."
+    },
+    "anatomySource": {
+      "type": "string",
+      "enum": ["measured", "unavailable"],
+      "description": "\"measured\" — `anatomy` was built from a real measure-components.mjs run. \"unavailable\" — no measured output existed on disk for this tag; `anatomy` is null. Never fabricated."
+    },
+    "anatomyCase": {
+      "type": ["string", "null"],
+      "description": "The variant `case` string (e.g. \"Variant=default,Width=hug\") sampled to build `anatomy`, for traceability. `null` when anatomySource is \"unavailable\"."
+    },
+    "anatomy": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["root"],
+          "properties": {
+            "root": { "$ref": "#/definitions/anatomyNode" },
+            "stateOverrides": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "hover": { "$ref": "#/definitions/nodeTokenDiff" },
+                "focus": { "$ref": "#/definitions/nodeTokenDiff" },
+                "active": { "$ref": "#/definitions/nodeTokenDiff" },
+                "disabled": { "$ref": "#/definitions/nodeTokenDiff" }
+              },
+              "description": "Per-state token deltas against `root`, keyed by node PATH (\"0\" = root, \"0.1\" = its second child, etc. — see anatomyNode traversal order). Only nodes/tokens that actually differ from the default state are present; a state absent here means the same case had no captured delta."
+            }
+          }
+        }
+      ]
+    },
+    "tokens": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^--al-" },
+      "description": "Every `--al-*` custom property referenced anywhere in `anatomy` (root, descendants, and state overrides), deduplicated and sorted. This is a REFERENCE list — token values live in the token pipeline (libs/al-web-components/styles/tokens), never here."
+    },
+    "a11y": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ariaAttributes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "CEM attribute names that carry ARIA semantics (name matches /aria/i), e.g. \"ariaControls\"."
+        },
+        "cssParts": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Named `::part()` targets the CEM records — the styleable/inspectable surface for an AT or a design tool."
+        }
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "figma"],
+      "properties": {
+        "code": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["importPath", "tagName", "workspace"],
+          "properties": {
+            "importPath": { "type": "string", "description": "Package-relative module path, e.g. \"@southleft/al-web-components/components/button/button.ts\"." },
+            "tagName": { "type": "string" },
+            "workspace": { "type": "string", "description": "The npm workspace this component ships from (the shared library, or a project's brandLibrary)." }
+          }
+        },
+        "figma": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["fileKey", "componentSetName", "nodeId"],
+          "properties": {
+            "fileKey": { "type": ["string", "null"] },
+            "componentSetName": { "type": ["string", "null"] },
+            "nodeId": { "type": ["string", "null"] },
+            "url": { "type": ["string", "null"] }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "anatomyNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tag"],
+      "properties": {
+        "tag": { "type": "string", "description": "The rendered HTML tag for this node." },
+        "cls": { "type": ["string", "null"], "description": "The node's authored class, when present." },
+        "layout": {
+          "anyOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "display": { "type": "string" },
+                "direction": { "type": "string" },
+                "align": { "type": "string" },
+                "justify": { "type": "string" }
+              }
+            }
+          ],
+          "description": "Coarse, canvas-expressible layout facts (no pixel geometry) computed from the measured node."
+        },
+        "tokens": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/tokenBinding" },
+          "description": "CSS property name -> token binding REFERENCED by this node in its default state."
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/anatomyNode" }
+        }
+      }
+    },
+    "tokenBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^--al-", "description": "The `--al-*` custom property this CSS declaration resolves to." },
+        "figma": { "type": ["string", "null"], "description": "The matching Figma variable path from scripts/figma-atoms/token-map.mjs (e.g. \"theme/color/background/primary-default\"), or null when token-map has no entry for this token." }
+      }
+    },
+    "nodeTokenDiff": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": { "$ref": "#/definitions/tokenBinding" }
+      },
+      "description": "Node path -> { cssProperty -> token binding } for tokens that changed (or newly appeared) in this state, relative to the same path in `root`."
+    }
+  }
+}

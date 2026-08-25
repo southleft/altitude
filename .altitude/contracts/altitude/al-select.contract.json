@@ -1,0 +1,299 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-select",
+  "name": "Select",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-select",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [
+    {
+      "name": "align",
+      "description": "**Select alignment**\n- **bottom** Dropdown panel appears on the bottom\n- **top** Dropdown panel appears on the top",
+      "type": "enum",
+      "rawType": "'bottom' | 'top'",
+      "values": [
+        "bottom",
+        "top"
+      ],
+      "default": "'bottom'",
+      "bindings": {
+        "code": {
+          "attribute": "align"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "ariaDescribedBy",
+      "description": "Aria describedby\n1. Used to connect the field note in select to the select menu for accessibility",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "ariaDescribedBy"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "errorNote",
+      "description": "The select error note",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "errorNote"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "fieldId",
+      "description": "The unique id of the select",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "fieldId"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "fieldNote",
+      "description": "The select field note",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "fieldNote"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "hasSearch",
+      "description": "Add a search input to the dropdown panel",
+      "type": "boolean",
+      "rawType": "boolean",
+      "default": "false",
+      "bindings": {
+        "code": {
+          "attribute": "hasSearch"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "hideLabel",
+      "description": "Hide the label?",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "hideLabel"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isActive",
+      "description": "is Active",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isActive"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isActiveDropdown",
+      "description": "is Active select\n1. Select is open when set to true. Close when set to false",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isActiveDropdown"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isDisabled",
+      "description": "The select's disabled attribute",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDisabled"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isError",
+      "description": "Error state",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isError"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isOptional",
+      "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isOptional"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isReadonly",
+      "description": "Readonly attribute\n- Specifies that an input field is read-only",
+      "type": "boolean",
+      "rawType": "boolean",
+      "default": "true",
+      "bindings": {
+        "code": {
+          "attribute": "isReadonly"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isRequired",
+      "description": "The select's required attribute",
+      "type": "boolean",
+      "rawType": "boolean",
+      "default": "false",
+      "bindings": {
+        "code": {
+          "attribute": "isRequired"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "label",
+      "description": "The select's label",
+      "type": "string",
+      "rawType": "string",
+      "default": "'Label'",
+      "bindings": {
+        "code": {
+          "attribute": "label"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "name",
+      "description": "The select's name attribute",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "name"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "placeholder",
+      "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an input element",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "placeholder"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "title",
+      "description": "The select's title",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "title"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "value",
+      "description": "The select's value attribute",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "value"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "onSelectClose",
+      "description": "Fired when the option list closes. Detail: `{ active }` — always `false`."
+    },
+    {
+      "name": "onSelectOpen",
+      "description": "Fired when the option list opens. Detail: `{ active }` — always `true`."
+    }
+  ],
+  "slots": [
+    {
+      "name": "",
+      "description": "The select content"
+    },
+    {
+      "name": "error",
+      "description": "If content is slotted, it will display in place of the errorNote property"
+    },
+    {
+      "name": "field-note",
+      "description": "If content is slotted, it will display in place of the fieldNote property"
+    }
+  ],
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [
+      "ariaDescribedBy"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/select/select.ts",
+      "tagName": "al-select",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

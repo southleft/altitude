@@ -1,0 +1,301 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-banner",
+  "name": "Banner",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-banner\n\nA page-level, full-width announcement bar — distinct from `<al-alert>`\n(which is a card-surfaced, contextual message). Reuses the same tone\nvocabulary as `<al-alert>`/`<al-toast>` (icon color by `variant`) so the\ntwo read as siblings.",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "isDismissed",
+      "description": "Whether the banner has been dismissed. Owned state, toggled by `close()`.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDismissed"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isDismissible",
+      "description": "Whether the banner shows a dismiss control.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDismissible"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "variant",
+      "description": "Variant\n- **default** renders a banner that represents an informative announcement\n- **success** renders a banner that represents a success state\n- **warning** renders a banner that represents a warning state\n- **danger** renders a banner that represents a danger/incident state",
+      "type": "enum",
+      "rawType": "'success' | 'warning' | 'danger'",
+      "values": [
+        "danger",
+        "success",
+        "warning"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "variant"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Variant",
+          "options": [
+            "Danger",
+            "Info",
+            "Success",
+            "Warning"
+          ]
+        }
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "onBannerClose",
+      "description": "Fired when the banner is dismissed. Detail: `{ isDismissed }`."
+    }
+  ],
+  "slots": [
+    {
+      "name": "",
+      "description": "The banner's message content."
+    },
+    {
+      "name": "icon",
+      "description": "Slot in an icon to override the tone-default one."
+    },
+    {
+      "name": "link",
+      "description": "Optional trailing link/CTA (typically an `<al-link>`)."
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Variant=danger,Dismissible=no",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "al-c-banner al-c-banner--danger",
+      "layout": {
+        "display": "flex",
+        "direction": "row",
+        "align": "center",
+        "justify": "normal"
+      },
+      "tokens": {
+        "background-color": {
+          "code": "--al-theme-color-background-default",
+          "figma": "theme/color/background/default"
+        },
+        "column-gap": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        },
+        "gap": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        },
+        "padding": {
+          "code": "--al-theme-space-sm",
+          "figma": "theme/space/sm"
+        },
+        "padding-bottom": {
+          "code": "--al-theme-space-sm",
+          "figma": "theme/space/sm"
+        },
+        "padding-left": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        },
+        "padding-right": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        },
+        "padding-top": {
+          "code": "--al-theme-space-sm",
+          "figma": "theme/space/sm"
+        },
+        "row-gap": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        }
+      },
+      "children": [
+        {
+          "tag": "div",
+          "cls": "al-c-banner__icon",
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "span",
+              "cls": "al-c-icon",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "svg",
+                  "cls": "",
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "height": {
+                      "code": "--al-icon-height",
+                      "figma": null
+                    },
+                    "width": {
+                      "code": "--al-icon-width",
+                      "figma": null
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "path",
+                      "cls": "",
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "div",
+          "cls": "al-c-banner__body",
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-banner__content",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-typography-preset-14",
+                  "figma": null
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-banner__content",
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "font": {
+                      "code": "--al-typography-preset-14",
+                      "figma": null
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "tokens": [
+    "--al-icon-height",
+    "--al-icon-width",
+    "--al-theme-color-background-default",
+    "--al-theme-color-content-default",
+    "--al-theme-space",
+    "--al-theme-space-sm",
+    "--al-typography-preset-14"
+  ],
+  "a11y": {
+    "ariaAttributes": [
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/banner/banner.ts",
+      "tagName": "al-banner",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": "Banner",
+      "nodeId": "729:229",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=729-229"
+    }
+  }
+}

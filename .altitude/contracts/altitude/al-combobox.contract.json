@@ -1,0 +1,651 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-combobox",
+  "name": "Combobox",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-combobox\n\nA text input with a filtered listbox popup, following the WAI-ARIA\ncombobox/listbox/option pattern. Reuses `al-dropdown-panel` for the popup\nsurface, `al-list`/`al-list-item` for options, and `al-input` for the\nfield — the same primitives `al-select` and `al-search` are built on —\nrather than reinventing popover positioning or option rendering.\n\nFiltering is either automatic (`filterMode=\"auto\"`, the default —\n`items` is filtered client-side by a case-insensitive substring match on\n`label`) or manual (`filterMode=\"manual\"` — the consumer listens for\n`onComboboxFilter` and reassigns `items` themselves, e.g. from an async\nAPI call).",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "align",
+      "description": "**Combobox alignment**\n- **bottom** Popup appears below the field\n- **top** Popup appears above the field",
+      "type": "enum",
+      "rawType": "'bottom' | 'top'",
+      "values": [
+        "bottom",
+        "top"
+      ],
+      "default": "'bottom'",
+      "bindings": {
+        "code": {
+          "attribute": "align"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "ariaDescribedBy",
+      "description": "Aria describedby",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "ariaDescribedBy"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "errorNote",
+      "description": "The combobox error note",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "errorNote"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "fieldId",
+      "description": "The unique id of the field",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "fieldId"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "fieldNote",
+      "description": "The combobox field note",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "fieldNote"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "filterMode",
+      "description": "How `items` is filtered as the user types.\n- **auto** filters `items` client-side by a case-insensitive substring match on `label`\n- **manual** performs no client-side filtering — listen for `onComboboxFilter` and\n  reassign `items` yourself (e.g. after an async request)",
+      "type": "enum",
+      "rawType": "'auto' | 'manual'",
+      "values": [
+        "auto",
+        "manual"
+      ],
+      "default": "'auto'",
+      "bindings": {
+        "code": {
+          "attribute": "filterMode"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "hideLabel",
+      "description": "Hide the label?",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "hideLabel"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isActiveDropdown",
+      "description": "Is the listbox popup open?",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isActiveDropdown"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isDisabled",
+      "description": "The combobox's disabled attribute",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDisabled"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isError",
+      "description": "Error state",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isError"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isOptional",
+      "description": "Optional state",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isOptional"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isRequired",
+      "description": "The combobox's required attribute",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isRequired"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "label",
+      "description": "The combobox's label",
+      "type": "string",
+      "rawType": "string",
+      "default": "'Label'",
+      "bindings": {
+        "code": {
+          "attribute": "label"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Label",
+          "options": [
+            "Hidden",
+            "Shown"
+          ]
+        }
+      }
+    },
+    {
+      "name": "noResultsText",
+      "description": "Text shown in the popup when no options match the current query.",
+      "type": "string",
+      "rawType": "string",
+      "default": "'No results found'",
+      "bindings": {
+        "code": {
+          "attribute": "noResultsText"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "placeholder",
+      "description": "Placeholder attribute",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "placeholder"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "selectedValue",
+      "description": "The `value` of the currently selected option, if any. `undefined` while\nthe user is typing a query that doesn't match a committed selection.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "selectedValue"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "value",
+      "description": "The current text in the input. Reflects the selected option's label once\nan option has been chosen.",
+      "type": "string",
+      "rawType": "string",
+      "default": "''",
+      "bindings": {
+        "code": {
+          "attribute": "value"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "onComboboxChange",
+      "description": "Fired when an option is selected. Detail: `{ value, label, item }`."
+    },
+    {
+      "name": "onComboboxClose",
+      "description": "Fired when the listbox closes. Detail: `{ active }` — always `false`."
+    },
+    {
+      "name": "onComboboxFilter",
+      "description": "Fired as the input text changes, before filtering is applied. Detail: `{ query }`."
+    },
+    {
+      "name": "onComboboxOpen",
+      "description": "Fired when the listbox opens. Detail: `{ active }` — always `true`."
+    }
+  ],
+  "slots": [
+    {
+      "name": "error",
+      "description": "If content is slotted, it will display in place of the errorNote property"
+    },
+    {
+      "name": "field-note",
+      "description": "If content is slotted, it will display in place of the fieldNote property"
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Label=hidden",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "al-c-combobox al-has-hidden-label al-c-combobox--align-bottom",
+      "layout": {
+        "display": "flex",
+        "direction": "column",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {
+        "column-gap": {
+          "code": "--al-theme-space-xxs",
+          "figma": "theme/space/xxs"
+        },
+        "gap": {
+          "code": "--al-theme-space-xxs",
+          "figma": "theme/space/xxs"
+        },
+        "row-gap": {
+          "code": "--al-theme-space-xxs",
+          "figma": "theme/space/xxs"
+        }
+      },
+      "children": [
+        {
+          "tag": "div",
+          "cls": "al-c-combobox__container",
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-input al-has-hidden-label",
+              "layout": {
+                "display": "flex",
+                "direction": "column",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-input__container",
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "input",
+                      "cls": "al-c-input__input",
+                      "layout": {
+                        "display": "inline-block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-color": {
+                          "code": "--al-theme-color-border-default",
+                          "figma": "theme/color/border/default"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-border-default",
+                          "figma": "theme/color/border/default"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width",
+                          "figma": "theme/border/width/@"
+                        },
+                        "border-width": {
+                          "code": "--al-theme-border-width",
+                          "figma": "theme/border/width/@"
+                        },
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-typography-preset-16",
+                          "figma": null
+                        },
+                        "min-height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "padding": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "padding-bottom": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "padding-left": {
+                          "code": "--al-theme-space",
+                          "figma": "theme/space/@"
+                        },
+                        "padding-right": {
+                          "code": "--al-theme-space",
+                          "figma": "theme/space/@"
+                        },
+                        "padding-top": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "label",
+                      "cls": "al-c-input__label",
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "column-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "font": {
+                          "code": "--al-typography-preset-16",
+                          "figma": null
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "span",
+                          "cls": "",
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "div",
+                      "cls": "al-c-input__after",
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "column-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "span",
+                          "cls": "al-c-icon",
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "svg",
+                              "cls": "",
+                              "layout": {
+                                "display": "flex",
+                                "direction": "row",
+                                "align": "center",
+                                "justify": "center"
+                              },
+                              "tokens": {
+                                "height": {
+                                  "code": "--al-icon-height",
+                                  "figma": null
+                                },
+                                "width": {
+                                  "code": "--al-icon-width",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "div",
+          "cls": "al-c-field-note",
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default-weak",
+              "figma": "theme/color/content/default-weak"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "font": {
+              "code": "--al-typography-preset-14",
+              "figma": null
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-field-note",
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "font": {
+                  "code": "--al-typography-preset-14",
+                  "figma": null
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "tokens": [
+    "--al-base-space",
+    "--al-icon-height",
+    "--al-icon-width",
+    "--al-theme-border-radius",
+    "--al-theme-border-width",
+    "--al-theme-color-background-transparent-default",
+    "--al-theme-color-border-default",
+    "--al-theme-color-content-default",
+    "--al-theme-color-content-default-weak",
+    "--al-theme-space",
+    "--al-theme-space-xs",
+    "--al-theme-space-xxs",
+    "--al-typography-preset-14",
+    "--al-typography-preset-16"
+  ],
+  "a11y": {
+    "ariaAttributes": [
+      "ariaDescribedBy"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/combobox/combobox.ts",
+      "tagName": "al-combobox",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": "Combobox",
+      "nodeId": null,
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/"
+    }
+  }
+}

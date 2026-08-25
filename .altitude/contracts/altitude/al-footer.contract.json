@@ -1,0 +1,42 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-footer",
+  "name": "Footer",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-footer\n\nThe site footer landmark and its vertical rhythm. Footer owns the `<footer>`\nelement, its block padding and the gap between stacked rows. Arrangement is\n`<al-layout>`'s job — link columns, legal rows and social clusters are the\npage's composition.\n\n```html\n<al-footer>\n  <al-layout direction=\"row\" justify=\"between\" wrap gap=\"xl\">\n    <al-logo></al-logo>\n    <al-layout direction=\"row\" wrap gap=\"xl\">...link columns...</al-layout>\n  </al-layout>\n  <al-divider></al-divider>\n  <al-layout direction=\"row\" justify=\"between\" align=\"center\" wrap>\n    <small>&copy; 2026 Acme</small>\n    <al-layout direction=\"row\" gap=\"sm\">...social...</al-layout>\n  </al-layout>\n</al-footer>\n```\n\nSee \"Arrangement vs. semantics\" in AGENTS.md.",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The footer content. Wrap each row in an `<al-layout>` to arrange it."
+    }
+  ],
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/footer/footer.ts",
+      "tagName": "al-footer",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

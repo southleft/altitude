@@ -1,0 +1,180 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-heading",
+  "name": "Heading",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-heading",
+  "semantics": {
+    "element": "h2",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "isBold",
+      "description": "Is bold?\n- **true** Renders the heading with semibold font weight\n- **false** Renders the heading with regular font weight",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isBold"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "tagName",
+      "description": "Heading tag name\n- **h1** renders an `h1` tag\n- **h2** renders an `h2` tag, this is the default\n- **h3** renders an `h3` tag\n- **h4** renders an `h4` tag\n- **h5** renders an `h5` tag\n- **h6** renders an `h6` tag",
+      "type": "enum",
+      "rawType": "'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'",
+      "values": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
+      "default": "'h2'",
+      "bindings": {
+        "code": {
+          "attribute": "tagName"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "variant",
+      "description": "Heading variants\n- **default** renders a heading with the XL font styles\n- **sm** renders a heading with the SM font styles\n- **md** renders a heading with the MD font styles\n- **lg** renders a heading with the LG font styles\n- **display-sm** renders a heading with the Display SM font styles\n- **display-md** renders a heading with the Display MD font styles\n- **display-lg** renders a heading with the Display LG font styles",
+      "type": "enum",
+      "rawType": "'display-lg' | 'display-md' | 'display-sm' | 'lg' | 'md' | 'sm'",
+      "values": [
+        "display-lg",
+        "display-md",
+        "display-sm",
+        "lg",
+        "md",
+        "sm"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "variant"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Variant",
+          "options": [
+            "Default",
+            "Display Lg",
+            "Display Md",
+            "Display Sm",
+            "Lg",
+            "Md",
+            "Sm"
+          ]
+        }
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The heading content"
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Variant=default,Weight=bold",
+  "anatomy": {
+    "root": {
+      "tag": "h2",
+      "cls": "al-c-heading al-is-bold",
+      "layout": {
+        "display": "block",
+        "direction": "row",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {
+        "color": {
+          "code": "--al-theme-color-content-default",
+          "figma": "theme/color/content/default"
+        },
+        "font": {
+          "code": "--al-theme-typography-heading-sm",
+          "figma": null
+        },
+        "font-weight": {
+          "code": "--al-font-weight-bold",
+          "figma": "typography/font-weight/bold"
+        },
+        "letter-spacing": {
+          "code": "--al-theme-typography-heading-sm-bold-letter-spacing",
+          "figma": null
+        }
+      },
+      "children": [
+        {
+          "tag": "h2",
+          "cls": "al-c-heading al-is-bold",
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "font": {
+              "code": "--al-theme-typography-heading-sm",
+              "figma": null
+            },
+            "font-weight": {
+              "code": "--al-font-weight-bold",
+              "figma": "typography/font-weight/bold"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-heading-sm-bold-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": []
+        }
+      ]
+    }
+  },
+  "tokens": [
+    "--al-font-weight-bold",
+    "--al-theme-color-content-default",
+    "--al-theme-typography-heading-sm",
+    "--al-theme-typography-heading-sm-bold-letter-spacing"
+  ],
+  "a11y": {
+    "ariaAttributes": [
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/heading/heading.ts",
+      "tagName": "al-heading",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "rdhBS9t89V42E7EfiPjmSa",
+      "componentSetName": "Heading",
+      "nodeId": "10:1926",
+      "url": "https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-1926"
+    }
+  }
+}

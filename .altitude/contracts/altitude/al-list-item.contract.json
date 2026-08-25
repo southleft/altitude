@@ -1,0 +1,328 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-list-item",
+  "name": "List Item",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-list-item",
+  "semantics": {
+    "element": "li",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "behavior",
+      "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **flyout** changes the nested items into flyout menus",
+      "type": "string",
+      "rawType": "'flyout'",
+      "bindings": {
+        "code": {
+          "attribute": "behavior"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "flyoutPosition",
+      "description": "Flyout position (only use with flyout behavior)\n- **left** positions the flyout menu to the left of the item trigger\n- **bottom** positions the flyout menu below the item trigger",
+      "type": "enum",
+      "rawType": "'left' | 'bottom' | 'top'",
+      "values": [
+        "bottom",
+        "left",
+        "top"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "flyoutPosition"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "href",
+      "description": "URL if this is an <a> element - this swaps <button> for <a>",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "href"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isActive",
+      "description": "Active state",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isActive"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isCurrent",
+      "description": "Current state",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isCurrent"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isDisabled",
+      "description": "Disabled attribute",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDisabled"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isError",
+      "description": "Error state\n1. Changes the component's treatment to represent an error",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isError"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "onClick",
+      "description": "Disabled attribute",
+      "type": "string",
+      "rawType": "() => void",
+      "bindings": {
+        "code": {
+          "attribute": "onClick"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "target",
+      "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one.\n  If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
+      "type": "enum",
+      "rawType": "'_blank' | '_self' | '_parent' | '_top'",
+      "values": [
+        "_blank",
+        "_parent",
+        "_self",
+        "_top"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "target"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "value",
+      "description": "Value for a list item that needs to return a value to an input in a dropdown. This is required for search/drop-down.\nValue can be a string or object ({lable, value} pair)",
+      "type": "string",
+      "rawType": "string | { label: string; value: any; [key: string]: unknown }",
+      "bindings": {
+        "code": {
+          "attribute": "value"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "variant",
+      "description": "Variants\n- **static** renders a list item that isn't interactive. Use for typeahead dropdowns",
+      "type": "string",
+      "rawType": "'static'",
+      "bindings": {
+        "code": {
+          "attribute": "variant"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Variant",
+          "options": [
+            "Default",
+            "Static"
+          ]
+        }
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The content of the list item"
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Variant=default,Current=No",
+  "anatomy": {
+    "root": {
+      "tag": "li",
+      "cls": "al-c-list-item",
+      "layout": {
+        "display": "list-item",
+        "direction": "row",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {},
+      "children": [
+        {
+          "tag": "button",
+          "cls": "al-c-list-item__link",
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "normal",
+            "justify": "space-between"
+          },
+          "tokens": {
+            "font": {
+              "code": "--al-typography-preset-14",
+              "figma": null
+            },
+            "width": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            }
+          },
+          "children": [
+            {
+              "tag": "span",
+              "cls": "al-c-list-item__body",
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-list-item__text",
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-list-item__text",
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "stateOverrides": {
+      "hover": {
+        "0.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        }
+      },
+      "focus": {
+        "0.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-color": {
+            "code": "--al-theme-color-border-primary-default",
+            "figma": "theme/color/border/primary-default"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-width": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        }
+      }
+    }
+  },
+  "tokens": [
+    "--al-theme-border-width-md",
+    "--al-theme-color-background-default-strong",
+    "--al-theme-color-border-primary-default",
+    "--al-theme-space-xs",
+    "--al-theme-space-xxs",
+    "--al-typography-preset-14"
+  ],
+  "a11y": {
+    "ariaAttributes": [
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/list-item/list-item.ts",
+      "tagName": "al-list-item",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": "List Item",
+      "nodeId": "3436:1747",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3436-1747"
+    }
+  }
+}

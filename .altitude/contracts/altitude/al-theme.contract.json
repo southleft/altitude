@@ -1,0 +1,136 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-theme",
+  "name": "Theme",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-theme",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [
+    {
+      "name": "brand",
+      "description": "Brand identifier. Currently shipped: 'altitude' | 'southleft'.",
+      "type": "enum",
+      "rawType": "'altitude' | 'southleft'",
+      "values": [
+        "altitude",
+        "southleft"
+      ],
+      "default": "'altitude'",
+      "bindings": {
+        "code": {
+          "attribute": "brand"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "contrast",
+      "description": "Contrast axis.",
+      "type": "enum",
+      "rawType": "'normal' | 'more'",
+      "values": [
+        "more",
+        "normal"
+      ],
+      "default": "'normal'",
+      "bindings": {
+        "code": {
+          "attribute": "contrast"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "density",
+      "description": "Density axis.",
+      "type": "enum",
+      "rawType": "'compact' | 'cozy' | 'comfortable'",
+      "values": [
+        "comfortable",
+        "compact",
+        "cozy"
+      ],
+      "default": "'comfortable'",
+      "bindings": {
+        "code": {
+          "attribute": "density"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "mode",
+      "description": "Color mode.",
+      "type": "enum",
+      "rawType": "'light' | 'dark'",
+      "values": [
+        "dark",
+        "light"
+      ],
+      "default": "'light'",
+      "bindings": {
+        "code": {
+          "attribute": "mode"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "motion",
+      "description": "Motion axis. Falls back to `prefers-reduced-motion` when unset.\n`expressive` lengthens durations and swaps in springier easing on the\n`theme.animation.{duration,timing}.role.*` tokens; `reduced` still wins\nunder `prefers-reduced-motion` unless `full` is set (accessibility-first\n— `expressive` is a decorative upgrade, not an override of the OS\npreference).",
+      "type": "string",
+      "rawType": "'full' | 'reduced' | 'expressive' | undefined",
+      "bindings": {
+        "code": {
+          "attribute": "motion"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "shape",
+      "description": "Shape axis. Repoints the `theme.border.radius.role.*` tokens\n(action/control/surface/indicator) that components map their\nborder-radius usage to. `default` (unset) reproduces today's per-brand\nradii exactly — the role tokens resolve through the existing\n`--al-theme-border-radius{,-lg,-round}` chain, so a brand's own radius\nidentity still shows through until `sharp`/`pill` overrides it.",
+      "type": "string",
+      "rawType": "'default' | 'sharp' | 'pill' | undefined",
+      "bindings": {
+        "code": {
+          "attribute": "shape"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The content tree the theme applies to."
+    }
+  ],
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/theme/theme.ts",
+      "tagName": "al-theme",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

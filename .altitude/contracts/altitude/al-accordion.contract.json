@@ -1,0 +1,67 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-accordion",
+  "name": "Accordion",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-accordion",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [
+    {
+      "name": "expandAll",
+      "description": "Expand all?\n- All panels will be in expand or open state when it's true",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "expandAll"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "expandOneOnly",
+      "description": "Single panel only?\n- Display only a single panel at a time",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "expandOneOnly"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The accordion content, a set of accordion panels"
+    }
+  ],
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/accordion/accordion.ts",
+      "tagName": "al-accordion",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

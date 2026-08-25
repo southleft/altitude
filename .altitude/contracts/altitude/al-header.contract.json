@@ -1,0 +1,67 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-header",
+  "name": "Header",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-header\n\nThe site header landmark and its chrome. Header owns the `<header>` element,\nthe opt-in sticky/elevated behaviour and the stacking context. Arrangement is\n`<al-layout>`'s job — nest one and lay the bar out there.\n\n```html\n<al-header sticky elevated>\n  <al-layout direction=\"row\" align=\"center\" justify=\"between\">\n    <al-logo></al-logo>\n    <al-menu>...</al-menu>\n    <al-layout direction=\"row\" gap=\"sm\">...actions...</al-layout>\n  </al-layout>\n</al-header>\n```\n\nSee \"Arrangement vs. semantics\" in AGENTS.md.",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [
+    {
+      "name": "elevated",
+      "description": "Cast a shadow under the bar to separate it from the content it scrolls over.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "elevated"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "sticky",
+      "description": "Stick the header to the top of its scroll container.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "sticky"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The header content. Wrap it in an `<al-layout>` to arrange it."
+    }
+  ],
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/header/header.ts",
+      "tagName": "al-header",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

@@ -1,0 +1,325 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-link",
+  "name": "Link",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-link",
+  "semantics": {
+    "element": "a",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "ariaLabelledBy",
+      "description": "Aria Labelled By attribute\n- Optional aria-labelledby for a11y\n- There may be instances where a nearby headline can act is the perfect label for a general link.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "ariaLabelledBy"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "href",
+      "description": "The link URL",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "href"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isDisabled",
+      "description": "Disabled attribute",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDisabled"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "label",
+      "description": "Aria label attribute\n- Optional aria-label for a11y\n- Most screen readers will read out loud the aria-label attribute in place of the link text. This is used for links that have text such as 'Learn more' or 'Read more'.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "label"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "linkTitle",
+      "description": "Title attribute\n- Optional title for a11y\n- If a link opens a new window or performs an action, use the title attribute to provide a tooltip with additional information.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "linkTitle"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "target",
+      "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
+      "type": "enum",
+      "rawType": "'_blank' | '_self' | '_parent' | '_top'",
+      "values": [
+        "_blank",
+        "_parent",
+        "_self",
+        "_top"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "target"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "variant",
+      "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset",
+      "type": "enum",
+      "rawType": "'xs' | 'sm' | 'lg'",
+      "values": [
+        "lg",
+        "sm",
+        "xs"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "variant"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The link text"
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Size=default",
+  "anatomy": {
+    "root": {
+      "tag": "a",
+      "cls": "al-c-link",
+      "layout": {
+        "display": "inline-flex",
+        "direction": "row",
+        "align": "center",
+        "justify": "flex-start"
+      },
+      "tokens": {
+        "border-bottom-left-radius": {
+          "code": "--al-theme-border-radius-xs",
+          "figma": "theme/border/radius/xs"
+        },
+        "border-bottom-right-radius": {
+          "code": "--al-theme-border-radius-xs",
+          "figma": "theme/border/radius/xs"
+        },
+        "border-radius": {
+          "code": "--al-theme-border-radius-xs",
+          "figma": "theme/border/radius/xs"
+        },
+        "border-top-left-radius": {
+          "code": "--al-theme-border-radius-xs",
+          "figma": "theme/border/radius/xs"
+        },
+        "border-top-right-radius": {
+          "code": "--al-theme-border-radius-xs",
+          "figma": "theme/border/radius/xs"
+        },
+        "color": {
+          "code": "--al-theme-color-content-primary-default",
+          "figma": "theme/color/content/primary-default"
+        },
+        "column-gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "font": {
+          "code": "--al-theme-typography-body-md",
+          "figma": null
+        },
+        "gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "letter-spacing": {
+          "code": "--al-theme-typography-body-md-letter-spacing",
+          "figma": null
+        },
+        "row-gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        }
+      },
+      "children": [
+        {
+          "tag": "a",
+          "cls": "al-c-link",
+          "layout": {
+            "display": "inline-flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "flex-start"
+          },
+          "tokens": {
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius-xs",
+              "figma": "theme/border/radius/xs"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius-xs",
+              "figma": "theme/border/radius/xs"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius-xs",
+              "figma": "theme/border/radius/xs"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius-xs",
+              "figma": "theme/border/radius/xs"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius-xs",
+              "figma": "theme/border/radius/xs"
+            },
+            "color": {
+              "code": "--al-theme-color-content-primary-default",
+              "figma": "theme/color/content/primary-default"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "font": {
+              "code": "--al-theme-typography-body-md",
+              "figma": null
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-body-md-letter-spacing",
+              "figma": null
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    "stateOverrides": {
+      "hover": {
+        "0": {
+          "color": {
+            "code": "--al-theme-color-content-primary-strong",
+            "figma": "theme/color/content/primary-strong"
+          }
+        },
+        "0.0": {
+          "color": {
+            "code": "--al-theme-color-content-primary-strong",
+            "figma": "theme/color/content/primary-strong"
+          }
+        }
+      },
+      "focus": {
+        "0": {
+          "outline": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-color": {
+            "code": "--al-theme-color-focus-ring",
+            "figma": "theme/color/focus-ring"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-width": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.0": {
+          "outline": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-color": {
+            "code": "--al-theme-color-focus-ring",
+            "figma": "theme/color/focus-ring"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-width": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        }
+      }
+    }
+  },
+  "tokens": [
+    "--al-theme-border-radius-xs",
+    "--al-theme-border-width-md",
+    "--al-theme-color-content-primary-default",
+    "--al-theme-color-content-primary-strong",
+    "--al-theme-color-focus-ring",
+    "--al-theme-space-xs",
+    "--al-theme-typography-body-md",
+    "--al-theme-typography-body-md-letter-spacing"
+  ],
+  "a11y": {
+    "ariaAttributes": [
+      "ariaLabelledBy",
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/link/link.ts",
+      "tagName": "al-link",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "rdhBS9t89V42E7EfiPjmSa",
+      "componentSetName": "Link",
+      "nodeId": "10:1964",
+      "url": "https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-1964"
+    }
+  }
+}

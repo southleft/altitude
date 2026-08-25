@@ -1,0 +1,67 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-list",
+  "name": "List",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-list",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [
+    {
+      "name": "behavior",
+      "description": "Behavior\n- **overflow** turns the list into an overflow list",
+      "type": "string",
+      "rawType": "'overflow'",
+      "bindings": {
+        "code": {
+          "attribute": "behavior"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "direction",
+      "description": "Orientation\n- default renders a stacked list\n- **horizontal** renders the list side-by-side and wraps unless overflow is turned on",
+      "type": "string",
+      "rawType": "'row'",
+      "bindings": {
+        "code": {
+          "attribute": "direction"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The list items"
+    }
+  ],
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/list/list.ts",
+      "tagName": "al-list",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

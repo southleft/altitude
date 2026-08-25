@@ -1,0 +1,73 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-icon-star",
+  "name": "Icon Star",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Icon: al-icon-star",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [
+    {
+      "name": "iconTitle",
+      "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "iconTitle"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "size",
+      "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon",
+      "type": "enum",
+      "rawType": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+      "values": [
+        "lg",
+        "md",
+        "sm",
+        "xl",
+        "xs",
+        "xxl",
+        "xxxl"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "size"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": [
+      "svg"
+    ]
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/icon/icons/star.ts",
+      "tagName": "al-icon-star",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

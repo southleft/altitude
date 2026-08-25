@@ -1,0 +1,256 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-layout",
+  "name": "Layout",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-layout\n\nThe single arrangement primitive for the design system. Layout owns three\northogonal jobs, selected by `variant`:\n\n- **flow** (default) — stack or row content with `direction` / `gap` /\n  `align` / `justify` / `wrap`.\n- **constrained** — own the page measure. Children sit in a centred content\n  column capped at `size`, with fluid gutter tracks either side. Any child\n  marked `bleed` breaks out edge-to-edge.\n- **grid** — an N-column grid (`columns`). Children span with the shared\n  `.al-u-grid__item.col:N` classes; there is no second span system.\n- **bento** — a 12-column auto-row grid for asymmetric feature tiles.\n\nSemantic components must not re-implement arrangement. A component that\ngroups things for MEANING (`al-checkbox-group`'s fieldset,\n`al-radio-group`'s roving keyboard selection) keeps only that meaning and\nnests its slotted content in an `<al-layout>`.",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [
+    {
+      "name": "align",
+      "description": "Cross-axis alignment\n- Defaults to `stretch` for a column and `center` for a row",
+      "type": "enum",
+      "rawType": "'start' | 'center' | 'end' | 'stretch'",
+      "values": [
+        "center",
+        "end",
+        "start",
+        "stretch"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "align"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "columns",
+      "description": "Column count under `variant=\"grid\"` (1–12, default 12)",
+      "type": "number",
+      "rawType": "number",
+      "bindings": {
+        "code": {
+          "attribute": "columns"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "direction",
+      "description": "Direction\n- **column** (default) stacks children vertically\n- **row** arranges children horizontally, centered on the cross axis",
+      "type": "enum",
+      "rawType": "'row' | 'column'",
+      "values": [
+        "column",
+        "row"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "direction"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "fullHeight",
+      "description": "Fill at least the height of the viewport\n- Opt in for page shells. Override the height with `--al-layout-min-height`",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "fullHeight"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "gap",
+      "description": "Gap between children (default is 16px)\n- **none** removes the gap\n- **xs** 4px\n- **sm** 8px\n- **md** 16px (same as the default)\n- **lg** 24px\n- **xl** 32px",
+      "type": "enum",
+      "rawType": "'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+      "values": [
+        "lg",
+        "md",
+        "none",
+        "sm",
+        "xl",
+        "xs"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "gap"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "grow",
+      "description": "Absorb the free space of a flex parent\n- Needed when the layout is slotted into a flex container (such as a\n  dialog or popover footer) and `justify` needs room to act on",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "grow"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "gutter",
+      "description": "Gutter — the width of the tracks either side of the content column under\n`variant=\"constrained\"`. Defaults to a fluid 20px–60px clamp.",
+      "type": "enum",
+      "rawType": "'none' | 'sm' | 'md' | 'lg'",
+      "values": [
+        "lg",
+        "md",
+        "none",
+        "sm"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "gutter"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "justify",
+      "description": "Main-axis distribution",
+      "type": "enum",
+      "rawType": "'start' | 'center' | 'end' | 'between'",
+      "values": [
+        "between",
+        "center",
+        "end",
+        "start"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "justify"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "noCollapse",
+      "description": "Keep the grid's columns at every width\n- By default a grid collapses to a single column below the medium\n  breakpoint so tiles never become unreadably narrow",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "noCollapse"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "responsive",
+      "description": "Collapse a row into a column on small screens",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "responsive"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "size",
+      "description": "Measure — the width of the centred content column under\n`variant=\"constrained\"`. Defaults to the theme's container width.",
+      "type": "enum",
+      "rawType": "'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'full'",
+      "values": [
+        "full",
+        "lg",
+        "md",
+        "sm",
+        "xl",
+        "xxl"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "size"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "stretchItems",
+      "description": "Stretch children to fill the main axis",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "stretchItems"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "variant",
+      "description": "Style variant\n- **default** a flow layout — a column, or a row with `direction=\"row\"`\n- **constrained** a centred content column with gutter tracks; children\n  marked `bleed` break out edge-to-edge\n- **grid** an N-column grid, sized by `columns`\n- **bento** a 12-column auto-row grid for asymmetric feature tiles",
+      "type": "enum",
+      "rawType": "'constrained' | 'grid' | 'bento'",
+      "values": [
+        "bento",
+        "constrained",
+        "grid"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "variant"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "wrap",
+      "description": "Allow children to wrap onto multiple lines",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "wrap"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The layout content. Under `variant=\"constrained\"`, a child carrying the `bleed` attribute breaks out of the content column."
+    }
+  ],
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/layout/layout.ts",
+      "tagName": "al-layout",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

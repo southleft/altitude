@@ -1,0 +1,372 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-cta-band",
+  "name": "CTA Band",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-cta-band\n\nThe closing call-to-action band that ends 16 of the site's 24 pages: a\nfull-bleed surface with the brand's grid texture behind it, a kicker, a\ncentred display heading and lead, and the page's actions below.\n\nWhat it owns is the band — the top hairline, the texture, the generous\nresponsive rhythm, and the centred measure the copy is capped to. The actions\ncome from the page through the default slot, because which CTAs close a page\nis the page's decision, not the band's.\n\n```html\n<al-cta-band heading=\"Is your design system AI-ready?\" dek=\"…\">\n  <al-layout direction=\"row\" wrap gap=\"md\" align=\"center\" justify=\"center\">\n    <al-button href=\"/contact\">Book a call</al-button>\n    <al-button variant=\"tertiary\" href=\"/services/workshops\">Ask about a workshop</al-button>\n  </al-layout>\n</al-cta-band>\n```",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "dek",
+      "description": "The lead paragraph under the heading. Omit for none.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "dek"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "heading",
+      "description": "The band's heading.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "heading"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "heading-tag",
+      "description": "The heading's semantic level — a document-outline concern, so not fixed.",
+      "type": "string",
+      "rawType": "string",
+      "default": "'h2'",
+      "bindings": {
+        "code": {
+          "attribute": "heading-tag",
+          "member": "headingTag"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "kicker",
+      "description": "The accent kicker above the heading. Defaults to the brand's `<cta>` form.",
+      "type": "string",
+      "rawType": "string",
+      "default": "'<cta>'",
+      "bindings": {
+        "code": {
+          "attribute": "kicker"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The band's actions. Wrap them in an `<al-layout>` to arrange them — a row that wraps to a stack is the usual choice."
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "sl-c-cta-band",
+      "layout": {
+        "display": "block",
+        "direction": "row",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {},
+      "children": [
+        {
+          "tag": "div",
+          "cls": "sl-c-cta-band__texture",
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": []
+        },
+        {
+          "tag": "div",
+          "cls": "sl-c-cta-band__inner",
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "p",
+              "cls": "sl-c-cta-band__kicker",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-primary-default",
+                  "figma": "theme/color/content/primary-default"
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "h2",
+              "cls": "al-c-heading al-c-heading--display-md al-is-bold",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-display-md",
+                  "figma": null
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-display-md-bold-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": [
+                {
+                  "tag": "h2",
+                  "cls": "al-c-heading al-c-heading--display-md al-is-bold",
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "font": {
+                      "code": "--al-theme-typography-display-md",
+                      "figma": null
+                    },
+                    "font-weight": {
+                      "code": "--al-font-weight-bold",
+                      "figma": "typography/font-weight/bold"
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-display-md-bold-letter-spacing",
+                      "figma": null
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "p",
+              "cls": "sl-c-cta-band__dek",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "div",
+              "cls": "sl-c-cta-band__actions",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "button",
+                  "cls": "al-c-button",
+                  "layout": {
+                    "display": "inline-flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-primary-default",
+                      "figma": "theme/color/background/primary-default"
+                    },
+                    "border-bottom-left-radius": {
+                      "code": "--al-theme-border-radius-role-action",
+                      "figma": "theme/border/radius/role/action"
+                    },
+                    "border-bottom-right-radius": {
+                      "code": "--al-theme-border-radius-role-action",
+                      "figma": "theme/border/radius/role/action"
+                    },
+                    "border-radius": {
+                      "code": "--al-theme-border-radius-role-action",
+                      "figma": "theme/border/radius/role/action"
+                    },
+                    "border-top-left-radius": {
+                      "code": "--al-theme-border-radius-role-action",
+                      "figma": "theme/border/radius/role/action"
+                    },
+                    "border-top-right-radius": {
+                      "code": "--al-theme-border-radius-role-action",
+                      "figma": "theme/border/radius/role/action"
+                    },
+                    "color": {
+                      "code": "--al-theme-color-content-primary-weak",
+                      "figma": "theme/color/content/primary-weak"
+                    },
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "font-weight": {
+                      "code": "--al-font-weight-bold",
+                      "figma": "typography/font-weight/bold"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                      "figma": null
+                    },
+                    "padding": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "al-c-button__text",
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "span",
+                          "cls": "al-c-button__text",
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "tokens": [
+    "--al-font-weight-bold",
+    "--al-theme-border-radius-role-action",
+    "--al-theme-color-background-primary-default",
+    "--al-theme-color-content-default",
+    "--al-theme-color-content-default-weak",
+    "--al-theme-color-content-primary-default",
+    "--al-theme-color-content-primary-weak",
+    "--al-theme-space",
+    "--al-theme-space-xs",
+    "--al-theme-typography-body-md-bold-letter-spacing",
+    "--al-theme-typography-display-md",
+    "--al-theme-typography-display-md-bold-letter-spacing"
+  ],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": [
+      "actions",
+      "band",
+      "dek",
+      "heading",
+      "inner",
+      "kicker",
+      "texture"
+    ]
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/sl-web-components/components/cta-band/cta-band.ts",
+      "tagName": "al-cta-band",
+      "workspace": "@southleft/sl-web-components"
+    },
+    "figma": {
+      "fileKey": "rdhBS9t89V42E7EfiPjmSa",
+      "componentSetName": "CTA Band",
+      "nodeId": "10:3322",
+      "url": "https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-3322"
+    }
+  }
+}

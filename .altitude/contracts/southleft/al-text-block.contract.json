@@ -1,0 +1,106 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-text-block",
+  "name": "Text Block",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-text-block",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "maxWidth",
+      "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
+      "type": "string",
+      "rawType": "'sm'",
+      "bindings": {
+        "code": {
+          "attribute": "maxWidth"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The text passage content"
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Width=default",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "al-c-text-block",
+      "layout": {
+        "display": "flex",
+        "direction": "column",
+        "align": "flex-start",
+        "justify": "normal"
+      },
+      "tokens": {
+        "column-gap": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        },
+        "font": {
+          "code": "--al-typography-preset-16",
+          "figma": null
+        },
+        "gap": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        },
+        "row-gap": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        }
+      },
+      "children": [
+        {
+          "tag": "p",
+          "cls": "",
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": []
+        }
+      ]
+    }
+  },
+  "tokens": [
+    "--al-theme-space",
+    "--al-typography-preset-16"
+  ],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/text-block/text-block.ts",
+      "tagName": "al-text-block",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "rdhBS9t89V42E7EfiPjmSa",
+      "componentSetName": "Text Block",
+      "nodeId": "10:1970",
+      "url": "https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-1970"
+    }
+  }
+}

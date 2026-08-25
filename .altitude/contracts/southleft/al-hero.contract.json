@@ -1,0 +1,458 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-hero",
+  "name": "Hero",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-hero\n\nThe HOMEPAGE hero — a full-bleed landing composition: the brand's grid\ntexture behind a kicker and a display headline, then a two-column split with\nthe lead copy and actions on the left and a supporting panel on the right.\n\nDistinct from `al-page-hero`, the interior band on 19 of the site's other\npages. The site's own class names (`.al-hero` vs `.al-page-hero`) already\nseparate them; these components keep that split rather than overloading one\nname — they are different shapes, not variants of each other.\n\n```html\n<al-hero\n  kicker=\"<southleft>\"\n  heading=\"AI-powered design systems. Built by the people building the tools.\"\n  lead=\"We audit, build, and evolve design systems for teams at…\"\n>\n  <al-button slot=\"actions\" href=\"/contact\">Book a call</al-button>\n  <al-button slot=\"actions\" variant=\"tertiary\" href=\"/services\">See how we work</al-button>\n  <div slot=\"chips\">…loose token chips…</div>\n  <div slot=\"aside\">…the terminal panel…</div>\n</al-hero>\n```\n\nTHE GLYPH FIELD IS PART OF THE HERO, not page art. It was first left in the\napp on the reuse test, which was the wrong call: the marks are drawn on the\nSAME 72px lattice as the grid texture, and the app's own note says it plainly\n— \"the grid alone reads as an empty backdrop\". Grid without marks is an\nunfinished hero, so the component owns both layers. `--sl-artifacts` thins\nthe field or silences it (`0`), and reduced motion stops it moving.\n\nWHAT STAYS IN THE PAGE is the terminal panel — one page, brand art with no\nbearing on the hero's shape. The `aside` slot is that seam: the hero owns the\ntwo-column composition and the rhythm, the page owns what fills the right\ncolumn.",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "heading",
+      "description": "The headline. Rendered at the display scale.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "heading"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "kicker",
+      "description": "The accent kicker above the headline.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "kicker"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "lead",
+      "description": "The lead paragraph in the left column.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "lead"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "Anything extra at the end of the lead column."
+    },
+    {
+      "name": "actions",
+      "description": "The CTAs, under the lead copy. Laid out as a wrapping row."
+    },
+    {
+      "name": "aside",
+      "description": "The right-hand column. Hidden below `64rem`, where the composition collapses to one column and a supporting panel would crowd the fold."
+    },
+    {
+      "name": "chips",
+      "description": "The annotation strip beneath the actions — the site's \"loose tokens\" row."
+    }
+  ],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "sl-c-hero",
+      "layout": {
+        "display": "block",
+        "direction": "row",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {},
+      "children": [
+        {
+          "tag": "div",
+          "cls": "sl-c-hero__texture",
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": []
+        },
+        {
+          "tag": "canvas",
+          "cls": "sl-c-hero__murmur",
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": []
+        },
+        {
+          "tag": "div",
+          "cls": "sl-c-hero__content",
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-layout al-c-layout--constrained",
+              "layout": {
+                "display": "grid",
+                "direction": "column",
+                "align": "stretch",
+                "justify": "normal"
+              },
+              "tokens": {
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding": {
+                  "code": "--al-layout-padding",
+                  "figma": null
+                },
+                "padding-bottom": {
+                  "code": "--al-layout-padding",
+                  "figma": null
+                },
+                "padding-left": {
+                  "code": "--al-layout-padding",
+                  "figma": null
+                },
+                "padding-right": {
+                  "code": "--al-layout-padding",
+                  "figma": null
+                },
+                "padding-top": {
+                  "code": "--al-layout-padding",
+                  "figma": null
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-layout al-c-layout--gap-none",
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "stretch",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "p",
+                      "cls": "sl-c-hero__kicker",
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    },
+                    {
+                      "tag": "h1",
+                      "cls": "al-c-heading al-c-heading--display-lg al-is-bold",
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-display-lg",
+                          "figma": null
+                        },
+                        "font-weight": {
+                          "code": "--al-font-weight-bold",
+                          "figma": "typography/font-weight/bold"
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-display-lg-bold-letter-spacing",
+                          "figma": null
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "h1",
+                          "cls": "al-c-heading al-c-heading--display-lg al-is-bold",
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default",
+                              "figma": "theme/color/content/default"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-display-lg",
+                              "figma": null
+                            },
+                            "font-weight": {
+                              "code": "--al-font-weight-bold",
+                              "figma": "typography/font-weight/bold"
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-display-lg-bold-letter-spacing",
+                              "figma": null
+                            }
+                          },
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "div",
+                      "cls": "al-c-layout al-c-layout--grid al-c-layout--align-end al-c-layout--no-collapse",
+                      "layout": {
+                        "display": "grid",
+                        "direction": "column",
+                        "align": "flex-end",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-layout-gap",
+                          "figma": null
+                        },
+                        "gap": {
+                          "code": "--al-layout-gap",
+                          "figma": null
+                        },
+                        "row-gap": {
+                          "code": "--al-layout-gap",
+                          "figma": null
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-layout al-c-layout--gap-none",
+                          "layout": {
+                            "display": "flex",
+                            "direction": "column",
+                            "align": "stretch",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "al-c-text-block",
+                              "layout": {
+                                "display": "flex",
+                                "direction": "column",
+                                "align": "flex-start",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "column-gap": {
+                                  "code": "--al-theme-space",
+                                  "figma": "theme/space/@"
+                                },
+                                "font": {
+                                  "code": "--al-text-block-font",
+                                  "figma": null
+                                },
+                                "gap": {
+                                  "code": "--al-theme-space",
+                                  "figma": "theme/space/@"
+                                },
+                                "row-gap": {
+                                  "code": "--al-theme-space",
+                                  "figma": "theme/space/@"
+                                }
+                              },
+                              "children": [
+                                {
+                                  "tag": "div",
+                                  "cls": "al-c-text-block",
+                                  "layout": {
+                                    "display": "flex",
+                                    "direction": "column",
+                                    "align": "flex-start",
+                                    "justify": "normal"
+                                  },
+                                  "tokens": {
+                                    "column-gap": {
+                                      "code": "--al-theme-space",
+                                      "figma": "theme/space/@"
+                                    },
+                                    "font": {
+                                      "code": "--al-text-block-font",
+                                      "figma": null
+                                    },
+                                    "gap": {
+                                      "code": "--al-theme-space",
+                                      "figma": "theme/space/@"
+                                    },
+                                    "row-gap": {
+                                      "code": "--al-theme-space",
+                                      "figma": "theme/space/@"
+                                    }
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            },
+                            {
+                              "tag": "div",
+                              "cls": "al-c-layout al-c-layout--row al-c-layout--gap-sm al-c-layout--align-center al-c-layout--wrap",
+                              "layout": {
+                                "display": "flex",
+                                "direction": "row",
+                                "align": "center",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "column-gap": {
+                                  "code": "--al-theme-space-xs",
+                                  "figma": "theme/space/xs"
+                                },
+                                "gap": {
+                                  "code": "--al-theme-space-xs",
+                                  "figma": "theme/space/xs"
+                                },
+                                "padding": {
+                                  "code": "--al-layout-padding",
+                                  "figma": null
+                                },
+                                "padding-bottom": {
+                                  "code": "--al-layout-padding",
+                                  "figma": null
+                                },
+                                "padding-left": {
+                                  "code": "--al-layout-padding",
+                                  "figma": null
+                                },
+                                "padding-right": {
+                                  "code": "--al-layout-padding",
+                                  "figma": null
+                                },
+                                "padding-top": {
+                                  "code": "--al-layout-padding",
+                                  "figma": null
+                                },
+                                "row-gap": {
+                                  "code": "--al-theme-space-xs",
+                                  "figma": "theme/space/xs"
+                                }
+                              },
+                              "children": []
+                            },
+                            {
+                              "tag": "div",
+                              "cls": "sl-c-hero__chips",
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "div",
+                          "cls": "sl-c-hero__aside",
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "tokens": [
+    "--al-font-weight-bold",
+    "--al-layout-gap",
+    "--al-layout-padding",
+    "--al-text-block-font",
+    "--al-theme-color-content-default",
+    "--al-theme-space",
+    "--al-theme-space-xs",
+    "--al-theme-typography-display-lg",
+    "--al-theme-typography-display-lg-bold-letter-spacing"
+  ],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": [
+      "aside",
+      "band",
+      "heading",
+      "kicker",
+      "lead",
+      "murmur",
+      "texture"
+    ]
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/sl-web-components/components/hero/hero.ts",
+      "tagName": "al-hero",
+      "workspace": "@southleft/sl-web-components"
+    },
+    "figma": {
+      "fileKey": "rdhBS9t89V42E7EfiPjmSa",
+      "componentSetName": "Hero",
+      "nodeId": "10:3350",
+      "url": "https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-3350"
+    }
+  }
+}

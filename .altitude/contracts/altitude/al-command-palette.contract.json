@@ -1,0 +1,147 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-command-palette",
+  "name": "Command Palette",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-command-palette\n\nA cmd/ctrl+k overlay with fuzzy search over a provided action list.\nReuses `al-focus-trap` for the same focus-containment behavior as\n`al-dialog`/`al-popover`, and the same \"always-rendered, opacity/visibility\ntoggled\" overlay shape as `al-dialog` for its backdrop + transition.\n\nThe `actions` array is the entire action-provider API: `{ id, label, group?,\nkeywords?, icon? }`. `icon` names must already be registered (see the icon\nsystem section of AGENTS.md) — the palette does not register glyphs on your behalf.",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [
+    {
+      "name": "ariaLabel",
+      "description": "Accessible label for the dialog surface.",
+      "type": "string",
+      "rawType": "string",
+      "default": "'Command palette'",
+      "bindings": {
+        "code": {
+          "attribute": "ariaLabel"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "emptyText",
+      "description": "Text shown when no action matches the query.",
+      "type": "string",
+      "rawType": "string",
+      "default": "'No matching commands'",
+      "bindings": {
+        "code": {
+          "attribute": "emptyText"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "enableShortcut",
+      "description": "Opt-in: when true, a document-level Cmd/Ctrl+K listener toggles the palette open.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "enableShortcut"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isActive",
+      "description": "Is the palette open?",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isActive"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "placeholder",
+      "description": "Input placeholder text.",
+      "type": "string",
+      "rawType": "string",
+      "default": "'Type a command or search…'",
+      "bindings": {
+        "code": {
+          "attribute": "placeholder"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "searchLabel",
+      "description": "Accessible name for the search input.\n\nNOT the placeholder. A placeholder is not an accessible name — it is\nremoved from the accessibility tree the moment the user types, so the field\na screen-reader user is mid-way through becomes an unnamed combobox. The\ntwo are set separately for that reason.",
+      "type": "string",
+      "rawType": "string",
+      "default": "'Search commands'",
+      "bindings": {
+        "code": {
+          "attribute": "searchLabel"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "transitionDelay",
+      "description": "Number of ms of the palette's open/close CSS transition delay, used to delay\nfocus trap activation. Mirrors al-dialog's `transitionDelay`.",
+      "type": "number",
+      "rawType": "number",
+      "default": "200",
+      "bindings": {
+        "code": {
+          "attribute": "transitionDelay"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "onCommandPaletteAction",
+      "description": "Fired when an action is chosen (click or Enter). Detail: `{ action }` — the selected `ALCommandAction`."
+    },
+    {
+      "name": "onCommandPaletteClose",
+      "description": "Fired when the palette closes by any means (Escape, backdrop click, or an action being chosen). Detail: `{ active }` — always `false`."
+    },
+    {
+      "name": "onCommandPaletteOpen",
+      "description": "Fired when the palette opens. Detail: `{ active }` — always `true`."
+    }
+  ],
+  "slots": [
+    {
+      "name": "",
+      "description": "Optional content rendered above the results list (e.g. recent-searches)."
+    }
+  ],
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [
+      "ariaLabel"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/command-palette/command-palette.ts",
+      "tagName": "al-command-palette",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": "Command Palette",
+      "nodeId": null,
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/"
+    }
+  }
+}

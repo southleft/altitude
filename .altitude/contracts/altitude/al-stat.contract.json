@@ -1,0 +1,125 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-stat",
+  "name": "Stat",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-stat\n\nA single KPI tile — value, label, and an optional trend delta with a\ndirectional chevron. Follows the design system's canonical stat-card\ncontract (value/label/trend/delta/invertPolarity). Composes into a \"KPI\nband\" by placing several `<al-stat>` inside a grid (see the KPI Band\nstory) or an `<al-layout variant=\"bento\">`.",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [
+    {
+      "name": "delta",
+      "description": "The delta text, e.g. \"+12%\". Renders next to the trend chevron. The\ntrend row only renders when this is a non-empty string.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "delta"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "description",
+      "description": "Optional supporting description rendered below the trend row.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "description"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "invertPolarity",
+      "description": "Flips ONLY the success/danger color mapping for metrics where a lower\nnumber is better (cost, latency, churn). The chevron direction and the\naccessible \"Trending up/down\" text always reflect the literal `trend`\nvalue — only the color changes.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "invertPolarity"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "label",
+      "description": "The metric's label, e.g. \"Active users\".",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "label"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "trend",
+      "description": "Trend direction.\n- **none** (default) No trend indicator is rendered\n- **up** Renders an up chevron\n- **down** Renders a down chevron",
+      "type": "enum",
+      "rawType": "'up' | 'down' | 'none'",
+      "values": [
+        "down",
+        "none",
+        "up"
+      ],
+      "default": "'none'",
+      "bindings": {
+        "code": {
+          "attribute": "trend"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "value",
+      "description": "The display value, e.g. \"1,234\" or \"$4.2M\". Typed as a string — the\nconsumer owns locale formatting, digit grouping, and unit suffixes.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "value"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "icon",
+      "description": "Optional leading icon, rendered above the value."
+    }
+  ],
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": [
+      "container",
+      "trend",
+      "value"
+    ]
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/stat/stat.ts",
+      "tagName": "al-stat",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

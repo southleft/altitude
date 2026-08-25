@@ -1,0 +1,130 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-drawer",
+  "name": "Drawer",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-drawer",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [
+    {
+      "name": "alignment",
+      "description": "Alignment\n- **right** Aligns the drawer to the right of the viewport",
+      "type": "string",
+      "rawType": "'right'",
+      "bindings": {
+        "code": {
+          "attribute": "alignment"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "ariaLabelledBy",
+      "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "ariaLabelledBy"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "disableBackdropClick",
+      "description": "Disable to close the drawer on outside click",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "disableBackdropClick"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "hasBackdrop",
+      "description": "Fade/ghost back the page background content",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "hasBackdrop"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isActive",
+      "description": "Is active?\n- **true** Shows the drawer container\n- **false** Hides the drawer container",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isActive"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "width",
+      "description": "Width of drawer panel when expanded / collapsed as side panel",
+      "type": "number",
+      "rawType": "number",
+      "bindings": {
+        "code": {
+          "attribute": "width"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "onDrawerClose",
+      "description": "Fired when the drawer closes by any means. Detail: `{ active }`."
+    },
+    {
+      "name": "onDrawerCloseButton",
+      "description": "Fired only when the drawer's close button is activated. Detail: `{ active }`. Use `onDrawerClose` to catch every close path."
+    },
+    {
+      "name": "onDrawerOpen",
+      "description": "Fired when the drawer opens. Detail: `{ active }` — the new open state."
+    }
+  ],
+  "slots": [
+    {
+      "name": "",
+      "description": "The drawer content"
+    }
+  ],
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [
+      "ariaLabelledBy"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/drawer/drawer.ts",
+      "tagName": "al-drawer",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}
