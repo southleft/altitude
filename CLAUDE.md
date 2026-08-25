@@ -74,17 +74,28 @@ The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with 
 - Each has: `.tsx` (component), `.stories.tsx` (Storybook)
 
 ### Design Tokens
-- **Edit `libs/al-web-components/styles/tokens/**.json`** — the tracked, hand-authored
-  Tokens Studio tree (legacy `value`/`type` shape). This is the only token source you edit.
-- `libs/al-web-components/styles/tokens-dtcg/` is its **generated DTCG mirror**
-  (`$value`/`$type`), rewritten by `scripts/convert-tokens-to-dtcg.js` on every
-  `build:tokens` and **gitignored** (`.gitignore:18`). Do not hand-edit it — your change is
-  overwritten by the next build. (T6.2 will delete `tokens/` and flip `tokens-dtcg/` to
-  editable; until then, the direction is `tokens/` → `tokens-dtcg/`.)
+- **Edit `libs/al-web-components/styles/tokens-dtcg/**.json`** — the tracked,
+  hand-authored **DTCG** tree (`$value`/`$type`). This is the only token source you edit.
+  It is also published (`./tokens-dtcg/*` subpath export), so it is public API.
+- The legacy Tokens Studio tree (`styles/tokens/`, `value`/`type` shape) and its converter
+  `scripts/convert-tokens-to-dtcg.js` were **deleted** — Tokens Studio is no longer part of
+  this pipeline. Figma Variables are generated FROM these tokens
+  (`scripts/build-figma-payload.mjs`), never the reverse.
+- **Every token carries two types, and they answer different questions:**
+  - `$type` — the DTCG standard type. Deliberately coarse: `sizing`, `spacing`,
+    `borderRadius`, `borderWidth`, `fontSizes` and `lineHeights` all collapse to `dimension`.
+  - `$extensions["org.altitude.token"].cssType` — the CSS surface the token is authored
+    for. Finer than `$type` and **not** recoverable from it. It drives the
+    `cssProperties` allow-list; a token without one gets no allow-list.
+  See `scripts/lib/dtcg-token.mjs` — use `authoredType()` when you need what a token is
+  FOR, `dtcgType()` when you need standards conformance. Getting this backwards silently
+  degrades 163 of 555 tokens.
+- When adding a token by hand, set `$value`, `$type` **and** the `cssType` extension;
+  then run `pnpm run generate:token-metadata` to fill in the derived metadata.
 - Built via **Style Dictionary v5** to CSS custom properties, JSON, and TypeScript types
 - Token tiers: tier-1 (base values), tier-2 (semantic tokens), tier-3 (brand/theme tokens)
 - See `.altitude/TOKENS.md` § Overview for the stage-by-stage table, and `llms.txt`
-  for the consumer-facing view — all three must keep naming `tokens/` as the source.
+  for the consumer-facing view — all three must keep naming `tokens-dtcg/` as the source.
 
 ### Theming
 - Scoped `<al-theme brand mode density contrast motion>` host (Phase 4) — sets tokens on `:host`, not `:root`

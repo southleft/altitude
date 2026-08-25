@@ -79,7 +79,7 @@ no script can check them, so they are on you and the PR reviewer:
 | Per-component schemas (T3.2) | [`libs/al-web-components/schemas/`](./libs/al-web-components/schemas/) — see [Component schema index](./libs/al-web-components/schemas/INDEX.md) |
 | Pilot web components | `libs/al-web-components/components/{button,input,select,dialog,theme-switcher}/` |
 | Pilot React wrappers | `libs/al-react/src/components/{Button,Input,Select,Dialog,ThemeSwitcher}/` |
-| Tokens (legacy + DTCG) | `libs/al-web-components/styles/tokens/` (legacy) and `tokens-dtcg/` (generated) |
+| Tokens (DTCG source) | `libs/al-web-components/styles/tokens-dtcg/` |
 | Base class | `libs/al-web-components/components/ALElement.ts` |
 | Registry (versioned tags) | `libs/al-web-components/directives/register.ts` |
 
@@ -154,6 +154,17 @@ on this page, never a second source of truth. Registered in [`.mcp.json`](./.mcp
 on :6017 (`POST /mcp`, `GET /parity.json`). See
 [`libs/altitude-mcp/README.md`](./libs/altitude-mcp/README.md) for the full tool contract and
 example calls. (`pnpm run check:mcp-docs` asserts this list matches the registered tools.)
+
+It also exposes **resources** (7: 6 fixed-URI artifacts under `altitude://` — CEM, resolved
+tokens, the a11y report, the two ai-readiness digests, the ds-project registry — plus one
+`ResourceTemplate`, `altitude://parity-manifest/{project}`, since the parity manifest is the one
+artifact that's genuinely per-design-system) and **prompts** (4: `audit_component_parity`,
+`generate_brand_theme`, `check_snippet_convention`, `scaffold_component`, each grounded in a real
+engine/skill/gate — see `libs/altitude-mcp/src/lib/{resources,prompts}.mjs`). Both degrade the same
+way the tools do: a missing/malformed artifact reads back as structured JSON, never a crash or a
+thrown protocol error. Full intent → surface → required filters → expected fields → common failure
+mode table (Carbon's format, generated from a live handshake, not hand-written):
+[`libs/altitude-mcp/CAPABILITY-MATRIX.md`](./libs/altitude-mcp/CAPABILITY-MATRIX.md).
 
 ## Component authoring rules (per pilot pattern)
 
@@ -734,8 +745,11 @@ For a React wrapper (`libs/al-react/src/components/<Name>/`):
 ## What NOT to do
 
 - Don't hand-edit `custom-elements.json`. Regenerate via the script.
-- Don't hand-edit `libs/al-web-components/styles/tokens-dtcg/`. It is
-  produced by `scripts/convert-tokens-to-dtcg.js` and lives in `.gitignore`.
+- DO hand-edit `libs/al-web-components/styles/tokens-dtcg/` — it is the tracked
+  DTCG token source. Set `$value`, `$type` AND
+  `$extensions["org.altitude.token"].cssType`, then run
+  `pnpm run generate:token-metadata`. A token with no `cssType` gets no
+  `cssProperties` allow-list (see `scripts/lib/dtcg-token.mjs`).
 - Don't introduce new dependencies without a plan-task mapping.
 - Don't bypass G2 by force-pushing past the migration-gate workflow.
 - Don't add `:root { --al-* }` outside Phase 4's `<al-theme>` host (T4.2).

@@ -99,7 +99,8 @@ Each task: **Goal · Changes · Acceptance (objectively verifiable) · Depends o
 - **T1.1 — Parallel SD v5 pipeline.**
   Goal: DTCG source + Style Dictionary v5, emitting **byte-comparable** legacy `--al-*` names alongside new DTCG/JSON/TS outputs, running *next to* the v3 pipeline (not replacing it yet).
   Changes: convert tier-1/2/3 tokens to DTCG (`$value`/`$type`), keep Tokens Studio compatibility; rewrite `tokens-config.js` to ESM + async SD v5 (port the custom `tokens`, `scss/variables`, `json/flat` formatters and the box-shadow/typography/space helpers to v5's async API); freeze current public token names as aliases.
-  Acceptance: `pnpm build:tokens:v5` emits CSS whose `--al-*` variable set is **byte-identical** to the v3 output (snapshot diff = empty) **plus** DTCG + TS-types artifacts; alias map committed.
+  Acceptance: `pnpm build:tokens` emits CSS whose `--al-*` variable set is **byte-identical** to the v3 output (snapshot diff = empty) **plus** DTCG + TS-types artifacts; alias map committed.
+  Superseded 2026-08-25: Tokens Studio compatibility was dropped and `styles/tokens-dtcg/` became the single hand-authored source (see `.altitude/TOKENS.md`).
   Depends on: T0.1.
 
 - **T1.2 — Token-contract tests.**
@@ -108,11 +109,13 @@ Each task: **Goal · Changes · Acceptance (objectively verifiable) · Depends o
   Acceptance: `pnpm test:tokens` passes; mutating a token name without an alias fails the suite.
   Depends on: T1.1.
 
-- **T1.3 — Figma / Tokens-Studio ingestion + round-trip.**
-  Goal: define how DTCG JSON enters the repo and stays in sync.
-  Changes: document + script the ingest (export → validate → commit), ownership, and round-trip rules.
-  Acceptance: `pnpm tokens:ingest` validates an export and writes DTCG files; invalid export is rejected with a clear error.
-  Depends on: T1.1.
+- **T1.3 — Figma / Tokens-Studio ingestion + round-trip. WITHDRAWN (2026-08-25).**
+  The `tokens:ingest` npm script named in the acceptance criterion was never created, and the
+  script written for it (`scripts/ingest-tokens-from-studio.js`) wrote into a tree that
+  `build:tokens` deleted on the next run — so it could never have worked. Both are deleted.
+  The sync direction is code → Figma (`scripts/build-figma-payload.mjs`), not Figma → code;
+  drift back from Figma is *detected* (`parity:tokens-drift`), never auto-ingested.
+  See `.altitude/FIGMA-SYNC.md`.
 
 **Gate P1:** v5 pipeline byte-matches legacy var names · token-contract tests green · ingestion documented.
 
@@ -215,6 +218,10 @@ Each task: **Goal · Changes · Acceptance (objectively verifiable) · Depends o
 - **T6.2 — Remove legacy paths.** Delete the global `:root` swap, the old SD v3 pipeline, and `wca`.
   Acceptance: grep for the legacy injection + v3 config = 0; build green.
   Depends on: T6.1.
+  Follow-up COMPLETE (2026-08-25): the legacy Tokens Studio tree (`styles/tokens/`), its
+  converter (`scripts/convert-tokens-to-dtcg.js`) and the `build:tokens:v5` alias are deleted;
+  `styles/tokens-dtcg/` is now tracked, hand-authored and editable. Emitted `styles/dist/`
+  verified byte-identical across the change.
 - **T6.3 — Enforce gates.** Turn a11y CI gate and bundle-size budgets from "baseline" to "enforced" (per package + registry mode).
   Acceptance: PR exceeding the bundle budget or introducing an a11y violation fails CI.
   Depends on: T6.1.

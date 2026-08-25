@@ -44,6 +44,8 @@ them in the same PR as the code they describe.
 | `AI-THEME.md` | The deterministic OKLCH theme solver behind the Storybook AI console |
 | `BRAND-LAYER.md` | `@southleft/sl-web-components` — the Southleft brand layer: the 9 components, same-tag override by define-order, the CEM-regeneration trap, the two styling layers |
 | `WORKFLOWS.md` | Repo-wide process map — one page per workflow (component, tokens, brand tokens, brand layer, Figma sync both directions, docs, release, a11y), plus the full `scripts/` index |
+| `REGISTRY-EVALUATION.md` | Why Altitude does not publish a shadcn-compatible `registry.json` — the format's copy-paste/Tailwind assumptions vs. this library's compiled-Lit/Shadow-DOM/multi-framework reality, evidence-based |
+| `AI-DIRECTORY-EVALUATION.md` | Why Altitude does not adopt Adobe's `.ai/` + symlinked `.claude/`/`.cursor/` pattern now — `core.symlinks=false` verified on a real Windows checkout, no second tool-config directory exists yet to justify it |
 | `README.md` | This file |
 
 ## Rules

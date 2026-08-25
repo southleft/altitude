@@ -22,7 +22,7 @@ What changes were made in this PR, and why?
 
 - [ ] **Component changes:** `node scripts/component-check.mjs <tag>` passes — bundle.ts, migration.json, CEM regenerated, parity seeded, React wrapper, guidance YAML, llms.txt.
 - [ ] **Changeset** added for any public-API or token change (`pnpm dlx changeset`, per `.altitude/SEMVER.md`).
-- [ ] **Tokens** edited only in `styles/tokens/**` (never `tokens-dtcg/`); `.altitude/baselines/` updated where G8 applies.
+- [ ] **Tokens** edited in `styles/tokens-dtcg/**` (the DTCG source) with a `cssType` extension on any new token; `.altitude/baselines/` updated where G8 applies.
 - [ ] **Stories** updated (WC and React) and accessibility checked.
 - [ ] **Docs gates** pass locally after `pnpm --filter al-app-docs build`: `pnpm run gate:docs && pnpm run gate:docs-panels && pnpm run gate:guidance && pnpm run check:llms`.
 

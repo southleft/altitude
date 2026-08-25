@@ -18,7 +18,14 @@ Why:
 
 `colors.json` re-points the six primary colour tokens at `{color.brand.blue.*}`
 — which is what the base theme already resolves them to, so it is a semantic
-no-op kept for Tokens Studio round-trip symmetry with the other three brands.
+no-op. It is not decoration: `brandSources()`
+(`styles/tokens-config.v5.mjs:474`) globs `tier-2/brand/altitude/*.json`, so
+this file is the entire `source` for the two `{ brand: 'altitude' }` entries in
+the config's `brands` array. Delete it and the brand has nothing to build from,
+and `tokens-altitude-{light,dark}.css` — the bundles
+`scripts/check-brand-distinctiveness.js` asserts byte-identical to the base
+theme — stop being emitted. Being a no-op is exactly what makes that assertion
+hold.
 
 If a future review wants altitude to have character of its own, that is a
 re-scope: it needs a new default brand for unbranded consumers first. See

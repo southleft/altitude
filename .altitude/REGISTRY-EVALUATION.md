@@ -1,0 +1,115 @@
+# Evaluating a shadcn-compatible `registry.json` — decision: do not build
+
+**Decision (2026-08-25): do not publish a shadcn-compatible registry.** The
+premise in the spec — "publishing registry.json gets MCP support for free and
+the CHI 2026 study found registry context produced the highest DS-compliance
+rate" — does not survive contact with what the shadcn registry format actually
+is and what Altitude actually ships. This is a reasoned no, not an
+unexamined one; the evidence is below. Revisit if either changes: Altitude
+adopts Tailwind + a copy-paste distribution model (it will not, by design —
+see `TOKENS.md` / `BRANDS.md`), or shadcn's schema grows a first-class
+compiled-web-component item type.
+
+## What the format actually is
+
+`registry.json` / `registry-item.json` (schema:
+`https://ui.shadcn.com/schema/registry-item.json`) is shadcn/ui's **copy-paste
+ownership** format. A registry item's `files[]` carry literal source `content`
+that the shadcn CLI/MCP **writes verbatim into the consumer's own repository**
+as a file the consumer now owns and can edit directly — that is the whole
+value proposition ("this is your code now, not a dependency"). Confirmed
+top-level fields: `name`, `type`, `dependencies` (npm), `devDependencies`,
+`registryDependencies` (other registry items), `files[]` (`path`, `type`,
+`content`, `target`), plus `cssVars`, `tailwind`, `css`, `style`, `baseColor`,
+`font`, `iconLibrary` — all Tailwind/shadcn-ui-specific configuration
+surfaces, not generic component metadata. `type` is a closed enum:
+`registry:lib | block | component | ui | hook | theme | page | file | style |
+base | font | item`. The CLI (`npx shadcn add <url>`) resolves a project's
+`components.json` (Tailwind config, import aliases, React) before it writes
+anything — the format assumes a shadcn/ui-initialized React + Tailwind
+project on the consuming end.
+
+## Why it does not fit this library
+
+1. **Altitude ships compiled Lit web components behind Shadow DOM, not
+   forkable JSX source.** `@southleft/al-web-components` is a versioned npm
+   package — consumers `import` and `customElements.define` it; they do not
+   copy `.ts`/`.scss` source into their own tree and maintain a fork. There
+   is no meaningful "your code now" artifact to hand over: the real
+   implementation is a decorated Lit class compiled into a shadow root, and
+   pasting that source into a consumer's repo would (a) require Vite + Lit +
+   the modern Sass compiler in *their* toolchain just to build one component,
+   and (b) immediately diverge from the versioned package on the next
+   release — exactly the drift this whole spec exists to prevent, just moved
+   from documentation into distribution.
+2. **Zero Tailwind anywhere in this repo** (`grep -rn tailwind
+   package.json libs/*/package.json` — no hits). `cssVars`, `tailwind`,
+   `baseColor`, `style`, `font`, `iconLibrary` have no honest values to
+   publish: Altitude's token layer is Style Dictionary-built `--al-*` custom
+   properties under `@layer al.theme`, resolved through `<al-theme
+   brand mode density contrast motion>` (see `TOKENS.md`, `BRANDS.md`,
+   `AXES.md`) — a different mechanism than Tailwind's config-driven CSS
+   variable injection that these fields assume. Publishing them populated
+   with Altitude concepts would be schema-valid and semantically wrong;
+   leaving them empty makes the registry item pass validation while
+   answering none of the questions a shadcn-aware tool asks it.
+3. **The React wrapper is not the "real" component either.** Even the
+   `@southleft/al-react` package is a thin `@lit/react` wrapper around the
+   same compiled Lit element — pasting its generated `.tsx` source as
+   "ownable" content is a copy of a copy; editing the pasted file changes
+   nothing about the actual rendered (shadow-DOM) component.
+4. **This repo's own consumer base is majority non-React.** `apps/` ships
+   Angular, Svelte, Astro, vanilla web-components, SSR and MFE fixtures
+   alongside React — six of seven are outside the React+Tailwind assumption
+   the registry format and its CLI/MCP are built around. A `registry.json`
+   would describe (and only serve) the smallest slice of Altitude's actual
+   audience while implying, to any tool that indexes registries by
+   convention, that Altitude is a shadcn/ui-family library. It is not.
+5. **The stated benefit is a mechanism, and Altitude already has the
+   mechanism, more precisely.** What the CHI 2026 finding plausibly measures
+   is "an AI agent with a structured, queryable, ground-truth catalog of real
+   component names/props outperforms one guessing from training data" — not
+   anything specific to shadcn's file format. Altitude already ships that
+   mechanism, and it is closer to the source of truth than a registry's
+   static copy-paste files would be: the `altitude` MCP server (8 tools, 7
+   resources, 4 prompts — `libs/altitude-mcp/CAPABILITY-MATRIX.md`) reads
+   live off the actual `custom-elements.json`, generated by
+   `@custom-elements-manifest/analyzer` straight from the component source,
+   plus the generated `llms.txt` / `llms-components.txt` / `llms-tokens.txt`
+   and (as of this spec, R10) the `altitude-facts` agent skill
+   (`.claude/skills/altitude-facts/`). "Registry context" and "MCP context"
+   are not competing distribution channels here; Altitude already ships the
+   thing the study credits, through a channel that fits its actual
+   architecture.
+6. **"MCP support for free" only reaches shadcn's own MCP client, inside an
+   already-Tailwind project.** The shadcn MCP server (`docs/mcp`) browses and
+   installs FROM configured registries — a consumer needs shadcn/ui tooling
+   running for that benefit to reach them at all, at which point they are, by
+   definition, not using this library the way five-sixths of this repo's own
+   fixture apps do.
+
+## What would change the answer
+
+- Altitude adopting Tailwind and a copy-paste (rather than npm-versioned)
+  distribution model for some consumer segment — not planned; it would
+  contradict the whole `<al-theme>` / cascade-layer / Style Dictionary
+  architecture documented in `TOKENS.md` and `BRANDS.md`.
+- shadcn's schema adding a first-class "compiled custom element, install via
+  npm + `customElements.define`" item type that does not assume Tailwind or
+  copy-paste ownership. No evidence of this as of the versions inspected
+  here (2026-08-25).
+
+## Evidence trail
+
+- `https://ui.shadcn.com/schema/registry-item.json` — field/enum list above.
+- `https://ui.shadcn.com/docs/registry/registry-json`,
+  `https://ui.shadcn.com/docs/registry/getting-started`,
+  `https://ui.shadcn.com/docs/mcp` — CLI/MCP behaviour and the
+  `components.json` / Tailwind prerequisite.
+- `grep -rn tailwind package.json libs/al-web-components/package.json
+  libs/al-react/package.json` in this repo — no hits, confirmed 2026-08-25.
+- `apps/` directory listing (`angular`, `astro`, `home`, `mfe`, `react`, `ssr`,
+  `svelte`, `web-components`) — six of eight fixtures are non-React.
+- `libs/altitude-mcp/CAPABILITY-MATRIX.md`, `llms.txt`,
+  `.claude/skills/altitude-facts/` — the mechanism this spec already ships
+  in place of a registry.
