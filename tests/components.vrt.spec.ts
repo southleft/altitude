@@ -25,6 +25,26 @@ import { expect, test } from '@playwright/test';
  *
  * Baselines land in `.altitude/baselines/screenshots/` (snapshotPathTemplate in
  * playwright.config.ts), beside the five pilots.
+ *
+ * THE BASELINES ARE RUNNER-RENDERED, AND CI IS AUTHORITATIVE.
+ *
+ * Text rasterises differently on Linux and Windows, so a baseline captured on a
+ * developer machine can differ from the same render on the CI runner by enough
+ * to trip `maxDiffPixelRatio: 0.01`. Measured on this corpus: 58 of 67
+ * components are identical across the two, and 9 are not — alert, banner,
+ * breadcrumbs, heading, pagination, tab-panel, tabs, testimonial, text-block.
+ * Every one of them is text-heavy, which is the tell.
+ *
+ * Those 9 are committed AS THE RUNNER RENDERS THEM, the same way commit 709f484
+ * refreshed the five pilots "from runner-rendered actuals". The consequence is
+ * worth stating plainly rather than discovering: **running this spec on Windows
+ * reports those 9 as failures.** That is the platform difference, not a
+ * regression, and CI is the check that counts.
+ *
+ * To refresh a baseline after an intentional visual change, take it from the
+ * runner rather than from your machine: the failing job uploads the `-actual`
+ * PNGs as the `playwright-report` artifact, and those are the files to commit.
+ * `--update-snapshots` locally will produce baselines that fail CI.
  */
 
 // `process.cwd()` and not an `import.meta.url`-relative path: Playwright loads
