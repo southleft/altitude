@@ -75,7 +75,7 @@
     "test": "pnpm --dir ../.. exec vitest run --project wc",
     "plop": "plop --plopfile plop/plop-config.js",
     "validate:usage": "node cli/validate.mjs",
-    "start:fixture": "pnpm --dir story-fixture exec vite"
+    "start:fixture": "vite -c story-fixture/vite.config.mjs"
   },
   "bin": {
     "altitude-validate": "./cli/validate.mjs"

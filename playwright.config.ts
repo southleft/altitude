@@ -73,7 +73,13 @@ export default defineConfig({
     // separately-maintained fixtures that can drift apart. Built by
     // `pnpm run build:story-fixture` (part of build:fixtures).
     {
-      command: 'pnpm --dir libs/al-web-components/story-fixture exec vite preview --port 5178',
+      // Run through the WORKSPACE PACKAGE, not `--dir`. story-fixture/ is nested
+      // inside al-web-components, so the `libs/*` workspace glob does not match
+      // it, it has no node_modules of its own, and `pnpm --dir … exec vite`
+      // finds no binary on a clean CI install (exit 254, "Command vite not
+      // found"). Same trap the build script hit; fixed the same way.
+      command:
+        'pnpm --filter @southleft/al-web-components exec vite preview -c story-fixture/vite.config.mjs --port 5178',
       url: 'http://localhost:5178/iframe.html?id=button--Default',
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
