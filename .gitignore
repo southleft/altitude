@@ -131,3 +131,8 @@ playwright-report
 # run; the only durable artifact is the floor in
 # `.altitude/baselines/coverage.json`, which IS tracked.
 /coverage/
+/tmp-shots
+
+# The story fixture is a build artifact — rebuilt by `pnpm run build:story-fixture`
+# whenever the a11y sweep runs. Only its source is durable.
+libs/al-web-components/story-fixture/dist/

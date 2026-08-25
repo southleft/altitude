@@ -284,7 +284,33 @@ function pickStory(module) {
    */
   const meta = module.default ?? {};
   const normalize = (value) => {
-    if (typeof value === 'function') return { render: value, args: value.args ?? {} };
+    /*
+     * `meta.args` is merged for CSF2 too, but only its PRIMITIVE entries.
+     *
+     * A CSF2 story sets just what it overrides (`Disabled.args = { isDisabled:
+     * true }`) and inherits label, placeholder and fieldNote from the default
+     * export, so reading `value.args` alone rendered every CSF2 component
+     * stripped of its own example content — no label, no placeholder, no field
+     * note. (The same omission in the accessibility fixture hid a real 2.4:1
+     * contrast failure on `al-select`'s disabled field note.)
+     *
+     * Only STRINGS and NUMBERS are inherited. `spread()` renders a boolean or
+     * an object as a PROPERTY binding, which this serializer correctly refuses
+     * to guess at — inheriting `isActive: false` from a default export marked
+     * al-alert, al-toast, al-tab-panel and al-file-upload unrepresentable and
+     * cost them their previews outright. A string becomes an attribute and
+     * survives static markup; a boolean-as-property never could, and it is not
+     * what was missing anyway. The gap this closes is textual: the label,
+     * placeholder and field note a CSF2 story inherits and never restates.
+     */
+    if (typeof value === 'function') {
+      const inherited = Object.fromEntries(
+        Object.entries(meta.args ?? {}).filter(
+          ([, v]) => typeof v === 'string' || typeof v === 'number',
+        ),
+      );
+      return { render: value, args: { ...inherited, ...(value.args ?? {}) } };
+    }
     if (value && typeof value === 'object') {
       const render = typeof value.render === 'function' ? value.render : meta.render;
       if (typeof render === 'function') return { render, args: { ...(meta.args ?? {}), ...(value.args ?? {}) } };
