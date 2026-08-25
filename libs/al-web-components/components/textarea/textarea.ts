@@ -180,6 +180,30 @@ export class ALTextarea extends ALElement {
   accessor maxLengthValue: number;
 
   /**
+   * Generated id for the ERROR note.
+   *
+   * Separate from `ariaDescribedBy`, which is public API and names the field
+   * note. Both can render at once, and `aria-describedby` takes a LIST, so the
+   * error needs an id of its own rather than borrowing the field note's.
+   */
+  private errorNoteId: string;
+
+  /**
+   * The ids `aria-describedby` should point at, in reading order.
+   *
+   * Only the notes actually RENDERED are listed — the error note is conditional
+   * on `isError`, and pointing at an element that is not in the DOM makes the
+   * whole attribute unreliable rather than merely incomplete.
+   */
+  private get describedBy(): string | undefined {
+    const ids = [
+      this.fieldNote || this.slotNotEmpty('field-note') ? this.ariaDescribedBy : undefined,
+      (this.errorNote || this.slotNotEmpty('error')) && this.isError ? this.errorNoteId : undefined
+    ].filter(Boolean);
+    return ids.length ? ids.join(' ') : undefined;
+  }
+
+  /**
    * Connected callback
    * 1. Dynamically sets the fieldId and ariaDescribedBy for A11y
    */
@@ -189,6 +213,9 @@ export class ALTextarea extends ALElement {
     this.fieldId = this.fieldId || nanoid();
     if (this.fieldNote) {
       this.ariaDescribedBy = this.ariaDescribedBy || nanoid();
+    }
+    if (this.errorNote) {
+      this.errorNoteId = this.errorNoteId || nanoid();
     }
   }
 
@@ -289,7 +316,7 @@ export class ALTextarea extends ALElement {
             ?readonly="${this.isReadonly}"
             ?required="${this.isRequired}"
             ?disabled="${this.isDisabled}"
-            aria-describedby="${ifDefined(this.ariaDescribedBy)}"
+            aria-describedby="${ifDefined(this.describedBy)}"
             placeholder="${ifDefined(this.placeholder)}"
             maxlength="${ifDefined(this.maxLength)}"
             minlength=${ifDefined(this.minLength)}
@@ -337,7 +364,7 @@ export class ALTextarea extends ALElement {
                   ${(this.errorNote || this.slotNotEmpty('error')) && this.isError
                     ? html`
                         <slot name="error">
-                          <${this.fieldNoteEl} ?isDisabled=${this.isDisabled} ?isError=${true}> ${this.errorNote} </${this.fieldNoteEl}>
+                          <${this.fieldNoteEl} ?isDisabled=${this.isDisabled} ?isError=${true} id=${ifDefined(this.errorNoteId)}> ${this.errorNote} </${this.fieldNoteEl}>
                         </slot>
                       `
                     : html``}

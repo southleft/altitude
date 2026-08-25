@@ -161,19 +161,35 @@ describe('al-checkbox', () => {
     expect(note!.textContent!.trim()).toBe('You can change this later.');
   });
 
-  it('leaves the error note unreferenced by the input', async () => {
-    // FINDING, documented not endorsed. checkbox.ts:124-126 generates
-    // `ariaDescribedBy` ONLY when a fieldNote exists, and checkbox.ts:203-209
-    // renders the error note with no id at all. An errorNote on its own is
-    // visible but unreachable from the control, and al-field-note declares no
-    // live region either (field-note.test.ts), so the error is never announced.
+  it('references the error note from the input, and lists both notes when both render', async () => {
+    // The id was generated ONLY when a fieldNote existed, and the error note
+    // rendered with no id at all — so an errorNote on its own was visible and
+    // referenced by nothing. A validation error is the single message that most
+    // needs announcing, and it was the one guaranteed not to be.
+    //
+    // Fixed 2026-08-24: the error note gets its own generated id, and
+    // aria-describedby is a LIST of the notes actually rendered. Note
+    // al-field-note still declares no role/aria-live, so this makes the message
+    // REACHABLE, not automatically announced on change — see field-note.test.ts.
     const el = await fixture<ALCheckbox>(html`<al-checkbox isError errorNote="You must accept the terms.">Terms</al-checkbox>`);
     await el.updateComplete;
 
     const notes = [...el.shadowRoot!.querySelectorAll('al-field-note')];
-    expect(notes.map((n) => n.textContent!.trim())).toContain('You must accept the terms.');
-    expect(inner(el).getAttribute('aria-describedby'), 'current behavior — the error note is orphaned').toBeNull();
-    expect(notes.every((n) => !n.id), 'no rendered note carries an id to point at').toBe(true);
+    const errorNote = notes.find((n) => n.textContent!.trim() === 'You must accept the terms.')!;
+    expect(errorNote, 'the error note renders').toBeTruthy();
+    expect(errorNote.id, 'and now carries an id to point at').toBeTruthy();
+
+    const describedBy = inner(el).getAttribute('aria-describedby');
+    expect(describedBy, 'the control points at it').toContain(errorNote.id);
+  });
+
+  it('drops the error note from aria-describedby when isError is not set', async () => {
+    // The note is conditional on `isError`, so referencing it unconditionally
+    // would point at an element that is not in the DOM — which makes the whole
+    // attribute unreliable rather than merely incomplete.
+    const el = await fixture<ALCheckbox>(html`<al-checkbox errorNote="You must accept the terms.">Terms</al-checkbox>`);
+    await el.updateComplete;
+    expect(inner(el).getAttribute('aria-describedby')).toBeNull();
   });
 
   it('contributes nothing to the owning form', async () => {

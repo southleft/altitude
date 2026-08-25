@@ -96,16 +96,37 @@ describe('al-textarea', () => {
     expect(note!.textContent!.trim()).toBe('Keep it short.');
   });
 
-  it('leaves the error note unreferenced by the textarea', async () => {
-    // FINDING, documented not endorsed. textarea.ts:190-192 only generates
-    // `ariaDescribedBy` when a `fieldNote` exists, and textarea.ts:337-343
-    // renders the error note with no id. An errorNote on its own is visible but
-    // unreachable from the control — same gap as al-checkbox and al-input.
-    const el = await fixture<ALTextarea>(html`<al-textarea label="Bio" isError errorNote="Too long."></al-textarea>`);
+  it('references the error note from the textarea, and lists both notes when both render', async () => {
+    // The id was generated ONLY when a fieldNote existed, and the error note
+    // rendered with no id at all — so an errorNote on its own was visible and
+    // referenced by nothing. A validation error is the single message that most
+    // needs announcing, and it was the one guaranteed not to be.
+    //
+    // Fixed 2026-08-24: the error note gets its own generated id, and
+    // aria-describedby is a LIST of the notes actually rendered. al-field-note
+    // still declares no role/aria-live, so this makes the message REACHABLE,
+    // not automatically announced on change — see field-note.test.ts.
+    const el = await fixture<ALTextarea>(
+      html`<al-textarea label="Bio" isError errorNote="This field is required."></al-textarea>`
+    );
     await el.updateComplete;
 
-    expect(el.shadowRoot!.querySelector('.al-c-textarea__field-notes')!.textContent).toContain('Too long.');
-    expect(inner(el).getAttribute('aria-describedby'), 'current behavior — the error note is orphaned').toBeNull();
+    const notes = [...el.shadowRoot!.querySelectorAll('al-field-note')];
+    const errorNote = notes.find((n) => n.textContent!.trim() === 'This field is required.')!;
+    expect(errorNote, 'the error note renders').toBeTruthy();
+    expect(errorNote.id, 'and now carries an id to point at').toBeTruthy();
+    expect(inner(el).getAttribute('aria-describedby'), 'the control points at it').toContain(errorNote.id);
+  });
+
+  it('drops the error note from aria-describedby when isError is not set', async () => {
+    // The note is conditional on `isError`, so referencing it unconditionally
+    // would point at an element that is not in the DOM — which makes the whole
+    // attribute unreliable rather than merely incomplete.
+    const el = await fixture<ALTextarea>(
+      html`<al-textarea label="Bio" errorNote="This field is required."></al-textarea>`
+    );
+    await el.updateComplete;
+    expect(inner(el).getAttribute('aria-describedby')).toBeNull();
   });
 
   it('reflects required, readonly and disabled onto the real textarea', async () => {
