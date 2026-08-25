@@ -246,10 +246,12 @@ exists. `scripts/contracts/generate-figma.mjs` reads a contract
 intermediate **ops** artifact (`buildOps()` — stable key order, no timestamps,
 same contract in -> byte-identical bytes out), and executes it over
 `scripts/figma-atoms/mcp-shim.mjs` to build a real component set: the State
-and Variant axes, the Text/Is Full Width/Slot Before/Slot After component
-properties the contract's props/slots warrant, and token-bound
-fills/strokes/spacing from the contract's anatomy — nothing fabricated
-beyond what the contract states.
+and Variant axes, the Text/Is Full Width/Slot Before/Slot After/Icon
+Before/Icon After component properties the contract's props/slots warrant
+(the last two only when a slot names a `figmaPlaceholder` — see "Slot
+placeholder instances (T19)" below), and token-bound fills/strokes/spacing
+from the contract's anatomy — nothing fabricated beyond what the contract
+states.
 
 ```bash
 node scripts/figma-atoms/mcp-shim.mjs                          # keep running (Figma Desktop open, Bridge plugin running)
@@ -292,10 +294,24 @@ has no SCSS source in `al-button` at all (no `&:active` rule — the `:not()`
 in the hover selector is an exclusion, not a state of its own), so its row
 renders as Default until a component's `.scss` actually defines one. Anatomy
 also carries no literal text content (`contract.schema.json`'s anatomyNode
-has no `text` field), so the Text property's default is a placeholder. Icon
-Before/After (INSTANCE_SWAP) is deliberately not built — the contract's
-`before`/`after` slots are generic, not a reference to a specific icon
-component to bind.
+has no `text` field), so the Text property's default is a placeholder.
+
+**Slot placeholder instances (T19).** A `before`/`after` slot whose contract
+entry carries `slots[].figmaPlaceholder` — the real Figma set's own
+icon-instance placeholder convention (e.g. al-button's real set uses
+"done-circle" before, "send" after, both flat components on the library's
+"🛠 Icons" page), discovered live and recorded by hand, never inferred — gets a
+real icon INSTANCE built in the right leading/trailing position, wired to
+Slot Before/After (BOOLEAN `visible`) and Icon Before/After (INSTANCE_SWAP
+`mainComponent`), and recolored **recursively** to that row's own resolved
+content-color token (the same paint the label text uses — confirmed against
+the real set: icon fill and label fill are always the identical bound
+variable, every Variant/State row), per the Icon Recoloring reference. The
+placeholder is resolved **by name** inside the plugin code at generation time
+— never a node id anywhere in the contract or the ops artifact, since icon
+libraries re-mint ids on republish. A slot with no `figmaPlaceholder` still
+degrades to the boolean-only behavior from T12/T18 (no INSTANCE_SWAP
+property, no icon instance) — a documented gap, not a guess.
 
 ## Anatomy availability is best-effort
 

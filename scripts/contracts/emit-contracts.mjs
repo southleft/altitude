@@ -680,6 +680,28 @@ function runSeed() {
 
 // ── --check-drift: on-disk contract vs. what the repo's own sources derive ─
 
+/** Hand-authored slot extension fields (T19, spec 2026-08-25-contract-backed-
+ * figma-parity-and-generation: `slots[].figmaPlaceholder`, the real Figma
+ * set's icon-instance placeholder convention) carry no derivation source at
+ * all — no CEM/token-map/measure-components fact says which icon component a
+ * hand-built set uses as its Slot Before/After default. Rather than add
+ * `slots` wholesale to DRIFT_IGNORED_FIELDS (which would also blind
+ * --check-drift to genuine CEM slot name/description changes), copy just this
+ * one hand-authored field from the on-disk contract onto the freshly derived
+ * slots (matched by slot name) before the two are diffed — same principle
+ * `conditionalBindings` documents at the top level, one level down. Mutates
+ * and returns `derived` in place; `derived` is a transient in-memory object
+ * for this comparison only, never written back to disk here. */
+function carryForwardSlotExtensions(disk, derived) {
+  if (!Array.isArray(disk?.slots) || !Array.isArray(derived?.slots)) return derived;
+  const diskSlotByName = new Map(disk.slots.map((s) => [s.name, s]));
+  for (const slot of derived.slots) {
+    const diskSlot = diskSlotByName.get(slot.name);
+    if (diskSlot?.figmaPlaceholder) slot.figmaPlaceholder = diskSlot.figmaPlaceholder;
+  }
+  return derived;
+}
+
 /** Field names present on either side, minus the given ignore-set, whose JSON differs. */
 function driftedFields(disk, derived, ignoredFields) {
   const fields = new Set([...Object.keys(disk ?? {}), ...Object.keys(derived ?? {})]);
@@ -735,7 +757,7 @@ function runCheckDrift() {
       continue;
     }
 
-    const fields = driftedFields(disk, derived, ignoredThisRun);
+    const fields = driftedFields(disk, carryForwardSlotExtensions(disk, derived), ignoredThisRun);
     if (fields.length) {
       drifted++;
       console.error(`[contracts] DRIFT — ${tag}: ${fields.join(', ')}`);

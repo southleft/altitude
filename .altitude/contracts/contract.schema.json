@@ -135,7 +135,11 @@
         "required": ["name"],
         "properties": {
           "name": { "type": "string", "description": "Empty string for the default (unnamed) slot." },
-          "description": { "type": "string" }
+          "description": { "type": "string" },
+          "figmaPlaceholder": {
+            "type": "string",
+            "description": "OPTIONAL, hand-authored (T19, spec 2026-08-25-contract-backed-figma-parity-and-generation): the name of the flat icon COMPONENT on the real Figma set's icon library page (e.g. \"🛠 Icons\") this project's hand-built set uses as the library placeholder default for this slot's Icon Before/After INSTANCE_SWAP property, discovered by inspecting the real set live (never inferred). A name, never a node id — icon libraries re-mint ids on republish; scripts/contracts/generate-figma.mjs resolves the actual component BY NAME at generation time. Absent when the placeholder convention has not been discovered for this slot yet; generate-figma.mjs then builds the Slot Before/After boolean only, with no Icon Before/After property or instance."
+          }
         }
       }
     },

@@ -21,9 +21,19 @@
  *   - the plugin-side primitives (bindNum/boundSolid/font resolution) mirror
  *     scripts/figma-atoms/build-page.mjs almost verbatim.
  *   - library conventions (State axis, Title Case values, "Primary" not
- *     "default", Text/Is Full Width/Slot Before/Slot After component
- *     properties, a 2px stroke focus ring) come straight from
+ *     "default", Text/Is Full Width/Slot Before/Slot After/Icon Before/Icon
+ *     After component properties, a 2px stroke focus ring) come straight from
  *     .claude/skills/altitude-figma-sync/SKILL.md.
+ *   - T19: a `before`/`after` slot whose contract entry carries
+ *     `figmaPlaceholder` (the real set's icon-instance placeholder
+ *     convention, discovered live) ALSO gets an icon INSTANCE created in the
+ *     right leading/trailing position, wired to Slot Before/After (BOOLEAN,
+ *     `visible`) and Icon Before/After (INSTANCE_SWAP, `mainComponent`), and
+ *     recolored recursively to the row's own content-color token per the
+ *     Icon Recoloring reference (giorris.dev). The placeholder is resolved
+ *     BY NAME inside the plugin code, never by a node id stored anywhere —
+ *     see buildOps()'s componentProperties comment and
+ *     .altitude/contracts/README.md.
  * Auto-layout is HUG on both axes throughout (no pixel geometry to target a
  * fixed size against) — see the Sizing Modes reference in the skill's
  * "External refs" table: dimension is never set via resize() here at all, so
@@ -88,6 +98,21 @@ const CHECK_DETERMINISM = process.argv.includes('--check-determinism');
 /** Interaction-state axis order, the library's own convention (SKILL.md §3,
  * confirmed against the REAL al-button set's "State" VARIANT options). */
 const STATE_ORDER = ['Default', 'Hover', 'Active', 'Focus', 'Disabled'];
+
+/**
+ * T19: the Figma variable the real al-button set binds every slot icon
+ * instance's width/height to, CONFIRMED live (figma_execute against node
+ * 4271:9562 — every variant's "container"/"Icon After" instance, Primary AND
+ * Secondary alike, resolves the SAME `VariableID` to this name; the
+ * contract's `conditionalBindings.variant.primary` also carries a
+ * `--al-icon-height`/`--al-icon-width` -> `theme/icon/lg` pair, but that CSS
+ * override was confirmed to apply to a DIFFERENT rendering context (icon-only
+ * buttons), not the slotted before/after icon the real set actually shows —
+ * using it here would render the wrong size for every variant but Primary.
+ * A fixed default, not a per-variant lookup, same class of constant as
+ * FAMILY/fontSize below (documented judgment call, not a contract fact).
+ */
+const ICON_SIZE_FIGMA_VAR = 'theme/icon/md';
 
 /** Anatomy node (contract.schema.json shape) -> build-tree node carrying only
  * resolved Figma variable NAMES (contract tokens already carry `.figma`). */
@@ -198,17 +223,36 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
   const axes = [stateAxis, variantAxis].filter(Boolean);
 
   // Component properties: only for props/slots the contract actually
-  // declares — never fabricated. Icon Before/After (INSTANCE_SWAP) is
-  // deliberately NOT added: the contract's `before`/`after` slots are
-  // generic ("typically an icon"), not a reference to a specific icon
-  // component, and INSTANCE_SWAP needs a real default instance to point at.
+  // declares — never fabricated. T19: a `before`/`after` slot ALSO gets an
+  // Icon Before/After INSTANCE_SWAP property when its contract entry carries
+  // `figmaPlaceholder` (the real set's icon-instance placeholder convention,
+  // discovered live — see contract.schema.json's slots[].figmaPlaceholder
+  // and README.md). No `figmaPlaceholder` -> the boolean alone is built, same
+  // as before T19 (a documented degradation, not a guess). `default` here is
+  // the icon's NAME, never a node id — icon libraries re-mint ids on
+  // republish, so the actual component is resolved BY NAME inside the plugin
+  // code at generation time (buildPluginCode's findIconComponentByName),
+  // keeping this pure function's determinism intact (--check-determinism
+  // never touches Figma). `layerName` is the instance layer BOTH the
+  // Slot Before/After boolean's `visible` reference and the Icon Before/After
+  // INSTANCE_SWAP's `mainComponent` reference target — one instance, two
+  // component-property wires, mirroring the real set's own layer.
   const componentProperties = [{ name: 'Text', type: 'TEXT', default: contract.name || tag }];
   if ((contract.props || []).some((p) => p.name === 'fullWidth')) {
     componentProperties.push({ name: 'Is Full Width', type: 'BOOLEAN', default: false });
   }
-  const slotNames = new Set((contract.slots || []).map((s) => s.name));
-  if (slotNames.has('before')) componentProperties.push({ name: 'Slot Before', type: 'BOOLEAN', default: false });
-  if (slotNames.has('after')) componentProperties.push({ name: 'Slot After', type: 'BOOLEAN', default: false });
+  const slotByName = new Map((contract.slots || []).map((s) => [s.name, s]));
+  const slotNames = new Set(slotByName.keys());
+  if (slotNames.has('before')) {
+    componentProperties.push({ name: 'Slot Before', type: 'BOOLEAN', default: false, layerName: 'Icon Before' });
+    const iconName = slotByName.get('before').figmaPlaceholder || null;
+    if (iconName) componentProperties.push({ name: 'Icon Before', type: 'INSTANCE_SWAP', default: iconName, layerName: 'Icon Before' });
+  }
+  if (slotNames.has('after')) {
+    componentProperties.push({ name: 'Slot After', type: 'BOOLEAN', default: false, layerName: 'Icon After' });
+    const iconName = slotByName.get('after').figmaPlaceholder || null;
+    if (iconName) componentProperties.push({ name: 'Icon After', type: 'INSTANCE_SWAP', default: iconName, layerName: 'Icon After' });
+  }
 
   const root = contract.anatomy ? convertAnatomyNode(contract.anatomy.root) : null;
   const stateOverrides = convertStateOverrides(contract.anatomy && contract.anatomy.stateOverrides);
@@ -260,10 +304,23 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
     'anatomy carries no literal text content (contract.schema.json\'s anatomyNode has no `text` field) — ' +
     'the Text component property default is a placeholder (the contract\'s display name), not measured copy.',
   );
-  if (slotNames.has('before') || slotNames.has('after')) {
+  const sidesWithPlaceholder = ['before', 'after'].filter((s) => slotNames.has(s) && slotByName.get(s).figmaPlaceholder);
+  const sidesWithoutPlaceholder = ['before', 'after'].filter((s) => slotNames.has(s) && !slotByName.get(s).figmaPlaceholder);
+  if (sidesWithoutPlaceholder.length) {
+    const label = (s) => (s === 'before' ? 'Before' : 'After');
     degradations.push(
-      'Slot Before/Slot After are declared as booleans only (presence, per SKILL.md\'s pairing convention) — ' +
-      'the contract does not name an icon component to bind, so no INSTANCE_SWAP property or icon instance is built.',
+      `Slot ${sidesWithoutPlaceholder.map(label).join('/')} declared as a boolean only (presence, per SKILL.md's ` +
+      `pairing convention) — the contract's slot entry has no \`figmaPlaceholder\`, so no Icon ` +
+      `${sidesWithoutPlaceholder.map(label).join('/')} INSTANCE_SWAP property or icon instance is built.`,
+    );
+  }
+  if (sidesWithPlaceholder.length) {
+    degradations.push(
+      `Icon ${sidesWithPlaceholder.map((s) => (s === 'before' ? 'Before' : 'After')).join('/')} INSTANCE_SWAP ` +
+      'default is resolved LIVE by NAME from the icons page at generation time (never a hard-coded node id — ' +
+      `see contract.slots[].figmaPlaceholder, T19); icon size is a fixed ${ICON_SIZE_FIGMA_VAR} (documented ` +
+      'judgment call above ICON_SIZE_FIGMA_VAR, not a per-variant contract fact), and the icon is recolored to ' +
+      'this row\'s own resolved content-color token, recursively, per the Icon Recoloring reference.',
     );
   }
 
@@ -313,6 +370,7 @@ function buildPluginCode(ops, SC) {
     }
     const OPS = ${JSON.stringify(ops)};
     const PAGE_NAME = ${JSON.stringify(ops.page)};
+    const ICON_SIZE_FIGMA_VAR = ${JSON.stringify(ICON_SIZE_FIGMA_VAR)};
 
     await figma.loadAllPagesAsync();
     const V = {};
@@ -345,6 +403,48 @@ function buildPluginCode(ops, SC) {
       const vv = V[name];
       if (!vv) { misses.add(name); return false; }
       try { node.setBoundVariable(field, vv); return true; } catch (e) { return false; }
+    }
+
+    // T19: resolve an Icon Before/After INSTANCE_SWAP default BY NAME, never
+    // by a stored node id (icon libraries re-mint ids on republish — the ops
+    // artifact carries only the icon's own component NAME, e.g. "done-circle"
+    // — see contract.slots[].figmaPlaceholder). Prefer the library's own
+    // icons page (SKILL.md convention "🛠 Icons"); fall back to a whole-file
+    // search so this still works if that page is ever renamed.
+    async function findIconComponentByName(name) {
+      const iconsPage = figma.root.children.find((p) => p.name === '🛠 Icons');
+      if (iconsPage) {
+        await iconsPage.loadAsync();
+        const hit = iconsPage.findOne((n) => n.type === 'COMPONENT' && n.name === name);
+        if (hit) return hit;
+      }
+      return figma.root.findOne((n) => n.type === 'COMPONENT' && n.name === name);
+    }
+
+    // T19: recursively rebind every fill/stroke under an icon instance to the
+    // SAME resolved paint used for this row's label text — confirmed against
+    // the real set live (the icon's inner vector fill and the label's text
+    // fill are always the identical bound variable, every Variant/State row)
+    // and matches the Icon Recoloring reference's "extract the color from a
+    // sibling text node" convention. Recurses into children so a
+    // multi-path/grouped icon is never left partially recolored.
+    function recolorIconTree(node, paint) {
+      if (!paint) return;
+      if (Array.isArray(node.fills) && node.fills.length) { try { node.fills = [paint]; } catch (e) { /* mixed/locked node */ } }
+      if (Array.isArray(node.strokes) && node.strokes.length) { try { node.strokes = [paint]; } catch (e) { /* mixed/locked node */ } }
+      if ('children' in node) for (const child of node.children) recolorIconTree(child, paint);
+    }
+
+    // Resolve every Icon Before/After INSTANCE_SWAP's default component ONCE
+    // (same placeholder for every variant/state row — nothing per-row here),
+    // keyed by the layer name both the boolean's 'visible' reference and the
+    // instance-swap's 'mainComponent' reference target after combineAsVariants.
+    const iconSwapProps = OPS.componentProperties.filter((p) => p.type === 'INSTANCE_SWAP');
+    const iconComponentsByLayer = {};
+    for (const p of iconSwapProps) {
+      const comp = await findIconComponentByName(p.default);
+      if (comp) iconComponentsByLayer[p.layerName] = comp;
+      else misses.add('icon-component:' + p.default);
     }
 
     // Fonts — this contract has no font-size/family token on al-button (they are
@@ -462,6 +562,30 @@ function buildPluginCode(ops, SC) {
         }
       }
 
+      // T19: this row's content-color paint, resolved ONCE and shared by the
+      // label text AND both slot icons — confirmed live against the real set
+      // (icon fill and label fill are always the SAME bound variable, every
+      // Variant/State row; see ICON_SIZE_FIGMA_VAR's neighbor comment above
+      // for the one place this component deliberately does NOT follow a
+      // per-variant contract fact).
+      const contentPaint = await boundSolid(tokens['color']);
+
+      // Icon Before (leading) — appended FIRST so it sits before the label in
+      // the auto-layout's row order; hidden by default (Slot Before's own
+      // default is false), wired to Slot Before/Icon Before after
+      // combineAsVariants (component properties can only be added to the
+      // COMPONENT_SET, not a lone variant — SKILL.md §3).
+      const beforeIconComp = iconComponentsByLayer['Icon Before'];
+      if (beforeIconComp) {
+        const inst = beforeIconComp.createInstance();
+        inst.name = 'Icon Before';
+        comp.appendChild(inst);
+        inst.visible = false;
+        bindNum(inst, 'width', ICON_SIZE_FIGMA_VAR);
+        bindNum(inst, 'height', ICON_SIZE_FIGMA_VAR);
+        recolorIconTree(inst, contentPaint);
+      }
+
       // Label — anatomy's nested text-only wrapper spans (al-c-button__text x2)
       // carry no tokens/layout facts beyond the leaf's own, so they collapse
       // into one text node appended directly to the component.
@@ -474,7 +598,19 @@ function buildPluginCode(ops, SC) {
       comp.appendChild(t);
       textNodes.push(t);
 
-      { const p = await boundSolid(tokens['color']); if (p) t.fills = [p]; }
+      if (contentPaint) t.fills = [contentPaint];
+
+      // Icon After (trailing) — appended LAST, same wiring as Icon Before.
+      const afterIconComp = iconComponentsByLayer['Icon After'];
+      if (afterIconComp) {
+        const inst = afterIconComp.createInstance();
+        inst.name = 'Icon After';
+        comp.appendChild(inst);
+        inst.visible = false;
+        bindNum(inst, 'width', ICON_SIZE_FIGMA_VAR);
+        bindNum(inst, 'height', ICON_SIZE_FIGMA_VAR);
+        recolorIconTree(inst, contentPaint);
+      }
 
       if (state === 'Disabled') {
         // conditionalBindings.state.disabled (SCSS &:disabled { opacity: ... }) first;
@@ -546,7 +682,28 @@ function buildPluginCode(ops, SC) {
           }
           addedProps.push(prop.name);
         } else if (prop.type === 'BOOLEAN') {
-          set.addComponentProperty(prop.name, 'BOOLEAN', !!prop.default);
+          const propRef = set.addComponentProperty(prop.name, 'BOOLEAN', !!prop.default);
+          if (prop.layerName) {
+            for (const variant of set.children) {
+              const layer = variant.findOne((n) => n.type === 'INSTANCE' && n.name === prop.layerName);
+              if (layer) layer.componentPropertyReferences = { ...(layer.componentPropertyReferences || {}), visible: propRef };
+            }
+          }
+          addedProps.push(prop.name);
+        } else if (prop.type === 'INSTANCE_SWAP') {
+          // T19: wire AFTER combineAsVariants, same as TEXT/BOOLEAN above —
+          // addComponentProperty only accepts the COMPONENT_SET (SKILL.md
+          // §3). The default component id is resolved live above
+          // (iconComponentsByLayer, keyed by name, never stored as an id in
+          // OPS) — a miss there means no property is added at all, same
+          // honest-degrade convention bindNum/boundSolid already use.
+          const iconComp = iconComponentsByLayer[prop.layerName];
+          if (!iconComp) { misses.add('component-property:' + prop.name + ' (icon "' + prop.default + '" not found)'); continue; }
+          const propRef = set.addComponentProperty(prop.name, 'INSTANCE_SWAP', iconComp.id);
+          for (const variant of set.children) {
+            const layer = variant.findOne((n) => n.type === 'INSTANCE' && n.name === prop.layerName);
+            if (layer) layer.componentPropertyReferences = { ...(layer.componentPropertyReferences || {}), mainComponent: propRef };
+          }
           addedProps.push(prop.name);
         }
       } catch (e) { misses.add('component-property:' + prop.name); }
