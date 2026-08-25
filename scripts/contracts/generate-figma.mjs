@@ -71,6 +71,12 @@ function argOf(flag) {
   return i > -1 && process.argv[i + 1] && !process.argv[i + 1].startsWith('-') ? process.argv[i + 1] : null;
 }
 
+/** Case/dash-insensitive key, mirrors emit-contracts.mjs's normKey — used to pair a Figma
+ * variant option ("Secondary") or Title Case state ("Hover") with a conditionalBindings
+ * key ("secondary" / "hover"); not exported from there, so re-derived here (same
+ * dependency-free-helper convention emit-contracts documents for parity.mjs's privates). */
+const normKey = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
 const COMPONENT = argOf('--component') || 'al-button';
 const PAGE_NAME = argOf('--page') || 'Contract Pilot';
 const SHIM_PORT = Number(argOf('--shim') ?? 9401);
@@ -116,6 +122,46 @@ function convertStateOverrides(stateOverrides) {
     if (Object.keys(paths).length) out[state] = paths;
   }
   return out;
+}
+
+/** { cssProp: tokenBinding } -> { cssProp: figmaVariableName }, dropping anything with no
+ * resolved Figma variable (mirrors convertAnatomyNode's `if (binding && binding.figma)`).
+ * Also safe to call on a `variantBinding` object that carries a `state` sub-map — that
+ * key's value has no `.figma` of its own so it is silently skipped, not misread. */
+function figmaMapOf(bindingMap) {
+  const out = {};
+  for (const [cssProp, tb] of Object.entries(bindingMap || {})) if (tb && tb.figma) out[cssProp] = tb.figma;
+  return out;
+}
+
+/**
+ * T18: resolve ONE contract's `conditionalBindings` (see contract.schema.json) into
+ * lookup functions keyed the way the OPS variant/state axes actually spell things
+ * (Figma Title Case option / state name), rather than forcing every caller to re-pair
+ * casing. `null` values from either lookup mean "no SCSS-derived fact for this
+ * condition" — the caller falls back to the anatomy-derived root tokens, never fabricates.
+ */
+function resolveConditionalBindings(contract) {
+  const cb = contract.conditionalBindings || null;
+  const variantEntries = Object.entries(cb?.variant || {});
+  const stateEntries = Object.entries(cb?.state || {});
+
+  return {
+    /** Figma variant option name (e.g. "Secondary") -> that variant's own binding object
+     * (may carry a `state` sub-map for compound variant+state overrides), or null. */
+    variantBindingFor(optionName) {
+      if (!optionName) return null;
+      const key = normKey(optionName);
+      return variantEntries.find(([name]) => normKey(name) === key)?.[1] ?? null;
+    },
+    /** Figma state name (e.g. "Hover") -> the GENERIC (variant-agnostic) binding for
+     * that state, or null. */
+    genericStateBindingFor(stateName) {
+      if (!stateName) return null;
+      const key = normKey(stateName);
+      return stateEntries.find(([name]) => normKey(name) === key)?.[1] ?? null;
+    },
+  };
 }
 
 /**
@@ -167,15 +213,35 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
   const root = contract.anatomy ? convertAnatomyNode(contract.anatomy.root) : null;
   const stateOverrides = convertStateOverrides(contract.anatomy && contract.anatomy.stateOverrides);
 
+  // T18: per-(State, Variant) resolved tokens — base bindings (measured anatomy root,
+  // ONE case) overridden by conditionalBindings.variant[<variant>] (SCSS, every variant),
+  // in turn overridden for non-Default rows by a compound variant+state override when the
+  // SCSS nests one directly under that variant, else the generic conditionalBindings.state
+  // delta. This is the fix for the T12 pilot bug: anatomy alone gave every Variant column
+  // the SAME background/color (it only ever measured one case); conditionalBindings is
+  // keyed by variant precisely because anatomy cannot be.
+  const { variantBindingFor, genericStateBindingFor } = resolveConditionalBindings(contract);
+  const rootFigmaTokens = root ? root.tokens : {};
+
   // Cross-product, State x Variant (or State alone when the component has no
   // variant axis) — sorted by name for a stable, readable ops file.
   const variants = [];
   for (const state of stateAxis.values) {
     for (const variant of variantAxis ? variantAxis.values : [null]) {
+      const variantBinding = variant ? variantBindingFor(variant) : null;
+      const variantLayer = variantBinding ? figmaMapOf(variantBinding) : {};
+      let stateLayer = {};
+      if (state !== 'Default') {
+        const compound = variantBinding?.state
+          ? Object.entries(variantBinding.state).find(([name]) => normKey(name) === normKey(state))?.[1]
+          : null;
+        stateLayer = figmaMapOf(compound ?? genericStateBindingFor(state));
+      }
       variants.push({
         name: variant ? `State=${state}, Variant=${variant}` : `State=${state}`,
         state,
         variant,
+        tokens: { ...rootFigmaTokens, ...variantLayer, ...stateLayer },
       });
     }
   }
@@ -183,11 +249,11 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
 
   const degradations = [];
   if (!root) degradations.push('anatomy unavailable on this contract — no structural/token facts to build from.');
-  if (variantAxis) {
+  if (variantAxis && !contract.conditionalBindings?.variant) {
     degradations.push(
       'per-Variant token deltas are not in the contract (anatomySource captured exactly one case, ' +
-      `"${contract.anatomyCase}") — every Variant value renders with the SAME root/state tokens; only ` +
-      'the State axis carries a measured delta.',
+      `"${contract.anatomyCase}", and conditionalBindings has no variant section) — every Variant value ` +
+      'renders with the SAME root/state tokens; only the State axis carries a measured delta.',
     );
   }
   degradations.push(
@@ -322,6 +388,28 @@ function buildPluginCode(ops, SC) {
     }
     await figma.setCurrentPageAsync(page);
 
+    // T18: the library's default theme mode is DARK (main.css bakes dark into
+    // root — SKILL.md), and the content colors this generator binds (e.g.
+    // content-primary-weak) are authored to read on a dark surface. A page
+    // left on Figma's default WHITE background is why the T12 pilot's light
+    // text read as invisible — mirror the real file's page convention here.
+    // NOTE: PageNode.backgrounds throws "cannot be bound to variables" — this
+    // is the one paint in this whole generator that is a resolved LITERAL,
+    // not a bound variable (a Figma API limitation on Page, not a choice).
+    {
+      const bgVarName = 'theme/color/background/default';
+      const vv = V[bgVarName];
+      if (vv) {
+        try {
+          const val = await rawOf(vv);
+          if (val && val.r !== undefined) page.backgrounds = [{ type: 'SOLID', color: { r: val.r, g: val.g, b: val.b } }];
+          else misses.add('page-background:' + bgVarName);
+        } catch (e) { misses.add('page-background:' + bgVarName); }
+      } else {
+        misses.add('page-background:' + bgVarName);
+      }
+    }
+
     const root = OPS.root;
     const rootTokens = (root && root.tokens) || {};
     const textNodes = [];
@@ -333,7 +421,7 @@ function buildPluginCode(ops, SC) {
       return at ? at[cssProp] || null : null;
     }
 
-    async function buildVariant(state, variant) {
+    async function buildVariant(state, variant, tokens) {
       const comp = figma.createComponent();
       comp.name = variant ? ('State=' + state + ', Variant=' + variant) : ('State=' + state);
       page.appendChild(comp); // combineAsVariants requires siblings already on the target page
@@ -355,10 +443,23 @@ function buildPluginCode(ops, SC) {
         bindNum(comp, 'paddingRight', rootTokens['padding-right'] || rootTokens['padding']);
       }
 
-      { const p = await boundSolid(rootTokens['background-color']); if (p) comp.fills = [p]; }
+      // T18: tokens is this ROW's resolved facts — anatomy root overridden by
+      // conditionalBindings.variant[<variant>] then a state delta (compound
+      // variant+state, else the generic conditionalBindings.state) — see
+      // buildOps(). Falls back to rootTokens only for facts conditionalBindings
+      // never carries (border-radius, gap, padding — shared, not variant/state-conditional).
+      { const p = await boundSolid(tokens['background-color']); if (p) comp.fills = [p]; }
       const radiusVar = rootTokens['border-radius'] || rootTokens['border-top-left-radius'];
       if (radiusVar) {
         for (const f of ['topLeftRadius', 'topRightRadius', 'bottomRightRadius', 'bottomLeftRadius']) bindNum(comp, f, radiusVar);
+      }
+      if (tokens['border-color']) {
+        const strokePaint = await boundSolid(tokens['border-color']);
+        if (strokePaint) {
+          comp.strokes = [strokePaint];
+          comp.strokeAlign = 'INSIDE';
+          bindNum(comp, 'strokeWeight', tokens['border-width']);
+        }
       }
 
       // Label — anatomy's nested text-only wrapper spans (al-c-button__text x2)
@@ -373,12 +474,12 @@ function buildPluginCode(ops, SC) {
       comp.appendChild(t);
       textNodes.push(t);
 
-      const hoverColor = overrideFor('hover', '0', 'color');
-      const colorVar = state === 'Hover' && hoverColor ? hoverColor : rootTokens['color'];
-      { const p = await boundSolid(colorVar); if (p) t.fills = [p]; }
+      { const p = await boundSolid(tokens['color']); if (p) t.fills = [p]; }
 
       if (state === 'Disabled') {
-        const opacityVar = overrideFor('disabled', '0', 'opacity');
+        // conditionalBindings.state.disabled (SCSS &:disabled { opacity: ... }) first;
+        // the measured-anatomy override is a fallback for a contract with no such fact.
+        const opacityVar = tokens['opacity'] || overrideFor('disabled', '0', 'opacity');
         if (opacityVar) bindNum(comp, 'opacity', opacityVar);
       }
 
@@ -407,7 +508,7 @@ function buildPluginCode(ops, SC) {
 
     const hasVariantAxis = OPS.axes.some((a) => a.name === 'Variant');
     const comps = [];
-    for (const v of OPS.variants) comps.push(await buildVariant(v.state, hasVariantAxis ? v.variant : null));
+    for (const v of OPS.variants) comps.push(await buildVariant(v.state, hasVariantAxis ? v.variant : null, v.tokens || {}));
 
     // Grid layout: columns = Variant (or a single column when there is no
     // Variant axis), rows = State. Sizes are hug/content-driven (no pixel

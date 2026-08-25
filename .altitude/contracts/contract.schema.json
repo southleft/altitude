@@ -182,6 +182,23 @@
       "items": { "type": "string", "pattern": "^--al-" },
       "description": "Every `--al-*` custom property referenced anywhere in `anatomy` (root, descendants, and state overrides), deduplicated and sorted. This is a REFERENCE list — token values live in the token pipeline (libs/al-web-components/styles/tokens), never here."
     },
+    "conditionalBindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/variantBinding" },
+          "description": "Keyed by the SAME lowercase values the `variant` prop's `values`/`bindings.figma.options` already use (BEM modifier class suffix -> variant value, e.g. `.al-c-button--secondary` -> \"secondary\"), PLUS a synthesized default-variant key for the component's unmodified base selector when exactly one Figma option has no corresponding modifier class (e.g. Button's bare `.al-c-button` rule -> \"primary\"). Each entry is CSS property -> token binding for that variant's own declarations (T18, spec 2026-08-25-contract-backed-figma-parity-and-generation)."
+        },
+        "state": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/conditionBindingMap" },
+          "description": "Keyed by the SAME state names `states` already uses (pseudo-class/attribute -> state: `:hover` -> \"hover\", `:focus-visible`/`:focus` -> \"focus\", `:active` -> \"active\", `:disabled`/`[disabled]` -> \"disabled\"). CSS property -> token binding for the GENERIC (variant-agnostic) state rule nested under the component's unmodified base selector — applies to any variant that has no compound override under `variant.<name>.state.<name>`."
+        }
+      },
+      "description": "Per-variant and per-state CSS declaration -> token bindings recovered directly from the component's own .scss (T18) — never fabricated: a component whose .scss has no BEM modifier classes or no nested pseudo-class/attribute state rules simply omits the corresponding key (or the whole section). Only declarations whose value resolves to EXACTLY ONE `--al-*` design token (or the `border: <width> solid <color>` two-token shorthand, split into `border-width`/`border-color`) are captured — a value with an unresolvable custom property (e.g. `--al-button-padding`) or more than one token reference is skipped rather than guessed. This is DERIVED from source that IS available in CI (unlike measured anatomy), so it participates fully in --check-drift and --check-determinism."
+    },
     "a11y": {
       "type": "object",
       "additionalProperties": false,
@@ -278,6 +295,23 @@
         "additionalProperties": { "$ref": "#/definitions/tokenBinding" }
       },
       "description": "Node path -> { cssProperty -> token binding } for tokens that changed (or newly appeared) in this state, relative to the same path in `root`."
+    },
+    "conditionBindingMap": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/tokenBinding" },
+      "description": "CSS property -> token binding recovered from ONE selector's direct declarations (T18)."
+    },
+    "variantBinding": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/tokenBinding" },
+      "properties": {
+        "state": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/conditionBindingMap" },
+          "description": "Compound variant+state overrides found as a pseudo-class/attribute rule NESTED directly inside this variant's own selector block (e.g. `.al-c-button--secondary:hover`) — wins over the generic `conditionalBindings.state.<name>` for this variant."
+        }
+      },
+      "description": "One variant's own CSS property -> token bindings (additionalProperties), plus an optional `state` map for its compound state overrides. `state` is reserved and never collides with a real CSS property name."
     }
   }
 }

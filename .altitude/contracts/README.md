@@ -27,6 +27,7 @@ code):
 | `props[].bindings.figma`, `bindings.figma` (component-level) | the project's parity manifest (`.altitude/figma-sync/**/parity-manifest.json`) |
 | `anatomy`, `states`, `semantics.element` | `scripts/figma-atoms/measure-components.mjs` output (`spec-light.json`), when present on disk |
 | token references inside `anatomy` / `tokens` | `scripts/figma-atoms/token-map.mjs` (`CSS_TO_TOKEN`) |
+| `conditionalBindings` (T18) | the component's own `.scss` — BEM modifier classes (`.al-c-<tag>--<suffix>`) and nested pseudo-class/attribute state rules, parsed with `postcss-scss`; omitted entirely for a component whose `.scss` has neither. Unlike `anatomy`, this is derived from source that IS available in CI, so it participates fully in `--check-drift` / `--check-determinism`, never excluded the way anatomy is when `spec-light.json` is unavailable. |
 
 `status` and `version` are the two fields that are **curation metadata, not a
 derived fact** — they say who owns the content now, not what the code/Figma
@@ -180,6 +181,7 @@ pnpm run contracts:check                                        # --check-drift,
 node scripts/contracts/emit-contracts.mjs --check-drift --project southleft
 node scripts/contracts/emit-contracts.mjs --check                # ajv-validate the on-disk contracts against contract.schema.json, read-only
 node scripts/contracts/emit-contracts.mjs --adopt                 # ONE-OFF: the T10 adoption pass itself (derived -> source, 0.1.0 -> 1.0.0); idempotent, not a day-to-day command
+node scripts/contracts/emit-contracts.mjs --add-conditional-bindings  # ONE-OFF: the T18 migration itself (merges the new conditionalBindings field into every on-disk contract, status/version untouched); idempotent, not a day-to-day command
 ```
 
 `--check-drift` re-derives every tracked component in memory from its
@@ -277,13 +279,20 @@ figma-sync artifact (a build INPUT derived entirely from the tracked
 contract, not durable state).
 
 **Known, honest limits of a contract-driven build**, all named in the ops
-artifact's own `degradations` array: a contract's `anatomy` captures exactly
-ONE measured case (see `anatomyCase`), so every Variant value renders with
-the SAME root/state tokens — per-Variant visual differences (e.g. Danger's
-red vs. Bare's transparent background) are simply not in the contract yet,
-and are absent from the generated set rather than guessed. Anatomy also
-carries no literal text content (`contract.schema.json`'s anatomyNode has no
-`text` field), so the Text property's default is a placeholder. Icon
+artifact's own `degradations` array: `anatomy` still captures exactly ONE
+measured case (see `anatomyCase`), so any root-level fact anatomy alone
+carries (border-radius, gap, padding, icon size) is shared across every
+Variant/State cell. T18 closed the biggest instance of this — per-Variant
+background/text/border color and the Hover/Disabled state deltas now come
+from `conditionalBindings` (recovered straight from the component's `.scss`,
+see the table above), not from the single measured case — but a component
+with NO `conditionalBindings` (no BEM modifiers, no nested state rules in its
+`.scss`) still renders every cell identically, same as before T18. `active`
+has no SCSS source in `al-button` at all (no `&:active` rule — the `:not()`
+in the hover selector is an exclusion, not a state of its own), so its row
+renders as Default until a component's `.scss` actually defines one. Anatomy
+also carries no literal text content (`contract.schema.json`'s anatomyNode
+has no `text` field), so the Text property's default is a placeholder. Icon
 Before/After (INSTANCE_SWAP) is deliberately not built — the contract's
 `before`/`after` slots are generic, not a reference to a specific icon
 component to bind.

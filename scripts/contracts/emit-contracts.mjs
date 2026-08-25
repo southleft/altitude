@@ -64,6 +64,7 @@ const CHECK_DRIFT = process.argv.includes('--check-drift');
 const CHECK = process.argv.includes('--check');
 const CHECK_DETERMINISM = process.argv.includes('--check-determinism');
 const ADOPT = process.argv.includes('--adopt');
+const ADD_CONDITIONAL_BINDINGS = process.argv.includes('--add-conditional-bindings');
 const FORCE = process.argv.includes('--force');
 const STATES = ['hover', 'focus', 'active', 'disabled'];
 
@@ -103,6 +104,9 @@ Pick one:
   --check             ajv-validate the on-disk contracts against contract.schema.json, read-only — refuses an illegal contract file BY NAME
   --check-determinism re-derive every tracked contract TWICE in memory and byte-compare the two serializations; exit 1 + names any component whose two derivations differ
   --adopt             one-off: flip status derived -> source, bump version 0.1.0 -> 1.0.0 (idempotent)
+  --add-conditional-bindings  one-off (T18): merge the derived \`conditionalBindings\` field into every
+                      on-disk contract that has none yet drift-free otherwise; skips (loudly) any
+                      contract whose OTHER fields already drift from derivation, rather than clobber it
 
   pnpm run contracts:seed / contracts:seed:sl
   pnpm run contracts:check / contracts:validate / contracts:check-determinism
@@ -213,6 +217,212 @@ function buildA11y(component) {
 function tokenBindingFor(cssSuffix) {
   const hit = CSS_TO_TOKEN[cssSuffix];
   return { code: `--al-${cssSuffix}`, figma: hit?.figma ?? null };
+}
+
+// ── conditionalBindings (T18): variant/state facts recovered from the
+//    component's OWN .scss — see contract.schema.json's `conditionalBindings`
+//    and README.md for the mapping this documents in code. ─────────────────
+
+/** Lazily require postcss-scss (devDependency; CJS) — same createRequire
+ * bridge pattern as ajv's below, no new dependency. */
+let _scssParse = null;
+function scssParse() {
+  if (!_scssParse) _scssParse = createRequire(import.meta.url)('postcss-scss').parse;
+  return _scssParse;
+}
+
+/** pseudo-class/attribute selector (relative, e.g. "&:hover:not(:active, :disabled)")
+ * -> canonical state name, or null. Order matters: disabled/focus checked before the
+ * broader hover/active so a combinator like `:hover:not(..., :disabled)` still reads
+ * as "hover" (the LEADING pseudo-class is the rule's own state, `:not()` is exclusion). */
+const STATE_SELECTOR_PATTERNS = [
+  ['disabled', /^&(:disabled|\[disabled\])\b/],
+  ['focus', /^&(:focus-visible|:focus)\b/],
+  ['active', /^&:active\b/],
+  ['hover', /^&:hover\b/],
+];
+
+function matchStateSelector(selector) {
+  const s = String(selector ?? '').trim();
+  for (const [state, re] of STATE_SELECTOR_PATTERNS) if (re.test(s)) return state;
+  return null;
+}
+
+/** `border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);`
+ * -> { 'border-width': 'theme-border-width', 'border-color': 'theme-color-border-default' }.
+ * The ONE shorthand this repo's components author with two token references (SKILL.md
+ * conventions) — everything else with >1 `--al-*` reference in a value is left uncaptured
+ * (see conditionalTokenBinding) rather than guessed. */
+function splitBorderShorthand(value) {
+  const m = String(value).match(/^var\(--al-([a-z0-9-]+)\)\s+[a-z]+\s+var\(--al-([a-z0-9-]+)\)$/i);
+  return m ? { 'border-width': m[1], 'border-color': m[2] } : null;
+}
+
+/** A declaration value with EXACTLY ONE `--al-*` reference -> its token binding, else
+ * null. Multi-var shorthands (other than the `border` split above) and references to a
+ * component-local custom property with no design-token entry (e.g. `--al-button-padding`)
+ * are skipped, never guessed — conditionalBindings never invents which token "is" the fact. */
+function conditionalTokenBinding(value) {
+  const matches = [...String(value).matchAll(/--al-([a-z0-9-]+)/gi)].map((m) => m[1]);
+  if (matches.length !== 1) return null;
+  const hit = CSS_TO_TOKEN[matches[0]];
+  return hit ? { code: `--al-${matches[0]}`, figma: hit.figma } : null;
+}
+
+/** DIRECT-child declarations of a postcss-scss rule (never a nested rule's decls —
+ * `rule.each`, not `rule.walkDecls`, keeps a nested `&:hover` block's own decls out of
+ * its parent's) -> { cssProp: tokenBinding }, sorted, token-bearing only, or null. */
+function directDeclBindings(rule) {
+  const out = {};
+  rule.each((node) => {
+    if (node.type !== 'decl') return;
+    if (node.prop === 'border') {
+      const split = splitBorderShorthand(node.value);
+      if (split) {
+        for (const [longhand, suffix] of Object.entries(split)) {
+          const hit = CSS_TO_TOKEN[suffix];
+          if (hit) out[longhand] = { code: `--al-${suffix}`, figma: hit.figma };
+        }
+        return;
+      }
+    }
+    const binding = conditionalTokenBinding(node.value);
+    if (binding) out[node.prop] = binding;
+  });
+  return Object.keys(out).length ? sortedMap(out) : null;
+}
+
+function sortedMap(obj) {
+  return Object.fromEntries(Object.entries(obj).sort(([a], [b]) => a.localeCompare(b)));
+}
+
+/** The component's own `.scss` file(s) (never stories/tests — mirrors
+ * parity.mjs's hashComponentSource() filter), for the origin ('base' vs a
+ * project's brand layer) this roster entry actually ships from. */
+function scssFilesFor({ component, origin, project }) {
+  const root = origin === 'brand' ? project.resolved.brandLibrary?.root : project.resolved.libraryRoot;
+  if (!root) return [];
+  const dir = join(root, dirname(component.modulePath));
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.scss') && !/\.stories\.|\.test\.|\.spec\./.test(f))
+    .sort()
+    .map((f) => join(dir, f));
+}
+
+/** `al-button` -> `al-c-button` — the BEM base class this repo's components are
+ * authored under (verified against button/chip/toggle-button .scss). Modifiers are
+ * `.al-c-button--<suffix>`; the unmodified `.al-c-button` selector is the default. */
+function baseClassFor(tag) {
+  return `al-c-${tag.replace(/^al-/, '')}`;
+}
+
+/**
+ * Recover `conditionalBindings` for one tag from its own .scss — best-effort AND
+ * conservative: a component with no BEM variant modifiers and no nested pseudo-
+ * class/attribute state rules under its base selector yields `null` (the whole
+ * section is omitted from the contract, never an empty stub).
+ *
+ * Mapping this implements (documented here, not just in the schema):
+ *   - `.al-c-<tag>--<suffix>` where `<suffix>` matches one of the `variant` prop's
+ *     enum `values` (case/dash-insensitive)  -> `conditionalBindings.variant.<suffix>`
+ *   - the unmodified `.al-c-<tag>` selector, WHEN exactly one of the `variant`
+ *     prop's Figma `options` has no corresponding modifier class (e.g. Button's
+ *     "Primary")            -> `conditionalBindings.variant.<that-option-lowercased>`
+ *   - `&:hover` / `&:focus-visible|:focus` / `&:active` / `&:disabled|[disabled]`
+ *     nested directly inside a MATCHED variant's block -> that variant's `.state.<name>`
+ *   - the same, nested directly inside the unmodified base selector's block
+ *     -> the generic `conditionalBindings.state.<name>` (applies to any variant with
+ *     no compound override of its own — i.e. "variant base + generic state delta")
+ */
+function extractConditionalBindings({ tag, props, scssFiles }) {
+  if (!scssFiles.length) return null;
+
+  const parse = scssParse();
+  const baseClass = baseClassFor(tag);
+  const baseSelectorRe = new RegExp(`^\\.${baseClass}$`);
+  const modifierSelectorRe = new RegExp(`^\\.${baseClass}--([a-z0-9-]+)$`);
+
+  const variantProp = props.find((p) => p.name === 'variant' && p.type === 'enum');
+  const variantValues = new Set(variantProp?.values ?? []);
+  const figmaOptions = variantProp?.bindings?.figma?.options ?? [];
+
+  const variantOut = {};
+  const stateOut = {};
+  const matchedModifiers = new Set();
+  let baseRule = null;
+
+  for (const file of scssFiles) {
+    let root;
+    try {
+      root = parse(readFileSync(file, 'utf8'));
+    } catch {
+      continue; // unparsable .scss — never seen in this repo; skip rather than fabricate
+    }
+
+    root.walkRules((rule) => {
+      const selectors = (rule.selectors ?? [rule.selector]).map((s) => s.trim());
+      if (selectors.length !== 1) return; // a comma/compound selector list — not a single variant/base surface
+      const selector = selectors[0];
+
+      if (baseSelectorRe.test(selector)) {
+        baseRule = rule;
+        return;
+      }
+
+      const modMatch = selector.match(modifierSelectorRe);
+      if (!modMatch) return;
+      const suffix = modMatch[1];
+      if (!variantValues.has(suffix)) return; // a structural modifier (icon-only, full-width, ...), not a `variant` value
+      matchedModifiers.add(suffix);
+
+      const base = directDeclBindings(rule) ?? {};
+      const stateEntry = {};
+      rule.each((child) => {
+        if (child.type !== 'rule') return;
+        const state = matchStateSelector(child.selector);
+        if (!state) return;
+        const bindings = directDeclBindings(child);
+        if (bindings) stateEntry[state] = bindings;
+      });
+
+      const entry = { ...base };
+      if (Object.keys(stateEntry).length) entry.state = sortedMap(stateEntry);
+      if (Object.keys(entry).length) variantOut[suffix] = entry;
+    });
+  }
+
+  if (baseRule) {
+    baseRule.each((child) => {
+      if (child.type !== 'rule') return;
+      const state = matchStateSelector(child.selector);
+      if (!state) return;
+      const bindings = directDeclBindings(child);
+      if (bindings) stateOut[state] = bindings;
+    });
+
+    // The unmodified selector IS the variant default exactly when one Figma
+    // option has no BEM modifier of its own (Button: "Primary").
+    const matchedNorm = new Set([...matchedModifiers].map(normKey));
+    const unmatchedOptions = figmaOptions.filter((o) => !matchedNorm.has(normKey(o)));
+    if (unmatchedOptions.length === 1) {
+      const defaultBase = directDeclBindings(baseRule);
+      if (defaultBase) variantOut[unmatchedOptions[0].trim().toLowerCase().replace(/\s+/g, '-')] = defaultBase;
+    }
+  }
+
+  const hasVariant = Object.keys(variantOut).length > 0;
+  const hasState = Object.keys(stateOut).length > 0;
+  if (!hasVariant && !hasState) return null;
+
+  const out = {};
+  if (hasVariant) out.variant = sortedMap(variantOut);
+  if (hasState) out.state = sortedMap(stateOut);
+  return out;
+}
+
+function buildConditionalBindings({ tag, props, component, origin, project }) {
+  return extractConditionalBindings({ tag, props, scssFiles: scssFilesFor({ component, origin, project }) });
 }
 
 // ── anatomy (T3): read measure-components.mjs output, BEST-EFFORT ─────────
@@ -352,6 +562,7 @@ function buildSemantics(anatomy) {
 function buildContract({ tag, component, origin, project, manifestEntry, measuredSpec }) {
   const { anatomy, anatomySource, anatomyCase, states } = buildAnatomy(measuredSpec, tag);
   const props = buildProps(component, manifestEntry);
+  const conditionalBindings = buildConditionalBindings({ tag, props, component, origin, project });
 
   return {
     $schema: '../contract.schema.json',
@@ -369,6 +580,7 @@ function buildContract({ tag, component, origin, project, manifestEntry, measure
     anatomyCase,
     anatomy,
     tokens: collectTokens(anatomy),
+    ...(conditionalBindings ? { conditionalBindings } : {}),
     a11y: buildA11y(component),
     bindings: {
       code: buildCodeBindings({ component, origin, project }),
@@ -650,10 +862,79 @@ function runAdopt() {
   );
 }
 
+// ── --add-conditional-bindings: one-off T18 migration ──────────────────────
+//
+// Mirrors --adopt's shape (parse on-disk JSON, mutate ONE thing, re-serialize
+// with the emitter's own stable formatting) but the "one thing" here is a
+// brand-new derived field, not curation metadata. Safety check before writing
+// ANY file: re-derive the contract and diff it against disk with the same
+// driftedFields() --check-drift uses, ignoring status/version AND
+// conditionalBindings itself (that field differing — disk has none yet,
+// derived may have one — is the expected, desired change this pass makes).
+// If anything ELSE differs too, this contract has drifted from derivation for
+// an unrelated reason; skip it loudly rather than silently overwrite whatever
+// hand edit caused that drift.
+
+function runAddConditionalBindings() {
+  const { project, manifest, byTag, measuredSpec, outDir, trackedTags } = loadContext();
+  const ignored = new Set([...DRIFT_IGNORED_FIELDS, 'conditionalBindings']);
+
+  let added = 0;
+  let unchanged = 0;
+  let skippedNoBindings = 0;
+  let skippedOtherDrift = 0;
+  let skipped = 0;
+
+  for (const tag of trackedTags) {
+    const { reason, contract: derived } = deriveOne({ tag, manifest, byTag, project, measuredSpec });
+    if (reason) {
+      skipped++;
+      continue;
+    }
+
+    const outPath = join(outDir, `${tag}.contract.json`);
+    if (!existsSync(outPath)) {
+      skipped++;
+      console.error(`[contracts] MISSING — ${tag} has no contract on disk, skipping.`);
+      continue;
+    }
+
+    const disk = JSON.parse(readFileSync(outPath, 'utf8'));
+    const otherDrift = driftedFields(disk, derived, ignored);
+    if (otherDrift.length) {
+      skippedOtherDrift++;
+      console.error(`[contracts] SKIP ${tag} — unrelated drift on ${otherDrift.join(', ')}; not touching (fix drift first).`);
+      continue;
+    }
+
+    if (!derived.conditionalBindings) {
+      skippedNoBindings++;
+      continue; // this component's .scss has no BEM modifiers / nested state rules — nothing to add
+    }
+
+    if (JSON.stringify(disk.conditionalBindings) === JSON.stringify(derived.conditionalBindings)) {
+      unchanged++;
+      continue;
+    }
+
+    disk.conditionalBindings = derived.conditionalBindings;
+    writeFileSync(outPath, JSON.stringify(disk, null, 2) + '\n', 'utf8');
+    added++;
+  }
+
+  console.log(
+    `[contracts] --add-conditional-bindings ${project.id}: added ${added}, unchanged ${unchanged}, ` +
+      `no-bindings-in-scss ${skippedNoBindings}, skipped-other-drift ${skippedOtherDrift}, skipped ${skipped} ` +
+      `(of ${trackedTags.length} tracked).`,
+  );
+  if (skippedOtherDrift) process.exit(1);
+}
+
 // ── main ─────────────────────────────────────────────────────────────────
 
 function main() {
   if (ADOPT) return runAdopt();
+  if (ADD_CONDITIONAL_BINDINGS) return runAddConditionalBindings();
   if (CHECK_DRIFT) return runCheckDrift();
   if (CHECK_DETERMINISM) return runCheckDeterminism();
   if (SEED) return runSeed();
