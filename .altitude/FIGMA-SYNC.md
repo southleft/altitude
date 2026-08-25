@@ -10,8 +10,8 @@
 > for that project every component reads `missing-in-figma` and the generated
 > prompts are build-it instructions, not reconcile instructions.
 
-> How Altitude's token source (`libs/al-web-components/styles/tokens/`) stays in
-> agreement with the Figma variables library, using the
+> How Altitude's token source (`libs/al-web-components/styles/tokens-dtcg/`)
+> stays in agreement with the Figma variables library, using the
 > [Figma Console MCP](https://github.com/southleft/figma-console-mcp) server.
 > The loop is **operator-driven and agent-mediated** — a human (or an agent
 > acting for one) initiates every sync. Nothing runs on a schedule, and there is
@@ -32,19 +32,24 @@
 
 ## What maps to what
 
-Altitude's source of truth is the Tokens Studio-format tree in
-`styles/tokens/` (`value`/`type` keys; `$metadata.json` declares
-`tokenSetOrder`; `scripts/convert-tokens-to-dtcg.js` derives the DTCG mirror
-that Style Dictionary v5 builds). Figma organizes the same decisions as
-**collections** (an axis) containing **modes** (the axis's variants):
+Altitude's source of truth is the hand-authored DTCG tree in
+`styles/tokens-dtcg/` (`$value`/`$type`, plus an
+`$extensions["org.altitude.token"].cssType` per token carrying the authored CSS
+surface — see [`TOKENS.md`](./TOKENS.md)). Style Dictionary v5 builds directly
+from it; there is no intermediate tree and no converter. **Code is upstream of
+Figma**: `scripts/build-figma-payload.mjs` generates the Figma variable payload
+*from* these files. Nothing imports Figma back into them automatically.
+
+Figma organizes the same decisions as **collections** (an axis) containing
+**modes** (the axis's variants):
 
 | Figma collection | Modes | Altitude source |
 |---|---|---|
-| Primitive | Default | `tokens/tier-1/*.json` |
-| Semantic | Default | `tokens/tier-2/*.json` (borders, spacing, shadows, typography, …) |
-| Color Scheme | Light, Dark | `tokens/tier-2/theme/{light,dark}/` |
-| Brand | Altitude, Southleft | `tokens/tier-2/brand/<brand>/` (sparse overrides) |
-| Composed (tier 3) | Light, Dark | `tokens/tier-3/theme/{light,dark}/` |
+| Primitive | Default | `tokens-dtcg/tier-1/*.json` |
+| Semantic | Default | `tokens-dtcg/tier-2/*.json` (borders, spacing, shadows, typography, …) |
+| Color Scheme | Light, Dark | `tokens-dtcg/tier-2/theme/{light,dark}/` |
+| Brand | Altitude, Southleft | `tokens-dtcg/tier-2/brand/<brand>/` (sparse overrides) |
+| Composed (tier 3) | Light, Dark | `tokens-dtcg/tier-3/theme/{light,dark}/` |
 | Density / Shape / Motion / Contrast | per axis | hand-written `:host([attr])` rules in `components/theme/theme.scss` (see `.altitude/AXES.md` / `REGISTRATION.md` era docs) — **not** token-file axes today; model in Figma only once they become token roles |
 
 Axes are **orthogonal** — a variant combination (Southleft + Dark + Compact)
@@ -65,8 +70,11 @@ and values, not judgment:
 3. **Some concepts are code-only** (e.g. cascade layers, `styleModifier`
    utilities, versioned-tag registry). They have no Figma representation and
    are excluded from sync entirely.
-4. **`$metadata.json` tokenSetOrder is code-only** but must stay consistent
-   with any set you add during reconciliation.
+4. **Adding a token set is a directory operation, not a manifest edit.**
+   `tokens-config.v5.mjs` globs the tier directories, so a new file under
+   `tokens-dtcg/tier-2/brand/<brand>/` is picked up on the next `build:tokens`.
+   The only ordering that exists lives in that config's `include`/`source`
+   split — there is no `tokenSetOrder` manifest any more.
 
 ## A brand is a recipe, not an axis
 
@@ -87,8 +95,9 @@ brand, state its recipe explicitly.
    brand/mode-aware bucketing, rename detection; `--project <id>` scopes the
    brand data symmetrically; `--json` for machine output; exit 1 on drift).
 3. **Reconcile** — direction depends on which side moved:
-   - *Design change (Figma → code):* edit `styles/tokens/**` to match the
-     export (respecting fidelity rules), then
+   - *Design change (Figma → code):* **hand-edit** `styles/tokens-dtcg/**` to
+     match the export (respecting fidelity rules) — there is no importer
+     script; then
      `pnpm --filter @southleft/al-web-components build:tokens` and the token contract
      tests (`test:tokens`, root `test:brands` / `test:preset-parity`).
    - *Token change (code → Figma):* push variables with

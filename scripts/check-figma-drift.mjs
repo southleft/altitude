@@ -27,7 +27,7 @@
  *     structurally normalized), so unit/case/whitespace differences that
  *     Style Dictionary would treat as identical are not reported as drift
  *   - BRAND/MODE awareness: code-side context (tier, brand, light/dark) is
- *     derived from each token file's path under `styles/tokens/`
+ *     derived from each token file's path under `styles/tokens-dtcg/`
  *     (tier-1 -> "primitive", tier-2 -> "semantic", tier-2/theme/{light,dark}
  *     -> "theme", tier-2/brand/<brand>[/mode/{light,dark}] -> "brand",
  *     tier-3/theme/{light,dark} -> "composed" — see the mapping table in
@@ -93,7 +93,7 @@ try {
   console.error(`[check-figma-drift] Could not resolve a DS project (${err.message}); defaulting to "altitude".`);
 }
 
-const TOKENS_DIR = join(ROOT, 'libs/al-web-components/styles/tokens');
+const TOKENS_DIR = join(ROOT, 'libs/al-web-components/styles/tokens-dtcg');
 const BRAND_DIR = join(TOKENS_DIR, 'tier-2/brand');
 const KNOWN_BRANDS = existsSync(BRAND_DIR)
   ? readdirSync(BRAND_DIR).filter((n) => statSync(join(BRAND_DIR, n)).isDirectory())
@@ -273,9 +273,9 @@ function rgbaToHex(s) {
   return '#' + h(parts[0]) + h(parts[1]) + h(parts[2]) + (a < 1 ? h(a * 255) : '');
 }
 
-/** Tokens Studio `type` (and DTCG `$type`) -> comparison family. Mirrors the
- *  vocabulary `scripts/convert-tokens-to-dtcg.js` maps to DTCG types — kept
- *  in step deliberately rather than importing (that script is CommonJS). */
+/** Authored `cssType` (and DTCG `$type`) -> comparison family. Covers BOTH
+ *  vocabularies so a token is bucketed the same however it was typed — see
+ *  `scripts/lib/dtcg-token.mjs` for why a token has two types. */
 const TYPE_FAMILY = {
   color: 'color',
   dimension: 'dimension', sizing: 'dimension', spacing: 'dimension',

@@ -35,7 +35,7 @@ reduced-motion+high-contrast) without touching a single brand file.
 
 The two axes below are **hand-written host rules in `theme.scss`**, exactly
 like `density` and `contrast` before them (T4.4) — never a generated
-per-brand file, never a `brand+shape` combination file. `styles/tokens/tier-2/brand/<brand>/`
+per-brand file, never a `brand+shape` combination file. `styles/tokens-dtcg/tier-2/brand/<brand>/`
 (the brand contract, `BRANDS.md` §6) has no `shape` or `motion` entry and
 never should: adding one would make the two axes multiply
 (2 brands × 3 shapes × 3 motions = a combinatorial file explosion) instead of

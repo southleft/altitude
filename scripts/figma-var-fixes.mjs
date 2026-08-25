@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * figma-var-fixes.mjs — emit the operations that make the Figma variables in
- * `Altitude Design System` match `styles/tokens/**`.
+ * `Altitude Design System` match `styles/tokens-dtcg/**`.
  *
  * Direction is code -> Figma. Deletions are NEVER emitted: Figma-only variables
  * are reported for a human to decide, because designs in the file may use them.
@@ -15,7 +15,7 @@ const ops = [];
 
 /* --- 1. Tier 2 Brand corruption ---------------------------------------- */
 // Altitude primary-default is #FF00AA (magenta) and Southleft is #CC0088.
-// styles/tokens/tier-2/brand/{altitude,southleft}/colors.json say blue.500 / red.500.
+// styles/tokens-dtcg/tier-2/brand/{altitude,southleft}/colors.json say blue.500 / red.500.
 ops.push(setValue('theme/color/background/primary-default', 'Tier 2 Brand', 'Altitude', '{color/brand/blue/500}'));
 ops.push(setValue('theme/color/background/primary-default', 'Tier 2 Brand', 'Southleft', '{color/brand/red/500}'));
 

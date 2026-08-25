@@ -179,7 +179,7 @@ Preset → mixin traffic, so you know which presets are worth overriding:
 
 ## 3. Shadows recompute per brand
 
-`tokens/tier-1/shadows.json` colours every drop-shadow stop with
+`tokens-dtcg/tier-1/shadows.json` colours every drop-shadow stop with
 `{theme.color.shadow.default}` — a **tier-2** reference from a tier-1 token
 (pre-existing inversion). The `--al-box-shadow-N` literals are therefore
 recomputed at build time from whatever `theme.color.shadow.default` resolves to
@@ -219,7 +219,7 @@ tokens; the four highest-traffic ones are free.
 | `contrast` | `theme.color.border.default` | `components/theme/theme.scss:37-39` |
 | `motion` | legacy `theme.animation.duration.{2,4,6,8}` + the `-role-{fast,base,slow}` / `-timing-role-{standard,emphasized}` tokens (spec 2026-08-20-token-axes-expansion) | `components/theme/theme.scss` "motion axis" |
 | `shape` | `theme.border.radius.role.{action,control,surface,indicator}` (spec 2026-08-20-token-axes-expansion) | `components/theme/theme.scss` "shape axis" |
-| `brand` | everything else in §1.1 | `styles/tokens/tier-2/brand/<brand>/*.json` |
+| `brand` | everything else in §1.1 | `styles/tokens-dtcg/tier-2/brand/<brand>/*.json` |
 
 `shape` and the `motion` role tokens are documented in full in
 [`AXES.md`](./AXES.md) — that file, not this section, is the source of truth
@@ -231,7 +231,7 @@ carry no tier-2 `:root` default of their own.
 ## 6. The brand contract (R3)
 
 A brand token set lives in
-`libs/al-web-components/styles/tokens/tier-2/brand/<brand>/` and may contain:
+`libs/al-web-components/styles/tokens-dtcg/tier-2/brand/<brand>/` and may contain:
 
 | File | Token paths | Tier |
 |---|---|---|
@@ -245,7 +245,7 @@ Rules:
 
 1. **Reference, never literal.** Every brand value must be a `{…}` reference to
    a tier-1 primitive. If the primitive you need does not exist, add it to
-   `tokens/tier-1/*.json` — additively, never renaming or re-valuing an
+   `tokens-dtcg/tier-1/*.json` — additively, never renaming or re-valuing an
    existing stop.
 2. **Typography goes through tier-1 presets** (§2). A `theme.typography.*`
    override is inert; never write one.
@@ -255,10 +255,7 @@ Rules:
    avatars, toggles and spinners.
 6. **Tracking is not a lever** — `letterSpacing` is dropped by the formatter
    (§2).
-7. Register every new file in `tokens/$metadata.json` `tokenSetOrder` (after
-   the tier-2 default it overrides) and in the brand's `tokens/$themes.json`
-   `selectedTokenSets` as `"enabled"`.
-8. `altitude` is the **neutral reference**. It is what an adopter renders with
+7. `altitude` is the **neutral reference**. It is what an adopter renders with
    no `brand` set, so its bundle must stay byte-identical to the base theme
    bundle apart from additive tokens. Do not give altitude character.
 
@@ -387,7 +384,7 @@ bundles. Details: `.altitude/baselines/README.md`.
 > **There is no scaffold.** No plop template, no `scripts/*` generator. The MCP
 > tool `altitude_generate_theme` is *not* one — it runs an in-memory OKLCH
 > solver (`.altitude/AI-THEME.md`) and writes no files, and its raw hex output
-> violates rule 1 below anyway. Adding a brand is a hand edit in ~8 places.
+> violates rule 1 below anyway. Adding a brand is a hand edit in ~7 places.
 >
 > Precedent to copy: `git show 5575fac` added four brands; `git show 02a0900`
 > removed six. The union of those two diffs is the checklist.
@@ -395,15 +392,15 @@ bundles. Details: `.altitude/baselines/README.md`.
 ### 9.0 Before you start — read these three
 
 1. **§1** — the reachability map. Several obvious overrides change nothing.
-2. **§6** — the contract's 8 rules. Rule 1 (reference, never literal) and
-   rule 8 (`altitude` stays neutral) are gate-enforced.
+2. **§6** — the contract's 7 rules. Rule 1 (reference, never literal) and
+   rule 7 (`altitude` stays neutral) are gate-enforced.
 3. **[`AXES.md`](./AXES.md) §1-2** — a brand look is a *recipe* across axes, not
    one attribute flip, and there are **no per-brand shape/motion files**.
 
 ### 9.1 Author the token set
 
 ```
-libs/al-web-components/styles/tokens/tier-2/brand/<brand>/
+libs/al-web-components/styles/tokens-dtcg/tier-2/brand/<brand>/
   colors.json                  # required
   borders.json                 # optional
   shadows.json                 # optional
@@ -413,18 +410,38 @@ libs/al-web-components/styles/tokens/tier-2/brand/<brand>/
   mode/dark/colors.json
 ```
 
-Legacy Tokens Studio shape (`value`/`type`, **not** `$value`/`$type` — the DTCG
-mirror is generated). Copy `tier-2/brand/southleft/borders.json` for the
-canonical form:
+DTCG shape (`$value`/`$type`), hand-authored — this tree *is* the source, there
+is no other one to keep in sync. Copy
+`tier-2/brand/southleft/borders.json` for the canonical form:
 
 ```json
-{ "theme": { "border": { "radius": {
-  "@": { "value": "{border.radius.2}", "type": "borderRadius" } } } } }
+{ "theme": { "border": { "radius": { "@": {
+  "$value": "{border.radius.2}",
+  "$type": "dimension",
+  "$extensions": { "org.altitude.token": { "cssType": "borderRadius" } }
+} } } } }
 ```
+
+Note the two types. `$type` is the coarse DTCG one — `borderRadius`,
+`borderWidth`, `spacing` and `sizing` all collapse into `dimension`. The
+authored CSS surface lives in `$extensions["org.altitude.token"].cssType`, and
+it is **not recoverable from `$type`**: omit it and the token gets no
+`com.salesforce.styling.cssProperties` allow-list. See `.altitude/TOKENS.md`
+§"The two types every token carries" and `scripts/lib/dtcg-token.mjs`.
+
+The rest of the `$extensions` block (`org.primer.llm` usage,
+`com.salesforce.styling`, `com.atlassian.token`, `com.adobe.id`) is written for
+you by `pnpm run generate:token-metadata`; `pnpm run check:token-metadata` is
+its drift gate. Run both after adding a brand file.
+
+**No registration step.** `brandSources()`
+(`tokens-config.v5.mjs:474`) globs `tier-2/brand/<brand>/*.json`, so a new file
+in that directory is picked up on the next `build:tokens`. The only file that
+must name your brand is the `brands` array (§9.3).
 
 Every value is a `{…}` reference to a tier-1 primitive (§6 rule 1). If the
 primitive you need does not exist, add it **additively** to
-`tokens/tier-1/*.json` — never rename or re-value an existing stop.
+`tokens-dtcg/tier-1/*.json` — never rename or re-value an existing stop.
 
 **Do not create these files for `altitude`.** See
 `tier-2/brand/altitude/README.md`: `tokens-altitude-{light,dark}.css` is
@@ -448,7 +465,7 @@ partial contains the string `animation`, and all 13 motion tokens resolve
 identically across altitude/southleft × light/dark. That is the current state
 of an ungated rule, not a guarantee — keep it true.
 
-Contrast this with §9.5's failure mode, which is its mirror image: there, a
+Contrast this with §9.4's failure mode, which is its mirror image: there, a
 brand that does *too little* silently does nothing; here, a brand that reaches
 *too far* silently works.
 
@@ -516,23 +533,7 @@ deliberately **non-recursive**; the mode file is picked up only by the explicit
 `existsSync` check at `tokens-config.v5.mjs:476-478`. Rationale: the comment at
 `tokens-config.v5.mjs:451-472`. Precedent: southleft's light "paper" mode.
 
-### 9.3 Register with Tokens Studio (both files)
-
-- `tokens/$metadata.json` → `tokenSetOrder`: one entry per file, placed **after
-  the tier-2 default it overrides** (existing brand rows: lines 25-29).
-- `tokens/$themes.json` → a new object with `"group": "Tier 2 (Brand)"`. Copy
-  the `Southleft` entry: dependencies are `"source"`, the brand's own sets are
-  `"enabled"`.
-
-**Known gap, inherited:** `southleft/mode/{light,dark}/colors.json` are in
-neither file. They build correctly (Style Dictionary reads them directly) but
-the Tokens Studio round-trip does not see them. Mirror the omission or fix it —
-just know it is a gap, not a convention.
-
-`tokens-dtcg/` needs no edit: `scripts/convert-tokens-to-dtcg.js` mirrors the
-tree recursively, so a new directory appears on its own.
-
-### 9.4 The one config edit
+### 9.3 The one config edit
 
 `libs/al-web-components/styles/tokens-config.v5.mjs:589-602` — the `brands`
 array is **hardcoded**, one entry per brand × mode you intend to ship:
@@ -552,7 +553,7 @@ that mode it renders its mode-invariant identity over the base theme's colours.
 That is what the compile-time `PresetBundle` union in `.storybook/presets.ts`
 (`presets.ts:33-35`) exists to guard.
 
-### 9.5 Build, then check the emitter actually emitted
+### 9.4 Build, then check the emitter actually emitted
 
 ```bash
 pnpm --filter @southleft/al-web-components build:tokens
@@ -570,7 +571,7 @@ skips an empty delta (`tokens-config.v5.mjs:706, 715-717`) — which is exactly
 why there is no `tokens-brand-altitude.scss`. A missing file means your values
 resolved identically to the base theme: the attribute will parse and do nothing.
 
-### 9.6 Widen the surface (8 sites)
+### 9.5 Widen the surface (8 sites)
 
 | # | File:line | Edit |
 |---|---|---|
@@ -583,7 +584,7 @@ resolved identically to the base theme: the attribute will parse and do nothing.
 | 7 | `libs/al-react/src/components/Theme/Theme.stories.tsx:18, 59` | Storybook control only. `ALThemeProps` derives from the generated wrapper, so the type flows from site 1 — no React source edit. |
 | 8 | `.altitude/visual-compare/harness/<brand>.html` | Copy `southleft.html`, swap the single `<link>` to `tokens-<brand>-<mode>.css`. Then add the column to `harness/index.html`. |
 
-### 9.7 Widen the three brand lists in the harnesses
+### 9.6 Widen the three brand lists in the harnesses
 
 ```
 .altitude/visual-compare/harness/scoped.js:31-34   const BRANDS = [[id, description], …]
@@ -594,7 +595,7 @@ scripts/check-scoped-theming.mjs:49                const BRANDS = ['altitude', '
 `scripts/check-brand-distinctiveness.js` needs **no** edit — it discovers brands
 from `readdirSync(dist-v5/css/brand)` (`:87-93`).
 
-### 9.8 Verify
+### 9.7 Verify
 
 ```bash
 pnpm --filter @southleft/al-web-components build       # full: dist + css, not just tokens
@@ -621,7 +622,7 @@ The two gates a new brand most often trips:
 The token baseline is a hard CI gate with no tolerance (`AGENTS.md:62-65`, G8);
 procedure in [`TOKENS.md`](./TOKENS.md) § "Rebaselining after a token change".
 
-### 9.9 Optional — register a DS project
+### 9.8 Optional — register a DS project
 
 **A brand does not need one.** The dependency runs the other way:
 `scripts/check-ds-projects.mjs:144-149` (R9) requires every registered project
@@ -640,7 +641,7 @@ new project up with **zero code changes** — enforced by
 Note that `llms.txt` derives its brand count from `ds-projects.json`, not from
 the token directories, so a brand without a project entry will not appear there.
 
-### 9.10 Finally
+### 9.9 Finally
 
 Update §7 above (its title and table), `MIGRATION.md` if the brand is
 consumer-facing, and add a changeset.

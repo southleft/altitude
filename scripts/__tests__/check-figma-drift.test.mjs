@@ -7,7 +7,7 @@
  * is proving the CLI contract behaves correctly end to end.
  *
  * The structured fixture (fixtures/figma-export.drift.json) is built against
- * REAL paths/values read out of libs/al-web-components/styles/tokens/ so the
+ * REAL paths/values read out of libs/al-web-components/styles/tokens-dtcg/ so the
  * assertions below double as a live check that the script's understanding of
  * that tree hasn't drifted. Run: node scripts/__tests__/check-figma-drift.test.mjs
  */

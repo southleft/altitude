@@ -13,8 +13,8 @@ in sync with `libs/al-web-components`.
 
 | Script | Does |
 |---|---|
-| `../build-figma-payload.mjs` | Token source → Figma-ready payload (3 collections) |
-| `../audit-figma-vs-code.mjs` | Diff live Figma variables against `styles/tokens/**` |
+| `../build-figma-payload.mjs` | Token source (`styles/tokens-dtcg/**`) → Figma-ready payload (3 collections). Code is upstream of Figma; there is no reverse import. |
+| `../audit-figma-vs-code.mjs` | Diff live Figma variables against `styles/tokens-dtcg/**` |
 | `../figma-var-fixes.mjs` | Emit the variable set/create ops the audit implies |
 | `bridge-io.mjs` | GET/POST JSON channel the plugin sandbox can reach (port 9223–9232) |
 | `harness.mjs` | Serves the real components from `dist/`, both modes, + `window.__spec()` |

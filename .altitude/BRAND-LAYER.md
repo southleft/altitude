@@ -139,8 +139,8 @@ API**, and commit the result.
 
 ## Two styling layers — know which one you're in
 
-1. **Altitude-owned brand tokens.** `libs/al-web-components/styles/tokens/tier-2/brand/southleft/`
-   — real Tokens Studio tokens that build into `:host([brand='southleft'])`
+1. **Altitude-owned brand tokens.** `libs/al-web-components/styles/tokens-dtcg/tier-2/brand/southleft/`
+   — real design tokens in the hand-authored DTCG source that build into `:host([brand='southleft'])`
    partials. This is the sanctioned, tracked mechanism for brand theming; see
    `.altitude/BRANDS.md` for the full contract (what a brand set may contain,
    the reference-never-literal rule, the axis-ownership boundaries).
@@ -156,7 +156,7 @@ API**, and commit the result.
    `.sl-page`), so the fallback pattern lets the app's value win when present
    and still renders correctly with no app CSS loaded at all (the Storybook
    case). **The documented exit** is to promote these four values into real
-   tier-2 brand tokens under `tokens/tier-2/brand/southleft/`, at which point
+   tier-2 brand tokens under `tokens-dtcg/tier-2/brand/southleft/`, at which point
    this file collapses to plain `var(--al-…)` references and the duplication
    disappears. Do not add a fifth ad hoc `--sl-*` fallback here without
    considering whether it belongs in layer 1 instead.

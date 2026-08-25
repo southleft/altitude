@@ -64,7 +64,7 @@ writing, run it directly with `node`.
 
 | Step | Command |
 |---|---|
-| Edit | `libs/al-web-components/styles/tokens/**.json` — the only editable source. Never hand-edit `tokens-dtcg/` (generated, gitignored) |
+| Edit | `libs/al-web-components/styles/tokens-dtcg/**.json` — the only token source (tracked, hand-authored DTCG). Give every new token an `$extensions["org.altitude.token"].cssType`, or it gets no `cssProperties` allow-list |
 | Build | `pnpm --filter @southleft/al-web-components build:tokens` |
 | Contract test | `pnpm --filter @southleft/al-web-components test:tokens` (or `node scripts/test-tokens-contract.js`) |
 | Rebaseline (only if the change is intentional) | `node scripts/capture-token-baseline.js` |
@@ -77,18 +77,18 @@ procedure, the frozen `core/variables.scss`).
 
 | Step | Command |
 |---|---|
-| Edit | `libs/al-web-components/styles/tokens/tier-2/brand/<brand>/*.json` — references only, never literals; typography goes through `typography-primitives.json` (tier-1 exception), never `theme.space.{sm,md,lg}` |
+| Edit | `libs/al-web-components/styles/tokens-dtcg/tier-2/brand/<brand>/*.json` — references only, never literals; typography goes through `typography-primitives.json` (tier-1 exception), never `theme.space.{sm,md,lg}` |
 | Build + verify | `pnpm --filter @southleft/al-web-components build:tokens && pnpm run test:brands` |
 | Rendered proof | `pnpm run brands:compare` (regenerates `.altitude/visual-compare/brands.dark.png`) |
 
-Depth: `.altitude/BRANDS.md` (the reachability map, the brand contract's 8
+Depth: `.altitude/BRANDS.md` (the reachability map, the brand contract's 7
 rules, the two shipped brands' marker table).
 
 ## Add a NEW brand (`<al-theme brand="yourbrand">`)
 
 Different from the row above: that one edits an existing brand's values, this
 one makes a new `brand` value exist. **There is no scaffold** — it is a hand
-edit in ~8 places, and skipping any one of them fails a gate or (worse) makes
+edit in ~7 places, and skipping any one of them fails a gate or (worse) makes
 the brand a silent no-op.
 
 **Full ordered checklist: [`.altitude/BRANDS.md`](./BRANDS.md) § 9 "Adding a new
@@ -96,14 +96,13 @@ brand — the quick start".** Shape of it:
 
 | Step | Where |
 |---|---|
-| Author the token set | `styles/tokens/tier-2/brand/<brand>/*.json` — references only (§9.1); `mode/<theme>/colors.json` for values that must flip with `mode` (§9.2) |
-| Register with Tokens Studio | `tokens/$metadata.json` + `tokens/$themes.json` (§9.3) |
-| The one config edit | `styles/tokens-config.v5.mjs:589-602` — the hardcoded `brands` array, one entry per brand × mode (§9.4) |
-| Build + sanity check | `build:tokens`, then confirm `dist-v5/scss/host/tokens-brand-<brand>*.scss` exists — **a missing partial means an empty delta, i.e. the brand does nothing** (§9.5). `theme.scss` needs no edit. |
-| Widen the surface | `theme.ts` union → regenerate CEM/schema; `theme-switcher.ts`; `.storybook/presets.ts`; MCP `z.enum`; React stories; a harness HTML (§9.6) |
-| Widen the harness brand lists | `harness/scoped.js`, `build-brand-compare.mjs`, `check-scoped-theming.mjs` (§9.7) |
-| Verify | `test:brands`, `brands:compare`, `test:scoped-theming`, `gate:token-usage`, **`node scripts/capture-token-baseline.js`** (G8, same PR) (§9.8) |
-| Optional | A `.altitude/ds-projects.json` entry — only for Figma parity + a scoped docs site. A brand does **not** require one (§9.9) |
+| Author the token set | `styles/tokens-dtcg/tier-2/brand/<brand>/*.json` — DTCG, references only, every token carrying a `cssType` (§9.1); `mode/<theme>/colors.json` for values that must flip with `mode` (§9.2). No registration step — the directory is globbed. |
+| The one config edit | `styles/tokens-config.v5.mjs:589-602` — the hardcoded `brands` array, one entry per brand × mode (§9.3) |
+| Build + sanity check | `build:tokens`, then confirm `dist-v5/scss/host/tokens-brand-<brand>*.scss` exists — **a missing partial means an empty delta, i.e. the brand does nothing** (§9.4). `theme.scss` needs no edit. |
+| Widen the surface | `theme.ts` union → regenerate CEM/schema; `theme-switcher.ts`; `.storybook/presets.ts`; MCP `z.enum`; React stories; a harness HTML (§9.5) |
+| Widen the harness brand lists | `harness/scoped.js`, `build-brand-compare.mjs`, `check-scoped-theming.mjs` (§9.6) |
+| Verify | `test:brands`, `brands:compare`, `test:scoped-theming`, `gate:token-usage`, **`node scripts/capture-token-baseline.js`** (G8, same PR) (§9.7) |
+| Optional | A `.altitude/ds-projects.json` entry — only for Figma parity + a scoped docs site. A brand does **not** require one (§9.8) |
 
 `altitude_generate_theme` (MCP) is **not** a brand generator — it is an
 in-memory OKLCH solver that writes no files. See `.altitude/AI-THEME.md`.
@@ -225,10 +224,12 @@ same way any other doc does.
 
 ### Tokens
 
-- `convert-tokens-to-dtcg.js` — legacy `value`/`type` JSON → generated DTCG `$value`/`$type` mirror. Runs inside `build:tokens`.
+- `lib/dtcg-token.mjs` — the one place that resolves a DTCG leaf's two types: `dtcgType()` (coarse `$type`) vs `authoredType()` (`$extensions["org.altitude.token"].cssType`). Read it before writing anything that walks `tokens-dtcg/`.
 - `test-tokens-contract.js` — name/file/count/value/dangling-ref checks vs `.altitude/baselines/tokens/snapshot.json`. `test:tokens`.
 - `capture-token-baseline.js` — rewrites the token snapshot baseline. `baselines:tokens`.
-- `ingest-tokens-from-studio.js` — ingests a Figma/Tokens-Studio DTCG export into the editable source.
+- `generate-token-metadata.mjs` — writes the `$extensions` blocks (usage rules, `cssProperties`, lifecycle, uuid) into `tokens-dtcg/**.json`. `generate:token-metadata`. Idempotent.
+- `check-token-metadata.mjs` — drift gate for those blocks (uuid presence/uniqueness/stability, resolvable `replacement` paths). `check:token-metadata`.
+- `codemod-deprecated-tokens.mjs` — rewrites `var()` call sites of deprecated tokens to their `replacement`. Dry run by default. `codemod:deprecated-tokens`.
 - `emit-token-types.js` — emits TypeScript types for tokens (part of `build:tokens`).
 - `copy-tokens-to-legacy-dist.js` — byte-copies `dist-v5/` to the legacy `dist/` import path (part of `build:tokens`).
 - `check-token-usage.mjs` — phantom-vs-dead token report; `--fail-on-phantom` is `gate:token-usage`.

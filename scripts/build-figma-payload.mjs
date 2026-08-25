@@ -5,8 +5,8 @@
  * Usage:
  *   node scripts/build-figma-payload.mjs [--out .altitude/figma-sync/altitude-figma-payload.json]
  *
- * Reads the Tokens Studio source of truth (libs/al-web-components/styles/tokens)
- * and emits a Figma-ready payload: three orthogonal collections, values already
+ * Reads the hand-authored DTCG source of truth
+ * (libs/al-web-components/styles/tokens-dtcg) and emits a Figma-ready payload: three orthogonal collections, values already
  * converted to the four types Figma variables actually support.
  *
  * Scope (decided 2026-08-20): **Altitude raw tokens only**. No Brand collection,
@@ -31,9 +31,10 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { isTokenLeaf, normalizeLeaf } from './lib/dtcg-token.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const TOKENS = join(ROOT, 'libs/al-web-components/styles/tokens');
+const TOKENS = join(ROOT, 'libs/al-web-components/styles/tokens-dtcg');
 
 /** rem → px. `base.font` is 1rem and the emitted CSS assumes a 16px root. */
 const REM_PX = 16;
@@ -57,7 +58,9 @@ const STYLE_TYPES = new Set(['typography', 'boxShadow']);
  */
 const WRONG_AS_FLOAT = ['border.radius.round'];
 
-/** Tokens Studio type → Figma resolvedType. */
+/** Authored `cssType` (see scripts/lib/dtcg-token.mjs) → Figma resolvedType.
+ *  Keyed on cssType, NOT DTCG `$type`: `$type` collapses boxShadow→shadow and
+ *  every dimension-ish type→dimension, which would misroute the style types. */
 const FIGMA_TYPE = {
   color: 'COLOR',
   sizing: 'FLOAT',
@@ -80,19 +83,19 @@ const FIGMA_TYPE = {
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
 const isExcluded = (path, list) => list.some((p) => path === p || path.startsWith(p + '.'));
 
-/** Flatten a Tokens Studio tree to `{ 'a.b.c': {value, type} }`. */
+/** Flatten the DTCG tree to `{ 'a.b.c': {value, type} }` (type = authored cssType). */
 function flatten(node, prefix = '', out = {}) {
   for (const [key, val] of Object.entries(node)) {
     if (key.startsWith('$')) continue;
     const path = prefix ? `${prefix}.${key}` : key;
-    if (val && typeof val === 'object' && 'value' in val) out[path] = val;
+    if (isTokenLeaf(val)) out[path] = normalizeLeaf(val);
     else if (val && typeof val === 'object') flatten(val, path, out);
   }
   return out;
 }
 
 /**
- * Convert a Tokens Studio scalar to a Figma variable value.
+ * Convert a token scalar to a Figma variable value.
  * Brace references pass through untouched — figma_setup_design_tokens resolves
  * `{a.b.c}` to an alias on the variable named `a/b/c`.
  */
@@ -176,7 +179,7 @@ function partition(rawByMode, report) {
       }
       const figmaType = FIGMA_TYPE[def.type];
       if (!figmaType) {
-        report.warnings.push(`${path}: unmapped Tokens Studio type '${def.type}' — skipped`);
+        report.warnings.push(`${path}: unmapped cssType '${def.type}' — skipped`);
         report.excluded.unmappedType.add(`${path} (${def.type})`);
         continue;
       }
@@ -277,7 +280,7 @@ function main() {
   }
 
   const payload = {
-    generatedFrom: 'libs/al-web-components/styles/tokens',
+    generatedFrom: 'libs/al-web-components/styles/tokens-dtcg',
     scope: 'altitude-only (no Brand collection, no Southleft)',
     collections,
     styles: {

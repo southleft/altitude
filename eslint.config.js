@@ -17,7 +17,6 @@ export default [
       '**/playwright-report/**',
       '**/.storybook/preview-bundle*',
       '**/coverage/**',
-      'libs/al-web-components/styles/tokens-dtcg/**',
       'libs/al-web-components/styles/dist/**',
       'libs/al-web-components/custom-elements.json',
       'libs/al-web-components/schemas/**',

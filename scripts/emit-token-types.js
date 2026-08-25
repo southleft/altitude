@@ -25,7 +25,7 @@ const TOKENS_JSON = path.join(V5, 'tokens.json');
 
 function main() {
   if (!fs.existsSync(TOKENS_JSON)) {
-    console.error('[token-types] missing input — run build:tokens:v5 first.');
+    console.error('[token-types] missing input — run build:tokens first.');
     process.exit(1);
   }
   const flat = JSON.parse(fs.readFileSync(TOKENS_JSON, 'utf8'));

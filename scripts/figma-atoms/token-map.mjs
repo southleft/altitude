@@ -21,9 +21,10 @@ import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname, resolve, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { scope, projectArg } from './project-scope.mjs';
+import { isTokenLeaf, normalizeLeaf } from '../lib/dtcg-token.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const TOKENS = join(ROOT, 'libs/al-web-components/styles/tokens');
+const TOKENS = join(ROOT, 'libs/al-web-components/styles/tokens-dtcg');
 // Which brand's overrides count as real tokens. Resolved from the active project.
 const BRAND = (() => { try { return scope(projectArg()).brand; } catch { return null; } })();
 
@@ -71,7 +72,7 @@ function flatten(node, prefix, out) {
   for (const [k, v] of Object.entries(node)) {
     if (k.startsWith('$')) continue;
     const p = prefix ? `${prefix}.${k}` : k;
-    if (v && typeof v === 'object' && 'value' in v) out[p] = v;
+    if (isTokenLeaf(v)) out[p] = normalizeLeaf(v);
     else if (v && typeof v === 'object') flatten(v, p, out);
   }
   return out;

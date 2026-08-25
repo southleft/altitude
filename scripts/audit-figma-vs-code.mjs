@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * audit-figma-vs-code.mjs — diff the live Figma variables in
- * `Altitude Design System` (y83n4o9LOGs74oAoguFcGS) against `styles/tokens/**`.
+ * `Altitude Design System` (y83n4o9LOGs74oAoguFcGS) against `styles/tokens-dtcg/**`.
  *
  * Input:  .altitude/figma-sync/figma-live-vars.json  (POSTed out of the plugin)
  * Output: .altitude/figma-sync/figma-audit.json + a console summary
@@ -12,9 +12,10 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { isTokenLeaf, normalizeLeaf } from './lib/dtcg-token.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const TOKENS = join(ROOT, 'libs/al-web-components/styles/tokens');
+const TOKENS = join(ROOT, 'libs/al-web-components/styles/tokens-dtcg');
 const live = JSON.parse(readFileSync(join(ROOT, '.altitude/figma-sync/figma-live-vars.json'), 'utf8'));
 
 /** Figma name prefix -> code token prefix. Longest match wins. */
@@ -57,7 +58,7 @@ function flatten(node, prefix, out) {
   for (const [k, v] of Object.entries(node)) {
     if (k.startsWith('$')) continue;
     const p = prefix ? `${prefix}.${k}` : k;
-    if (v && typeof v === 'object' && 'value' in v) out[p] = v;
+    if (isTokenLeaf(v)) out[p] = normalizeLeaf(v);
     else if (v && typeof v === 'object') flatten(v, p, out);
   }
   return out;

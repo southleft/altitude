@@ -133,7 +133,7 @@ set -e
 step "6. Token build-config change without baselines update — baselines gate fails"
 # Guards the G8 anchor for `styles/tokens-config.v5.mjs`. Adding a brand to its
 # `brands` array changes the emitted token set without touching
-# `styles/tokens/**`, so this anchor is the only thing that catches it.
+# `styles/tokens-dtcg/**`, so this anchor is the only thing that catches it.
 ( cd "$WORKTREE"
   git reset --hard "$BASE_REF" >/dev/null
   echo "// touch" >> libs/al-web-components/styles/tokens-config.v5.mjs

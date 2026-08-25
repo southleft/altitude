@@ -11,7 +11,7 @@ decision" for the full rationale.
 Wired through `@font-face` in `../../src/styles/fonts.css` (`font-display:
 swap`), and referenced ONLY through the `southleft` brand's
 `font-family.secondary` design token
-(`libs/al-web-components/styles/tokens/tier-2/brand/southleft/typography-primitives.json`)
+(`libs/al-web-components/styles/tokens-dtcg/tier-2/brand/southleft/typography-primitives.json`)
 — no page or component sets `font-family: 'Agrandir'` directly.
 
 IBM Plex Sans (body/heading) needs no separate self-hosted file: it is already
