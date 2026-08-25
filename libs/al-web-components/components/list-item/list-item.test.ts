@@ -45,4 +45,19 @@ describe('al-list-item', () => {
     const anchor = el.shadowRoot!.querySelector('a.al-c-list-item__link') as HTMLElement;
     expect(anchor.hasAttribute('tabindex'), 'an enabled anchor declares no tabindex').toBe(false);
   });
+
+  it('an invalid tabindex was never focusable anyway, so removing it changed no behavior', async () => {
+    // Worth pinning, because the fix LOOKS like it could have removed a tab
+    // stop. Measured: `tabindex="false"` yields `tabIndex === -1` and is not
+    // focusable — identical to declaring nothing. The fix deleted an invalid
+    // attribute from the DOM and nothing else.
+    const host = await fixture<HTMLElement>(html`<div></div>`);
+    const probe = document.createElement('div');
+    probe.setAttribute('tabindex', 'false');
+    host.append(probe);
+
+    expect(probe.tabIndex, 'an invalid value parses as -1').toBe(-1);
+    probe.focus();
+    expect(document.activeElement === probe, 'and is not focusable').toBe(false);
+  });
 });

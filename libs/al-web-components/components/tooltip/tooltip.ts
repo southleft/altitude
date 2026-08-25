@@ -1,3 +1,11 @@
+/* eslint-disable lit-a11y/click-events-have-key-events --
+ * The trigger wrapper takes `tabindex="0"` only when the slotted trigger has
+ * nothing focusable of its own (`syncTriggerFocusability`), and the keydown that
+ * activates it — Enter/Space -> `toggleActive` — sits on the PARENT wrapper, so
+ * it catches the bubbled event. The rule requires the handler on the same
+ * element as the click and cannot follow that. Verified by test: an inert
+ * trigger is tabbable and opens on Enter.
+ */
 /* eslint-disable lit-a11y/accessible-name --
  * `role="tooltip"` here wraps `<slot></slot>`: the tooltip's accessible name IS
  * its slotted content, supplied by the consumer, and at runtime it has one. The

@@ -1,3 +1,18 @@
+/* eslint-disable lit-a11y/click-events-have-key-events --
+ * Two `@click` wrappers, both keyboard-reachable by a route the rule cannot see.
+ *
+ *   variant="static" — documented as "isn't interactive. Use for typeahead
+ *   dropdowns". Selection is driven by the owning combobox's arrow keys, the
+ *   same aria-activedescendant pattern al-command-palette uses; the item is
+ *   never focused itself.
+ *
+ *   the `_slotHasOwnControl` branch — the wrapper is a plain <div> precisely
+ *   BECAUSE the consumer slotted their own focusable control (a link, a
+ *   checkbox). That control owns the interaction and its own keyboard handling,
+ *   and its activation click bubbles to this wrapper. Making the wrapper
+ *   interactive is what the branch exists to avoid: it produced axe
+ *   `nested-interactive` and announced only the outer control.
+ */
 import { TemplateResult, unsafeCSS } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';

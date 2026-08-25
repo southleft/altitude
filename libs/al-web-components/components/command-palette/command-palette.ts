@@ -1,3 +1,12 @@
+/* eslint-disable lit-a11y/click-events-have-key-events --
+ * The `role="option"` rows carry `@click` and no keydown, and correctly so:
+ * this is the aria-activedescendant pattern. The options are NEVER focused —
+ * focus stays in the combobox input, which owns the whole keyboard contract
+ * (ArrowUp/ArrowDown/Home/End move `activeIndex`, Enter calls
+ * `chooseAction(results[this.activeIndex])`). A keydown handler on an element
+ * that can never receive focus would be dead code, and adding tabindex to the
+ * options would BREAK the pattern by moving focus out of the input.
+ */
 import { TemplateResult, unsafeCSS } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
