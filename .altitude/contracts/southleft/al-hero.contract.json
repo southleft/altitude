@@ -2,8 +2,8 @@
   "$schema": "../contract.schema.json",
   "id": "al-hero",
   "name": "Hero",
-  "version": "0.1.0",
-  "status": "derived",
+  "version": "1.0.0",
+  "status": "source",
   "description": "Component: al-hero\n\nThe HOMEPAGE hero — a full-bleed landing composition: the brand's grid\ntexture behind a kicker and a display headline, then a two-column split with\nthe lead copy and actions on the left and a supporting panel on the right.\n\nDistinct from `al-page-hero`, the interior band on 19 of the site's other\npages. The site's own class names (`.al-hero` vs `.al-page-hero`) already\nseparate them; these components keep that split rather than overloading one\nname — they are different shapes, not variants of each other.\n\n```html\n<al-hero\n  kicker=\"<southleft>\"\n  heading=\"AI-powered design systems. Built by the people building the tools.\"\n  lead=\"We audit, build, and evolve design systems for teams at…\"\n>\n  <al-button slot=\"actions\" href=\"/contact\">Book a call</al-button>\n  <al-button slot=\"actions\" variant=\"tertiary\" href=\"/services\">See how we work</al-button>\n  <div slot=\"chips\">…loose token chips…</div>\n  <div slot=\"aside\">…the terminal panel…</div>\n</al-hero>\n```\n\nTHE GLYPH FIELD IS PART OF THE HERO, not page art. It was first left in the\napp on the reuse test, which was the wrong call: the marks are drawn on the\nSAME 72px lattice as the grid texture, and the app's own note says it plainly\n— \"the grid alone reads as an empty backdrop\". Grid without marks is an\nunfinished hero, so the component owns both layers. `--sl-artifacts` thins\nthe field or silences it (`0`), and reduced motion stops it moving.\n\nWHAT STAYS IN THE PAGE is the terminal panel — one page, brand art with no\nbearing on the hero's shape. The `aside` slot is that seam: the hero owns the\ntwo-column composition and the rhythm, the page owns what fills the right\ncolumn.",
   "semantics": {
     "element": "div",

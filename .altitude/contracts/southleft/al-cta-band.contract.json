@@ -2,8 +2,8 @@
   "$schema": "../contract.schema.json",
   "id": "al-cta-band",
   "name": "CTA Band",
-  "version": "0.1.0",
-  "status": "derived",
+  "version": "1.0.0",
+  "status": "source",
   "description": "Component: al-cta-band\n\nThe closing call-to-action band that ends 16 of the site's 24 pages: a\nfull-bleed surface with the brand's grid texture behind it, a kicker, a\ncentred display heading and lead, and the page's actions below.\n\nWhat it owns is the band — the top hairline, the texture, the generous\nresponsive rhythm, and the centred measure the copy is capped to. The actions\ncome from the page through the default slot, because which CTAs close a page\nis the page's decision, not the band's.\n\n```html\n<al-cta-band heading=\"Is your design system AI-ready?\" dek=\"…\">\n  <al-layout direction=\"row\" wrap gap=\"md\" align=\"center\" justify=\"center\">\n    <al-button href=\"/contact\">Book a call</al-button>\n    <al-button variant=\"tertiary\" href=\"/services/workshops\">Ask about a workshop</al-button>\n  </al-layout>\n</al-cta-band>\n```",
   "semantics": {
     "element": "div",

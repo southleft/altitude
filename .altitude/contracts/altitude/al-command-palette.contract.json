@@ -2,8 +2,8 @@
   "$schema": "../contract.schema.json",
   "id": "al-command-palette",
   "name": "Command Palette",
-  "version": "0.1.0",
-  "status": "derived",
+  "version": "1.0.0",
+  "status": "source",
   "description": "Component: al-command-palette\n\nA cmd/ctrl+k overlay with fuzzy search over a provided action list.\nReuses `al-focus-trap` for the same focus-containment behavior as\n`al-dialog`/`al-popover`, and the same \"always-rendered, opacity/visibility\ntoggled\" overlay shape as `al-dialog` for its backdrop + transition.\n\nThe `actions` array is the entire action-provider API: `{ id, label, group?,\nkeywords?, icon? }`. `icon` names must already be registered (see the icon\nsystem section of AGENTS.md) — the palette does not register glyphs on your behalf.",
   "semantics": {
     "element": null,

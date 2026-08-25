@@ -2,8 +2,8 @@
   "$schema": "../contract.schema.json",
   "id": "al-page-hero",
   "name": "Page Hero",
-  "version": "0.1.0",
-  "status": "derived",
+  "version": "1.0.0",
+  "status": "source",
   "description": "Component: al-page-hero\n\nSouthleft's INTERIOR-page hero band — an eyebrow, a display heading, a lead\nparagraph, and whatever the page adds below. Appears on 19 of the site's 24\npages.\n\nNot to be confused with `al-hero`, the HOMEPAGE hero: that one is a\ntwo-column landing composition with the grid texture behind it. They are\ngenuinely different shapes, and the site's own class names (`.al-page-hero`\nvs `.al-hero`) already tell them apart — this keeps that distinction rather\nthan overloading one name with two jobs.\n\nWhat it owns is the BAND: the vertical rhythm, and the eyebrow hugging its\ncontent instead of stretching. Arrangement is `<al-layout>`'s job, and the\nstack below is exactly that — nested in the shadow root so the page does not\nhave to restate it, not replaced by a grid of this component's own.\n\n```html\n<al-page-hero label=\"Services\" heading=\"Design systems that hold\" dek=\"…\">\n  <al-layout direction=\"row\" gap=\"md\">\n    <al-button>Book a call</al-button>\n  </al-layout>\n</al-page-hero>\n```\n\nThe three content props are CONTENT, not layout — they say what the band\nsays, never where anything sits. A fundamentally different hero shape is a\ndifferent component, not another prop on this one. That distinction is the\nwhole reason `al-hero` was removed from Altitude: six fixed named slots plus\nfive layout props, abandoned mid-build by its first real consumer.",
   "semantics": {
     "element": "div",

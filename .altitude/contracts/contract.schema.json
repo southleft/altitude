@@ -23,12 +23,12 @@
     "version": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+\\.\\d+$",
-      "description": "Contract schema-instance version, independent of the component's own package version. Emitted contracts start at 0.1.0 (Phase D is expected to promote this)."
+      "description": "Contract schema-instance version, independent of the component's own package version. Freshly seeded (--seed) contracts start at 0.1.0; adoption into editable source (status: \"source\") bumps this to 1.0.0. Bump it again on any hand-authored breaking edit to the contract (T10)."
     },
     "status": {
       "type": "string",
-      "enum": ["derived", "draft", "stable", "deprecated"],
-      "description": "\"derived\" — machine-generated, not yet hand-reviewed (every contract emitted by scripts/contracts/emit-contracts.mjs today). \"draft\" / \"stable\" / \"deprecated\" are reserved for a future phase that promotes reviewed contracts to editable status."
+      "enum": ["derived", "source", "draft", "stable", "deprecated"],
+      "description": "\"derived\" — machine-generated, not yet hand-reviewed (scripts/contracts/emit-contracts.mjs's --seed output, before adoption). \"source\" — ADOPTED: this contract is editable, git-tracked source of truth (T10, spec 2026-08-25-contract-backed-figma-parity-and-generation); the emitter no longer regenerates it, hand edits are the reviewable unit of change (contract PR), and drift is checked against it with --check-drift rather than the other way around. \"draft\" / \"stable\" / \"deprecated\" are reserved for a further maturity phase on top of \"source\"."
     },
     "description": {
       "type": "string",

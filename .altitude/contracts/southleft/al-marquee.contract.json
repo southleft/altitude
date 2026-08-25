@@ -2,8 +2,8 @@
   "$schema": "../contract.schema.json",
   "id": "al-marquee",
   "name": "Marquee",
-  "version": "0.1.0",
-  "status": "derived",
+  "version": "1.0.0",
+  "status": "source",
   "description": "Component: al-marquee\n\nAn endless belt of outline display type. Decorative reinforcement of the\npage's message — it pauses on hover and stands still under reduced motion.\n\nItems are given as slotted elements and the component renders the belt\nitself, twice:\n\n```html\n<al-marquee>\n  <span>Design Systems</span>\n  <span data-variant=\"solid\">×</span>\n  <span>AI</span>\n  <span data-variant=\"mono\">— built by the people building the tools —</span>\n</al-marquee>\n```\n\nWHY THE SLOT IS A DATA SOURCE, NOT THE RENDERED CONTENT. A seamless loop\nneeds the sequence present twice, so the `-50%` translate lands the second\ncopy exactly where the first began. A slot can only project its nodes ONCE —\nthere is no way to show the same light-DOM node in two places — so the\ncomponent reads the slotted elements, hides the slot, and renders two copies\ninto the shadow root. Styling then lives in ordinary shadow CSS rather than\nbeing split between `::slotted()` for the originals and normal rules for the\nclones.\n\nThis is arrangement the component genuinely owns: the belt is a single\nanimated track, not a place a consumer arranges boxes.",
   "semantics": {
     "element": "div",

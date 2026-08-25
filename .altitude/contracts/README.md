@@ -9,8 +9,17 @@ side. It upgrades Figma parity from digest-level ("something in this
 component changed") to property-level ("this specific prop's legal values
 changed").
 
-Contracts are **generated artifacts**, not hand-authored. They are emitted
-from what the repo already produces:
+**Contracts are editable source, not a generated artifact.** As of the T10
+adoption pass (spec 2026-08-25-contract-backed-figma-parity-and-generation),
+every contract carries `"status": "source"` and `"version": "1.0.0"`: hand
+edits to a contract file are the reviewable unit of change (a **contract
+PR** — see "The contract-PR flow", below), and `scripts/contracts/
+emit-contracts.mjs` no longer regenerates them on every run. It was, at
+first, a pure emitter — it derived every field below from what the repo's
+other pipelines already produce, and that derivation is still exactly how a
+contract gets its FIRST draft (`--seed`, for a component that has none yet)
+and how it is checked for staleness afterward (`--check-drift`, contract ↔
+code):
 
 | Contract field | Source |
 | --- | --- |
@@ -18,6 +27,11 @@ from what the repo already produces:
 | `props[].bindings.figma`, `bindings.figma` (component-level) | the project's parity manifest (`.altitude/figma-sync/**/parity-manifest.json`) |
 | `anatomy`, `states`, `semantics.element` | `scripts/figma-atoms/measure-components.mjs` output (`spec-light.json`), when present on disk |
 | token references inside `anatomy` / `tokens` | `scripts/figma-atoms/token-map.mjs` (`CSS_TO_TOKEN`) |
+
+`status` and `version` are the two fields that are **curation metadata, not a
+derived fact** — they say who owns the content now, not what the code/Figma
+manifest currently produce — and `--check-drift` excludes both from its
+comparison for exactly that reason.
 
 Adapted from [`southleft/ds-contracts-poc`](https://github.com/southleft/ds-contracts-poc)'s
 `contracts/contract.schema.json` — see **Deviations**, below, for exactly what
@@ -89,27 +103,94 @@ Southleft's `brandLibrary` supersedes some tags (`al-card`, `al-header`,
 `al-footer`) with a different CEM entry entirely, so the contract content can
 legitimately differ.
 
-## Emitting contracts
+## Editing a contract (the contract-PR flow)
+
+Since T10, a contract file is edited the same way any other tracked source is
+edited — no separate tool required:
+
+1. Open `.altitude/contracts/<project>/<tag>.contract.json` and change the
+   field(s) that need to change (a prop's legal `values`, a corrected
+   `description`, a token binding, `states`, …). Keep the file's existing key
+   order and 2-space indent so the diff stays reviewable — the emitter's
+   formatting convention, not a requirement enforced by tooling.
+2. Bump `version` (semver) for anything a consumer would call a breaking or
+   notable change to the contract's own content. `status` stays `"source"`
+   (or advances to `"draft"` / `"stable"` / `"deprecated"` per the maturity
+   ladder in `contract.schema.json`) — it does not revert to `"derived"`.
+3. Open a PR. The diff IS the review: a reviewer reads exactly which
+   props/events/slots/anatomy/bindings changed, same as reviewing a code
+   diff — nothing to regenerate, nothing to reconcile before the PR is
+   readable.
+4. Reconcile the two things the contract now asserts:
+   - **Code**: `pnpm run contracts:check` (`--check-drift`) re-derives every
+     tracked component from the CEM/manifest/token-map/measure-components
+     output and diffs it against the on-disk contract (`status`/`version`
+     excluded — see above). A field it flags means the contract now
+     disagrees with what the component's code actually does; either change
+     the code to match the newly-edited contract, or the edit was wrong.
+   - **Figma canvas**: `pnpm run contracts:diff -- --component <tag>`
+     (`scripts/contracts/diff-contracts.mjs`, over a live-extracted canvas
+     dump from `contracts:canvas`) does the equivalent check against the
+     Figma side — see "Canvas contracts", above.
+5. Once code and Figma both agree with the contract, stamp the sync:
+   `pnpm run parity:synced <tag>` (or `parity:synced:sl`). As of T11 this
+   also records the contract's own state at the moment of stamping —
+   `lastSync.contractHash` (sha256 of the contract file) and
+   `lastSync.contractVersion` (its `version` field) — in the parity
+   manifest, so a later edit to the contract that nobody re-stamped shows up
+   as `contractDrifted: true` on that component's parity report entry
+   (`libs/altitude-mcp/src/lib/parity.mjs`). See `.altitude/PARITY.md`.
+
+## Seeding a contract for a NEW component
+
+A component with no contract file yet (a component just scaffolded, or one
+newly added to a project's parity manifest) gets its first draft from the
+same derivation the old always-overwriting emitter used to run on every
+call — now opt-in and scoped to components that don't already have one:
 
 ```bash
-pnpm run contracts:emit           # altitude (the registry default)
-pnpm run contracts:emit:sl        # == contracts:emit --project southleft
-node scripts/contracts/emit-contracts.mjs --project <id>   # any registered project
-node scripts/contracts/emit-contracts.mjs --check          # also ajv-validates every emitted contract against the schema
+pnpm run contracts:seed              # altitude — writes a contract for every tracked tag with none yet
+pnpm run contracts:seed:sl           # == contracts:seed --project southleft
+node scripts/contracts/emit-contracts.mjs --seed --project <id>
+node scripts/contracts/emit-contracts.mjs --seed --force   # re-derive and OVERWRITE an existing contract — discards any hand edits; use deliberately, not by habit
 ```
 
-The emitter is deterministic: stable key order, 2-space indent, a trailing
-newline, and no timestamps — running it twice with no source changes produces
-byte-identical files. It reads `--project <id>` / `DS_PROJECT` the same way
-every other parity CLI does (`libs/altitude-mcp/src/lib/ds-project.mjs`),
-defaulting to the registry's default project (`altitude`).
+The derivation itself is unchanged and still deterministic: stable key
+order, 2-space indent, a trailing newline, and no timestamps — seeding twice
+with no source changes and `--force` produces byte-identical output. `--seed`
+reads `--project <id>` / `DS_PROJECT` the same way every other parity CLI
+does (`libs/altitude-mcp/src/lib/ds-project.mjs`), defaulting to the
+registry's default project (`altitude`).
 
-**Scope: parity-tracked components only.** The emitter iterates the active
+**Scope: parity-tracked components only.** `--seed` iterates the active
 project's parity manifest (`paths.parityManifest`) — that is the definition
 of "tracked" this spec uses, T4's reconciliation checks against exactly this
 list. A manifest entry with `excluded: true` (e.g. `al-icon`, `al-theme`,
 `al-theme-switcher` — see `.altitude/ds-projects.json` `excluded`) is skipped
 with a logged line; it is never silently dropped.
+
+## Checking a contract against its sources (drift)
+
+`node scripts/contracts/emit-contracts.mjs` with **no mode flag** now prints
+a short usage note and exits 1 rather than silently overwriting hand-edited
+contracts — pick one of:
+
+```bash
+pnpm run contracts:check                                        # --check-drift, altitude
+node scripts/contracts/emit-contracts.mjs --check-drift --project southleft
+node scripts/contracts/emit-contracts.mjs --check                # ajv-validate the on-disk contracts against contract.schema.json, read-only
+node scripts/contracts/emit-contracts.mjs --adopt                 # ONE-OFF: the T10 adoption pass itself (derived -> source, 0.1.0 -> 1.0.0); idempotent, not a day-to-day command
+```
+
+`--check-drift` re-derives every tracked component in memory from its
+sources and diffs it, field by field, against the on-disk contract —
+excluding `status`/`version` (curation metadata, see above) — and exits 1 if
+anything disagrees, printing exactly which fields drifted per component. A
+missing contract file (a tracked component nobody has run `--seed` for yet)
+is reported the same way. This is the CODE side of drift; the CANVAS side —
+contract vs. a live Figma extraction — is `contracts:diff`
+(`scripts/contracts/diff-contracts.mjs`), documented under "Canvas
+contracts", above.
 
 ## Anatomy availability is best-effort
 
@@ -148,7 +229,7 @@ renamed, or narrowed for that reason — not by oversight.
 | `a11y.{focusVisible,minHitArea,contrast}` | `a11y.{ariaAttributes,cssParts}` | The upstream fields are accessibility *requirements* a design system asserts; nothing in CEM/measure-components states them per component. What CEM *does* state: which attributes carry ARIA semantics (name matches `/aria/i`) and which `::part()` targets exist — both kept as canvas-expressible facts. |
 | `bindings.figma.anchors.componentSetKey`, `representation`, `statePreviews` | `bindings.figma.{fileKey,componentSetName,nodeId,url}` | Altitude's parity manifest records a Figma **name** + **node id** per component (`figma.name`/`figma.nodeId`), not a component-set key; `url` is the existing `figmaNodeUrlFor()` deep link, reused rather than reinvented. |
 | `bindings.code.anchors.{importPath,export}` | `bindings.code.{importPath,tagName,workspace}` | Altitude components are custom elements, not named JS exports consumed by import — `tagName` (the actual usage surface) and `workspace` (which npm package, base vs. brand layer) are the facts that matter here; `importPath` is still included, built from the CEM's own `modulePath`. |
-| `status` enum `draft \| stable \| deprecated` | adds `"derived"` | Every contract emitted at this phase is machine-generated and unreviewed — `"derived"` says that plainly. Phase D (flip to editable, per the project source note) is expected to promote reviewed contracts to `draft`/`stable`. |
+| `status` enum `draft \| stable \| deprecated` | adds `"derived"` and `"source"` | `"derived"` — machine-generated, not yet hand-reviewed (`--seed` output before adoption). `"source"` — ADOPTED editable source (T10): every contract in this repo carries this status today, having been flipped from `"derived"` in one deterministic pass (`--adopt`, version bumped 0.1.0 → 1.0.0 alongside it). `draft`/`stable`/`deprecated` remain reserved for a further maturity ladder on top of `"source"`. |
 
 ### What's next (explicitly out of scope here)
 
@@ -156,5 +237,6 @@ renamed, or narrowed for that reason — not by oversight.
   emitter + a `--check` validation pass you can run by hand).
 - Per-part (not just root) state overrides.
 - A "code" adapter that reads the contract back and asserts the live
-  component still matches it (upstream's `provenance.awaitingCodeAdoption`
-  models drift in that direction; nothing here does yet).
+  component still matches it — **this is now `--check-drift`** (T10), so
+  this line item is DONE for the code side; the Figma-canvas side remains
+  `contracts:diff` against a live extraction, not continuous.

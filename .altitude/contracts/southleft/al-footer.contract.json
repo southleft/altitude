@@ -2,8 +2,8 @@
   "$schema": "../contract.schema.json",
   "id": "al-footer",
   "name": "Footer",
-  "version": "0.1.0",
-  "status": "derived",
+  "version": "1.0.0",
+  "status": "source",
   "description": "Component: al-footer\n\nSouthleft's site footer — an asymmetric three-column masthead, a pull quote,\nand a legal bar.\n\nIT *IS* `al-footer` — the brand implementation of that tag. It owns the\n`<footer>` landmark and its box directly; it no longer wraps Altitude's,\nbecause a component cannot render the tag it is registered under without\nrecursing (spec 2026-08-23-one-al-namespace-across-brand-and-base). The\n`--al-footer-*` custom properties remain the public API, now read here.\n\n```html\n<al-footer copyright=\"© 2026 Southleft, LLC. All rights reserved.\"\n           quote=\"If I cannot do great things, I can do small things in a great way.\"\n           cite=\"— attributed to Dr. Martin Luther King Jr.\">\n  <al-logo slot=\"brand\" variant=\"southleft\" href=\"/\"></al-logo>\n  <p slot=\"brand\">Design systems consulting, engineering, and AI integration.</p>\n  <nav slot=\"columns\" aria-label=\"Footer\">…</nav>\n  <a slot=\"legal\" href=\"/privacy-policy\">Privacy policy</a>\n</al-footer>\n```\n\nThe masthead is `<al-layout variant=\"grid\">` driven through the documented\n`--al-layout-template` hook, not a bespoke grid — the same escape hatch the\nsite already uses, so an asymmetric masthead never becomes a reason to\nhand-roll `display: grid`.",
   "semantics": {
     "element": "footer",

@@ -23,13 +23,26 @@
  * Determinism: stable key order, 2-space indent, trailing newline, no
  * timestamps. Same inputs -> byte-identical output, every run.
  *
- * Usage:
- *   node scripts/contracts/emit-contracts.mjs                     # DS_PROJECT / registry default
- *   node scripts/contracts/emit-contracts.mjs --project southleft
- *   node scripts/contracts/emit-contracts.mjs --check             # also ajv-validate every emitted file
- *   pnpm run contracts:emit / contracts:emit:sl
+ * SOURCE OF TRUTH (T10, spec 2026-08-25-contract-backed-figma-parity-and-
+ * generation): as of the adoption pass, contracts under .altitude/contracts/
+ * are EDITABLE, hand-curated source, not a derived artifact this script keeps
+ * overwriting — see .altitude/contracts/README.md "Contracts are editable
+ * source". This script is now a one-time SEED (bootstrap a contract for a
+ * component that has none yet) plus a DRIFT CHECK (does the on-disk contract
+ * still match what the repo's own sources would derive). It never silently
+ * regenerates an existing hand-edited file.
+ *
+ * Usage — pick exactly one mode:
+ *   node scripts/contracts/emit-contracts.mjs --seed                  # bootstrap NEW components only; refuses to overwrite an existing contract file
+ *   node scripts/contracts/emit-contracts.mjs --seed --force          # ...unless --force (re-seed on purpose, discards hand edits)
+ *   node scripts/contracts/emit-contracts.mjs --check-drift           # re-derive every tracked component in memory, diff vs. on-disk (status/version excluded); exit 1 on any drift
+ *   node scripts/contracts/emit-contracts.mjs --check                 # ajv-validate the on-disk contracts against contract.schema.json, read-only
+ *   node scripts/contracts/emit-contracts.mjs --adopt                 # ONE-OFF: flip status derived -> source and bump version 0.1.0 -> 1.0.0 on every on-disk contract (the T10 adoption pass; safe to re-run, idempotent)
+ *   node scripts/contracts/emit-contracts.mjs                         # no mode flag: prints this usage note, does nothing, exit 1
+ *   ... any of the above + --project southleft / DS_PROJECT
+ *   pnpm run contracts:seed / contracts:seed:sl / contracts:check
  */
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
@@ -43,8 +56,28 @@ const REPO_ROOT = join(HERE, '..', '..');
 const CONTRACTS_DIR = join(REPO_ROOT, '.altitude', 'contracts');
 const SCHEMA_PATH = join(CONTRACTS_DIR, 'contract.schema.json');
 
+const SEED = process.argv.includes('--seed');
+const CHECK_DRIFT = process.argv.includes('--check-drift');
 const CHECK = process.argv.includes('--check');
+const ADOPT = process.argv.includes('--adopt');
+const FORCE = process.argv.includes('--force');
+// Curation metadata, not a derived fact — a hand-adopted contract's status
+// and version are never expected to match what re-derivation would produce.
+const DRIFT_IGNORED_FIELDS = new Set(['status', 'version']);
 const STATES = ['hover', 'focus', 'active', 'disabled'];
+
+const USAGE = `[contracts] no mode flag given — emit-contracts.mjs no longer overwrites .altitude/contracts/**/*.contract.json by default (T10: contracts are edited source of truth, see .altitude/contracts/README.md).
+
+Pick one:
+  --seed [--force]   bootstrap contracts for NEW components only; refuses an existing file unless --force
+  --check-drift       re-derive every tracked component and diff it against the on-disk contract (status/version excluded); exit 1 on drift
+  --check             ajv-validate the on-disk contracts against contract.schema.json, read-only
+  --adopt             one-off: flip status derived -> source, bump version 0.1.0 -> 1.0.0 (idempotent)
+
+  pnpm run contracts:seed / contracts:seed:sl
+  pnpm run contracts:check
+  node scripts/contracts/emit-contracts.mjs --check --project <id>
+`;
 
 // ── small, dependency-free CEM-text helpers (mirrors parity.mjs's private
 //    unionValues()/normKey() — not exported from there, so re-derived here
@@ -313,61 +346,217 @@ function buildContract({ tag, component, origin, project, manifestEntry, measure
   };
 }
 
-// ── main ─────────────────────────────────────────────────────────────────
+// ── shared: resolve project + manifest + roster, walk tracked tags ────────
 
-function main() {
+/** Everything every mode needs before it can iterate tracked tags. */
+function loadContext() {
   const project = resolveProject();
   const manifest = readManifest(project);
   if (!manifest) {
     console.error(`[contracts] no parity manifest at ${project.resolved.parityManifest} — run parity:seed first.`);
     process.exit(2);
   }
-
   const { roster } = resolveComponentRoster(project);
   const byTag = new Map(roster.map((r) => [r.component.tag, r]));
   const measuredSpec = loadMeasuredSpec(project.resolved.figmaSyncDir);
-
   const outDir = join(CONTRACTS_DIR, project.id);
+  const trackedTags = Object.keys(manifest.components ?? {}).sort();
+  return { project, manifest, byTag, measuredSpec, outDir, trackedTags };
+}
+
+/** Derive one tag's in-memory contract, or `null` (+ a reason) when it's excluded / has no CEM record. */
+function deriveOne({ tag, manifest, byTag, project, measuredSpec }) {
+  const entry = manifest.components[tag];
+  if (entry?.excluded) return { entry, reason: 'excluded' };
+  const rosterEntry = byTag.get(tag);
+  if (!rosterEntry) return { entry, reason: 'no-cem' };
+  const contract = buildContract({
+    tag,
+    component: rosterEntry.component,
+    origin: rosterEntry.origin,
+    project,
+    manifestEntry: entry,
+    measuredSpec,
+  });
+  return { entry, reason: null, contract };
+}
+
+// ── --seed: bootstrap NEW components only ──────────────────────────────────
+
+function runSeed() {
+  const { project, manifest, byTag, measuredSpec, outDir, trackedTags } = loadContext();
   mkdirSync(outDir, { recursive: true });
 
-  const trackedTags = Object.keys(manifest.components ?? {}).sort();
   const emitted = [];
   const skippedExcluded = [];
   const skippedNoCem = [];
+  const skippedExisting = [];
 
   for (const tag of trackedTags) {
-    const entry = manifest.components[tag];
-    if (entry?.excluded) {
+    const { entry, reason, contract } = deriveOne({ tag, manifest, byTag, project, measuredSpec });
+    if (reason === 'excluded') {
       skippedExcluded.push(tag);
       console.log(`[contracts] skip ${tag} — excluded (${entry.note ?? 'no note'})`);
       continue;
     }
-    const rosterEntry = byTag.get(tag);
-    if (!rosterEntry) {
+    if (reason === 'no-cem') {
       skippedNoCem.push(tag);
       console.warn(`[contracts] skip ${tag} — parity-tracked but no CEM record found for project "${project.id}"`);
       continue;
     }
 
-    const contract = buildContract({
-      tag,
-      component: rosterEntry.component,
-      origin: rosterEntry.origin,
-      project,
-      manifestEntry: entry,
-      measuredSpec,
-    });
-
     const outPath = join(outDir, `${tag}.contract.json`);
+    if (existsSync(outPath) && !FORCE) {
+      skippedExisting.push(tag);
+      console.log(`[contracts] skip ${tag} — already has a contract (editable source). Use --force to re-seed and discard hand edits.`);
+      continue;
+    }
+
     writeFileSync(outPath, JSON.stringify(contract, null, 2) + '\n', 'utf8');
     emitted.push({ tag, path: outPath, contract });
   }
 
   console.log(
-    `[contracts] ${project.id}: emitted ${emitted.length}, excluded ${skippedExcluded.length}, no-CEM ${skippedNoCem.length} (manifest tracked ${trackedTags.length})`,
+    `[contracts] --seed ${project.id}: seeded ${emitted.length}, already-sourced ${skippedExisting.length}, excluded ${skippedExcluded.length}, no-CEM ${skippedNoCem.length} (manifest tracked ${trackedTags.length})`,
   );
 
   if (CHECK && !validateWithAjv(emitted)) process.exit(1);
+}
+
+// ── --check-drift: on-disk contract vs. what the repo's own sources derive ─
+
+/** Field names present on either side, minus curation metadata, whose JSON differs. */
+function driftedFields(disk, derived) {
+  const fields = new Set([...Object.keys(disk ?? {}), ...Object.keys(derived ?? {})]);
+  const drifted = [];
+  for (const field of fields) {
+    if (DRIFT_IGNORED_FIELDS.has(field)) continue;
+    if (JSON.stringify(disk?.[field]) !== JSON.stringify(derived?.[field])) drifted.push(field);
+  }
+  return drifted;
+}
+
+function runCheckDrift() {
+  const { project, manifest, byTag, measuredSpec, outDir, trackedTags } = loadContext();
+
+  let ok = 0;
+  let drifted = 0;
+  let missing = 0;
+  let skipped = 0;
+
+  for (const tag of trackedTags) {
+    const { reason, contract: derived } = deriveOne({ tag, manifest, byTag, project, measuredSpec });
+    if (reason) {
+      skipped++;
+      continue;
+    }
+
+    const outPath = join(outDir, `${tag}.contract.json`);
+    if (!existsSync(outPath)) {
+      missing++;
+      console.error(`[contracts] MISSING — ${tag} has no contract on disk. Run: pnpm run contracts:seed${project.isDefault ? '' : ` --project ${project.id}`}`);
+      continue;
+    }
+
+    let disk;
+    try {
+      disk = JSON.parse(readFileSync(outPath, 'utf8'));
+    } catch (err) {
+      missing++;
+      console.error(`[contracts] UNREADABLE — ${tag}: ${err.message}`);
+      continue;
+    }
+
+    const fields = driftedFields(disk, derived);
+    if (fields.length) {
+      drifted++;
+      console.error(`[contracts] DRIFT — ${tag}: ${fields.join(', ')}`);
+    } else {
+      ok++;
+    }
+  }
+
+  console.log(
+    `[contracts] --check-drift ${project.id}: ${ok} match, ${drifted} drifted, ${missing} missing, ${skipped} skipped (excluded/no-CEM) — ${trackedTags.length} tracked.`,
+  );
+  if (drifted || missing) process.exit(1);
+}
+
+// ── --check: ajv-validate the on-disk contracts, read-only ────────────────
+
+function runCheckOnly() {
+  const project = resolveProject();
+  const dir = join(CONTRACTS_DIR, project.id);
+  if (!existsSync(dir)) {
+    console.error(`[contracts] no contracts directory for "${project.id}" at ${relative(REPO_ROOT, dir)} — run contracts:seed first.`);
+    process.exit(2);
+  }
+  const files = readdirSync(dir).filter((f) => f.endsWith('.contract.json')).sort();
+  const loaded = files.map((f) => ({ path: join(dir, f), contract: JSON.parse(readFileSync(join(dir, f), 'utf8')) }));
+  if (!validateWithAjv(loaded)) process.exit(1);
+}
+
+// ── --adopt: one-off status/version flip (T10 adoption pass) ──────────────
+//
+// Mechanical and deterministic on purpose: parses each on-disk contract,
+// mutates ONLY `status`/`version`, and re-serializes with the emitter's own
+// stable formatting (2-space indent, trailing newline). Every other key's
+// value and the object's own key ORDER is exactly what was already on disk —
+// JSON.parse->mutate->JSON.stringify never reorders untouched keys — so this
+// is a curation-metadata rewrite, not a re-derivation; doing the same edit by
+// hand across 128 files would have been unreviewable.
+
+function runAdopt() {
+  const project = resolveProject();
+  const dir = join(CONTRACTS_DIR, project.id);
+  if (!existsSync(dir)) {
+    console.error(`[contracts] no contracts directory for "${project.id}" at ${relative(REPO_ROOT, dir)} — nothing to adopt.`);
+    process.exit(2);
+  }
+  const files = readdirSync(dir).filter((f) => f.endsWith('.contract.json')).sort();
+
+  let adopted = 0;
+  let alreadySource = 0;
+  let unexpectedVersion = 0;
+  let unexpectedStatus = 0;
+
+  for (const f of files) {
+    const p = join(dir, f);
+    const contract = JSON.parse(readFileSync(p, 'utf8'));
+    if (contract.status === 'source') {
+      alreadySource++;
+      continue;
+    }
+    if (contract.status !== 'derived') {
+      unexpectedStatus++;
+      console.warn(`[contracts] skip ${f}: status is "${contract.status}", not "derived" — not touching.`);
+      continue;
+    }
+    if (contract.version !== '0.1.0') {
+      unexpectedVersion++;
+      console.warn(`[contracts] ${f}: version is "${contract.version}", not the expected "0.1.0" — flipping status only, version left as-is.`);
+    } else {
+      contract.version = '1.0.0';
+    }
+    contract.status = 'source';
+    writeFileSync(p, JSON.stringify(contract, null, 2) + '\n', 'utf8');
+    adopted++;
+  }
+
+  console.log(
+    `[contracts] --adopt ${project.id}: adopted ${adopted}, already-source ${alreadySource}, unexpected status ${unexpectedStatus}, unexpected version ${unexpectedVersion} (of ${files.length}).`,
+  );
+}
+
+// ── main ─────────────────────────────────────────────────────────────────
+
+function main() {
+  if (ADOPT) return runAdopt();
+  if (CHECK_DRIFT) return runCheckDrift();
+  if (SEED) return runSeed();
+  if (CHECK) return runCheckOnly();
+  console.log(USAGE);
+  process.exit(1);
 }
 
 /** ajv is CommonJS; createRequire is the standard bridge from an ESM script — no new dependency, ajv is already a root devDependency (see scripts/validate-contracts.js). */

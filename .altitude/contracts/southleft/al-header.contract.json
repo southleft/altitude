@@ -2,8 +2,8 @@
   "$schema": "../contract.schema.json",
   "id": "al-header",
   "name": "Header",
-  "version": "0.1.0",
-  "status": "derived",
+  "version": "1.0.0",
+  "status": "source",
   "description": "Component: al-header\n\nSouthleft's primary navigation bar — sticky, translucent, blurred, with pill\nnav items, circular icon actions and a numbered mobile panel.\n\nIT *IS* `al-header` — the brand implementation of that tag, not a wrapper\naround Altitude's. It owns the `<header>` landmark, the sticky behaviour and\nthe stacking context itself, and adds what is Southleft's alone: the pill\ntreatment, the icon-button shape, and the mobile panel.\n\nIt used to compose `<al-header>` and feed it chrome through\n`--al-header-background` / `-backdrop-filter` / `-border-block-end`. Taking\nthe tag ended that (one namespace, spec\n2026-08-23-one-al-namespace-across-brand-and-base): an `<al-header>` rendered\ninside `<al-header>` recurses forever. Those custom properties are still the\npublic API — header.scss now READS them rather than passing them on — so a\nconsumer overriding one is unaffected.\n\nAn app gets this implementation, or Altitude's bare landmark, by importing\none module or the other. Never both: `customElements.define` is first-come\nand final.\n\n```html\n<al-header>\n  <al-logo slot=\"brand\" variant=\"southleft\" href=\"/\"></al-logo>\n  <a slot=\"nav\" href=\"/work\">Work</a>\n  <a slot=\"nav\" href=\"/insights\" aria-current=\"page\">Insights</a>\n  <button slot=\"actions\" aria-label=\"Ink / paper\">…</button>\n  <al-button slot=\"actions\" href=\"/contact\">Book a call</al-button>\n  <a slot=\"mobile\" href=\"/work\">Work</a>\n</al-header>\n```\n\nIt earns its own tag by owning BEHAVIOUR, not arrangement: the mobile panel's\nopen/closed state, the button that drives it, and the `aria-expanded` /\n`aria-controls` relationship between them. Everything positional is still\n`<al-layout>`.",
   "semantics": {
     "element": "header",

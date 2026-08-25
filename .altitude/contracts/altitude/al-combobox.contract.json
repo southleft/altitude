@@ -2,8 +2,8 @@
   "$schema": "../contract.schema.json",
   "id": "al-combobox",
   "name": "Combobox",
-  "version": "0.1.0",
-  "status": "derived",
+  "version": "1.0.0",
+  "status": "source",
   "description": "Component: al-combobox\n\nA text input with a filtered listbox popup, following the WAI-ARIA\ncombobox/listbox/option pattern. Reuses `al-dropdown-panel` for the popup\nsurface, `al-list`/`al-list-item` for options, and `al-input` for the\nfield — the same primitives `al-select` and `al-search` are built on —\nrather than reinventing popover positioning or option rendering.\n\nFiltering is either automatic (`filterMode=\"auto\"`, the default —\n`items` is filtered client-side by a case-insensitive substring match on\n`label`) or manual (`filterMode=\"manual\"` — the consumer listens for\n`onComboboxFilter` and reassigns `items` themselves, e.g. from an async\nAPI call).",
   "semantics": {
     "element": "div",

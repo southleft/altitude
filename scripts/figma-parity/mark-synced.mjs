@@ -40,6 +40,8 @@ import {
   contractDigest,
   digestOf,
   resolveComponentRoster,
+  contractFileHash,
+  readCodeContract,
 } from '../../libs/altitude-mcp/src/lib/parity.mjs';
 
 const project = resolveProject();
@@ -97,6 +99,23 @@ for (const tag of tags) {
     continue;
   }
   const { component, view } = rosterEntry;
+
+  // T11 (spec 2026-08-25-contract-backed-figma-parity-and-generation): stamp
+  // the TRACKED contract's own state alongside the code/Figma digests, so a
+  // later hand edit to .altitude/contracts/<project>/<tag>.contract.json with
+  // nobody re-running mark-synced shows up as `contractDrifted` on the parity
+  // report (libs/altitude-mcp/src/lib/parity.mjs). A tag with no contract
+  // file yet (not seeded — see `pnpm run contracts:seed`) is NOT an error
+  // here: the stamp still proceeds on codeHash/contractDigest/figmaDigest as
+  // before, it just warns and stamps no contractHash/contractVersion.
+  const trackedContractHash = contractFileHash(project, tag);
+  if (!trackedContractHash) {
+    console.warn(
+      `warn ${tag}: no tracked contract at .altitude/contracts/${project.id}/${tag}.contract.json — stamping without contractHash/contractVersion. Run: pnpm run contracts:seed${projectFlag}`,
+    );
+  }
+  const trackedContract = trackedContractHash ? readCodeContract(project, tag) : null;
+
   entry.lastSync = {
     date: now,
     // `view` is the ROSTER's project record for this tag — the real project
@@ -110,6 +129,10 @@ for (const tag of tags) {
     // edit moves only the hash and no longer flips the badge.
     contractDigest: contractDigest(component),
     figmaDigest: entry.figmaCurrentDigest ?? entry.lastSync?.figmaDigest ?? opsDigestFor(tag),
+    // OPTIONAL (T11) — omitted entirely (not written as null) when no
+    // tracked contract file exists yet, so a manifest entry for a tag never
+    // seeded stays exactly as small as it was before this existed.
+    ...(trackedContractHash ? { contractHash: trackedContractHash, contractVersion: trackedContract?.version ?? null } : {}),
   };
   stamped += 1;
 }

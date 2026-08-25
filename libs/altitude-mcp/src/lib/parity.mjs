@@ -272,15 +272,40 @@ export function diffFigmaContract(contract, figmaContract) {
 //     existing `contractDiff` field above — those stay exactly the digest
 //     engine's call.
 
-/** `.altitude/contracts/<project>/<tag>.contract.json` — the emitted CODE contract, if present. */
-function readCodeContract(p, tag) {
-  const path = join(REPO_ROOT, '.altitude', 'contracts', p.id, `${tag}.contract.json`);
+/**
+ * Absolute path to the tracked contract file for one tag, project-scoped.
+ * Since T10 (spec 2026-08-25-contract-backed-figma-parity-and-generation)
+ * this file is EDITABLE SOURCE, not a derived artifact — see
+ * `.altitude/contracts/README.md`.
+ */
+export function contractFilePath(project, tag) {
+  const p = asProject(project);
+  return join(REPO_ROOT, '.altitude', 'contracts', p.id, `${tag}.contract.json`);
+}
+
+/** `.altitude/contracts/<project>/<tag>.contract.json` — the tracked CODE contract, if present. */
+export function readCodeContract(project, tag) {
+  const path = contractFilePath(project, tag);
   if (!existsSync(path)) return null;
   try {
     return JSON.parse(readFileSync(path, 'utf8'));
   } catch {
     return null;
   }
+}
+
+/**
+ * sha256 of the tracked contract file's raw text, CRLF-normalised (same
+ * convention as `hashComponentSource`) — what `scripts/figma-parity/
+ * mark-synced.mjs` stamps as `lastSync.contractHash` (T11). `null` when no
+ * contract file exists yet for this tag (not seeded — see `--seed` in
+ * `scripts/contracts/emit-contracts.mjs`).
+ */
+export function contractFileHash(project, tag) {
+  const path = contractFilePath(project, tag);
+  if (!existsSync(path)) return null;
+  const raw = readFileSync(path, 'utf8').replace(/\r\n/g, '\n');
+  return createHash('sha256').update(raw).digest('hex');
 }
 
 /** `<figma-sync dir>/canvas-contracts/<tag>.canvas.json` — the extracted CANVAS contract, if present. */
@@ -494,6 +519,17 @@ export function computeParity(project) {
     // no canvas dump is byte-identical to one computed before this existed.
     const canvasDiff = canvasContractDiffFor(p, c.tag);
 
+    // T11 (spec 2026-08-25-contract-backed-figma-parity-and-generation):
+    // OPTIONAL pass-through of the contract state `scripts/figma-parity/
+    // mark-synced.mjs` stamped into `lastSync`, plus a live drift flag.
+    // Guarded on `entry?.lastSync?.contractHash` existing, so an entry that
+    // was never stamped with a contract hash (every entry as of this write)
+    // triggers ZERO extra file reads and contributes NOTHING to `item` — the
+    // same graceful-degradation discipline as `canvasDiff` above (T7): never
+    // decides `status`, an annotation only.
+    const stampedContractHash = entry?.lastSync?.contractHash ?? null;
+    const contractDrifted = stampedContractHash ? contractFileHash(p, c.tag) !== stampedContractHash : false;
+
     const item = {
       tag: c.tag,
       title: story?.title ?? null,
@@ -533,6 +569,18 @@ export function computeParity(project) {
         ? {
             disagreements: canvasDiff.disagreements,
             canvasContractDiff: { compared: canvasDiff.compared, skipped: canvasDiff.skipped },
+          }
+        : {}),
+      /** OPTIONAL — present only when `mark-synced.mjs` stamped a contract
+       * hash for this component (T11). `contractDrifted: true` means the
+       * TRACKED contract file has changed since that stamp — the contract
+       * itself needs re-review, independent of `status` (which stays
+       * digest-driven; this is an annotation, not a new status). */
+      ...(stampedContractHash
+        ? {
+            contractHash: stampedContractHash,
+            contractVersion: entry?.lastSync?.contractVersion ?? null,
+            ...(contractDrifted ? { contractDrifted: true } : {}),
           }
         : {}),
     };

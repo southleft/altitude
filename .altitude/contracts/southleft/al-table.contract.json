@@ -2,8 +2,8 @@
   "$schema": "../contract.schema.json",
   "id": "al-table",
   "name": "Table",
-  "version": "0.1.0",
-  "status": "derived",
+  "version": "1.0.0",
+  "status": "source",
   "description": "Component: al-table\n\nRenders a semantic `<table>` either from the `columns` + `data` properties\n(data-driven mode) or from slotted `<thead>` / `<tbody>` markup (slotted\nmode, used when `columns`/`data` are not both set). The horizontal scroll\ncontainer lives INSIDE the component so a wide table scrolls itself —\nthe page never scrolls. Cell/header padding uses the theme's `--al-theme-space-*`\ntokens, so the table is automatically density-aware wherever it is rendered\ninside a `<al-theme density=\"...\">` scope.",
   "semantics": {
     "element": "div",

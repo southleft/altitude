@@ -2,8 +2,8 @@
   "$schema": "../contract.schema.json",
   "id": "al-layout",
   "name": "Layout",
-  "version": "0.1.0",
-  "status": "derived",
+  "version": "1.0.0",
+  "status": "source",
   "description": "Component: al-layout\n\nThe single arrangement primitive for the design system. Layout owns three\northogonal jobs, selected by `variant`:\n\n- **flow** (default) — stack or row content with `direction` / `gap` /\n  `align` / `justify` / `wrap`.\n- **constrained** — own the page measure. Children sit in a centred content\n  column capped at `size`, with fluid gutter tracks either side. Any child\n  marked `bleed` breaks out edge-to-edge.\n- **grid** — an N-column grid (`columns`). Children span with the shared\n  `.al-u-grid__item.col:N` classes; there is no second span system.\n- **bento** — a 12-column auto-row grid for asymmetric feature tiles.\n\nSemantic components must not re-implement arrangement. A component that\ngroups things for MEANING (`al-checkbox-group`'s fieldset,\n`al-radio-group`'s roving keyboard selection) keeps only that meaning and\nnests its slotted content in an `<al-layout>`.",
   "semantics": {
     "element": "div",
