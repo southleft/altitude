@@ -475,7 +475,7 @@ export class ALListItem extends ALElement {
     if (this.href) {
       return html`
         <li role=${this._listRole} class="${componentClassName}" @keydown=${this.handleKeyDown}>
-          <a class="al-c-list-item__link al-c-list-item-href__link" href=${this.href} target=${this.target} tabindex=${this.isDisabled && '-1'}>
+          <a class="al-c-list-item__link al-c-list-item-href__link" href=${this.href} target=${this.target} tabindex=${ifDefined(this.isDisabled ? '-1' : undefined)}>
             <span class="al-c-list-item__body">
               ${this.slotNotEmpty('before') && html` <div class="al-c-list-item__icon"><slot name="before"></slot></div> `}
               <div class="al-c-list-item__text">
@@ -489,7 +489,7 @@ export class ALListItem extends ALElement {
     } else if (this.variant === 'static') {
       return html`
         <li role=${this._listRole} class="${componentClassName}" @keydown=${this.handleKeyDown}>
-          <div class="al-c-list-item__link" @click=${this.handleClick} tabindex=${this.isDisabled && '-1'}>
+          <div class="al-c-list-item__link" @click=${this.handleClick} tabindex=${ifDefined(this.isDisabled ? '-1' : undefined)}>
             <span class="al-c-list-item__body">
               ${this.slotNotEmpty('before') && html` <div class="al-c-list-item__icon"><slot name="before"></slot></div> `}
               <div class="al-c-list-item__text">
