@@ -32,7 +32,7 @@ const LOGOS = [
 export const Default: Story = {
   render: () => html`
     <al-logo-wall>
-      ${LOGOS.map(([slug, name]) => html`<img src="/southleft/logos/${slug}.webp" alt=${name} />`)}
+      ${LOGOS.map(([slug, name]) => html`<img src="/logos/${slug}.webp" alt=${name} />`)}
     </al-logo-wall>
   `
 };
@@ -44,7 +44,7 @@ export const Default: Story = {
 export const Vivid: Story = {
   render: () => html`
     <al-logo-wall vivid>
-      ${LOGOS.slice(0, 4).map(([slug, name]) => html`<img src="/southleft/logos/${slug}.webp" alt=${name} />`)}
+      ${LOGOS.slice(0, 4).map(([slug, name]) => html`<img src="/logos/${slug}.webp" alt=${name} />`)}
     </al-logo-wall>
   `
 };

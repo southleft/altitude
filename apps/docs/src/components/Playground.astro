@@ -36,6 +36,10 @@ interface Props {
   };
 }
 
+// The site's configured base. Imported rather than read from `Astro.url`,
+// because the rewrite below must match what the build actually emits.
+import { base } from '../lib/site.mjs';
+
 const { component, project, example = null } = Astro.props;
 
 /* Controls, in the canvas's order: enums, then the content field, then flags. */
@@ -81,8 +85,30 @@ const fullBleed = component.tier === 'organisms';
  * a broken preview.
  */
 const hasExample = Boolean(example?.ok && example.html);
+
+/**
+ * Root-relative asset URLs in story markup need this site's base.
+ *
+ * A story writes `src="/logos/ibm.webp"` because that is what it means in the
+ * app that owns the file. This site is served under a base (`/docs`), so the
+ * literal path 404s and the preview renders broken-image icons — which is
+ * exactly what the logo wall did. Rewriting here rather than in the story keeps
+ * the story honest about its own asset, and covers every future story with one.
+ *
+ * Deliberately narrow: only `src`/`srcset`/`href` values starting with a single
+ * `/`. A protocol-relative `//cdn…` or an absolute `https://` is left alone,
+ * and so is anything already under the base.
+ */
+const withBase = (markup: string) =>
+  base === '' || base === '/'
+    ? markup
+    : markup.replace(
+        /(src|href|srcset)="\/(?!\/)/g,
+        (_m, attr) => `${attr}="${base.replace(/\/$/, '')}/`,
+      );
+
 const exampleHtml = hasExample
-  ? example.html.replace(
+  ? withBase(example.html).replace(
       // `\\s` and not `\s`: inside a template literal an unrecognised escape
       // collapses to the bare character, so `[\s/>]` would compile to `[s/>]`
       // and match `<sl-heros…`. The lookahead keeps `<al-list` from matching
