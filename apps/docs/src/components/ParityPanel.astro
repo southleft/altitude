@@ -139,6 +139,28 @@ const unobserved = rows.filter((row) => !row.figmaObserved && row.figmaSetName);
               </div>
             )}
 
+            {row.disagreements && row.disagreements.length > 0 && (
+              <div class="spec-table spec-table--props parity__diff" data-parity-disagreements={row.disagreements.length}>
+                <div class="spec-table__head">
+                  <span>PROPERTY</span>
+                  <span>DISAGREEMENT</span>
+                  <span>CODE / CANVAS</span>
+                </div>
+                {row.disagreements.map((d) => (
+                  <div class="spec-table__row" data-parity-disagreement-dimension={d.dimension}>
+                    <span class="spec-table__name">{d.key}</span>
+                    <span class="spec-table__type">
+                      [{d.dimension}] {d.kind}
+                    </span>
+                    <span class="spec-table__default">
+                      {Array.isArray(d.code) ? d.code.join(', ') : d.code ?? '—'} /{' '}
+                      {Array.isArray(d.canvas) ? d.canvas.join(', ') : d.canvas ?? '—'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
             {row.note && <p class="parity__note">{row.note}</p>}
           </div>
         );

@@ -1,0 +1,37 @@
+{
+  "$comment": "Fixture CANVAS contract for contract-diff.mjs --self-test — paired with diff-code-sample.contract.json. Plants: (1) no 'Full Width' component property, so code's fullWidth prop is missing-in-canvas; (2) an extra 'Quaternary' Variant option code doesn't have, so the axis is a variant-value mismatch; (3) no bound variables at all, so code's one token binding is missing-in-canvas; (4) no 'State' variant axis, WITH the matching degradation recorded — code declares 4 states, and the differ must SKIP the state dimension rather than report 4 missing-in-canvas disagreements.",
+  "$schema": "../canvas-contract.schema.json",
+  "component": "al-self-test",
+  "figma": { "name": "Self Test", "nodeId": "0:0", "fileKey": "FAKE0000000000000000000" },
+  "variantAxes": [
+    { "name": "Variant", "values": ["Secondary", "Tertiary", "Quaternary"] }
+  ],
+  "componentProperties": [
+    { "name": "Variant", "type": "VARIANT", "values": ["Secondary", "Tertiary", "Quaternary"] }
+  ],
+  "states": [],
+  "textStyles": [],
+  "tokens": [],
+  "anatomySource": "observed",
+  "anatomyCase": "Variant=Secondary",
+  "anatomy": {
+    "name": "Variant=Secondary",
+    "type": "COMPONENT",
+    "boundVariables": {},
+    "textStyle": null,
+    "children": []
+  },
+  "bindings": {
+    "code": null,
+    "figma": { "fileKey": "FAKE0000000000000000000", "componentSetName": "Self Test", "nodeId": "0:0", "url": null }
+  },
+  "degradations": [
+    "props[].bindings.code — canvas has no code attribute names; see componentProperties for the Figma-side property list only.",
+    "events, slots — not representable in a Figma component set.",
+    "a11y.{ariaAttributes,cssParts} — ARIA attributes and CSS parts are code (CEM) facts; no accessibility read is performed from canvas.",
+    "semantics.role — no live accessibility-tree read is performed from canvas.",
+    "anatomy.*.tokens — canvas resolves Figma bound-VARIABLE NAMES only (see anatomy.*.boundVariables); it cannot know which `--al-*` custom property a variable maps to in code (see scripts/figma-atoms/token-map.mjs for that side).",
+    "bindings.code — no code binding is derivable from canvas alone.",
+    "states — no \"State\" variant axis found on this set."
+  ]
+}

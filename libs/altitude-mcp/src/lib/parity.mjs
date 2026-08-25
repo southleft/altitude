@@ -40,10 +40,11 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
-import { WC_ROOT } from './paths.mjs';
+import { WC_ROOT, REPO_ROOT } from './paths.mjs';
 import { resolveProject, figmaNodeUrlFor } from './ds-project.mjs';
 import { loadComponents, loadComponentsFrom } from './cem.mjs';
 import { getStoryInfo } from './stories.mjs';
+import { diffContracts } from './contract-diff.mjs';
 
 /**
  * Normalise whatever a caller passed into a resolved project record.
@@ -248,6 +249,67 @@ export function diffFigmaContract(contract, figmaContract) {
   return { checked: matched.length + mismatches.length, mismatches, matched, unmatchedFigmaProps };
 }
 
+// ── property-level contract diff (T6/T7, spec 2026-08-25-contract-backed-
+//    figma-parity-and-generation) ────────────────────────────────────────
+//
+// `diffFigmaContract()` above is the DIGEST-ERA comparison: it reads the
+// manifest's stored `figmaContract` (a snapshot captured by
+// refresh-figma-digests.mjs) against the CEM's attribute list, and it is the
+// FAST PATH — always available, no live Figma connection required, and it
+// alone still decides `figmaDrift`/`contractMismatches` in `assessEntry()`.
+// This section is a pure ENRICHMENT layered on top, never a replacement:
+//
+//   * it only runs when a CANVAS DUMP exists on disk for this tag (an
+//     OBSERVATION from scripts/contracts/extract-canvas.mjs — gitignored,
+//     commonly absent) AND an EMITTED code contract exists
+//     (scripts/contracts/emit-contracts.mjs's `.altitude/contracts/<project>/
+//     <tag>.contract.json`, itself a generated artifact, not source of truth);
+//   * when either is missing, this contributes NOTHING to the report entry —
+//     no `disagreements`, no `canvasContractDiff` key at all — so a project
+//     with no canvas dumps on disk (the default state) produces a report
+//     byte-identical to before this existed;
+//   * it never touches `status`, `driftBasis`, `figmaObserved` or the
+//     existing `contractDiff` field above — those stay exactly the digest
+//     engine's call.
+
+/** `.altitude/contracts/<project>/<tag>.contract.json` — the emitted CODE contract, if present. */
+function readCodeContract(p, tag) {
+  const path = join(REPO_ROOT, '.altitude', 'contracts', p.id, `${tag}.contract.json`);
+  if (!existsSync(path)) return null;
+  try {
+    return JSON.parse(readFileSync(path, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+/** `<figma-sync dir>/canvas-contracts/<tag>.canvas.json` — the extracted CANVAS contract, if present. */
+function readCanvasContract(p, tag) {
+  const path = join(p.resolved.figmaSyncDir, 'canvas-contracts', `${tag}.canvas.json`);
+  if (!existsSync(path)) return null;
+  try {
+    return JSON.parse(readFileSync(path, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Property-level disagreements for one tag, or `null` when there is nothing
+ * to compare (no canvas dump — the common case). Graceful by construction:
+ * a missing or unparsable file on either side is treated the same as "not
+ * observed yet", never thrown.
+ *
+ * @returns {null|{disagreements: Array, compared: object, skipped: Array}}
+ */
+function canvasContractDiffFor(p, tag) {
+  const canvasContract = readCanvasContract(p, tag);
+  if (!canvasContract) return null; // the fast path this whole layer must not slow down
+  const codeContract = readCodeContract(p, tag);
+  if (!codeContract) return null; // contract not emitted yet — nothing to diff against
+  return diffContracts({ codeContract, canvasContract });
+}
+
 // ── status computation ──────────────────────────────────────────────────
 
 /** Figma deep-link for a node id in the given project's file. */
@@ -426,6 +488,12 @@ export function computeParity(project) {
       status = STATUS.EXCLUDED;
     }
 
+    // Enrichment only — see canvasContractDiffFor()'s own comment. `null`
+    // (no canvas dump / no emitted contract on disk) contributes nothing
+    // below; every field it adds is spread in conditionally so an entry with
+    // no canvas dump is byte-identical to one computed before this existed.
+    const canvasDiff = canvasContractDiffFor(p, c.tag);
+
     const item = {
       tag: c.tag,
       title: story?.title ?? null,
@@ -457,6 +525,16 @@ export function computeParity(project) {
       lastSync: entry?.lastSync ?? null,
       figmaCurrentDigest: entry?.figmaCurrentDigest ?? null,
       note: entry?.note ?? configExclusion ?? null,
+      /** OPTIONAL — present only when a canvas dump exists on disk (see
+       * canvasContractDiffFor()). Property-level disagreements between the
+       * emitted code contract and the live-extracted canvas contract, from
+       * contract-diff.mjs. Never decides `status`; enriches it. */
+      ...(canvasDiff
+        ? {
+            disagreements: canvasDiff.disagreements,
+            canvasContractDiff: { compared: canvasDiff.compared, skipped: canvasDiff.skipped },
+          }
+        : {}),
     };
     item.aiPrompt = buildAiPrompt(item, p);
     entries.push(item);
@@ -549,6 +627,25 @@ function pipelineFor(p) {
   ];
 }
 
+/**
+ * The compact "What disagrees:" block — one line per property-level
+ * disagreement from `contract-diff.mjs`, when a canvas dump made them
+ * available (see `canvasContractDiffFor()` in computeParity()). Named exact
+ * deltas so the copy-paste reconciliation prompt says WHICH prop/variant
+ * value/state/token binding disagrees, not just that the status is drift.
+ * `[]` when `item.disagreements` is absent or empty — no canvas dump, or a
+ * clean compare — so a component with nothing to say gets nothing appended.
+ */
+function disagreementsSection(item) {
+  if (!item.disagreements?.length) return [];
+  const lines = item.disagreements.map((d) => {
+    const code = Array.isArray(d.code) ? d.code.join(', ') : (d.code ?? '—');
+    const canvas = Array.isArray(d.canvas) ? d.canvas.join(', ') : (d.canvas ?? '—');
+    return `  - [${d.dimension}] ${d.key} (${d.kind}) — code: ${code} / canvas: ${canvas}`;
+  });
+  return ['', `What disagrees (${item.disagreements.length}, from the canvas contract diff):`, ...lines];
+}
+
 function promptFooter(tag, p) {
   const projectFlag = p.isDefault ? '' : ` --project ${p.id}`;
   return [
@@ -617,7 +714,15 @@ export function buildAiPrompt(item, project) {
     ],
   };
 
-  return [head, context, '', ...(byStatus[item.status] ?? []), '', ...promptFooter(item.tag, p)].join('\n');
+  return [
+    head,
+    context,
+    '',
+    ...(byStatus[item.status] ?? []),
+    ...disagreementsSection(item),
+    '',
+    ...promptFooter(item.tag, p),
+  ].join('\n');
 }
 
 // ── the public projection ───────────────────────────────────────────────
@@ -683,6 +788,22 @@ export function publicParityReport(project) {
             })),
             relabelled: c.contractDiff.matched.filter((m) => m.relabelled).map((m) => m.property),
           }
+        : null,
+      /** OPTIONAL — present only when a canvas dump made a property-level
+       * diff possible (see canvasContractDiffFor() in computeParity()).
+       * Every field here is a component/prop/token/state NAME, never a
+       * Figma file key, node id or script path — safe for the public site;
+       * apps/docs/scripts/check-status-panels.mjs still re-checks the built
+       * output for those leaks regardless. */
+      disagreements: c.disagreements
+        ? c.disagreements.map((d) => ({
+            dimension: d.dimension,
+            key: d.key,
+            kind: d.kind,
+            code: d.code,
+            canvas: d.canvas,
+            detail: d.detail,
+          }))
         : null,
       note: c.note,
     })),

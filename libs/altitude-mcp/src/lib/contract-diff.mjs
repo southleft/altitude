@@ -222,10 +222,17 @@ export function diffContracts({ codeContract, canvasContract } = {}) {
     }
   }
 
-  // Canvas component properties with no matching code prop at all.
+  // Canvas component properties with no matching code prop at all. The
+  // synthetic "State" axis is excluded on purpose — every Figma set carries
+  // one with no code attribute counterpart (states are behaviour, not a
+  // prop; see parity.mjs's diffFigmaContract() comment), and it is already
+  // compared on its own terms below, via the dedicated 'state' dimension.
+  // Flagging it here too would double-report the exact same non-drift case
+  // parity.mjs already documents as curation, not drift.
   for (const cp of canvasContract.componentProperties ?? []) {
     const key = normKey(cp.name);
     if (matchedCanvasKeys.has(key)) continue;
+    if (key === normKey('state')) continue;
     const dimension = cp.type === 'VARIANT' ? 'variant-axis' : 'prop';
     if (dimension === 'variant-axis') compared.variants += 1; else compared.props += 1;
     disagreements.push({

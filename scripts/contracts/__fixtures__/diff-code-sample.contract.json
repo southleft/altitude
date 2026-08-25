@@ -1,0 +1,65 @@
+{
+  "$comment": "Fixture CODE contract for contract-diff.mjs --self-test — see diff-canvas-sample.canvas.json for its paired CANVAS contract and diff-contracts.mjs for the planted disagreements this pair is designed to produce.",
+  "$schema": "../contract.schema.json",
+  "id": "al-self-test",
+  "name": "Self Test",
+  "version": "0.1.0",
+  "status": "derived",
+  "description": "Component: al-self-test",
+  "semantics": {
+    "element": "button",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "fullWidth",
+      "description": "Planted disagreement #1 — this prop has no matching Figma component property in the paired canvas fixture, so it must surface as one dimension:'prop' kind:'missing-in-canvas' disagreement.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": { "attribute": "fullWidth" },
+        "figma": null
+      }
+    },
+    {
+      "name": "variant",
+      "description": "Planted disagreement #2 — the paired canvas fixture's Variant axis carries an extra option ('Quaternary') this enum does not, so it must surface as one dimension:'variant-value' kind:'value-mismatch' disagreement (single entry for the whole axis, not per-option).",
+      "type": "enum",
+      "rawType": "'secondary' | 'tertiary'",
+      "values": ["secondary", "tertiary"],
+      "bindings": {
+        "code": { "attribute": "variant" },
+        "figma": { "kind": "VARIANT", "property": "Variant", "options": ["Secondary", "Tertiary"] }
+      }
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "states": ["hover", "focus", "active", "disabled"],
+  "anatomySource": "measured",
+  "anatomyCase": "Variant=secondary",
+  "anatomy": {
+    "root": {
+      "tag": "button",
+      "cls": "al-c-self-test",
+      "layout": null,
+      "tokens": {
+        "background-color": {
+          "code": "--al-theme-color-background-primary-default",
+          "figma": "theme/color/background/primary-default"
+        }
+      },
+      "children": []
+    }
+  },
+  "tokens": ["--al-theme-color-background-primary-default"],
+  "a11y": { "ariaAttributes": [], "cssParts": [] },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/self-test/self-test.ts",
+      "tagName": "al-self-test",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": { "fileKey": "FAKE0000000000000000000", "componentSetName": "Self Test", "nodeId": "0:0", "url": null }
+  }
+}
