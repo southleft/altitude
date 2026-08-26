@@ -1,16 +1,17 @@
 {
-  "$comment": "Fixture CANVAS contract for contract-diff.mjs --self-test — paired with diff-code-sample.contract.json. Plants: (1) no 'Full Width' component property, so code's fullWidth prop is missing-in-canvas; (2) an extra 'Quaternary' Variant option code doesn't have, so the axis is a variant-value mismatch; (3) no bound variables at all, so code's one token binding is missing-in-canvas; (4) no 'State' variant axis, WITH the matching degradation recorded — code declares 4 states, and the differ must SKIP the state dimension rather than report 4 missing-in-canvas disagreements. T17 additions: (a) 'Checked' (BOOLEAN) pairs with code's isChecked, NO disagreement; (b) 'Selected' (BOOLEAN, not VARIANT) pairs with code's enum isSelected, exactly ONE variant-axis value-mismatch; (c) 'Slot Before' (BOOLEAN) pairs with code's 'before' slot, NO disagreement; (d) 'Slot After' (BOOLEAN) has no matching code slot, exactly ONE dimension:'slot' kind:'slot-unpaired' disagreement.",
+  "$comment": "Fixture CANVAS contract for contract-diff.mjs --self-test — paired with diff-code-sample.contract.json. Plants: (1) no 'Full Width' component property, so code's fullWidth prop is missing-in-canvas; (2) an extra 'Quaternary' Variant option code doesn't have, so the axis is a variant-value mismatch; (3) no bound variables at all, so code's one token binding is missing-in-canvas; (4) no 'State' variant axis, WITH the matching degradation recorded — code declares 4 states, and the differ must SKIP the state dimension rather than report 4 missing-in-canvas disagreements. T17 additions: (a) 'Checked' (BOOLEAN) pairs with code's isChecked, NO disagreement; (b) 'Selected' (BOOLEAN, not VARIANT) pairs with code's enum isSelected, exactly ONE variant-axis value-mismatch; (c) 'Slot Before' pairs with code's 'before' slot, NO disagreement; (d) 'Slot After' (BOOLEAN) has no matching code slot, exactly ONE dimension:'slot' kind:'slot-unpaired' disagreement. T23 addition: 'Slot Before' is deliberately type VARIANT (values False/True — the fan-out convention's own shape), not BOOLEAN like 'Slot After' — PAIRING_CONVENTIONS matches a slot by NAME only, never by type, so this fixture proves both the older property-style (Slot After, still BOOLEAN, still unpaired-by-design here) and the newer axis-style (Slot Before, VARIANT) pair identically. See .altitude/contracts/README.md § Fan-out convention.",
   "$schema": "../canvas-contract.schema.json",
   "component": "al-self-test",
   "figma": { "name": "Self Test", "nodeId": "0:0", "fileKey": "FAKE0000000000000000000" },
   "variantAxes": [
-    { "name": "Variant", "values": ["Secondary", "Tertiary", "Quaternary"] }
+    { "name": "Variant", "values": ["Secondary", "Tertiary", "Quaternary"] },
+    { "name": "Slot Before", "values": ["False", "True"] }
   ],
   "componentProperties": [
     { "name": "Variant", "type": "VARIANT", "values": ["Secondary", "Tertiary", "Quaternary"] },
     { "name": "Checked", "type": "BOOLEAN", "values": null },
     { "name": "Selected", "type": "BOOLEAN", "values": null },
-    { "name": "Slot Before", "type": "BOOLEAN", "values": null },
+    { "name": "Slot Before", "type": "VARIANT", "values": ["False", "True"] },
     { "name": "Slot After", "type": "BOOLEAN", "values": null }
   ],
   "states": [],

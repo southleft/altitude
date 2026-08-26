@@ -50,9 +50,9 @@ the logos are the subject rather than social proof in passing.
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The logo images. Sized and treated by the component; pass them at their natural dimensions. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The logo images. Sized and treated by the component; pass them at their natural dimensions. | — | — |
 
 ## Events (0)
 

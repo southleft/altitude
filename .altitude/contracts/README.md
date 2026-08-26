@@ -246,12 +246,13 @@ exists. `scripts/contracts/generate-figma.mjs` reads a contract
 intermediate **ops** artifact (`buildOps()` — stable key order, no timestamps,
 same contract in -> byte-identical bytes out), and executes it over
 `scripts/figma-atoms/mcp-shim.mjs` to build a real component set: the State
-and Variant axes, the Text/Is Full Width/Slot Before/Slot After/Icon
-Before/Icon After component properties the contract's props/slots warrant
-(the last two only when a slot names a `figmaPlaceholder` — see "Slot
-placeholder instances (T19)" below), and token-bound fills/strokes/spacing
-from the contract's anatomy — nothing fabricated beyond what the contract
-states.
+and Variant axes, PLUS one more VARIANT axis per curated boolean (T23, see
+"Fan-out convention" below) OR a BOOLEAN component property for an
+un-curated one, the Text/Icon Before/Icon After component properties the
+contract's props/slots warrant (the icon ones only when a slot names a
+`figmaPlaceholder` — see "Slot placeholder instances (T19)" below), and
+token-bound fills/strokes/spacing from the contract's anatomy — nothing
+fabricated beyond what the contract states.
 
 ```bash
 node scripts/figma-atoms/mcp-shim.mjs                          # keep running (Figma Desktop open, Bridge plugin running)
@@ -312,6 +313,62 @@ placeholder is resolved **by name** inside the plugin code at generation time
 libraries re-mint ids on republish. A slot with no `figmaPlaceholder` still
 degrades to the boolean-only behavior from T12/T18 (no INSTANCE_SWAP
 property, no icon instance) — a documented gap, not a guess.
+
+## Fan-out convention (T22/T23)
+
+A curated boolean **fans out as its own True/False VARIANT axis** — a
+separately-built component per combination, cartesian with every other axis
+— instead of staying a single shared BOOLEAN component property (T12/T18/T19
+behavior, still the default for anything not curated). Curation is a new
+schema-additive field, hand-set per contract, never derived:
+
+- `props[].bindings.figma.axis: true` (alongside `kind: "VARIANT"` and
+  `options: ["False", "True"]`) — a layout boolean like `fullWidth`.
+- `slots[].figmaAxis: true` — a `before`/`after` slot.
+
+**Why axes, not properties, for slots.** A shared BOOLEAN property's
+visibility is a single runtime toggle across every variant — a static focus
+ring built at generation time (`ring.resize(comp.width + 8, ...)`) can only
+ever be correct for ONE render of that toggle, usually the built default
+(icons hidden). Fan out the slot as an axis instead and every combination is
+its own real component, built with its OWN true geometry (icons shown or
+hidden, full width or not) BEFORE the ring is sized — so the ring is correct
+for every combination, not just the default one (T22).
+
+**Generalized default, for any component, not just button:** an `enum` prop
+is always an axis (unchanged, pre-dates this curation field entirely — see
+the `variant` prop's own binding). A `before`/`after` slot or a
+layout-affecting boolean is a component property **unless** curated
+`figmaAxis`/`axis: true`. An unknown/behavior-only boolean (e.g. `hideText`)
+stays a property regardless — there is nothing to "fan out" visually for it.
+
+**Icon Before/After stay component properties either way.** The real Button
+set (see below) keeps them that way even where it DOES fan out other things,
+and generate-figma.mjs mirrors that: the icon INSTANCE_SWAP property is wired
+post-`combineAsVariants` exactly as T19 built it; only the icon's per-variant
+VISIBILITY moves from a runtime property reference to a static per-variant
+bake when its slot is curated as an axis.
+
+**"Is Full Width" has no measured pixel fact.** Contracts carry no pixel
+geometry at all (see "Deviations" below) and no real Figma set exposes this
+as an axis to inspect — the generator renders it as the variant's own natural
+hug width plus a fixed margin (`FULL_WIDTH_EXTRA_PX` in generate-figma.mjs),
+a documented judgment call, not an observed target width.
+
+**Deliberate discrepancy — verify before trusting "matches the real set."**
+al-button's contract (`.altitude/contracts/altitude/al-button.contract.json`)
+curates all three (`fullWidth`, `before`, `after`) into axis mode, growing
+the Contract Pilot regeneration from 25 to 200 variants (State × Variant ×
+Slot Before × Slot After × Is Full Width). This was VERIFIED, live, against
+the REAL Button set (node `4271:9562`, `y83n4o9LOGs74oAoguFcGS`) at T22/T23
+time: the real set still has 25 variants — `Is Full Width`, `Slot Before`,
+`Slot After` are BOOLEAN component properties there, not VARIANT axes. The
+pilot's fan-out is a deliberate proposal/pilot of the convention, not a
+description of what the real set currently does — a human decision is still
+open on whether to convert the real hand-built set to match. Re-verify live
+(`figma_get_status` + read `componentPropertyDefinitions` off node
+`4271:9562`) before asserting either set's shape in a future task; this
+paragraph will go stale the moment someone converts the real set.
 
 ## Anatomy availability is best-effort
 

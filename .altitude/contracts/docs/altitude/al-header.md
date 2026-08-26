@@ -51,9 +51,9 @@ _No interaction states recorded._
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The header content. Wrap it in an `<al-layout>` to arrange it. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The header content. Wrap it in an `<al-layout>` to arrange it. | — | — |
 
 ## Events (0)
 

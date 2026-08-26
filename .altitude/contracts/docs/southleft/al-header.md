@@ -75,12 +75,12 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (4)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `actions` | The right-hand cluster. Native `<button>`s get the circular icon treatment; anything else (an `<al-button>` CTA) is left alone. | — |
-| `brand` | The wordmark. Usually `<al-logo variant="southleft">`. | — |
-| `mobile` | The panel's links. Supplied separately from `nav` because a slot can project its nodes only once — see the note in the SCSS. | — |
-| `nav` | The primary links, as flat `<a>` elements. The component gives them the pill treatment and marks `aria-current="page"` as the filled state. Hidden below the `64rem` breakpoint, where the mobile panel takes over. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `actions` | The right-hand cluster. Native `<button>`s get the circular icon treatment; anything else (an `<al-button>` CTA) is left alone. | — | — |
+| `brand` | The wordmark. Usually `<al-logo variant="southleft">`. | — | — |
+| `mobile` | The panel's links. Supplied separately from `nav` because a slot can project its nodes only once — see the note in the SCSS. | — | — |
+| `nav` | The primary links, as flat `<a>` elements. The component gives them the pill treatment and marks `aria-current="page"` as the filled state. Hidden below the `64rem` breakpoint, where the mobile panel takes over. | — | — |
 
 ## Events (1)
 

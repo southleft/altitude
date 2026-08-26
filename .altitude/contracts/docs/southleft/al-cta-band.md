@@ -65,9 +65,9 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The band's actions. Wrap them in an `<al-layout>` to arrange them — a row that wraps to a stack is the usual choice. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The band's actions. Wrap them in an `<al-layout>` to arrange them — a row that wraps to a stack is the usual choice. | — | — |
 
 ## Events (0)
 

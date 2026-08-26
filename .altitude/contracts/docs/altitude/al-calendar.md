@@ -118,10 +118,10 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (2)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `after` | If content is slotted, it will override the default "next button" icon | — |
-| `before` | If content is slotted, it will override the default "previous button" icon | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `after` | If content is slotted, it will override the default "next button" icon | — | — |
+| `before` | If content is slotted, it will override the default "previous button" icon | — | — |
 
 ## Events (1)
 

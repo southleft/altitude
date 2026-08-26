@@ -158,18 +158,34 @@ function buildVariantAxesSection(props) {
 
 function buildSlotsSection(slots) {
   if (!slots.length) return '_No slots declared._';
-  const rows = slots.map((s) => [code(s.name || '(default)'), s.description ?? '—', s.figmaPlaceholder ? code(s.figmaPlaceholder) : '—']);
-  const main = table(['Slot', 'Description', 'Figma placeholder'], rows);
+  const rows = slots.map((s) => [
+    code(s.name || '(default)'),
+    s.description ?? '—',
+    s.figmaPlaceholder ? code(s.figmaPlaceholder) : '—',
+    s.figmaAxis ? 'VARIANT axis' : '—',
+  ]);
+  const main = table(['Slot', 'Description', 'Figma placeholder', 'Figma fan-out'], rows);
   const hasPlaceholder = slots.some((s) => s.figmaPlaceholder);
-  if (!hasPlaceholder) return main;
-  return (
-    `${main}\n\n` +
-    '**Figma placeholder convention (T19):** a `before`/`after` slot with a `figmaPlaceholder` value names ' +
-    'the real Figma set\'s own icon-instance placeholder this slot resolves to when generating or reconciling ' +
-    'a set — matched by **name**, never a node id (icon libraries re-mint ids on republish). See ' +
-    '`.altitude/contracts/README.md` § Slot placeholder instances (T19) and the Icon Recoloring reference in ' +
-    '`altitude-figma-sync`\'s `SKILL.md`.'
-  );
+  const hasAxis = slots.some((s) => s.figmaAxis);
+  const notes = [main];
+  if (hasPlaceholder) {
+    notes.push(
+      '**Figma placeholder convention (T19):** a `before`/`after` slot with a `figmaPlaceholder` value names ' +
+      'the real Figma set\'s own icon-instance placeholder this slot resolves to when generating or reconciling ' +
+      'a set — matched by **name**, never a node id (icon libraries re-mint ids on republish). See ' +
+      '`.altitude/contracts/README.md` § Slot placeholder instances (T19) and the Icon Recoloring reference in ' +
+      '`altitude-figma-sync`\'s `SKILL.md`.',
+    );
+  }
+  if (hasAxis) {
+    notes.push(
+      '**Fan-out convention (T23):** a slot marked "VARIANT axis" fans out as its own True/False Figma VARIANT ' +
+      'axis in a generated set — a separately-built component per combination — rather than a single shared ' +
+      'BOOLEAN component property toggling visibility across every variant. See `.altitude/contracts/README.md` ' +
+      '§ Fan-out convention.',
+    );
+  }
+  return notes.join('\n\n');
 }
 
 function buildEventsSection(events) {

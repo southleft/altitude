@@ -58,9 +58,9 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The breadcrumbs content, a set of breadcrumb items | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The breadcrumbs content, a set of breadcrumb items | — | — |
 
 ## Events (0)
 

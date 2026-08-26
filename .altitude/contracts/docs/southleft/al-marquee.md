@@ -63,9 +63,9 @@ Pause the belt. Reflected so a page can stop it from outside
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The items. Each element's text becomes one item; `data-variant="solid"` fills it in the accent colour and `data-variant="mono"` renders it as small mono type. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The items. Each element's text becomes one item; `data-variant="solid"` fills it in the accent colour and `data-variant="mono"` renders it as small mono type. | — | — |
 
 ## Events (0)
 

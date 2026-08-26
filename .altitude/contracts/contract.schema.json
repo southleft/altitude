@@ -106,6 +106,10 @@
                     "type": "array",
                     "items": { "type": "string" },
                     "description": "The raw Figma option labels for a VARIANT property, as observed — NOT mapped value-for-value onto `values` (see README § Deviations: label pairing across the two sides is not attempted here)."
+                  },
+                  "axis": {
+                    "type": "boolean",
+                    "description": "OPTIONAL, hand-curated (T23, spec 2026-08-25-contract-backed-figma-parity-and-generation): true when this prop should FAN OUT as a Figma VARIANT axis (its own True/False option column, cartesian with every other axis) in a generated set, rather than staying a single shared component PROPERTY. Only meaningful alongside `kind: \"VARIANT\"` (a boolean prop marked as an axis reads `options: [\"False\", \"True\"]`, Figma's own Title Case boolean-variant spelling). Absent/false is the default — see .altitude/contracts/README.md § Fan-out convention for the generalized rule (enum props are always axes already; a boolean prop is a component property unless curated otherwise here)."
                   }
                 },
                 "description": "`null` when this prop has no matched, OBSERVED Figma component property (never-refreshed manifest, or a prop the Figma set does not expose)."
@@ -139,6 +143,10 @@
           "figmaPlaceholder": {
             "type": "string",
             "description": "OPTIONAL, hand-authored (T19, spec 2026-08-25-contract-backed-figma-parity-and-generation): the name of the flat icon COMPONENT on the real Figma set's icon library page (e.g. \"🛠 Icons\") this project's hand-built set uses as the library placeholder default for this slot's Icon Before/After INSTANCE_SWAP property, discovered by inspecting the real set live (never inferred). A name, never a node id — icon libraries re-mint ids on republish; scripts/contracts/generate-figma.mjs resolves the actual component BY NAME at generation time. Absent when the placeholder convention has not been discovered for this slot yet; generate-figma.mjs then builds the Slot Before/After boolean only, with no Icon Before/After property or instance."
+          },
+          "figmaAxis": {
+            "type": "boolean",
+            "description": "OPTIONAL, hand-curated (T23, spec 2026-08-25-contract-backed-figma-parity-and-generation): true when this `before`/`after` slot should FAN OUT as its own True/False Figma VARIANT axis (\"Slot Before\"/\"Slot After\") in a generated set — cartesian with every other axis, each combination a separately-built variant with the slot's icon statically shown or hidden — rather than a single shared BOOLEAN component property toggling visibility across every variant at once. Absent/false is the default (boolean property, T12/T18/T19 behavior) — see .altitude/contracts/README.md § Fan-out convention. The generalized default for OTHER components: a slot with no figmaAxis stays a property; curate it true when the real (or intended) Figma set demonstrably fans it out."
           }
         }
       }

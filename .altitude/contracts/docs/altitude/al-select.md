@@ -127,11 +127,11 @@ _No interaction states recorded._
 
 ## Slots (3)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The select content | — |
-| `error` | If content is slotted, it will display in place of the errorNote property | — |
-| `field-note` | If content is slotted, it will display in place of the fieldNote property | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The select content | — | — |
+| `error` | If content is slotted, it will display in place of the errorNote property | — | — |
+| `field-note` | If content is slotted, it will display in place of the fieldNote property | — | — |
 
 ## Events (2)
 

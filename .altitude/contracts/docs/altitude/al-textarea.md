@@ -156,12 +156,12 @@ Value attribute
 
 ## Slots (4)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `after` | The content that appears after the text in the input | — |
-| `before` | The content that appears before the text in the input | — |
-| `error` | If content is slotted, it will display in place of the errorNote property | — |
-| `field-note` | If content is slotted, it will display in place of the fieldNote property | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `after` | The content that appears after the text in the input | — | — |
+| `before` | The content that appears before the text in the input | — | — |
+| `error` | If content is slotted, it will display in place of the errorNote property | — | — |
+| `field-note` | If content is slotted, it will display in place of the fieldNote property | — | — |
 
 ## Events (1)
 

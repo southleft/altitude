@@ -74,9 +74,9 @@ consumer owns locale formatting, digit grouping, and unit suffixes.
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `icon` | Optional leading icon, rendered above the value. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `icon` | Optional leading icon, rendered above the value. | — | — |
 
 ## Events (0)
 

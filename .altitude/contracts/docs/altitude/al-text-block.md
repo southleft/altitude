@@ -33,9 +33,9 @@ _No interaction states recorded._
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The text passage content | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The text passage content | — | — |
 
 ## Events (0)
 

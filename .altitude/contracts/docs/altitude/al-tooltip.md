@@ -67,11 +67,11 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (3)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The content that appears inside the tooltip | — |
-| `prefix` | The content that appears before the main content | — |
-| `trigger` | The trigger that opens the tooltip | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The content that appears inside the tooltip | — | — |
+| `prefix` | The content that appears before the main content | — | — |
+| `trigger` | The trigger that opens the tooltip | — | — |
 
 ## Events (2)
 

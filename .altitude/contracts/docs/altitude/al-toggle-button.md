@@ -56,9 +56,9 @@ Variant
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The content to display in the toggle button | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The content to display in the toggle button | — | — |
 
 ## Events (2)
 

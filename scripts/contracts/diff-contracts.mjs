@@ -132,11 +132,11 @@ function runSelfTest() {
       find('variant-axis', 'value-mismatch').length === 1 && find('variant-axis', 'value-mismatch')[0].key === 'isSelected',
     ],
     [
-      'T17 (c) paired slot convention (code slot "before" <-> canvas "Slot Before") produces NO disagreement',
+      'T17/T23 (c) paired slot convention (code slot "before" <-> canvas "Slot Before", fixture type VARIANT — T23\'s fan-out shape, proving pairing is type-agnostic) produces NO disagreement',
       !disagreements.some((d) => d.dimension === 'slot' && d.key === 'slot:before'),
     ],
     [
-      'T17 (d) unpaired canvas slot property ("Slot After", no code "after" slot) produces exactly ONE slot-unpaired disagreement',
+      'T17 (d) unpaired canvas slot property ("Slot After", still BOOLEAN — the pre-T23 property style, no code "after" slot) produces exactly ONE slot-unpaired disagreement',
       find('slot', 'slot-unpaired').length === 1 && find('slot', 'slot-unpaired')[0].key === 'Slot After',
     ],
     ['no other disagreements were fabricated (exactly 5 total)', disagreements.length === 5],

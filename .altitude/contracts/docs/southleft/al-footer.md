@@ -67,11 +67,11 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (3)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `brand` | The first, wider column: wordmark, blurb, CTA, whatever annotation the page carries. | — |
-| `columns` | The remaining masthead columns. Each top-level element becomes one column. | — |
-| `legal` | Links for the bottom bar, beside the copyright. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `brand` | The first, wider column: wordmark, blurb, CTA, whatever annotation the page carries. | — | — |
+| `columns` | The remaining masthead columns. Each top-level element becomes one column. | — | — |
+| `legal` | Links for the bottom bar, beside the copyright. | — | — |
 
 ## Events (0)
 

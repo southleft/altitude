@@ -133,9 +133,9 @@ _No interaction states recorded._
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The layout content. Under `variant="constrained"`, a child carrying the `bleed` attribute breaks out of the content column. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The layout content. Under `variant="constrained"`, a child carrying the `bleed` attribute breaks out of the content column. | — | — |
 
 ## Events (0)
 

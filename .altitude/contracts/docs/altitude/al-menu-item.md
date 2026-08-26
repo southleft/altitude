@@ -146,10 +146,10 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (2)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The content to display in the menu item | — |
-| `before` | Optional prefix content to display in the menu item | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The content to display in the menu item | — | — |
+| `before` | Optional prefix content to display in the menu item | — | — |
 
 ## Events (2)
 

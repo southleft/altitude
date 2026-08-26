@@ -81,11 +81,11 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (3)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The radio content, a set of radio items. Items stack in a column by default; for a row, nest them in `<al-layout direction="row" wrap>`. | — |
-| `error` | If content is slotted, it will display in place of the errorNote property | — |
-| `field-note` | If content is slotted, it will display in place of the fieldNote property | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The radio content, a set of radio items. Items stack in a column by default; for a row, nest them in `<al-layout direction="row" wrap>`. | — | — |
+| `error` | If content is slotted, it will display in place of the errorNote property | — | — |
+| `field-note` | If content is slotted, it will display in place of the fieldNote property | — | — |
 
 ## Events (1)
 

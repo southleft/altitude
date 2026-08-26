@@ -17,7 +17,7 @@ Component: al-button
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
 | `ariaControls` | string | — | — | — |
-| `fullWidth` | boolean | — | — | — |
+| `fullWidth` | boolean | — | — | **Is Full Width** (VARIANT): `False`, `True` |
 | `hideText` | boolean | — | — | — |
 | `href` | string | — | — | — |
 | `isAriaDisabled` | boolean | — | — | — |
@@ -96,6 +96,11 @@ Style variant
 
 ## Variant axes
 
+### `fullWidth` (Figma property "Is Full Width")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `False`, `True`
+
 ### `variant` (Figma property "Variant")
 
 - Code values: `bare`, `danger`, `secondary`, `tertiary`
@@ -107,13 +112,15 @@ Style variant
 
 ## Slots (3)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The button text content. Omit when rendering an icon-only button (set `hideText` + `label` instead). | — |
-| `after` | Content to display after the button text, typically an icon. Icon-only button pattern: set `hideText` + provide an accessible name via `label`, then place the icon in the `before` slot. Do NOT also include a visible text node — the slot's default text content is hidden but still present in the layout, and a duplicate label produces a redundant accessible name. Example: <al-button hideText label="Open actions menu" ariaControls="menu-id"> <al-icon-dots-vertical slot="before" iconTitle="Actions"></al-icon-dots-vertical> </al-button> | `send` |
-| `before` | Content to display before the button text, typically an icon. | `done-circle` |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The button text content. Omit when rendering an icon-only button (set `hideText` + `label` instead). | — | — |
+| `after` | Content to display after the button text, typically an icon. Icon-only button pattern: set `hideText` + provide an accessible name via `label`, then place the icon in the `before` slot. Do NOT also include a visible text node — the slot's default text content is hidden but still present in the layout, and a duplicate label produces a redundant accessible name. Example: <al-button hideText label="Open actions menu" ariaControls="menu-id"> <al-icon-dots-vertical slot="before" iconTitle="Actions"></al-icon-dots-vertical> </al-button> | `send` | VARIANT axis |
+| `before` | Content to display before the button text, typically an icon. | `done-circle` | VARIANT axis |
 
 **Figma placeholder convention (T19):** a `before`/`after` slot with a `figmaPlaceholder` value names the real Figma set's own icon-instance placeholder this slot resolves to when generating or reconciling a set — matched by **name**, never a node id (icon libraries re-mint ids on republish). See `.altitude/contracts/README.md` § Slot placeholder instances (T19) and the Icon Recoloring reference in `altitude-figma-sync`'s `SKILL.md`.
+
+**Fan-out convention (T23):** a slot marked "VARIANT axis" fans out as its own True/False Figma VARIANT axis in a generated set — a separately-built component per combination — rather than a single shared BOOLEAN component property toggling visibility across every variant. See `.altitude/contracts/README.md` § Fan-out convention.
 
 ## Events (0)
 

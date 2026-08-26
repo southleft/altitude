@@ -63,9 +63,9 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The tab label | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The tab label | — | — |
 
 ## Events (1)
 

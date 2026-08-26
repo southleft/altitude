@@ -94,9 +94,9 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | Anything below the lead paragraph — CTAs, a token strip, a form. Laid out as further children of the stack. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | Anything below the lead paragraph — CTAs, a token strip, a form. Laid out as further children of the stack. | — | — |
 
 ## Events (0)
 

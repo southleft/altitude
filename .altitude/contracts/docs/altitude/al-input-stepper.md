@@ -116,10 +116,10 @@ Value
 
 ## Slots (2)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `error` | If content is slotted, it will display in place of the errorNote property | — |
-| `field-note` | If content is slotted, it will display in place of the fieldNote property | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `error` | If content is slotted, it will display in place of the errorNote property | — | — |
+| `field-note` | If content is slotted, it will display in place of the fieldNote property | — | — |
 
 ## Events (1)
 

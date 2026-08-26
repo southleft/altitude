@@ -69,9 +69,9 @@ Width property
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The menu items in the menu (children must be `<al-menu-item>`). | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The menu items in the menu (children must be `<al-menu-item>`). | — | — |
 
 ## Events (1)
 

@@ -58,11 +58,11 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (3)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The label for each stepper item | — |
-| `description` | The description that displays below the label | — |
-| `icon` | The icon that displays next to the label | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The label for each stepper item | — | — |
+| `description` | The description that displays below the label | — | — |
+| `icon` | The icon that displays next to the label | — | — |
 
 ## Events (0)
 

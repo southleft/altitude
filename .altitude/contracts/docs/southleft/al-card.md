@@ -193,19 +193,19 @@ Variant
 
 ## Slots (11)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The card's body. | — |
-| `action-right` | Top-right single control (kebab / overflow menu). Altitude's card documents this slot but renders no matching `<slot>` element, so anything assigned to it there disappears; this implementation actually renders it, in the header row's trailing cluster beside `cue`. | — |
-| `actions-end` | Trailing-action row, trailing edge — the canonical primary action. | — |
-| `actions-start` | Trailing-action row, leading edge. | — |
-| `cue` | A trailing cue on the header row — the corner glyph under `variant="service"`. Decorative; mark it `aria-hidden` when the card is already a link. | — |
-| `footer` | A footer cue pinned to the bottom of the card, whatever the body's height. Ignored when the `footer-label` property is set. | — |
-| `header` | The card's heading row. Ignored when the `heading` property is set, which is how the media variants supply theirs. | — |
-| `image` | Media above the header. Under the base variants it sits INSIDE the card's padding, exactly as Altitude's card does; under `article`/`work` the media region is flush to the card edge. The `image` property is the usual way to fill it for the media variants; this slot is for anything else, an `<al-avatar>` included. | — |
-| `list` | A supporting list below the body. Under `variant="service"` a slotted `<ul>` gets the brand's mono treatment. | — |
-| `meta` | A mono meta row above the heading — category, date. Each slotted node is its own item in a row. Collapses entirely when empty. | — |
-| `tags` | Tag chips under the body. Each slotted node gets the brand's square-cornered chip treatment, so plain `<span>`s are enough. Collapses entirely when empty. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The card's body. | — | — |
+| `action-right` | Top-right single control (kebab / overflow menu). Altitude's card documents this slot but renders no matching `<slot>` element, so anything assigned to it there disappears; this implementation actually renders it, in the header row's trailing cluster beside `cue`. | — | — |
+| `actions-end` | Trailing-action row, trailing edge — the canonical primary action. | — | — |
+| `actions-start` | Trailing-action row, leading edge. | — | — |
+| `cue` | A trailing cue on the header row — the corner glyph under `variant="service"`. Decorative; mark it `aria-hidden` when the card is already a link. | — | — |
+| `footer` | A footer cue pinned to the bottom of the card, whatever the body's height. Ignored when the `footer-label` property is set. | — | — |
+| `header` | The card's heading row. Ignored when the `heading` property is set, which is how the media variants supply theirs. | — | — |
+| `image` | Media above the header. Under the base variants it sits INSIDE the card's padding, exactly as Altitude's card does; under `article`/`work` the media region is flush to the card edge. The `image` property is the usual way to fill it for the media variants; this slot is for anything else, an `<al-avatar>` included. | — | — |
+| `list` | A supporting list below the body. Under `variant="service"` a slotted `<ul>` gets the brand's mono treatment. | — | — |
+| `meta` | A mono meta row above the heading — category, date. Each slotted node is its own item in a row. Collapses entirely when empty. | — | — |
+| `tags` | Tag chips under the body. Each slotted node gets the brand's square-cornered chip treatment, so plain `<span>`s are enough. Collapses entirely when empty. | — | — |
 
 ## Events (0)
 

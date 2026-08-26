@@ -54,11 +54,11 @@ Variant
 
 ## Slots (3)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The banner's message content. | — |
-| `icon` | Slot in an icon to override the tone-default one. | — |
-| `link` | Optional trailing link/CTA (typically an `<al-link>`). | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The banner's message content. | — | — |
+| `icon` | Slot in an icon to override the tone-default one. | — | — |
+| `link` | Optional trailing link/CTA (typically an `<al-link>`). | — | — |
 
 ## Events (1)
 

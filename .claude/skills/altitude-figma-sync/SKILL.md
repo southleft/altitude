@@ -144,6 +144,25 @@ node scripts/figma-atoms/build-spec.mjs
 - Icon-only is a SEPARATE set (`Button (Icon)`), not an axis.
 - Focus renders as a **2px stroke**, not a CSS-style outline.
 
+**Fan-out convention for GENERATED sets (T23, spec 2026-08-25-contract-backed-
+figma-parity-and-generation).** `scripts/contracts/generate-figma.mjs` reads a
+per-prop/per-slot curation field — `bindings.figma.axis: true` on a prop,
+`figmaAxis: true` on a `before`/`after` slot (`.altitude/contracts/*/al-*.contract.json`,
+schema in `contract.schema.json`) — and, when set, fans that boolean out as its
+own True/False **VARIANT axis** (a separately-built component per combination,
+cartesian with every other axis) instead of a single shared BOOLEAN component
+property. **This is opt-in generator behavior, not the hand-built convention
+above** — VERIFIED live against the real Button set (node `4271:9562`): its
+`Is Full Width`/`Slot Before`/`Slot After` are still plain BOOLEAN properties
+(25 variants total, State × Variant only), not axes, as of this writing. The
+al-button *contract* has been curated into axis mode anyway (200-variant
+Contract Pilot regeneration) as a deliberate pilot of the fan-out convention —
+see `.altitude/contracts/README.md` § Fan-out convention for the full
+discrepancy this accepts pending a decision on whether the real set should
+ever be converted to match. Generalized default for any OTHER component: an
+enum prop is always an axis (unchanged); a slot or layout boolean is a
+component property UNLESS curated `figmaAxis`/`axis: true`.
+
 **Prefer repairing an existing set over rebuilding it** — rebuilding discards the
 property surface, the instances and the documentation scaffold.
 

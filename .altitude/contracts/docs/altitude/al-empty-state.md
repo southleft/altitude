@@ -40,10 +40,10 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (2)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `actions` | Optional action row (buttons/links), rendered below the description. | — |
-| `icon` | Optional icon or illustration, rendered above the heading. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `actions` | Optional action row (buttons/links), rendered below the description. | — | — |
+| `icon` | Optional icon or illustration, rendered above the heading. | — | — |
 
 ## Events (0)
 

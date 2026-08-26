@@ -45,9 +45,9 @@ _No interaction states recorded._
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The footer content. Wrap each row in an `<al-layout>` to arrange it. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The footer content. Wrap each row in an `<al-layout>` to arrange it. | — | — |
 
 ## Events (0)
 

@@ -86,9 +86,9 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The trailing position, for a control the link cannot express — a filter, a segmented toggle. Use it INSTEAD of `linkHref`; both render if both are set. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The trailing position, for a control the link cannot express — a filter, a segmented toggle. Use it INSTEAD of `linkHref`; both render if both are set. | — | — |
 
 ## Events (0)
 

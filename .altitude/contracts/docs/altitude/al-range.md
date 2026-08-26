@@ -139,11 +139,11 @@ Input value
 
 ## Slots (3)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `after` | If content is slotted, it will override the default range "max" label text | — |
-| `before` | If content is slotted, it will override the default range "min" label text | — |
-| `label` | If content is slotted, it will override the default range label | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `after` | If content is slotted, it will override the default range "max" label text | — | — |
+| `before` | If content is slotted, it will override the default range "min" label text | — | — |
+| `label` | If content is slotted, it will override the default range label | — | — |
 
 ## Events (2)
 

@@ -68,12 +68,12 @@ _No interaction states recorded._
 
 ## Slots (4)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The main body of the dialog | — |
-| `footer` | The footer of the dialog that appears below the main slot | — |
-| `header` | The header of the dialog that appears above the main slot | — |
-| `trigger` | The trigger that opens/closes the dialog | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The main body of the dialog | — | — |
+| `footer` | The footer of the dialog that appears below the main slot | — | — |
+| `header` | The header of the dialog that appears above the main slot | — | — |
+| `trigger` | The trigger that opens/closes the dialog | — | — |
 
 ## Events (3)
 

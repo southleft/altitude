@@ -107,11 +107,11 @@ Style variant
 
 ## Slots (3)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The button text content. Omit when rendering an icon-only button (set `hideText` + `label` instead). | — |
-| `after` | Content to display after the button text, typically an icon. Icon-only button pattern: set `hideText` + provide an accessible name via `label`, then place the icon in the `before` slot. Do NOT also include a visible text node — the slot's default text content is hidden but still present in the layout, and a duplicate label produces a redundant accessible name. Example: <al-button hideText label="Open actions menu" ariaControls="menu-id"> <al-icon-dots-vertical slot="before" iconTitle="Actions"></al-icon-dots-vertical> </al-button> | — |
-| `before` | Content to display before the button text, typically an icon. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The button text content. Omit when rendering an icon-only button (set `hideText` + `label` instead). | — | — |
+| `after` | Content to display after the button text, typically an icon. Icon-only button pattern: set `hideText` + provide an accessible name via `label`, then place the icon in the `before` slot. Do NOT also include a visible text node — the slot's default text content is hidden but still present in the layout, and a duplicate label produces a redundant accessible name. Example: <al-button hideText label="Open actions menu" ariaControls="menu-id"> <al-icon-dots-vertical slot="before" iconTitle="Actions"></al-icon-dots-vertical> </al-button> | — | — |
+| `before` | Content to display before the button text, typically an icon. | — | — |
 
 ## Events (0)
 

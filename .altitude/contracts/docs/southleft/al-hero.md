@@ -76,12 +76,12 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (4)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | Anything extra at the end of the lead column. | — |
-| `actions` | The CTAs, under the lead copy. Laid out as a wrapping row. | — |
-| `aside` | The right-hand column. Hidden below `64rem`, where the composition collapses to one column and a supporting panel would crowd the fold. | — |
-| `chips` | The annotation strip beneath the actions — the site's "loose tokens" row. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | Anything extra at the end of the lead column. | — | — |
+| `actions` | The CTAs, under the lead copy. Laid out as a wrapping row. | — | — |
+| `aside` | The right-hand column. Hidden below `64rem`, where the composition collapses to one column and a supporting panel would crowd the fold. | — | — |
+| `chips` | The annotation strip beneath the actions — the site's "loose tokens" row. | — | — |
 
 ## Events (0)
 

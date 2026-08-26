@@ -90,6 +90,13 @@ const SELF_TEST = process.argv.includes('--self-test');
 const PORT = Number(argOf('--port') ?? 9401);
 const SHIM = `http://127.0.0.1:${PORT}/call`;
 const ANATOMY_DEPTH = Number(argOf('--depth') ?? DEFAULT_ANATOMY_DEPTH);
+// T23: a fan-out set (Slot Before/After + Is Full Width as VARIANT axes, e.g.
+// al-button's 200-variant pilot) is far bigger than the 25-variant sets this
+// script was written against — the bridge's own EXECUTE_CODE default (7s)
+// times out walking that many variants' anatomy in one figma_execute call.
+// Overridable, not just bumped, since a future component could fan out
+// wider still.
+const TIMEOUT_MS = Number(argOf('--timeout') ?? 45000);
 // T12 escape hatch: extract a set by NODE ID instead of the parity manifest's
 // mapping — the manifest deliberately keeps pointing at the tracked set (e.g.
 // the real al-button), so a one-off extraction of a DIFFERENT set for the
@@ -504,7 +511,7 @@ async function main() {
       );
       process.exit(1);
     }
-    const payload = parsePayload(await call('figma_execute', { code: snapshotCode([{ tag: COMPONENT, name: null, nodeId: NODE_ID }]) }));
+    const payload = parsePayload(await call('figma_execute', { code: snapshotCode([{ tag: COMPONENT, name: null, nodeId: NODE_ID }]), timeout: TIMEOUT_MS }));
     if (payload.fileKey && payload.fileKey !== project.figma.fileKey) {
       console.error(`Refusing to extract: connected file is ${payload.fileKey}, expected ${project.figma.fileKey}.`);
       process.exit(1);
@@ -556,7 +563,7 @@ async function main() {
     process.exit(1);
   }
 
-  const payload = parsePayload(await call('figma_execute', { code: snapshotCode(wanted) }));
+  const payload = parsePayload(await call('figma_execute', { code: snapshotCode(wanted), timeout: TIMEOUT_MS }));
   if (payload.fileKey && payload.fileKey !== project.figma.fileKey) {
     console.error(
       `Refusing to extract: connected file is ${payload.fileKey}, expected ${project.figma.fileKey} ("${project.figma.fileName}").`,

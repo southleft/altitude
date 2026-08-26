@@ -37,9 +37,9 @@ _No interaction states recorded._
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The accordion content, a set of accordion panels | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The accordion content, a set of accordion panels | — | — |
 
 ## Events (0)
 

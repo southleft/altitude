@@ -120,9 +120,9 @@ Value associated with the field
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The component's content | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The component's content | — | — |
 
 ## Events (2)
 

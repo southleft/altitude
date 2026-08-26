@@ -37,9 +37,9 @@ Variant
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | A set of toggle buttons. Arranged in a row by default; for a column or a gap, nest them in `<al-layout>` with the props you need. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | A set of toggle buttons. Arranged in a row by default; for a column or a gap, nest them in `<al-layout>` with the props you need. | — | — |
 
 ## Events (0)
 

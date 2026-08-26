@@ -77,9 +77,9 @@ _No interaction states recorded._
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | Optional content rendered above the results list (e.g. recent-searches). | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | Optional content rendered above the results list (e.g. recent-searches). | — | — |
 
 ## Events (3)
 

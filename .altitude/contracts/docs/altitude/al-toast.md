@@ -67,11 +67,11 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (3)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The toast title or primary text | — |
-| `actions` | Actions to optionally display in the toast | — |
-| `icon` | Slot in an icon to override the default one | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The toast title or primary text | — | — |
+| `actions` | Actions to optionally display in the toast | — | — |
+| `icon` | Slot in an icon to override the default one | — | — |
 
 ## Events (2)
 

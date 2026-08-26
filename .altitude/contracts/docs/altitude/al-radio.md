@@ -90,11 +90,11 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (3)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The component content that appears next to the radio | — |
-| `error` | If content is slotted, it will display in place of the errorNote property | — |
-| `field-note` | If content is slotted, it will display in place of the fieldNote property | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The component content that appears next to the radio | — | — |
+| `error` | If content is slotted, it will display in place of the errorNote property | — | — |
+| `field-note` | If content is slotted, it will display in place of the fieldNote property | — | — |
 
 ## Events (1)
 

@@ -82,9 +82,9 @@ function propNameKeys(rawName) {
  * - SLOT rows (`codeSlot` set): one or more canvas `componentProperties`
  *   matching `canvasPattern` are the canvas-side ENCODING of one code
  *   SLOT (Figma has no slot concept — a set author expresses "there's a
- *   slot here" as a BOOLEAN "Slot Before"/"Slot After" toggle, sometimes
- *   paired with an INSTANCE_SWAP "Icon Before"/"Icon After" for the
- *   default fill). Both sides present -> satisfied, presence-only, no
+ *   slot here" as a "Slot Before"/"Slot After" toggle, sometimes paired
+ *   with an INSTANCE_SWAP "Icon Before"/"Icon After" for the default
+ *   fill). Both sides present -> satisfied, presence-only, no
  *   disagreement. Either side alone -> one `slot-unpaired` disagreement,
  *   dimension `slot`.
  * - PROP rows (`codeProp` set): a canvas property matching `canvasPattern`
@@ -93,6 +93,21 @@ function propNameKeys(rawName) {
  *   name) when THAT exists; else it is left unclaimed and falls through to
  *   the generic "missing-in-code" report — a genuine gap, not a pairing
  *   miss.
+ *
+ * T23 (spec 2026-08-25-contract-backed-figma-parity-and-generation): a SLOT
+ * row's `canvasPattern` deliberately carries no `canvasType` — the toggle a
+ * hand-built set expresses "there's a slot here" with can be a BOOLEAN
+ * component property (T12/T18/T19, still the default) OR its own True/False
+ * VARIANT axis (the fan-out convention a contract opts into via
+ * `slots[].figmaAxis: true` — see .altitude/contracts/README.md § Fan-out
+ * convention and generate-figma.mjs). Pairing by NAME only, ignoring type,
+ * means both styles pair identically without a second row per slot — proven
+ * by the self-test fixture (`Slot Before` planted as VARIANT, `Slot After`
+ * still BOOLEAN, both handled by this SAME table). The generic (non-slot)
+ * prop-name pairing a few lines below this table is likewise type-agnostic
+ * for non-enum code props (e.g. `fullWidth` <-> canvas "Is Full Width" pairs
+ * whether that canvas property is BOOLEAN or, once curated as an axis,
+ * VARIANT) — no PAIRING_CONVENTIONS row was needed for that case at all.
  *
  * A new convention is one row here; `applyPairingConventions()` below is
  * the whole generic engine over this table — see T17 (spec

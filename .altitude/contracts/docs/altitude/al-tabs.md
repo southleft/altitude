@@ -43,10 +43,10 @@ Tabs variant
 
 ## Slots (2)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The tab items for the tabs | — |
-| `panel` | The tab panels that correspond to the slotted tab items | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The tab items for the tabs | — | — |
+| `panel` | The tab panels that correspond to the slotted tab items | — | — |
 
 ## Events (1)
 

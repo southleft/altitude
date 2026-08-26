@@ -77,11 +77,11 @@ Variant of pagination (e.g., 'small' for a compact view)
 
 ## Slots (3)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `label` | If content is slotted, it will override the default pagination label | — |
-| `next` | If content is slotted, it will override the default "next" icon | — |
-| `prev` | If content is slotted, it will override the default "previous" icon | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `label` | If content is slotted, it will override the default pagination label | — | — |
+| `next` | If content is slotted, it will override the default "next" icon | — | — |
+| `prev` | If content is slotted, it will override the default "previous" icon | — | — |
 
 ## Events (1)
 

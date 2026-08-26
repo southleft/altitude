@@ -96,9 +96,9 @@ Variants
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The content of the list item | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The content of the list item | — | — |
 
 ## Events (0)
 

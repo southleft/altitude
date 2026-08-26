@@ -79,12 +79,12 @@ _No interaction states recorded._
 
 ## Slots (4)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The main body of the popover | — |
-| `footer` | The footer of the popover that appears below the main slot | — |
-| `header` | The header of the popover that appears above the main slot | — |
-| `trigger` | The trigger that opens/closes the popover | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The main body of the popover | — | — |
+| `footer` | The footer of the popover that appears below the main slot | — | — |
+| `header` | The header of the popover that appears above the main slot | — | — |
+| `trigger` | The trigger that opens/closes the popover | — | — |
 
 ## Events (3)
 

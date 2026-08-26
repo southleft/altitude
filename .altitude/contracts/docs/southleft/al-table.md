@@ -67,9 +67,9 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | Slotted `<table>`-internal markup (e.g. `<thead>`/`<tbody>`), used only when `columns` and `data` are not both provided. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | Slotted `<table>`-internal markup (e.g. `<thead>`/`<tbody>`), used only when `columns` and `data` are not both provided. | — | — |
 
 ## Events (3)
 

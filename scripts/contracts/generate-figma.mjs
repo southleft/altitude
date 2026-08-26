@@ -115,6 +115,30 @@ const STATE_ORDER = ['Default', 'Hover', 'Active', 'Focus', 'Disabled'];
 const ICON_SIZE_FIGMA_VAR = 'theme/icon/md';
 
 /**
+ * T23: canonical order for boolean-turned-axis component properties, matching
+ * the naming convention the task spelled out live ("State=Default,
+ * Variant=Primary, Slot Before=False, Slot After=False, Is Full Width=True")
+ * — State and Variant always come first (see buildOps), then these in this
+ * fixed order when present. A future curated axis this repo doesn't know
+ * about yet (generalized default) is appended after, sorted alphabetically,
+ * so ordering stays deterministic without a hard-coded exhaustive list.
+ */
+const BOOLEAN_AXIS_CANONICAL_ORDER = ['Slot Before', 'Slot After', 'Is Full Width'];
+
+/**
+ * T23: "Is Full Width" has no measured pixel fact to render from at all — no
+ * real Figma set exposes it as an axis to inspect live (VERIFIED against the
+ * REAL Button set, node 4271:9562: `Is Full Width` is a BOOLEAN component
+ * property there, not a VARIANT axis — see README.md § Fan-out convention
+ * for the full discrepancy this generator's pilot now deliberately accepts).
+ * Rendered here as "natural hug width plus a fixed visible margin" rather
+ * than a fixed absolute pixel target, so it is ALWAYS demonstrably wider
+ * than its same-row False sibling regardless of that variant's own label/
+ * icon content length — a documented judgment call, not a contract fact.
+ */
+const FULL_WIDTH_EXTRA_PX = 160;
+
+/**
  * T21: the "site" background token — CONFIRMED via token-map.mjs
  * (`--al-theme-color-body-background` -> `theme/color/body/background`) and
  * `libs/al-web-components/styles/core/base.scss:29` (`body { background: var(
@@ -252,38 +276,82 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
   const stateValues = STATE_ORDER.filter((s) => s === 'Default' || declaredStates.has(s.toLowerCase()));
   const stateAxis = { name: 'State', values: stateValues, default: 'Default' };
 
-  const axes = [stateAxis, variantAxis].filter(Boolean);
-
-  // Component properties: only for props/slots the contract actually
-  // declares — never fabricated. T19: a `before`/`after` slot ALSO gets an
-  // Icon Before/After INSTANCE_SWAP property when its contract entry carries
-  // `figmaPlaceholder` (the real set's icon-instance placeholder convention,
-  // discovered live — see contract.schema.json's slots[].figmaPlaceholder
-  // and README.md). No `figmaPlaceholder` -> the boolean alone is built, same
-  // as before T19 (a documented degradation, not a guess). `default` here is
-  // the icon's NAME, never a node id — icon libraries re-mint ids on
-  // republish, so the actual component is resolved BY NAME inside the plugin
-  // code at generation time (buildPluginCode's findIconComponentByName),
-  // keeping this pure function's determinism intact (--check-determinism
-  // never touches Figma). `layerName` is the instance layer BOTH the
-  // Slot Before/After boolean's `visible` reference and the Icon Before/After
-  // INSTANCE_SWAP's `mainComponent` reference target — one instance, two
-  // component-property wires, mirroring the real set's own layer.
-  const componentProperties = [{ name: 'Text', type: 'TEXT', default: contract.name || tag }];
-  if ((contract.props || []).some((p) => p.name === 'fullWidth')) {
-    componentProperties.push({ name: 'Is Full Width', type: 'BOOLEAN', default: false });
-  }
+  // T23: boolean-turned-axis curation. `bindings.figma.axis: true` on the
+  // `fullWidth` prop, `figmaAxis: true` on a `before`/`after` slot — a slot
+  // or layout boolean marked this way FANS OUT as its own True/False VARIANT
+  // axis (a real distinct component per combination) instead of staying a
+  // single shared BOOLEAN component property (T12/T18/T19 behavior, still
+  // the default for anything NOT curated — generalized rule, see
+  // .altitude/contracts/README.md § Fan-out convention). Collected into one
+  // list so axis-ordering, componentProperties, and the per-variant builder
+  // below all read from the same classification rather than re-deriving it
+  // three times.
   const slotByName = new Map((contract.slots || []).map((s) => [s.name, s]));
   const slotNames = new Set(slotByName.keys());
-  if (slotNames.has('before')) {
-    componentProperties.push({ name: 'Slot Before', type: 'BOOLEAN', default: false, layerName: 'Icon Before' });
-    const iconName = slotByName.get('before').figmaPlaceholder || null;
-    if (iconName) componentProperties.push({ name: 'Icon Before', type: 'INSTANCE_SWAP', default: iconName, layerName: 'Icon Before' });
+  const fullWidthProp = (contract.props || []).find((p) => p.name === 'fullWidth');
+
+  const layoutBooleans = [];
+  if (fullWidthProp) {
+    const isAxis = !!fullWidthProp.bindings?.figma?.axis;
+    layoutBooleans.push({
+      kind: 'fullWidth',
+      propertyName: fullWidthProp.bindings?.figma?.property || 'Is Full Width',
+      options: fullWidthProp.bindings?.figma?.options?.length ? fullWidthProp.bindings.figma.options : ['False', 'True'],
+      isAxis,
+    });
   }
-  if (slotNames.has('after')) {
-    componentProperties.push({ name: 'Slot After', type: 'BOOLEAN', default: false, layerName: 'Icon After' });
-    const iconName = slotByName.get('after').figmaPlaceholder || null;
-    if (iconName) componentProperties.push({ name: 'Icon After', type: 'INSTANCE_SWAP', default: iconName, layerName: 'Icon After' });
+  for (const side of ['before', 'after']) {
+    if (!slotNames.has(side)) continue;
+    const slot = slotByName.get(side);
+    const layerName = side === 'before' ? 'Icon Before' : 'Icon After';
+    layoutBooleans.push({
+      kind: 'slot',
+      side,
+      propertyName: side === 'before' ? 'Slot Before' : 'Slot After',
+      options: ['False', 'True'],
+      isAxis: !!slot.figmaAxis,
+      layerName,
+      iconName: slot.figmaPlaceholder || null,
+    });
+  }
+
+  // Axis order: State, Variant, then curated boolean axes in the library's
+  // documented convention order (BOOLEAN_AXIS_CANONICAL_ORDER), any future
+  // curated name not in that list appended alphabetically after — see the
+  // constant's own comment.
+  const booleanAxisDefs = layoutBooleans
+    .filter((b) => b.isAxis)
+    .map((b) => ({ name: b.propertyName, values: [...b.options], default: b.options.includes('False') ? 'False' : b.options[0], kind: b.kind, side: b.side, layerName: b.layerName }))
+    .sort((a, b) => {
+      const ai = BOOLEAN_AXIS_CANONICAL_ORDER.indexOf(a.name);
+      const bi = BOOLEAN_AXIS_CANONICAL_ORDER.indexOf(b.name);
+      if (ai !== -1 && bi !== -1) return ai - bi;
+      if (ai !== -1) return -1;
+      if (bi !== -1) return 1;
+      return a.name.localeCompare(b.name);
+    });
+
+  const axes = [stateAxis, variantAxis, ...booleanAxisDefs].filter(Boolean);
+
+  // Component properties: only for props/slots the contract actually
+  // declares — never fabricated, and never for a boolean that became an axis
+  // above (axis membership and property membership are mutually exclusive
+  // for the SAME boolean). Icon Before/After (INSTANCE_SWAP) is a component
+  // property EITHER WAY — the real set keeps it as one even when Slot
+  // Before/After becomes an axis (T23 task) — `default` is the icon's NAME,
+  // never a node id (icon libraries re-mint ids on republish); the actual
+  // component is resolved BY NAME inside the plugin code at generation time
+  // (buildPluginCode's findIconComponentByName), keeping this pure
+  // function's determinism intact (--check-determinism never touches
+  // Figma). `layerName` is the instance layer this property's
+  // `mainComponent` reference targets (plus, in property mode only, the
+  // paired boolean's own `visible` reference — see T19).
+  const componentProperties = [{ name: 'Text', type: 'TEXT', default: contract.name || tag }];
+  for (const b of layoutBooleans) {
+    if (!b.isAxis) componentProperties.push({ name: b.propertyName, type: 'BOOLEAN', default: false, ...(b.layerName ? { layerName: b.layerName } : {}) });
+    if (b.kind === 'slot' && b.iconName) {
+      componentProperties.push({ name: b.layerName, type: 'INSTANCE_SWAP', default: b.iconName, layerName: b.layerName });
+    }
   }
 
   const root = contract.anatomy ? convertAnatomyNode(contract.anatomy.root) : null;
@@ -299,8 +367,19 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
   const { variantBindingFor, genericStateBindingFor } = resolveConditionalBindings(contract);
   const rootFigmaTokens = root ? root.tokens : {};
 
-  // Cross-product, State x Variant (or State alone when the component has no
-  // variant axis) — sorted by name for a stable, readable ops file.
+  /** T23: cartesian product of a list of {values:[...]} — used to fan out
+   * every curated boolean axis alongside State x Variant. Order preserved:
+   * first axis varies slowest (outermost loop), matching the naming
+   * convention's own left-to-right axis order. */
+  function cartesian(list) {
+    return list.reduce((acc, axis) => acc.flatMap((combo) => axis.values.map((v) => [...combo, [axis.name, v]])), [[]]);
+  }
+  const axisCombos = booleanAxisDefs.length ? cartesian(booleanAxisDefs) : [[]];
+
+  // Cross-product, State x Variant x every curated boolean axis (or just
+  // State when the component has neither) — sorted by name for a stable,
+  // readable ops file. `axisValues` carries ONLY the curated boolean axes
+  // (State/Variant already have their own top-level fields, unchanged).
   const variants = [];
   for (const state of stateAxis.values) {
     for (const variant of variantAxis ? variantAxis.values : [null]) {
@@ -313,12 +392,19 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
           : null;
         stateLayer = figmaMapOf(compound ?? genericStateBindingFor(state));
       }
-      variants.push({
-        name: variant ? `State=${state}, Variant=${variant}` : `State=${state}`,
-        state,
-        variant,
-        tokens: { ...rootFigmaTokens, ...variantLayer, ...stateLayer },
-      });
+      for (const combo of axisCombos) {
+        const axisValues = Object.fromEntries(combo);
+        const nameParts = [`State=${state}`];
+        if (variant) nameParts.push(`Variant=${variant}`);
+        for (const axisDef of booleanAxisDefs) nameParts.push(`${axisDef.name}=${axisValues[axisDef.name]}`);
+        variants.push({
+          name: nameParts.join(', '),
+          state,
+          variant,
+          axisValues,
+          tokens: { ...rootFigmaTokens, ...variantLayer, ...stateLayer },
+        });
+      }
     }
   }
   variants.sort((a, b) => a.name.localeCompare(b.name));
@@ -336,8 +422,9 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
     'anatomy carries no literal text content (contract.schema.json\'s anatomyNode has no `text` field) — ' +
     'the Text component property default is a placeholder (the contract\'s display name), not measured copy.',
   );
-  const sidesWithPlaceholder = ['before', 'after'].filter((s) => slotNames.has(s) && slotByName.get(s).figmaPlaceholder);
-  const sidesWithoutPlaceholder = ['before', 'after'].filter((s) => slotNames.has(s) && !slotByName.get(s).figmaPlaceholder);
+  const slotSides = layoutBooleans.filter((b) => b.kind === 'slot');
+  const sidesWithPlaceholder = slotSides.filter((b) => b.iconName).map((b) => b.side);
+  const sidesWithoutPlaceholder = slotSides.filter((b) => !b.iconName).map((b) => b.side);
   if (sidesWithoutPlaceholder.length) {
     const label = (s) => (s === 'before' ? 'Before' : 'After');
     degradations.push(
@@ -353,6 +440,26 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
       `see contract.slots[].figmaPlaceholder, T19); icon size is a fixed ${ICON_SIZE_FIGMA_VAR} (documented ` +
       'judgment call above ICON_SIZE_FIGMA_VAR, not a per-variant contract fact), and the icon is recolored to ' +
       'this row\'s own resolved content-color token, recursively, per the Icon Recoloring reference.',
+    );
+  }
+  const axisModeSlotSides = slotSides.filter((b) => b.isAxis).map((b) => b.side);
+  if (axisModeSlotSides.length) {
+    const label = (s) => (s === 'before' ? 'Before' : 'After');
+    degradations.push(
+      `T23: Slot ${axisModeSlotSides.map(label).join('/')} ${axisModeSlotSides.length > 1 ? 'are' : 'is'} curated as ` +
+      'a variant AXIS (figmaAxis: true) — every combination fans out as a separately-built variant with the ' +
+      'slot\'s icon statically shown/hidden, rather than one shared BOOLEAN property. VERIFIED against the ' +
+      'real Button set (node 4271:9562) that this does NOT currently match its live shape (Slot Before/After ' +
+      'there are still BOOLEAN properties) — see .altitude/contracts/README.md § Fan-out convention for the ' +
+      'discrepancy this pilot deliberately accepts pending a decision on the real set.',
+    );
+  }
+  if (layoutBooleans.some((b) => b.kind === 'fullWidth' && b.isAxis)) {
+    degradations.push(
+      'T23: "Is Full Width" is curated as a variant axis, but no real or measured pixel fact exists for what ' +
+      '"full width" renders as (contract.schema.json\'s anatomyNode has no pixel geometry, and the real Button ' +
+      `set does not expose this as an axis to inspect) — rendered as natural hug width + a fixed ${FULL_WIDTH_EXTRA_PX}px ` +
+      'margin (documented judgment call, FULL_WIDTH_EXTRA_PX), not a measured or observed target width.',
     );
   }
 
@@ -403,6 +510,7 @@ function buildPluginCode(ops, SC) {
     const OPS = ${JSON.stringify(ops)};
     const PAGE_NAME = ${JSON.stringify(ops.page)};
     const ICON_SIZE_FIGMA_VAR = ${JSON.stringify(ICON_SIZE_FIGMA_VAR)};
+    const FULL_WIDTH_EXTRA_PX = ${JSON.stringify(FULL_WIDTH_EXTRA_PX)};
     const SITE_BG_FIGMA_VAR = ${JSON.stringify(SITE_BG_FIGMA_VAR)};
     const FRAME_PADDING_FIGMA_VAR = ${JSON.stringify(FRAME_PADDING_FIGMA_VAR)};
     const THEME_MODE_COLLECTION_NAME = ${JSON.stringify(THEME_MODE_COLLECTION_NAME)};
@@ -558,9 +666,17 @@ function buildPluginCode(ops, SC) {
       return at ? at[cssProp] || null : null;
     }
 
-    async function buildVariant(state, variant, tokens) {
+    // T23: boolean axes this component actually declares (kind 'slot' or
+    // 'fullWidth' — State/Variant are handled separately, unchanged). Looked
+    // up by kind/side rather than re-parsing variant NAMES, so buildVariant
+    // reads axis membership the same deterministic way buildOps() wrote it.
+    const slotAxisBefore = OPS.axes.find((a) => a.kind === 'slot' && a.side === 'before');
+    const slotAxisAfter = OPS.axes.find((a) => a.kind === 'slot' && a.side === 'after');
+    const fullWidthAxis = OPS.axes.find((a) => a.kind === 'fullWidth');
+
+    async function buildVariant(state, variant, axisValues, tokens, variantName) {
       const comp = figma.createComponent();
-      comp.name = variant ? ('State=' + state + ', Variant=' + variant) : ('State=' + state);
+      comp.name = variantName;
       page.appendChild(comp); // combineAsVariants requires siblings already on the target page
       comp.fills = [];
 
@@ -608,16 +724,21 @@ function buildPluginCode(ops, SC) {
       const contentPaint = await boundSolid(tokens['color']);
 
       // Icon Before (leading) — appended FIRST so it sits before the label in
-      // the auto-layout's row order; hidden by default (Slot Before's own
-      // default is false), wired to Slot Before/Icon Before after
-      // combineAsVariants (component properties can only be added to the
-      // COMPONENT_SET, not a lone variant — SKILL.md §3).
+      // the auto-layout's row order. T23: visibility is now STATIC per this
+      // specific variant when Slot Before is a curated AXIS (this variant's
+      // own axisValues['Slot Before'] — a separately-built component per
+      // True/False, never a runtime toggle); falls back to the T19 default
+      // (hidden, wired via a shared BOOLEAN property's visible reference
+      // after combineAsVariants) when Slot Before stayed a property.
+      // Icon Before/After itself is ALWAYS a component property either way
+      // (component properties can only be added to the COMPONENT_SET, not a
+      // lone variant — SKILL.md §3), wired below after combineAsVariants.
       const beforeIconComp = iconComponentsByLayer['Icon Before'];
       if (beforeIconComp) {
         const inst = beforeIconComp.createInstance();
         inst.name = 'Icon Before';
         comp.appendChild(inst);
-        inst.visible = false;
+        inst.visible = slotAxisBefore ? axisValues[slotAxisBefore.name] === 'True' : false;
         bindNum(inst, 'width', ICON_SIZE_FIGMA_VAR);
         bindNum(inst, 'height', ICON_SIZE_FIGMA_VAR);
         recolorIconTree(inst, contentPaint);
@@ -643,10 +764,26 @@ function buildPluginCode(ops, SC) {
         const inst = afterIconComp.createInstance();
         inst.name = 'Icon After';
         comp.appendChild(inst);
-        inst.visible = false;
+        inst.visible = slotAxisAfter ? axisValues[slotAxisAfter.name] === 'True' : false;
         bindNum(inst, 'width', ICON_SIZE_FIGMA_VAR);
         bindNum(inst, 'height', ICON_SIZE_FIGMA_VAR);
         recolorIconTree(inst, contentPaint);
+      }
+
+      // T23: "Is Full Width" axis — resize WIDTH to FIXED, then immediately
+      // restore HEIGHT to hug (Sizing Modes ref: resize() sets BOTH axes to
+      // FIXED, so the hug override must come AFTER, never before). Runs
+      // AFTER icons/label are in place so comp.width here is this
+      // variant's own true natural width (including whichever icons this
+      // exact variant shows) — never a shared/default measurement. A fixed
+      // MARGIN over natural width, not an absolute target — see
+      // FULL_WIDTH_EXTRA_PX's module-level comment for why no measured pixel
+      // fact exists to size this from.
+      if (fullWidthAxis && axisValues[fullWidthAxis.name] === 'True' && comp.layoutMode !== 'NONE') {
+        const target = comp.width + FULL_WIDTH_EXTRA_PX;
+        comp.resize(target, comp.height);
+        comp.primaryAxisSizingMode = 'FIXED';
+        comp.counterAxisSizingMode = 'AUTO';
       }
 
       if (state === 'Disabled') {
@@ -679,54 +816,75 @@ function buildPluginCode(ops, SC) {
       return comp;
     }
 
-    const hasVariantAxis = OPS.axes.some((a) => a.name === 'Variant');
     const comps = [];
-    for (const v of OPS.variants) comps.push(await buildVariant(v.state, hasVariantAxis ? v.variant : null, v.tokens || {}));
+    for (const v of OPS.variants) comps.push(await buildVariant(v.state, v.variant, v.axisValues || {}, v.tokens || {}, v.name));
 
-    // T21: pitch must reserve room for the WIDEST a variant can ever render,
-    // not just its built (icons-hidden) default — Slot Before/After default
-    // to false, but a reviewer previewing a specific variant COMPONENT
-    // in-place (or an earlier verification pass, see the T19 report) can
-    // flip an icon layer's own visibility independent of the shared
-    // property default, since each variant is its own component with its
-    // own layer tree. Measuring with every icon layer forced VISIBLE first,
-    // then hiding them again (restoring the true Slot Before/After default),
-    // means the reserved cell size is correct for either state — this is
-    // "measure max variant width" from the T21 task, chosen over wrapping
-    // the grid in its own auto-layout because combineAsVariants'
-    // ABSOLUTE-positioned variant siblings are how Figma's own component
-    // sets are structured (switching variants must not reflow siblings).
+    // T21/T23: pitch must reserve room for the WIDEST a variant can ever
+    // render. Axis-mode slots/full-width already bake each variant's TRUE
+    // final geometry in during buildVariant (a separately-built component
+    // per combination — nothing to toggle), so comp.width/height are
+    // already correct there. A slot that stayed a shared BOOLEAN property
+    // (no figmaAxis curated) still defaults hidden but can be toggled
+    // independently per variant COMPONENT by a reviewer inspecting the raw
+    // set (see the T19/T21 reports), so measurement still forces every icon
+    // layer VISIBLE first, then restores each layer to its OWN already-built
+    // visibility (not a hardcoded false — axis-mode variants vary per row).
     const iconLayerNamesForMeasurement = ['Icon Before', 'Icon After'];
+    const builtVisibility = comps.map((comp) => {
+      const vis = {};
+      for (const child of comp.children) {
+        if (child.type === 'INSTANCE' && iconLayerNamesForMeasurement.includes(child.name)) vis[child.name] = child.visible;
+      }
+      return vis;
+    });
     for (const comp of comps) {
       for (const child of comp.children) {
         if (child.type === 'INSTANCE' && iconLayerNamesForMeasurement.includes(child.name)) child.visible = true;
       }
     }
-    const maxWWithIcons = Math.max(...comps.map((c) => c.width), 60);
-    const maxHWithIcons = Math.max(...comps.map((c) => c.height), 24);
-    for (const comp of comps) {
-      for (const child of comp.children) {
-        if (child.type === 'INSTANCE' && iconLayerNamesForMeasurement.includes(child.name)) child.visible = false;
+    const maxW = Math.max(...comps.map((c) => c.width), 60);
+    const maxH = Math.max(...comps.map((c) => c.height), 24);
+    for (let i = 0; i < comps.length; i++) {
+      const vis = builtVisibility[i];
+      for (const child of comps[i].children) {
+        if (child.name in vis) child.visible = vis[child.name];
       }
     }
 
-    // Grid layout: columns = Variant (or a single column when there is no
-    // Variant axis), rows = State. Sizes are hug/content-driven (no pixel
-    // geometry to plan a grid from ahead of time), so the pitch is computed
-    // from the components AFTER building, same pattern as build-page.mjs.
-    const variantAxisDef = OPS.axes.find((a) => a.name === 'Variant');
+    // T23: grid layout generalizes beyond State x Variant — COLUMNS = State
+    // (matches "State columns x stacked ... row groups" from the task),
+    // ROWS = the cartesian product of every OTHER axis (Variant, then
+    // curated boolean axes in OPS.axes order), so this scales to any number
+    // of fanned-out axes for any component, not just button's 5. Sizes are
+    // hug/content-driven — pitch computed from the components AFTER
+    // building, same pattern as build-page.mjs.
     const stateAxisDef = OPS.axes.find((a) => a.name === 'State');
-    const cols = variantAxisDef ? variantAxisDef.values : [null];
-    const rows = stateAxisDef ? stateAxisDef.values : ['Default'];
-    const maxW = maxWWithIcons;
-    const maxH = maxHWithIcons;
+    const colAxisDef = stateAxisDef || OPS.axes[0] || null;
+    const rowAxisDefs = OPS.axes.filter((a) => a !== colAxisDef);
+    const cols = colAxisDef ? colAxisDef.values : [null];
+
+    function valueForAxis(v, axisDef) {
+      if (!axisDef) return null;
+      if (axisDef.name === 'State') return v.state;
+      if (axisDef.name === 'Variant') return v.variant;
+      return (v.axisValues || {})[axisDef.name];
+    }
+    function cartesianRows(list) {
+      return list.reduce((acc, axis) => acc.flatMap((combo) => axis.values.map((val) => [...combo, val])), [[]]);
+    }
+    const rowCombos = cartesianRows(rowAxisDefs);
+    const rowKeyOrder = rowCombos.map((combo) => combo.map((val, idx) => rowAxisDefs[idx].name + '=' + val).join('|'));
+    function rowKeyFor(v) {
+      return rowAxisDefs.map((a) => a.name + '=' + valueForAxis(v, a)).join('|');
+    }
+
     const pitchX = Math.ceil((maxW + 40) / 2) * 2;
     const pitchY = Math.ceil((maxH + 40) / 2) * 2;
     for (let i = 0; i < OPS.variants.length; i++) {
       const v = OPS.variants[i];
       const comp = comps[i];
-      const gx = hasVariantAxis ? cols.indexOf(v.variant) : 0;
-      const gy = rows.indexOf(v.state);
+      const gx = colAxisDef ? cols.indexOf(valueForAxis(v, colAxisDef)) : 0;
+      const gy = rowKeyOrder.indexOf(rowKeyFor(v));
       comp.x = 40 + Math.max(gx, 0) * pitchX;
       comp.y = 40 + Math.max(gy, 0) * pitchY;
     }
@@ -737,21 +895,17 @@ function buildPluginCode(ops, SC) {
 
     // T21: combineAsVariants sizes the resulting COMPONENT_SET (layoutMode
     // NONE — a static bounding box, not a HUG frame) from its children's
-    // geometry AT THIS MOMENT, i.e. icons-HIDDEN (their true default) — the
-    // icons-visible measurement above only fixed the PITCH between siblings,
-    // so nothing overlaps arithmetically, but the set's own reported
-    // width/height still under-counts the icons-visible worst case. Since
-    // that static size does NOT recompute when a reviewer later toggles a
-    // Slot Before/After layer's visibility on a specific variant (each
-    // variant is its own component; the shared boolean default stays
-    // false), the set — and the presentation frame hugging it below — must
-    // be explicitly sized to the FULL grid footprint up front, or the last
-    // row/column clips against that frame's edge instead of showing its
-    // reserved padding. Never shrinks below what combineAsVariants already
-    // measured — only grows to the reserved worst case.
+    // geometry AT THIS MOMENT. The force-visible/restore measurement above
+    // can leave a property-mode icon narrower again by the time combine
+    // runs (restored to ITS true, possibly-hidden state) even though the
+    // PITCH already reserved the wider worst case — so the set, and the
+    // presentation frame hugging it below, must be explicitly sized to the
+    // full reserved grid footprint, or the last row/column clips against
+    // that frame's edge instead of showing its reserved padding. Never
+    // shrinks below what combineAsVariants already measured — only grows.
     {
       const footprintW = 40 + Math.max(cols.length - 1, 0) * pitchX + maxW;
-      const footprintH = 40 + Math.max(rows.length - 1, 0) * pitchY + maxH;
+      const footprintH = 40 + Math.max(rowKeyOrder.length - 1, 0) * pitchY + maxH;
       if (footprintW > set.width || footprintH > set.height) {
         try { set.resize(Math.max(set.width, footprintW), Math.max(set.height, footprintH)); }
         catch (e) { misses.add('set-resize-for-icon-worst-case'); }
@@ -866,8 +1020,10 @@ function buildPluginCode(ops, SC) {
       presentationFramePadding: FRAME_PADDING_FIGMA_VAR,
       explicitThemeModeCollection: THEME_MODE_COLLECTION_NAME,
       explicitThemeMode: appliedThemeMode,
-      maxVariantWidthWithIcons: maxWWithIcons,
-      maxVariantHeightWithIcons: maxHWithIcons,
+      maxVariantWidth: maxW,
+      maxVariantHeight: maxH,
+      gridColumns: cols.length,
+      gridRows: rowKeyOrder.length,
     });
   `;
 }

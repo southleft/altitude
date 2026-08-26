@@ -32,9 +32,9 @@ _No interaction states recorded._
 
 ## Slots (1)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The stepper content, a set of stepper items | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The stepper content, a set of stepper items | — | — |
 
 ## Events (0)
 

@@ -55,14 +55,14 @@ _No interaction states recorded._
 
 ## Slots (6)
 
-| Slot | Description | Figma placeholder |
-| --- | --- | --- |
-| `(default)` | The main content of the card (renders below the header). | — |
-| `action-right` | Top-right single control (kebab / overflow menu). | — |
-| `actions-end` | Trailing-action row, trailing edge (bottom-right). Use for the canonical bottom-right primary action. | — |
-| `actions-start` | Trailing-action row, leading edge (bottom-left). Use for a "View" / "Open" primary action. | — |
-| `header` | Card heading row. | — |
-| `image` | Media rendered above the header, INSIDE the card's padding. Takes the full content width; an `<al-avatar>` sits here too, which is the common case across the example apps. NOT flush to the card edge — this line previously claimed it was, and it never has been: `.al-c-card` carries a single outer `padding` and `.al-c-card__image` neither resets nor negates it (card.scss). The claim was wrong rather than the code: the slot is used for avatars in `apps/angular`, `apps/astro` and `apps/svelte`, and bleeding it to the edge would wreck all of them. A card that needs edge-to-edge media wants a card that owns its own padding, not a flag here — see the `article` / `work` variants on Southleft's `al-card` in `libs/sl-web-components`, which move the padding onto the content column. | — |
+| Slot | Description | Figma placeholder | Figma fan-out |
+| --- | --- | --- | --- |
+| `(default)` | The main content of the card (renders below the header). | — | — |
+| `action-right` | Top-right single control (kebab / overflow menu). | — | — |
+| `actions-end` | Trailing-action row, trailing edge (bottom-right). Use for the canonical bottom-right primary action. | — | — |
+| `actions-start` | Trailing-action row, leading edge (bottom-left). Use for a "View" / "Open" primary action. | — | — |
+| `header` | Card heading row. | — | — |
+| `image` | Media rendered above the header, INSIDE the card's padding. Takes the full content width; an `<al-avatar>` sits here too, which is the common case across the example apps. NOT flush to the card edge — this line previously claimed it was, and it never has been: `.al-c-card` carries a single outer `padding` and `.al-c-card__image` neither resets nor negates it (card.scss). The claim was wrong rather than the code: the slot is used for avatars in `apps/angular`, `apps/astro` and `apps/svelte`, and bleeding it to the edge would wreck all of them. A card that needs edge-to-edge media wants a card that owns its own padding, not a flag here — see the `article` / `work` variants on Southleft's `al-card` in `libs/sl-web-components`, which move the padding onto the content column. | — | — |
 
 ## Events (0)
 

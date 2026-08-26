@@ -698,6 +698,33 @@ function carryForwardSlotExtensions(disk, derived) {
   for (const slot of derived.slots) {
     const diskSlot = diskSlotByName.get(slot.name);
     if (diskSlot?.figmaPlaceholder) slot.figmaPlaceholder = diskSlot.figmaPlaceholder;
+    // T23: slots[].figmaAxis — same "no derivation source exists" reasoning
+    // as figmaPlaceholder above; whether a slot fans out as its own variant
+    // axis is a hand-curation decision, not something CEM/token-map/
+    // measure-components can observe.
+    if (diskSlot?.figmaAxis) slot.figmaAxis = diskSlot.figmaAxis;
+  }
+  return derived;
+}
+
+/** T23: `props[].bindings.figma` hand-curated into axis mode (`axis: true`)
+ * carries no derivation source either — `figmaPropBindingFor()` above derives
+ * a prop's Figma binding from the manifest's cached OBSERVED digest of the
+ * REAL set (refresh-figma-digests.mjs), which reports whatever the real set
+ * ACTUALLY does today (e.g. al-button's real "Is Full Width" is still a
+ * BOOLEAN property, not a VARIANT axis, as of T23 — see README.md § Fan-out
+ * convention for why the pilot and the real set are allowed to diverge).
+ * Once a prop's on-disk `bindings.figma.axis` is true, the WHOLE figma
+ * binding object for that prop is hand-owned (kind/property/options change
+ * together as one curated unit) — carry it forward wholesale, matched by
+ * prop name, same transient/comparison-only mutation as
+ * carryForwardSlotExtensions above. */
+function carryForwardPropAxisCuration(disk, derived) {
+  if (!Array.isArray(disk?.props) || !Array.isArray(derived?.props)) return derived;
+  const diskPropByName = new Map(disk.props.map((p) => [p.name, p]));
+  for (const prop of derived.props) {
+    const diskProp = diskPropByName.get(prop.name);
+    if (diskProp?.bindings?.figma?.axis) prop.bindings.figma = diskProp.bindings.figma;
   }
   return derived;
 }
@@ -757,7 +784,8 @@ function runCheckDrift() {
       continue;
     }
 
-    const fields = driftedFields(disk, carryForwardSlotExtensions(disk, derived), ignoredThisRun);
+    const curated = carryForwardPropAxisCuration(disk, carryForwardSlotExtensions(disk, derived));
+    const fields = driftedFields(disk, curated, ignoredThisRun);
     if (fields.length) {
       drifted++;
       console.error(`[contracts] DRIFT — ${tag}: ${fields.join(', ')}`);
