@@ -60,6 +60,7 @@
  *   node scripts/contracts/generate-figma.mjs --component al-button --page "Contract Pilot"
  *   node scripts/contracts/generate-figma.mjs --component al-button --ops-only     # write the ops artifact only, never touch Figma
  *   node scripts/contracts/generate-figma.mjs --component al-button --check-determinism  # same contract, derive ops TWICE in memory, byte-compare; exit 1 on mismatch
+ *   node scripts/contracts/generate-figma.mjs --component al-button --sheet       # T31: plugin-free Propstar-equivalent documentation sheet (run AFTER the lean-set build above)
  *
  * Ops artifact: .altitude/figma-sync/<project's figma-sync dir>/generated-ops/
  * <tag>.ops.json — gitignored (same zone as every other figma-sync artifact,
@@ -99,6 +100,17 @@ const PAGE_NAME = argOf('--page') || 'Contract Pilot';
 const SHIM_PORT = Number(argOf('--shim') ?? 9401);
 const OPS_ONLY = process.argv.includes('--ops-only');
 const CHECK_DETERMINISM = process.argv.includes('--check-determinism');
+/**
+ * T31: plugin-free Propstar-equivalent documentation mode. Builds a labeled
+ * grid of INSTANCES of the already-generated (or pre-existing) lean,
+ * property-mode component set — one instance per State x Variant x every
+ * BOOLEAN component property combination — as its own top-level frame next
+ * to the set, never inside it. Requires the target set to already exist on
+ * `--page`; run generate-figma.mjs without `--sheet` first (or a real,
+ * hand-built set of the same name). See buildSheetPlan() below and
+ * .altitude/contracts/README.md § Documentation sheet (--sheet, T31).
+ */
+const SHEET = process.argv.includes('--sheet');
 
 // ── ops derivation (pure — no fs/network beyond the caller-supplied contract) ──
 
@@ -146,6 +158,27 @@ const BOOLEAN_AXIS_CANONICAL_ORDER = ['Slot Before', 'Slot After', 'Is Full Widt
 const FULL_WIDTH_EXTRA_PX = 160;
 
 /**
+ * T31 (`--sheet`): fixed, generous pitch for the documentation sheet's grid
+ * of INSTANCES — not a measured fact (unlike the live set's own per-variant
+ * `comps.map((c) => c.width)` worst-case dance in buildPluginCode, an
+ * instance's true rendered width is not known until AFTER figma_execute
+ * places it, and re-measuring 100 instances mid-build risks the ~30s
+ * per-call ceiling the same way T21/T28's icon-visibility measurement dance
+ * already did once for the live set — see their own comments). A sheet cell
+ * only ever needs to comfortably fit al-button's own worst case (label plus
+ * two icons) at any State/Variant, so one fixed pitch reserved up front is
+ * both cheap and correct; a future component with a wider natural width
+ * would need this constant revisited by hand, same class of judgment call as
+ * FULL_WIDTH_EXTRA_PX above.
+ */
+const SHEET_ROW_LABEL_WIDTH_PX = 220;
+const SHEET_CELL_PITCH_X_PX = 200;
+const SHEET_ROW_PITCH_Y_PX = 56;
+const SHEET_HEADER_HEIGHT_PX = 40;
+const SHEET_GROUP_HEADING_HEIGHT_PX = 32;
+const SHEET_GROUP_GAP_Y_PX = 24;
+
+/**
  * T21: the "site" background token — CONFIRMED via token-map.mjs
  * (`--al-theme-color-body-background` -> `theme/color/body/background`) and
  * `libs/al-web-components/styles/core/base.scss:29` (`body { background: var(
@@ -176,6 +209,16 @@ const FRAME_PADDING_FIGMA_VAR = 'theme/space/xl';
  * task: never hardcode Light or Dark, always follow whatever the collection's
  * `defaultModeId` currently says. */
 const THEME_MODE_COLLECTION_NAME = 'Tier 2 | Theme';
+
+/** T31 (`--sheet`): the label/heading text color for the documentation
+ * sheet — a real content token (same one al-button's own anatomy root binds
+ * for its Default-state label, see the contract's `conditionalBindings`),
+ * not a resolved literal, so a header/group/row label actually reads on the
+ * sheet frame's own explicit-mode fill instead of defaulting to Figma's
+ * built-in black-text-node default (invisible against a dark surface — the
+ * bug T18/T21 already fixed once for the live set's own label/icon paint,
+ * reused here for exactly the same reason). */
+const SHEET_LABEL_COLOR_FIGMA_VAR = 'theme/color/content/default';
 
 /** Anatomy node (contract.schema.json shape) -> build-tree node carrying only
  * resolved Figma variable NAMES (contract tokens already carry `.figma`). */
@@ -258,7 +301,19 @@ function resolveConditionalBindings(contract) {
  * Pure function: same `contract` object -> byte-identical
  * `JSON.stringify(ops, null, 2)` every call (proven by --check-determinism).
  */
-export function buildOps(contract, { projectId = 'altitude', pageName = 'Contract Pilot' } = {}) {
+export function buildOps(contract, {
+  projectId = 'altitude', pageName = 'Contract Pilot',
+  // T31: `--sheet`'s own use of this SAME derivation — every non-omitted
+  // boolean (slot or fullWidth) is forced into axis mode regardless of the
+  // contract's own `figma.axis`/`figmaAxis` curation, so the documentation
+  // sheet always fans out EVERY property combination, independent of what
+  // the live (property-mode-by-default) set itself curates. This is the
+  // "repurpose, don't duplicate" seam for the T23 fan-out machinery below —
+  // buildSheetPlan() calls buildOps(contract, { forceAllBooleanAxes: true })
+  // to get the full cartesian `variants` list, then re-groups it for
+  // rendering rather than re-deriving the cartesian product itself.
+  forceAllBooleanAxes = false,
+} = {}) {
   const tag = contract.id;
 
   // Variant axis: the contract's OWN Figma-side option list already IS "the
@@ -306,7 +361,7 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
   const layoutBooleans = [];
   if (fullWidthProp) {
     const isOmit = !!fullWidthProp.bindings?.figma?.omit;
-    const isAxis = !isOmit && !!fullWidthProp.bindings?.figma?.axis;
+    const isAxis = !isOmit && (forceAllBooleanAxes || !!fullWidthProp.bindings?.figma?.axis);
     layoutBooleans.push({
       kind: 'fullWidth',
       propertyName: fullWidthProp.bindings?.figma?.property || 'Is Full Width',
@@ -325,7 +380,7 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
       side,
       propertyName: side === 'before' ? 'Slot Before' : 'Slot After',
       options: ['False', 'True'],
-      isAxis: !isOmit && !!slot.figmaAxis,
+      isAxis: !isOmit && (forceAllBooleanAxes || !!slot.figmaAxis),
       isOmit,
       layerName,
       iconName: slot.figmaPlaceholder || null,
@@ -475,20 +530,28 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
   if (axisModeSlotSides.length) {
     const label = (s) => (s === 'before' ? 'Before' : 'After');
     degradations.push(
-      `T23: Slot ${axisModeSlotSides.map(label).join('/')} ${axisModeSlotSides.length > 1 ? 'are' : 'is'} curated as ` +
-      'a variant AXIS (figmaAxis: true) — every combination fans out as a separately-built variant with the ' +
-      'slot\'s icon statically shown/hidden, rather than one shared BOOLEAN property. VERIFIED against the ' +
-      'real Button set (node 4271:9562) that this does NOT currently match its live shape (Slot Before/After ' +
-      'there are still BOOLEAN properties) — see .altitude/contracts/README.md § Fan-out convention for the ' +
-      'discrepancy this pilot deliberately accepts pending a decision on the real set.',
+      forceAllBooleanAxes
+        ? `T31 (--sheet): Slot ${axisModeSlotSides.map(label).join('/')} ${axisModeSlotSides.length > 1 ? 'are' : 'is'} ` +
+          'fanned out as a documentation-only variant AXIS for this sheet plan (every property combination gets its ' +
+          'own labeled instance) — this is NOT contract curation and has no bearing on the live, property-mode ' +
+          'generated set, which keeps this as a shared BOOLEAN property. See .altitude/contracts/README.md § ' +
+          'Documentation sheet (--sheet, T31).'
+        : `T23: Slot ${axisModeSlotSides.map(label).join('/')} ${axisModeSlotSides.length > 1 ? 'are' : 'is'} curated as ` +
+          'a variant AXIS (figmaAxis: true) — every combination fans out as a separately-built variant with the ' +
+          'slot\'s icon statically shown/hidden, rather than one shared BOOLEAN property. VERIFIED against the ' +
+          'real Button set (node 4271:9562) that this does NOT match its live shape (Slot Before/After there are ' +
+          'still BOOLEAN properties, the library\'s real, lean convention — see .altitude/contracts/README.md § ' +
+          'Fan-out convention) — curating this true on a NEW contract should be reserved for a component whose ' +
+          'real set demonstrably fans a boolean out as its own axis, not the default.',
     );
   }
   if (layoutBooleans.some((b) => b.kind === 'fullWidth' && b.isAxis)) {
     degradations.push(
-      'T23: "Is Full Width" is curated as a variant axis, but no real or measured pixel fact exists for what ' +
-      '"full width" renders as (contract.schema.json\'s anatomyNode has no pixel geometry, and the real Button ' +
-      `set does not expose this as an axis to inspect) — rendered as natural hug width + a fixed ${FULL_WIDTH_EXTRA_PX}px ` +
-      'margin (documented judgment call, FULL_WIDTH_EXTRA_PX), not a measured or observed target width.',
+      `${forceAllBooleanAxes ? 'T31 (--sheet)' : 'T23'}: "Is Full Width" is fanned out as a variant axis, but no real or ` +
+      'measured pixel fact exists for what "full width" renders as (contract.schema.json\'s anatomyNode has no pixel ' +
+      'geometry, and the real Button set does not expose this as an axis to inspect) — rendered as natural hug width ' +
+      `+ a fixed ${FULL_WIDTH_EXTRA_PX}px margin (documented judgment call, FULL_WIDTH_EXTRA_PX), not a measured or ` +
+      'observed target width.',
     );
   }
   const omitted = layoutBooleans.filter((b) => b.isOmit);
@@ -523,6 +586,113 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
 
 function serialize(ops) {
   return `${JSON.stringify(ops, null, 2)}\n`;
+}
+
+// ── documentation-sheet plan (T31, `--sheet`) ──────────────────────────────
+
+/**
+ * `--sheet` mode's pure derivation: contract -> a deterministic plan for a
+ * Propstar-equivalent documentation frame — no ids, no measured/live facts.
+ * REPURPOSES buildOps()'s T23 fan-out machinery rather than re-deriving a
+ * second cartesian product: `buildOps(contract, { forceAllBooleanAxes: true
+ * })` fans out EVERY non-omitted boolean (regardless of the contract's own
+ * curation, which as of T31 no longer marks anything axis-mode for the LIVE
+ * set) into the same `ops.variants` cartesian list T23 originally built
+ * components from. This function only RE-GROUPS that list for rendering as
+ * INSTANCES of the already-built (property-mode) set — it does not fan
+ * anything out itself, and builds nothing (no components, no page access).
+ *
+ * Grouping (documented judgment call — the owner's Propstar screenshot was a
+ * reference image, not machine-readable input to this generator, so this is
+ * "a clean deterministic grouping," not an attempted pixel-for-pixel
+ * replica):
+ *   - COLUMNS = State — matches the live set's own primary grid axis
+ *     (buildPluginCode's `colAxisDef`), so the sheet reads in the same
+ *     direction as the set it documents.
+ *   - ROW GROUPS, outermost to innermost = Variant, then every other
+ *     boolean axis in BOOLEAN_AXIS_CANONICAL_ORDER (Slot Before, Slot
+ *     After, Is Full Width if ever un-omitted) — the SAME left-to-right
+ *     order `booleanAxisDefs` already sorts into for OPS.axes/variant
+ *     naming, so this sheet's grouping direction matches both the ops
+ *     artifact's own axis order and the live grid's row axis order. One
+ *     heading per Variant value (the outermost, most visually distinct
+ *     group); a single concatenated row label ("Slot Before=False, Slot
+ *     After=True") for every combination of the remaining boolean axes — a
+ *     real nested visual frame per boolean axis was considered and
+ *     rejected: with only al-button's two slot booleans there is nothing a
+ *     second frame level would clarify that the concatenated label does not
+ *     already say, and a flat label list generalizes to any number of
+ *     future boolean axes without a frame-per-axis explosion.
+ *
+ * Layout is computed here too, not in the plugin code — FIXED pitch
+ * constants (`SHEET_*_PX` above), never measured; see their own comment for
+ * why (the live set's per-variant "measure after building" dance is exactly
+ * the kind of extra per-call work this sheet's ~100-instance batch cannot
+ * afford under the Desktop Bridge's ~30s execution ceiling).
+ */
+export function buildSheetPlan(contract, { projectId = 'altitude', pageName = 'Contract Pilot' } = {}) {
+  const forcedOps = buildOps(contract, { projectId, pageName, forceAllBooleanAxes: true });
+  const stateAxis = forcedOps.axes.find((a) => a.name === 'State');
+  const variantAxis = forcedOps.axes.find((a) => a.name === 'Variant');
+  const boolAxes = forcedOps.axes.filter((a) => a !== stateAxis && a !== variantAxis);
+
+  function cartesianObjects(list) {
+    return list.reduce((acc, axis) => acc.flatMap((combo) => axis.values.map((v) => ({ ...combo, [axis.name]: v }))), [{}]);
+  }
+  const subCombos = boolAxes.length ? cartesianObjects(boolAxes) : [{}];
+  const variantValues = variantAxis ? variantAxis.values : [null];
+
+  let y = SHEET_HEADER_HEIGHT_PX;
+  const rowGroups = variantValues.map((variant) => {
+    const headingY = y;
+    y += SHEET_GROUP_HEADING_HEIGHT_PX;
+    const rows = subCombos.map((combo) => {
+      const rowY = y;
+      y += SHEET_ROW_PITCH_Y_PX;
+      const cells = stateAxis.values.map((state, ci) => {
+        const properties = { State: state };
+        if (variant) properties.Variant = variant;
+        for (const a of boolAxes) properties[a.name] = combo[a.name] === 'True';
+        const matched = forcedOps.variants.find((vv) => vv.state === state
+          && (!variantAxis || vv.variant === variant)
+          && boolAxes.every((a) => (vv.axisValues || {})[a.name] === combo[a.name]));
+        return { state, x: SHEET_ROW_LABEL_WIDTH_PX + ci * SHEET_CELL_PITCH_X_PX, y: rowY, properties, sourceVariantName: matched ? matched.name : null };
+      });
+      const rowLabel = boolAxes.map((a) => `${a.name}=${combo[a.name]}`).join(', ') || null;
+      return { rowLabel, y: rowY, cells };
+    });
+    y += SHEET_GROUP_GAP_Y_PX;
+    return { groupLabel: variant ? `Variant=${variant}` : null, headingY, rows };
+  });
+
+  const totalWidth = SHEET_ROW_LABEL_WIDTH_PX + stateAxis.values.length * SHEET_CELL_PITCH_X_PX;
+  const totalHeight = y;
+  const totalInstances = rowGroups.reduce((n, g) => n + g.rows.reduce((m, r) => m + r.cells.length, 0), 0);
+
+  return {
+    schemaVersion: 1,
+    generator: 'scripts/contracts/generate-figma.mjs --sheet',
+    project: projectId,
+    contract: { id: contract.id, name: contract.name, version: contract.version },
+    page: pageName,
+    targetComponentSetName: contract.name,
+    sheetFrameName: `${contract.name} — Prop Sheet`,
+    columns: { name: stateAxis.name, values: stateAxis.values },
+    rowAxisOrder: [variantAxis ? variantAxis.name : null, ...boolAxes.map((a) => a.name)].filter(Boolean),
+    rowGroups,
+    layout: {
+      rowLabelWidth: SHEET_ROW_LABEL_WIDTH_PX,
+      cellPitchX: SHEET_CELL_PITCH_X_PX,
+      rowPitchY: SHEET_ROW_PITCH_Y_PX,
+      headerHeight: SHEET_HEADER_HEIGHT_PX,
+      groupHeadingHeight: SHEET_GROUP_HEADING_HEIGHT_PX,
+      groupGapY: SHEET_GROUP_GAP_Y_PX,
+      totalWidth,
+      totalHeight,
+    },
+    totalInstances,
+    degradations: forcedOps.degradations,
+  };
 }
 
 // ── plugin code (runs inside Figma Desktop via figma_execute) ─────────────
@@ -1522,6 +1692,308 @@ function buildPluginCode(ops, SC) {
   `;
 }
 
+// ── sheet plugin code (T31, `--sheet` — runs inside Figma Desktop) ─────────
+
+/** Same fileKey guard buildPluginCode opens with — every mutating call this
+ * generator ever sends carries it, sheet-mode calls included. Factored out
+ * (not duplicated four times: once per setup call, once per group call)
+ * because sheet mode issues MULTIPLE figma_execute calls per run (batched —
+ * see main()'s sheet path), each needing this same first line. */
+function fileGuardSnippet(SC) {
+  return String.raw`
+    if (figma.fileKey !== ${JSON.stringify(SC.fileKey)}) {
+      throw new Error(
+        'REFUSING TO WRITE: expected file ' + ${JSON.stringify(SC.fileKey)} + ' (' + ${JSON.stringify(SC.fileName)} +
+        ') but the Desktop Bridge is focused on "' + figma.root.name + '" (' + figma.fileKey + ').'
+      );
+    }
+  `;
+}
+
+/** Best-effort text-style linkage, mirrors buildPluginCode's own end-of-run
+ * block (same convention, factored so sheet mode's several calls each
+ * define the SAME `linkTextStyles` helper rather than re-typing it). */
+function textStyleLinkSnippet() {
+  return String.raw`
+    async function linkTextStyles(nodes) {
+      const styles = await figma.getLocalTextStylesAsync();
+      const styleKey = (fam, sty, size) => fam + '|' + sty + '|' + Math.round(size);
+      const byKey = new Map();
+      for (const s of styles) {
+        const k = styleKey(s.fontName.family, s.fontName.style, s.fontSize);
+        if (!byKey.has(k)) byKey.set(k, s);
+      }
+      let linked = 0;
+      for (const t of nodes) {
+        const fn = t.fontName;
+        if (!fn || fn === figma.mixed) continue;
+        const st = byKey.get(styleKey(fn.family, fn.style, t.fontSize));
+        if (st) { try { await t.setTextStyleIdAsync(st.id); linked++; } catch (e) { /* leave literal */ } }
+      }
+      return linked;
+    }
+  `;
+}
+
+/** Shared variable-resolution primitives (V/rawOf/boundSolid/bindNum) —
+ * verbatim from buildPluginCode's own copy, factored so sheet mode's several
+ * calls (setup AND every per-group call, each its own isolated
+ * figma_execute invocation with no shared JS state) each get the SAME
+ * helpers rather than re-typing them. `misses` is a `Set`, matching the rest
+ * of this generator's convention — the caller flattens it to an array at
+ * `return` time. */
+function variableHelpersSnippet() {
+  return String.raw`
+    await figma.loadAllPagesAsync();
+    const V = {};
+    for (const v of await figma.variables.getLocalVariablesAsync()) V[v.name] = v;
+    const misses = new Set();
+    async function rawOf(v) {
+      const c = await figma.variables.getVariableCollectionByIdAsync(v.variableCollectionId);
+      let val = v.valuesByMode[c.defaultModeId];
+      let g = 0;
+      while (val && val.type === 'VARIABLE_ALIAS' && g++ < 8) {
+        const nv = await figma.variables.getVariableByIdAsync(val.id);
+        const nc = await figma.variables.getVariableCollectionByIdAsync(nv.variableCollectionId);
+        val = nv.valuesByMode[nc.defaultModeId];
+      }
+      return val;
+    }
+    async function boundSolid(name) {
+      if (!name) return null;
+      const vv = V[name];
+      if (!vv) { misses.add(name); return null; }
+      const val = await rawOf(vv);
+      const color = val && val.r !== undefined ? { r: val.r, g: val.g, b: val.b } : { r: 0, g: 0, b: 0 };
+      const paint = { type: 'SOLID', color };
+      if (val && val.a !== undefined && val.a < 1) paint.opacity = val.a;
+      return figma.variables.setBoundVariableForPaint(paint, 'color', vv);
+    }
+    function bindNum(node, field, name) {
+      if (!name) return false;
+      const vv = V[name];
+      if (!vv) { misses.add(name); return false; }
+      try { node.setBoundVariable(field, vv); return true; } catch (e) { return false; }
+    }
+  `;
+}
+
+/**
+ * T31 `--sheet` setup call — the FIRST of N figma_execute calls this mode
+ * issues (see main()'s sheet path). Idempotently (REPLACE, not append)
+ * creates the sheet's own presentation frame next to the target set's
+ * "<name> — Generated" frame, sizes it to the plan's precomputed total
+ * footprint, and builds the State column header row. Never touches the
+ * target set itself (read-only lookup by name) or any page other than
+ * `--page`. Returns the ids the subsequent per-group calls need.
+ */
+function buildSheetSetupPluginCode(plan, SC) {
+  return String.raw`
+    ${fileGuardSnippet(SC)}
+    ${textStyleLinkSnippet()}
+    ${variableHelpersSnippet()}
+    const PLAN = ${JSON.stringify(plan)};
+    const FRAME_PADDING_FIGMA_VAR = ${JSON.stringify(FRAME_PADDING_FIGMA_VAR)};
+    const SITE_BG_FIGMA_VAR = ${JSON.stringify(SITE_BG_FIGMA_VAR)};
+    const THEME_MODE_COLLECTION_NAME = ${JSON.stringify(THEME_MODE_COLLECTION_NAME)};
+    const SHEET_LABEL_COLOR_FIGMA_VAR = ${JSON.stringify(SHEET_LABEL_COLOR_FIGMA_VAR)};
+
+    // SAFETY: this mode NEVER creates the page — it must already exist from a
+    // prior (non-sheet) generation run, or from a real, hand-built set of
+    // the same name. Mirrors buildPluginCode's own "never delete/recreate the
+    // page" guarantee, one level stricter (this mode does not even create it).
+    const page = figma.root.children.find((p) => p.name === PLAN.page);
+    if (!page) {
+      throw new Error('Page "' + PLAN.page + '" not found. Run generate-figma.mjs without --sheet first to build the lean set this sheet documents.');
+    }
+    await page.loadAsync();
+    await figma.setCurrentPageAsync(page);
+
+    const targetSet = page.findOne((n) => n.type === 'COMPONENT_SET' && n.name === PLAN.targetComponentSetName);
+    if (!targetSet) {
+      throw new Error('Component set "' + PLAN.targetComponentSetName + '" not found on page "' + PLAN.page + '". Run generate-figma.mjs without --sheet first.');
+    }
+
+    // Idempotent: a prior sheet frame of the SAME name is replaced wholesale,
+    // never appended alongside a stale copy. Only this one frame is ever
+    // touched — the target set and everything else on the page is untouched.
+    const prior = page.findOne((n) => n.type === 'FRAME' && n.name === PLAN.sheetFrameName);
+    if (prior) prior.remove();
+
+    // Positioned NEXT TO the set's own presentation frame (its own top-level
+    // frame, never inside the set) — falls back to a fixed offset from the
+    // set itself if that frame is not found (e.g. a real, hand-built set with
+    // no "<name> — Generated" wrapper of its own).
+    const generatedFrame = page.findOne((n) => n.type === 'FRAME' && n.name === PLAN.targetComponentSetName + ' — Generated');
+    const originX = generatedFrame ? generatedFrame.x + generatedFrame.width + 200 : targetSet.x + targetSet.width + 400;
+    const originY = generatedFrame ? generatedFrame.y : targetSet.y;
+
+    const sheetGrid = figma.createFrame();
+    sheetGrid.name = 'Sheet Grid';
+    sheetGrid.layoutMode = 'NONE';
+    sheetGrid.fills = [];
+    sheetGrid.resize(PLAN.layout.totalWidth, PLAN.layout.totalHeight);
+
+    const sheetFrame = figma.createFrame();
+    sheetFrame.name = PLAN.sheetFrameName;
+    page.appendChild(sheetFrame);
+    sheetFrame.layoutMode = 'HORIZONTAL';
+    sheetFrame.primaryAxisSizingMode = 'AUTO';
+    sheetFrame.counterAxisSizingMode = 'AUTO';
+    bindNum(sheetFrame, 'paddingTop', FRAME_PADDING_FIGMA_VAR);
+    bindNum(sheetFrame, 'paddingBottom', FRAME_PADDING_FIGMA_VAR);
+    bindNum(sheetFrame, 'paddingLeft', FRAME_PADDING_FIGMA_VAR);
+    bindNum(sheetFrame, 'paddingRight', FRAME_PADDING_FIGMA_VAR);
+    { const p = await boundSolid(SITE_BG_FIGMA_VAR); if (p) sheetFrame.fills = [p]; }
+    sheetFrame.appendChild(sheetGrid);
+    sheetFrame.x = originX;
+    sheetFrame.y = originY;
+
+    // "dep on defaults" — same convention as the live set's own presentation
+    // frame (buildPluginCode): never hardcode Light or Dark.
+    const themeModeCollection = (await figma.variables.getLocalVariableCollectionsAsync())
+      .find((c) => c.name === THEME_MODE_COLLECTION_NAME);
+    let appliedThemeMode = null;
+    if (themeModeCollection) {
+      try {
+        sheetFrame.setExplicitVariableModeForCollection(themeModeCollection, themeModeCollection.defaultModeId);
+        appliedThemeMode = themeModeCollection.modes.find((m) => m.modeId === themeModeCollection.defaultModeId)?.name ?? themeModeCollection.defaultModeId;
+      } catch (e) { misses.add('explicit-variable-mode:' + THEME_MODE_COLLECTION_NAME); }
+    } else {
+      misses.add('variable-collection:' + THEME_MODE_COLLECTION_NAME);
+    }
+
+    const fontName = { family: 'IBM Plex Sans', style: 'Regular' };
+    try { await figma.loadFontAsync(fontName); } catch (e) { await figma.loadFontAsync({ family: 'Inter', style: 'Regular' }); fontName.family = 'Inter'; }
+    // T31: label text color — bound to the SAME token every other run of
+    // this generator resolves against the sheet frame's own explicit theme
+    // mode, so a label reads correctly regardless of which mode is current
+    // (never a resolved literal — see SHEET_LABEL_COLOR_FIGMA_VAR's comment).
+    const labelPaint = await boundSolid(SHEET_LABEL_COLOR_FIGMA_VAR);
+
+    const headerTextNodes = [];
+    for (let ci = 0; ci < PLAN.columns.values.length; ci++) {
+      const t = figma.createText();
+      t.fontName = fontName;
+      t.characters = PLAN.columns.name + '=' + PLAN.columns.values[ci];
+      t.fontSize = 12;
+      if (labelPaint) t.fills = [labelPaint];
+      sheetGrid.appendChild(t);
+      t.x = PLAN.layout.rowLabelWidth + ci * PLAN.layout.cellPitchX;
+      t.y = 0;
+      headerTextNodes.push(t);
+    }
+    const textStylesLinked = await linkTextStyles(headerTextNodes);
+
+    return JSON.stringify({
+      pageId: page.id,
+      sheetFrameId: sheetFrame.id,
+      sheetGridId: sheetGrid.id,
+      targetSetId: targetSet.id,
+      appliedThemeMode,
+      textStylesLinked,
+      missingVars: [...misses],
+    });
+  `;
+}
+
+/**
+ * T31 `--sheet` per-group call — ONE of these per Variant-level row group
+ * (5 for al-button: Bare/Danger/Primary/Secondary/Tertiary), issued
+ * sequentially by main()'s sheet path AFTER the setup call above. Builds
+ * that group's own heading + row labels + one INSTANCE per (State x every
+ * other boolean axis) cell, each switched to its own combination via
+ * `setProperties` against the TARGET set's real property definitions —
+ * never a freshly-built component, never a runtime toggle. Splitting one
+ * call per group (rather than one call for all ~100 instances) is the
+ * "batch across calls" the Desktop Bridge's ~30s per-call ceiling requires
+ * for a fan-out this size (see SHEET_* pitch constants' own comment).
+ */
+function buildSheetGroupPluginCode(plan, groupIndex, ids, SC) {
+  const group = plan.rowGroups[groupIndex];
+  return String.raw`
+    ${fileGuardSnippet(SC)}
+    ${textStyleLinkSnippet()}
+    ${variableHelpersSnippet()}
+    const GROUP = ${JSON.stringify(group)};
+    const SHEET_LABEL_COLOR_FIGMA_VAR = ${JSON.stringify(SHEET_LABEL_COLOR_FIGMA_VAR)};
+
+    // T28-style dynamic-page discipline: getNodeByIdAsync loads whatever page
+    // a node belongs to, but new nodes THIS call creates still root onto
+    // whatever page is currently ACTIVE — make the target page current again
+    // explicitly, the same incident buildPluginCode's own comment documents
+    // for icon resolution, rather than assume the setup call's page-switch
+    // is still in effect several calls later.
+    const page = await figma.getNodeByIdAsync(${JSON.stringify(ids.pageId)});
+    if (!page) throw new Error('page ' + ${JSON.stringify(ids.pageId)} + ' no longer resolves — rerun --sheet from the setup call.');
+    await figma.setCurrentPageAsync(page);
+
+    const sheetGrid = await figma.getNodeByIdAsync(${JSON.stringify(ids.sheetGridId)});
+    const targetSet = await figma.getNodeByIdAsync(${JSON.stringify(ids.targetSetId)});
+    if (!sheetGrid || !targetSet) throw new Error('sheet grid or target set node id no longer resolves — rerun --sheet from the setup call.');
+
+    const setDefs = targetSet.componentPropertyDefinitions || {};
+    function applyFor(properties) {
+      const apply = {};
+      for (const key in setDefs) {
+        const d = setDefs[key];
+        const bare = key.split('#')[0];
+        if (!(bare in properties)) continue;
+        if (d.variantOptions) apply[key] = String(properties[bare]);
+        else if (d.type === 'BOOLEAN') apply[key] = !!properties[bare];
+      }
+      return apply;
+    }
+
+    const fontName = { family: 'IBM Plex Sans', style: 'Regular' };
+    try { await figma.loadFontAsync(fontName); } catch (e) { await figma.loadFontAsync({ family: 'Inter', style: 'Regular' }); fontName.family = 'Inter'; }
+    const labelPaint = await boundSolid(SHEET_LABEL_COLOR_FIGMA_VAR);
+
+    const setPropMisses = [];
+    const labelNodes = [];
+    let built = 0;
+    const base = targetSet.defaultVariant || targetSet.children[0];
+
+    if (GROUP.groupLabel) {
+      const heading = figma.createText();
+      heading.fontName = fontName;
+      heading.characters = GROUP.groupLabel;
+      heading.fontSize = 14;
+      if (labelPaint) heading.fills = [labelPaint];
+      sheetGrid.appendChild(heading);
+      heading.x = 0;
+      heading.y = GROUP.headingY;
+      labelNodes.push(heading);
+    }
+
+    for (const row of GROUP.rows) {
+      if (row.rowLabel) {
+        const label = figma.createText();
+        label.fontName = fontName;
+        label.characters = row.rowLabel;
+        label.fontSize = 11;
+        if (labelPaint) label.fills = [labelPaint];
+        sheetGrid.appendChild(label);
+        label.x = 0;
+        label.y = row.y;
+        labelNodes.push(label);
+      }
+      for (const cell of row.cells) {
+        const inst = base.createInstance();
+        sheetGrid.appendChild(inst);
+        try { inst.setProperties(applyFor(cell.properties)); }
+        catch (e) { setPropMisses.push('setProperties:' + JSON.stringify(cell.properties) + ':' + e.message); }
+        inst.x = cell.x;
+        inst.y = cell.y;
+        built++;
+      }
+    }
+    const textStylesLinked = await linkTextStyles(labelNodes);
+
+    return JSON.stringify({ group: GROUP.groupLabel, built, textStylesLinked, missingVars: [...misses, ...setPropMisses] });
+  `;
+}
+
 // ── decoy guard (mirrors scripts/contracts/extract-canvas.mjs's checkDecoyGuard) ──
 
 function checkDecoyGuard(project, statusText) {
@@ -1579,9 +2051,97 @@ function writeOps(SC, tag, ops) {
   return outPath;
 }
 
+/** T31: the sheet plan's own ops artifact — same zone, same "gitignored build
+ * INPUT" convention as writeOps() above, distinct filename so a `--sheet` run
+ * never clobbers (or is clobbered by) the lean set's own `<tag>.ops.json`. */
+function writeSheetOps(SC, tag, plan) {
+  const dir = join(SC.dirs.sync, 'generated-ops');
+  mkdirSync(dir, { recursive: true });
+  const outPath = join(dir, `${tag}.sheet.ops.json`);
+  writeFileSync(outPath, serialize(plan), 'utf8');
+  return outPath;
+}
+
+/**
+ * T31 `--sheet` entry point. Mirrors the non-sheet path's own
+ * ops-only/check-determinism/decoy-guard shape, then drives the batched
+ * setup-call + one-call-per-Variant-group sequence buildSheetSetupPluginCode/
+ * buildSheetGroupPluginCode implement — never a single all-100-instances
+ * call (see SHEET_* pitch constants' comment on the ~30s per-call ceiling).
+ */
+async function mainSheet(SC, contract) {
+  if (CHECK_DETERMINISM) {
+    const first = serialize(buildSheetPlan(contract, { projectId: SC.id, pageName: PAGE_NAME }));
+    const second = serialize(buildSheetPlan(contract, { projectId: SC.id, pageName: PAGE_NAME }));
+    const ok = first === second;
+    console.log(`[generate-figma] --sheet --check-determinism ${SC.id}/${COMPONENT}: ${ok ? 'DETERMINISTIC' : 'NONDETERMINISTIC'}`);
+    if (!ok) {
+      console.error('[generate-figma] two in-memory sheet-plan derivations of the same contract produced different bytes.');
+      process.exit(1);
+    }
+    return;
+  }
+
+  const plan = buildSheetPlan(contract, { projectId: SC.id, pageName: PAGE_NAME });
+  const outPath = writeSheetOps(SC, COMPONENT, plan);
+  console.log(`[generate-figma] --sheet ${SC.id}/${COMPONENT}: wrote a ${plan.totalInstances}-instance plan -> ${outPath}`);
+
+  if (OPS_ONLY) return;
+
+  const status = parsePayload(await call(SHIM_PORT, 'figma_get_status', {}));
+  const statusStr = JSON.stringify(status);
+  const guard = checkDecoyGuard(SC.project, statusStr);
+  if (guard.blocked) {
+    console.error(
+      `Refusing to generate: Figma is on the "${guard.decoy.fileName}" DECOY file. Open "${SC.fileName}" (${SC.fileKey}).` +
+      (guard.decoy.why ? `\n  ${guard.decoy.why}` : ''),
+    );
+    process.exit(1);
+  }
+
+  const setupText = await call(SHIM_PORT, 'figma_execute', { code: buildSheetSetupPluginCode(plan, SC), fileKey: SC.fileKey, timeout: 90000 });
+  let setupPayload;
+  try { setupPayload = JSON.parse(setupText); } catch { console.error(setupText); process.exit(1); }
+  if (setupPayload.success === false || setupPayload.error) {
+    console.error('[generate-figma] --sheet SETUP FAILED:', setupPayload.error || setupPayload);
+    process.exit(1);
+  }
+  const ids = typeof setupPayload.result === 'string' ? JSON.parse(setupPayload.result) : setupPayload.result;
+  console.log('[generate-figma] --sheet setup:', JSON.stringify(ids));
+
+  const missingVars = [...(ids.missingVars || [])];
+  let totalBuilt = 0;
+  for (let gi = 0; gi < plan.rowGroups.length; gi++) {
+    const code = buildSheetGroupPluginCode(plan, gi, ids, SC);
+    const text = await call(SHIM_PORT, 'figma_execute', { code, fileKey: SC.fileKey, timeout: 90000 });
+    let payload;
+    try { payload = JSON.parse(text); } catch { console.error(text); process.exit(1); }
+    if (payload.success === false || payload.error) {
+      console.error(`[generate-figma] --sheet GROUP ${gi + 1}/${plan.rowGroups.length} FAILED:`, payload.error || payload);
+      process.exit(1);
+    }
+    const result = typeof payload.result === 'string' ? JSON.parse(payload.result) : payload.result;
+    console.log(`[generate-figma] --sheet group ${gi + 1}/${plan.rowGroups.length}:`, JSON.stringify(result));
+    totalBuilt += result.built || 0;
+    missingVars.push(...(result.missingVars || []));
+  }
+
+  console.log(JSON.stringify({
+    sheetFrameId: ids.sheetFrameId,
+    totalInstancesPlanned: plan.totalInstances,
+    totalInstancesBuilt: totalBuilt,
+    missingVars,
+  }, null, 2));
+}
+
 async function main() {
   const SC = scope(projectArg());
   const { contract } = loadContract(SC.id, COMPONENT);
+
+  if (SHEET) {
+    await mainSheet(SC, contract);
+    return;
+  }
 
   if (CHECK_DETERMINISM) {
     // T15's TODO(T12): same contract inputs -> byte-identical ops output,

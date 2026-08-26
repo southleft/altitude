@@ -167,30 +167,58 @@ as `contractDrifted` even when code and Figma both still match. See
 - Focus renders as a **2px stroke**, not a CSS-style outline.
 
 **Fan-out convention for GENERATED sets (T23, spec 2026-08-25-contract-backed-
-figma-parity-and-generation).** `scripts/contracts/generate-figma.mjs` reads a
-per-prop/per-slot curation field — `bindings.figma.axis: true` on a prop,
-`figmaAxis: true` on a `before`/`after` slot (`.altitude/contracts/*/al-*.contract.json`,
-schema in `contract.schema.json`) — and, when set, fans that boolean out as its
+figma-parity-and-generation; reverted to property mode as the DEFAULT, T31,
+same spec).** `scripts/contracts/generate-figma.mjs` reads a per-prop/per-slot
+curation field — `bindings.figma.axis: true` on a prop, `figmaAxis: true` on a
+`before`/`after` slot (`.altitude/contracts/*/al-*.contract.json`, schema in
+`contract.schema.json`) — and, ONLY when curated, fans that boolean out as its
 own True/False **VARIANT axis** (a separately-built component per combination,
 cartesian with every other axis) instead of a single shared BOOLEAN component
-property. **This is opt-in generator behavior, not the hand-built convention
-above** — VERIFIED live against the real Button set (node `4271:9562`): its
-`Is Full Width`/`Slot Before`/`Slot After` are still plain BOOLEAN properties
-(25 variants total, State × Variant only), not axes, as of this writing. The
-al-button *contract* has been curated into axis mode anyway (200-variant
-Contract Pilot regeneration) as a deliberate pilot of the fan-out convention —
-see `.altitude/contracts/README.md` § Fan-out convention for the full
-discrepancy this accepts pending a decision on whether the real set should
-ever be converted to match. Generalized default for any OTHER component: an
-enum prop is always an axis (unchanged); a slot or layout boolean is a
-component property UNLESS curated `figmaAxis`/`axis: true`.
+property. **Property mode (the shared-BOOLEAN behavior) is the library's own
+convention and this generator's default** — VERIFIED live against the real
+Button set (node `4271:9562`): its `Is Full Width`/`Slot Before`/`Slot After`
+have always been plain BOOLEAN properties (25 variants total, State × Variant
+only), never axes. T22/T23 curated al-button's contract into axis mode anyway
+(a 200→100-variant Contract Pilot regeneration) as a pilot of the fan-out
+convention, reasoning from a Propstar documentation-sheet screenshot that
+turned out to show a DOCUMENTATION artifact (every property combination as a
+labeled instance), not the real set's own variant structure — T31 corrected
+this, removed the curation, and the pilot is back to the real set's own lean
+25 variants. The fan-out MACHINERY is not removed (a future component's real
+set might genuinely fan a boolean out as its own axis, and `--sheet` mode
+below reuses it internally) — see `.altitude/contracts/README.md` § Fan-out
+convention for the full history. Generalized default for any OTHER
+component: an enum prop is always an axis (unchanged); a slot or layout
+boolean is a component property UNLESS curated `figmaAxis`/`axis: true` for a
+component whose real set demonstrably fans it out.
+
+**Documentation sheet, plugin-free (`--sheet`, T31).** The Propstar-style
+fan-out grid the T22/T23 screenshot actually showed is still buildable —
+without folding it into the live set's own variants, and without requiring
+the Propstar plugin at all (an agent cannot launch a Figma plugin, and a
+colleague may not have Propstar installed). `generate-figma.mjs --component
+al-button --sheet` (run AFTER the plain, non-`--sheet` build) creates/replaces
+a `"Button — Prop Sheet"` frame next to the set's own presentation frame: a
+labeled grid of real INSTANCES of the (lean, property-mode) set, one per
+State × Variant × every other boolean property combination (100 for
+al-button), each switched via `setProperties`. Internally reuses the SAME
+T23 cartesian derivation (`buildOps(contract, { forceAllBooleanAxes: true
+})`), just re-grouped for rendering rather than re-derived — "repurposed, not
+duplicated." Batched across one setup call + one call per Variant row group
+(6 total for al-button) to stay under the Desktop Bridge's ~30s per-call
+ceiling. Idempotent (replaces the prior sheet frame by name). Propstar itself
+remains a valid optional interactive alternative for building the same kind
+of sheet by hand; `--sheet` is the canonical, automatable, plugin-free path.
+See `.altitude/contracts/README.md` § Documentation sheet (`--sheet`, T31)
+for the full grouping/layout/batching rationale.
 
 **Figma-expression opt-out (T27).** The inverse curation: `bindings.figma.omit:
 true` (props) / `figmaOmit: true` (slots) means the generator builds NOTHING
 for it at all — no axis, no property, no instance. al-button's `fullWidth` is
 curated this way in both projects' contracts (owner: "I don't need that in
-figma"), dropping the Contract Pilot regeneration to 100 variants (no `Is
-Full Width` axis). `contract-diff.mjs` treats an omitted-and-absent prop/slot
+figma"), independent of the (T31, now off-by-default) axis-mode curation —
+`fullWidth` was never built at all, at any point, regardless of which mode
+`before`/`after` were in. `contract-diff.mjs` treats an omitted-and-absent prop/slot
 as a named `intentional-omission` skip, never a disagreement — but canvas
 still exposing it is flagged `present-despite-omission`.
 

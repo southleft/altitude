@@ -246,23 +246,29 @@ exists. `scripts/contracts/generate-figma.mjs` reads a contract
 intermediate **ops** artifact (`buildOps()` — stable key order, no timestamps,
 same contract in -> byte-identical bytes out), and executes it over
 `scripts/figma-atoms/mcp-shim.mjs` to build a real component set: the State
-and Variant axes, PLUS one more VARIANT axis per curated boolean (T23, see
-"Fan-out convention" below) OR a BOOLEAN component property for an
-un-curated one OR NOTHING AT ALL for one curated `omit`/`figmaOmit: true`
-(T27, see "Figma-expression opt-out" below), the Text/Icon Before/Icon After
-component properties the contract's props/slots warrant (the icon ones only
-when a slot names a `figmaPlaceholder`, resolved against the Phosphor Figma
-library as of T28 and instantiated inside the owner's DS "Icon" wrapper
-component as of T29 — see "Slot placeholder instances (T19)", "Phosphor icon
-source (T28)", and "Slot icons instantiate the DS Icon wrapper (T29)" below),
-and token-bound fills/strokes/spacing from the contract's anatomy — nothing
-fabricated beyond what the contract states.
+and Variant axes, PLUS a BOOLEAN component property per layout/slot boolean
+— **property mode, the library's own default as of T31** (see "Fan-out
+convention" below) — or, only when a contract hand-curates it, one more
+VARIANT axis per curated boolean instead, OR NOTHING AT ALL for one curated
+`omit`/`figmaOmit: true` (T27, see "Figma-expression opt-out" below), the
+Text/Icon Before/Icon After component properties the contract's props/slots
+warrant (the icon ones only when a slot names a `figmaPlaceholder`, resolved
+against the Phosphor Figma library as of T28 and instantiated inside the
+owner's DS "Icon" wrapper component as of T29 — see "Slot placeholder
+instances (T19)", "Phosphor icon source (T28)", and "Slot icons instantiate
+the DS Icon wrapper (T29)" below), and token-bound fills/strokes/spacing from
+the contract's anatomy — nothing fabricated beyond what the contract states.
+A `--sheet` flag (T31, see "Documentation sheet" below) builds a separate,
+plugin-free Propstar-equivalent documentation grid of every property
+combination next to the (lean, property-mode) set, without folding that
+fan-out into the set's own variants.
 
 ```bash
 node scripts/figma-atoms/mcp-shim.mjs                          # keep running (Figma Desktop open, Bridge plugin running)
-node scripts/contracts/generate-figma.mjs --component al-button              # build/rebuild
+node scripts/contracts/generate-figma.mjs --component al-button              # build/rebuild the lean, property-mode set
 node scripts/contracts/generate-figma.mjs --component al-button --ops-only   # ops artifact only, no Figma call
 node scripts/contracts/generate-figma.mjs --component al-button --check-determinism  # same contract, ops derived twice in memory, byte-compared
+node scripts/contracts/generate-figma.mjs --component al-button --sheet      # T31: plugin-free documentation sheet, next to the set above
 ```
 
 **Scratch-page policy.** Every generated set lands on a dedicated page —
@@ -349,61 +355,187 @@ so there is no real set to check. Southleft's `al-button`/`al-card`/`al-input`/
 swept this session — that file was not the one open in Figma Desktop — and
 are left exactly as they were rather than guessed.
 
-## Fan-out convention (T22/T23)
+## Fan-out convention (T22/T23; reverted to property mode T31)
 
-A curated boolean **fans out as its own True/False VARIANT axis** — a
+A curated boolean **can fan out as its own True/False VARIANT axis** — a
 separately-built component per combination, cartesian with every other axis
-— instead of staying a single shared BOOLEAN component property (T12/T18/T19
-behavior, still the default for anything not curated). Curation is a new
-schema-additive field, hand-set per contract, never derived:
+— instead of staying a single shared BOOLEAN component property. Curation is
+a schema-additive field, hand-set per contract, never derived:
 
 - `props[].bindings.figma.axis: true` (alongside `kind: "VARIANT"` and
   `options: ["False", "True"]`) — a layout boolean like `fullWidth`.
 - `slots[].figmaAxis: true` — a `before`/`after` slot.
 
-**Why axes, not properties, for slots.** A shared BOOLEAN property's
-visibility is a single runtime toggle across every variant — a static focus
-ring built at generation time (`ring.resize(comp.width + 8, ...)`) can only
-ever be correct for ONE render of that toggle, usually the built default
-(icons hidden). Fan out the slot as an axis instead and every combination is
-its own real component, built with its OWN true geometry (icons shown or
-hidden, full width or not) BEFORE the ring is sized — so the ring is correct
-for every combination, not just the default one (T22).
+**Property mode — booleans as shared BOOLEAN component properties, never an
+axis — is the library's own default, and (T31) al-button's contract no
+longer curates anything otherwise.** T22/T23 curated al-button's `fullWidth`/
+`before`/`after` into axis mode as a deliberate PILOT of the fan-out
+convention, reasoning from a Propstar documentation-sheet screenshot the
+owner had shared. That screenshot showed every property combination as a
+separate labeled INSTANCE in a reference grid — a Propstar-generated
+**documentation artifact**, not the real component set's own variant
+structure. T31 corrected this reading after re-confirming live against the
+REAL Button set (node `4271:9562`, `y83n4o9LOGs74oAoguFcGS`):
+`componentPropertyDefinitions` there has always been the LEAN 25 variants
+(State × Variant only) with `Slot Before`/`Slot After` as plain BOOLEAN
+properties — exactly what T22/T23's own "Deliberate discrepancy" warning
+below already said, before this task acted on it. al-button's contract
+(`.altitude/contracts/altitude/al-button.contract.json`) has had its
+`figmaAxis: true` curation removed from both slots as of T31; the Contract
+Pilot regeneration is 25 variants again, matching the real set's own shape.
+Every fan-out combination this task's Propstar screenshot wanted to see is
+now available a different way — see "Documentation sheet (`--sheet`, T31)"
+below.
 
-**Generalized default, for any component, not just button:** an `enum` prop
-is always an axis (unchanged, pre-dates this curation field entirely — see
-the `variant` prop's own binding). A `before`/`after` slot or a
-layout-affecting boolean is a component property **unless** curated
-`figmaAxis`/`axis: true`. An unknown/behavior-only boolean (e.g. `hideText`)
-stays a property regardless — there is nothing to "fan out" visually for it.
+**The fan-out machinery itself is NOT removed** — the schema fields, the
+`booleanAxisDefs`/cartesian derivation in `generate-figma.mjs`'s `buildOps()`,
+and this whole section's mechanics remain fully live, for two reasons: (1) a
+FUTURE component's real Figma set might genuinely fan a boolean out as its
+own axis, in which case curating `figmaAxis`/`axis: true` for THAT component
+is the correct, deliberate call this field exists for; (2) `--sheet` mode
+(T31) reuses this exact machinery internally (`buildOps(contract, {
+forceAllBooleanAxes: true })`) to derive its own documentation-grid cartesian
+product, rather than re-implementing the fan-out a second way. "Repurposed,"
+not deleted.
+
+**Why axes, not properties, for slots — when curated.** A shared BOOLEAN
+property's visibility is a single runtime toggle across every variant — a
+static focus ring built at generation time (`ring.resize(comp.width + 8,
+...)`) can only ever be correct for ONE render of that toggle, usually the
+built default (icons hidden). Fan out the slot as an axis instead and every
+combination is its own real component, built with its OWN true geometry
+(icons shown or hidden, full width or not) BEFORE the ring is sized — so the
+ring is correct for every combination, not just the default one (T22). T30's
+focus-as-frame-stroke fix (a real Figma stroke follows the frame's own true
+bounds automatically) made this no longer necessary for al-button — a stroke
+on a property-mode component is correct for whichever combination of
+booleans that SAME component currently has toggled, with nothing to
+pre-bake — which is what let T31 revert al-button to property mode at all.
+
+**Generalized default, for any component:** an `enum` prop is always an axis
+(unchanged, pre-dates this curation field entirely — see the `variant`
+prop's own binding). A `before`/`after` slot or a layout-affecting boolean is
+a component property **unless** curated `figmaAxis`/`axis: true` — curate it
+only for a component whose REAL (or confirmed-intended) Figma set
+demonstrably fans that boolean out as its own axis, never as a default. An
+unknown/behavior-only boolean (e.g. `hideText`) stays a property regardless —
+there is nothing to "fan out" visually for it.
 
 **Icon Before/After stay component properties either way.** The real Button
-set (see below) keeps them that way even where it DOES fan out other things,
-and generate-figma.mjs mirrors that: the icon INSTANCE_SWAP property is wired
-post-`combineAsVariants` exactly as T19 built it; only the icon's per-variant
-VISIBILITY moves from a runtime property reference to a static per-variant
-bake when its slot is curated as an axis.
+set keeps them that way even for a component that DOES curate other things
+into axis mode, and generate-figma.mjs mirrors that: the icon INSTANCE_SWAP
+property is wired post-`combineAsVariants` exactly as T19 built it; only the
+icon's per-variant VISIBILITY would move from a runtime property reference to
+a static per-variant bake if its slot were ever curated as an axis.
 
 **"Is Full Width" has no measured pixel fact.** Contracts carry no pixel
 geometry at all (see "Deviations" below) and no real Figma set exposes this
-as an axis to inspect — the generator renders it as the variant's own natural
-hug width plus a fixed margin (`FULL_WIDTH_EXTRA_PX` in generate-figma.mjs),
-a documented judgment call, not an observed target width.
+as an axis to inspect — a component that DID curate this into axis mode would
+render it as the variant's own natural hug width plus a fixed margin
+(`FULL_WIDTH_EXTRA_PX` in generate-figma.mjs), a documented judgment call,
+not an observed target width. al-button's own `fullWidth` is curated
+`omit: true` instead (see "Figma-expression opt-out" below) — not built at
+all, axis or property.
+
+## Documentation sheet (`--sheet`, T31)
+
+A plugin-free equivalent of the Propstar documentation-grid screenshot that
+originally motivated T22/T23's (since-reverted) axis-mode curation —
+available to anyone who can run `generate-figma.mjs`, no Figma plugin
+install required (Propstar or otherwise), which matters because an agent
+cannot launch a Figma plugin and a colleague may not have Propstar installed
+at all.
+
+```bash
+node scripts/contracts/generate-figma.mjs --component al-button              # 1. build/rebuild the lean, property-mode set first
+node scripts/contracts/generate-figma.mjs --component al-button --sheet      # 2. THEN build/replace its documentation sheet
+node scripts/contracts/generate-figma.mjs --component al-button --sheet --ops-only          # sheet PLAN artifact only, no Figma call
+node scripts/contracts/generate-figma.mjs --component al-button --sheet --check-determinism # same contract, sheet plan derived twice in memory, byte-compared
+```
+
+**What it builds.** A frame named `"<Component> — Prop Sheet"` — its OWN
+top-level frame on `--page`, positioned next to (never inside or on top of)
+the set's own `"<Component> — Generated"` presentation frame — containing a
+labeled grid of real INSTANCES of the already-built (property-mode) set, one
+instance per State × Variant × every other BOOLEAN component property
+combination (al-button: 5 × 5 × 2 × 2 = 100), each switched into its own
+combination via the Figma plugin API's `setProperties` against the TARGET
+set's real property definitions — never a freshly-built component, never a
+runtime-shared toggle. Idempotent: re-running REPLACES the prior sheet frame
+by name, never appends a second stale copy alongside it, and never touches
+the target set (read-only lookup by name) or the target's own presentation
+frame.
+
+**Requires the set to already exist.** `--sheet` never creates the lean set
+or the page it lives on — run `generate-figma.mjs` WITHOUT `--sheet` first
+(or point it at a real, hand-built set of the same name already on
+`--page`). It also means regenerating the base set (a plain, non-`--sheet`
+run) clears the WHOLE page, including a previously-built sheet frame — same
+"reused with only its own children cleared" page policy the base builder has
+always had (see "Scratch-page policy" above) — so re-run `--sheet` again
+after any base regeneration if the sheet should still be there.
+
+**Grouping (a documented judgment call — see `buildSheetPlan()`'s own
+comment in `generate-figma.mjs`).** COLUMNS = State, matching the live set's
+own primary grid axis. ROW GROUPS, outermost to innermost = Variant, then
+every other boolean axis in the SAME `BOOLEAN_AXIS_CANONICAL_ORDER` the
+(possible, if curated) axis-mode fan-out above already uses (Slot Before,
+Slot After, Is Full Width) — one heading per Variant value, one concatenated
+row label (e.g. `"Slot Before=False, Slot After=True"`) per combination of
+the remaining booleans. This is "a clean deterministic grouping," not an
+attempted pixel-for-pixel replica of the owner's Propstar reference
+screenshot, which was a reference image, not machine-readable input to this
+generator.
+
+**Repurposes the T23 fan-out machinery, does not duplicate it.**
+`buildSheetPlan()` calls `buildOps(contract, { forceAllBooleanAxes: true })`
+— the SAME `booleanAxisDefs`/cartesian derivation the (deprecated-by-default)
+axis mode above uses, just forced on for every non-omitted boolean
+regardless of the contract's own curation — to get the full cartesian
+`variants` list, then only RE-GROUPS that list for rendering as sheet
+instances. It builds nothing itself and does not re-derive the cartesian
+product a second way.
+
+**Batched across multiple `figma_execute` calls, by design.** The Desktop
+Bridge enforces a hard ~30s execution ceiling per call (see T28's own
+comments on this file). Rather than one call creating all ~100 instances,
+`--sheet` issues one SETUP call (creates/replaces the sheet frame, sizes it
+to a precomputed FIXED footprint, builds the State column header) followed
+by one call PER Variant row group (al-button: 5 calls, 20 instances each) —
+6 total calls for the pilot. Layout uses fixed, generous pitch constants
+(`SHEET_ROW_LABEL_WIDTH_PX`/`SHEET_CELL_PITCH_X_PX`/etc. in
+`generate-figma.mjs`), computed once in Node, never measured live — the live
+set's own "measure worst-case width after building" dance (see T21/T28's
+comments) is exactly the kind of extra per-call work a ~100-instance batch
+cannot afford under this ceiling.
+
+**Ops artifact.** `.altitude/figma-sync/<project's figma-sync
+dir>/generated-ops/<tag>.sheet.ops.json` — same gitignored zone, same
+"deterministic build INPUT, no ids" rules as the lean set's own
+`<tag>.ops.json` (`buildSheetPlan()` is a pure function; `--check-determinism`
+proves it the same way).
+
+**Relationship to Propstar.** Propstar (the interactive Figma plugin) remains
+a perfectly valid OPTIONAL way to build the same kind of reference sheet by
+hand, live, inside Figma — nothing here removes it or discourages using it.
+`--sheet` is the CANONICAL, automatable, plugin-free equivalent: no install,
+runs from any shell with the Desktop Bridge connected, reproducible from the
+contract alone.
 
 **Deliberate discrepancy — verify before trusting "matches the real set."**
-al-button's contract (`.altitude/contracts/altitude/al-button.contract.json`)
-curates all three (`fullWidth`, `before`, `after`) into axis mode, growing
-the Contract Pilot regeneration from 25 to 200 variants (State × Variant ×
-Slot Before × Slot After × Is Full Width). This was VERIFIED, live, against
-the REAL Button set (node `4271:9562`, `y83n4o9LOGs74oAoguFcGS`) at T22/T23
-time: the real set still has 25 variants — `Is Full Width`, `Slot Before`,
-`Slot After` are BOOLEAN component properties there, not VARIANT axes. The
-pilot's fan-out is a deliberate proposal/pilot of the convention, not a
-description of what the real set currently does — a human decision is still
-open on whether to convert the real hand-built set to match. Re-verify live
+(Historical, T22/T23; resolved T31.) al-button's contract briefly curated all
+three (`fullWidth`, `before`, `after`) into axis mode, growing the Contract
+Pilot regeneration from 25 to 200 variants (State × Variant × Slot Before ×
+Slot After × Is Full Width) — later 100 once `fullWidth` was marked `omit`
+(T27). This was verified, live, against the REAL Button set (node
+`4271:9562`, `y83n4o9LOGs74oAoguFcGS`) at T22/T23 time to NOT match: the real
+set has always had 25 variants, with `Slot Before`/`Slot After` as BOOLEAN
+component properties, not axes. T31 closed this gap by removing the
+curation rather than converting the real set — re-verify live
 (`figma_get_status` + read `componentPropertyDefinitions` off node
 `4271:9562`) before asserting either set's shape in a future task; this
-paragraph will go stale the moment someone converts the real set.
+paragraph will go stale the moment someone curates a NEW component into axis
+mode for a confirmed-real reason.
 
 ## Figma-expression opt-out (T27)
 
@@ -424,7 +556,12 @@ Schema-additive, hand-curated only, no derivation source (same principle as
 instance, no Icon Before/After INSTANCE_SWAP property for an omitted slot.
 al-button's pilot regenerated at 100 variants (5 State × 5 Variant × 2 Slot
 Before × 2 Slot After) once `fullWidth` was marked omitted — down from T23's
-200, with no `Is Full Width` axis anywhere on the set.
+200, with no `Is Full Width` axis anywhere on the set. (T31: al-button's
+`before`/`after` slots have since had their OWN `figmaAxis: true` curation
+removed too, dropping the Contract Pilot regeneration to the lean, real-set-
+matching 25 variants — see "Fan-out convention" above. `fullWidth` stays
+`omit: true` either way; omission and axis-mode curation are independent
+fields.)
 
 **Differ effect** (`contract-diff.mjs`): an omitted prop/slot absent from
 canvas — the DESIRED state — is a named `skipped` entry
