@@ -468,30 +468,41 @@ re-running REPLACES the prior sheet frame by name, never appends a second
 stale copy alongside it, and never touches the target set (read-only lookup
 by name) or the target's own presentation frame.
 
-**A real table, not positioned lines (T32).** The grid is nested auto-layout
+**A real table, CSS `border-collapse`-simple (T32; corrected mid-task after
+owner review of a zoomed screenshot).** The grid is nested auto-layout
 frames — one VERTICAL "Sheet Grid" containing a header row and one frame per
-Variant group (a banner cell + one row per boolean combo), each row a
+Variant group (a banner row + one row per boolean combo), each row a
 HORIZONTAL frame of FIXED-width cell frames (one per State column, or the
 row-label column) — never a `figma.createVector()` line and never a
 manually-positioned x/y (an earlier same-task cut tried exactly that; it was
-superseded before shipping). The dashed purple gridlines the owner asked to
-mirror from Propstar are REAL per-side frame borders
-(`strokeTopWeight`/`strokeRightWeight`/`strokeBottomWeight`/
-`strokeLeftWeight`, `strokeAlign: 'INSIDE'`) — each cell draws only its own
-right + bottom edge (the "collapsed borders" convention: the shared boundary
-with the next cell/row is always drawn by the cell BEFORE it, never by
-both), the label column additionally draws left, and the header row
-additionally draws top — closing the table's four outer edges exactly once
-each with no doubled or missing lines. A Variant-group boundary draws at
-`SHEET_SEPARATOR_GROUP_WEIGHT` (2px) instead of the ordinary 1px, reading
-distinctly heavier per the owner's own "can carry a heavier... border"
-direction. Every cell also gets real bindable padding
-(`SHEET_CELL_PADDING_FIGMA_VAR`, `theme/space/sm`) and the grid itself gets
-its own (`SHEET_GRID_PADDING_FIGMA_VAR`, `theme/space/lg`, one step in from
-the outer container's `theme/space/xl`) — both real auto-layout `padding*`
-bindings now that every frame involved is genuine auto-layout, not the
-`layoutMode: 'NONE'` canvas an earlier cut used (which had no such property
-to bind at all).
+superseded before shipping). A FIRST T32 cut gave every cell its own 4-side
+"collapsed borders" stroke (right+bottom always, plus left/top for edge
+cells) — the owner's own zoomed screenshot showed this rendering as separate
+floating dashed boxes with doubled/offset edges, not one grid. The corrected
+rule, verbatim: **"only stroke on main container, rows - bottom (except for
+last), columns - right (except for last)."** Exactly three stroke sources
+now exist anywhere in the sheet: the outer "Sheet Grid" frame draws a full
+four-side border once (`sheetGrid.strokeTopWeight` etc., set directly in
+`buildSheetSetupPluginCode`); every ROW (header, banner, or data — the rule
+does not distinguish them) draws ONLY its own bottom edge, none on its
+absolute LAST row (the container's own bottom edge closes that one instead —
+drawing both would double it); every CELL draws ONLY its own right edge,
+none on the row's last cell (same reasoning, horizontal axis). A
+Variant-group boundary is simply that group's own last row's bottom weight
+upgraded to `SHEET_SEPARATOR_GROUP_WEIGHT` (2px vs the ordinary 1px) — one
+line, heavier, never a second frame or a banner-side stroke. `itemSpacing: 0`
+on every row AND every group/grid-level frame is what makes these
+single-edge strokes read as ONE continuous line rather than a gap-then-a-line
+— see `rowBottomWeight()`/`cellRightWeight()` in `generate-figma.mjs` for the
+exact pure-function rule, and `.mm/specs/2026-08-25-contract-backed-figma-
+parity-and-generation/verification/screenshots/t32-prop-sheet-borders-detail.png`
+for a zoomed crop proving no gaps/doubles. Every cell also gets real
+bindable padding (`SHEET_CELL_PADDING_FIGMA_VAR`, `theme/space/sm`) and the
+grid itself gets its own (`SHEET_GRID_PADDING_FIGMA_VAR`, `theme/space/lg`,
+one step in from the outer container's `theme/space/xl`) — both real
+auto-layout `padding*` bindings now that every frame involved is genuine
+auto-layout, not the `layoutMode: 'NONE'` canvas an earlier cut used (which
+had no such property to bind at all).
 
 **Requires the set to already exist.** `--sheet` never creates the lean set
 or the page it lives on — run `generate-figma.mjs` WITHOUT `--sheet` first

@@ -205,11 +205,16 @@ an instance of the file's own "Documentation Header" master at the top
 until per-component docs publish), then a genuine nested-auto-layout TABLE of
 real INSTANCES of the (lean, property-mode) set below it, one per State ×
 Variant × every other boolean property combination (100 for al-button), each
-switched via `setProperties`. The Propstar-purple gridlines are REAL per-side
-frame borders on each cell (collapsed-border convention — every cell draws
-only its own right+bottom edge, the label column also draws left, the header
-row also draws top), a Variant-group boundary drawing at double weight; row
-labels are humanized ("Icon before", "Icons before + after", "Default"),
+switched via `setProperties`. The Propstar-purple gridlines are a CSS
+`border-collapse`-simple rule (corrected mid-task after the owner reviewed a
+zoomed screenshot of a first, over-complicated per-cell 4-side attempt that
+rendered as separate floating boxes): the outer grid frame draws one full
+four-side border, every ROW draws only its own bottom edge (none on the
+table's absolute last row), every CELL draws only its own right edge (none
+on a row's last cell), `itemSpacing: 0` throughout so adjacent single-edge
+strokes read as one continuous line — a Variant-group boundary is just that
+group's own last row's bottom weight at double weight, never a second frame;
+row labels are humanized ("Icon before", "Icons before + after", "Default"),
 never a raw `Prop=Value` dump. Internally reuses the SAME T23 cartesian
 derivation (`buildOps(contract, { forceAllBooleanAxes: true })`), just
 re-grouped for rendering rather than re-derived — "repurposed, not

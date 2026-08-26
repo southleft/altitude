@@ -841,30 +841,37 @@ function humanizeBooleanCombo(contract, boolAxes, combo) {
 }
 
 /**
- * T32: per-side border weights for one cell — the "real table, collapsed
- * borders" rule. Every cell draws its OWN right + bottom edge (the shared
- * boundary with the NEXT cell/row is always drawn by the cell BEFORE it,
- * never by both, so no edge is ever double-drawn by accident); a cell also
- * draws LEFT when it is the row-label column (col 0 — the only column nothing
- * to its own left would otherwise close), and draws TOP only when it is the
- * table's very first row (the header row) closing the table's own top edge —
- * every other row's top boundary is already the row above it own bottom
- * edge. A GROUP boundary (this cell's row is the LAST row of a Variant group
- * that is not the last group) upgrades that row's bottom weight to
- * `SHEET_SEPARATOR_GROUP_WEIGHT` — "heavier... border" per the owner's own
- * design direction — everywhere else weight is the ordinary
- * `SHEET_SEPARATOR_WEIGHT`. A weight of 0 means that side is invisible
- * (Figma renders nothing for that edge), never omitted from the object, so
- * every cell's stroke shape is uniform and independent of its position.
+ * T32 (owner correction — the first cut's per-cell 4-side "collapsed
+ * borders" scheme rendered as separate floating boxes with doubled/offset
+ * dashes at shared edges, not one grid; her own words: "maybe only stroke on
+ * main container, rows - bottom (except for last), columns - right (except
+ * for last)"). CSS `border-collapse`-style, exactly three stroke sources,
+ * never more:
+ *   - the outer container (sheetGrid) draws a full four-side border once —
+ *     see buildSheetSetupPluginCode.
+ *   - EVERY row (header, banner, or data — border-collapse does not
+ *     distinguish them) draws its OWN bottom edge ONLY, never top/left/
+ *     right (the container's own edges already close those, and every
+ *     row's TOP boundary is simply the row above it own bottom).
+ *   - EVERY cell (label or data) draws its OWN right edge ONLY, never top/
+ *     bottom/left, for the exact same reason along the horizontal axis.
+ * The ABSOLUTE last row in the whole table draws NO bottom (the container's
+ * own bottom edge closes it — drawing both would double that one edge); the
+ * LAST cell in a row draws NO right (the container's own right edge closes
+ * it). A Variant-group boundary is simply that group's OWN last row's
+ * bottom weight upgraded to `SHEET_SEPARATOR_GROUP_WEIGHT` — "heavier...
+ * border" per the owner's design direction — never a second frame or a
+ * banner-side stroke; there is exactly one line at that seam, at a heavier
+ * weight, same as every other row boundary is exactly one line at the
+ * ordinary weight.
  */
-function cellBorders({ isHeaderRow, isFirstColumn, isLastRowOfGroup, isLastGroup }) {
-  const bottomWeight = isLastRowOfGroup && !isLastGroup ? SHEET_SEPARATOR_GROUP_WEIGHT : SHEET_SEPARATOR_WEIGHT;
-  return {
-    top: isHeaderRow ? SHEET_SEPARATOR_WEIGHT : 0,
-    right: SHEET_SEPARATOR_WEIGHT,
-    bottom: bottomWeight,
-    left: isFirstColumn ? SHEET_SEPARATOR_WEIGHT : 0,
-  };
+function rowBottomWeight({ isLastRowOverall, isLastRowOfGroup, isLastGroup }) {
+  if (isLastRowOverall) return 0;
+  if (isLastRowOfGroup && !isLastGroup) return SHEET_SEPARATOR_GROUP_WEIGHT;
+  return SHEET_SEPARATOR_WEIGHT;
+}
+function cellRightWeight(isLastColumn) {
+  return isLastColumn ? 0 : SHEET_SEPARATOR_WEIGHT;
 }
 
 /**
@@ -899,26 +906,31 @@ export function buildSheetPlan(contract, { projectId = 'altitude', pageName = 'C
   const lastGroupIndex = variantValues.length - 1;
 
   // Header row: one label-column spacer cell (empty — the row-label column
-  // has nothing to say in the header) + one cell per State value.
+  // has nothing to say in the header) + one cell per State value. Its OWN
+  // bottom is ordinary weight (it is never the table's last row); the last
+  // State column's cell draws no right (the container's own edge closes it).
   const headerCells = [
-    { label: '', isLabelColumn: true, border: cellBorders({ isHeaderRow: true, isFirstColumn: true, isLastRowOfGroup: false, isLastGroup: true }) },
-    ...stateAxis.values.map((state) => ({
+    { label: '', isLabelColumn: true, rightWeight: cellRightWeight(false) },
+    ...stateAxis.values.map((state, ci) => ({
       label: humanizeAxisValue(state),
       isLabelColumn: false,
-      border: cellBorders({ isHeaderRow: true, isFirstColumn: false, isLastRowOfGroup: false, isLastGroup: true }),
+      rightWeight: cellRightWeight(ci === stateAxis.values.length - 1),
     })),
   ];
+  const headerBottomWeight = rowBottomWeight({ isLastRowOverall: false, isLastRowOfGroup: false, isLastGroup: false });
 
   const groups = variantValues.map((variant, gi) => {
     const isLastGroup = gi === lastGroupIndex;
     const rows = subCombos.map((combo, ri) => {
       const isLastRowOfGroup = ri === subCombos.length - 1;
+      const isLastRowOverall = isLastGroup && isLastRowOfGroup;
+      const bottomWeight = rowBottomWeight({ isLastRowOverall, isLastRowOfGroup, isLastGroup });
       const labelCell = {
         label: boolAxes.length ? humanizeBooleanCombo(contract, boolAxes, combo) : 'Default',
         isLabelColumn: true,
-        border: cellBorders({ isHeaderRow: false, isFirstColumn: true, isLastRowOfGroup, isLastGroup }),
+        rightWeight: cellRightWeight(false),
       };
-      const dataCells = stateAxis.values.map((state) => {
+      const dataCells = stateAxis.values.map((state, ci) => {
         const properties = { State: state };
         if (variant) properties.Variant = variant;
         for (const a of boolAxes) properties[a.name] = combo[a.name] === 'True';
@@ -929,21 +941,22 @@ export function buildSheetPlan(contract, { projectId = 'altitude', pageName = 'C
           state,
           properties,
           sourceVariantName: matched ? matched.name : null,
-          border: cellBorders({ isHeaderRow: false, isFirstColumn: false, isLastRowOfGroup, isLastGroup }),
+          rightWeight: cellRightWeight(ci === stateAxis.values.length - 1),
         };
       });
-      return { labelCell, cells: dataCells };
+      return { labelCell, cells: dataCells, bottomWeight };
     });
     return {
       groupLabel: variant ? humanizeAxisValue(variant) : null,
-      // Banner is its own single wide cell spanning the WHOLE table width —
-      // its own top edge is the group boundary line for every group after
-      // the first (the first group's banner sits directly under the header
-      // row, whose own bottom is already 0 by cellBorders' rule, so the
-      // banner needs SOMETHING to close that seam — it always draws its own
-      // top at the group weight, upgraded to the heavier weight only when
-      // there is a PRECEDING group to separate from).
-      banner: { label: variant ? humanizeAxisValue(variant) : null, topWeight: gi === 0 ? SHEET_SEPARATOR_WEIGHT : SHEET_SEPARATOR_GROUP_WEIGHT },
+      // Banner is one wide cell (its own row) spanning the table's FULL
+      // width — a single column, so it draws NO right (there is nothing
+      // beside it to divide from; the container's own right edge closes
+      // it). Its bottom follows the SAME row rule as every other row (it is
+      // never the group's LAST row, since at least one data row always
+      // follows it) — no separate "group boundary" concept lives here
+      // anymore; that boundary is entirely the PRECEDING group's own last
+      // data row (see rowBottomWeight's own comment).
+      banner: { label: variant ? humanizeAxisValue(variant) : null, bottomWeight: rowBottomWeight({ isLastRowOverall: false, isLastRowOfGroup: false, isLastGroup: false }) },
       rows,
     };
   });
@@ -982,7 +995,9 @@ export function buildSheetPlan(contract, { projectId = 'altitude', pageName = 'C
       separatorColor: SHEET_SEPARATOR_COLOR_RGB,
       separatorColorHex: SHEET_SEPARATOR_COLOR_HEX,
       dashPattern: SHEET_SEPARATOR_DASH_PATTERN,
+      separatorWeight: SHEET_SEPARATOR_WEIGHT,
       headerCells,
+      headerBottomWeight,
       groups,
     },
     totalInstances,
@@ -2074,32 +2089,40 @@ function variableHelpersSnippet() {
 }
 
 /**
- * T32: shared cell-frame builder — used by BOTH the setup call (header row
- * cells) and every group call (label cells + data cells), so the "real
- * table" construction rule lives in exactly one place. Ordering follows this
- * file's own established Sizing Modes discipline (see the "Is Full Width"
- * axis comment in buildVariant, and T28's icon-instance comment): a freshly
- * created auto-layout frame starts HUG/HUG; `resize()` sets BOTH axes to
- * FIXED as a side effect, so the "restore the OTHER axis back to hug"
- * override must come immediately AFTER resize(), never before.
- *   - `width`: the cell's FIXED width (SHEET_ROW_LABEL_WIDTH_PX for a label/
- *     banner cell, SHEET_CELL_WIDTH_PX for a data-column cell) — this is
- *     what keeps every row's columns aligned into a real grid, since Figma
- *     auto-layout has no cross-row "equalize this column's width" feature of
- *     its own; every cell in the same column position must simply request
- *     the SAME fixed width.
+ * T32 (owner correction, CSS border-collapse rule): shared cell/row-frame
+ * builder — used by BOTH the setup call (header row) and every group call
+ * (banner + data rows), so the "real table" construction rule lives in
+ * exactly one place. Ordering follows this file's own established Sizing
+ * Modes discipline (see the "Is Full Width" axis comment in buildVariant,
+ * and T28's icon-instance comment): a freshly created auto-layout frame
+ * starts HUG/HUG; `resize()` sets BOTH axes to FIXED as a side effect, so
+ * the "restore the OTHER axis back to hug" override must come immediately
+ * AFTER resize(), never before.
+ *
+ * Exactly three stroke sources exist anywhere in the sheet (see
+ * `rowBottomWeight()`/`cellRightWeight()` in buildSheetPlan for the full
+ * rule this mirrors): the outer container (set directly on sheetGrid, not
+ * here), each ROW's own bottom edge (`makeRow`), each CELL's own right edge
+ * (`makeCell`) — never a cell's top/bottom/left or a row's top/left/right.
+ * `itemSpacing: 0` on both is what makes adjacent frames' single-edge
+ * strokes read as ONE continuous grid line rather than a gap-then-a-line.
+ *   - `width`: the cell's FIXED width (SHEET_ROW_LABEL_WIDTH_PX for a
+ *     label/banner cell, SHEET_CELL_WIDTH_PX for a data-column cell) — this
+ *     is what keeps every row's columns aligned into a real grid, since
+ *     Figma auto-layout has no cross-row "equalize this column's width"
+ *     feature of its own; every cell in the same column position must
+ *     simply request the SAME fixed width.
  *   - `align`: 'CENTER' for a data cell (centers its one instance), 'MIN'
  *     for a label/banner cell (left-aligns its text, the ordinary table
  *     convention).
- *   - `border`: `{ top, right, bottom, left }` weights from buildSheetPlan's
- *     own `cellBorders()` — 0 means invisible on that side. `strokeAlign:
- *     'INSIDE'` so the border never grows the cell beyond its own fixed
- *     width (an OUTSIDE/CENTER stroke would, breaking column alignment by
- *     the stroke weight on every bordered edge).
+ *   - `rightWeight`/`bottomWeight`: 0 means invisible on that side —
+ *     `strokeAlign: 'INSIDE'` throughout so a border never grows a cell/row
+ *     beyond its own fixed width (an OUTSIDE/CENTER stroke would, breaking
+ *     column alignment by the stroke weight on every bordered edge).
  */
 function cellFrameSnippet() {
   return String.raw`
-    function makeCell(width, align, border, paint, dashPattern, cellPaddingVar) {
+    function makeCell(width, align, rightWeight, paint, dashPattern, cellPaddingVar) {
       const cell = figma.createFrame();
       cell.name = 'Cell';
       cell.layoutMode = 'HORIZONTAL';
@@ -2117,13 +2140,13 @@ function cellFrameSnippet() {
       cell.strokes = [paint];
       cell.dashPattern = dashPattern;
       cell.strokeAlign = 'INSIDE';
-      cell.strokeTopWeight = border.top;
-      cell.strokeRightWeight = border.right;
-      cell.strokeBottomWeight = border.bottom;
-      cell.strokeLeftWeight = border.left;
+      cell.strokeTopWeight = 0;
+      cell.strokeRightWeight = rightWeight;
+      cell.strokeBottomWeight = 0;
+      cell.strokeLeftWeight = 0;
       return cell;
     }
-    function makeRow() {
+    function makeRow(bottomWeight, paint, dashPattern) {
       const row = figma.createFrame();
       row.name = 'Row';
       row.layoutMode = 'HORIZONTAL';
@@ -2131,6 +2154,13 @@ function cellFrameSnippet() {
       row.counterAxisSizingMode = 'AUTO';
       row.itemSpacing = 0;
       row.fills = [];
+      row.strokes = [paint];
+      row.dashPattern = dashPattern;
+      row.strokeAlign = 'INSIDE';
+      row.strokeTopWeight = 0;
+      row.strokeRightWeight = 0;
+      row.strokeBottomWeight = bottomWeight;
+      row.strokeLeftWeight = 0;
       return row;
     }
   `;
@@ -2205,6 +2235,20 @@ function buildSheetSetupPluginCode(plan, SC) {
     bindNum(sheetGrid, 'paddingBottom', PLAN.table.gridPaddingFigmaVar);
     bindNum(sheetGrid, 'paddingLeft', PLAN.table.gridPaddingFigmaVar);
     bindNum(sheetGrid, 'paddingRight', PLAN.table.gridPaddingFigmaVar);
+    // T32 (owner correction): the ONLY four-side stroke in the whole sheet —
+    // every row/cell inside draws at most one edge each (see
+    // cellFrameSnippet's own comment) — this single border is what closes
+    // the table's outer top/left/right, and its bottom edge closes the
+    // table's absolute last row (which deliberately draws no bottom of its
+    // own, to avoid doubling this exact edge).
+    { const sepPaintContainer = { type: 'SOLID', color: PLAN.table.separatorColor };
+      sheetGrid.strokes = [sepPaintContainer];
+      sheetGrid.dashPattern = PLAN.table.dashPattern;
+      sheetGrid.strokeAlign = 'INSIDE';
+      sheetGrid.strokeTopWeight = PLAN.table.separatorWeight;
+      sheetGrid.strokeRightWeight = PLAN.table.separatorWeight;
+      sheetGrid.strokeBottomWeight = PLAN.table.separatorWeight;
+      sheetGrid.strokeLeftWeight = PLAN.table.separatorWeight; }
 
     // Regular weight — used for the header-row cell labels below AND (T32)
     // the doc header's Description text, which already ships this exact
@@ -2333,11 +2377,11 @@ function buildSheetSetupPluginCode(plan, SC) {
     // call) rather than a group call since it belongs to the WHOLE table,
     // not any one Variant group.
     const sepPaint = { type: 'SOLID', color: PLAN.table.separatorColor };
-    const headerRow = makeRow();
+    const headerRow = makeRow(PLAN.table.headerBottomWeight, sepPaint, PLAN.table.dashPattern);
     const columnHeaderTextNodes = [];
     for (const hc of PLAN.table.headerCells) {
       const width = hc.isLabelColumn ? PLAN.table.rowLabelWidth : PLAN.table.cellWidth;
-      const cell = makeCell(width, hc.isLabelColumn ? 'MIN' : 'CENTER', hc.border, sepPaint, PLAN.table.dashPattern, PLAN.table.cellPaddingFigmaVar);
+      const cell = makeCell(width, hc.isLabelColumn ? 'MIN' : 'CENTER', hc.rightWeight, sepPaint, PLAN.table.dashPattern, PLAN.table.cellPaddingFigmaVar);
       if (hc.label) {
         const t = figma.createText();
         t.fontName = fontName;
@@ -2440,12 +2484,15 @@ function buildSheetGroupPluginCode(plan, groupIndex, ids, SC) {
     groupFrame.itemSpacing = 0;
     groupFrame.fills = [];
 
-    // Banner — one cell spanning the table's FULL width (label column +
-    // every data column), carrying the humanized Variant value. Its own top
-    // edge is this group's boundary line (heavier when there is a preceding
-    // group to separate from — see buildSheetPlan's own banner comment).
-    const bannerRow = makeRow();
-    const bannerCell = makeCell(${JSON.stringify(plan.table.tableWidth)}, 'MIN', { top: GROUP.banner.topWeight, right: 1, bottom: 1, left: 1 }, sepPaint, TABLE.dashPattern, TABLE.cellPaddingFigmaVar);
+    // Banner — its own ROW, one cell spanning the table's FULL width (label
+    // column + every data column), carrying the humanized Variant value.
+    // Single column -> no right edge of its own (see cellRightWeight's own
+    // comment); its bottom follows the ordinary row rule, same as every
+    // other row (T32 owner correction — no separate "group boundary" stroke
+    // lives on the banner; that boundary is entirely the PRECEDING group's
+    // own last data row, see buildSheetPlan's rowBottomWeight comment).
+    const bannerRow = makeRow(GROUP.banner.bottomWeight, sepPaint, TABLE.dashPattern);
+    const bannerCell = makeCell(${JSON.stringify(plan.table.tableWidth)}, 'MIN', 0, sepPaint, TABLE.dashPattern, TABLE.cellPaddingFigmaVar);
     if (GROUP.banner.label) {
       const heading = figma.createText();
       heading.fontName = fontName;
@@ -2459,8 +2506,8 @@ function buildSheetGroupPluginCode(plan, groupIndex, ids, SC) {
     groupFrame.appendChild(bannerRow);
 
     for (const row of GROUP.rows) {
-      const dataRow = makeRow();
-      const labelCell = makeCell(TABLE.rowLabelWidth, 'MIN', row.labelCell.border, sepPaint, TABLE.dashPattern, TABLE.cellPaddingFigmaVar);
+      const dataRow = makeRow(row.bottomWeight, sepPaint, TABLE.dashPattern);
+      const labelCell = makeCell(TABLE.rowLabelWidth, 'MIN', row.labelCell.rightWeight, sepPaint, TABLE.dashPattern, TABLE.cellPaddingFigmaVar);
       if (row.labelCell.label) {
         const label = figma.createText();
         label.fontName = fontName;
@@ -2473,7 +2520,7 @@ function buildSheetGroupPluginCode(plan, groupIndex, ids, SC) {
       dataRow.appendChild(labelCell);
 
       for (const cell of row.cells) {
-        const dataCell = makeCell(TABLE.cellWidth, 'CENTER', cell.border, sepPaint, TABLE.dashPattern, TABLE.cellPaddingFigmaVar);
+        const dataCell = makeCell(TABLE.cellWidth, 'CENTER', cell.rightWeight, sepPaint, TABLE.dashPattern, TABLE.cellPaddingFigmaVar);
         const inst = base.createInstance();
         dataCell.appendChild(inst);
         try { inst.setProperties(applyFor(cell.properties)); }
