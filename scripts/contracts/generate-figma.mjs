@@ -2122,20 +2122,47 @@ function variableHelpersSnippet() {
  */
 function cellFrameSnippet() {
   return String.raw`
-    function makeCell(width, align, rightWeight, paint, dashPattern, cellPaddingVar) {
+    // T32 (owner polish — a zoomed screenshot showed label/header cells as
+    // short, non-flush boxes): makeCell() no longer applies padding on the
+    // OUTER bordered frame at all — that outer frame's ONLY job is width +
+    // border + (for a label/header cell) filling the row's full height, so
+    // its border always runs flush top-to-bottom with the row. Padding
+    // instead lives on makeLabelInner() — a small HUG-sized wrapper around
+    // just the TEXT — for any cell whose content is text (label, banner,
+    // header). A data cell (holding a button instance) is UNCHANGED: no
+    // inner wrapper, padding stays directly on the cell (the instance
+    // already carries its own visual weight; there is no "short box"
+    // problem there — see this function's own investigation notes below).
+    //
+    // Root cause, confirmed live this session (not merely a padding
+    // question): 1) a freshly created, still-childless frame's own
+    // \`.height\` getter can read Figma's createFrame() DEFAULT (100) rather
+    // than its true post-layoutMode hug size — resize()'s old
+    // \`Math.max(cell.height, 1)\` therefore locked some cells at a stale
+    // 100px instead of a real small hug value, most visibly the header
+    // row's empty corner cell (its stale 100 became the header ROW's own
+    // hug height once every header cell had gone FILL, inflating every
+    // sibling along with it). Fixed by never trusting \`.height\` here — a
+    // resize() height argument of a plain literal \`1\` is always safe
+    // because \`counterAxisSizingMode\` is restored to hug immediately after.
+    // 2) \`sheetGrid\`'s OWN padding bind (in buildSheetSetupPluginCode)
+    // silently failed the SAME way — CONFIRMED live (\`boundVariables: {}\`
+    // after the run, despite no reported \`missingVars\` entry, because
+    // bindNum's try/catch swallows a THROWN setBoundVariable failure without
+    // recording it) — binding a padding variable onto sheetGrid before it
+    // had any children did not stick; moved to after the header row is
+    // appended (see buildSheetSetupPluginCode).
+    function makeCell(width, align, rightWeight, paint, dashPattern) {
       const cell = figma.createFrame();
       cell.name = 'Cell';
       cell.layoutMode = 'HORIZONTAL';
       cell.primaryAxisAlignItems = align;
       cell.counterAxisAlignItems = 'CENTER';
       cell.fills = [];
-      bindNum(cell, 'paddingTop', cellPaddingVar);
-      bindNum(cell, 'paddingBottom', cellPaddingVar);
-      bindNum(cell, 'paddingLeft', cellPaddingVar);
-      bindNum(cell, 'paddingRight', cellPaddingVar);
       // resize() forces BOTH axes to FIXED — restore height to hug right
-      // after, so only WIDTH stays fixed (see this function's own comment).
-      cell.resize(width, Math.max(cell.height, 1));
+      // after, so only WIDTH stays fixed. A literal \`1\`, never \`.height\`
+      // (see this function's own comment on why that read can be stale).
+      cell.resize(width, 1);
       cell.counterAxisSizingMode = 'AUTO';
       cell.strokes = [paint];
       cell.dashPattern = dashPattern;
@@ -2144,6 +2171,34 @@ function cellFrameSnippet() {
       cell.strokeRightWeight = rightWeight;
       cell.strokeBottomWeight = 0;
       cell.strokeLeftWeight = 0;
+      return cell;
+    }
+    // T32: the text-padding wrapper — HUG both axes, no border/fill of its
+    // own, appended INSIDE a (border-owning, padding-free) makeCell(). This
+    // is what keeps the label's own breathing room while letting the OUTER
+    // cell's border run flush with the row when that outer cell is set to
+    // FILL height by the caller (layoutSizingVertical, set post-append —
+    // meaningless before a node is parented into an auto-layout frame, so
+    // never attempted here).
+    function makeLabelInner(paddingVar) {
+      const inner = figma.createFrame();
+      inner.name = 'Label';
+      inner.layoutMode = 'HORIZONTAL';
+      inner.primaryAxisSizingMode = 'AUTO';
+      inner.counterAxisSizingMode = 'AUTO';
+      inner.fills = [];
+      bindNum(inner, 'paddingTop', paddingVar);
+      bindNum(inner, 'paddingBottom', paddingVar);
+      bindNum(inner, 'paddingLeft', paddingVar);
+      bindNum(inner, 'paddingRight', paddingVar);
+      return inner;
+    }
+    function makeDataCell(width, rightWeight, paint, dashPattern, cellPaddingVar) {
+      const cell = makeCell(width, 'CENTER', rightWeight, paint, dashPattern);
+      bindNum(cell, 'paddingTop', cellPaddingVar);
+      bindNum(cell, 'paddingBottom', cellPaddingVar);
+      bindNum(cell, 'paddingLeft', cellPaddingVar);
+      bindNum(cell, 'paddingRight', cellPaddingVar);
       return cell;
     }
     function makeRow(bottomWeight, paint, dashPattern) {
@@ -2231,10 +2286,14 @@ function buildSheetSetupPluginCode(plan, SC) {
     sheetGrid.counterAxisSizingMode = 'AUTO';
     sheetGrid.itemSpacing = 0;
     sheetGrid.fills = [];
-    bindNum(sheetGrid, 'paddingTop', PLAN.table.gridPaddingFigmaVar);
-    bindNum(sheetGrid, 'paddingBottom', PLAN.table.gridPaddingFigmaVar);
-    bindNum(sheetGrid, 'paddingLeft', PLAN.table.gridPaddingFigmaVar);
-    bindNum(sheetGrid, 'paddingRight', PLAN.table.gridPaddingFigmaVar);
+    // T32 (bug found while investigating the owner's padding polish ask):
+    // binding a padding variable onto sheetGrid HERE — before it has any
+    // children — CONFIRMED LIVE to silently not stick (boundVariables: {}
+    // read back after a full run, despite no reported missingVars entry,
+    // because bindNum's own try/catch swallows a thrown setBoundVariable
+    // failure without recording it — a real gap in that helper, not touched
+    // here to keep this fix surgical). Moved to right after the header row
+    // is appended below, once sheetGrid actually has content.
     // T32 (owner correction): the ONLY four-side stroke in the whole sheet —
     // every row/cell inside draws at most one edge each (see
     // cellFrameSnippet's own comment) — this single border is what closes
@@ -2381,19 +2440,32 @@ function buildSheetSetupPluginCode(plan, SC) {
     const columnHeaderTextNodes = [];
     for (const hc of PLAN.table.headerCells) {
       const width = hc.isLabelColumn ? PLAN.table.rowLabelWidth : PLAN.table.cellWidth;
-      const cell = makeCell(width, hc.isLabelColumn ? 'MIN' : 'CENTER', hc.rightWeight, sepPaint, PLAN.table.dashPattern, PLAN.table.cellPaddingFigmaVar);
+      // T32 (owner polish): a header cell is a TEXT (or empty) cell — no
+      // padding of its own, FILL height so its border runs flush with the
+      // row; the label's own breathing room lives on makeLabelInner() below.
+      const cell = makeCell(width, hc.isLabelColumn ? 'MIN' : 'CENTER', hc.rightWeight, sepPaint, PLAN.table.dashPattern);
       if (hc.label) {
+        const inner = makeLabelInner(PLAN.table.cellPaddingFigmaVar);
         const t = figma.createText();
         t.fontName = fontName;
         t.characters = hc.label;
         t.fontSize = 12;
         if (labelPaint) t.fills = [labelPaint];
-        cell.appendChild(t);
+        inner.appendChild(t);
+        cell.appendChild(inner);
         columnHeaderTextNodes.push(t);
       }
       headerRow.appendChild(cell);
+      cell.layoutSizingVertical = 'FILL'; // only settable once parented into the row's auto-layout.
     }
     sheetGrid.appendChild(headerRow);
+    // T32: NOW bind — sheetGrid has a real child, so the bind sticks (see
+    // this frame's own creation comment above for the confirmed-live root
+    // cause of why binding this any earlier silently failed).
+    bindNum(sheetGrid, 'paddingTop', PLAN.table.gridPaddingFigmaVar);
+    bindNum(sheetGrid, 'paddingBottom', PLAN.table.gridPaddingFigmaVar);
+    bindNum(sheetGrid, 'paddingLeft', PLAN.table.gridPaddingFigmaVar);
+    bindNum(sheetGrid, 'paddingRight', PLAN.table.gridPaddingFigmaVar);
     const columnLabelStylesLinked = await linkTextStyles(columnHeaderTextNodes);
 
     return JSON.stringify({
@@ -2492,35 +2564,53 @@ function buildSheetGroupPluginCode(plan, groupIndex, ids, SC) {
     // lives on the banner; that boundary is entirely the PRECEDING group's
     // own last data row, see buildSheetPlan's rowBottomWeight comment).
     const bannerRow = makeRow(GROUP.banner.bottomWeight, sepPaint, TABLE.dashPattern);
-    const bannerCell = makeCell(${JSON.stringify(plan.table.tableWidth)}, 'MIN', 0, sepPaint, TABLE.dashPattern, TABLE.cellPaddingFigmaVar);
+    // T32 (owner polish): no padding on the outer banner cell — FILL height
+    // (trivial here, it is the row's only cell, but kept for consistency
+    // with every other label-type cell) — breathing room lives on
+    // makeLabelInner() instead.
+    const bannerCell = makeCell(${JSON.stringify(plan.table.tableWidth)}, 'MIN', 0, sepPaint, TABLE.dashPattern);
     if (GROUP.banner.label) {
+      const inner = makeLabelInner(TABLE.cellPaddingFigmaVar);
       const heading = figma.createText();
       heading.fontName = fontName;
       heading.characters = GROUP.banner.label;
       heading.fontSize = 14;
       if (labelPaint) heading.fills = [labelPaint];
-      bannerCell.appendChild(heading);
+      inner.appendChild(heading);
+      bannerCell.appendChild(inner);
       labelNodes.push(heading);
     }
     bannerRow.appendChild(bannerCell);
+    bannerCell.layoutSizingVertical = 'FILL';
     groupFrame.appendChild(bannerRow);
 
     for (const row of GROUP.rows) {
       const dataRow = makeRow(row.bottomWeight, sepPaint, TABLE.dashPattern);
-      const labelCell = makeCell(TABLE.rowLabelWidth, 'MIN', row.labelCell.rightWeight, sepPaint, TABLE.dashPattern, TABLE.cellPaddingFigmaVar);
+      // T32 (owner polish): row-label cell — no padding on the outer cell,
+      // FILL height so its border runs flush top-to-bottom with the row
+      // (the original complaint: a short/floating label box) — the label's
+      // own breathing room moves to makeLabelInner().
+      const labelCell = makeCell(TABLE.rowLabelWidth, 'MIN', row.labelCell.rightWeight, sepPaint, TABLE.dashPattern);
       if (row.labelCell.label) {
+        const inner = makeLabelInner(TABLE.cellPaddingFigmaVar);
         const label = figma.createText();
         label.fontName = fontName;
         label.characters = row.labelCell.label;
         label.fontSize = 11;
         if (labelPaint) label.fills = [labelPaint];
-        labelCell.appendChild(label);
+        inner.appendChild(label);
+        labelCell.appendChild(inner);
         labelNodes.push(label);
       }
       dataRow.appendChild(labelCell);
+      labelCell.layoutSizingVertical = 'FILL'; // only settable once parented into the row's auto-layout.
 
       for (const cell of row.cells) {
-        const dataCell = makeCell(TABLE.cellWidth, 'CENTER', cell.rightWeight, sepPaint, TABLE.dashPattern, TABLE.cellPaddingFigmaVar);
+        // Data cell — UNCHANGED: padding stays directly on the cell (the
+        // instance itself already carries the row's visual weight, so
+        // there is no "short box" problem here — HUG height keeps matching
+        // the row exactly, same as before this polish pass).
+        const dataCell = makeDataCell(TABLE.cellWidth, cell.rightWeight, sepPaint, TABLE.dashPattern, TABLE.cellPaddingFigmaVar);
         const inst = base.createInstance();
         dataCell.appendChild(inst);
         try { inst.setProperties(applyFor(cell.properties)); }
