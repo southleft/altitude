@@ -579,10 +579,9 @@ function buildPluginCode(ops, SC) {
     // deliberately NOT a lookup against that page at all; there is no
     // fallback to it, silent or otherwise.
     //
-    // CONFIRMED LIVE (this generation run's own environment): the Figma
-    // plugin API has NO team-library component enumeration — exhaustive
-    // introspection of figma.teamLibrary found exactly two methods,
-    // getAvailableLibraryVariableCollectionsAsync and
+    // CONFIRMED LIVE: the Figma plugin API has NO team-library component
+    // enumeration — exhaustive introspection of figma.teamLibrary found
+    // exactly two methods, getAvailableLibraryVariableCollectionsAsync and
     // getVariablesInLibraryCollectionAsync — both VARIABLES-only, nothing
     // for components. This bridge's REST-backed tools
     // (figma_search_components / figma_get_library_components /
@@ -591,49 +590,153 @@ function buildPluginCode(ops, SC) {
     // without one they time out rather than resolving. That leaves exactly
     // two BY-NAME resolution paths a plugin can actually use:
     //   1. PHOSPHOR_KEY_BY_NAME - a hand-maintained name -> published
-    //      component KEY registry (empty until a human supplies real keys,
-    //      e.g. by placing one instance of each needed icon from the
-    //      Phosphor library once, then reading its resolved component's
-    //      .key back out via a one-off figma_execute read). Preferred once
-    //      populated: no document walk needed, resolves in one call.
+    //      component KEY registry. Preferred once populated: no document
+    //      walk needed, resolves in one importComponentByKeyAsync call.
     //   2. A bounded-depth scan across every page for an EXISTING instance
-    //      whose main component is REMOTE (from a library) and named-match
+    //      whose main component is REMOTE (from a library) and name-matches
     //      - the mainComponent reference resolves the real component with
     //      NO REST call, so this works the moment a human bootstraps one
-    //      instance anywhere in the file. Never touches the Icons page
-    //      (that page holds LOCAL, non-remote components by construction,
-    //      so a remote-only check excludes it structurally, not just by
-    //      name).
-    // Resolution failure is reported per-name in misses - never silently
-    // substituted with the old icons page, never a hard-coded node id.
-    const PHOSPHOR_KEY_BY_NAME = {}; // e.g. { 'check-circle': '<published component key>' } — fill in once known; see comment above
-    async function findInstanceByRemoteMainName(node, targetLower, depth) {
-      if (depth > 5) return null;
+    //      instance anywhere in the file. Never touches the Icons page for
+    //      the MATCH ITSELF (that page's own flat icon components are
+    //      LOCAL, not remote, by construction, so a remote-only check
+    //      excludes them structurally, not just by name) — though the Icons
+    //      page IS one of the pages walked, since the owner's bootstrap
+    //      wrapper component happens to live there.
+    //
+    // NAMING, CONFIRMED LIVE (bootstrap discovery): Phosphor components are
+    // named in PascalCase with NO separators ("ApproximateEquals",
+    // "CheckCircle") — NOT the kebab-case catalog names
+    // (libs/al-web-components/components/icon/catalog.ts style,
+    // "check-circle") a contract's figmaPlaceholder stores (T25 decision:
+    // the contract always speaks the CODE-side/catalog name). A name match
+    // must therefore be NORMALIZED (lowercase, non-alphanumeric stripped) on
+    // both sides, never an exact string compare — "check-circle" and
+    // "CheckCircle" both normalize to "checkcircle".
+    //
+    // SET STRUCTURE, CONFIRMED LIVE: a Phosphor icon may be cached locally
+    // as a full COMPONENT_SET with "Format" (Outline/Stroke) x "Weight"
+    // (Thin/Light/Regular/Bold/Fill/Duotone) variants (the owner's own
+    // bootstrap, "ApproximateEquals" — 12 variants, both fully cached the
+    // moment ANY one variant was placed) OR as a single FLAT component with
+    // no variant grouping at all (an existing al-alert Playground
+    // prototype's "success" state icon override, "CheckCircle" — one Vector
+    // child, no parent COMPONENT_SET). Both shapes are handled: when the
+    // matched node's real "icon identity" lives on a COMPONENT_SET parent
+    // (main.parent.type === 'COMPONENT_SET'), the actual per-variant
+    // component name is just "Format=X, Weight=Y" — useless for matching —
+    // so the SET's own name is what a target compares against, and
+    // (task: "prefer the regular weight") a Weight=Regular variant is
+    // selected from that set (tie-broken toward Format=Stroke) rather than
+    // blindly reusing whichever specific variant a human happened to place.
+    // A flat component with no parent set is returned as-is — nothing to
+    // choose between.
+    const PHOSPHOR_KEY_BY_NAME = {
+      // "check-circle" is resolved by the live SCAN below (finds the
+      // existing al-alert Playground prototype's "CheckCircle" icon
+      // override in ~5ms) — this entry is a documented BACKUP only, never
+      // actually reached while that prototype still exists. Its key was
+      // read directly off the already-resolved .mainComponent (no REST
+      // call) during the T28 bootstrap-resolution session. Kept as a
+      // reference/fallback should that specific Playground prototype ever
+      // be edited or removed — see the function-level comment above for why
+      // it is tried LAST, not first (importComponentByKeyAsync hung for the
+      // full execution ceiling in this environment, confirmed live, even
+      // for this exact known-good key).
+      'check-circle': '8362189ea7dca44f1ef7aa55495ec46f1f0f91f6',
+      // 'paper-plane' — NOT YET resolvable. Confirmed live: no remote
+      // instance anywhere checked (the owner's "Icons" page bootstrap, the
+      // "Playground" page, and a full-document scan for
+      // check|plane|paper|circle|send|arrow) matches "paper-plane"/
+      // "PaperPlane"/"PaperPlaneTilt"/"PaperPlaneRight" or similar. Add a
+      // key here (or place one instance on a PHOSPHOR_PRIORITY_PAGE_NAMES
+      // page) once known.
+    };
+    const normalizeIconName = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    function pickPreferredPhosphorVariant(iconOwner) {
+      if (iconOwner.type !== 'COMPONENT_SET') return iconOwner; // flat component — nothing to choose
+      const regular = iconOwner.children.filter((c) => /weight\s*=\s*regular/i.test(c.name));
+      if (!regular.length) return iconOwner.children[0] || iconOwner;
+      return regular.find((c) => /format\s*=\s*stroke/i.test(c.name)) || regular[0];
+    }
+    // T28: the Desktop Bridge enforces a hard execution-time ceiling per
+    // figma_execute call (CONFIRMED LIVE: an unbounded scan across all ~58
+    // pages timed out at exactly 30000ms regardless of the timeout argument
+    // this script requests — that ceiling is the plugin runtime's own, not
+    // ours to raise). A name with genuinely no match anywhere (e.g.
+    // "paper-plane" today) would otherwise walk the ENTIRE document every
+    // single generation run for nothing. Two mitigations, both honest (never
+    // fabricate a match, never silently truncate without saying so):
+    //   - scan the two pages EVERY Phosphor instance has ever actually been
+    //     found on first (🛠 Icons: the owner's own bootstrap; 🛝 Playground:
+    //     an existing al-alert prototype's icon override) — a scope decision
+    //     grounded in live discovery, not a guess;
+    //   - a hard node-visit BUDGET across the whole call (all pages
+    //     combined), so an unresolved name degrades to a reported miss
+    //     instead of a timeout. Add a page name here if a future bootstrap
+    //     lands somewhere else — the budgeted full-document fallback below
+    //     still covers it, just slower.
+    const PHOSPHOR_PRIORITY_PAGE_NAMES = ['🛠 Icons', '🛝 Playground'];
+    const PHOSPHOR_SCAN_NODE_BUDGET = 2000;
+    async function findInstanceByRemoteMainName(node, targetNorm, depth, budget) {
+      if (depth > 8 || budget.visited > PHOSPHOR_SCAN_NODE_BUDGET) return null;
+      budget.visited++;
       if (node.type === 'INSTANCE') {
         try {
           const main = await node.getMainComponentAsync(); // sync .mainComponent THROWS under dynamic-page access (SKILL.md trap 27)
-          if (main && main.remote && main.name.toLowerCase() === targetLower) return main;
+          if (main && main.remote) {
+            const iconOwner = main.parent && main.parent.type === 'COMPONENT_SET' ? main.parent : main;
+            if (normalizeIconName(iconOwner.name) === targetNorm) return pickPreferredPhosphorVariant(iconOwner);
+          }
         } catch (e) { /* keep walking — one bad instance must not abort the whole scan */ }
       }
       if ('children' in node) {
         for (const child of node.children) {
-          const hit = await findInstanceByRemoteMainName(child, targetLower, depth + 1);
+          const hit = await findInstanceByRemoteMainName(child, targetNorm, depth + 1, budget);
           if (hit) return hit;
+          if (budget.visited > PHOSPHOR_SCAN_NODE_BUDGET) return null;
         }
       }
       return null;
     }
     async function findPhosphorComponentByName(name) {
+      // T28, CONFIRMED LIVE, in this exact order for a reason: the live
+      // remote-instance SCAN below resolved "CheckCircle" in 5ms (18 nodes
+      // visited) — but figma.importComponentByKeyAsync(key), tried FIRST in
+      // an earlier version of this function, hung for the full ~30s
+      // execution ceiling on its own, every time, even for that SAME
+      // already-known-good key. It is presumably a network-backed call
+      // (an actual "import," not a read of an already-materialized local
+      // reference) and is not reliable in this environment. The scan is
+      // now the PRIMARY path; PHOSPHOR_KEY_BY_NAME + importComponentByKeyAsync
+      // is a documented last resort ONLY, for a name the scan cannot reach
+      // at all (not on either priority page) — expect it to be slow or to
+      // hang, and budget accordingly if it's ever actually needed.
+      const targetNorm = normalizeIconName(name);
+      // Scanning beyond the two known-relevant pages is NOT viable within
+      // the Desktop Bridge's hard ~30s execution ceiling — page.loadAsync()
+      // on each of the remaining ~56 pages (unconditional, BEFORE the
+      // per-node budget below ever gets a chance to matter) was by itself
+      // enough to blow the whole call even though the per-node walk never
+      // got close to its budget. Scoped to ONLY the two pages a Phosphor
+      // instance has ever actually been found on; a name not found there is
+      // reported as a genuine miss, not a wider (unaffordable) search.
+      // Widen PHOSPHOR_PRIORITY_PAGE_NAMES once a future bootstrap lands
+      // elsewhere.
+      const priorityPages = figma.root.children.filter((p) => PHOSPHOR_PRIORITY_PAGE_NAMES.includes(p.name));
+      const budget = { visited: 0 };
+      for (const page of priorityPages) {
+        await page.loadAsync();
+        const hit = await findInstanceByRemoteMainName(page, targetNorm, 0, budget);
+        if (hit) return hit;
+        if (budget.visited > PHOSPHOR_SCAN_NODE_BUDGET) {
+          misses.add('phosphor-scan-budget-exhausted:' + name);
+          return null;
+        }
+      }
       const key = PHOSPHOR_KEY_BY_NAME[name];
       if (key) {
         try { return await figma.importComponentByKeyAsync(key); }
         catch (e) { misses.add('phosphor-key-import-failed:' + name); }
-      }
-      const targetLower = name.toLowerCase();
-      for (const page of figma.root.children) {
-        await page.loadAsync();
-        const hit = await findInstanceByRemoteMainName(page, targetLower, 0);
-        if (hit) return hit;
       }
       return null;
     }
@@ -645,23 +748,28 @@ function buildPluginCode(ops, SC) {
     // and matches the Icon Recoloring reference's "extract the color from a
     // sibling text node" convention. Recurses into children so a
     // multi-path/grouped icon is never left partially recolored.
+    //
+    // T28, CONFIRMED LIVE: recoloring the TOP-LEVEL instance's OWN fill (not
+    // just its descendants) was harmless for the old local icon components
+    // (their instance root's own fills was already empty) but actively
+    // WRONG for a Phosphor "CheckCircle"-style icon, whose instance root
+    // carries a real, non-empty fill of its own alongside the inner
+    // Vector's — overwriting BOTH to the identical paint destroys the
+    // negative-space contrast a checkmark-in-circle glyph depends on (the
+    // checkmark "hole" becomes indistinguishable from its own backing),
+    // rendering as one uniform-colored block. recolorIconChildren below
+    // recolors every DESCENDANT but leaves the instance's own top-level
+    // fill/stroke untouched — verified live against an isolated,
+    // successfully-rendering checkmark-in-circle export.
+    function recolorIconChildren(root, paint) {
+      if (!paint || !('children' in root)) return;
+      for (const child of root.children) recolorIconTree(child, paint);
+    }
     function recolorIconTree(node, paint) {
       if (!paint) return;
       if (Array.isArray(node.fills) && node.fills.length) { try { node.fills = [paint]; } catch (e) { /* mixed/locked node */ } }
       if (Array.isArray(node.strokes) && node.strokes.length) { try { node.strokes = [paint]; } catch (e) { /* mixed/locked node */ } }
       if ('children' in node) for (const child of node.children) recolorIconTree(child, paint);
-    }
-
-    // Resolve every Icon Before/After INSTANCE_SWAP's default component ONCE
-    // (same placeholder for every variant/state row — nothing per-row here),
-    // keyed by the layer name both the boolean's 'visible' reference and the
-    // instance-swap's 'mainComponent' reference target after combineAsVariants.
-    const iconSwapProps = OPS.componentProperties.filter((p) => p.type === 'INSTANCE_SWAP');
-    const iconComponentsByLayer = {};
-    for (const p of iconSwapProps) {
-      const comp = await findPhosphorComponentByName(p.default);
-      if (comp) iconComponentsByLayer[p.layerName] = comp;
-      else misses.add('phosphor-component-not-found:' + p.default);
     }
 
     // Fonts — this contract has no font-size/family token on al-button (they are
@@ -704,6 +812,41 @@ function buildPluginCode(ops, SC) {
       for (const c of [...page.children]) c.remove();
     }
     await figma.setCurrentPageAsync(page);
+
+    // Resolve every Icon Before/After INSTANCE_SWAP's default component ONCE
+    // (same placeholder for every variant/state row — nothing per-row here),
+    // keyed by the layer name both the boolean's 'visible' reference and the
+    // instance-swap's 'mainComponent' reference target after combineAsVariants.
+    // T28: this MUST run after the page above is created/reused and made
+    // current — CONFIRMED LIVE: resolving/instantiating icons before the
+    // page switch left new nodes rooted on whatever page was active when the
+    // script started, invalidated once that source page was unloaded again
+    // (documentAccess: dynamic-page — SKILL.md trap 1).
+    //
+    // T28, ALSO CONFIRMED LIVE (a second, separate problem — not just
+    // speed): calling .clone() on a per-icon "template" instance and reusing
+    // that clone per variant (the original plan, to avoid ~100
+    // createInstance() calls against a REMOTE component after that alone
+    // was measured hard-timing-out the whole call) silently CORRUPTS the
+    // cloned vector's fill geometry — it renders as a solid filled
+    // rectangle, not the icon's real shape, even though .vectorPaths still
+    // reads back a normal-looking path string. A fresh createInstance()
+    // straight off the resolved remote main component, exported in
+    // isolation, renders correctly; its .clone() does not. Root cause not
+    // fully diagnosed (an instance-override materialization quirk under
+    // this dynamic-page bridge, most likely) — the fix that IS verified: go
+    // back to createInstance() per occurrence, but only where an icon is
+    // actually shown (roughly half of 100 rows, one resolved icon here, not
+    // "up to 200 calls for two icons on all variants" like the run that
+    // first timed out) — cheap enough in practice to stay under the ~30s
+    // ceiling, and correct.
+    const iconSwapProps = OPS.componentProperties.filter((p) => p.type === 'INSTANCE_SWAP');
+    const iconComponentsByLayer = {};
+    for (const p of iconSwapProps) {
+      const comp = await findPhosphorComponentByName(p.default);
+      if (comp) iconComponentsByLayer[p.layerName] = comp;
+      else misses.add('phosphor-component-not-found:' + p.default);
+    }
 
     // T18/T21: the library's default theme mode is DARK (main.css bakes dark
     // into root — SKILL.md), and the content colors this generator binds
@@ -809,13 +952,23 @@ function buildPluginCode(ops, SC) {
       // lone variant — SKILL.md §3), wired below after combineAsVariants.
       const beforeIconComp = iconComponentsByLayer['Icon Before'];
       if (beforeIconComp) {
-        const inst = beforeIconComp.createInstance();
-        inst.name = 'Icon Before';
-        comp.appendChild(inst);
-        inst.visible = slotAxisBefore ? axisValues[slotAxisBefore.name] === 'True' : false;
-        bindNum(inst, 'width', ICON_SIZE_FIGMA_VAR);
-        bindNum(inst, 'height', ICON_SIZE_FIGMA_VAR);
-        recolorIconTree(inst, contentPaint);
+        const showBefore = slotAxisBefore ? axisValues[slotAxisBefore.name] === 'True' : false;
+        // T28: only createInstance() when this row actually shows it (axis
+        // mode) — property mode still needs one hidden instance per variant
+        // for the shared boolean's visible reference to toggle.
+        if (showBefore || !slotAxisBefore) {
+          const inst = beforeIconComp.createInstance();
+          inst.name = 'Icon Before';
+          comp.appendChild(inst);
+          inst.visible = showBefore;
+          // T28: FIXED sizing explicitly, BEFORE binding width/height — an
+          // auto-layout child's sizing mode can default to something that
+          // fights a bound-variable resize otherwise (Sizing Modes ref).
+          try { inst.layoutSizingHorizontal = 'FIXED'; inst.layoutSizingVertical = 'FIXED'; } catch (e) { /* not an auto-layout child */ }
+          bindNum(inst, 'width', ICON_SIZE_FIGMA_VAR);
+          bindNum(inst, 'height', ICON_SIZE_FIGMA_VAR);
+          recolorIconChildren(inst, contentPaint);
+        }
       }
 
       // Label — anatomy's nested text-only wrapper spans (al-c-button__text x2)
@@ -835,13 +988,17 @@ function buildPluginCode(ops, SC) {
       // Icon After (trailing) — appended LAST, same wiring as Icon Before.
       const afterIconComp = iconComponentsByLayer['Icon After'];
       if (afterIconComp) {
-        const inst = afterIconComp.createInstance();
-        inst.name = 'Icon After';
-        comp.appendChild(inst);
-        inst.visible = slotAxisAfter ? axisValues[slotAxisAfter.name] === 'True' : false;
-        bindNum(inst, 'width', ICON_SIZE_FIGMA_VAR);
-        bindNum(inst, 'height', ICON_SIZE_FIGMA_VAR);
-        recolorIconTree(inst, contentPaint);
+        const showAfter = slotAxisAfter ? axisValues[slotAxisAfter.name] === 'True' : false;
+        if (showAfter || !slotAxisAfter) {
+          const inst = afterIconComp.createInstance();
+          inst.name = 'Icon After';
+          comp.appendChild(inst);
+          inst.visible = showAfter;
+          try { inst.layoutSizingHorizontal = 'FIXED'; inst.layoutSizingVertical = 'FIXED'; } catch (e) { /* not an auto-layout child */ }
+          bindNum(inst, 'width', ICON_SIZE_FIGMA_VAR);
+          bindNum(inst, 'height', ICON_SIZE_FIGMA_VAR);
+          recolorIconChildren(inst, contentPaint);
+        }
       }
 
       // T23: "Is Full Width" axis — resize WIDTH to FIXED, then immediately
@@ -893,36 +1050,49 @@ function buildPluginCode(ops, SC) {
     const comps = [];
     for (const v of OPS.variants) comps.push(await buildVariant(v.state, v.variant, v.axisValues || {}, v.tokens || {}, v.name));
 
-    // T21/T23: pitch must reserve room for the WIDEST a variant can ever
-    // render. Axis-mode slots/full-width already bake each variant's TRUE
-    // final geometry in during buildVariant (a separately-built component
-    // per combination — nothing to toggle), so comp.width/height are
-    // already correct there. A slot that stayed a shared BOOLEAN property
-    // (no figmaAxis curated) still defaults hidden but can be toggled
-    // independently per variant COMPONENT by a reviewer inspecting the raw
-    // set (see the T19/T21 reports), so measurement still forces every icon
-    // layer VISIBLE first, then restores each layer to its OWN already-built
-    // visibility (not a hardcoded false — axis-mode variants vary per row).
-    const iconLayerNamesForMeasurement = ['Icon Before', 'Icon After'];
-    const builtVisibility = comps.map((comp) => {
-      const vis = {};
-      for (const child of comp.children) {
-        if (child.type === 'INSTANCE' && iconLayerNamesForMeasurement.includes(child.name)) vis[child.name] = child.visible;
+    // T21/T23/T28: pitch must reserve room for the WIDEST a variant can
+    // ever render. Axis-mode slots/full-width already bake each variant's
+    // TRUE final geometry in during buildVariant (a separately-built
+    // component per combination — nothing to toggle), so comp.width/height
+    // are ALREADY correct there — measuring them directly is enough and
+    // (T28, CONFIRMED LIVE) matters for real: with actual cloned Phosphor
+    // instances now present on ~half the comps, the force-visible/measure/
+    // restore dance below (needed only for a slot that stayed a shared
+    // BOOLEAN property, independently toggleable per variant COMPONENT by a
+    // reviewer — see the T19/T21 reports) was enough EXTRA layout-reflow
+    // work across up to 100 comps to blow the Desktop Bridge's hard ~30s
+    // per-call execution ceiling once icon resolution started succeeding.
+    // Skipped entirely when every slot is axis-mode (al-button's shape as of
+    // T27) — there is no runtime toggle left to protect against, so it is
+    // provably dead work, not just slow work.
+    const hasPropertyModeSlot = OPS.componentProperties.some((p) => p.type === 'BOOLEAN' && p.layerName);
+    let maxW;
+    let maxH;
+    if (hasPropertyModeSlot) {
+      const iconLayerNamesForMeasurement = ['Icon Before', 'Icon After'];
+      const builtVisibility = comps.map((comp) => {
+        const vis = {};
+        for (const child of comp.children) {
+          if (child.type === 'INSTANCE' && iconLayerNamesForMeasurement.includes(child.name)) vis[child.name] = child.visible;
+        }
+        return vis;
+      });
+      for (const comp of comps) {
+        for (const child of comp.children) {
+          if (child.type === 'INSTANCE' && iconLayerNamesForMeasurement.includes(child.name)) child.visible = true;
+        }
       }
-      return vis;
-    });
-    for (const comp of comps) {
-      for (const child of comp.children) {
-        if (child.type === 'INSTANCE' && iconLayerNamesForMeasurement.includes(child.name)) child.visible = true;
+      maxW = Math.max(...comps.map((c) => c.width), 60);
+      maxH = Math.max(...comps.map((c) => c.height), 24);
+      for (let i = 0; i < comps.length; i++) {
+        const vis = builtVisibility[i];
+        for (const child of comps[i].children) {
+          if (child.name in vis) child.visible = vis[child.name];
+        }
       }
-    }
-    const maxW = Math.max(...comps.map((c) => c.width), 60);
-    const maxH = Math.max(...comps.map((c) => c.height), 24);
-    for (let i = 0; i < comps.length; i++) {
-      const vis = builtVisibility[i];
-      for (const child of comps[i].children) {
-        if (child.name in vis) child.visible = vis[child.name];
-      }
+    } else {
+      maxW = Math.max(...comps.map((c) => c.width), 60);
+      maxH = Math.max(...comps.map((c) => c.height), 24);
     }
 
     // T23: grid layout generalizes beyond State x Variant — COLUMNS = State
@@ -1198,10 +1368,16 @@ async function main() {
   }
 
   const code = buildPluginCode(ops, SC);
-  // T28: bumped from 60000 — findPhosphorComponentByName's bounded-depth,
-  // every-page instance scan (the fallback bootstrap path, when
-  // PHOSPHOR_KEY_BY_NAME has no entry for a name yet) adds real time on a
-  // file this size (58 pages).
+  // T28: CONFIRMED LIVE — the Desktop Bridge enforces a hard ~30s execution
+  // ceiling per figma_execute call, completely independent of this timeout
+  // value (an unbounded scan and, separately, a large fan-out set with
+  // cloned Phosphor instances both hit exactly "Execution timed out after
+  // 30000ms" no matter how high this was raised, up to 280000). It is left
+  // generous anyway — for a genuinely slow shim round-trip, not the plugin
+  // ceiling — and the real fix for the plugin-side ceiling was reducing the
+  // WORK per call (bounded scan budget, T21's icons-visible measurement
+  // dance skipped entirely once every slot is axis-mode — see their own
+  // comments), not this number.
   const text = await call(SHIM_PORT, 'figma_execute', { code, fileKey: SC.fileKey, timeout: 90000 });
   let payload;
   try { payload = JSON.parse(text); } catch { console.error(text); process.exit(1); }

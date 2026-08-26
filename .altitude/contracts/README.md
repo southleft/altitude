@@ -449,54 +449,124 @@ instantiated from the **Phosphor** Figma library — never the legacy local
 owner: "let's not use the icon component that was in the figma bc that's the
 old icons... let's use the Phosphor library I added").
 
-**Resolution mechanism** (`findPhosphorComponentByName` in
-`generate-figma.mjs`'s plugin code), in order:
+### Bootstrap convention (reproducible)
 
-1. `PHOSPHOR_KEY_BY_NAME` — a hand-maintained `name -> published component
-   key` registry, empty until a human supplies real keys. Preferred once
-   populated: resolves in one `importComponentByKeyAsync` call, no document
-   walk.
-2. A bounded-depth scan across every page for an EXISTING instance whose
-   main component is REMOTE (`.remote === true`, i.e. genuinely from a
-   library — this excludes the local "🛠 Icons" components structurally, not
-   just by page name) and name-matches. Works the moment a human places one
-   instance of a needed icon anywhere in the file — no REST call needed,
-   since `.mainComponent` already resolves the real component.
+The Figma plugin API has **no team-library component enumeration** —
+exhaustive introspection of `figma.teamLibrary` in this environment found
+exactly two methods, `getAvailableLibraryVariableCollectionsAsync` and
+`getVariablesInLibraryCollectionAsync`, both VARIABLES-only, nothing for
+components. This bridge's REST-backed tools (`figma_search_components`,
+`figma_get_library_components`, name-based `figma_instantiate_component`)
+are unusable without a `FIGMA_ACCESS_TOKEN` (`figma_diagnose`: "No Figma
+access token detected") — they hang for the full execution ceiling rather
+than resolving, in this environment.
+
+The one resolution path that DOES work with no REST call at all: place a
+real INSTANCE of the needed Phosphor icon **anywhere in the file** (a
+`.mainComponent` reference is already fully resolved locally, live, once an
+instance exists — no import needed). The owner's own bootstrap did exactly
+this — a component named "Icon" on the "🛠 Icons" page (node `3509:4324`)
+wraps a placed Phosphor instance internally. A second, independently useful
+example was found already sitting in the file: an existing al-alert
+"🛝 Playground" prototype's `type=success` states override their icon slot
+with a remote "CheckCircle" instance. **To bootstrap a new icon**: place one
+instance of it (drag from the Assets panel, or swap an existing
+INSTANCE_SWAP slot to it) on either the "🛠 Icons" or "🛝 Playground" page —
+`generate-figma.mjs` scans exactly those two pages (see below) and will pick
+it up on the next run.
+
+### Naming, CONFIRMED LIVE
+
+Phosphor components are named in **PascalCase with no separators**
+("ApproximateEquals", "CheckCircle") — NOT the kebab-case catalog names
+(`libs/al-web-components/components/icon/catalog.ts` style, "check-circle")
+a contract's `figmaPlaceholder` stores (the T25 decision: the contract always
+speaks the CODE-side/catalog name). Matching is NORMALIZED (lowercase,
+non-alphanumeric stripped) on both sides — "check-circle" and "CheckCircle"
+both normalize to "checkcircle" — never an exact string compare.
+
+A Phosphor icon may be cached locally as a full **COMPONENT_SET** with
+"Format" (Outline/Stroke) × "Weight" (Thin/Light/Regular/Bold/Fill/Duotone)
+variants (the owner's bootstrap, "ApproximateEquals" — all 12 variants
+cached the moment any ONE was placed) OR as a single **flat component** with
+no variant grouping at all (the al-alert prototype's "CheckCircle" — one
+Vector child, no parent set). `generate-figma.mjs` handles both: when the
+match is a COMPONENT_SET, it selects a `Weight=Regular` variant (tie-broken
+toward `Format=Stroke`) per the task's "prefer the regular weight"
+instruction; a flat component is used as-is.
+
+### Resolution mechanism (`findPhosphorComponentByName`)
+
+In this order — **the scan runs FIRST, the key registry is a fallback LAST**
+(reversed from the original design; see the pitfall below):
+
+1. A bounded-depth scan across `PHOSPHOR_PRIORITY_PAGE_NAMES` (`"🛠 Icons"`,
+   `"🛝 Playground"` today — the two pages a Phosphor instance has ever
+   actually been found on) for an existing instance whose main component is
+   REMOTE (`.remote === true`) and name-matches (normalized). A hard
+   node-visit budget (`PHOSPHOR_SCAN_NODE_BUDGET`) bounds worst-case time.
+2. `PHOSPHOR_KEY_BY_NAME` — a hand-maintained `name -> published component
+   key` registry, tried only if the scan above found nothing.
 
 **Resolution failure degrades cleanly, per name** — logged in the ops
-result's `missingVars` (e.g. `phosphor-component-not-found:check-circle`),
+result's `missingVars` (e.g. `phosphor-component-not-found:paper-plane`),
 never a silent fallback to the old icons page: no icon instance is built for
-that side, and (since nothing exists to bind it) no Icon Before/After
-INSTANCE_SWAP property is added either — the Slot Before/After axis or
-property is unaffected either way.
+that side, and no Icon Before/After INSTANCE_SWAP property is added either —
+the Slot Before/After axis or property is unaffected either way. As of the
+T28 pilot regeneration: `check-circle` resolves (100 variants, `Icon Before`
+present); `paper-plane` does not — no remote instance anywhere in the
+document matches "paper-plane"/"PaperPlane"/"PaperPlaneTilt" or similar,
+checked live.
 
-**Confirmed environment limit (T28, live).** The Figma plugin API has **no
-team-library component enumeration** — exhaustive introspection of
-`figma.teamLibrary` in this environment found exactly two methods,
-`getAvailableLibraryVariableCollectionsAsync` and
-`getVariablesInLibraryCollectionAsync`, both VARIABLES-only. This bridge's
-REST-backed tools (`figma_search_components`, `figma_get_library_components`,
-name-based `figma_instantiate_component`) are unusable without a
-`FIGMA_ACCESS_TOKEN` (`figma_diagnose`: "No Figma access token detected") —
-they time out rather than resolving, in this environment. As of the T28 pilot
-regeneration, no Phosphor instance existed anywhere in the file to bootstrap
-from (checked live: "🛠 Icons", "🧪 Library Composition Demo", and every other
-page), so BOTH resolution paths above returned nothing for "check-circle" and
-"paper-plane" — the pilot built successfully (100 variants, correct axes) but
-with **no** icon instances or Icon Before/After property, an honest, logged
-degradation, not a silent gap. Unblocking needs one of: a `FIGMA_ACCESS_TOKEN`
-(enables the REST-backed search tools), a human placing one instance of each
-needed Phosphor icon anywhere in the file (path 2 above then resolves it), or
-a human supplying the real component keys directly into
-`PHOSPHOR_KEY_BY_NAME` (path 1).
+### Three hard-won pitfalls (all CONFIRMED live, in this order of discovery)
 
-**Recoloring is unaffected** — `recolorIconTree` (T19) operates generically
-on any instance's `fills`/`strokes`, recursively; it does not know or care
-which library an icon instance came from, so no Phosphor-specific change was
-needed there. Not independently re-verified against a real Phosphor instance
-in the T28 session (see the environment limit above) — the mechanism was
-already proven correct against the old icon convention and the code path is
-identical for the new one.
+1. **The Desktop Bridge enforces a hard ~30s execution ceiling per
+   `figma_execute` call, independent of the `timeout` this script
+   requests** — raising it as high as 280000 made no difference; the error
+   is always exactly "Execution timed out after 30000ms". Two things blew
+   this budget once icon resolution started succeeding: an UNBOUNDED
+   page-by-page scan (`page.loadAsync()` on ~56 pages the icon was never
+   going to be on, called unconditionally before any per-node budget check
+   could matter) — fixed by scoping to the two known-relevant pages only;
+   and `figma.importComponentByKeyAsync(key)`, which hung for the FULL
+   ceiling on its own even for an already-known-good key — apparently a
+   network-backed call, unreliable in this environment, which is why the
+   scan is tried first and the key registry is now the fallback, not the
+   other way around.
+2. **Icon templates must be created AFTER the target page is current, not
+   before.** Creating one shared template instance per icon (to `.clone()`
+   per variant, avoiding repeated `createInstance()` against a remote
+   component) before switching to the "Contract Pilot" page left the
+   templates rooted on whichever page was active when the script started;
+   once that source page was unloaded again (`documentAccess: dynamic-page`
+   — see the "Hard-won traps" section of `altitude-figma-sync`'s SKILL.md),
+   `.clone()` failed with "the node ... does not exist".
+3. **`.clone()` of a Phosphor instance silently corrupts its rendered
+   geometry** — the cloned vector's `.vectorPaths` reads back a
+   normal-looking path string, but it renders as a solid filled block, not
+   the icon's real shape. Root cause not fully diagnosed (an
+   instance-override materialization quirk under this bridge, most likely).
+   Verified fix: use `createInstance()` per occurrence instead — but only
+   for a row that actually SHOWS the icon (axis-mode: roughly half of the
+   fanned-out rows), not all 100, which keeps total call volume low enough
+   to stay under pitfall 1's ceiling.
+4. **Recoloring the icon INSTANCE's own top-level fill, not just its
+   descendants, is fine for the old local icon convention but wrong for
+   Phosphor.** The old "🛠 Icons" components' instance root had an empty
+   `fills` array, so `recolorIconTree`'s root-level fill/stroke rewrite was
+   a harmless no-op there. A Phosphor "CheckCircle"-style icon's instance
+   root carries a real, non-empty fill of its own alongside the inner
+   Vector's; overwriting BOTH to the same paint destroys the negative-space
+   contrast a checkmark-in-circle glyph depends on (the "hole" becomes
+   indistinguishable from its own backing), rendering as one uniform block.
+   Fixed by `recolorIconChildren` — recolors every DESCENDANT, never the
+   instance's own top-level paint.
+
+**Recoloring, once fixed per pitfall 4 above, is CONFIRMED working on
+Phosphor's flat vector fills** — the icon's Vector fill and the row's label
+text fill read back as the identical bound Figma variable across every
+tested variant (Primary/Danger/Bare), exactly matching the T19 convention's
+original guarantee for the old icon source.
 
 ## Anatomy availability is best-effort
 
