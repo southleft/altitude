@@ -114,7 +114,7 @@ something meant to leave a developer's machine. This is safe ONLY because the
 server is loopback-only by construction: it binds `127.0.0.1` by default,
 rejects any request whose `Host` header is not a loopback hostname, and only
 reflects a loopback `Origin` in its CORS header (`server.mjs`'s
-`isLoopbackOrigin` check, ~line 55-75) — there is no code path that serves
+`isLoopback` check, ~line 55-75) — there is no code path that serves
 this port to a non-loopback client today, and no auth layer if that ever
 changed.
 

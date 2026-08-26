@@ -24,9 +24,9 @@
  *      guidance panel or an explicit "not yet authored" note. Rendering
  *      neither is the shape that lets a section quietly vanish, so it fails.
  *
- *   3. NO PARTIAL PANELS. A page that claims guidance must carry all seven
+ *   3. NO PARTIAL PANELS. A page that claims guidance must carry all eight
  *      sections — purpose, when to use, when NOT to use, do, don't,
- *      accessibility, content. The collection schema already requires them at
+ *      accessibility, content, sources. The collection schema already requires them at
  *      build time; this re-checks the rendered output, because the schema
  *      cannot see a template that stopped rendering a section.
  *

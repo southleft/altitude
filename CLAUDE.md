@@ -14,10 +14,10 @@ The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with 
 
 ### Development
 - Start a specific workspace: `pnpm --filter WORKSPACE_NAME start`
-- Web components Storybook: `pnpm --filter @southleft/al-web-components start` (port 6006)
-  (this also starts the altitude MCP in streamable-HTTP mode on port 6017 — `POST /mcp`,
-  `GET /parity.json`; `start:sb` runs Storybook alone)
-- React Storybook: `pnpm --filter @southleft/al-react start` (port 9009)
+- Altitude MCP (streamable-HTTP): `pnpm --filter @southleft/al-web-components start` — runs the
+  MCP on port 6017 (`POST /mcp`, `GET /parity.json`, `GET /healthz`). Storybook was retired
+  2026-08-25; there is no `start:sb`.
+- React wrapper tests: `pnpm --filter @southleft/al-react start` (runs vitest, react project)
 - React app: `pnpm --filter al-app-react start`
 - Angular app: `pnpm --filter al-app-angular start`
 - Svelte app: `pnpm --filter al-app-svelte start`
@@ -39,8 +39,8 @@ The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with 
 - Lint: `pnpm lint`
 
 ### Figma ↔ code parity
-- Storybook was retired 2026-08-25; the live surfaces are the `altitude_check_parity` /
-  `audit_component_parity` MCP tools (green = 1:1 with Figma, yellow = that side drifted, red =
+- Storybook was retired 2026-08-25; the live surfaces are the `altitude_check_parity` MCP
+  tool and the `audit_component_parity` MCP prompt (green = 1:1 with Figma, yellow = that side drifted, red =
   missing on the other side, each entry carrying a ready-to-paste `aiPrompt` reconciliation
   string), `GET /parity.json`, and each docs page's read-only `ParityPanel` (no interactive
   actions — reconciliation is agent-driven via the MCP tool, not a docs-page button).

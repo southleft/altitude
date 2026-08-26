@@ -32,9 +32,9 @@
 //   excluded         deliberately not represented in Figma
 //
 // This module is shared by three consumers: the `altitude_check_parity` MCP
-// tool, the Storybook parity emitter (`.storybook/parity-emitter.mjs` writes
-// dist/parity.json for the sidebar + docs block), and the scripts/figma-parity
-// CLIs. Keep it dependency-free (node: builtins only).
+// tool (also served over HTTP as GET /parity.json), the docs site's build-time
+// status panels (apps/docs/src/lib/parity.mjs via publicParityReport()), and
+// the scripts/figma-parity CLIs. Keep it dependency-free (node: builtins only).
 
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, writeFileSync, mkdirSync } from 'node:fs';
