@@ -437,7 +437,8 @@ not an observed target width. al-button's own `fullWidth` is curated
 `omit: true` instead (see "Figma-expression opt-out" below) — not built at
 all, axis or property.
 
-## Documentation sheet (`--sheet`, T31)
+## Documentation sheet (`--sheet`, T31; humanized labels, a real bordered
+table, and a doc-page header, T32)
 
 A plugin-free equivalent of the Propstar documentation-grid screenshot that
 originally motivated T22/T23's (since-reverted) axis-mode curation —
@@ -455,16 +456,42 @@ node scripts/contracts/generate-figma.mjs --component al-button --sheet --check-
 
 **What it builds.** A frame named `"<Component> — Prop Sheet"` — its OWN
 top-level frame on `--page`, positioned next to (never inside or on top of)
-the set's own `"<Component> — Generated"` presentation frame — containing a
-labeled grid of real INSTANCES of the already-built (property-mode) set, one
-instance per State × Variant × every other BOOLEAN component property
-combination (al-button: 5 × 5 × 2 × 2 = 100), each switched into its own
-combination via the Figma plugin API's `setProperties` against the TARGET
-set's real property definitions — never a freshly-built component, never a
-runtime-shared toggle. Idempotent: re-running REPLACES the prior sheet frame
-by name, never appends a second stale copy alongside it, and never touches
-the target set (read-only lookup by name) or the target's own presentation
-frame.
+the set's own `"<Component> — Generated"` presentation frame — containing an
+instance of the file's own "Documentation Header" master (T32, see below) at
+the top, then a genuine nested-auto-layout TABLE of real INSTANCES of the
+already-built (property-mode) set below it, one instance per State × Variant
+× every other BOOLEAN component property combination (al-button: 5 × 5 × 2 ×
+2 = 100), each switched into its own combination via the Figma plugin API's
+`setProperties` against the TARGET set's real property definitions — never a
+freshly-built component, never a runtime-shared toggle. Idempotent:
+re-running REPLACES the prior sheet frame by name, never appends a second
+stale copy alongside it, and never touches the target set (read-only lookup
+by name) or the target's own presentation frame.
+
+**A real table, not positioned lines (T32).** The grid is nested auto-layout
+frames — one VERTICAL "Sheet Grid" containing a header row and one frame per
+Variant group (a banner cell + one row per boolean combo), each row a
+HORIZONTAL frame of FIXED-width cell frames (one per State column, or the
+row-label column) — never a `figma.createVector()` line and never a
+manually-positioned x/y (an earlier same-task cut tried exactly that; it was
+superseded before shipping). The dashed purple gridlines the owner asked to
+mirror from Propstar are REAL per-side frame borders
+(`strokeTopWeight`/`strokeRightWeight`/`strokeBottomWeight`/
+`strokeLeftWeight`, `strokeAlign: 'INSIDE'`) — each cell draws only its own
+right + bottom edge (the "collapsed borders" convention: the shared boundary
+with the next cell/row is always drawn by the cell BEFORE it, never by
+both), the label column additionally draws left, and the header row
+additionally draws top — closing the table's four outer edges exactly once
+each with no doubled or missing lines. A Variant-group boundary draws at
+`SHEET_SEPARATOR_GROUP_WEIGHT` (2px) instead of the ordinary 1px, reading
+distinctly heavier per the owner's own "can carry a heavier... border"
+direction. Every cell also gets real bindable padding
+(`SHEET_CELL_PADDING_FIGMA_VAR`, `theme/space/sm`) and the grid itself gets
+its own (`SHEET_GRID_PADDING_FIGMA_VAR`, `theme/space/lg`, one step in from
+the outer container's `theme/space/xl`) — both real auto-layout `padding*`
+bindings now that every frame involved is genuine auto-layout, not the
+`layoutMode: 'NONE'` canvas an earlier cut used (which had no such property
+to bind at all).
 
 **Requires the set to already exist.** `--sheet` never creates the lean set
 or the page it lives on — run `generate-figma.mjs` WITHOUT `--sheet` first
@@ -480,12 +507,51 @@ comment in `generate-figma.mjs`).** COLUMNS = State, matching the live set's
 own primary grid axis. ROW GROUPS, outermost to innermost = Variant, then
 every other boolean axis in the SAME `BOOLEAN_AXIS_CANONICAL_ORDER` the
 (possible, if curated) axis-mode fan-out above already uses (Slot Before,
-Slot After, Is Full Width) — one heading per Variant value, one concatenated
-row label (e.g. `"Slot Before=False, Slot After=True"`) per combination of
-the remaining booleans. This is "a clean deterministic grouping," not an
-attempted pixel-for-pixel replica of the owner's Propstar reference
-screenshot, which was a reference image, not machine-readable input to this
-generator.
+Slot After, Is Full Width) — one banner cell per Variant value, one label
+cell per combination of the remaining booleans. This is "a clean
+deterministic grouping," not an attempted pixel-for-pixel replica of the
+owner's Propstar reference screenshot, which was a reference image, not
+machine-readable input to this generator.
+
+**Labels are humanized, never a raw property dump (T32).** A column header
+or banner reads the bare axis VALUE — `"Hover"`, `"Primary"` — never
+`"State=Hover"`/`"Variant=Primary"`. A row label describes only what is ON:
+`"Default"` when every boolean in that row is off; a slot boolean reads
+`"Icon before"`/`"Icon after"` (or `"Content before"`/`"Content after"` for a
+slot with no `figmaPlaceholder` — see `slotNounFor()`), multiple ON sides
+sharing the same noun collapse and pluralize (`"Icons before + after"`),
+different nouns join as separate singular terms (`"Icon before + Content
+after"`); a non-slot boolean (a future component's, e.g. a curated `Is Full
+Width` axis) reads `"With full width"`. See `humanizeAxisValue()`/
+`humanizeBooleanCombo()` in `generate-figma.mjs` — pure string derivation
+from the contract, covered by the same `--check-determinism` proof as
+everything else in this plan.
+
+**Documentation-page header (T32).** The sheet's own container frame opens
+with an INSTANCE of the file's "Documentation Header" component (a single
+COMPONENT, `componentPropertyDefinitions: {}` — no exposed properties, so its
+text is overridden by editing child TEXT nodes directly, not
+`setProperties`), resolved BY NAME on the file's own "Documentation" page
+(never by node id — the same by-name convention `findIconWrapperComponent`
+already uses for another file-local master). This component has exactly ONE
+other placement in the whole file (the master itself, used directly as the
+file's own "Documentation" landing page banner) — there is no established
+"component doc header" reuse convention to mirror, so this is new territory,
+not a copied pattern; see `SHEET_DOC_HEADER_MASTER_NAME`'s own comment in
+`generate-figma.mjs` for the full discovery. Content, all contract-derived
+and deterministic: the master's "Heading" text becomes the component's own
+display name (`contract.name`, e.g. "Button"); "Sub Heading" is left
+UNTOUCHED ("Altitude Design System" — the task named a title and a
+description only); "Description" becomes the contract's own `description`
+field (trimmed/capped, `SHEET_DOC_HEADER_DESCRIPTION_MAX`) with a trailing
+HYPERLINKED "View full documentation" run (`TextNode.setRangeHyperlink` on
+just that trailing range — the master has no separate link element to
+reuse). **The link is a DUMMY placeholder** —
+`https://altitude.pages.dev/docs/components/<tag-minus-al->/` (e.g.
+`.../docs/components/button/`) — the docs site's own future per-component
+routing shape, wired now because docs are not published per-component yet;
+revisit once they are (T20's own generated `.altitude/contracts/docs/
+<project>/<tag>.md` is a candidate source for that eventual page).
 
 **Repurposes the T23 fan-out machinery, does not duplicate it.**
 `buildSheetPlan()` calls `buildOps(contract, { forceAllBooleanAxes: true })`
@@ -499,15 +565,16 @@ product a second way.
 **Batched across multiple `figma_execute` calls, by design.** The Desktop
 Bridge enforces a hard ~30s execution ceiling per call (see T28's own
 comments on this file). Rather than one call creating all ~100 instances,
-`--sheet` issues one SETUP call (creates/replaces the sheet frame, sizes it
-to a precomputed FIXED footprint, builds the State column header) followed
-by one call PER Variant row group (al-button: 5 calls, 20 instances each) —
-6 total calls for the pilot. Layout uses fixed, generous pitch constants
-(`SHEET_ROW_LABEL_WIDTH_PX`/`SHEET_CELL_PITCH_X_PX`/etc. in
-`generate-figma.mjs`), computed once in Node, never measured live — the live
-set's own "measure worst-case width after building" dance (see T21/T28's
-comments) is exactly the kind of extra per-call work a ~100-instance batch
-cannot afford under this ceiling.
+`--sheet` issues one SETUP call (creates/replaces the sheet frame, builds the
+doc header instance, and builds the table's header row) followed by one call
+PER Variant row group (al-button: 5 calls, building that group's banner +
+rows + 20 instances each) — 6 total calls for the pilot, each appending its
+own group frame to the shared "Sheet Grid" auto-layout frame the setup call
+created. Every cell uses a FIXED width (`SHEET_ROW_LABEL_WIDTH_PX`/
+`SHEET_CELL_WIDTH_PX` in `generate-figma.mjs`) rather than measuring an
+instance's true rendered size — the live set's own "measure worst-case width
+after building" dance (see T21/T28's comments) is exactly the kind of extra
+per-call work a ~100-instance batch cannot afford under this ceiling.
 
 **Ops artifact.** `.altitude/figma-sync/<project's figma-sync
 dir>/generated-ops/<tag>.sheet.ops.json` — same gitignored zone, same

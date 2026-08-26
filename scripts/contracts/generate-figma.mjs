@@ -171,12 +171,145 @@ const FULL_WIDTH_EXTRA_PX = 160;
  * would need this constant revisited by hand, same class of judgment call as
  * FULL_WIDTH_EXTRA_PX above.
  */
+/**
+ * T32 (owner design direction, superseding the first `--sheet` cut's
+ * positioned-vector-line approach entirely): "wrap each row/col in a frame
+ * for each variation so we can make the purple lines actual borders like a
+ * real table." The sheet is now a genuine nested-auto-layout table —
+ * sheetGrid (VERTICAL) > [header row, one group frame per Variant (VERTICAL:
+ * a banner row + one row-frame per boolean combo)] > row frames (HORIZONTAL)
+ * > cell frames (one per State column, or one row-label/banner cell) — never
+ * manually positioned x/y, never a `figma.createVector()` line. Every cell
+ * is a FIXED-width frame (SHEET_CELL_WIDTH_PX for a data column,
+ * SHEET_ROW_LABEL_WIDTH_PX for the label column) with `itemSpacing: 0`
+ * between siblings so adjacent borders touch and read as one continuous
+ * grid line, per-side stroke weights (see SHEET_SEPARATOR_* below) drawing
+ * only the sides that would otherwise double up with a neighbor's own
+ * border — see buildSheetPlan()'s own "table" section for the exact rule.
+ */
 const SHEET_ROW_LABEL_WIDTH_PX = 220;
-const SHEET_CELL_PITCH_X_PX = 200;
-const SHEET_ROW_PITCH_Y_PX = 56;
-const SHEET_HEADER_HEIGHT_PX = 40;
-const SHEET_GROUP_HEADING_HEIGHT_PX = 32;
-const SHEET_GROUP_GAP_Y_PX = 24;
+const SHEET_CELL_WIDTH_PX = 200;
+/** T32: internal cell padding — a real bindable auto-layout `padding*`
+ * property now that every cell is a real frame (unlike the pre-T32 grid,
+ * which had no such property to bind at all). One step down from the grid's
+ * OWN padding (`theme/space/lg`, 24px, below) for a visible-but-not-
+ * excessive gap between a cell's border and its own instance/label. */
+const SHEET_CELL_PADDING_FIGMA_VAR = 'theme/space/sm';
+/** T32: the sheetGrid frame's own padding (grid-to-container inset) — now a
+ * REAL auto-layout `padding*` binding (sheetGrid is a genuine VERTICAL
+ * auto-layout frame as of this task, not the `layoutMode: 'NONE'`
+ * manually-positioned canvas the first `--sheet` cut used, which had no
+ * real padding property to bind at all). `theme/space/xl` (28px) is the
+ * OUTER container's own padding (`FRAME_PADDING_FIGMA_VAR`); one step down,
+ * `theme/space/lg` (24px — CONFIRMED in `libs/al-web-components/styles/
+ * tokens-dtcg/tier-2/spacing.json`), reads as a nested inset relative to
+ * that outer padding — judged on the live canvas, not derived from a rule.
+ */
+const SHEET_GRID_PADDING_FIGMA_VAR = 'theme/space/lg';
+
+/**
+ * T32 (owner feedback): structural gridlines between State columns and
+ * between Variant row groups, matching the Propstar reference sheet's own
+ * look — as of this task, REAL frame borders (per-side stroke weights on
+ * cell frames), not positioned vector lines. Color is the LITERAL hex Figma
+ * itself uses for a selected component/component-set outline in its own UI
+ * chrome (`#9747FF`) — DELIBERATELY a Figma-UI-convention literal, not a
+ * `theme/*` design token: there is no "component outline purple" DS token to
+ * bind (it names Figma's own canvas chrome color, not anything the library
+ * ships to a browser), and these strokes live ONLY on frames inside the
+ * generated documentation sheet in Figma — no CSS surface, no component
+ * render, nothing this repo's no-literal-color lint/token conventions were
+ * ever meant to police. Computed once here so every cell border in every
+ * figma_execute call this mode issues uses the identical RGB triple.
+ */
+const SHEET_SEPARATOR_COLOR_HEX = '#9747FF';
+const SHEET_SEPARATOR_COLOR_RGB = {
+  r: parseInt(SHEET_SEPARATOR_COLOR_HEX.slice(1, 3), 16) / 255,
+  g: parseInt(SHEET_SEPARATOR_COLOR_HEX.slice(3, 5), 16) / 255,
+  b: parseInt(SHEET_SEPARATOR_COLOR_HEX.slice(5, 7), 16) / 255,
+};
+/** Figma's own component-outline stroke: 1px, dashed. `[4, 4]` approximates
+ * that dash rhythm at documentation-sheet scale — judged on the live canvas,
+ * not a value read off any API. */
+const SHEET_SEPARATOR_DASH_PATTERN = [4, 4];
+const SHEET_SEPARATOR_WEIGHT = 1;
+/** T32: the border between two Variant groups draws at DOUBLE weight — "can
+ * carry a heavier... border" per the owner's own design direction, so a
+ * group boundary reads distinctly from an ordinary row-to-row boundary
+ * within the same group. Judged on the live canvas, not a measured fact. */
+const SHEET_SEPARATOR_GROUP_WEIGHT = 2;
+
+/**
+ * T32 (owner feedback, live discovery this session): the sheet's container
+ * frame gets an INSTANCE of the file's existing "Documentation Header"
+ * component (`101:29248`, CONFIRMED live this session — never stored by id,
+ * only by name, resolved live the same way `findIconWrapperComponent`/
+ * `findPhosphorComponentByName` already resolve OTHER file-local masters;
+ * see buildSheetSetupPluginCode's own header block for the resolution).
+ *
+ * WHAT IT IS, confirmed live: a single COMPONENT (not a set — no
+ * `componentPropertyDefinitions` at all, so its text can only be overridden
+ * by editing child TEXT nodes directly, never `setProperties`), living on
+ * the file's own `"Documentation"` page as the literal top child of that
+ * page's one top-level `"Documentation"` frame (VERTICAL auto-layout: this
+ * header, fixed 1440x336, THEN a `"Content"` frame below it). Its own
+ * children: `Branding` (a large decorative logo Vector), `Header` > `Header`
+ * containing `Heading` (IBM Plex Sans Bold 48, "Documentation") and
+ * `Sub Heading` (IBM Plex Sans Bold 28, "Altitude Design System"), and
+ * `Description` > `Text` (IBM Plex Sans Regular 18, a longer paragraph). No
+ * existing hyperlink on any text run (`TextNode.hyperlink` reads `null`
+ * everywhere) — this master has never carried a link before.
+ *
+ * NO ESTABLISHED REUSE CONVENTION EXISTS: this component has exactly ONE
+ * placement in the whole file — the master itself, used directly (not as an
+ * instance) as the file's own one-off "Documentation" page banner. There is
+ * no second instance anywhere to confirm a "component doc page header"
+ * pattern from, so applying it here is new territory, not a mirrored
+ * convention — the owner's own framing ("it would like to it's own doc page
+ * ultimately") reads as a documentation-artifact concern specifically, which
+ * is why it is wired to the SHEET's container only, not the live/lean set's
+ * own "<name> — Generated" frame (a working component-set frame, not a
+ * documentation artifact) — see buildSheetSetupPluginCode's own comment for
+ * this judgment call.
+ *
+ * FIELD MAPPING (a judgment call — the master exposes three text layers,
+ * the task named exactly two): `Heading` (the master's biggest, most
+ * prominent text) <- the component's own display NAME (`contract.name`,
+ * e.g. "Button") as the per-component TITLE. `Description` <- the
+ * contract's own `description` field, trimmed and capped (see
+ * `SHEET_DOC_HEADER_DESCRIPTION_MAX`), with a trailing hyperlinked
+ * "View full documentation" run appended (the master has no separate link
+ * element to reuse — `setRangeHyperlink` on just that trailing text range
+ * is the mechanism the task asked to verify/use). `Sub Heading` is left
+ * UNCHANGED ("Altitude Design System") — the task named Title + Description
+ * only; brand-level context stays true for every component page.
+ */
+const SHEET_DOC_HEADER_MASTER_NAME = 'Documentation Header';
+const SHEET_DOC_HEADER_MASTER_PAGE = 'Documentation';
+const SHEET_DOC_HEADER_DESCRIPTION_MAX = 200;
+const SHEET_DOC_HEADER_LINK_TEXT = 'View full documentation';
+/**
+ * DUMMY LINK — docs are not published per-component yet ("we need to
+ * publish the docs first," the owner's own words). This is the FUTURE
+ * canonical URL shape (matches the live docs site's own
+ * `/docs/components/<tag>` routing convention, tag with its `al-` prefix
+ * dropped) — a placeholder to wire the MECHANISM now, not a live link.
+ * Revisit once per-component doc pages actually exist (see T20's own
+ * `.altitude/contracts/docs/<project>/<tag>.md` generation, a candidate
+ * source for that eventual page).
+ */
+const SHEET_DOC_HEADER_DOCS_BASE_URL = 'https://altitude.pages.dev/docs/components/';
+
+function docHeaderDocsUrl(tag) {
+  return `${SHEET_DOC_HEADER_DOCS_BASE_URL}${String(tag).replace(/^al-/, '')}/`;
+}
+
+function docHeaderDescription(rawDescription) {
+  const s = String(rawDescription || '').trim();
+  return s.length > SHEET_DOC_HEADER_DESCRIPTION_MAX
+    ? `${s.slice(0, SHEET_DOC_HEADER_DESCRIPTION_MAX - 1).trimEnd()}…`
+    : s;
+}
 
 /**
  * T21: the "site" background token — CONFIRMED via token-map.mjs
@@ -630,6 +763,128 @@ function serialize(ops) {
  * the kind of extra per-call work this sheet's ~100-instance batch cannot
  * afford under the Desktop Bridge's ~30s execution ceiling).
  */
+/**
+ * T32 (owner feedback): "Slot Before=False, Slot After=False" reads as raw
+ * property-name debug output, not documentation. Pure string derivation, no
+ * ids, contract-derived so it generalizes to any component's boolean axes —
+ * not al-button-specific.
+ *
+ *   - AXIS VALUE labels (column headers, group headings) drop the
+ *     "Axis=" prefix entirely: the column/group already names the axis by
+ *     position (a "State" column header of plain "Hover", a Variant group
+ *     heading of plain "Primary") — see humanizeAxisValue() below.
+ *   - BOOLEAN-COMBINATION row labels describe ONLY what's ON, never every
+ *     axis at every value — see humanizeBooleanCombo() below.
+ */
+function humanizeAxisValue(value) {
+  return value;
+}
+
+/** The noun a slot's boolean earns in a row label: "Icon" when that slot
+ * carries a `figmaPlaceholder` (T19/T25's icon-instance convention — the
+ * slot is understood to hold an icon), "Content" otherwise (a slotted
+ * boolean with no icon convention documented for it). Slot NAME is already
+ * "before"/"after" (contract.slots[].name), so "Icon <slot name>" reads as
+ * "Icon before" with no further transformation needed. */
+function slotNounFor(contract, slotName) {
+  const slot = (contract.slots || []).find((s) => s.name === slotName);
+  return slot && slot.figmaPlaceholder ? 'Icon' : 'Content';
+}
+
+/** "Is Full Width" -> "full width" (drop a leading "Is ", lowercase the
+ * rest) for a generic, non-slot boolean's "With <...>" row-label term. */
+function spacedPropName(figmaPropertyName) {
+  return figmaPropertyName.replace(/^Is\s+/, '').toLowerCase();
+}
+
+/**
+ * `boolAxes` is buildOps()'s own `booleanAxisDefs` (each carrying
+ * `{ name, kind, side }` — `kind: 'slot'` + `side: 'before'|'after'` for a
+ * slot boolean, `kind: 'fullWidth'` for a generic layout boolean), `combo`
+ * is one boolAxes-name -> 'True'|'False' combination (buildSheetPlan's own
+ * `cartesianObjects` output). Returns "Default" when nothing in the combo is
+ * on; otherwise ONE humanized term per axis that IS on, slot terms grouped
+ * by noun (same noun, multiple sides -> pluralized "Icons before + after";
+ * different nouns -> one singular term per side, e.g. "Icon before +
+ * Content after"), non-slot terms appended as "With <prop name>", all
+ * joined with " + ".
+ */
+function humanizeBooleanCombo(contract, boolAxes, combo) {
+  const onAxes = boolAxes.filter((a) => combo[a.name] === 'True');
+  if (!onAxes.length) return 'Default';
+
+  const slotTerms = onAxes.filter((a) => a.kind === 'slot');
+  const otherTerms = onAxes.filter((a) => a.kind !== 'slot');
+
+  const parts = [];
+  if (slotTerms.length) {
+    // Group ON slot sides by their noun, preserving boolAxes' own left-to-
+    // right (BOOLEAN_AXIS_CANONICAL_ORDER) order within each noun group.
+    const sidesByNoun = new Map();
+    for (const a of slotTerms) {
+      const noun = slotNounFor(contract, a.side);
+      if (!sidesByNoun.has(noun)) sidesByNoun.set(noun, []);
+      sidesByNoun.get(noun).push(a.side);
+    }
+    if (sidesByNoun.size === 1) {
+      const [[noun, sides]] = [...sidesByNoun.entries()];
+      parts.push(sides.length > 1 ? `${noun}s ${sides.join(' + ')}` : `${noun} ${sides[0]}`);
+    } else {
+      // Different nouns on the same row: one singular term per side, in
+      // slotTerms' own order, joined below alongside everything else.
+      for (const a of slotTerms) parts.push(`${slotNounFor(contract, a.side)} ${a.side}`);
+    }
+  }
+  for (const a of otherTerms) parts.push(`With ${spacedPropName(a.name)}`);
+
+  return parts.join(' + ');
+}
+
+/**
+ * T32: per-side border weights for one cell — the "real table, collapsed
+ * borders" rule. Every cell draws its OWN right + bottom edge (the shared
+ * boundary with the NEXT cell/row is always drawn by the cell BEFORE it,
+ * never by both, so no edge is ever double-drawn by accident); a cell also
+ * draws LEFT when it is the row-label column (col 0 — the only column nothing
+ * to its own left would otherwise close), and draws TOP only when it is the
+ * table's very first row (the header row) closing the table's own top edge —
+ * every other row's top boundary is already the row above it own bottom
+ * edge. A GROUP boundary (this cell's row is the LAST row of a Variant group
+ * that is not the last group) upgrades that row's bottom weight to
+ * `SHEET_SEPARATOR_GROUP_WEIGHT` — "heavier... border" per the owner's own
+ * design direction — everywhere else weight is the ordinary
+ * `SHEET_SEPARATOR_WEIGHT`. A weight of 0 means that side is invisible
+ * (Figma renders nothing for that edge), never omitted from the object, so
+ * every cell's stroke shape is uniform and independent of its position.
+ */
+function cellBorders({ isHeaderRow, isFirstColumn, isLastRowOfGroup, isLastGroup }) {
+  const bottomWeight = isLastRowOfGroup && !isLastGroup ? SHEET_SEPARATOR_GROUP_WEIGHT : SHEET_SEPARATOR_WEIGHT;
+  return {
+    top: isHeaderRow ? SHEET_SEPARATOR_WEIGHT : 0,
+    right: SHEET_SEPARATOR_WEIGHT,
+    bottom: bottomWeight,
+    left: isFirstColumn ? SHEET_SEPARATOR_WEIGHT : 0,
+  };
+}
+
+/**
+ * T32: contract -> a deterministic TABLE plan (no ids, no positions — every
+ * frame's size/border/order is derived structurally, then built via real
+ * nested auto-layout, not measured or manually placed). REPURPOSES
+ * buildOps()'s T23 fan-out machinery exactly as the first `--sheet` cut did
+ * (`forceAllBooleanAxes: true` fans out every non-omitted boolean into the
+ * SAME cartesian `variants` list T23 originally built LIVE components from —
+ * this function only re-groups that list into table rows, it does not fan
+ * anything out itself and touches no page).
+ *
+ * Grouping (documented judgment call — see `humanizeBooleanCombo()` above
+ * for the label side of the same call): COLUMNS = State; ROW GROUPS,
+ * outermost to innermost = Variant, then every other boolean axis in
+ * `BOOLEAN_AXIS_CANONICAL_ORDER` — unchanged from the first `--sheet` cut,
+ * only the RENDERING mechanism (real bordered table frames, not positioned
+ * vector lines + free-floating text/instances) changed under T32's owner
+ * design direction.
+ */
 export function buildSheetPlan(contract, { projectId = 'altitude', pageName = 'Contract Pilot' } = {}) {
   const forcedOps = buildOps(contract, { projectId, pageName, forceAllBooleanAxes: true });
   const stateAxis = forcedOps.axes.find((a) => a.name === 'State');
@@ -641,33 +896,60 @@ export function buildSheetPlan(contract, { projectId = 'altitude', pageName = 'C
   }
   const subCombos = boolAxes.length ? cartesianObjects(boolAxes) : [{}];
   const variantValues = variantAxis ? variantAxis.values : [null];
+  const lastGroupIndex = variantValues.length - 1;
 
-  let y = SHEET_HEADER_HEIGHT_PX;
-  const rowGroups = variantValues.map((variant) => {
-    const headingY = y;
-    y += SHEET_GROUP_HEADING_HEIGHT_PX;
-    const rows = subCombos.map((combo) => {
-      const rowY = y;
-      y += SHEET_ROW_PITCH_Y_PX;
-      const cells = stateAxis.values.map((state, ci) => {
+  // Header row: one label-column spacer cell (empty — the row-label column
+  // has nothing to say in the header) + one cell per State value.
+  const headerCells = [
+    { label: '', isLabelColumn: true, border: cellBorders({ isHeaderRow: true, isFirstColumn: true, isLastRowOfGroup: false, isLastGroup: true }) },
+    ...stateAxis.values.map((state) => ({
+      label: humanizeAxisValue(state),
+      isLabelColumn: false,
+      border: cellBorders({ isHeaderRow: true, isFirstColumn: false, isLastRowOfGroup: false, isLastGroup: true }),
+    })),
+  ];
+
+  const groups = variantValues.map((variant, gi) => {
+    const isLastGroup = gi === lastGroupIndex;
+    const rows = subCombos.map((combo, ri) => {
+      const isLastRowOfGroup = ri === subCombos.length - 1;
+      const labelCell = {
+        label: boolAxes.length ? humanizeBooleanCombo(contract, boolAxes, combo) : 'Default',
+        isLabelColumn: true,
+        border: cellBorders({ isHeaderRow: false, isFirstColumn: true, isLastRowOfGroup, isLastGroup }),
+      };
+      const dataCells = stateAxis.values.map((state) => {
         const properties = { State: state };
         if (variant) properties.Variant = variant;
         for (const a of boolAxes) properties[a.name] = combo[a.name] === 'True';
         const matched = forcedOps.variants.find((vv) => vv.state === state
           && (!variantAxis || vv.variant === variant)
           && boolAxes.every((a) => (vv.axisValues || {})[a.name] === combo[a.name]));
-        return { state, x: SHEET_ROW_LABEL_WIDTH_PX + ci * SHEET_CELL_PITCH_X_PX, y: rowY, properties, sourceVariantName: matched ? matched.name : null };
+        return {
+          state,
+          properties,
+          sourceVariantName: matched ? matched.name : null,
+          border: cellBorders({ isHeaderRow: false, isFirstColumn: false, isLastRowOfGroup, isLastGroup }),
+        };
       });
-      const rowLabel = boolAxes.map((a) => `${a.name}=${combo[a.name]}`).join(', ') || null;
-      return { rowLabel, y: rowY, cells };
+      return { labelCell, cells: dataCells };
     });
-    y += SHEET_GROUP_GAP_Y_PX;
-    return { groupLabel: variant ? `Variant=${variant}` : null, headingY, rows };
+    return {
+      groupLabel: variant ? humanizeAxisValue(variant) : null,
+      // Banner is its own single wide cell spanning the WHOLE table width —
+      // its own top edge is the group boundary line for every group after
+      // the first (the first group's banner sits directly under the header
+      // row, whose own bottom is already 0 by cellBorders' rule, so the
+      // banner needs SOMETHING to close that seam — it always draws its own
+      // top at the group weight, upgraded to the heavier weight only when
+      // there is a PRECEDING group to separate from).
+      banner: { label: variant ? humanizeAxisValue(variant) : null, topWeight: gi === 0 ? SHEET_SEPARATOR_WEIGHT : SHEET_SEPARATOR_GROUP_WEIGHT },
+      rows,
+    };
   });
 
-  const totalWidth = SHEET_ROW_LABEL_WIDTH_PX + stateAxis.values.length * SHEET_CELL_PITCH_X_PX;
-  const totalHeight = y;
-  const totalInstances = rowGroups.reduce((n, g) => n + g.rows.reduce((m, r) => m + r.cells.length, 0), 0);
+  const totalInstances = groups.reduce((n, g) => n + g.rows.reduce((m, r) => m + r.cells.length, 0), 0);
+  const tableWidth = SHEET_ROW_LABEL_WIDTH_PX + stateAxis.values.length * SHEET_CELL_WIDTH_PX;
 
   return {
     schemaVersion: 1,
@@ -679,16 +961,29 @@ export function buildSheetPlan(contract, { projectId = 'altitude', pageName = 'C
     sheetFrameName: `${contract.name} — Prop Sheet`,
     columns: { name: stateAxis.name, values: stateAxis.values },
     rowAxisOrder: [variantAxis ? variantAxis.name : null, ...boolAxes.map((a) => a.name)].filter(Boolean),
-    rowGroups,
-    layout: {
+    // T32: resolved BY NAME live in the plugin code (never an id here) —
+    // see SHEET_DOC_HEADER_MASTER_NAME's own comment for what this is and
+    // why it has no established reuse convention to mirror yet.
+    header: {
+      masterName: SHEET_DOC_HEADER_MASTER_NAME,
+      masterPageName: SHEET_DOC_HEADER_MASTER_PAGE,
+      title: contract.name || contract.id,
+      description: docHeaderDescription(contract.description),
+      linkText: SHEET_DOC_HEADER_LINK_TEXT,
+      linkUrl: docHeaderDocsUrl(contract.id),
+      width: tableWidth,
+    },
+    table: {
       rowLabelWidth: SHEET_ROW_LABEL_WIDTH_PX,
-      cellPitchX: SHEET_CELL_PITCH_X_PX,
-      rowPitchY: SHEET_ROW_PITCH_Y_PX,
-      headerHeight: SHEET_HEADER_HEIGHT_PX,
-      groupHeadingHeight: SHEET_GROUP_HEADING_HEIGHT_PX,
-      groupGapY: SHEET_GROUP_GAP_Y_PX,
-      totalWidth,
-      totalHeight,
+      cellWidth: SHEET_CELL_WIDTH_PX,
+      tableWidth,
+      cellPaddingFigmaVar: SHEET_CELL_PADDING_FIGMA_VAR,
+      gridPaddingFigmaVar: SHEET_GRID_PADDING_FIGMA_VAR,
+      separatorColor: SHEET_SEPARATOR_COLOR_RGB,
+      separatorColorHex: SHEET_SEPARATOR_COLOR_HEX,
+      dashPattern: SHEET_SEPARATOR_DASH_PATTERN,
+      headerCells,
+      groups,
     },
     totalInstances,
     degradations: forcedOps.degradations,
@@ -1779,6 +2074,69 @@ function variableHelpersSnippet() {
 }
 
 /**
+ * T32: shared cell-frame builder — used by BOTH the setup call (header row
+ * cells) and every group call (label cells + data cells), so the "real
+ * table" construction rule lives in exactly one place. Ordering follows this
+ * file's own established Sizing Modes discipline (see the "Is Full Width"
+ * axis comment in buildVariant, and T28's icon-instance comment): a freshly
+ * created auto-layout frame starts HUG/HUG; `resize()` sets BOTH axes to
+ * FIXED as a side effect, so the "restore the OTHER axis back to hug"
+ * override must come immediately AFTER resize(), never before.
+ *   - `width`: the cell's FIXED width (SHEET_ROW_LABEL_WIDTH_PX for a label/
+ *     banner cell, SHEET_CELL_WIDTH_PX for a data-column cell) — this is
+ *     what keeps every row's columns aligned into a real grid, since Figma
+ *     auto-layout has no cross-row "equalize this column's width" feature of
+ *     its own; every cell in the same column position must simply request
+ *     the SAME fixed width.
+ *   - `align`: 'CENTER' for a data cell (centers its one instance), 'MIN'
+ *     for a label/banner cell (left-aligns its text, the ordinary table
+ *     convention).
+ *   - `border`: `{ top, right, bottom, left }` weights from buildSheetPlan's
+ *     own `cellBorders()` — 0 means invisible on that side. `strokeAlign:
+ *     'INSIDE'` so the border never grows the cell beyond its own fixed
+ *     width (an OUTSIDE/CENTER stroke would, breaking column alignment by
+ *     the stroke weight on every bordered edge).
+ */
+function cellFrameSnippet() {
+  return String.raw`
+    function makeCell(width, align, border, paint, dashPattern, cellPaddingVar) {
+      const cell = figma.createFrame();
+      cell.name = 'Cell';
+      cell.layoutMode = 'HORIZONTAL';
+      cell.primaryAxisAlignItems = align;
+      cell.counterAxisAlignItems = 'CENTER';
+      cell.fills = [];
+      bindNum(cell, 'paddingTop', cellPaddingVar);
+      bindNum(cell, 'paddingBottom', cellPaddingVar);
+      bindNum(cell, 'paddingLeft', cellPaddingVar);
+      bindNum(cell, 'paddingRight', cellPaddingVar);
+      // resize() forces BOTH axes to FIXED — restore height to hug right
+      // after, so only WIDTH stays fixed (see this function's own comment).
+      cell.resize(width, Math.max(cell.height, 1));
+      cell.counterAxisSizingMode = 'AUTO';
+      cell.strokes = [paint];
+      cell.dashPattern = dashPattern;
+      cell.strokeAlign = 'INSIDE';
+      cell.strokeTopWeight = border.top;
+      cell.strokeRightWeight = border.right;
+      cell.strokeBottomWeight = border.bottom;
+      cell.strokeLeftWeight = border.left;
+      return cell;
+    }
+    function makeRow() {
+      const row = figma.createFrame();
+      row.name = 'Row';
+      row.layoutMode = 'HORIZONTAL';
+      row.primaryAxisSizingMode = 'AUTO';
+      row.counterAxisSizingMode = 'AUTO';
+      row.itemSpacing = 0;
+      row.fills = [];
+      return row;
+    }
+  `;
+}
+
+/**
  * T31 `--sheet` setup call — the FIRST of N figma_execute calls this mode
  * issues (see main()'s sheet path). Idempotently (REPLACE, not append)
  * creates the sheet's own presentation frame next to the target set's
@@ -1792,6 +2150,7 @@ function buildSheetSetupPluginCode(plan, SC) {
     ${fileGuardSnippet(SC)}
     ${textStyleLinkSnippet()}
     ${variableHelpersSnippet()}
+    ${cellFrameSnippet()}
     const PLAN = ${JSON.stringify(plan)};
     const FRAME_PADDING_FIGMA_VAR = ${JSON.stringify(FRAME_PADDING_FIGMA_VAR)};
     const SITE_BG_FIGMA_VAR = ${JSON.stringify(SITE_BG_FIGMA_VAR)};
@@ -1828,23 +2187,121 @@ function buildSheetSetupPluginCode(plan, SC) {
     const originX = generatedFrame ? generatedFrame.x + generatedFrame.width + 200 : targetSet.x + targetSet.width + 400;
     const originY = generatedFrame ? generatedFrame.y : targetSet.y;
 
+    // T32 (owner design direction): sheetGrid is now a REAL VERTICAL
+    // auto-layout frame — [header row, one group frame per Variant] —
+    // itemSpacing 0 so adjacent frames' own borders touch and read as ONE
+    // continuous table line, never a gap-then-a-line. Its OWN padding is a
+    // real bindable auto-layout property now (unlike the first --sheet
+    // cut's layoutMode: 'NONE' canvas, which had none — see
+    // SHEET_GRID_PADDING_FIGMA_VAR's own comment).
     const sheetGrid = figma.createFrame();
     sheetGrid.name = 'Sheet Grid';
-    sheetGrid.layoutMode = 'NONE';
+    sheetGrid.layoutMode = 'VERTICAL';
+    sheetGrid.primaryAxisSizingMode = 'AUTO';
+    sheetGrid.counterAxisSizingMode = 'AUTO';
+    sheetGrid.itemSpacing = 0;
     sheetGrid.fills = [];
-    sheetGrid.resize(PLAN.layout.totalWidth, PLAN.layout.totalHeight);
+    bindNum(sheetGrid, 'paddingTop', PLAN.table.gridPaddingFigmaVar);
+    bindNum(sheetGrid, 'paddingBottom', PLAN.table.gridPaddingFigmaVar);
+    bindNum(sheetGrid, 'paddingLeft', PLAN.table.gridPaddingFigmaVar);
+    bindNum(sheetGrid, 'paddingRight', PLAN.table.gridPaddingFigmaVar);
 
+    // Regular weight — used for the header-row cell labels below AND (T32)
+    // the doc header's Description text, which already ships this exact
+    // font/style in the master.
+    const fontName = { family: 'IBM Plex Sans', style: 'Regular' };
+    try { await figma.loadFontAsync(fontName); } catch (e) { await figma.loadFontAsync({ family: 'Inter', style: 'Regular' }); fontName.family = 'Inter'; }
+
+    // T32 (owner feedback): a VERTICAL stack — header ABOVE the grid, inside
+    // the SAME padded container — mirrors the ONE real usage this master has
+    // in the file (a VERTICAL "Documentation" frame: this header, then a
+    // "Content" frame below it). Was HORIZONTAL (a single-child hug wrapper)
+    // pre-T32; see SHEET_DOC_HEADER_MASTER_NAME's own comment for the full
+    // discovery and the "no established per-component convention" judgment
+    // call this rests on.
     const sheetFrame = figma.createFrame();
     sheetFrame.name = PLAN.sheetFrameName;
     page.appendChild(sheetFrame);
-    sheetFrame.layoutMode = 'HORIZONTAL';
+    sheetFrame.layoutMode = 'VERTICAL';
     sheetFrame.primaryAxisSizingMode = 'AUTO';
     sheetFrame.counterAxisSizingMode = 'AUTO';
     bindNum(sheetFrame, 'paddingTop', FRAME_PADDING_FIGMA_VAR);
     bindNum(sheetFrame, 'paddingBottom', FRAME_PADDING_FIGMA_VAR);
     bindNum(sheetFrame, 'paddingLeft', FRAME_PADDING_FIGMA_VAR);
     bindNum(sheetFrame, 'paddingRight', FRAME_PADDING_FIGMA_VAR);
+    bindNum(sheetFrame, 'itemSpacing', FRAME_PADDING_FIGMA_VAR);
     { const p = await boundSolid(SITE_BG_FIGMA_VAR); if (p) sheetFrame.fills = [p]; }
+
+    // T32: "Documentation Header" — resolved BY NAME on its own page, never
+    // by the id this session confirmed live (101:29248) — same
+    // by-name-not-by-id convention findIconWrapperComponent already uses
+    // for another file-local master. A miss here degrades cleanly: no
+    // header is built, the sheet still gets its grid, and the gap is
+    // reported in missingVars rather than aborting the whole sheet.
+    const docHeaderPage = figma.root.children.find((p) => p.name === PLAN.header.masterPageName);
+    let docHeaderMaster = null;
+    if (docHeaderPage) {
+      await docHeaderPage.loadAsync();
+      const hit = docHeaderPage.findOne((n) => (n.type === 'COMPONENT' || n.type === 'COMPONENT_SET') && n.name === PLAN.header.masterName);
+      if (hit) docHeaderMaster = hit.type === 'COMPONENT_SET' ? (hit.defaultVariant || hit.children[0]) : hit;
+    }
+    if (!docHeaderPage) misses.add('doc-header-page-not-found:' + PLAN.header.masterPageName);
+    else if (!docHeaderMaster) misses.add('doc-header-master-not-found:' + PLAN.header.masterName);
+
+    const docHeaderTextNodes = [];
+    let docHeaderInstance = null;
+    if (docHeaderMaster) {
+      docHeaderInstance = docHeaderMaster.createInstance();
+      // Master root is FIXED/FIXED sizing (CONFIRMED live) — an ordinary
+      // resize() is the correct, safe operation here (never the "resize()
+      // undoes HUG sizing" trap documented elsewhere in this file, which is
+      // about converting an ALREADY-hug frame; this one never was hug).
+      try { docHeaderInstance.resize(PLAN.header.width, docHeaderInstance.height); }
+      catch (e) { misses.add('doc-header-resize-failed'); }
+
+      // Font-load-before-setText (SKILL.md trap): each edited run's EXACT
+      // existing font must be loaded before its .characters is touched.
+      const headingFont = { family: 'IBM Plex Sans', style: 'Bold' };
+      try { await figma.loadFontAsync(headingFont); } catch (e) { await figma.loadFontAsync({ family: 'Inter', style: 'Bold' }); headingFont.family = 'Inter'; }
+
+      // T32: Title <- the component's own display name (contract.name via
+      // PLAN.header.title). Sub Heading is DELIBERATELY left untouched — see
+      // SHEET_DOC_HEADER_MASTER_NAME's own "FIELD MAPPING" comment.
+      const headingNode = docHeaderInstance.findOne((n) => n.type === 'TEXT' && n.name === 'Heading');
+      if (headingNode) {
+        headingNode.fontName = headingFont;
+        headingNode.characters = PLAN.header.title;
+        docHeaderTextNodes.push(headingNode);
+      } else {
+        misses.add('doc-header-heading-node-not-found');
+      }
+
+      // T32: Description <- the contract's own description, trimmed/capped
+      // (buildSheetPlan's docHeaderDescription()), with a trailing
+      // HYPERLINKED run — the master has no separate link element, so the
+      // Description text node's own trailing text range carries the link
+      // (setRangeHyperlink), per the task's own "if its link is a text
+      // node, use Figma's hyperlink property on the text range" guidance.
+      const descFrame = docHeaderInstance.findOne((n) => n.type === 'FRAME' && n.name === 'Description');
+      const descNode = descFrame ? descFrame.findOne((n) => n.type === 'TEXT') : docHeaderInstance.findOne((n) => n.type === 'TEXT' && n.name === 'Text');
+      if (descNode) {
+        descNode.fontName = fontName; // IBM Plex Sans Regular — already loaded above for the column labels.
+        const desc = PLAN.header.description;
+        const link = PLAN.header.linkText;
+        const full = desc ? desc + '  ' + link : link;
+        descNode.characters = full;
+        docHeaderTextNodes.push(descNode);
+        const linkStart = full.length - link.length;
+        try { descNode.setRangeHyperlink(linkStart, full.length, { type: 'URL', value: PLAN.header.linkUrl }); }
+        catch (e) { misses.add('doc-header-hyperlink-failed'); }
+      } else {
+        misses.add('doc-header-description-node-not-found');
+      }
+
+      sheetFrame.appendChild(docHeaderInstance); // appended BEFORE sheetGrid below -> renders ABOVE it in the vertical stack.
+    }
+    const docHeaderStylesLinked = docHeaderTextNodes.length ? await linkTextStyles(docHeaderTextNodes) : 0;
+
     sheetFrame.appendChild(sheetGrid);
     sheetFrame.x = originX;
     sheetFrame.y = originY;
@@ -1863,27 +2320,37 @@ function buildSheetSetupPluginCode(plan, SC) {
       misses.add('variable-collection:' + THEME_MODE_COLLECTION_NAME);
     }
 
-    const fontName = { family: 'IBM Plex Sans', style: 'Regular' };
-    try { await figma.loadFontAsync(fontName); } catch (e) { await figma.loadFontAsync({ family: 'Inter', style: 'Regular' }); fontName.family = 'Inter'; }
     // T31: label text color — bound to the SAME token every other run of
     // this generator resolves against the sheet frame's own explicit theme
     // mode, so a label reads correctly regardless of which mode is current
     // (never a resolved literal — see SHEET_LABEL_COLOR_FIGMA_VAR's comment).
     const labelPaint = await boundSolid(SHEET_LABEL_COLOR_FIGMA_VAR);
 
-    const headerTextNodes = [];
-    for (let ci = 0; ci < PLAN.columns.values.length; ci++) {
-      const t = figma.createText();
-      t.fontName = fontName;
-      t.characters = PLAN.columns.name + '=' + PLAN.columns.values[ci];
-      t.fontSize = 12;
-      if (labelPaint) t.fills = [labelPaint];
-      sheetGrid.appendChild(t);
-      t.x = PLAN.layout.rowLabelWidth + ci * PLAN.layout.cellPitchX;
-      t.y = 0;
-      headerTextNodes.push(t);
+    // T32 (owner design direction): the header row — a REAL bordered table
+    // row, built from makeRow()/makeCell() exactly like every group's own
+    // rows (buildSheetGroupPluginCode), so the header aligns into the SAME
+    // grid rather than being separately positioned text. Built here (setup
+    // call) rather than a group call since it belongs to the WHOLE table,
+    // not any one Variant group.
+    const sepPaint = { type: 'SOLID', color: PLAN.table.separatorColor };
+    const headerRow = makeRow();
+    const columnHeaderTextNodes = [];
+    for (const hc of PLAN.table.headerCells) {
+      const width = hc.isLabelColumn ? PLAN.table.rowLabelWidth : PLAN.table.cellWidth;
+      const cell = makeCell(width, hc.isLabelColumn ? 'MIN' : 'CENTER', hc.border, sepPaint, PLAN.table.dashPattern, PLAN.table.cellPaddingFigmaVar);
+      if (hc.label) {
+        const t = figma.createText();
+        t.fontName = fontName;
+        t.characters = hc.label;
+        t.fontSize = 12;
+        if (labelPaint) t.fills = [labelPaint];
+        cell.appendChild(t);
+        columnHeaderTextNodes.push(t);
+      }
+      headerRow.appendChild(cell);
     }
-    const textStylesLinked = await linkTextStyles(headerTextNodes);
+    sheetGrid.appendChild(headerRow);
+    const columnLabelStylesLinked = await linkTextStyles(columnHeaderTextNodes);
 
     return JSON.stringify({
       pageId: page.id,
@@ -1891,7 +2358,10 @@ function buildSheetSetupPluginCode(plan, SC) {
       sheetGridId: sheetGrid.id,
       targetSetId: targetSet.id,
       appliedThemeMode,
-      textStylesLinked,
+      textStylesLinked: columnLabelStylesLinked + docHeaderStylesLinked,
+      docHeaderBuilt: !!docHeaderInstance,
+      docHeaderInstanceId: docHeaderInstance ? docHeaderInstance.id : null,
+      headerCellsBuilt: PLAN.table.headerCells.length,
       missingVars: [...misses],
     });
   `;
@@ -1901,21 +2371,25 @@ function buildSheetSetupPluginCode(plan, SC) {
  * T31 `--sheet` per-group call — ONE of these per Variant-level row group
  * (5 for al-button: Bare/Danger/Primary/Secondary/Tertiary), issued
  * sequentially by main()'s sheet path AFTER the setup call above. Builds
- * that group's own heading + row labels + one INSTANCE per (State x every
- * other boolean axis) cell, each switched to its own combination via
- * `setProperties` against the TARGET set's real property definitions —
- * never a freshly-built component, never a runtime toggle. Splitting one
- * call per group (rather than one call for all ~100 instances) is the
- * "batch across calls" the Desktop Bridge's ~30s per-call ceiling requires
- * for a fan-out this size (see SHEET_* pitch constants' own comment).
+ * that group's own GROUP FRAME (T32: a real bordered table section — a
+ * banner row + one row-frame per boolean combo, each row a label cell + one
+ * data cell per State), each data cell's instance switched to its own
+ * combination via `setProperties` against the TARGET set's real property
+ * definitions — never a freshly-built component, never a runtime toggle —
+ * then appends that whole group frame to sheetGrid. Splitting one call per
+ * group (rather than one call for all ~100 instances) is the "batch across
+ * calls" the Desktop Bridge's ~30s per-call ceiling requires for a fan-out
+ * this size (see SHEET_* pitch constants' own comment).
  */
 function buildSheetGroupPluginCode(plan, groupIndex, ids, SC) {
-  const group = plan.rowGroups[groupIndex];
+  const group = plan.table.groups[groupIndex];
   return String.raw`
     ${fileGuardSnippet(SC)}
     ${textStyleLinkSnippet()}
     ${variableHelpersSnippet()}
+    ${cellFrameSnippet()}
     const GROUP = ${JSON.stringify(group)};
+    const TABLE = ${JSON.stringify({ rowLabelWidth: plan.table.rowLabelWidth, cellWidth: plan.table.cellWidth, cellPaddingFigmaVar: plan.table.cellPaddingFigmaVar, dashPattern: plan.table.dashPattern, separatorColor: plan.table.separatorColor })};
     const SHEET_LABEL_COLOR_FIGMA_VAR = ${JSON.stringify(SHEET_LABEL_COLOR_FIGMA_VAR)};
 
     // T28-style dynamic-page discipline: getNodeByIdAsync loads whatever page
@@ -1948,46 +2422,69 @@ function buildSheetGroupPluginCode(plan, groupIndex, ids, SC) {
     const fontName = { family: 'IBM Plex Sans', style: 'Regular' };
     try { await figma.loadFontAsync(fontName); } catch (e) { await figma.loadFontAsync({ family: 'Inter', style: 'Regular' }); fontName.family = 'Inter'; }
     const labelPaint = await boundSolid(SHEET_LABEL_COLOR_FIGMA_VAR);
+    const sepPaint = { type: 'SOLID', color: TABLE.separatorColor };
 
     const setPropMisses = [];
     const labelNodes = [];
     let built = 0;
     const base = targetSet.defaultVariant || targetSet.children[0];
 
-    if (GROUP.groupLabel) {
+    // T32: the group frame — a VERTICAL auto-layout wrapper (HUG both axes,
+    // itemSpacing 0) holding this group's own banner row + every one of its
+    // data rows, appended to sheetGrid as ONE unit at the end of this call.
+    const groupFrame = figma.createFrame();
+    groupFrame.name = 'Group';
+    groupFrame.layoutMode = 'VERTICAL';
+    groupFrame.primaryAxisSizingMode = 'AUTO';
+    groupFrame.counterAxisSizingMode = 'AUTO';
+    groupFrame.itemSpacing = 0;
+    groupFrame.fills = [];
+
+    // Banner — one cell spanning the table's FULL width (label column +
+    // every data column), carrying the humanized Variant value. Its own top
+    // edge is this group's boundary line (heavier when there is a preceding
+    // group to separate from — see buildSheetPlan's own banner comment).
+    const bannerRow = makeRow();
+    const bannerCell = makeCell(${JSON.stringify(plan.table.tableWidth)}, 'MIN', { top: GROUP.banner.topWeight, right: 1, bottom: 1, left: 1 }, sepPaint, TABLE.dashPattern, TABLE.cellPaddingFigmaVar);
+    if (GROUP.banner.label) {
       const heading = figma.createText();
       heading.fontName = fontName;
-      heading.characters = GROUP.groupLabel;
+      heading.characters = GROUP.banner.label;
       heading.fontSize = 14;
       if (labelPaint) heading.fills = [labelPaint];
-      sheetGrid.appendChild(heading);
-      heading.x = 0;
-      heading.y = GROUP.headingY;
+      bannerCell.appendChild(heading);
       labelNodes.push(heading);
     }
+    bannerRow.appendChild(bannerCell);
+    groupFrame.appendChild(bannerRow);
 
     for (const row of GROUP.rows) {
-      if (row.rowLabel) {
+      const dataRow = makeRow();
+      const labelCell = makeCell(TABLE.rowLabelWidth, 'MIN', row.labelCell.border, sepPaint, TABLE.dashPattern, TABLE.cellPaddingFigmaVar);
+      if (row.labelCell.label) {
         const label = figma.createText();
         label.fontName = fontName;
-        label.characters = row.rowLabel;
+        label.characters = row.labelCell.label;
         label.fontSize = 11;
         if (labelPaint) label.fills = [labelPaint];
-        sheetGrid.appendChild(label);
-        label.x = 0;
-        label.y = row.y;
+        labelCell.appendChild(label);
         labelNodes.push(label);
       }
+      dataRow.appendChild(labelCell);
+
       for (const cell of row.cells) {
+        const dataCell = makeCell(TABLE.cellWidth, 'CENTER', cell.border, sepPaint, TABLE.dashPattern, TABLE.cellPaddingFigmaVar);
         const inst = base.createInstance();
-        sheetGrid.appendChild(inst);
+        dataCell.appendChild(inst);
         try { inst.setProperties(applyFor(cell.properties)); }
         catch (e) { setPropMisses.push('setProperties:' + JSON.stringify(cell.properties) + ':' + e.message); }
-        inst.x = cell.x;
-        inst.y = cell.y;
+        dataRow.appendChild(dataCell);
         built++;
       }
+      groupFrame.appendChild(dataRow);
     }
+
+    sheetGrid.appendChild(groupFrame);
     const textStylesLinked = await linkTextStyles(labelNodes);
 
     return JSON.stringify({ group: GROUP.groupLabel, built, textStylesLinked, missingVars: [...misses, ...setPropMisses] });
@@ -2111,17 +2608,17 @@ async function mainSheet(SC, contract) {
 
   const missingVars = [...(ids.missingVars || [])];
   let totalBuilt = 0;
-  for (let gi = 0; gi < plan.rowGroups.length; gi++) {
+  for (let gi = 0; gi < plan.table.groups.length; gi++) {
     const code = buildSheetGroupPluginCode(plan, gi, ids, SC);
     const text = await call(SHIM_PORT, 'figma_execute', { code, fileKey: SC.fileKey, timeout: 90000 });
     let payload;
     try { payload = JSON.parse(text); } catch { console.error(text); process.exit(1); }
     if (payload.success === false || payload.error) {
-      console.error(`[generate-figma] --sheet GROUP ${gi + 1}/${plan.rowGroups.length} FAILED:`, payload.error || payload);
+      console.error(`[generate-figma] --sheet GROUP ${gi + 1}/${plan.table.groups.length} FAILED:`, payload.error || payload);
       process.exit(1);
     }
     const result = typeof payload.result === 'string' ? JSON.parse(payload.result) : payload.result;
-    console.log(`[generate-figma] --sheet group ${gi + 1}/${plan.rowGroups.length}:`, JSON.stringify(result));
+    console.log(`[generate-figma] --sheet group ${gi + 1}/${plan.table.groups.length}:`, JSON.stringify(result));
     totalBuilt += result.built || 0;
     missingVars.push(...(result.missingVars || []));
   }

@@ -192,18 +192,27 @@ component: an enum prop is always an axis (unchanged); a slot or layout
 boolean is a component property UNLESS curated `figmaAxis`/`axis: true` for a
 component whose real set demonstrably fans it out.
 
-**Documentation sheet, plugin-free (`--sheet`, T31).** The Propstar-style
-fan-out grid the T22/T23 screenshot actually showed is still buildable —
-without folding it into the live set's own variants, and without requiring
-the Propstar plugin at all (an agent cannot launch a Figma plugin, and a
+**Documentation sheet, plugin-free (`--sheet`, T31; a real bordered table,
+humanized labels, and a doc-page header, T32).** The Propstar-style fan-out
+grid the T22/T23 screenshot actually showed is still buildable — without
+folding it into the live set's own variants, and without requiring the
+Propstar plugin at all (an agent cannot launch a Figma plugin, and a
 colleague may not have Propstar installed). `generate-figma.mjs --component
 al-button --sheet` (run AFTER the plain, non-`--sheet` build) creates/replaces
-a `"Button — Prop Sheet"` frame next to the set's own presentation frame: a
-labeled grid of real INSTANCES of the (lean, property-mode) set, one per
-State × Variant × every other boolean property combination (100 for
-al-button), each switched via `setProperties`. Internally reuses the SAME
-T23 cartesian derivation (`buildOps(contract, { forceAllBooleanAxes: true
-})`), just re-grouped for rendering rather than re-derived — "repurposed, not
+a `"Button — Prop Sheet"` frame next to the set's own presentation frame:
+an instance of the file's own "Documentation Header" master at the top
+(title/description/link all contract-derived — the link a dummy placeholder
+until per-component docs publish), then a genuine nested-auto-layout TABLE of
+real INSTANCES of the (lean, property-mode) set below it, one per State ×
+Variant × every other boolean property combination (100 for al-button), each
+switched via `setProperties`. The Propstar-purple gridlines are REAL per-side
+frame borders on each cell (collapsed-border convention — every cell draws
+only its own right+bottom edge, the label column also draws left, the header
+row also draws top), a Variant-group boundary drawing at double weight; row
+labels are humanized ("Icon before", "Icons before + after", "Default"),
+never a raw `Prop=Value` dump. Internally reuses the SAME T23 cartesian
+derivation (`buildOps(contract, { forceAllBooleanAxes: true })`), just
+re-grouped for rendering rather than re-derived — "repurposed, not
 duplicated." Batched across one setup call + one call per Variant row group
 (6 total for al-button) to stay under the Desktop Bridge's ~30s per-call
 ceiling. Idempotent (replaces the prior sheet frame by name). Propstar itself
