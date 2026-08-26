@@ -147,7 +147,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | outline | `--al-theme-border-width-md` | `theme/border/width/md` |
-| outline-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 | outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
 
@@ -167,9 +167,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-checkbox`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (14)
+## Tokens referenced (16)
 
-`--al-base-space`, `--al-theme-border-radius-lg`, `--al-theme-border-radius-round`, `--al-theme-border-radius-xs`, `--al-theme-border-width-md`, `--al-theme-color-background-default-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-primary-weak`, `--al-theme-opacity-disabled`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-typography-preset-16`
+`--al-base-space`, `--al-theme-border-radius-lg`, `--al-theme-border-radius-round`, `--al-theme-border-radius-xs`, `--al-theme-border-width-md`, `--al-theme-color-background-default-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-primary-weak`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`
 
 ---
 

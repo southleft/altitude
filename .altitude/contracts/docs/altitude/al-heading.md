@@ -82,8 +82,9 @@ _No events declared._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | color | `--al-theme-color-content-default` | `theme/color/content/default` |
-| font | `--al-typography-preset-20` | — |
+| font | `--al-theme-typography-heading-sm` | — |
 | font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
+| letter-spacing | `--al-theme-typography-heading-sm-bold-letter-spacing` | — |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -95,9 +96,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-heading`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (3)
+## Tokens referenced (4)
 
-`--al-font-weight-bold`, `--al-theme-color-content-default`, `--al-typography-preset-20`
+`--al-font-weight-bold`, `--al-theme-color-content-default`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-bold-letter-spacing`
 
 ---
 

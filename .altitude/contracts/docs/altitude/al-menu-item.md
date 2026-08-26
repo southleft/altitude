@@ -183,9 +183,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-menu-item`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (4)
+## Tokens referenced (6)
 
-`--al-menu-item-height`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-typography-preset-14`
+`--al-menu-item-height`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

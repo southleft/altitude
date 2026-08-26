@@ -237,7 +237,11 @@
                   "figma": "theme/color/content/default"
                 },
                 "font": {
-                  "code": "--al-typography-preset-14",
+                  "code": "--al-theme-typography-body-sm",
+                  "figma": null
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-sm-letter-spacing",
                   "figma": null
                 }
               },
@@ -257,7 +261,11 @@
                       "figma": "theme/color/content/default"
                     },
                     "font": {
-                      "code": "--al-typography-preset-14",
+                      "code": "--al-theme-typography-body-sm",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     }
                   },
@@ -277,8 +285,53 @@
     "--al-theme-color-content-default",
     "--al-theme-space",
     "--al-theme-space-sm",
-    "--al-typography-preset-14"
+    "--al-theme-typography-body-sm",
+    "--al-theme-typography-body-sm-letter-spacing"
   ],
+  "conditionalBindings": {
+    "variant": {
+      "danger": {
+        "parts": {
+          "icon": {
+            "--al-icon-fill": {
+              "code": "--al-theme-color-content-danger-default",
+              "figma": "theme/color/content/danger-default"
+            }
+          }
+        }
+      },
+      "info": {
+        "background-color": {
+          "code": "--al-theme-color-background-default",
+          "figma": "theme/color/background/default"
+        },
+        "gap": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        }
+      },
+      "success": {
+        "parts": {
+          "icon": {
+            "--al-icon-fill": {
+              "code": "--al-theme-color-content-success-default",
+              "figma": "theme/color/content/success-default"
+            }
+          }
+        }
+      },
+      "warning": {
+        "parts": {
+          "icon": {
+            "--al-icon-fill": {
+              "code": "--al-theme-color-content-warning-default",
+              "figma": "theme/color/content/warning-default"
+            }
+          }
+        }
+      }
+    }
+  },
   "a11y": {
     "ariaAttributes": [
       "variant"

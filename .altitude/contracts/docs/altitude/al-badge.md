@@ -87,6 +87,7 @@ _No events declared._
 | column-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 | font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
 | gap | `--al-theme-space-xxs` | `theme/space/xxs` |
+| letter-spacing | `--al-theme-typography-body-xs-bold-letter-spacing` | — |
 | min-height | `--al-theme-space-xs` | `theme/space/xs` |
 | min-width | `--al-theme-space-xs` | `theme/space/xs` |
 | row-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
@@ -132,15 +133,41 @@ _No events declared._
 | background | `--al-theme-color-background-warning-default` | `theme/color/background/warning-default` |
 | color | `--al-theme-color-content-warning-weak` | `theme/color/content/warning-weak` |
 
+### Per-`position`
+
+#### `bottom-left`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| z-index | `--al-z-index-400` | `z-index/400` |
+
+#### `bottom-right`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| z-index | `--al-z-index-400` | `z-index/400` |
+
+#### `top-left`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| z-index | `--al-z-index-400` | `z-index/400` |
+
+#### `top-right`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| z-index | `--al-z-index-400` | `z-index/400` |
+
 ## Code
 
 - Import: `@southleft/al-web-components/components/badge/badge.ts`
 - Tag: `al-badge`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (5)
+## Tokens referenced (6)
 
-`--al-font-weight-bold`, `--al-theme-color-background-danger-default`, `--al-theme-color-content-danger-weak`, `--al-theme-space-xs`, `--al-theme-space-xxs`
+`--al-font-weight-bold`, `--al-theme-color-background-danger-default`, `--al-theme-color-content-danger-weak`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
 
 ---
 

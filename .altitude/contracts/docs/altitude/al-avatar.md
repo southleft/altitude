@@ -80,6 +80,7 @@ _No events declared._
 | color | `--al-theme-color-content-default` | `theme/color/content/default` |
 | font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
 | height | `--al-theme-icon-xxxl` | `theme/icon/xxxl` |
+| letter-spacing | `--al-theme-typography-body-md-bold-letter-spacing` | — |
 | line-height | `--al-theme-icon-xxxl` | `theme/icon/xxxl` |
 | width | `--al-theme-icon-xxxl` | `theme/icon/xxxl` |
 
@@ -93,9 +94,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-avatar`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (9)
+## Tokens referenced (11)
 
-`--al-font-weight-bold`, `--al-theme-border-radius-round`, `--al-theme-color-background-danger-default`, `--al-theme-color-background-default-stronger`, `--al-theme-color-content-danger-weak`, `--al-theme-color-content-default`, `--al-theme-icon-xxxl`, `--al-theme-space-xs`, `--al-theme-space-xxs`
+`--al-font-weight-bold`, `--al-theme-border-radius-round`, `--al-theme-color-background-danger-default`, `--al-theme-color-background-default-stronger`, `--al-theme-color-content-danger-weak`, `--al-theme-color-content-default`, `--al-theme-icon-xxxl`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-xs-bold-letter-spacing`
 
 ---
 

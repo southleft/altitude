@@ -104,8 +104,9 @@ _No events declared._
 | border-top-right-radius | `--al-theme-border-radius-xs` | `theme/border/radius/xs` |
 | color | `--al-theme-color-content-primary-default` | `theme/color/content/primary-default` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
-| font | `--al-typography-preset-16` | — |
+| font | `--al-theme-typography-body-md` | — |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
+| letter-spacing | `--al-theme-typography-body-md-letter-spacing` | — |
 | row-gap | `--al-theme-space-xs` | `theme/space/xs` |
 
 ### State overrides (measured, root node)
@@ -127,7 +128,7 @@ _No events declared._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | outline | `--al-theme-border-width-md` | `theme/border/width/md` |
-| outline-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 | outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
 
@@ -136,7 +137,7 @@ _No events declared._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | outline | `--al-theme-border-width-md` | `theme/border/width/md` |
-| outline-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 | outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
 
@@ -171,9 +172,9 @@ _No events declared._
 - Tag: `al-link`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (7)
+## Tokens referenced (8)
 
-`--al-theme-border-radius-xs`, `--al-theme-border-width-md`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-primary-default`, `--al-theme-color-content-primary-strong`, `--al-theme-space-xs`, `--al-typography-preset-16`
+`--al-theme-border-radius-xs`, `--al-theme-border-width-md`, `--al-theme-color-content-primary-default`, `--al-theme-color-content-primary-strong`, `--al-theme-color-focus-ring`, `--al-theme-space-xs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`
 
 ---
 

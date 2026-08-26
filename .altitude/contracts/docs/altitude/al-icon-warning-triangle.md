@@ -2,7 +2,7 @@
 
 # al-icon-warning-triangle — Icon Warning Triangle
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<—>`
+**Status:** `source` · **Version:** `1.0.0` · **Element:** `<span>`
 
 Icon: al-icon-warning-triangle
 
@@ -41,7 +41,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## States
 
-_No interaction states recorded._
+`hover`, `focus`, `active`, `disabled`
 
 ## Slots (0)
 
@@ -58,7 +58,11 @@ _No events declared._
 
 ## Anatomy & token bindings
 
-Anatomy was not measured when this contract was authored (`anatomySource: "unavailable"`) — see `.altitude/contracts/README.md` § Anatomy availability is best-effort. No root-level token table to show.
+**Anatomy case measured:** `Default=default` (source: `measured`)
+
+### Root — `<span class="al-c-icon">`
+
+_None._
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -70,9 +74,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-icon-warning-triangle`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (0)
+## Tokens referenced (1)
 
-_None._
+`--al-theme-icon`
 
 ---
 

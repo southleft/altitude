@@ -113,6 +113,53 @@ const enumAxis = (prop, values) => ({
   attrs: (v) => (v === 'default' ? {} : { [prop.toLowerCase()]: v }),
 });
 
+/**
+ * T25 (spec 2026-08-25-contract-backed-figma-parity-and-generation) — the
+ * generated `<al-icon-*>` elements (ALIconBase, see icon-base.ts's own doc
+ * comment) share ONE render body and expose no variant-worthy props: `size`
+ * is a dimension, not a token-bearing structural fork, and `iconTitle` only
+ * changes an ARIA attribute, never the DOM shape. A single default-case
+ * `atom()` per tag is therefore not a "mechanical dump" in the sense this
+ * file's own header warns against — there is genuinely nothing else to
+ * cross-product — it is the SAME "single default variant" shape `al-calendar`
+ * already uses above, applied to components with even less internal
+ * structure.
+ *
+ * ONLY THESE 15 OF THE 37 GENERATED ICON TAGS ARE LISTED — verified live, not
+ * assumed. Every `<al-icon-*>` element is `@deprecated` (see icon-base.ts /
+ * icons/<name>.ts: "Use `<al-icon name=\"x\">`... will be removed in the next
+ * major version") and bundle.ts does NOT import `./icon/icons/*` at all — a
+ * deprecated tag's wrapper CLASS only ends up in the harness's esbuild output
+ * (and therefore only upgrades to a real shadow root `__spec()` can measure)
+ * when some OTHER already-rendered component still imports that specific
+ * icon internally for its own use (alert/chip/dialog/drawer/file-upload/
+ * popover/search/toast do, for exactly these 15 names — confirmed by grepping
+ * `libs/al-web-components/components/**\/*.ts` for each import, then
+ * confirming a real `spec-light.json` entry for the tag after a live
+ * `measure-components.mjs` run). The other 22 (attachment, bell, bookmark,
+ * check, chevron-up, clock, copy, dots-vertical, emoji, filter, help, home,
+ * layout-masonry, list, menu, pin, send, sign-in, sign-out, star, support,
+ * user) are used by NO currently-rendered component, so their custom element
+ * never upgrades in this harness; `__spec()` skips a host with no
+ * `shadowRoot` rather than recording anything — listing them here would add
+ * PLAN entries that deterministically measure NOTHING, not broaden coverage.
+ * Making all 37 reliably measurable would mean importing every
+ * `icon/icons/*.ts` from the harness bundle directly — a real source change
+ * to a deprecated code path, out of scope for a contracts-data task; left as
+ * documented follow-up rather than attempted here.
+ */
+const ICON_TAGS = [
+  'add', 'calendar', 'chevron-down', 'chevron-left', 'chevron-right', 'close', 'document',
+  'dots-horizontal', 'info', 'minus', 'search', 'settings', 'success', 'warning-circle',
+  'warning-triangle',
+];
+
+const ICON_ATOMS = ICON_TAGS.map((name) => {
+  const figmaName = `Icon ${name.split('-').map((s) => s[0].toUpperCase() + s.slice(1)).join(' ')}`;
+  return atom(`al-icon-${name}`, figmaName, { Default: { values: ['default'], attrs: () => ({}) } },
+    { note: 'Generated icon element (ALIconBase) — one render body, no variant-worthy props; see plan.mjs ICON_TAGS comment.' });
+});
+
 export const PLAN = [
   atom('al-button', 'Button',
     {
@@ -769,6 +816,8 @@ export const PLAN = [
       fillWidth: 1280,
       note: 'Brand implementation. Three hairlines, all $sl-border-faint (55% of border-default-weak).',
     }),
+
+  ...ICON_ATOMS,
 
 ];
 

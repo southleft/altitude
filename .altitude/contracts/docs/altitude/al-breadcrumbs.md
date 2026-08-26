@@ -89,9 +89,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-breadcrumbs`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (6)
+## Tokens referenced (8)
 
-`--al-theme-border-radius-md`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-typography-preset-18`
+`--al-theme-border-radius-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-lg`, `--al-theme-typography-body-lg-letter-spacing`
 
 ---
 

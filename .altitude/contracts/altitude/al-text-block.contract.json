@@ -6,7 +6,7 @@
   "status": "source",
   "description": "Component: al-text-block",
   "semantics": {
-    "element": null,
+    "element": "div",
     "role": null
   },
   "props": [
@@ -30,11 +30,62 @@
       "description": "The text passage content"
     }
   ],
-  "states": [],
-  "anatomySource": "unavailable",
-  "anatomyCase": null,
-  "anatomy": null,
-  "tokens": [],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Width=default",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "al-c-text-block",
+      "layout": {
+        "display": "flex",
+        "direction": "column",
+        "align": "flex-start",
+        "justify": "normal"
+      },
+      "tokens": {
+        "column-gap": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        },
+        "font": {
+          "code": "--al-typography-preset-16",
+          "figma": null
+        },
+        "gap": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        },
+        "row-gap": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        }
+      },
+      "children": [
+        {
+          "tag": "p",
+          "cls": "",
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": []
+        }
+      ]
+    }
+  },
+  "tokens": [
+    "--al-theme-space",
+    "--al-typography-preset-16"
+  ],
   "a11y": {
     "ariaAttributes": [],
     "cssParts": []

@@ -2,7 +2,7 @@
 
 # al-list — List
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<—>`
+**Status:** `source` · **Version:** `1.0.0` · **Element:** `<ul>`
 
 Component: al-list
 
@@ -34,7 +34,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## States
 
-_No interaction states recorded._
+`hover`, `focus`, `active`, `disabled`
 
 ## Slots (1)
 
@@ -53,7 +53,11 @@ _No events declared._
 
 ## Anatomy & token bindings
 
-Anatomy was not measured when this contract was authored (`anatomySource: "unavailable"`) — see `.altitude/contracts/README.md` § Anatomy availability is best-effort. No root-level token table to show.
+**Anatomy case measured:** `Direction=default` (source: `measured`)
+
+### Root — `<ul class="al-c-list">`
+
+_None._
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -65,9 +69,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-list`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (0)
+## Tokens referenced (4)
 
-_None._
+`--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

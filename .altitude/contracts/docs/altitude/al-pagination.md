@@ -102,7 +102,8 @@ Variant of pagination (e.g., 'small' for a compact view)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| font | `--al-typography-preset-14` | — |
+| font | `--al-theme-typography-body-sm` | — |
+| letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -114,9 +115,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-pagination`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (13)
+## Tokens referenced (15)
 
-`--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-color-background-primary-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-content-primary-weak`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-typography-preset-14`
+`--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-color-background-primary-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-content-primary-weak`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

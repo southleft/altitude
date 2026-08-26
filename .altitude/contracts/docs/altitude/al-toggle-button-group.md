@@ -76,9 +76,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-toggle-button-group`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (8)
+## Tokens referenced (10)
 
-`--al-base-space`, `--al-theme-border-radius`, `--al-theme-border-radius-lg`, `--al-theme-box-shadow-md`, `--al-theme-color-background-default`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-typography-preset-14`
+`--al-base-space`, `--al-theme-border-radius`, `--al-theme-border-radius-lg`, `--al-theme-box-shadow-md`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

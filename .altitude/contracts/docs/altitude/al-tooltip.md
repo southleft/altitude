@@ -103,9 +103,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-tooltip`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (7)
+## Tokens referenced (8)
 
-`--al-theme-border-radius`, `--al-theme-box-shadow`, `--al-theme-color-background-default-strong`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-typography-preset-12`
+`--al-theme-border-radius`, `--al-theme-box-shadow`, `--al-theme-color-background-default-strong`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`
 
 ---
 

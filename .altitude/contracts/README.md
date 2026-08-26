@@ -297,22 +297,51 @@ renders as Default until a component's `.scss` actually defines one. Anatomy
 also carries no literal text content (`contract.schema.json`'s anatomyNode
 has no `text` field), so the Text property's default is a placeholder.
 
-**Slot placeholder instances (T19).** A `before`/`after` slot whose contract
-entry carries `slots[].figmaPlaceholder` — the real Figma set's own
-icon-instance placeholder convention (e.g. al-button's real set uses
-"done-circle" before, "send" after, both flat components on the library's
-"🛠 Icons" page), discovered live and recorded by hand, never inferred — gets a
-real icon INSTANCE built in the right leading/trailing position, wired to
-Slot Before/After (BOOLEAN `visible`) and Icon Before/After (INSTANCE_SWAP
+**Slot placeholder instances (T19; naming convention updated T25).** A
+`before`/`after` slot whose contract entry carries `slots[].figmaPlaceholder`
+gets a real icon INSTANCE built in the right leading/trailing position, wired
+to Slot Before/After (BOOLEAN `visible`) and Icon Before/After (INSTANCE_SWAP
 `mainComponent`), and recolored **recursively** to that row's own resolved
 content-color token (the same paint the label text uses — confirmed against
 the real set: icon fill and label fill are always the identical bound
-variable, every Variant/State row), per the Icon Recoloring reference. The
-placeholder is resolved **by name** inside the plugin code at generation time
-— never a node id anywhere in the contract or the ops artifact, since icon
-libraries re-mint ids on republish. A slot with no `figmaPlaceholder` still
-degrades to the boolean-only behavior from T12/T18 (no INSTANCE_SWAP
-property, no icon instance) — a documented gap, not a guess.
+variable, every Variant/State row), per the Icon Recoloring reference. A slot
+with no `figmaPlaceholder` still degrades to the boolean-only behavior from
+T12/T18 (no INSTANCE_SWAP property, no icon instance) — a documented gap, not
+a guess.
+
+**`figmaPlaceholder` names a Phosphor catalog entry, not a Figma-side name
+(T25).** Every real Figma component set's `Icon Before`/`Icon After`
+INSTANCE_SWAP property has a `defaultValue` node id; resolving that id live
+gives the DEFAULT icon INSTANCE's own name, which is what gets recorded here.
+Before T25, that name was whatever the Figma-side icon library called it — the
+now-retired "🛠 Icons" page (al-button's real set: "done-circle" before, "send"
+after). The owner has since added a Phosphor library to Figma, and Phosphor
+(`libs/al-web-components/components/icon/catalog.ts` + `phosphor/*.ts`) is the
+icon source going forward on BOTH sides — so as of T25, a discovered name is
+resolved BY HAND to its nearest Phosphor catalog entry before being written
+into the contract (al-button: "done-circle" -> "check-circle", "send" ->
+"paper-plane") — the contract always stores the CODE-side (Phosphor) name now,
+never the old Figma-side one. `apps/docs/src/lib/contracts.mjs`'s playground
+default reads `figmaPlaceholder` directly as a catalog name for exactly this
+reason (its old done-circle/send -> check-circle/paper-plane translation table
+is gone — the contract already speaks Phosphor). Resolving a Phosphor name
+back to a live instance in the Figma-side Phosphor library at generation time
+is separate, queued follow-up work for `generate-figma.mjs` — not yet done as
+of this note. The placeholder remains resolved **by name**, never a node id,
+in the contract or the ops artifact either way, since icon libraries re-mint
+ids on republish.
+
+**Sweep coverage (T25).** Live-verified against the real Altitude Figma file
+(`y83n4o9LOGs74oAoguFcGS`): al-banner, al-menu-item, al-empty-state, al-input,
+al-range, and al-textarea's real sets have **no** `Icon Before`/`Icon After`
+INSTANCE_SWAP property at all — confirmed by reading each set's
+`componentPropertyDefinitions` live, not assumed — so none gets a
+`figmaPlaceholder`. al-alert, al-toast, al-stat, al-stepper-item, and
+al-calendar have no Figma mapping in the manifest at all (`figma: null`),
+so there is no real set to check. Southleft's `al-button`/`al-card`/`al-input`/
+`al-stat` (a different Figma file, `rdhBS9t89V42E7EfiPjmSa`) were **not**
+swept this session — that file was not the one open in Figma Desktop — and
+are left exactly as they were rather than guessed.
 
 ## Fan-out convention (T22/T23)
 

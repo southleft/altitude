@@ -175,9 +175,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-combobox`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (14)
+## Tokens referenced (16)
 
-`--al-base-space`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-typography-preset-14`, `--al-typography-preset-16`
+`--al-base-space`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

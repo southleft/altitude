@@ -314,6 +314,40 @@
     "--al-theme-space",
     "--al-theme-space-sm"
   ],
+  "conditionalBindings": {
+    "variant": {
+      "danger": {
+        "parts": {
+          "icon": {
+            "--al-icon-fill": {
+              "code": "--al-theme-color-content-danger-default",
+              "figma": "theme/color/content/danger-default"
+            }
+          }
+        }
+      },
+      "success": {
+        "parts": {
+          "icon": {
+            "--al-icon-fill": {
+              "code": "--al-theme-color-content-success-default",
+              "figma": "theme/color/content/success-default"
+            }
+          }
+        }
+      },
+      "warning": {
+        "parts": {
+          "icon": {
+            "--al-icon-fill": {
+              "code": "--al-theme-color-content-warning-default",
+              "figma": "theme/color/content/warning-default"
+            }
+          }
+        }
+      }
+    }
+  },
   "a11y": {
     "ariaAttributes": [
       "variant"

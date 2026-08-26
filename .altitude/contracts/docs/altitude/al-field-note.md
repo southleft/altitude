@@ -62,8 +62,9 @@ _No events declared._
 | --- | --- | --- |
 | color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
-| font | `--al-typography-preset-14` | — |
+| font | `--al-theme-typography-body-sm` | — |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
+| letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
 | row-gap | `--al-theme-space-xs` | `theme/space/xs` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
@@ -76,9 +77,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-field-note`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (3)
+## Tokens referenced (4)
 
-`--al-theme-color-content-default-weak`, `--al-theme-space-xs`, `--al-typography-preset-14`
+`--al-theme-color-content-default-weak`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

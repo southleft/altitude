@@ -85,6 +85,7 @@ Variant
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
+| background | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
 | background-color | `--al-theme-color-background-danger-default` | `theme/color/background/danger-default` |
 | border-bottom-left-radius | `--al-base-space` | `base/space` |
 | border-bottom-right-radius | `--al-base-space` | `base/space` |
@@ -93,8 +94,8 @@ Variant
 | border-top-right-radius | `--al-base-space` | `base/space` |
 | color | `--al-theme-color-content-danger-weak` | `theme/color/content/danger-weak` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
-| font | `--al-typography-preset-14` | — |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
+| letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
 | padding | `--al-theme-space-xxs` | `theme/space/xxs` |
 | padding-bottom | `--al-theme-space-xxs` | `theme/space/xxs` |
 | padding-left | `--al-theme-space-sm` | `theme/space/sm` |
@@ -109,7 +110,7 @@ Variant
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | outline | `--al-theme-border-width-md` | `theme/border/width/md` |
-| outline-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
 | outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.0)
@@ -117,7 +118,7 @@ Variant
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | outline | `--al-theme-border-width-md` | `theme/border/width/md` |
-| outline-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
 | outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
@@ -130,6 +131,14 @@ Variant
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-danger-default` | `theme/color/background/danger-default` |
 | color | `--al-theme-color-content-danger-weak` | `theme/color/content/danger-weak` |
+
+#### `default`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
+| gap | `--al-theme-space-xs` | `theme/space/xs` |
 
 #### `info`
 
@@ -167,9 +176,9 @@ Variant
 - Tag: `al-chip`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (9)
+## Tokens referenced (10)
 
-`--al-base-space`, `--al-theme-border-width-md`, `--al-theme-color-background-danger-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-danger-weak`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-typography-preset-14`
+`--al-base-space`, `--al-theme-border-width-md`, `--al-theme-color-background-danger-default`, `--al-theme-color-background-default-strong`, `--al-theme-color-content-danger-weak`, `--al-theme-color-focus-ring`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

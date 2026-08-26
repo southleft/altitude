@@ -179,9 +179,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-range`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (10)
+## Tokens referenced (12)
 
-`--al-range-track-height`, `--al-theme-border-radius`, `--al-theme-color-background-default-strong`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-typography-preset-14`, `--al-typography-preset-16`
+`--al-range-track-height`, `--al-theme-border-radius`, `--al-theme-color-background-default-strong`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

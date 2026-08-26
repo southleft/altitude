@@ -176,9 +176,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-file-upload`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (17)
+## Tokens referenced (20)
 
-`--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-icon-xxl`, `--al-theme-space`, `--al-theme-space-lg`, `--al-theme-space-md`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-typography-preset-14`, `--al-typography-preset-16`
+`--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-icon-xxl`, `--al-theme-space`, `--al-theme-space-lg`, `--al-theme-space-md`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

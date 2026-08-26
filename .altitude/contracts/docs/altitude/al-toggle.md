@@ -95,7 +95,7 @@ _None._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | outline | `--al-theme-border-width-md` | `theme/border/width/md` |
-| outline-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 | outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
 
@@ -111,7 +111,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (5)
 
-`--al-theme-border-width-md`, `--al-theme-color-background-default-strong`, `--al-theme-color-border-primary-default`, `--al-toggle-height`, `--al-toggle-width`
+`--al-theme-border-width-md`, `--al-theme-color-background-default-strong`, `--al-theme-color-focus-ring`, `--al-toggle-height`, `--al-toggle-width`
 
 ---
 

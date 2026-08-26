@@ -170,7 +170,19 @@ _No events declared._
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
-This component's `.scss` has no BEM modifier classes and no nested pseudo-class/attribute state rules that resolve to a single `--al-*` token — no conditional bindings to derive (T18; see `.altitude/contracts/README.md`).
+### Per-variant (`variant`)
+
+#### `bento`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| gap | `--al-theme-space` | `theme/space/@` |
+
+#### `default`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| gap | `--al-theme-space` | `theme/space/@` |
 
 ## Code
 

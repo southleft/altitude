@@ -127,7 +127,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (16)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-display-md`, `--al-theme-typography-display-md-bold-letter-spacing`, `--al-typography-preset-16`
+`--al-base-space`, `--al-font-weight-bold`, `--al-theme-border-width`, `--al-theme-color-background-default-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-display-md`, `--al-theme-typography-display-md-bold-letter-spacing`, `--al-typography-preset-16`
 
 ---
 

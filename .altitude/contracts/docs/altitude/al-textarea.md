@@ -208,7 +208,8 @@ Value attribute
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-default-weak` | `theme/color/background/default-weak` |
-| font | `--al-typography-preset-12` | — |
+| font | `--al-theme-typography-body-xs` | — |
+| letter-spacing | `--al-theme-typography-body-xs-letter-spacing` | — |
 | padding | `--al-theme-space-xxs` | `theme/space/xxs` |
 | padding-left | `--al-theme-space-xxs` | `theme/space/xxs` |
 | padding-right | `--al-theme-space-xxs` | `theme/space/xxs` |
@@ -245,9 +246,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-textarea`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (17)
+## Tokens referenced (20)
 
-`--al-base-space`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-default-weak`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-border-default-strong`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-typography-preset-12`, `--al-typography-preset-14`, `--al-typography-preset-16`
+`--al-base-space`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-default-weak`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-border-default-strong`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`
 
 ---
 

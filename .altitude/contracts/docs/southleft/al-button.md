@@ -209,6 +209,7 @@ _No events declared._
 | --al-icon-height | `--al-theme-icon-lg` | `theme/icon/lg` |
 | --al-icon-width | `--al-theme-icon-lg` | `theme/icon/lg` |
 | background-color | `--al-theme-color-background-primary-default` | `theme/color/background/primary-default` |
+| border-radius | `--al-theme-border-radius-role-action` | `theme/border/radius/role/action` |
 | color | `--al-theme-color-content-primary-weak` | `theme/color/content/primary-weak` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
 

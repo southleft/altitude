@@ -217,7 +217,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (17)
 
-`--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-default`, `--al-theme-color-background-default-strong`, `--al-theme-color-background-default-weak`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-color-focus-ring`, `--al-theme-space-md`, `--al-theme-space-sm`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-border-radius-role-surface`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-default`, `--al-theme-color-background-default-strong`, `--al-theme-color-background-default-weak`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-color-focus-ring`, `--al-theme-space-md`, `--al-theme-space-sm`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

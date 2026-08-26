@@ -101,10 +101,41 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 | border-top-right-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
 | box-shadow | `--al-theme-box-shadow-lg` | `theme/box-shadow/lg` |
 | font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
+| letter-spacing | `--al-theme-typography-body-md-bold-letter-spacing` | — |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
-This component's `.scss` has no BEM modifier classes and no nested pseudo-class/attribute state rules that resolve to a single `--al-*` token — no conditional bindings to derive (T18; see `.altitude/contracts/README.md`).
+### Per-variant (`variant`)
+
+#### `danger`
+
+_None._
+
+**Sub-element `icon`** (this variant's own override of that part — T25, a reversed-nesting BEM rule):
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| --al-icon-fill | `--al-theme-color-content-danger-default` | `theme/color/content/danger-default` |
+
+#### `success`
+
+_None._
+
+**Sub-element `icon`** (this variant's own override of that part — T25, a reversed-nesting BEM rule):
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| --al-icon-fill | `--al-theme-color-content-success-default` | `theme/color/content/success-default` |
+
+#### `warning`
+
+_None._
+
+**Sub-element `icon`** (this variant's own override of that part — T25, a reversed-nesting BEM rule):
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| --al-icon-fill | `--al-theme-color-content-warning-default` | `theme/color/content/warning-default` |
 
 ## Code
 
@@ -112,9 +143,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-toast`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (8)
+## Tokens referenced (9)
 
-`--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-md`, `--al-theme-box-shadow-lg`, `--al-theme-color-background-default`, `--al-theme-space`, `--al-theme-space-xxs`
+`--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-md`, `--al-theme-box-shadow-lg`, `--al-theme-color-background-default`, `--al-theme-space`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`
 
 ---
 

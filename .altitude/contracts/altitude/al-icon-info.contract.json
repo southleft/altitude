@@ -6,7 +6,7 @@
   "status": "source",
   "description": "Icon: al-icon-info",
   "semantics": {
-    "element": null,
+    "element": "span",
     "role": null
   },
   "props": [
@@ -46,11 +46,66 @@
   ],
   "events": [],
   "slots": [],
-  "states": [],
-  "anatomySource": "unavailable",
-  "anatomyCase": null,
-  "anatomy": null,
-  "tokens": [],
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Default=default",
+  "anatomy": {
+    "root": {
+      "tag": "span",
+      "cls": "al-c-icon",
+      "layout": {
+        "display": "block",
+        "direction": "row",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {},
+      "children": [
+        {
+          "tag": "svg",
+          "cls": "",
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "center"
+          },
+          "tokens": {
+            "height": {
+              "code": "--al-theme-icon",
+              "figma": "theme/icon/@"
+            },
+            "width": {
+              "code": "--al-theme-icon",
+              "figma": "theme/icon/@"
+            }
+          },
+          "children": [
+            {
+              "tag": "path",
+              "cls": "",
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "tokens": [
+    "--al-theme-icon"
+  ],
   "a11y": {
     "ariaAttributes": [],
     "cssParts": [

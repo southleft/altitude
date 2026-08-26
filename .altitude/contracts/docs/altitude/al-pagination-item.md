@@ -75,7 +75,8 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| font | `--al-typography-preset-14` | — |
+| font | `--al-theme-typography-body-sm` | — |
+| letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -87,9 +88,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-pagination-item`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (1)
+## Tokens referenced (2)
 
-`--al-typography-preset-14`
+`--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

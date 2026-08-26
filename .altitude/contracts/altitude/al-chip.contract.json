@@ -108,6 +108,10 @@
         "justify": "center"
       },
       "tokens": {
+        "background": {
+          "code": "--al-theme-color-background-default-strong",
+          "figma": "theme/color/background/default-strong"
+        },
         "background-color": {
           "code": "--al-theme-color-background-danger-default",
           "figma": "theme/color/background/danger-default"
@@ -140,13 +144,13 @@
           "code": "--al-theme-space-xs",
           "figma": "theme/space/xs"
         },
-        "font": {
-          "code": "--al-typography-preset-14",
-          "figma": null
-        },
         "gap": {
           "code": "--al-theme-space-xs",
           "figma": "theme/space/xs"
+        },
+        "letter-spacing": {
+          "code": "--al-theme-typography-body-sm-letter-spacing",
+          "figma": null
         },
         "padding": {
           "code": "--al-theme-space-xxs",
@@ -184,6 +188,10 @@
             "justify": "center"
           },
           "tokens": {
+            "background": {
+              "code": "--al-theme-color-background-default-strong",
+              "figma": "theme/color/background/default-strong"
+            },
             "background-color": {
               "code": "--al-theme-color-background-danger-default",
               "figma": "theme/color/background/danger-default"
@@ -216,13 +224,13 @@
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
-            "font": {
-              "code": "--al-typography-preset-14",
-              "figma": null
-            },
             "gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-body-sm-letter-spacing",
+              "figma": null
             },
             "padding": {
               "code": "--al-theme-space-xxs",
@@ -261,8 +269,8 @@
             "figma": "theme/border/width/md"
           },
           "outline-color": {
-            "code": "--al-theme-color-border-primary-default",
-            "figma": "theme/color/border/primary-default"
+            "code": "--al-theme-color-focus-ring",
+            "figma": "theme/color/focus-ring"
           },
           "outline-width": {
             "code": "--al-theme-border-width-md",
@@ -275,8 +283,8 @@
             "figma": "theme/border/width/md"
           },
           "outline-color": {
-            "code": "--al-theme-color-border-primary-default",
-            "figma": "theme/color/border/primary-default"
+            "code": "--al-theme-color-focus-ring",
+            "figma": "theme/color/focus-ring"
           },
           "outline-width": {
             "code": "--al-theme-border-width-md",
@@ -290,32 +298,14 @@
     "--al-base-space",
     "--al-theme-border-width-md",
     "--al-theme-color-background-danger-default",
-    "--al-theme-color-border-primary-default",
+    "--al-theme-color-background-default-strong",
     "--al-theme-color-content-danger-weak",
+    "--al-theme-color-focus-ring",
     "--al-theme-space-sm",
     "--al-theme-space-xs",
     "--al-theme-space-xxs",
-    "--al-typography-preset-14"
+    "--al-theme-typography-body-sm-letter-spacing"
   ],
-  "a11y": {
-    "ariaAttributes": [
-      "variant"
-    ],
-    "cssParts": []
-  },
-  "bindings": {
-    "code": {
-      "importPath": "@southleft/al-web-components/components/chip/chip.ts",
-      "tagName": "al-chip",
-      "workspace": "@southleft/al-web-components"
-    },
-    "figma": {
-      "fileKey": "y83n4o9LOGs74oAoguFcGS",
-      "componentSetName": "Chip",
-      "nodeId": "3435:1086",
-      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3435-1086"
-    }
-  },
   "conditionalBindings": {
     "variant": {
       "danger": {
@@ -326,6 +316,20 @@
         "color": {
           "code": "--al-theme-color-content-danger-weak",
           "figma": "theme/color/content/danger-weak"
+        }
+      },
+      "default": {
+        "background": {
+          "code": "--al-theme-color-background-default-strong",
+          "figma": "theme/color/background/default-strong"
+        },
+        "color": {
+          "code": "--al-theme-color-content-default-weak",
+          "figma": "theme/color/content/default-weak"
+        },
+        "gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
         }
       },
       "info": {
@@ -376,6 +380,25 @@
           "figma": "theme/color/content/warning-weak"
         }
       }
+    }
+  },
+  "a11y": {
+    "ariaAttributes": [
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/chip/chip.ts",
+      "tagName": "al-chip",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": "Chip",
+      "nodeId": "3435:1086",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3435-1086"
     }
   }
 }

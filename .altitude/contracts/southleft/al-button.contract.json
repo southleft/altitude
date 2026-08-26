@@ -388,29 +388,6 @@
     "--al-theme-space-xs",
     "--al-theme-typography-body-md-bold-letter-spacing"
   ],
-  "a11y": {
-    "ariaAttributes": [
-      "ariaControls",
-      "isAriaDisabled",
-      "variant"
-    ],
-    "cssParts": [
-      "button"
-    ]
-  },
-  "bindings": {
-    "code": {
-      "importPath": "@southleft/al-web-components/components/button/button.ts",
-      "tagName": "al-button",
-      "workspace": "@southleft/al-web-components"
-    },
-    "figma": {
-      "fileKey": "rdhBS9t89V42E7EfiPjmSa",
-      "componentSetName": "Button",
-      "nodeId": "10:3081",
-      "url": "https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-3081"
-    }
-  },
   "conditionalBindings": {
     "variant": {
       "bare": {
@@ -465,6 +442,10 @@
         "background-color": {
           "code": "--al-theme-color-background-primary-default",
           "figma": "theme/color/background/primary-default"
+        },
+        "border-radius": {
+          "code": "--al-theme-border-radius-role-action",
+          "figma": "theme/border/radius/role/action"
         },
         "color": {
           "code": "--al-theme-color-content-primary-weak",
@@ -541,6 +522,29 @@
           "figma": "theme/color/background/primary-strong"
         }
       }
+    }
+  },
+  "a11y": {
+    "ariaAttributes": [
+      "ariaControls",
+      "isAriaDisabled",
+      "variant"
+    ],
+    "cssParts": [
+      "button"
+    ]
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/button/button.ts",
+      "tagName": "al-button",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "rdhBS9t89V42E7EfiPjmSa",
+      "componentSetName": "Button",
+      "nodeId": "10:3081",
+      "url": "https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-3081"
     }
   }
 }

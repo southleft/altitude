@@ -209,7 +209,14 @@
           "description": "Keyed by the SAME state names `states` already uses (pseudo-class/attribute -> state: `:hover` -> \"hover\", `:focus-visible`/`:focus` -> \"focus\", `:active` -> \"active\", `:disabled`/`[disabled]` -> \"disabled\"). CSS property -> token binding for the GENERIC (variant-agnostic) state rule nested under the component's unmodified base selector — applies to any variant that has no compound override under `variant.<name>.state.<name>`."
         }
       },
-      "description": "Per-variant and per-state CSS declaration -> token bindings recovered directly from the component's own .scss (T18) — never fabricated: a component whose .scss has no BEM modifier classes or no nested pseudo-class/attribute state rules simply omits the corresponding key (or the whole section). Only declarations whose value resolves to EXACTLY ONE `--al-*` design token (or the `border: <width> solid <color>` two-token shorthand, split into `border-width`/`border-color`) are captured — a value with an unresolvable custom property (e.g. `--al-button-padding`) or more than one token reference is skipped rather than guessed. This is DERIVED from source that IS available in CI (unlike measured anatomy), so it participates fully in --check-drift and --check-determinism."
+      "patternProperties": {
+        "^(?!variant$|state$)[a-z][a-zA-Z0-9]*$": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/variantBinding" },
+          "description": "T25: an enum prop OTHER than `variant` whose BEM modifier classes (`.al-c-<tag>--<value>`) carry their own token-bearing declarations — e.g. Badge's `position` (top-left/top-right/bottom-left/bottom-right share one `z-index` rule). Keyed by the prop's own name; each entry keyed by that prop's lowercase values, same conditionBindingMap/variantBinding shape as `variant` above. Kept fully separate from `variant`'s own key/semantics — never merged into it, even when a component has both."
+        }
+      },
+      "description": "Per-variant and per-state CSS declaration -> token bindings recovered directly from the component's own .scss (T18) — never fabricated: a component whose .scss has no BEM modifier classes or no nested pseudo-class/attribute state rules simply omits the corresponding key (or the whole section). Only declarations whose value resolves to EXACTLY ONE `--al-*` design token (or the `border: <width> solid <color>` two-token shorthand, split into `border-width`/`border-color`; or a two-level `var(--al-A, var(--al-B))` role/fallback chain, resolved to whichever of the two this project's own token tree actually indexes — T25) are captured — a value with an unresolvable custom property (e.g. `--al-button-padding`) or more than one uncorrelated token reference is skipped rather than guessed. This is DERIVED from source that IS available in CI (unlike measured anatomy), so it participates fully in --check-drift and --check-determinism."
     },
     "a11y": {
       "type": "object",
@@ -321,9 +328,14 @@
           "type": "object",
           "additionalProperties": { "$ref": "#/definitions/conditionBindingMap" },
           "description": "Compound variant+state overrides found as a pseudo-class/attribute rule NESTED directly inside this variant's own selector block (e.g. `.al-c-button--secondary:hover`) — wins over the generic `conditionalBindings.state.<name>` for this variant."
+        },
+        "parts": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/conditionBindingMap" },
+          "description": "T25: sub-element overrides found as a REVERSED-nesting BEM rule — `.al-c-<tag>__<part> { .al-c-<tag>--<this-variant> & {...} }` (this repo's authored convention for \"this part looks different inside that variant\", verified in alert/banner/toast's `__icon` rules; e.g. the icon's `--al-icon-fill` recolors per tone). Keyed by the part's own BEM suffix (`icon`, not `__icon`)."
         }
       },
-      "description": "One variant's own CSS property -> token bindings (additionalProperties), plus an optional `state` map for its compound state overrides. `state` is reserved and never collides with a real CSS property name."
+      "description": "One variant's own CSS property -> token bindings (additionalProperties), plus an optional `state` map for its compound state overrides and an optional `parts` map for sub-element overrides. `state` and `parts` are reserved and never collide with a real CSS property name."
     }
   }
 }

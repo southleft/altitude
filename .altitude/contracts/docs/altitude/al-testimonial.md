@@ -2,7 +2,7 @@
 
 # al-testimonial — Testimonial
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<—>`
+**Status:** `source` · **Version:** `1.0.0` · **Element:** `<figure>`
 
 Component: al-testimonial
 
@@ -47,7 +47,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## States
 
-_No interaction states recorded._
+`hover`, `focus`, `active`, `disabled`
 
 ## Slots (2)
 
@@ -67,7 +67,15 @@ _No events declared._
 
 ## Anatomy & token bindings
 
-Anatomy was not measured when this contract was authored (`anatomySource: "unavailable"`) — see `.altitude/contracts/README.md` § Anatomy availability is best-effort. No root-level token table to show.
+**Anatomy case measured:** `` (source: `measured`)
+
+### Root — `<figure class="al-c-testimonial">`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| column-gap | `--al-theme-space-md` | `theme/space/md` |
+| gap | `--al-theme-space-md` | `theme/space/md` |
+| row-gap | `--al-theme-space-md` | `theme/space/md` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -79,9 +87,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-testimonial`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (0)
+## Tokens referenced (10)
 
-_None._
+`--al-font-weight-bold`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space-md`, `--al-theme-space-sm`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-letter-spacing`
 
 ---
 

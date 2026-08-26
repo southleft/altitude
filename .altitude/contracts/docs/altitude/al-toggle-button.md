@@ -80,6 +80,7 @@ Variant
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
+| background | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
 | background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
 | border-bottom-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-bottom-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
@@ -87,7 +88,8 @@ Variant
 | border-top-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-top-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | box-shadow | `--al-theme-box-shadow-md` | `theme/box-shadow/md` |
-| font | `--al-typography-preset-14` | — |
+| font | `--al-theme-typography-body-sm` | — |
+| letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
 | padding | `--al-theme-space-xs` | `theme/space/xs` |
 | padding-bottom | `--al-theme-space-xs` | `theme/space/xs` |
 | padding-left | `--al-theme-space-xs` | `theme/space/xs` |
@@ -120,9 +122,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-toggle-button`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (9)
+## Tokens referenced (11)
 
-`--al-base-space`, `--al-theme-border-radius`, `--al-theme-border-radius-lg`, `--al-theme-box-shadow-md`, `--al-theme-color-background-default`, `--al-theme-color-background-default-strong`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-typography-preset-14`
+`--al-base-space`, `--al-theme-border-radius`, `--al-theme-border-radius-lg`, `--al-theme-box-shadow-md`, `--al-theme-color-background-default`, `--al-theme-color-background-default-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

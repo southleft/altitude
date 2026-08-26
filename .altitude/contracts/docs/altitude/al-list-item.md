@@ -131,7 +131,7 @@ _None._
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
 | outline | `--al-theme-border-width-md` | `theme/border/width/md` |
-| outline-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 | outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
 
@@ -145,9 +145,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-list-item`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (6)
+## Tokens referenced (7)
 
-`--al-theme-border-width-md`, `--al-theme-color-background-default-strong`, `--al-theme-color-border-primary-default`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-typography-preset-14`
+`--al-theme-border-width-md`, `--al-theme-color-background-default-strong`, `--al-theme-color-focus-ring`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

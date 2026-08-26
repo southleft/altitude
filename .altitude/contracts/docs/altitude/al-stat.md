@@ -2,7 +2,7 @@
 
 # al-stat — Stat
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<—>`
+**Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
 
 Component: al-stat
 
@@ -65,7 +65,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## States
 
-_No interaction states recorded._
+`hover`, `focus`, `active`, `disabled`
 
 ## Slots (1)
 
@@ -84,7 +84,29 @@ _No events declared._
 
 ## Anatomy & token bindings
 
-Anatomy was not measured when this contract was authored (`anatomySource: "unavailable"`) — see `.altitude/contracts/README.md` § Anatomy availability is best-effort. No root-level token table to show.
+**Anatomy case measured:** `Trend=default` (source: `measured`)
+
+### Root — `<div class="al-c-stat">`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
+| border | `--al-theme-border-width` | `theme/border/width/@` |
+| border-bottom-left-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| border-bottom-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| border-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| border-top-color | `--al-theme-color-border-default` | `theme/color/border/default` |
+| border-top-left-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| border-top-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
+| column-gap | `--al-theme-space-xs` | `theme/space/xs` |
+| gap | `--al-theme-space-xs` | `theme/space/xs` |
+| padding | `--al-theme-space-md` | `theme/space/md` |
+| padding-bottom | `--al-theme-space-md` | `theme/space/md` |
+| padding-left | `--al-theme-space-md` | `theme/space/md` |
+| padding-right | `--al-theme-space-md` | `theme/space/md` |
+| padding-top | `--al-theme-space-md` | `theme/space/md` |
+| row-gap | `--al-theme-space-xs` | `theme/space/xs` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -96,9 +118,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-stat`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (0)
+## Tokens referenced (16)
 
-_None._
+`--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space-md`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`, `--al-theme-typography-display-sm`, `--al-theme-typography-display-sm-bold-letter-spacing`
 
 ---
 

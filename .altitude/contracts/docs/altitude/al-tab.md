@@ -89,8 +89,9 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 | background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
 | color | `--al-theme-color-content-default` | `theme/color/content/default` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
-| font | `--al-typography-preset-14` | — |
+| font | `--al-theme-typography-body-sm` | — |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
+| letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
 | padding | `--al-theme-space-xs` | `theme/space/xs` |
 | padding-bottom | `--al-theme-space-xs` | `theme/space/xs` |
 | padding-left | `--al-theme-space` | `theme/space/@` |
@@ -117,7 +118,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | outline | `--al-theme-border-width-md` | `theme/border/width/md` |
-| outline-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 | outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
 
@@ -126,7 +127,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | outline | `--al-theme-border-width-md` | `theme/border/width/md` |
-| outline-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 | outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
 
@@ -170,9 +171,9 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 - Tag: `al-tab`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (9)
+## Tokens referenced (10)
 
-`--al-theme-border-width-md`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-typography-preset-14`
+`--al-theme-border-width-md`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

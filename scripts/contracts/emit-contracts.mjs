@@ -65,6 +65,7 @@ const CHECK = process.argv.includes('--check');
 const CHECK_DETERMINISM = process.argv.includes('--check-determinism');
 const ADOPT = process.argv.includes('--adopt');
 const ADD_CONDITIONAL_BINDINGS = process.argv.includes('--add-conditional-bindings');
+const REFRESH = process.argv.includes('--refresh');
 const FORCE = process.argv.includes('--force');
 const STATES = ['hover', 'focus', 'active', 'disabled'];
 
@@ -107,6 +108,15 @@ Pick one:
   --add-conditional-bindings  one-off (T18): merge the derived \`conditionalBindings\` field into every
                       on-disk contract that has none yet drift-free otherwise; skips (loudly) any
                       contract whose OTHER fields already drift from derivation, rather than clobber it
+  --refresh           (T25) re-derive every tracked contract and OVERWRITE its derived fields in
+                      place with the fresh derivation — status/version, slots[].figmaPlaceholder,
+                      slots[].figmaAxis, and axis-curated props[].bindings.figma are carried forward
+                      unchanged (same carry-forward this mode's own --check-drift uses); every other
+                      field becomes exactly what re-derivation produces. Anatomy-dependent fields
+                      (anatomy/anatomySource/anatomyCase/tokens/states/semantics) are left AS-IS on
+                      disk when this environment has no measured spec-light.json, same exclusion
+                      --check-drift applies, so a contract seeded on a machine WITH measured data
+                      never has that data clobbered by a --refresh run on a machine without it.
 
   pnpm run contracts:seed / contracts:seed:sl
   pnpm run contracts:check / contracts:validate / contracts:check-determinism
@@ -258,15 +268,40 @@ function splitBorderShorthand(value) {
   return m ? { 'border-width': m[1], 'border-color': m[2] } : null;
 }
 
+/** `var(--al-A, var(--al-B))` -> `['A', 'B']`, else `null`. This is the repo's documented
+ * "role token, falls back to its base token" shape (.altitude/TOKENS.md "Phantom tokens are a
+ * gate" — role tokens are declared by the scoped `<al-theme>` host / brand partials, not the
+ * `:root` bundle, so a project with no role override for this token sees only the fallback). */
+function roleFallbackPair(value) {
+  const m = String(value).trim().match(/^var\(--al-([a-z0-9-]+),\s*var\(--al-([a-z0-9-]+)\)\)$/i);
+  return m ? [m[1], m[2]] : null;
+}
+
 /** A declaration value with EXACTLY ONE `--al-*` reference -> its token binding, else
  * null. Multi-var shorthands (other than the `border` split above) and references to a
  * component-local custom property with no design-token entry (e.g. `--al-button-padding`)
- * are skipped, never guessed — conditionalBindings never invents which token "is" the fact. */
+ * are skipped, never guessed — conditionalBindings never invents which token "is" the fact.
+ *
+ * ONE exception (T25): a two-level `var(--al-A, var(--al-B))` role/fallback chain is not a
+ * guess — `--al-A` (the outer, "role" token) and `--al-B` (the inner, base-tier fallback) are
+ * never both live at once for a given project; CSS_TO_TOKEN only indexes `--al-A` when this
+ * project's token tree actually declares it (see roleFallbackPair above), so preferring
+ * whichever of the two IS indexed reports exactly the value this project's own token pipeline
+ * would resolve — the outer role token when the project has one, the inner base token
+ * (today's ACTUAL rendered value) when it doesn't. */
 function conditionalTokenBinding(value) {
   const matches = [...String(value).matchAll(/--al-([a-z0-9-]+)/gi)].map((m) => m[1]);
-  if (matches.length !== 1) return null;
-  const hit = CSS_TO_TOKEN[matches[0]];
-  return hit ? { code: `--al-${matches[0]}`, figma: hit.figma } : null;
+  if (matches.length === 1) {
+    const hit = CSS_TO_TOKEN[matches[0]];
+    return hit ? { code: `--al-${matches[0]}`, figma: hit.figma } : null;
+  }
+  const pair = roleFallbackPair(value);
+  if (pair) {
+    const [outer, inner] = pair;
+    const suffix = CSS_TO_TOKEN[outer] ? outer : CSS_TO_TOKEN[inner] ? inner : null;
+    if (suffix) return { code: `--al-${suffix}`, figma: CSS_TO_TOKEN[suffix].figma };
+  }
+  return null;
 }
 
 /** DIRECT-child declarations of a postcss-scss rule (never a nested rule's decls —
@@ -317,6 +352,18 @@ function baseClassFor(tag) {
   return `al-c-${tag.replace(/^al-/, '')}`;
 }
 
+/** `variantOut[suffix]` merge helper — NEVER a plain overwrite. The variant/modifier pass,
+ * the sub-element ("parts") pass, and the synthesized-default-variant pass below can all
+ * contribute to the SAME suffix key (e.g. a `.al-c-alert--success` rule + a
+ * `.al-c-alert__icon { .al-c-alert--success & {...} }` sub-element rule, or a `parts` write
+ * that runs before the base-rule's own declarations are read for the synthesized default) —
+ * spreading the new entry over the existing one keeps every previously-written key
+ * (`parts`, `state`, css props) intact regardless of which pass ran first. */
+function mergeVariantEntry(variantOut, suffix, entry) {
+  if (!entry || !Object.keys(entry).length) return;
+  variantOut[suffix] = { ...(variantOut[suffix] ?? {}), ...entry };
+}
+
 /**
  * Recover `conditionalBindings` for one tag from its own .scss — best-effort AND
  * conservative: a component with no BEM variant modifiers and no nested pseudo-
@@ -334,6 +381,16 @@ function baseClassFor(tag) {
  *   - the same, nested directly inside the unmodified base selector's block
  *     -> the generic `conditionalBindings.state.<name>` (applies to any variant with
  *     no compound override of its own — i.e. "variant base + generic state delta")
+ *   - (T25) a SUB-ELEMENT rule (`.al-c-<tag>__<part>`) whose block nests the variant
+ *     modifier the OTHER way round — `.al-c-<tag>--<suffix> &` (this repo's authored
+ *     convention for "this part looks different inside that variant", verified in
+ *     alert/banner/toast's `__icon` rules) — -> that variant's `.parts.<part>`, additive
+ *     to (never replacing) the variant's own top-level bindings.
+ *   - (T25) modifiers of an enum prop OTHER than `variant` (e.g. Badge's `position`:
+ *     top-left/top-right/bottom-left/bottom-right), INCLUDING a comma-separated selector
+ *     list shared across more than one of that prop's values (Badge's shared z-index rule)
+ *     -> `conditionalBindings.<propName>.<value>`, same conditionBindingMap shape as one
+ *     variant's own bindings.
  */
 function extractConditionalBindings({ tag, props, scssFiles }) {
   if (!scssFiles.length) return null;
@@ -342,13 +399,19 @@ function extractConditionalBindings({ tag, props, scssFiles }) {
   const baseClass = baseClassFor(tag);
   const baseSelectorRe = new RegExp(`^\\.${baseClass}$`);
   const modifierSelectorRe = new RegExp(`^\\.${baseClass}--([a-z0-9-]+)$`);
+  const partSelectorRe = new RegExp(`^\\.${baseClass}__([a-z0-9-]+)$`);
+  const reverseModifierRe = new RegExp(`^\\.${baseClass}--([a-z0-9-]+) &$`);
 
   const variantProp = props.find((p) => p.name === 'variant' && p.type === 'enum');
   const variantValues = new Set(variantProp?.values ?? []);
   const figmaOptions = variantProp?.bindings?.figma?.options ?? [];
+  // T25: any OTHER enum prop (position, etc.) whose BEM modifier classes carry their own
+  // token-bearing declarations — kept fully separate from `variant`'s own key/semantics.
+  const otherEnumProps = props.filter((p) => p.type === 'enum' && p.name !== 'variant' && p.values?.length);
 
   const variantOut = {};
   const stateOut = {};
+  const otherPropOut = {}; // propName -> { value -> conditionBindingMap }
   const matchedModifiers = new Set();
   let baseRule = null;
 
@@ -362,8 +425,48 @@ function extractConditionalBindings({ tag, props, scssFiles }) {
 
     root.walkRules((rule) => {
       const selectors = (rule.selectors ?? [rule.selector]).map((s) => s.trim());
+
+      // T25a: other-enum-prop modifiers — checked against EVERY individual selector in a
+      // comma-list too (Badge's `.al-c-badge--top-left, .al-c-badge--top-right, ...` shares
+      // one z-index declaration across all four `position` values).
+      for (const prop of otherEnumProps) {
+        for (const value of prop.values) {
+          if (!selectors.includes(`.${baseClass}--${value}`)) continue;
+          const bindings = directDeclBindings(rule);
+          if (!bindings) continue;
+          const propMap = otherPropOut[prop.name] ?? {};
+          propMap[value] = { ...(propMap[value] ?? {}), ...bindings };
+          otherPropOut[prop.name] = propMap;
+        }
+      }
+
       if (selectors.length !== 1) return; // a comma/compound selector list — not a single variant/base surface
       const selector = selectors[0];
+
+      // T25b: a sub-element rule whose own block nests the variant modifier reversed
+      // (`.al-c-<tag>--<suffix> &`) — never a base/modifier rule itself, so this always
+      // returns rather than falling into the checks below.
+      const partMatch = selector.match(partSelectorRe);
+      if (partMatch) {
+        const partName = partMatch[1];
+        rule.each((child) => {
+          if (child.type !== 'rule') return;
+          const childSelectors = (child.selectors ?? [child.selector]).map((s) => s.trim());
+          for (const cs of childSelectors) {
+            const revMatch = cs.match(reverseModifierRe);
+            if (!revMatch) continue;
+            const suffix = revMatch[1];
+            if (!variantValues.has(suffix)) continue;
+            matchedModifiers.add(suffix);
+            const bindings = directDeclBindings(child);
+            if (!bindings) continue;
+            const parts = { ...(variantOut[suffix]?.parts ?? {}) };
+            parts[partName] = { ...(parts[partName] ?? {}), ...bindings };
+            mergeVariantEntry(variantOut, suffix, { parts: sortedMap(parts) });
+          }
+        });
+        return;
+      }
 
       if (baseSelectorRe.test(selector)) {
         baseRule = rule;
@@ -388,7 +491,7 @@ function extractConditionalBindings({ tag, props, scssFiles }) {
 
       const entry = { ...base };
       if (Object.keys(stateEntry).length) entry.state = sortedMap(stateEntry);
-      if (Object.keys(entry).length) variantOut[suffix] = entry;
+      mergeVariantEntry(variantOut, suffix, entry);
     });
   }
 
@@ -407,17 +510,19 @@ function extractConditionalBindings({ tag, props, scssFiles }) {
     const unmatchedOptions = figmaOptions.filter((o) => !matchedNorm.has(normKey(o)));
     if (unmatchedOptions.length === 1) {
       const defaultBase = directDeclBindings(baseRule);
-      if (defaultBase) variantOut[unmatchedOptions[0].trim().toLowerCase().replace(/\s+/g, '-')] = defaultBase;
+      if (defaultBase) mergeVariantEntry(variantOut, unmatchedOptions[0].trim().toLowerCase().replace(/\s+/g, '-'), defaultBase);
     }
   }
 
   const hasVariant = Object.keys(variantOut).length > 0;
   const hasState = Object.keys(stateOut).length > 0;
-  if (!hasVariant && !hasState) return null;
+  const otherPropKeys = Object.keys(otherPropOut).sort();
+  if (!hasVariant && !hasState && !otherPropKeys.length) return null;
 
   const out = {};
   if (hasVariant) out.variant = sortedMap(variantOut);
   if (hasState) out.state = sortedMap(stateOut);
+  for (const propName of otherPropKeys) out[propName] = sortedMap(otherPropOut[propName]);
   return out;
 }
 
@@ -980,11 +1085,73 @@ function runAddConditionalBindings() {
   if (skippedOtherDrift) process.exit(1);
 }
 
+// ── --refresh (T25): re-derive every tracked contract, curation preserved ─
+//
+// The general-purpose successor to the one-off --adopt/--add-conditional-bindings
+// migrations: every DERIVED field (everything the table in README.md's "Contract
+// field | Source" names) becomes exactly what a fresh derivation produces; every
+// CURATED field (status, version, slots[].figmaPlaceholder, slots[].figmaAxis,
+// axis-mode props[].bindings.figma) is carried forward from disk first, using the
+// SAME carryForward*() helpers --check-drift diffs against — so running --refresh
+// right after a --check-drift pass with zero drift is a guaranteed no-op. Anatomy-
+// dependent fields are left untouched when this environment has no measured
+// spec-light.json (mirrors --check-drift's own ANATOMY_DEPENDENT_FIELDS exclusion),
+// so a --refresh run on a machine without measurement data can never regress a
+// contract's anatomy back to `null`/"unavailable".
+
+function runRefresh() {
+  const { project, manifest, byTag, measuredSpec, outDir, trackedTags } = loadContext();
+
+  let refreshed = 0;
+  let unchanged = 0;
+  let missing = 0;
+  let skipped = 0;
+
+  for (const tag of trackedTags) {
+    const { reason, contract: derived } = deriveOne({ tag, manifest, byTag, project, measuredSpec });
+    if (reason) {
+      skipped++;
+      continue;
+    }
+
+    const outPath = join(outDir, `${tag}.contract.json`);
+    if (!existsSync(outPath)) {
+      missing++;
+      console.error(`[contracts] MISSING — ${tag} has no contract on disk, skipping. Run --seed first.`);
+      continue;
+    }
+
+    const disk = JSON.parse(readFileSync(outPath, 'utf8'));
+    const merged = carryForwardPropAxisCuration(disk, carryForwardSlotExtensions(disk, derived));
+    merged.status = disk.status;
+    merged.version = disk.version;
+    if (!measuredSpec) {
+      for (const field of ANATOMY_DEPENDENT_FIELDS) merged[field] = disk[field];
+    }
+
+    const nextText = JSON.stringify(merged, null, 2) + '\n';
+    const diskText = JSON.stringify(disk, null, 2) + '\n';
+    if (nextText === diskText) {
+      unchanged++;
+      continue;
+    }
+
+    writeFileSync(outPath, nextText, 'utf8');
+    refreshed++;
+  }
+
+  console.log(
+    `[contracts] --refresh ${project.id}${measuredSpec ? '' : ' (no measured spec — anatomy-dependent fields left as-is)'}: ` +
+      `refreshed ${refreshed}, unchanged ${unchanged}, missing ${missing}, skipped ${skipped} (of ${trackedTags.length} tracked).`,
+  );
+}
+
 // ── main ─────────────────────────────────────────────────────────────────
 
 function main() {
   if (ADOPT) return runAdopt();
   if (ADD_CONDITIONAL_BINDINGS) return runAddConditionalBindings();
+  if (REFRESH) return runRefresh();
   if (CHECK_DRIFT) return runCheckDrift();
   if (CHECK_DETERMINISM) return runCheckDeterminism();
   if (SEED) return runSeed();

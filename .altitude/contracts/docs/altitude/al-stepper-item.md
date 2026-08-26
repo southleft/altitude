@@ -84,6 +84,7 @@ _No events declared._
 | column-gap | `--al-theme-space-sm` | `theme/space/sm` |
 | font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
 | gap | `--al-theme-space-sm` | `theme/space/sm` |
+| letter-spacing | `--al-theme-typography-body-md-bold-letter-spacing` | — |
 | row-gap | `--al-theme-space-sm` | `theme/space/sm` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
@@ -96,9 +97,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-stepper-item`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (10)
+## Tokens referenced (11)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-theme-border-width`, `--al-theme-color-background-primary-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-primary-weak`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`
+`--al-base-space`, `--al-font-weight-bold`, `--al-theme-border-width`, `--al-theme-color-background-primary-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-primary-weak`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`
 
 ---
 

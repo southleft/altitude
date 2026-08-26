@@ -72,8 +72,9 @@ _No events declared._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | column-gap | `--al-theme-space` | `theme/space/@` |
-| font | `--al-typography-preset-16` | — |
+| font | `--al-theme-typography-body-md` | — |
 | gap | `--al-theme-space` | `theme/space/@` |
+| letter-spacing | `--al-theme-typography-body-md-letter-spacing` | — |
 | row-gap | `--al-theme-space` | `theme/space/@` |
 
 ### State overrides (measured, root node)
@@ -83,7 +84,7 @@ _No events declared._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | outline | `--al-theme-border-width-md` | `theme/border/width/md` |
-| outline-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 | outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
 
@@ -92,7 +93,7 @@ _No events declared._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | outline | `--al-theme-border-width-md` | `theme/border/width/md` |
-| outline-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 | outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
 
@@ -106,9 +107,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-tab-panel`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (4)
+## Tokens referenced (5)
 
-`--al-theme-border-width-md`, `--al-theme-color-border-primary-default`, `--al-theme-space`, `--al-typography-preset-16`
+`--al-theme-border-width-md`, `--al-theme-color-focus-ring`, `--al-theme-space`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`
 
 ---
 

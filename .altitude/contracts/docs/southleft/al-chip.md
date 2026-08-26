@@ -85,6 +85,7 @@ Variant
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
+| background | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
 | background-color | `--al-theme-color-background-danger-default` | `theme/color/background/danger-default` |
 | border-bottom-left-radius | `--al-base-space` | `base/space` |
 | border-bottom-right-radius | `--al-base-space` | `base/space` |
@@ -93,7 +94,6 @@ Variant
 | border-top-right-radius | `--al-base-space` | `base/space` |
 | color | `--al-theme-color-content-danger-weak` | `theme/color/content/danger-weak` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
-| font | `--al-theme-typography-body-sm` | — |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
 | letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
 | padding | `--al-theme-space-xxs` | `theme/space/xxs` |
@@ -131,6 +131,14 @@ Variant
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-danger-default` | `theme/color/background/danger-default` |
 | color | `--al-theme-color-content-danger-weak` | `theme/color/content/danger-weak` |
+
+#### `default`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
+| gap | `--al-theme-space-xs` | `theme/space/xs` |
 
 #### `info`
 
@@ -170,7 +178,7 @@ Variant
 
 ## Tokens referenced (10)
 
-`--al-base-space`, `--al-theme-border-width-md`, `--al-theme-color-background-danger-default`, `--al-theme-color-content-danger-weak`, `--al-theme-color-focus-ring`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-base-space`, `--al-theme-border-width-md`, `--al-theme-color-background-danger-default`, `--al-theme-color-background-default-strong`, `--al-theme-color-content-danger-weak`, `--al-theme-color-focus-ring`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

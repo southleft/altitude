@@ -139,6 +139,10 @@
           "code": "--al-theme-space-xxs",
           "figma": "theme/space/xxs"
         },
+        "letter-spacing": {
+          "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+          "figma": null
+        },
         "min-height": {
           "code": "--al-theme-space-xs",
           "figma": "theme/space/xs"
@@ -160,27 +164,9 @@
     "--al-theme-color-background-danger-default",
     "--al-theme-color-content-danger-weak",
     "--al-theme-space-xs",
-    "--al-theme-space-xxs"
+    "--al-theme-space-xxs",
+    "--al-theme-typography-body-xs-bold-letter-spacing"
   ],
-  "a11y": {
-    "ariaAttributes": [
-      "variant"
-    ],
-    "cssParts": []
-  },
-  "bindings": {
-    "code": {
-      "importPath": "@southleft/al-web-components/components/badge/badge.ts",
-      "tagName": "al-badge",
-      "workspace": "@southleft/al-web-components"
-    },
-    "figma": {
-      "fileKey": "y83n4o9LOGs74oAoguFcGS",
-      "componentSetName": "Badge",
-      "nodeId": "2626:541",
-      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=2626-541"
-    }
-  },
   "conditionalBindings": {
     "variant": {
       "danger": {
@@ -241,6 +227,51 @@
           "figma": "theme/color/content/warning-weak"
         }
       }
+    },
+    "position": {
+      "bottom-left": {
+        "z-index": {
+          "code": "--al-z-index-400",
+          "figma": "z-index/400"
+        }
+      },
+      "bottom-right": {
+        "z-index": {
+          "code": "--al-z-index-400",
+          "figma": "z-index/400"
+        }
+      },
+      "top-left": {
+        "z-index": {
+          "code": "--al-z-index-400",
+          "figma": "z-index/400"
+        }
+      },
+      "top-right": {
+        "z-index": {
+          "code": "--al-z-index-400",
+          "figma": "z-index/400"
+        }
+      }
+    }
+  },
+  "a11y": {
+    "ariaAttributes": [
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/badge/badge.ts",
+      "tagName": "al-badge",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": "Badge",
+      "nodeId": "2626:541",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=2626-541"
     }
   }
 }

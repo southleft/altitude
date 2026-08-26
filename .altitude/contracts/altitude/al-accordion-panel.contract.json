@@ -121,7 +121,7 @@
       "tokens": {},
       "children": [
         {
-          "tag": "dt",
+          "tag": "div",
           "cls": "al-c-accordion-panel__header",
           "layout": {
             "display": "block",
@@ -141,6 +141,14 @@
                 "justify": "space-between"
               },
               "tokens": {
+                "background": {
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
+                },
+                "background-color": {
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
+                },
                 "column-gap": {
                   "code": "--al-theme-space",
                   "figma": "theme/space/@"
@@ -190,12 +198,16 @@
                       "figma": "theme/space/@"
                     },
                     "font": {
-                      "code": "--al-typography-preset-16",
+                      "code": "--al-theme-typography-body-md",
                       "figma": null
                     },
                     "gap": {
                       "code": "--al-theme-space",
                       "figma": "theme/space/@"
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "figma": null
                     },
                     "row-gap": {
                       "code": "--al-theme-space",
@@ -304,10 +316,12 @@
   },
   "tokens": [
     "--al-theme-color-background-default",
+    "--al-theme-color-background-transparent-default",
     "--al-theme-icon-lg",
     "--al-theme-opacity-disabled",
     "--al-theme-space",
-    "--al-typography-preset-16"
+    "--al-theme-typography-body-md",
+    "--al-theme-typography-body-md-letter-spacing"
   ],
   "a11y": {
     "ariaAttributes": [

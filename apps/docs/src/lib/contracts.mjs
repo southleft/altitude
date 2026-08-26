@@ -13,16 +13,18 @@
  * carry different contracts in each — so this is looked up by
  * `(project.id, component.tag)`, not cached across projects.
  *
- * A `figmaPlaceholder` NAMES A FIGMA INSTANCE-SWAP DEFAULT, not necessarily a
- * name in this library's Phosphor icon catalog — Figma's "Icon Placeholder"
- * set and Phosphor do not share a naming scheme. `al-button`'s contract says
- * `done-circle` / `send`; neither exists in
- * `libs/al-web-components/components/icon/catalog.ts`. Each is mapped once,
- * by hand, to its nearest Phosphor equivalent below. If a future contract
- * introduces a new placeholder name with no entry here, the generic fallback
- * is used instead of throwing — a docs playground default is a convenience,
- * not a contract obligation, so a missing mapping degrades quietly rather
- * than failing the build.
+ * `figmaPlaceholder` NAMES A PHOSPHOR CATALOG ENTRY (T25, spec 2026-08-25-
+ * contract-backed-figma-parity-and-generation) — `libs/al-web-components/
+ * components/icon/catalog.ts` + `phosphor/*.ts` — the design-system's own
+ * icon library, not a Figma-side name. Figma's real component sets predate
+ * the Phosphor library and used a now-retired "🛠 Icons" page (old names like
+ * `done-circle`/`send`); those were resolved by hand to their nearest
+ * Phosphor equivalent (`check-circle`/`paper-plane`) and the CONTRACT was
+ * updated to store the Phosphor name directly, so this module needs no
+ * translation table of its own — a contract's `figmaPlaceholder` is always
+ * already a valid catalog name. (`scripts/contracts/generate-figma.mjs`
+ * resolving a Phosphor name against the Figma-side Phosphor library is
+ * separate, follow-up work — not this module's concern.)
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -41,12 +43,6 @@ function loadContract(projectId, tag) {
   return contract;
 }
 
-/** Figma placeholder name -> nearest Phosphor catalog entry, verified by hand. */
-const PLACEHOLDER_TO_ICON = {
-  'done-circle': 'check-circle',
-  send: 'paper-plane',
-};
-
 /** Used when a slot has no contract, or a contract slot has no placeholder. */
 const FALLBACK_ICON = { before: 'check-circle', after: 'arrow-right' };
 
@@ -61,9 +57,6 @@ const FALLBACK_ICON = { before: 'check-circle', after: 'arrow-right' };
 export function iconSlotDefaults(projectId, tag) {
   const contract = loadContract(projectId, tag);
   const slotByName = new Map((contract?.slots ?? []).map((s) => [s.name, s]));
-  const resolve = (side) => {
-    const placeholder = slotByName.get(side)?.figmaPlaceholder;
-    return (placeholder && PLACEHOLDER_TO_ICON[placeholder]) || FALLBACK_ICON[side];
-  };
+  const resolve = (side) => slotByName.get(side)?.figmaPlaceholder || FALLBACK_ICON[side];
   return { before: resolve('before'), after: resolve('after') };
 }

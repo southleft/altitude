@@ -115,8 +115,8 @@ Style variant
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
 | `(default)` | The button text content. Omit when rendering an icon-only button (set `hideText` + `label` instead). | — | — |
-| `after` | Content to display after the button text, typically an icon. Icon-only button pattern: set `hideText` + provide an accessible name via `label`, then place the icon in the `before` slot. Do NOT also include a visible text node — the slot's default text content is hidden but still present in the layout, and a duplicate label produces a redundant accessible name. Example: <al-button hideText label="Open actions menu" ariaControls="menu-id"> <al-icon-dots-vertical slot="before" iconTitle="Actions"></al-icon-dots-vertical> </al-button> | `send` | VARIANT axis |
-| `before` | Content to display before the button text, typically an icon. | `done-circle` | VARIANT axis |
+| `after` | Content to display after the button text, typically an icon. Icon-only button pattern: set `hideText` + provide an accessible name via `label`, then place the icon in the `before` slot. Do NOT also include a visible text node — the slot's default text content is hidden but still present in the layout, and a duplicate label produces a redundant accessible name. Example: <al-button hideText label="Open actions menu" ariaControls="menu-id"> <al-icon-dots-vertical slot="before" iconTitle="Actions"></al-icon-dots-vertical> </al-button> | `paper-plane` | VARIANT axis |
+| `before` | Content to display before the button text, typically an icon. | `check-circle` | VARIANT axis |
 
 **Figma placeholder convention (T19):** a `before`/`after` slot with a `figmaPlaceholder` value names the real Figma set's own icon-instance placeholder this slot resolves to when generating or reconciling a set — matched by **name**, never a node id (icon libraries re-mint ids on republish). See `.altitude/contracts/README.md` § Slot placeholder instances (T19) and the Icon Recoloring reference in `altitude-figma-sync`'s `SKILL.md`.
 
@@ -149,6 +149,7 @@ _No events declared._
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
 | font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
+| letter-spacing | `--al-theme-typography-body-md-bold-letter-spacing` | — |
 | padding | `--al-theme-space-xs` | `theme/space/xs` |
 | padding-bottom | `--al-theme-space-xs` | `theme/space/xs` |
 | padding-left | `--al-theme-space` | `theme/space/@` |
@@ -169,7 +170,7 @@ _No events declared._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | outline | `--al-theme-border-width-md` | `theme/border/width/md` |
-| outline-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 | outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
 
@@ -217,6 +218,7 @@ _No events declared._
 | --al-icon-height | `--al-theme-icon-lg` | `theme/icon/lg` |
 | --al-icon-width | `--al-theme-icon-lg` | `theme/icon/lg` |
 | background-color | `--al-theme-color-background-primary-default` | `theme/color/background/primary-default` |
+| border-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | color | `--al-theme-color-content-primary-weak` | `theme/color/content/primary-weak` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
 
@@ -270,9 +272,9 @@ _No events declared._
 - Tag: `al-button`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (10)
+## Tokens referenced (11)
 
-`--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`
+`--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-md-bold-letter-spacing`
 
 ---
 

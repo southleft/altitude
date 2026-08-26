@@ -176,6 +176,10 @@
         "font-weight": {
           "code": "--al-font-weight-bold",
           "figma": "typography/font-weight/bold"
+        },
+        "letter-spacing": {
+          "code": "--al-theme-typography-body-md-bold-letter-spacing",
+          "figma": null
         }
       },
       "children": [
@@ -327,8 +331,43 @@
     "--al-theme-box-shadow-lg",
     "--al-theme-color-background-default",
     "--al-theme-space",
-    "--al-theme-space-xxs"
+    "--al-theme-space-xxs",
+    "--al-theme-typography-body-md-bold-letter-spacing"
   ],
+  "conditionalBindings": {
+    "variant": {
+      "danger": {
+        "parts": {
+          "icon": {
+            "--al-icon-fill": {
+              "code": "--al-theme-color-content-danger-default",
+              "figma": "theme/color/content/danger-default"
+            }
+          }
+        }
+      },
+      "success": {
+        "parts": {
+          "icon": {
+            "--al-icon-fill": {
+              "code": "--al-theme-color-content-success-default",
+              "figma": "theme/color/content/success-default"
+            }
+          }
+        }
+      },
+      "warning": {
+        "parts": {
+          "icon": {
+            "--al-icon-fill": {
+              "code": "--al-theme-color-content-warning-default",
+              "figma": "theme/color/content/warning-default"
+            }
+          }
+        }
+      }
+    }
+  },
   "a11y": {
     "ariaAttributes": [
       "variant"

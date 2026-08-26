@@ -161,12 +161,16 @@
           "figma": "theme/space/xs"
         },
         "font": {
-          "code": "--al-typography-preset-16",
+          "code": "--al-theme-typography-body-md",
           "figma": null
         },
         "gap": {
           "code": "--al-theme-space-xs",
           "figma": "theme/space/xs"
+        },
+        "letter-spacing": {
+          "code": "--al-theme-typography-body-md-letter-spacing",
+          "figma": null
         },
         "row-gap": {
           "code": "--al-theme-space-xs",
@@ -213,12 +217,16 @@
               "figma": "theme/space/xs"
             },
             "font": {
-              "code": "--al-typography-preset-16",
+              "code": "--al-theme-typography-body-md",
               "figma": null
             },
             "gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-body-md-letter-spacing",
+              "figma": null
             },
             "row-gap": {
               "code": "--al-theme-space-xs",
@@ -251,8 +259,8 @@
             "figma": "theme/border/width/md"
           },
           "outline-color": {
-            "code": "--al-theme-color-border-primary-default",
-            "figma": "theme/color/border/primary-default"
+            "code": "--al-theme-color-focus-ring",
+            "figma": "theme/color/focus-ring"
           },
           "outline-offset": {
             "code": "--al-theme-border-width-md",
@@ -269,8 +277,8 @@
             "figma": "theme/border/width/md"
           },
           "outline-color": {
-            "code": "--al-theme-color-border-primary-default",
-            "figma": "theme/color/border/primary-default"
+            "code": "--al-theme-color-focus-ring",
+            "figma": "theme/color/focus-ring"
           },
           "outline-offset": {
             "code": "--al-theme-border-width-md",
@@ -287,32 +295,13 @@
   "tokens": [
     "--al-theme-border-radius-xs",
     "--al-theme-border-width-md",
-    "--al-theme-color-border-primary-default",
     "--al-theme-color-content-primary-default",
     "--al-theme-color-content-primary-strong",
+    "--al-theme-color-focus-ring",
     "--al-theme-space-xs",
-    "--al-typography-preset-16"
+    "--al-theme-typography-body-md",
+    "--al-theme-typography-body-md-letter-spacing"
   ],
-  "a11y": {
-    "ariaAttributes": [
-      "ariaLabelledBy",
-      "variant"
-    ],
-    "cssParts": []
-  },
-  "bindings": {
-    "code": {
-      "importPath": "@southleft/al-web-components/components/link/link.ts",
-      "tagName": "al-link",
-      "workspace": "@southleft/al-web-components"
-    },
-    "figma": {
-      "fileKey": "y83n4o9LOGs74oAoguFcGS",
-      "componentSetName": "Link",
-      "nodeId": "3435:964",
-      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3435-964"
-    }
-  },
   "conditionalBindings": {
     "variant": {
       "lg": {
@@ -345,6 +334,26 @@
           "figma": "theme/icon/@"
         }
       }
+    }
+  },
+  "a11y": {
+    "ariaAttributes": [
+      "ariaLabelledBy",
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/link/link.ts",
+      "tagName": "al-link",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": "Link",
+      "nodeId": "3435:964",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3435-964"
     }
   }
 }

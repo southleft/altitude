@@ -2,7 +2,7 @@
 
 # al-text-block — Text Block
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<—>`
+**Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
 
 Component: al-text-block
 
@@ -29,7 +29,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## States
 
-_No interaction states recorded._
+`hover`, `focus`, `active`, `disabled`
 
 ## Slots (1)
 
@@ -48,7 +48,16 @@ _No events declared._
 
 ## Anatomy & token bindings
 
-Anatomy was not measured when this contract was authored (`anatomySource: "unavailable"`) — see `.altitude/contracts/README.md` § Anatomy availability is best-effort. No root-level token table to show.
+**Anatomy case measured:** `Width=default` (source: `measured`)
+
+### Root — `<div class="al-c-text-block">`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| column-gap | `--al-theme-space` | `theme/space/@` |
+| font | `--al-typography-preset-16` | — |
+| gap | `--al-theme-space` | `theme/space/@` |
+| row-gap | `--al-theme-space` | `theme/space/@` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -60,9 +69,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-text-block`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (0)
+## Tokens referenced (2)
 
-_None._
+`--al-theme-space`, `--al-typography-preset-16`
 
 ---
 

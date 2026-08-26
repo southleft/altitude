@@ -231,6 +231,30 @@ function buildAnatomySection(contract) {
   return parts.join('\n');
 }
 
+/** Render one `variant`-shaped map (`{ <value>: { ...cssProp: tokenBinding, state?, parts? } }`)
+ * — shared by `conditionalBindings.variant` and any T25 other-enum-prop section, since both use
+ * the schema's `variantBinding` shape. `heading` is the `###` section title; `label` is what each
+ * value's own `####` sub-heading calls out (e.g. "variant" -> `secondary`, "position" -> `top-left`). */
+function renderVariantLikeSection(heading, map) {
+  const out = [heading, ''];
+  for (const [value, binding] of Object.entries(map)) {
+    const { state, parts: subParts, ...ownProps } = binding;
+    out.push(`#### \`${value}\``, '', tokenBindingsTable(ownProps));
+    if (subParts) {
+      for (const [partName, deltas] of Object.entries(subParts)) {
+        out.push('', `**Sub-element \`${partName}\`** (this variant's own override of that part — T25, a reversed-nesting BEM rule):`, '', tokenBindingsTable(deltas));
+      }
+    }
+    if (state) {
+      for (const [stateName, deltas] of Object.entries(state)) {
+        out.push('', `**On \`${stateName}\`** (compound — wins over the generic state rule below):`, '', tokenBindingsTable(deltas));
+      }
+    }
+    out.push('');
+  }
+  return out;
+}
+
 function buildConditionalBindingsSection(conditionalBindings) {
   if (!conditionalBindings) {
     return (
@@ -239,25 +263,21 @@ function buildConditionalBindingsSection(conditionalBindings) {
       '`.altitude/contracts/README.md`).'
     );
   }
-  const parts = [];
+  let parts = [];
   if (conditionalBindings.variant) {
-    parts.push('### Per-variant (`variant`)', '');
-    for (const [variant, binding] of Object.entries(conditionalBindings.variant)) {
-      const { state, ...ownProps } = binding;
-      parts.push(`#### \`${variant}\``, '', tokenBindingsTable(ownProps));
-      if (state) {
-        for (const [stateName, deltas] of Object.entries(state)) {
-          parts.push('', `**On \`${stateName}\`** (compound — wins over the generic state rule below):`, '', tokenBindingsTable(deltas));
-        }
-      }
-      parts.push('');
-    }
+    parts = parts.concat(renderVariantLikeSection('### Per-variant (`variant`)', conditionalBindings.variant));
   }
   if (conditionalBindings.state) {
     parts.push('### Per-state, variant-agnostic (`state`)', '');
     for (const [stateName, deltas] of Object.entries(conditionalBindings.state)) {
       parts.push(`#### \`${stateName}\``, '', tokenBindingsTable(deltas), '');
     }
+  }
+  // T25: any OTHER enum prop (position, etc.) whose own BEM modifiers carry token bindings —
+  // same variantBinding shape as `variant`, kept in its own section under the prop's own name.
+  for (const [propName, map] of Object.entries(conditionalBindings)) {
+    if (propName === 'variant' || propName === 'state') continue;
+    parts = parts.concat(renderVariantLikeSection(`### Per-\`${propName}\``, map));
   }
   return parts.join('\n').trim();
 }

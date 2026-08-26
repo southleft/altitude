@@ -82,9 +82,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-logo`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (3)
+## Tokens referenced (4)
 
-`--al-font-weight-bold`, `--al-theme-color-content-default-weak`, `--al-theme-space-xxs`
+`--al-font-weight-bold`, `--al-theme-color-content-default-weak`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
 
 ---
 

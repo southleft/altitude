@@ -2,7 +2,7 @@
 
 # al-layout — Layout
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<—>`
+**Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
 
 Component: al-layout
 
@@ -129,7 +129,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## States
 
-_No interaction states recorded._
+`hover`, `focus`, `active`, `disabled`
 
 ## Slots (1)
 
@@ -148,11 +148,25 @@ _No events declared._
 
 ## Anatomy & token bindings
 
-Anatomy was not measured when this contract was authored (`anatomySource: "unavailable"`) — see `.altitude/contracts/README.md` § Anatomy availability is best-effort. No root-level token table to show.
+**Anatomy case measured:** `Variant=bento,Direction=column` (source: `measured`)
+
+### Root — `<div class="al-c-layout al-c-layout--bento al-c-layout--gap-md">`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| column-gap | `--al-theme-space` | `theme/space/@` |
+| gap | `--al-theme-space` | `theme/space/@` |
+| row-gap | `--al-theme-space` | `theme/space/@` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
-This component's `.scss` has no BEM modifier classes and no nested pseudo-class/attribute state rules that resolve to a single `--al-*` token — no conditional bindings to derive (T18; see `.altitude/contracts/README.md`).
+### Per-variant (`variant`)
+
+#### `bento`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| gap | `--al-theme-space` | `theme/space/@` |
 
 ## Code
 
@@ -160,9 +174,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-layout`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (0)
+## Tokens referenced (6)
 
-_None._
+`--al-theme-border-radius-lg`, `--al-theme-box-shadow`, `--al-theme-color-background-default`, `--al-theme-color-content-default`, `--al-theme-space`, `--al-theme-space-xs`
 
 ---
 

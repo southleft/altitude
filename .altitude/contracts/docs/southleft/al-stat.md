@@ -97,12 +97,12 @@ _No events declared._
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
 | border | `--al-theme-border-width` | `theme/border/width/@` |
-| border-bottom-left-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
-| border-bottom-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
-| border-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| border-bottom-left-radius | `--al-theme-border-radius-role-surface` | `theme/border/radius/role/surface` |
+| border-bottom-right-radius | `--al-theme-border-radius-role-surface` | `theme/border/radius/role/surface` |
+| border-radius | `--al-theme-border-radius-role-surface` | `theme/border/radius/role/surface` |
 | border-top-color | `--al-theme-color-border-default` | `theme/color/border/default` |
-| border-top-left-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
-| border-top-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| border-top-left-radius | `--al-theme-border-radius-role-surface` | `theme/border/radius/role/surface` |
+| border-top-right-radius | `--al-theme-border-radius-role-surface` | `theme/border/radius/role/surface` |
 | border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
@@ -125,7 +125,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (16)
 
-`--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space-md`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`, `--al-theme-typography-display-sm`, `--al-theme-typography-display-sm-bold-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-border-radius-role-surface`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space-md`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`, `--al-theme-typography-display-sm`, `--al-theme-typography-display-sm-bold-letter-spacing`
 
 ---
 

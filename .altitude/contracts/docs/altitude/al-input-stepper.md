@@ -187,9 +187,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-input-stepper`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (19)
+## Tokens referenced (22)
 
-`--al-base-space`, `--al-button-padding`, `--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-border-default-strong`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-typography-preset-14`, `--al-typography-preset-16`
+`--al-base-space`, `--al-button-padding`, `--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-border-default-strong`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

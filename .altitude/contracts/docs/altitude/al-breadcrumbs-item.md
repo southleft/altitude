@@ -80,8 +80,9 @@ _No events declared._
 | --- | --- | --- |
 | color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
 | column-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
-| font | `--al-typography-preset-18` | — |
+| font | `--al-theme-typography-body-lg` | — |
 | gap | `--al-theme-space-xxs` | `theme/space/xxs` |
+| letter-spacing | `--al-theme-typography-body-lg-letter-spacing` | — |
 | row-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 
 ### State overrides (measured, root node)
@@ -112,9 +113,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-breadcrumbs-item`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (7)
+## Tokens referenced (9)
 
-`--al-theme-border-radius-md`, `--al-theme-color-background-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-typography-preset-18`
+`--al-theme-border-radius-md`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-lg`, `--al-theme-typography-body-lg-letter-spacing`
 
 ---
 
