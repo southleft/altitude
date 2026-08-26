@@ -34,6 +34,13 @@
  *     BY NAME inside the plugin code, never by a node id stored anywhere —
  *     see buildOps()'s componentProperties comment and
  *     .altitude/contracts/README.md.
+ *   - T29: that icon INSTANCE is now an instance of the owner's DS "Icon"
+ *     wrapper component (found by name, findIconWrapperComponent), never a
+ *     raw top-level instance of a Phosphor library component — the resolved
+ *     Phosphor glyph is swapped INTO the wrapper's own nested instance
+ *     (swapComponent) instead, mirroring code's `<al-icon>` wrapper over an
+ *     inline SVG. See "Slot placeholder instances" in
+ *     .altitude/contracts/README.md.
  * Auto-layout is HUG on both axes throughout (no pixel geometry to target a
  * fixed size against) — see the Sizing Modes reference in the skill's
  * "External refs" table: dimension is never set via resize() here at all, so
@@ -350,13 +357,18 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
   // property EITHER WAY — the real set keeps it as one even when Slot
   // Before/After becomes an axis (T23 task) — `default` is the icon's NAME,
   // never a node id (icon libraries re-mint ids on republish); the actual
-  // component is resolved BY NAME inside the plugin code at generation time
+  // glyph is resolved BY NAME inside the plugin code at generation time
   // (buildPluginCode's findPhosphorComponentByName, T28 — the Phosphor
-  // library, never the old "🛠 Icons" page), keeping this pure
-  // function's determinism intact (--check-determinism never touches
-  // Figma). `layerName` is the instance layer this property's
-  // `mainComponent` reference targets (plus, in property mode only, the
-  // paired boolean's own `visible` reference — see T19).
+  // library, never the old "🛠 Icons" flat-component page), keeping this
+  // pure function's determinism intact (--check-determinism never touches
+  // Figma). As of T29, that resolved glyph is never instantiated at the top
+  // level on its own — it is swapped INTO the nested slot of an instance of
+  // the owner's DS "Icon" wrapper component (also resolved by name,
+  // findIconWrapperComponent), so this property's own `mainComponent`
+  // default is the WRAPPER, not the glyph (see buildPluginCode). `layerName`
+  // is the instance layer this property's `mainComponent` reference targets
+  // (plus, in property mode only, the paired boolean's own `visible`
+  // reference — see T19).
   const componentProperties = [{ name: 'Text', type: 'TEXT', default: contract.name || tag }];
   for (const b of layoutBooleans) {
     if (b.isOmit) continue; // T27: omitted -> nothing at all, no axis, no property, no instance
@@ -447,12 +459,16 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
   }
   if (sidesWithPlaceholder.length) {
     degradations.push(
-      `Icon ${sidesWithPlaceholder.map((s) => (s === 'before' ? 'Before' : 'After')).join('/')} INSTANCE_SWAP ` +
-      'default is resolved LIVE by NAME from the Phosphor Figma library at generation time (T28 — never the old ' +
-      '"🛠 Icons" page, never a hard-coded node id; see contract.slots[].figmaPlaceholder and ' +
-      `findPhosphorComponentByName in buildPluginCode); icon size is a fixed ${ICON_SIZE_FIGMA_VAR} (documented ` +
-      'judgment call above ICON_SIZE_FIGMA_VAR, not a per-variant contract fact), and the icon is recolored to ' +
-      'this row\'s own resolved content-color token, recursively, per the Icon Recoloring reference.',
+      `Icon ${sidesWithPlaceholder.map((s) => (s === 'before' ? 'Before' : 'After')).join('/')} is built as an ` +
+      'INSTANCE of the owner\'s DS "Icon" wrapper component (resolved LIVE by name, findIconWrapperComponent, ' +
+      'never a hard-coded node id — T29), with the Phosphor glyph named by contract.slots[].figmaPlaceholder ' +
+      'resolved LIVE by name from the Phosphor Figma library (T28, findPhosphorComponentByName) and swapped INTO ' +
+      'the wrapper\'s own nested instance (swapComponent) — never instantiated as a raw top-level Phosphor ' +
+      `library instance. Icon size is a fixed ${ICON_SIZE_FIGMA_VAR} (documented judgment call above ` +
+      'ICON_SIZE_FIGMA_VAR, not a per-variant contract fact) bound on both the wrapper AND its nested glyph ' +
+      'instance (the wrapper does not auto-scale its child), and the icon is recolored to this row\'s own ' +
+      'resolved content-color token, recursively, per the Icon Recoloring reference — skipping the top-level ' +
+      'fill/stroke at EVERY instance boundary (wrapper root AND nested glyph root), not just the outermost one.',
     );
   }
   const axisModeSlotSides = slotSides.filter((b) => b.isAxis).map((b) => b.side);
@@ -613,47 +629,78 @@ function buildPluginCode(ops, SC) {
     // both sides, never an exact string compare — "check-circle" and
     // "CheckCircle" both normalize to "checkcircle".
     //
-    // SET STRUCTURE, CONFIRMED LIVE: a Phosphor icon may be cached locally
-    // as a full COMPONENT_SET with "Format" (Outline/Stroke) x "Weight"
-    // (Thin/Light/Regular/Bold/Fill/Duotone) variants (the owner's own
-    // bootstrap, "ApproximateEquals" — 12 variants, both fully cached the
-    // moment ANY one variant was placed) OR as a single FLAT component with
-    // no variant grouping at all (an existing al-alert Playground
-    // prototype's "success" state icon override, "CheckCircle" — one Vector
-    // child, no parent COMPONENT_SET). Both shapes are handled: when the
-    // matched node's real "icon identity" lives on a COMPONENT_SET parent
+    // SET STRUCTURE, CONFIRMED LIVE, REVISED (T29 mid-run correction — see
+    // below): a genuine Phosphor icon in THIS file is cached locally as a
+    // full COMPONENT_SET with "Format" (exactly Outline/Stroke) x "Weight"
+    // (a subset of Thin/Light/Regular/Bold/Fill/Duotone) variants — the
+    // owner's own bootstrap, "ApproximateEquals" (12 variants, both fully
+    // cached the moment ANY one variant was placed; its Format=Stroke,
+    // Weight=Regular variant's own key, 1a582ce849da9f63b09faaac23a1f6b694c
+    // bd75b, is the one component this session can say with certainty IS
+    // Phosphor — it's what the owner's own "Icon" wrapper nests). When the
+    // matched node's real "icon identity" lives on that COMPONENT_SET parent
     // (main.parent.type === 'COMPONENT_SET'), the actual per-variant
     // component name is just "Format=X, Weight=Y" — useless for matching —
     // so the SET's own name is what a target compares against, and
     // (task: "prefer the regular weight") a Weight=Regular variant is
-    // selected from that set (tie-broken toward Format=Stroke) rather than
-    // blindly reusing whichever specific variant a human happened to place.
-    // A flat component with no parent set is returned as-is — nothing to
-    // choose between.
+    // selected from that set (tie-broken toward Format=Stroke).
+    //
+    // WRONG-LIBRARY INCIDENT (T29, CONFIRMED LIVE — read before touching
+    // this again): an earlier version of this function ALSO accepted a
+    // remote instance with NO parent COMPONENT_SET at all ("a single FLAT
+    // component with no variant grouping") on name-match alone. The ONE
+    // flat remote match this file actually has for "CheckCircle" — an
+    // al-alert Playground prototype's icon override, key
+    // 8362189ea7dca44f1ef7aa55495ec46f1f0f91f6 — is NOT Phosphor. The owner
+    // identified it as belonging to a different, unrelated library ("CBDS UI
+    // kit demo") that happens to also ship a component literally named
+    // "CheckCircle". Name-matching a remote component is NOT sufficient to
+    // prove library membership — this file has at least two different
+    // libraries with overlapping icon names. The one PROVABLE, structural
+    // signal found this session: a genuinely Phosphor-cached icon here is
+    // ALWAYS the full Format x Weight COMPONENT_SET shape (confirmed for the
+    // only icon known-good, ApproximateEquals); the CBDS collision has NO
+    // parent set at all (main.parent reads back null for it — a fully flat,
+    // ungrouped remote reference). isVerifiedPhosphorIconSet() below
+    // enforces exactly this: COMPONENT_SET parent + the specific Format/
+    // Weight property shape, or REFUSE the match, no exceptions, even if the
+    // name matches perfectly. PHOSPHOR_KEY_BY_NAME's "check-circle" entry
+    // is REMOVED, not just deprioritized — it was this exact wrong key.
     const PHOSPHOR_KEY_BY_NAME = {
-      // "check-circle" is resolved by the live SCAN below (finds the
-      // existing al-alert Playground prototype's "CheckCircle" icon
-      // override in ~5ms) — this entry is a documented BACKUP only, never
-      // actually reached while that prototype still exists. Its key was
-      // read directly off the already-resolved .mainComponent (no REST
-      // call) during the T28 bootstrap-resolution session. Kept as a
-      // reference/fallback should that specific Playground prototype ever
-      // be edited or removed — see the function-level comment above for why
-      // it is tried LAST, not first (importComponentByKeyAsync hung for the
-      // full execution ceiling in this environment, confirmed live, even
-      // for this exact known-good key).
-      'check-circle': '8362189ea7dca44f1ef7aa55495ec46f1f0f91f6',
-      // 'paper-plane' — NOT YET resolvable. Confirmed live: no remote
-      // instance anywhere checked (the owner's "Icons" page bootstrap, the
-      // "Playground" page, and a full-document scan for
-      // check|plane|paper|circle|send|arrow) matches "paper-plane"/
-      // "PaperPlane"/"PaperPlaneTilt"/"PaperPlaneRight" or similar. Add a
-      // key here (or place one instance on a PHOSPHOR_PRIORITY_PAGE_NAMES
-      // page) once known.
+      // Deliberately empty. A name-keyed backup entry here is exactly how
+      // the CBDS "CheckCircle" key got treated as trustworthy in the first
+      // place (T28 bootstrap session read it straight off an already-
+      // resolved .mainComponent with no library-membership check at all).
+      // Any future entry MUST be a key for a component whose OWN parent is
+      // a COMPONENT_SET passing isVerifiedPhosphorIconSet() below — verified
+      // the same way a scan hit is, not exempted from it for being
+      // hand-typed.
     };
+    const PHOSPHOR_FORMAT_OPTIONS = ['Outline', 'Stroke'];
+    const PHOSPHOR_WEIGHT_OPTIONS = ['Thin', 'Light', 'Regular', 'Bold', 'Fill', 'Duotone'];
     const normalizeIconName = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    /** T29: the ONLY provable-in-this-environment library-membership check —
+     * see the WRONG-LIBRARY INCIDENT comment above for why name-matching
+     * alone (the pre-T29 behavior) is not trustworthy. A candidate is
+     * "verified Phosphor" only if its owning node is a COMPONENT_SET whose
+     * OWN Format/Weight variant-property shape matches the one confirmed
+     * Phosphor icon in this file (ApproximateEquals) — exact Format options,
+     * Weight options a non-empty subset of the six known weights. Anything
+     * else (no parent set, a parent set with a different property shape) is
+     * UNVERIFIED and must be refused, never used on name-match alone. */
+    function isVerifiedPhosphorIconSet(node) {
+      if (!node || node.type !== 'COMPONENT_SET') return false;
+      const defs = node.componentPropertyDefinitions || {};
+      const format = defs.Format;
+      const weight = defs.Weight;
+      if (!format || format.type !== 'VARIANT' || !Array.isArray(format.variantOptions)) return false;
+      if (!weight || weight.type !== 'VARIANT' || !Array.isArray(weight.variantOptions)) return false;
+      const formatSet = new Set(format.variantOptions);
+      if (formatSet.size !== PHOSPHOR_FORMAT_OPTIONS.length || !PHOSPHOR_FORMAT_OPTIONS.every((o) => formatSet.has(o))) return false;
+      if (!weight.variantOptions.length || !weight.variantOptions.every((o) => PHOSPHOR_WEIGHT_OPTIONS.includes(o))) return false;
+      return true;
+    }
     function pickPreferredPhosphorVariant(iconOwner) {
-      if (iconOwner.type !== 'COMPONENT_SET') return iconOwner; // flat component — nothing to choose
       const regular = iconOwner.children.filter((c) => /weight\s*=\s*regular/i.test(c.name));
       if (!regular.length) return iconOwner.children[0] || iconOwner;
       return regular.find((c) => /format\s*=\s*stroke/i.test(c.name)) || regular[0];
@@ -677,21 +724,49 @@ function buildPluginCode(ops, SC) {
     //     still covers it, just slower.
     const PHOSPHOR_PRIORITY_PAGE_NAMES = ['🛠 Icons', '🛝 Playground'];
     const PHOSPHOR_SCAN_NODE_BUDGET = 2000;
-    async function findInstanceByRemoteMainName(node, targetNorm, depth, budget) {
+    // T29: some catalog placeholder names are fulfilled by a MORE SPECIFIC
+    // Phosphor icon than the bare normalized name would match — the owner's
+    // own bootstrap for "paper-plane" placed Phosphor's "PaperPlaneTilt"
+    // glyph (a distinct, real Phosphor icon name — confirmed live, her own
+    // demo instance on the "🛠 Icons" page), not a bare "PaperPlane". This is
+    // a hand-curated EXACT alias, never a substring/fuzzy match — a looser
+    // match is exactly the shape of rule that let the wrong-library CBDS
+    // "CheckCircle" collision through in the first place (see the
+    // WRONG-LIBRARY INCIDENT comment above). Extend this map by hand only,
+    // per a confirmed live placement, the same discipline PHOSPHOR_KEY_BY_NAME
+    // already uses.
+    const PHOSPHOR_NAME_ALIASES = {
+      paperplane: ['paperplane', 'paperplanetilt'],
+    };
+    function candidateNormalizedNames(name) {
+      const norm = normalizeIconName(name);
+      return PHOSPHOR_NAME_ALIASES[norm] || [norm];
+    }
+    async function findInstanceByRemoteMainName(node, targetNorms, depth, budget) {
       if (depth > 8 || budget.visited > PHOSPHOR_SCAN_NODE_BUDGET) return null;
       budget.visited++;
       if (node.type === 'INSTANCE') {
         try {
           const main = await node.getMainComponentAsync(); // sync .mainComponent THROWS under dynamic-page access (SKILL.md trap 27)
-          if (main && main.remote) {
-            const iconOwner = main.parent && main.parent.type === 'COMPONENT_SET' ? main.parent : main;
-            if (normalizeIconName(iconOwner.name) === targetNorm) return pickPreferredPhosphorVariant(iconOwner);
+          // T29: a name match with NO parent COMPONENT_SET (main.parent ===
+          // null, or a parent that isn't a COMPONENT_SET at all) is NEVER
+          // accepted, full stop — see the WRONG-LIBRARY INCIDENT comment
+          // above PHOSPHOR_KEY_BY_NAME. Only a parent SET whose OWN Format/
+          // Weight shape verifies as Phosphor (isVerifiedPhosphorIconSet) is
+          // eligible; a same-named component belonging to a different
+          // library is reported as a rejected match, not silently used.
+          if (main && main.remote && main.parent && main.parent.type === 'COMPONENT_SET') {
+            const iconOwner = main.parent;
+            if (targetNorms.includes(normalizeIconName(iconOwner.name))) {
+              if (isVerifiedPhosphorIconSet(iconOwner)) return pickPreferredPhosphorVariant(iconOwner);
+              misses.add('phosphor-name-match-unverified-library:' + targetNorms.join('|') + ':' + (iconOwner.key || iconOwner.id));
+            }
           }
         } catch (e) { /* keep walking — one bad instance must not abort the whole scan */ }
       }
       if ('children' in node) {
         for (const child of node.children) {
-          const hit = await findInstanceByRemoteMainName(child, targetNorm, depth + 1, budget);
+          const hit = await findInstanceByRemoteMainName(child, targetNorms, depth + 1, budget);
           if (hit) return hit;
           if (budget.visited > PHOSPHOR_SCAN_NODE_BUDGET) return null;
         }
@@ -711,7 +786,7 @@ function buildPluginCode(ops, SC) {
       // is a documented last resort ONLY, for a name the scan cannot reach
       // at all (not on either priority page) — expect it to be slow or to
       // hang, and budget accordingly if it's ever actually needed.
-      const targetNorm = normalizeIconName(name);
+      const targetNorms = candidateNormalizedNames(name);
       // Scanning beyond the two known-relevant pages is NOT viable within
       // the Desktop Bridge's hard ~30s execution ceiling — page.loadAsync()
       // on each of the remaining ~56 pages (unconditional, BEFORE the
@@ -726,7 +801,7 @@ function buildPluginCode(ops, SC) {
       const budget = { visited: 0 };
       for (const page of priorityPages) {
         await page.loadAsync();
-        const hit = await findInstanceByRemoteMainName(page, targetNorm, 0, budget);
+        const hit = await findInstanceByRemoteMainName(page, targetNorms, 0, budget);
         if (hit) return hit;
         if (budget.visited > PHOSPHOR_SCAN_NODE_BUDGET) {
           misses.add('phosphor-scan-budget-exhausted:' + name);
@@ -735,8 +810,56 @@ function buildPluginCode(ops, SC) {
       }
       const key = PHOSPHOR_KEY_BY_NAME[name];
       if (key) {
-        try { return await figma.importComponentByKeyAsync(key); }
-        catch (e) { misses.add('phosphor-key-import-failed:' + name); }
+        // T29: a hand-typed key gets NO exemption from library verification
+        // — this exact path (an unverified key trusted because it was
+        // "already known-good") is how the CBDS CheckCircle key was treated
+        // as Phosphor in the first place. Verify the imported component's
+        // OWN parent set the same way a scan hit is checked.
+        try {
+          const imported = await figma.importComponentByKeyAsync(key);
+          const iconOwner = imported && imported.parent && imported.parent.type === 'COMPONENT_SET' ? imported.parent : null;
+          if (iconOwner && isVerifiedPhosphorIconSet(iconOwner)) return pickPreferredPhosphorVariant(iconOwner);
+          misses.add('phosphor-key-unverified-library:' + name + ':' + key);
+        } catch (e) { misses.add('phosphor-key-import-failed:' + name); }
+      }
+      return null;
+    }
+
+    // T29: the owner's DS "Icon" wrapper component — the thing every slot
+    // icon must actually be an INSTANCE OF, never the raw Phosphor library
+    // component found above. CONFIRMED LIVE (this generation session): it is
+    // a single, plain COMPONENT (not a COMPONENT_SET — no variants, no
+    // componentPropertyDefinitions of its own) named exactly "Icon", sitting
+    // directly on the "🛠 Icons" page, with ONE child: an INSTANCE of a
+    // Phosphor glyph (whatever the owner's bootstrap last placed — today
+    // "ArrowCircleUpRight" — this is scratch/bootstrap content, not
+    // meaningful, since every generated instance immediately swaps it). The
+    // component the owner described as "the set, 3504:396" is actually that
+    // NESTED Phosphor glyph's own cached Format×Weight variant set (12
+    // variants, "ApproximateEquals" today) — a different node one level
+    // deeper, not a set the wrapper itself belongs to; the wrapper (3509:4324)
+    // sits alone at PAGE level with variantProperties: null. Handled
+    // generically below in case the wrapper ever DOES become a proper
+    // variant set later (an owner edit outside this script's control): a
+    // COMPONENT_SET hit resolves to its own defaultVariant.
+    //
+    // Resolved BY NAME, same scan scope as the Phosphor glyph lookup
+    // (PHOSPHOR_PRIORITY_PAGE_NAMES) — never a hard-coded node id, since a
+    // node id is not stable across the owner's own edits to her file. Uses
+    // Figma's native (synchronous-predicate) findOne rather than the
+    // manual budgeted walk findPhosphorComponentByName needs — no async
+    // per-node check is required here (no "is this instance's main REMOTE"
+    // test), so the plugin API's own recursive search is cheaper and
+    // sufficient.
+    const ICON_WRAPPER_COMPONENT_NAME = 'Icon';
+    async function findIconWrapperComponent() {
+      for (const page of figma.root.children) {
+        if (!PHOSPHOR_PRIORITY_PAGE_NAMES.includes(page.name)) continue;
+        await page.loadAsync();
+        const hit = page.findOne((n) => (n.type === 'COMPONENT' || n.type === 'COMPONENT_SET') && n.name === ICON_WRAPPER_COMPONENT_NAME);
+        if (!hit) continue;
+        if (hit.type === 'COMPONENT_SET') return hit.defaultVariant || hit.children[0] || null;
+        return hit;
       }
       return null;
     }
@@ -761,9 +884,27 @@ function buildPluginCode(ops, SC) {
     // recolors every DESCENDANT but leaves the instance's own top-level
     // fill/stroke untouched — verified live against an isolated,
     // successfully-rendering checkmark-in-circle export.
+    //
+    // T29: pitfall 4 above is true at EVERY instance boundary, not just the
+    // outermost one — the DS "Icon" wrapper instance's own root fill is
+    // skipped (unchanged, this loop never touches root itself), but its
+    // nested Phosphor glyph instance is now ONE level further down the tree,
+    // and that instance's OWN top-level fill must be skipped too for exactly
+    // the same negative-space reason. A child that is itself an INSTANCE is
+    // therefore recursed into via recolorIconChildren again (skip-this-root,
+    // recolor-below), never recolorIconTree (recolor-everything-including-
+    // this-root) — CONFIRMED against the wrapper's own structure this
+    // session: wrapper root fills is [] (empty, harmless either way today),
+    // but the nested glyph instance is exactly the boundary pitfall 4 was
+    // written about, and a future glyph swapped in (e.g. a filled
+    // checkmark-in-circle) would corrupt at THIS boundary if it were
+    // recolored like an ordinary descendant.
     function recolorIconChildren(root, paint) {
       if (!paint || !('children' in root)) return;
-      for (const child of root.children) recolorIconTree(child, paint);
+      for (const child of root.children) {
+        if (child.type === 'INSTANCE') recolorIconChildren(child, paint);
+        else recolorIconTree(child, paint);
+      }
     }
     function recolorIconTree(node, paint) {
       if (!paint) return;
@@ -841,12 +982,25 @@ function buildPluginCode(ops, SC) {
     // first timed out) — cheap enough in practice to stay under the ~30s
     // ceiling, and correct.
     const iconSwapProps = OPS.componentProperties.filter((p) => p.type === 'INSTANCE_SWAP');
+    // iconComponentsByLayer holds the resolved PHOSPHOR GLYPH per layer (used
+    // to gate whether a side gets built at all, and as the swapComponent
+    // target below) — unchanged in shape from before T29.
     const iconComponentsByLayer = {};
     for (const p of iconSwapProps) {
       const comp = await findPhosphorComponentByName(p.default);
       if (comp) iconComponentsByLayer[p.layerName] = comp;
       else misses.add('phosphor-component-not-found:' + p.default);
     }
+    // T29: the DS "Icon" wrapper master — resolved ONCE, shared by every
+    // side/row, same "must run after the page switch" ordering constraint as
+    // the Phosphor lookup above (findIconWrapperComponent also touches
+    // page.loadAsync() on the two priority pages). A miss here means NO icon
+    // instances are built for ANY side this run — never fall back to
+    // instantiating the raw Phosphor component directly (that is exactly the
+    // bug this task fixes), so an unresolved wrapper degrades the same
+    // clean-skip way an unresolved glyph name already does.
+    const ICON_WRAPPER_MASTER = iconSwapProps.length ? await findIconWrapperComponent() : null;
+    if (iconSwapProps.length && !ICON_WRAPPER_MASTER) misses.add('icon-wrapper-component-not-found:' + ICON_WRAPPER_COMPONENT_NAME);
 
     // T18/T21: the library's default theme mode is DARK (main.css bakes dark
     // into root — SKILL.md), and the content colors this generator binds
@@ -950,14 +1104,19 @@ function buildPluginCode(ops, SC) {
       // Icon Before/After itself is ALWAYS a component property either way
       // (component properties can only be added to the COMPONENT_SET, not a
       // lone variant — SKILL.md §3), wired below after combineAsVariants.
-      const beforeIconComp = iconComponentsByLayer['Icon Before'];
-      if (beforeIconComp) {
+      const beforeGlyphComp = iconComponentsByLayer['Icon Before'];
+      if (beforeGlyphComp && ICON_WRAPPER_MASTER) {
         const showBefore = slotAxisBefore ? axisValues[slotAxisBefore.name] === 'True' : false;
         // T28: only createInstance() when this row actually shows it (axis
         // mode) — property mode still needs one hidden instance per variant
         // for the shared boolean's visible reference to toggle.
         if (showBefore || !slotAxisBefore) {
-          const inst = beforeIconComp.createInstance();
+          // T29: instantiate the DS "Icon" WRAPPER, never the raw Phosphor
+          // glyph component directly — the wrapper has no INSTANCE_SWAP
+          // property of its own (confirmed live: it is a lone COMPONENT, not
+          // a COMPONENT_SET), so the glyph is swapped onto its nested
+          // instance below instead.
+          const inst = ICON_WRAPPER_MASTER.createInstance();
           inst.name = 'Icon Before';
           comp.appendChild(inst);
           inst.visible = showBefore;
@@ -967,6 +1126,34 @@ function buildPluginCode(ops, SC) {
           try { inst.layoutSizingHorizontal = 'FIXED'; inst.layoutSizingVertical = 'FIXED'; } catch (e) { /* not an auto-layout child */ }
           bindNum(inst, 'width', ICON_SIZE_FIGMA_VAR);
           bindNum(inst, 'height', ICON_SIZE_FIGMA_VAR);
+          // T29: swap the resolved Phosphor glyph INTO the wrapper's own
+          // nested instance (never onto inst itself, which stays the
+          // wrapper). CONFIRMED LIVE, this session: a nested instance-
+          // within-an-instance's OWN width/height is NOT independently
+          // resizable through this plugin API — setBoundVariable, resize(),
+          // AND resizeWithoutConstraints() all return without throwing but
+          // silently leave the geometry unchanged (reproduced even before
+          // any swap, on the master's own untouched default child) — a
+          // platform restriction on nested-instance-child geometry writes,
+          // not a bug in this script. The attempt is kept (harmless, and
+          // correct if a future Figma API version lifts the restriction);
+          // ICON_SIZE_NESTED_MISMATCH below reports the honest outcome
+          // instead of assuming success. The WRAPPER's own size (bound
+          // above) is unaffected and correct either way.
+          const nested = inst.children.find((c) => c.type === 'INSTANCE');
+          if (nested) {
+            try {
+              nested.swapComponent(beforeGlyphComp);
+              try { nested.layoutSizingHorizontal = 'FIXED'; nested.layoutSizingVertical = 'FIXED'; } catch (e) { /* not an auto-layout child */ }
+              bindNum(nested, 'width', ICON_SIZE_FIGMA_VAR);
+              bindNum(nested, 'height', ICON_SIZE_FIGMA_VAR);
+              const sizeVar = V[ICON_SIZE_FIGMA_VAR];
+              const boundOk = sizeVar && nested.boundVariables && nested.boundVariables.width && nested.boundVariables.width.id === sizeVar.id;
+              if (!boundOk) misses.add('icon-wrapper-nested-size-not-bindable:Icon Before');
+            } catch (e) { misses.add('icon-wrapper-swap-failed:Icon Before'); }
+          } else {
+            misses.add('icon-wrapper-has-no-nested-instance:Icon Before');
+          }
           recolorIconChildren(inst, contentPaint);
         }
       }
@@ -986,17 +1173,36 @@ function buildPluginCode(ops, SC) {
       if (contentPaint) t.fills = [contentPaint];
 
       // Icon After (trailing) — appended LAST, same wiring as Icon Before.
-      const afterIconComp = iconComponentsByLayer['Icon After'];
-      if (afterIconComp) {
+      const afterGlyphComp = iconComponentsByLayer['Icon After'];
+      if (afterGlyphComp && ICON_WRAPPER_MASTER) {
         const showAfter = slotAxisAfter ? axisValues[slotAxisAfter.name] === 'True' : false;
         if (showAfter || !slotAxisAfter) {
-          const inst = afterIconComp.createInstance();
+          // T29: same wrapper-instance + nested-swap convention as Icon
+          // Before above.
+          const inst = ICON_WRAPPER_MASTER.createInstance();
           inst.name = 'Icon After';
           comp.appendChild(inst);
           inst.visible = showAfter;
           try { inst.layoutSizingHorizontal = 'FIXED'; inst.layoutSizingVertical = 'FIXED'; } catch (e) { /* not an auto-layout child */ }
           bindNum(inst, 'width', ICON_SIZE_FIGMA_VAR);
           bindNum(inst, 'height', ICON_SIZE_FIGMA_VAR);
+          // T29: see the matching comment on Icon Before above — nested-
+          // instance-within-an-instance resize is CONFIRMED not writable
+          // through this plugin API; attempted anyway, reported honestly.
+          const nested = inst.children.find((c) => c.type === 'INSTANCE');
+          if (nested) {
+            try {
+              nested.swapComponent(afterGlyphComp);
+              try { nested.layoutSizingHorizontal = 'FIXED'; nested.layoutSizingVertical = 'FIXED'; } catch (e) { /* not an auto-layout child */ }
+              bindNum(nested, 'width', ICON_SIZE_FIGMA_VAR);
+              bindNum(nested, 'height', ICON_SIZE_FIGMA_VAR);
+              const sizeVar = V[ICON_SIZE_FIGMA_VAR];
+              const boundOk = sizeVar && nested.boundVariables && nested.boundVariables.width && nested.boundVariables.width.id === sizeVar.id;
+              if (!boundOk) misses.add('icon-wrapper-nested-size-not-bindable:Icon After');
+            } catch (e) { misses.add('icon-wrapper-swap-failed:Icon After'); }
+          } else {
+            misses.add('icon-wrapper-has-no-nested-instance:Icon After');
+          }
           recolorIconChildren(inst, contentPaint);
         }
       }
@@ -1025,23 +1231,42 @@ function buildPluginCode(ops, SC) {
       }
 
       if (state === 'Focus') {
-        // Library convention: focus renders as a 2px outside stroke, not a CSS
-        // outline (SKILL.md §3 + build-page.mjs's focusRing handling).
+        // T30 (owner correction, mid-session — the T12-era abs-positioned
+        // rectangle below was "the wrong way to do a focus"): Focus renders
+        // as an OUTSIDE stroke on the component FRAME ITSELF — CONFIRMED
+        // LIVE against the real Button set (node 4271:9562): Primary+Focus
+        // AND Tertiary+Focus both carry the IDENTICAL single frame-level
+        // stroke (strokeWeight 2, strokeAlign OUTSIDE), UNCONDITIONALLY
+        // REPLACING whatever border-color stroke that variant's own row
+        // applied above (Tertiary carries its own border — the real set
+        // shows no dual/concentric ring, no combining: Focus simply
+        // overwrites the frame's one strokes array. Setting comp.strokes
+        // here after the border-color block above is exactly that override,
+        // no special-casing per variant needed. Bound to the T30-seeded
+        // theme/color/focus-ring variable (contract
+        // conditionalBindings.state.focus['outline-color']) — the real set's
+        // own frame stroke happens to bind a differently-scoped "Tier 2 |
+        // Brand" border-primary-default variable instead of a dedicated
+        // focus-ring token, but this generator has always resolved
+        // theme/color/focus-ring here (see the contract), and T30 is what
+        // makes that name finally resolvable in Figma.
+        //
+        // This replaces the T12-era absolutely-positioned "Focus Outline"
+        // RECTANGLE entirely, along with its width+8/height+8 ring-geometry
+        // tracking math (T22) — a frame stroke follows the frame's own true
+        // bounds automatically (slots-on rows, full-width rows, anything),
+        // so there is nothing left to track; that code path is now dead and
+        // has been deleted, not just superseded.
         const focusColor = overrideFor('focus', '0', 'outline-color');
         const focusWidth = overrideFor('focus', '0', 'outline-width');
         if (focusColor) {
-          const ring = figma.createRectangle();
-          ring.name = 'Focus Outline';
-          ring.fills = [];
           const p = await boundSolid(focusColor);
-          if (p) ring.strokes = [p];
-          ring.strokeWeight = 2;
-          if (focusWidth) bindNum(ring, 'strokeWeight', focusWidth);
-          ring.cornerRadius = 6;
-          comp.appendChild(ring);
-          if (comp.layoutMode !== 'NONE') ring.layoutPositioning = 'ABSOLUTE';
-          ring.resize(comp.width + 8, comp.height + 8);
-          ring.x = -4; ring.y = -4;
+          if (p) {
+            comp.strokes = [p];
+            comp.strokeAlign = 'OUTSIDE';
+            comp.strokeWeight = 2;
+            if (focusWidth) bindNum(comp, 'strokeWeight', focusWidth);
+          }
         }
       }
       return comp;
@@ -1215,13 +1440,37 @@ function buildPluginCode(ops, SC) {
         } else if (prop.type === 'INSTANCE_SWAP') {
           // T19: wire AFTER combineAsVariants, same as TEXT/BOOLEAN above —
           // addComponentProperty only accepts the COMPONENT_SET (SKILL.md
-          // §3). The default component id is resolved live above
+          // §3). T29: the property's own mainComponent default/target is
+          // now the DS "Icon" WRAPPER (ICON_WRAPPER_MASTER) — every "Icon
+          // Before"/"Icon After" layer this run built IS an instance of that
+          // wrapper (see buildVariant) — never the raw Phosphor glyph
+          // component that used to be wired here directly. The glyph
           // (iconComponentsByLayer, keyed by name, never stored as an id in
-          // OPS) — a miss there means no property is added at all, same
+          // OPS) still gates whether this side was built at all this run —
+          // a glyph miss means no icon instance exists for that layer name,
+          // so there is nothing for this property to reference either; a
+          // wrapper miss means NOTHING is wired for ANY side, same
           // honest-degrade convention bindNum/boundSolid already use.
-          const iconComp = iconComponentsByLayer[prop.layerName];
-          if (!iconComp) { misses.add('component-property:' + prop.name + ' (icon "' + prop.default + '" not found)'); continue; }
-          const propRef = set.addComponentProperty(prop.name, 'INSTANCE_SWAP', iconComp.id);
+          const glyphComp = iconComponentsByLayer[prop.layerName];
+          if (!glyphComp) { misses.add('component-property:' + prop.name + ' (icon "' + prop.default + '" not found)'); continue; }
+          if (!ICON_WRAPPER_MASTER) { misses.add('component-property:' + prop.name + ' (Icon wrapper component not found)'); continue; }
+          // Mirrors the REAL Button set's own INSTANCE_SWAP shape (node
+          // 4271:9562, read live this session): preferredValues is a
+          // one-entry [{ type: 'COMPONENT', key }] array naming the
+          // component a designer SHOULD swap to (there, a Phosphor library
+          // key; here, the wrapper's own key, since the wrapper — not a raw
+          // glyph — is the correct thing to swap to at this position).
+          // addComponentProperty's 4th (preferredValues) argument is
+          // undocumented in this environment's plugin API surface — attempt
+          // it, fall back to the 3-arg form and report the gap rather than
+          // failing the whole property.
+          let propRef;
+          try {
+            propRef = set.addComponentProperty(prop.name, 'INSTANCE_SWAP', ICON_WRAPPER_MASTER.id, [{ type: 'COMPONENT', key: ICON_WRAPPER_MASTER.key }]);
+          } catch (e) {
+            propRef = set.addComponentProperty(prop.name, 'INSTANCE_SWAP', ICON_WRAPPER_MASTER.id);
+            misses.add('instance-swap-preferred-values-unsupported:' + prop.name);
+          }
           for (const variant of set.children) {
             const layer = variant.findOne((n) => n.type === 'INSTANCE' && n.name === prop.layerName);
             if (layer) layer.componentPropertyReferences = { ...(layer.componentPropertyReferences || {}), mainComponent: propRef };
@@ -1256,6 +1505,7 @@ function buildPluginCode(ops, SC) {
       componentSetName: set.name,
       variants: set.children.length,
       componentProperties: addedProps,
+      iconWrapperComponent: ICON_WRAPPER_MASTER ? { id: ICON_WRAPPER_MASTER.id, key: ICON_WRAPPER_MASTER.key, name: ICON_WRAPPER_MASTER.name } : null,
       missingVars: [...misses],
       textStylesLinked: linked,
       textNodesTotal: textNodes.length,

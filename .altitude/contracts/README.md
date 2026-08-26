@@ -252,9 +252,10 @@ un-curated one OR NOTHING AT ALL for one curated `omit`/`figmaOmit: true`
 (T27, see "Figma-expression opt-out" below), the Text/Icon Before/Icon After
 component properties the contract's props/slots warrant (the icon ones only
 when a slot names a `figmaPlaceholder`, resolved against the Phosphor Figma
-library as of T28 — see "Slot placeholder instances (T19)" and "Phosphor
-icon source (T28)" below), and token-bound fills/strokes/spacing from the
-contract's anatomy — nothing
+library as of T28 and instantiated inside the owner's DS "Icon" wrapper
+component as of T29 — see "Slot placeholder instances (T19)", "Phosphor icon
+source (T28)", and "Slot icons instantiate the DS Icon wrapper (T29)" below),
+and token-bound fills/strokes/spacing from the contract's anatomy — nothing
 fabricated beyond what the contract states.
 
 ```bash
@@ -300,16 +301,18 @@ renders as Default until a component's `.scss` actually defines one. Anatomy
 also carries no literal text content (`contract.schema.json`'s anatomyNode
 has no `text` field), so the Text property's default is a placeholder.
 
-**Slot placeholder instances (T19; naming convention updated T25).** A
-`before`/`after` slot whose contract entry carries `slots[].figmaPlaceholder`
-gets a real icon INSTANCE built in the right leading/trailing position, wired
-to Slot Before/After (BOOLEAN `visible`) and Icon Before/After (INSTANCE_SWAP
-`mainComponent`), and recolored **recursively** to that row's own resolved
-content-color token (the same paint the label text uses — confirmed against
-the real set: icon fill and label fill are always the identical bound
-variable, every Variant/State row), per the Icon Recoloring reference. A slot
-with no `figmaPlaceholder` still degrades to the boolean-only behavior from
-T12/T18 (no INSTANCE_SWAP property, no icon instance) — a documented gap, not
+**Slot placeholder instances (T19; naming convention updated T25; instance
+vehicle changed T29 — see "Slot icons instantiate the DS Icon wrapper (T29)"
+below for the current mechanism).** A `before`/`after` slot whose contract
+entry carries `slots[].figmaPlaceholder` gets a real icon INSTANCE built in
+the right leading/trailing position, wired to Slot Before/After (BOOLEAN
+`visible`) and Icon Before/After (INSTANCE_SWAP `mainComponent`), and
+recolored **recursively** to that row's own resolved content-color token (the
+same paint the label text uses — confirmed against the real set: icon fill
+and label fill are always the identical bound variable, every Variant/State
+row), per the Icon Recoloring reference. A slot with no `figmaPlaceholder`
+still degrades to the boolean-only behavior from T12/T18 (no INSTANCE_SWAP
+property, no icon instance) — a documented gap, not
 a guess.
 
 **`figmaPlaceholder` names a Phosphor catalog entry, not a Figma-side name
@@ -567,6 +570,168 @@ Phosphor's flat vector fills** — the icon's Vector fill and the row's label
 text fill read back as the identical bound Figma variable across every
 tested variant (Primary/Danger/Bare), exactly matching the T19 convention's
 original guarantee for the old icon source.
+
+## Slot icons instantiate the DS Icon wrapper (T29)
+
+T28 instantiated the resolved Phosphor glyph directly as the slot icon's TOP-
+LEVEL instance. The owner corrected this: her file has a hand-built DS "Icon"
+wrapper component — a lone `COMPONENT` named exactly `"Icon"` (id `3509:4324`,
+sitting on the "🛠 Icons" page, **not itself a `COMPONENT_SET`** — it has no
+`componentPropertyDefinitions` of its own, `variantProperties: null`) whose
+one child is an INSTANCE of a Phosphor glyph. A slot icon must be an INSTANCE
+OF THAT WRAPPER with the Phosphor glyph swapped into its nested child — never
+a raw top-level Phosphor library instance, mirroring code using `<al-icon>`
+rather than an inline SVG.
+
+**Mechanism (live-confirmed, not the property-based swap originally
+assumed).** Because the wrapper is a plain `COMPONENT`, not a `COMPONENT_SET`,
+it exposes **no INSTANCE_SWAP property of its own** for the inner glyph
+(`addComponentProperty` is a `COMPONENT_SET`-only API — SKILL.md §3). The
+glyph is therefore swapped directly on the wrapper's nested child instance —
+`nested.swapComponent(resolvedPhosphorComponent)` — never through a component
+property. `generate-figma.mjs`'s `findIconWrapperComponent()` resolves the
+wrapper BY NAME (never a node id) the same way `findPhosphorComponentByName`
+resolves a glyph, scanning `PHOSPHOR_PRIORITY_PAGE_NAMES`; a `COMPONENT_SET`
+hit (if the wrapper is ever converted to one) resolves to its own
+`defaultVariant`. The Icon Before/After INSTANCE_SWAP property wired on the
+generated BUTTON set targets the WRAPPER's own id as its `mainComponent`
+default (mirroring the real Button set's own `preferredValues` shape — a
+one-entry `[{ type: 'COMPONENT', key }]` array — though this environment's
+`addComponentProperty` silently does not accept a 4th `preferredValues`
+argument; the fallback 3-arg call is used and the gap is reported as
+`instance-swap-preferred-values-unsupported`).
+
+**WRONG-LIBRARY INCIDENT — name-matching a remote component is not proof of
+library membership.** The first working version of this fix resolved
+"check-circle" to a REMOTE component literally named "CheckCircle" found on
+the "🛝 Playground" page (key `8362189ea7dca44f1ef7aa55495ec46f1f0f91f6`) and
+shipped it. The owner identified it as belonging to a **different, unrelated
+library** ("CBDS UI kit demo") that happens to also ship a component named
+"CheckCircle" — this file has at least two libraries with overlapping icon
+names, and matching by name alone is not sufficient proof of provenance. The
+one PROVABLE, structural signal found live: every genuinely Phosphor-cached
+icon in this file (confirmed for "ApproximateEquals", the icon the owner's
+Icon wrapper happened to nest at bootstrap time, and later for "CheckCircle"/
+"PaperPlaneTilt" once she placed real Phosphor instances) is cached as a full
+`COMPONENT_SET` with `Format` (exactly `Outline`/`Stroke`) × `Weight` (a
+subset of `Thin`/`Light`/`Regular`/`Bold`/`Fill`/`Duotone`) variants; the CBDS
+collision has **no parent set at all** (`main.parent` reads back `null` — a
+flat, ungrouped remote reference). `isVerifiedPhosphorIconSet()` enforces
+exactly this shape and REFUSES a name match with no verified parent set, no
+exceptions — including through the `PHOSPHOR_KEY_BY_NAME` hand-typed-key
+fallback (a hand-typed key gets no exemption; verified the same way a scan
+hit is). `PHOSPHOR_KEY_BY_NAME`'s "check-circle" entry (the wrong CBDS key)
+is **removed**, not deprioritized. **What library metadata the plugin API
+actually exposed for a remote `mainComponent`**, for future reference: `.key`
+(always present, globally unique per component, but shared library
+membership is NOT derivable from the key string itself — no common prefix or
+pattern), `.remote` (boolean only — which library is not exposed), `.parent`
+(the most useful signal in practice: `null` for a flat/ungrouped remote
+reference vs. a real local `COMPONENT_SET` mirror for one cached alongside
+its full variant family), `.description` / `.documentationLinks` (present
+but empty or unhelpful for both the trusted and untrusted candidates in this
+file — not a reliable signal here). No plugin API surface in this environment
+names the actual library a remote component came from.
+
+**Name aliasing, hand-curated, exact only.** The owner's own placed
+"paper-plane" demo instance is named Phosphor's **"PaperPlaneTilt"**, not a
+bare "PaperPlane" — a real, more specific Phosphor icon name, confirmed via
+her own bootstrap instance on the "🛠 Icons" page. `PHOSPHOR_NAME_ALIASES`
+maps the catalog-normalized name to the set of Figma-side names accepted —
+`paperplane: ['paperplane', 'paperplanetilt']` today — an EXACT alias table,
+never a substring/fuzzy match (a looser rule is exactly the shape that let
+the CBDS collision through).
+
+**Recolor must skip the top-level fill at EVERY instance boundary, not just
+the outermost one.** `recolorIconChildren` recurses one level further now: a
+child that is itself an `INSTANCE` (the wrapper's nested Phosphor glyph) is
+recursed into via `recolorIconChildren` again — skip-this-root, recolor-below
+— rather than `recolorIconTree` (recolor-everything-including-this-root).
+Pitfall 4 above (recoloring a Phosphor instance's own root fill destroys
+negative-space contrast) is true at the nested boundary exactly as it was at
+the outer one.
+
+**Sizing — a CONFIRMED plugin API restriction, not a bug.** The wrapper's own
+width/height binds to `ICON_SIZE_FIGMA_VAR` (`theme/icon/md`, 20px) exactly
+as before. The wrapper does **not** cascade a resize to its nested child (both
+are `FIXED`-sizing, not `HUG`/`FILL`), so the nested glyph instance's own
+width/height needs the same bind — but a nested instance-within-an-instance's
+geometry is **not independently writable** through this plugin API:
+`setBoundVariable('width'/'height', …)`, `resize()`, and
+`resizeWithoutConstraints()` all return without throwing yet leave the node's
+actual width/height unchanged (reproduced even on the wrapper master's own
+untouched default child, before any swap — not a swap side-effect). The
+attempt is kept (harmless; correct if a future Figma API version lifts the
+restriction) and the honest outcome is reported as
+`icon-wrapper-nested-size-not-bindable:Icon Before`/`After` rather than
+assumed to have succeeded. Net visual effect: the glyph renders at its
+wrapper master's own built-in 16px inside a 20px wrapper box, anchored
+top-left — a minor size mismatch, not a clipping/overflow/wrong-glyph defect.
+
+**Verified live, T29 pilot regeneration:** both "check-circle" and
+"paper-plane" now resolve to real, provenance-verified Phosphor glyphs
+("CheckCircle" key `bd79fe7bbc033e7bf60ea3f632190b5566f3b6a1`, "PaperPlaneTilt"
+key `b71d29dce505ba26c45d9d7221acbe9c900739bf` — both placed by the owner
+herself, both verified `COMPONENT_SET` Format×Weight shape) — 100 variants,
+Icon Before AND Icon After both present. Every one of the 100 slot icon
+instances' top-level `mainComponent` is `3509:4324` (the Icon wrapper) —
+zero raw-Phosphor-library or CBDS top-level instances, confirmed by walking
+every built "Icon Before"/"Icon After" layer and reading `getMainComponentAsync()`.
+
+## Focus ring color variable seeded (T30)
+
+The generated pilot's Focus-state ring geometry (position, stroke weight,
+layer order — see the Focus ring code in `generate-figma.mjs`) was correct
+from T12 onward, but rendered invisible: `theme/color/focus-ring` did not
+exist as a Figma variable, so `boundSolid()` resolved no paint and the ring's
+`strokes` array stayed empty (`[]`) — confirmed live by inspecting a
+Focus-row ring node directly (`visible: true`, correct geometry, `strokes: []`
+— the ONLY defect was the missing variable, not geometry/order).
+
+**Focus renders as a stroke on the component FRAME itself, not an
+absolutely-positioned shape (owner correction, mid-session, folded into
+T30's acceptance).** The T12-era implementation built a separate
+`Focus Outline` `RECTANGLE` child, absolutely positioned 4px outside the
+component's own bounds — the owner: "that's the wrong way to do a focus...
+it should be a stroke on the main component instead of being an abs
+positioned shape." CONFIRMED against the real Button set (node
+`4271:9562`): Primary+Focus AND Tertiary+Focus both carry the IDENTICAL
+single frame-level stroke (`strokeWeight: 2`, `strokeAlign: 'OUTSIDE'`) — no
+dual/concentric ring, no combining with a variant's own border.
+`generate-figma.mjs` now sets `comp.strokes`/`strokeAlign`/`strokeWeight`
+directly on the variant's own component frame for `state === 'Focus'`,
+which — since a Figma frame has exactly one `strokes` array — UNCONDITIONALLY
+REPLACES whatever border-color stroke that variant's own row applied earlier
+in the same function (Tertiary carries its own 1px INSIDE gray border at
+Default; Focus overwrites it with the 2px OUTSIDE focus color, matching the
+real set exactly). Bound to the T30-seeded `theme/color/focus-ring` variable
+below, not the real set's own (differently-scoped, "Tier 2 | Brand")
+`border/primary-default` — the contract's own token binding has always named
+`theme/color/focus-ring` here; T30 is what makes that name finally
+resolvable. The T12-era `Focus Outline` rectangle, and the T22 ring-geometry
+width/height tracking math it required (a static shape has to be measured and
+resized to match the variant's true bounds after icons/full-width are baked
+in), are **deleted entirely, not superseded** — a frame stroke follows the
+frame's own true bounds automatically, on every row (slots-on, full-width,
+anything), so there is nothing left to track.
+
+The code token (`libs/al-web-components/styles/tokens-dtcg/tier-3/theme/
+{light,dark}/colors.json`, `focus-ring`) is itself an ALIAS —
+`"$value": "{theme.color.border.primary-default}"`, identical in both modes —
+not a literal color. The Figma-side seed mirrors this exactly rather than
+resolving to a literal RGB: `theme/color/focus-ring` was created in the
+"Tier 2 | Theme" collection (the same collection `THEME_MODE_COLLECTION_NAME`
+in `generate-figma.mjs` already targets) as a `COLOR` variable whose Dark AND
+Light mode values are both a `VARIABLE_ALIAS` to the existing
+`theme/color/border/primary-default` variable — so it stays correct
+automatically if that token's own resolution ever changes, exactly like the
+code alias does. Idempotent by construction (verify-before-create on the
+variable, verify-before-set on each mode's value — a second run is a
+no-op, confirmed live) and additive-only: no existing variable or collection
+was modified, nothing was deleted. Regenerating the pilot after the seed
+picks up the new variable automatically (`boundSolid()` looks it up by name)
+— the `theme/color/focus-ring` entry disappeared from `missingVars`, and a
+Focus-row ring's `strokes` now reads back a real bound `SOLID` paint.
 
 ## Anatomy availability is best-effort
 
