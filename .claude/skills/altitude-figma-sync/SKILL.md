@@ -163,6 +163,26 @@ ever be converted to match. Generalized default for any OTHER component: an
 enum prop is always an axis (unchanged); a slot or layout boolean is a
 component property UNLESS curated `figmaAxis`/`axis: true`.
 
+**Figma-expression opt-out (T27).** The inverse curation: `bindings.figma.omit:
+true` (props) / `figmaOmit: true` (slots) means the generator builds NOTHING
+for it at all — no axis, no property, no instance. al-button's `fullWidth` is
+curated this way in both projects' contracts (owner: "I don't need that in
+figma"), dropping the Contract Pilot regeneration to 100 variants (no `Is
+Full Width` axis). `contract-diff.mjs` treats an omitted-and-absent prop/slot
+as a named `intentional-omission` skip, never a disagreement — but canvas
+still exposing it is flagged `present-despite-omission`.
+
+**Icon source for GENERATED sets is the Phosphor library, not "🛠 Icons"
+(T28).** `generate-figma.mjs`'s slot-icon instances are resolved from the
+Phosphor Figma library — `findPhosphorComponentByName`, never a lookup
+against "🛠 Icons" (that convention above is for the HAND-BUILT set only).
+The Figma plugin API has no team-library component enumeration, so
+resolution is either a hand-maintained key registry or a live scan for an
+existing REMOTE instance with a matching name; a miss degrades to "no icon
+instance," logged, never a silent fallback to the old page. See
+`.altitude/contracts/README.md` § Phosphor icon source for the full
+mechanism and its confirmed environment limits.
+
 **Prefer repairing an existing set over rebuilding it** — rebuilding discards the
 property surface, the instances and the documentation scaffold.
 

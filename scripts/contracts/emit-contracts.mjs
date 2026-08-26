@@ -110,8 +110,9 @@ Pick one:
                       contract whose OTHER fields already drift from derivation, rather than clobber it
   --refresh           (T25) re-derive every tracked contract and OVERWRITE its derived fields in
                       place with the fresh derivation — status/version, slots[].figmaPlaceholder,
-                      slots[].figmaAxis, and axis-curated props[].bindings.figma are carried forward
-                      unchanged (same carry-forward this mode's own --check-drift uses); every other
+                      slots[].figmaAxis, slots[].figmaOmit (T27), and axis-or-omit-curated
+                      props[].bindings.figma are carried forward unchanged (same carry-forward this
+                      mode's own --check-drift uses); every other
                       field becomes exactly what re-derivation produces. Anatomy-dependent fields
                       (anatomy/anatomySource/anatomyCase/tokens/states/semantics) are left AS-IS on
                       disk when this environment has no measured spec-light.json, same exclusion
@@ -808,28 +809,32 @@ function carryForwardSlotExtensions(disk, derived) {
     // axis is a hand-curation decision, not something CEM/token-map/
     // measure-components can observe.
     if (diskSlot?.figmaAxis) slot.figmaAxis = diskSlot.figmaAxis;
+    // T27: slots[].figmaOmit — same reasoning again: whether a slot should
+    // be expressed in Figma AT ALL is an opt-out decision, not a derivable
+    // fact.
+    if (diskSlot?.figmaOmit) slot.figmaOmit = diskSlot.figmaOmit;
   }
   return derived;
 }
 
-/** T23: `props[].bindings.figma` hand-curated into axis mode (`axis: true`)
- * carries no derivation source either — `figmaPropBindingFor()` above derives
- * a prop's Figma binding from the manifest's cached OBSERVED digest of the
- * REAL set (refresh-figma-digests.mjs), which reports whatever the real set
- * ACTUALLY does today (e.g. al-button's real "Is Full Width" is still a
- * BOOLEAN property, not a VARIANT axis, as of T23 — see README.md § Fan-out
- * convention for why the pilot and the real set are allowed to diverge).
- * Once a prop's on-disk `bindings.figma.axis` is true, the WHOLE figma
- * binding object for that prop is hand-owned (kind/property/options change
- * together as one curated unit) — carry it forward wholesale, matched by
- * prop name, same transient/comparison-only mutation as
- * carryForwardSlotExtensions above. */
+/** T23/T27: `props[].bindings.figma` hand-curated into axis mode (`axis: true`)
+ * OR opted out (`omit: true`) carries no derivation source either —
+ * `figmaPropBindingFor()` above derives a prop's Figma binding from the
+ * manifest's cached OBSERVED digest of the REAL set (refresh-figma-digests.mjs),
+ * which reports whatever the real set ACTUALLY does today (e.g. al-button's
+ * real "Is Full Width" is still a BOOLEAN property, not a VARIANT axis, as of
+ * T23 — see README.md § Fan-out convention for why the pilot and the real set
+ * are allowed to diverge). Once a prop's on-disk `bindings.figma.axis` OR
+ * `.omit` is true, the WHOLE figma binding object for that prop is hand-owned
+ * (kind/property/options/omit change together as one curated unit) — carry
+ * it forward wholesale, matched by prop name, same transient/comparison-only
+ * mutation as carryForwardSlotExtensions above. */
 function carryForwardPropAxisCuration(disk, derived) {
   if (!Array.isArray(disk?.props) || !Array.isArray(derived?.props)) return derived;
   const diskPropByName = new Map(disk.props.map((p) => [p.name, p]));
   for (const prop of derived.props) {
     const diskProp = diskPropByName.get(prop.name);
-    if (diskProp?.bindings?.figma?.axis) prop.bindings.figma = diskProp.bindings.figma;
+    if (diskProp?.bindings?.figma?.axis || diskProp?.bindings?.figma?.omit) prop.bindings.figma = diskProp.bindings.figma;
   }
   return derived;
 }
@@ -1091,7 +1096,8 @@ function runAddConditionalBindings() {
 // migrations: every DERIVED field (everything the table in README.md's "Contract
 // field | Source" names) becomes exactly what a fresh derivation produces; every
 // CURATED field (status, version, slots[].figmaPlaceholder, slots[].figmaAxis,
-// axis-mode props[].bindings.figma) is carried forward from disk first, using the
+// slots[].figmaOmit (T27), axis-or-omit-mode props[].bindings.figma) is carried
+// forward from disk first, using the
 // SAME carryForward*() helpers --check-drift diffs against — so running --refresh
 // right after a --check-drift pass with zero drift is a guaranteed no-op. Anatomy-
 // dependent fields are left untouched when this environment has no measured

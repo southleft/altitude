@@ -52,13 +52,28 @@
         "code": { "attribute": "isSelected" },
         "figma": null
       }
+    },
+    {
+      "name": "isExpanded",
+      "description": "T27 planted case (e) — curated `bindings.figma.omit: true`, and the paired canvas fixture has no matching property at all (the DESIRED state for an opt-out) — must produce NO disagreement, only a `skipped` entry (dimension:'prop', reason:'intentional-omission', key:'isExpanded'), and must NOT count toward compared.props.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": { "attribute": "isExpanded" },
+        "figma": { "omit": true }
+      }
     }
   ],
   "events": [],
   "slots": [
     {
       "name": "before",
-      "description": "T17 planted case (c) — a code slot the slot<->property pairing convention must pair with the paired canvas fixture's \"Slot Before\" property, satisfied, with NO disagreement (no \"after\" slot here on purpose — see the canvas fixture's unpaired \"Slot After\", planted case (d))."
+      "description": "T17 planted case (c) — a code slot the slot<->property pairing convention must pair with the paired canvas fixture's \"Slot Before\" property, satisfied, with NO disagreement."
+    },
+    {
+      "name": "after",
+      "figmaOmit": true,
+      "description": "T27 planted case (f) — curated `figmaOmit: true`, but the paired canvas fixture STILL exposes \"Slot After\" despite the opt-out — must produce exactly ONE disagreement (dimension:'slot', kind:'present-despite-omission', key:'slot:after'), never an ordinary slot-unpaired disagreement (supersedes the old T17 case (d), which tested a code contract with no \"after\" slot at all — see diff-canvas-sample.canvas.json's own $comment)."
     }
   ],
   "states": ["hover", "focus", "active", "disabled"],

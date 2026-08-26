@@ -136,8 +136,14 @@ function runSelfTest() {
       !disagreements.some((d) => d.dimension === 'slot' && d.key === 'slot:before'),
     ],
     [
-      'T17 (d) unpaired canvas slot property ("Slot After", still BOOLEAN — the pre-T23 property style, no code "after" slot) produces exactly ONE slot-unpaired disagreement',
-      find('slot', 'slot-unpaired').length === 1 && find('slot', 'slot-unpaired')[0].key === 'Slot After',
+      'T27 (e) omitted-and-absent prop (isExpanded, bindings.figma.omit:true, no matching canvas property) produces NO disagreement, only an intentional-omission skip',
+      !disagreements.some((d) => d.key === 'isExpanded') &&
+        skipped.some((s) => s.reason === 'intentional-omission' && s.key === 'isExpanded'),
+    ],
+    [
+      'T27 (f) omitted-but-present slot (code "after" curated figmaOmit:true, canvas still exposes "Slot After") produces exactly ONE present-despite-omission disagreement, never an ordinary slot-unpaired one',
+      find('slot', 'present-despite-omission').length === 1 && find('slot', 'present-despite-omission')[0].key === 'slot:after' &&
+        find('slot', 'slot-unpaired').length === 0,
     ],
     ['no other disagreements were fabricated (exactly 5 total)', disagreements.length === 5],
   ];

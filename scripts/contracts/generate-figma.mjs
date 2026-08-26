@@ -290,26 +290,36 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
   const slotNames = new Set(slotByName.keys());
   const fullWidthProp = (contract.props || []).find((p) => p.name === 'fullWidth');
 
+  // T27: `bindings.figma.omit: true` (props) / `slots[].figmaOmit: true`
+  // (slots) is a hand-curated OPT-OUT — reserving the right to keep a
+  // code-only boolean out of the generated Figma set entirely (owner: "I
+  // don't need that in figma", al-button's `fullWidth`). Takes precedence
+  // over `isAxis` if a contract were ever curated with both (should not
+  // happen in practice — nothing left to fan out once omitted).
   const layoutBooleans = [];
   if (fullWidthProp) {
-    const isAxis = !!fullWidthProp.bindings?.figma?.axis;
+    const isOmit = !!fullWidthProp.bindings?.figma?.omit;
+    const isAxis = !isOmit && !!fullWidthProp.bindings?.figma?.axis;
     layoutBooleans.push({
       kind: 'fullWidth',
       propertyName: fullWidthProp.bindings?.figma?.property || 'Is Full Width',
       options: fullWidthProp.bindings?.figma?.options?.length ? fullWidthProp.bindings.figma.options : ['False', 'True'],
       isAxis,
+      isOmit,
     });
   }
   for (const side of ['before', 'after']) {
     if (!slotNames.has(side)) continue;
     const slot = slotByName.get(side);
     const layerName = side === 'before' ? 'Icon Before' : 'Icon After';
+    const isOmit = !!slot.figmaOmit;
     layoutBooleans.push({
       kind: 'slot',
       side,
       propertyName: side === 'before' ? 'Slot Before' : 'Slot After',
       options: ['False', 'True'],
-      isAxis: !!slot.figmaAxis,
+      isAxis: !isOmit && !!slot.figmaAxis,
+      isOmit,
       layerName,
       iconName: slot.figmaPlaceholder || null,
     });
@@ -320,7 +330,7 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
   // curated name not in that list appended alphabetically after — see the
   // constant's own comment.
   const booleanAxisDefs = layoutBooleans
-    .filter((b) => b.isAxis)
+    .filter((b) => b.isAxis && !b.isOmit)
     .map((b) => ({ name: b.propertyName, values: [...b.options], default: b.options.includes('False') ? 'False' : b.options[0], kind: b.kind, side: b.side, layerName: b.layerName }))
     .sort((a, b) => {
       const ai = BOOLEAN_AXIS_CANONICAL_ORDER.indexOf(a.name);
@@ -341,13 +351,15 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
   // Before/After becomes an axis (T23 task) — `default` is the icon's NAME,
   // never a node id (icon libraries re-mint ids on republish); the actual
   // component is resolved BY NAME inside the plugin code at generation time
-  // (buildPluginCode's findIconComponentByName), keeping this pure
+  // (buildPluginCode's findPhosphorComponentByName, T28 — the Phosphor
+  // library, never the old "🛠 Icons" page), keeping this pure
   // function's determinism intact (--check-determinism never touches
   // Figma). `layerName` is the instance layer this property's
   // `mainComponent` reference targets (plus, in property mode only, the
   // paired boolean's own `visible` reference — see T19).
   const componentProperties = [{ name: 'Text', type: 'TEXT', default: contract.name || tag }];
   for (const b of layoutBooleans) {
+    if (b.isOmit) continue; // T27: omitted -> nothing at all, no axis, no property, no instance
     if (!b.isAxis) componentProperties.push({ name: b.propertyName, type: 'BOOLEAN', default: false, ...(b.layerName ? { layerName: b.layerName } : {}) });
     if (b.kind === 'slot' && b.iconName) {
       componentProperties.push({ name: b.layerName, type: 'INSTANCE_SWAP', default: b.iconName, layerName: b.layerName });
@@ -422,7 +434,7 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
     'anatomy carries no literal text content (contract.schema.json\'s anatomyNode has no `text` field) — ' +
     'the Text component property default is a placeholder (the contract\'s display name), not measured copy.',
   );
-  const slotSides = layoutBooleans.filter((b) => b.kind === 'slot');
+  const slotSides = layoutBooleans.filter((b) => b.kind === 'slot' && !b.isOmit);
   const sidesWithPlaceholder = slotSides.filter((b) => b.iconName).map((b) => b.side);
   const sidesWithoutPlaceholder = slotSides.filter((b) => !b.iconName).map((b) => b.side);
   if (sidesWithoutPlaceholder.length) {
@@ -436,8 +448,9 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
   if (sidesWithPlaceholder.length) {
     degradations.push(
       `Icon ${sidesWithPlaceholder.map((s) => (s === 'before' ? 'Before' : 'After')).join('/')} INSTANCE_SWAP ` +
-      'default is resolved LIVE by NAME from the icons page at generation time (never a hard-coded node id — ' +
-      `see contract.slots[].figmaPlaceholder, T19); icon size is a fixed ${ICON_SIZE_FIGMA_VAR} (documented ` +
+      'default is resolved LIVE by NAME from the Phosphor Figma library at generation time (T28 — never the old ' +
+      '"🛠 Icons" page, never a hard-coded node id; see contract.slots[].figmaPlaceholder and ' +
+      `findPhosphorComponentByName in buildPluginCode); icon size is a fixed ${ICON_SIZE_FIGMA_VAR} (documented ` +
       'judgment call above ICON_SIZE_FIGMA_VAR, not a per-variant contract fact), and the icon is recolored to ' +
       'this row\'s own resolved content-color token, recursively, per the Icon Recoloring reference.',
     );
@@ -460,6 +473,17 @@ export function buildOps(contract, { projectId = 'altitude', pageName = 'Contrac
       '"full width" renders as (contract.schema.json\'s anatomyNode has no pixel geometry, and the real Button ' +
       `set does not expose this as an axis to inspect) — rendered as natural hug width + a fixed ${FULL_WIDTH_EXTRA_PX}px ` +
       'margin (documented judgment call, FULL_WIDTH_EXTRA_PX), not a measured or observed target width.',
+    );
+  }
+  const omitted = layoutBooleans.filter((b) => b.isOmit);
+  if (omitted.length) {
+    const describe = (b) => (b.kind === 'slot' ? `Slot ${b.side === 'before' ? 'Before' : 'After'}` : b.propertyName);
+    degradations.push(
+      `T27: ${omitted.map(describe).join(', ')} ${omitted.length > 1 ? 'are' : 'is'} curated OMITTED ` +
+      '(`bindings.figma.omit`/`figmaOmit: true`) — by design, NOTHING is built for it: no axis, no component ' +
+      'property, no icon instance (for an omitted slot). This is an intentional opt-out (owner\'s call — the ' +
+      'prop/slot is real in code but deliberately excluded from the generated Figma surface), not a degradation ' +
+      'in the "missing measured fact" sense — see .altitude/contracts/README.md § Figma-expression opt-out.',
     );
   }
 
@@ -548,20 +572,70 @@ function buildPluginCode(ops, SC) {
       try { node.setBoundVariable(field, vv); return true; } catch (e) { return false; }
     }
 
-    // T19: resolve an Icon Before/After INSTANCE_SWAP default BY NAME, never
-    // by a stored node id (icon libraries re-mint ids on republish — the ops
-    // artifact carries only the icon's own component NAME, e.g. "done-circle"
-    // — see contract.slots[].figmaPlaceholder). Prefer the library's own
-    // icons page (SKILL.md convention "🛠 Icons"); fall back to a whole-file
-    // search so this still works if that page is ever renamed.
-    async function findIconComponentByName(name) {
-      const iconsPage = figma.root.children.find((p) => p.name === '🛠 Icons');
-      if (iconsPage) {
-        await iconsPage.loadAsync();
-        const hit = iconsPage.findOne((n) => n.type === 'COMPONENT' && n.name === name);
+    // T28: resolve an Icon Before/After INSTANCE_SWAP default BY NAME from
+    // the PHOSPHOR Figma library — NEVER the old "🛠 Icons" flat-component
+    // page (owner: "let's not use the icon component that was in the
+    // figma... let's use the Phosphor library"). This function is
+    // deliberately NOT a lookup against that page at all; there is no
+    // fallback to it, silent or otherwise.
+    //
+    // CONFIRMED LIVE (this generation run's own environment): the Figma
+    // plugin API has NO team-library component enumeration — exhaustive
+    // introspection of figma.teamLibrary found exactly two methods,
+    // getAvailableLibraryVariableCollectionsAsync and
+    // getVariablesInLibraryCollectionAsync — both VARIABLES-only, nothing
+    // for components. This bridge's REST-backed tools
+    // (figma_search_components / figma_get_library_components /
+    // figma_instantiate_component-by-name) are unusable without a
+    // FIGMA_ACCESS_TOKEN (figma_diagnose: "No Figma access token detected");
+    // without one they time out rather than resolving. That leaves exactly
+    // two BY-NAME resolution paths a plugin can actually use:
+    //   1. PHOSPHOR_KEY_BY_NAME - a hand-maintained name -> published
+    //      component KEY registry (empty until a human supplies real keys,
+    //      e.g. by placing one instance of each needed icon from the
+    //      Phosphor library once, then reading its resolved component's
+    //      .key back out via a one-off figma_execute read). Preferred once
+    //      populated: no document walk needed, resolves in one call.
+    //   2. A bounded-depth scan across every page for an EXISTING instance
+    //      whose main component is REMOTE (from a library) and named-match
+    //      - the mainComponent reference resolves the real component with
+    //      NO REST call, so this works the moment a human bootstraps one
+    //      instance anywhere in the file. Never touches the Icons page
+    //      (that page holds LOCAL, non-remote components by construction,
+    //      so a remote-only check excludes it structurally, not just by
+    //      name).
+    // Resolution failure is reported per-name in misses - never silently
+    // substituted with the old icons page, never a hard-coded node id.
+    const PHOSPHOR_KEY_BY_NAME = {}; // e.g. { 'check-circle': '<published component key>' } — fill in once known; see comment above
+    async function findInstanceByRemoteMainName(node, targetLower, depth) {
+      if (depth > 5) return null;
+      if (node.type === 'INSTANCE') {
+        try {
+          const main = await node.getMainComponentAsync(); // sync .mainComponent THROWS under dynamic-page access (SKILL.md trap 27)
+          if (main && main.remote && main.name.toLowerCase() === targetLower) return main;
+        } catch (e) { /* keep walking — one bad instance must not abort the whole scan */ }
+      }
+      if ('children' in node) {
+        for (const child of node.children) {
+          const hit = await findInstanceByRemoteMainName(child, targetLower, depth + 1);
+          if (hit) return hit;
+        }
+      }
+      return null;
+    }
+    async function findPhosphorComponentByName(name) {
+      const key = PHOSPHOR_KEY_BY_NAME[name];
+      if (key) {
+        try { return await figma.importComponentByKeyAsync(key); }
+        catch (e) { misses.add('phosphor-key-import-failed:' + name); }
+      }
+      const targetLower = name.toLowerCase();
+      for (const page of figma.root.children) {
+        await page.loadAsync();
+        const hit = await findInstanceByRemoteMainName(page, targetLower, 0);
         if (hit) return hit;
       }
-      return figma.root.findOne((n) => n.type === 'COMPONENT' && n.name === name);
+      return null;
     }
 
     // T19: recursively rebind every fill/stroke under an icon instance to the
@@ -585,9 +659,9 @@ function buildPluginCode(ops, SC) {
     const iconSwapProps = OPS.componentProperties.filter((p) => p.type === 'INSTANCE_SWAP');
     const iconComponentsByLayer = {};
     for (const p of iconSwapProps) {
-      const comp = await findIconComponentByName(p.default);
+      const comp = await findPhosphorComponentByName(p.default);
       if (comp) iconComponentsByLayer[p.layerName] = comp;
-      else misses.add('icon-component:' + p.default);
+      else misses.add('phosphor-component-not-found:' + p.default);
     }
 
     // Fonts — this contract has no font-size/family token on al-button (they are
@@ -1124,7 +1198,11 @@ async function main() {
   }
 
   const code = buildPluginCode(ops, SC);
-  const text = await call(SHIM_PORT, 'figma_execute', { code, fileKey: SC.fileKey, timeout: 60000 });
+  // T28: bumped from 60000 — findPhosphorComponentByName's bounded-depth,
+  // every-page instance scan (the fallback bootstrap path, when
+  // PHOSPHOR_KEY_BY_NAME has no entry for a name yet) adds real time on a
+  // file this size (58 pages).
+  const text = await call(SHIM_PORT, 'figma_execute', { code, fileKey: SC.fileKey, timeout: 90000 });
   let payload;
   try { payload = JSON.parse(text); } catch { console.error(text); process.exit(1); }
   if (payload.success === false || payload.error) {

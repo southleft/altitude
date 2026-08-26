@@ -126,6 +126,7 @@ export const PAIRING_CONVENTIONS = [
  *
  * @returns {{claimedCanvasProps: Set<object>, handledCodeSlots: Set<string>,
  *            skipCodePropNames: Set<string>, conventionDisagreements: Array,
+ *            omissionSkips: Array<{dimension:string,reason:string,key:string}>,
  *            comparedSlots: number}}
  */
 function applyPairingConventions({ codeContract, canvasContract }) {
@@ -133,6 +134,7 @@ function applyPairingConventions({ codeContract, canvasContract }) {
   const handledCodeSlots = new Set();
   const skipCodePropNames = new Set();
   const conventionDisagreements = [];
+  const omissionSkips = [];
   let comparedSlots = 0;
 
   const canvasProps = canvasContract.componentProperties ?? [];
@@ -146,6 +148,34 @@ function applyPairingConventions({ codeContract, canvasContract }) {
 
     if (conv.codeSlot) {
       const codeSlot = slotByName.get(conv.codeSlot);
+
+      // T27 (spec 2026-08-25-contract-backed-figma-parity-and-generation):
+      // a slot curated `figmaOmit: true` is a deliberate opt-out — it is
+      // NEVER a `slot-unpaired` disagreement when canvas has nothing for it
+      // (that is the DESIRED state, recorded as a named skip rather than
+      // silently vanishing). Canvas STILL expressing it despite the opt-out
+      // is the one real problem — flagged `present-despite-omission`,
+      // distinct from an ordinary pairing gap.
+      if (codeSlot?.figmaOmit) {
+        handledCodeSlots.add(conv.codeSlot);
+        for (const cp of canvasMatches) claimedCanvasProps.add(cp);
+        if (canvasMatches.length) {
+          const names = canvasMatches.map((c) => c.name).sort();
+          comparedSlots += 1;
+          conventionDisagreements.push({
+            dimension: 'slot',
+            key: `slot:${conv.codeSlot}`,
+            code: conv.codeSlot,
+            canvas: names,
+            kind: 'present-despite-omission',
+            detail: `code slot "${conv.codeSlot}" is curated figmaOmit: true (should not be expressed in Figma) but canvas still exposes ${names.map((n) => `"${n}"`).join(', ')}.`,
+          });
+        } else {
+          omissionSkips.push({ dimension: 'slot', reason: 'intentional-omission', key: `slot:${conv.codeSlot}` });
+        }
+        continue;
+      }
+
       if (!codeSlot && !canvasMatches.length) continue; // neither side expresses this slot — convention doesn't apply
       comparedSlots += 1;
       if (codeSlot && canvasMatches.length) {
@@ -197,7 +227,7 @@ function applyPairingConventions({ codeContract, canvasContract }) {
     }
   }
 
-  return { claimedCanvasProps, handledCodeSlots, skipCodePropNames, conventionDisagreements, comparedSlots };
+  return { claimedCanvasProps, handledCodeSlots, skipCodePropNames, conventionDisagreements, omissionSkips, comparedSlots };
 }
 
 /** Canvas componentProperties index for the generic name-pairing pass,
@@ -304,6 +334,7 @@ export function diffContracts({ codeContract, canvasContract } = {}) {
   const conventionResult = applyPairingConventions({ codeContract, canvasContract });
   disagreements.push(...conventionResult.conventionDisagreements);
   compared.slots = conventionResult.comparedSlots;
+  skipped.push(...conventionResult.omissionSkips); // T27: named intentional-omission skips, not disagreements
 
   // Facts a canvas read can never express, named rather than silently
   // skipped — see canvas-contract.schema.json's own `degradations` field and
@@ -349,6 +380,30 @@ export function diffContracts({ codeContract, canvasContract } = {}) {
     const figmaPropName = prop.bindings?.figma?.property ?? prop.name;
     const canvasProp = findCanvasProp(canvasPropsByKey, figmaPropName) ?? findCanvasProp(canvasPropsByKey, prop.name);
     const isEnumVariant = prop.type === 'enum';
+
+    // T27: a prop curated `bindings.figma.omit: true` is a deliberate
+    // opt-out (the owner's call — e.g. al-button's `fullWidth`: "I don't
+    // need that in figma"). Absent from canvas is the DESIRED state, named
+    // as an intentional-omission skip rather than a missing-in-canvas
+    // disagreement; canvas STILL exposing a matching property despite the
+    // opt-out is the one real problem (`present-despite-omission`). Neither
+    // branch falls through to the normal enum/prop comparison below.
+    if (prop.bindings?.figma?.omit) {
+      if (canvasProp) {
+        matchedCanvasProps.add(canvasProp);
+        disagreements.push({
+          dimension: isEnumVariant ? 'variant-axis' : 'prop',
+          key: prop.name,
+          code: prop.name,
+          canvas: canvasProp.name,
+          kind: 'present-despite-omission',
+          detail: `code prop "${prop.name}" is curated bindings.figma.omit: true (should not be expressed in Figma) but canvas still exposes "${canvasProp.name}".`,
+        });
+      } else {
+        skipped.push({ dimension: isEnumVariant ? 'variant-axis' : 'prop', reason: 'intentional-omission', key: prop.name });
+      }
+      continue;
+    }
 
     if (isEnumVariant) {
       compared.variants += 1;

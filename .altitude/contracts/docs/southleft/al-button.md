@@ -17,7 +17,7 @@ Component: al-button
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
 | `ariaControls` | string | — | — | — |
-| `fullWidth` | boolean | — | — | — |
+| `fullWidth` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `hideText` | boolean | — | — | — |
 | `href` | string | — | — | — |
 | `isAriaDisabled` | boolean | — | — | — |
@@ -93,6 +93,8 @@ Style variant
 - **tertiary** renders the button with an outlined style
 - **bare** renders the button with a bare style
 - **danger** renders the button used for caution actions
+
+**Figma-expression opt-out (T27):** `fullWidth` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

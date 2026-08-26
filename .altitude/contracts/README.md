@@ -248,10 +248,13 @@ same contract in -> byte-identical bytes out), and executes it over
 `scripts/figma-atoms/mcp-shim.mjs` to build a real component set: the State
 and Variant axes, PLUS one more VARIANT axis per curated boolean (T23, see
 "Fan-out convention" below) OR a BOOLEAN component property for an
-un-curated one, the Text/Icon Before/Icon After component properties the
-contract's props/slots warrant (the icon ones only when a slot names a
-`figmaPlaceholder` — see "Slot placeholder instances (T19)" below), and
-token-bound fills/strokes/spacing from the contract's anatomy — nothing
+un-curated one OR NOTHING AT ALL for one curated `omit`/`figmaOmit: true`
+(T27, see "Figma-expression opt-out" below), the Text/Icon Before/Icon After
+component properties the contract's props/slots warrant (the icon ones only
+when a slot names a `figmaPlaceholder`, resolved against the Phosphor Figma
+library as of T28 — see "Slot placeholder instances (T19)" and "Phosphor
+icon source (T28)" below), and token-bound fills/strokes/spacing from the
+contract's anatomy — nothing
 fabricated beyond what the contract states.
 
 ```bash
@@ -326,10 +329,10 @@ default reads `figmaPlaceholder` directly as a catalog name for exactly this
 reason (its old done-circle/send -> check-circle/paper-plane translation table
 is gone — the contract already speaks Phosphor). Resolving a Phosphor name
 back to a live instance in the Figma-side Phosphor library at generation time
-is separate, queued follow-up work for `generate-figma.mjs` — not yet done as
-of this note. The placeholder remains resolved **by name**, never a node id,
-in the contract or the ops artifact either way, since icon libraries re-mint
-ids on republish.
+is implemented as of T28 — see "Phosphor icon source (T28)" below for the
+resolution mechanism and its honest, environment-dependent limits. The
+placeholder remains resolved **by name**, never a node id, in the contract or
+the ops artifact either way, since icon libraries re-mint ids on republish.
 
 **Sweep coverage (T25).** Live-verified against the real Altitude Figma file
 (`y83n4o9LOGs74oAoguFcGS`): al-banner, al-menu-item, al-empty-state, al-input,
@@ -398,6 +401,102 @@ open on whether to convert the real hand-built set to match. Re-verify live
 (`figma_get_status` + read `componentPropertyDefinitions` off node
 `4271:9562`) before asserting either set's shape in a future task; this
 paragraph will go stale the moment someone converts the real set.
+
+## Figma-expression opt-out (T27)
+
+A prop or slot that is real in CODE can still be curated OUT of the
+generated Figma surface entirely — reserving the right to say "I don't need
+that in Figma" (the owner's own words, about al-button's `fullWidth`).
+Schema-additive, hand-curated only, no derivation source (same principle as
+`figmaPlaceholder`/`figmaAxis`/`axis` above):
+
+- `props[].bindings.figma.omit: true` — e.g. al-button's `fullWidth` (both
+  projects). When set, that is typically the ONLY key on the `figma` object
+  — there is nothing else to record about a Figma binding a prop
+  deliberately has none of.
+- `slots[].figmaOmit: true` — a `before`/`after` slot.
+
+**Generator effect** (`generate-figma.mjs`): an omitted prop/slot produces
+**nothing** — no VARIANT axis, no BOOLEAN component property, no icon
+instance, no Icon Before/After INSTANCE_SWAP property for an omitted slot.
+al-button's pilot regenerated at 100 variants (5 State × 5 Variant × 2 Slot
+Before × 2 Slot After) once `fullWidth` was marked omitted — down from T23's
+200, with no `Is Full Width` axis anywhere on the set.
+
+**Differ effect** (`contract-diff.mjs`): an omitted prop/slot absent from
+canvas — the DESIRED state — is a named `skipped` entry
+(`reason: "intentional-omission"`), never a `missing-in-canvas`/
+`slot-unpaired` disagreement. Canvas STILL exposing a property that pairs to
+an omitted prop/slot's name IS a real disagreement (`kind:
+"present-despite-omission"`) — the curation says it should not be there.
+Both branches are self-test-covered (`scripts/contracts/diff-contracts.mjs
+--self-test`, cases (e) and (f)).
+
+**`--check-drift`/`--refresh` treat these fields like `status`/`version`** —
+hand-curated, carried forward from disk, never flagged as drift against a
+fresh derivation (`carryForwardPropAxisCuration`/`carryForwardSlotExtensions`
+in `emit-contracts.mjs` — the same functions the axis curation already used,
+extended rather than duplicated).
+
+**Generalized default for other components:** nothing is omitted unless
+curated — an un-curated prop/slot behaves exactly as it did before T27.
+
+## Phosphor icon source (T28)
+
+Slot placeholder instances (see "Slot placeholder instances (T19)" above) are
+instantiated from the **Phosphor** Figma library — never the legacy local
+"🛠 Icons" page, which `generate-figma.mjs` no longer looks up at all (the
+owner: "let's not use the icon component that was in the figma bc that's the
+old icons... let's use the Phosphor library I added").
+
+**Resolution mechanism** (`findPhosphorComponentByName` in
+`generate-figma.mjs`'s plugin code), in order:
+
+1. `PHOSPHOR_KEY_BY_NAME` — a hand-maintained `name -> published component
+   key` registry, empty until a human supplies real keys. Preferred once
+   populated: resolves in one `importComponentByKeyAsync` call, no document
+   walk.
+2. A bounded-depth scan across every page for an EXISTING instance whose
+   main component is REMOTE (`.remote === true`, i.e. genuinely from a
+   library — this excludes the local "🛠 Icons" components structurally, not
+   just by page name) and name-matches. Works the moment a human places one
+   instance of a needed icon anywhere in the file — no REST call needed,
+   since `.mainComponent` already resolves the real component.
+
+**Resolution failure degrades cleanly, per name** — logged in the ops
+result's `missingVars` (e.g. `phosphor-component-not-found:check-circle`),
+never a silent fallback to the old icons page: no icon instance is built for
+that side, and (since nothing exists to bind it) no Icon Before/After
+INSTANCE_SWAP property is added either — the Slot Before/After axis or
+property is unaffected either way.
+
+**Confirmed environment limit (T28, live).** The Figma plugin API has **no
+team-library component enumeration** — exhaustive introspection of
+`figma.teamLibrary` in this environment found exactly two methods,
+`getAvailableLibraryVariableCollectionsAsync` and
+`getVariablesInLibraryCollectionAsync`, both VARIABLES-only. This bridge's
+REST-backed tools (`figma_search_components`, `figma_get_library_components`,
+name-based `figma_instantiate_component`) are unusable without a
+`FIGMA_ACCESS_TOKEN` (`figma_diagnose`: "No Figma access token detected") —
+they time out rather than resolving, in this environment. As of the T28 pilot
+regeneration, no Phosphor instance existed anywhere in the file to bootstrap
+from (checked live: "🛠 Icons", "🧪 Library Composition Demo", and every other
+page), so BOTH resolution paths above returned nothing for "check-circle" and
+"paper-plane" — the pilot built successfully (100 variants, correct axes) but
+with **no** icon instances or Icon Before/After property, an honest, logged
+degradation, not a silent gap. Unblocking needs one of: a `FIGMA_ACCESS_TOKEN`
+(enables the REST-backed search tools), a human placing one instance of each
+needed Phosphor icon anywhere in the file (path 2 above then resolves it), or
+a human supplying the real component keys directly into
+`PHOSPHOR_KEY_BY_NAME` (path 1).
+
+**Recoloring is unaffected** — `recolorIconTree` (T19) operates generically
+on any instance's `fills`/`strokes`, recursively; it does not know or care
+which library an icon instance came from, so no Phosphor-specific change was
+needed there. Not independently re-verified against a real Phosphor instance
+in the T28 session (see the environment limit above) — the mechanism was
+already proven correct against the old icon convention and the code path is
+identical for the new one.
 
 ## Anatomy availability is best-effort
 

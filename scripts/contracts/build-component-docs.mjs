@@ -125,17 +125,26 @@ function buildPropsSection(props) {
   if (!props.length) return '_No props declared._';
   const rows = props.map((p) => {
     const valuesCell = p.values?.length ? codeList(p.values) : p.type === 'enum' ? '—' : code(p.rawType !== p.type ? p.rawType : null);
-    const figmaCell = p.bindings?.figma
-      ? `**${p.bindings.figma.property}** (${p.bindings.figma.kind})` +
-        (p.bindings.figma.options?.length ? `: ${codeList(p.bindings.figma.options)}` : '')
-      : '—';
+    const figmaCell = p.bindings?.figma?.omit
+      ? '_not expressed in Figma (by design)_'
+      : p.bindings?.figma
+        ? `**${p.bindings.figma.property}** (${p.bindings.figma.kind})` +
+          (p.bindings.figma.options?.length ? `: ${codeList(p.bindings.figma.options)}` : '')
+        : '—';
     return [code(p.name), p.type, valuesCell, p.default !== undefined ? code(p.default) : '—', figmaCell];
   });
   const main = table(['Name', 'Type', 'Values', 'Default', 'Figma'], rows);
   const described = props.filter((p) => p.description);
-  if (!described.length) return main;
-  const prose = described.map((p) => `#### \`${p.name}\`\n\n${p.description}`).join('\n\n');
-  return `${main}\n\n${prose}`;
+  const prose = described.length ? described.map((p) => `#### \`${p.name}\`\n\n${p.description}`).join('\n\n') : null;
+  const omittedNames = props.filter((p) => p.bindings?.figma?.omit).map((p) => p.name);
+  const omitNote = omittedNames.length
+    ? '**Figma-expression opt-out (T27):** ' +
+      `${codeList(omittedNames)} ${omittedNames.length > 1 ? 'are' : 'is'} curated \`bindings.figma.omit: true\` — ` +
+      'a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component ' +
+      'property, no instance), independent of whether the real set happens to expose one today. See ' +
+      '`.altitude/contracts/README.md` § Figma-expression opt-out.'
+    : null;
+  return [main, prose, omitNote].filter(Boolean).join('\n\n');
 }
 
 function buildVariantAxesSection(props) {
@@ -162,11 +171,12 @@ function buildSlotsSection(slots) {
     code(s.name || '(default)'),
     s.description ?? '—',
     s.figmaPlaceholder ? code(s.figmaPlaceholder) : '—',
-    s.figmaAxis ? 'VARIANT axis' : '—',
+    s.figmaOmit ? 'not expressed (by design)' : s.figmaAxis ? 'VARIANT axis' : '—',
   ]);
   const main = table(['Slot', 'Description', 'Figma placeholder', 'Figma fan-out'], rows);
   const hasPlaceholder = slots.some((s) => s.figmaPlaceholder);
   const hasAxis = slots.some((s) => s.figmaAxis);
+  const omittedNames = slots.filter((s) => s.figmaOmit).map((s) => s.name || '(default)');
   const notes = [main];
   if (hasPlaceholder) {
     notes.push(
@@ -183,6 +193,15 @@ function buildSlotsSection(slots) {
       'axis in a generated set — a separately-built component per combination — rather than a single shared ' +
       'BOOLEAN component property toggling visibility across every variant. See `.altitude/contracts/README.md` ' +
       '§ Fan-out convention.',
+    );
+  }
+  if (omittedNames.length) {
+    notes.push(
+      '**Figma-expression opt-out (T27):** ' +
+      `${codeList(omittedNames)} ${omittedNames.length > 1 ? 'are' : 'is'} curated \`figmaOmit: true\` — a ` +
+      'deliberate decision to keep this slot out of the generated Figma set entirely (no axis, no BOOLEAN ' +
+      'property, no icon instance, no Icon Before/After INSTANCE_SWAP property). See ' +
+      '`.altitude/contracts/README.md` § Figma-expression opt-out.',
     );
   }
   return notes.join('\n\n');
