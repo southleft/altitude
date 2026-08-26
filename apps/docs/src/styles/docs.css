@@ -1271,6 +1271,30 @@ html[data-booting] .shell {
   background: var(--blue);
 }
 
+/* Icon-slot toggles (T24) — one `.pg__flag` per before/after slot, each with
+   a compact <al-combobox> search revealed underneath once switched on. */
+.pg__icon-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pg__icon-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pg__icon-search {
+  min-width: 0;
+}
+
+.pg__icon-search al-combobox {
+  display: block;
+  font: 400 11px/1.4 var(--mono);
+}
+
 .pg__code {
   grid-column: 1 / -1;
   border-top: 1px solid var(--line);

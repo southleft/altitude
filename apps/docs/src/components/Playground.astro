@@ -23,7 +23,7 @@
  */
 interface Props {
   /** The design-system project whose brand the stage renders under. */
-  project: { brand: string };
+  project: { brand: string; id: string };
   /** Story-derived preview markup (lib/examples.mjs), or a reason there is none. */
   example?: { ok: boolean; html?: string; styles?: string; story?: string; reason?: string } | null;
   component: {
@@ -39,6 +39,8 @@ interface Props {
 // The site's configured base. Imported rather than read from `Astro.url`,
 // because the rewrite below must match what the build actually emits.
 import { base } from '../lib/site.mjs';
+import { iconSlotDefaults } from '../lib/contracts.mjs';
+import { ICONS } from '../lib/icons.mjs';
 
 const { component, project, example = null } = Astro.props;
 
@@ -46,6 +48,21 @@ const { component, project, example = null } = Astro.props;
 const enums = component.props.filter((p) => p.options.length >= 2);
 const flags = component.props.filter((p) => p.isBoolean);
 const hasDefaultSlot = component.slots.some((s) => s.rawName === '');
+
+/*
+ * ICON SLOTS (T24). `before`/`after` are this library's convention for "this
+ * slot's content is typically an icon" — al-button, al-calendar, al-input,
+ * al-menu-item, al-range and al-textarea all declare one or both (see
+ * libs/al-web-components/custom-elements.json). That is specific enough to
+ * demo for real: a toggle switches the slot between empty and an
+ * `<al-icon>`, and a compact search (icon catalog-backed, lib/icons.mjs)
+ * picks which one. Any OTHER slot still has no control — "typically an
+ * icon" is a declared convention, not something inferable from a slot name
+ * generally, so this stays narrow rather than guessing at arbitrary slots.
+ */
+const iconSlots = component.slots.filter((s) => s.rawName === 'before' || s.rawName === 'after');
+/** Contract-sourced starting glyphs (falls back when a slot has none). */
+const iconDefaults = iconSlots.length ? iconSlotDefaults(project.id, component.tag) : null;
 
 /*
  * `field` matters as much as `name`. The controls drive the element by setting
@@ -130,7 +147,7 @@ const mountHtml = hasExample
 const showTextControl = hasDefaultSlot && !hasExample;
 
 /** Counted from what is actually rendered, so the header cannot overstate it. */
-const controlCount = enums.length + flags.length + (showTextControl ? 1 : 0);
+const controlCount = enums.length + flags.length + (showTextControl ? 1 : 0) + iconSlots.length;
 
 /*
  * The snippet is the markup on the stage, not a reconstruction of it. When an
@@ -153,6 +170,7 @@ const config = {
   exampleStory: hasExample ? example.story : null,
   enums: enums.map((p) => ({ name: p.name, field: p.field, options: p.options })),
   flags: flags.map((p) => ({ name: p.name, field: p.field })),
+  iconSlots: iconSlots.map((s) => ({ name: s.rawName, default: iconDefaults[s.rawName] })),
 };
 ---
 
@@ -336,6 +354,45 @@ const config = {
         </div>
       )
     }
+
+    {
+      /* Icon toggles (T24). One per `before`/`after` slot this component
+         actually declares — a toggle switches the slot between empty and an
+         `<al-icon>`, and the compact search underneath (an `<al-combobox>`,
+         populated and filtered by the script below from the icon catalog)
+         picks which glyph. Search starts hidden: the slot itself starts
+         empty, so there is nothing to search for until the reader turns it
+         on. */
+      config.iconSlots.length > 0 && (
+        <div>
+          <div class="pg__control-label">ICON SLOTS</div>
+          <div class="pg__icon-slots">
+            {config.iconSlots.map((slot) => (
+              <div class="pg__icon-slot" data-icon-slot={slot.name}>
+                <button
+                  class="pg__flag"
+                  type="button"
+                  data-icon-toggle={slot.name}
+                  aria-pressed="false"
+                >
+                  <span class="pg__box" />
+                  <span>Icon {slot.name}</span>
+                </button>
+                <div class="pg__icon-search" data-icon-search={slot.name} hidden>
+                  <al-combobox
+                    data-icon-combobox={slot.name}
+                    label={slot.name === 'before' ? 'Before icon' : 'After icon'}
+                    filterMode="manual"
+                    placeholder="Search icons…"
+                    noResultsText="No icons match"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    }
   </div>
 
   <div class="pg__code">
@@ -358,6 +415,50 @@ const config = {
 
 <script type="application/json" data-pg-config set:html={JSON.stringify(config)} />
 
+{
+  /*
+   * Only shipped on the pages that actually have an icon-slot toggle — a
+   * component with no `before`/`after` slot has nothing to search.
+   *
+   * WHY THIS CARRIES ARTWORK (`viewBox` + `body`) AND NOT JUST NAMES. The
+   * obvious design is `<al-icon name>` plus the library's opt-in lazy
+   * resolver (`components/icon/lazy` — dynamic `import()` per glyph,
+   * `libs/al-web-components/components/icon/lazy.ts`), which is what the
+   * Icons page's own USAGE sample recommends for exactly this situation:
+   * "icon names come from data you do not control." Tried first here; it
+   * breaks `astro build`. `lazy.js` is ITSELF a prior Vite/Rolldown build
+   * output with an inlined `__vitePreload` helper for its per-glyph dynamic
+   * imports, and re-bundling it through this app's OWN Vite/Rolldown pass
+   * re-injects a second one into the same chunk — `Identifier
+   * '__vitePreload' has already been declared`. Serving it unbundled
+   * (a raw asset + native `<script src>`) dodges that crash but breaks the
+   * feature a different way: it would load `registry.js` as a SEPARATE
+   * module instance from the one `LiveRuntime.astro`'s bundled
+   * `@southleft/al-web-components` import uses, so `setIconResolver` would
+   * be setting a resolver the real rendered `<al-icon>` never reads from.
+   * Eagerly registering the whole catalog (`components/icon/all.ts`) is
+   * also out — that module's own header says "Do NOT import it from an
+   * application" (~230 KB gzipped, built for the retired Storybook catalog
+   * page only).
+   *
+   * So the preview paints icons a different way: a plain inline `<svg
+   * viewBox>…</svg>` built from this page's own build-time icon data —
+   * the same `lib/icons.mjs` the Icons page itself inlines artwork from,
+   * just filtered to what a `before`/`after` slot's search can reach. No
+   * registry, no dynamic import, nothing left for a second bundler pass to
+   * collide with. The COPYABLE SNIPPET is unaffected by this — it still
+   * emits real `<al-icon slot name>` markup (see `setSnippetIcon` in the
+   * script below), because that is the API a reader should actually use.
+   */
+  config.iconSlots.length > 0 && (
+    <script
+      type="application/json"
+      data-pg-icons
+      set:html={JSON.stringify(ICONS.map(({ name, haystack, viewBox, body }) => ({ name, haystack, viewBox, body })))}
+    />
+  )
+}
+
 <script>
   // Playground state machine. Reads the generated config, mutates the real
   // element on the stage, and re-emits both snippets from the same state.
@@ -376,6 +477,7 @@ const config = {
       exampleStory: string | null;
       enums: { name: string; field: string; options: string[] }[];
       flags: { name: string; field: string }[];
+      iconSlots: { name: string; default: string }[];
     };
 
     const fieldOf = new Map<string, string>([
@@ -383,10 +485,41 @@ const config = {
       ...config.flags.map((f) => [f.name, f.field] as [string, string]),
     ]);
 
+    /**
+     * Icon-slot state, seeded from what is ACTUALLY on the stage rather than
+     * always starting empty (T24). A story could in principle mount a
+     * `before`/`after` slot already populated; reading the live element's own
+     * light-DOM children means the toggle opens already reflecting that
+     * instead of silently stripping it on first render.
+     */
+    const iconSlotState = (name: string, fallback: string) => {
+      const existing = Array.from(stage.children).find((el) => el.getAttribute('slot') === name);
+      return { on: Boolean(existing), name: existing?.getAttribute('name') || fallback };
+    };
+
+    /**
+     * The icon catalog for this page's search — name, search haystack and
+     * raw SVG artwork, embedded by Playground.astro only when there is an
+     * icon slot to search (see the comment beside `[data-pg-icons]`).
+     */
+    const iconIndexEl = document.querySelector<HTMLScriptElement>('[data-pg-icons]');
+    const iconIndex = iconIndexEl
+      ? (JSON.parse(iconIndexEl.textContent || '[]') as {
+          name: string;
+          haystack: string;
+          viewBox: string;
+          body: string;
+        }[])
+      : [];
+    const iconArt = new Map(iconIndex.map((icon) => [icon.name, icon]));
+
     const state = {
       enums: Object.fromEntries(config.enums.map((e) => [e.name, ''])) as Record<string, string>,
       flags: Object.fromEntries(config.flags.map((f) => [f.name, false])) as Record<string, boolean>,
       text: (document.querySelector<HTMLInputElement>('[data-pg-text]')?.value ?? '').trim(),
+      icons: Object.fromEntries(
+        config.iconSlots.map((s) => [s.name, iconSlotState(s.name, s.default)])
+      ) as Record<string, { on: boolean; name: string }>,
       tab: 'html' as 'html' | 'react',
     };
 
@@ -421,6 +554,80 @@ const config = {
       return markup.replace(open, `<${tag}${attrs}${match[2]}>`);
     };
 
+    /** Remove whichever element currently occupies `slot="before"|"after"`. */
+    const clearSlot = (root: Element, side: string) => {
+      Array.from(root.children).find((el) => el.getAttribute('slot') === side)?.remove();
+    };
+
+    /**
+     * Paint a `slot="before"|"after"` icon on the REAL, live element (T24).
+     *
+     * Not an `<al-icon name>` — see the long comment beside `[data-pg-icons]`
+     * in this file's markup for why the live preview cannot depend on that
+     * component's icon registry here. Instead this builds a plain inline
+     * `<svg viewBox>…</svg>` straight from this page's own build-time
+     * artwork, which needs no registration and cannot go blank. `slot` works
+     * on any element, not just custom-element children, so the browser
+     * projects it exactly the same way.
+     *
+     * A slotted child is light DOM, so this is plain DOM manipulation and
+     * works whether or not the host has upgraded yet — unlike the
+     * enum/flag controls, which have to go through JS properties because
+     * `setAttribute` cannot reach a Lit `@property` (see the config comment
+     * in this file's frontmatter).
+     */
+    const paintPreviewIcon = (root: Element, side: string, name: string | null) => {
+      clearSlot(root, side);
+      const art = name ? iconArt.get(name) : undefined;
+      if (!art) return;
+      const template = document.createElement('template');
+      // Sized and filled to match `<al-icon>`'s own default rendering
+      // (libs/al-web-components/components/icon/icon.scss's base `svg`
+      // rule) by hand: a bare `<svg>` outside `<al-icon>`'s shadow root
+      // never sees that stylesheet, so without this it paints at the
+      // browser's intrinsic default (300×150) instead of an icon-sized box.
+      template.innerHTML = `<svg slot="${side}" viewBox="${art.viewBox}" aria-hidden="true" style="display:inline-flex;flex:none;width:var(--al-theme-icon,20px);height:var(--al-theme-icon,20px);fill:currentColor;">${art.body}</svg>`;
+      const node = template.content.firstElementChild;
+      if (!node) return;
+      if (side === 'before') root.insertBefore(node, root.firstChild);
+      else root.appendChild(node);
+    };
+
+    /**
+     * The SNIPPET's icon markup, applied to a markup STRING rather than the
+     * live element — and a real `<al-icon slot name>`, unlike
+     * `paintPreviewIcon`, because this is what a reader copying the snippet
+     * should actually use.
+     *
+     * Parsed through a `<template>` rather than regex — the example markup is
+     * a whole tree (see `mergeRootAttrs`'s comment), and finding "the root
+     * element's direct children" correctly in arbitrary nested markup needs a
+     * real parser, not a bracket count.
+     *
+     * HTML tab only (see the call site): a React children tree isn't emitted
+     * as HTML text at all, and `<template>` lowercases tag names on parse,
+     * which would silently mangle a PascalCase React wrapper name.
+     */
+    const withIconSlots = (markup: string, tag: string, icons: Record<string, { on: boolean; name: string }>) => {
+      const template = document.createElement('template');
+      template.innerHTML = markup;
+      const root = template.content.querySelector(tag);
+      if (!root) return markup;
+      for (const side of ['before', 'after']) {
+        const cfg = icons[side];
+        if (!cfg) continue;
+        clearSlot(root, side);
+        if (cfg.on && cfg.name) {
+          const icon = document.createElement('al-icon');
+          icon.setAttribute('slot', side);
+          icon.setAttribute('name', cfg.name);
+          if (side === 'before') root.insertBefore(icon, root.firstChild);
+          else root.appendChild(icon);
+        }
+      }
+      return root.outerHTML;
+    };
+
     const snippet = (open: string, close: string) => {
       const pairs = attrPairs();
       const attrs = pairs
@@ -430,10 +637,15 @@ const config = {
       // The HTML tab shows what is actually on the stage. The React tab does
       // not: a wrapper takes children as JSX, so the story's slotted markup
       // does not transliterate, and a bare element is the honest thing to show.
-      const element =
+      let element =
         config.hasExample && state.tab !== 'react'
           ? mergeRootAttrs(config.exampleHtml, config.tag, pairs)
           : `<${open}${attrs}>${body}</${close}>`;
+      // Icon slots (T24), HTML tab only — see `withIconSlots`'s comment for
+      // why the React tab is excluded.
+      if (config.iconSlots.length > 0 && state.tab !== 'react') {
+        element = withIconSlots(element, config.tag, state.icons);
+      }
       // The HTML path ships the theme host too: pasted on its own, outside an
       // <al-theme>, the element renders under the base token bundle rather than
       // this design system's brand. The React path does not — an app using the
@@ -456,6 +668,22 @@ const config = {
         target[fieldOf.get(name) ?? name] = on;
       }
       if (config.hasDefaultSlot) stage.textContent = state.text;
+      if (config.iconSlots.length > 0) {
+        for (const [side, icon] of Object.entries(state.icons)) {
+          paintPreviewIcon(stage, side, icon.on ? icon.name : null);
+        }
+        // `slotNotEmpty()` (ALElement.ts) decides whether a component's shadow
+        // DOM even HAS a `<slot name="before">`/`<slot name="after">` to
+        // project into, and it is a plain, non-reactive DOM query — Lit only
+        // re-runs it when a `@property` changes, never in response to light
+        // DOM being mutated directly. Adding the icon above without this
+        // leaves it correctly in the light DOM (the snippet, driven off the
+        // SAME state, is unaffected) but with no `<slot>` to be assigned to,
+        // so nothing paints. `requestUpdate()` is the public, standard
+        // ReactiveElement method for "something not on a tracked property
+        // changed — re-render anyway."
+        (stage as unknown as { requestUpdate?: () => void }).requestUpdate?.();
+      }
 
       codeEl.textContent =
         state.tab === 'react' && config.react
@@ -489,6 +717,70 @@ const config = {
       state.text = (e.target as HTMLInputElement).value;
       render();
     });
+
+    /*
+     * ICON SLOTS (T24) — a toggle per `before`/`after` slot, each revealing a
+     * compact <al-combobox> search over the icon catalog once switched on.
+     *
+     * The catalog itself (`iconIndex`, above) is embedded once per page as
+     * `[data-pg-icons]`, only when `config.iconSlots.length > 0` — see the
+     * comment beside that script tag. `filterMode="manual"` on the combobox
+     * (rather than its own auto substring filter) is what caps the popup at
+     * MAX_ICON_RESULTS: with ~1,500 entries, rendering every match on an
+     * empty query would mean ~1,500 `<al-list-item>`s in a popup meant to be
+     * "compact".
+     */
+    const MAX_ICON_RESULTS = 40;
+
+    const matchIcons = (query: string) => {
+      const q = query.trim().toLowerCase();
+      const matches = q ? iconIndex.filter((icon) => icon.haystack.includes(q)) : iconIndex;
+      return matches.slice(0, MAX_ICON_RESULTS).map((icon) => ({ value: icon.name, label: icon.name }));
+    };
+
+    for (const toggle of document.querySelectorAll<HTMLButtonElement>('[data-icon-toggle]')) {
+      const side = toggle.dataset.iconToggle!;
+      const icon = state.icons[side];
+      // Reflect the seeded state (see `iconSlotState` above) rather than the
+      // server-rendered "off" default, for the same reason that default is
+      // seeded from the live element in the first place.
+      toggle.setAttribute('aria-pressed', String(icon.on));
+      const searchWrap = document.querySelector<HTMLElement>(`[data-icon-search="${side}"]`);
+      if (searchWrap) searchWrap.hidden = !icon.on;
+
+      toggle.addEventListener('click', () => {
+        icon.on = !icon.on;
+        toggle.setAttribute('aria-pressed', String(icon.on));
+        if (searchWrap) searchWrap.hidden = !icon.on;
+        render();
+      });
+    }
+
+    for (const combo of document.querySelectorAll<HTMLElement & { value: string; items: unknown }>(
+      '[data-icon-combobox]'
+    )) {
+      const side = combo.dataset.iconCombobox!;
+      const icon = state.icons[side];
+      // Driven through PROPERTIES, same as every other live control — `items`
+      // is `{ attribute: false }` on al-combobox, so an attribute could never
+      // reach it anyway.
+      combo.value = icon.name;
+      combo.items = matchIcons(icon.name);
+
+      combo.addEventListener('onComboboxFilter', ((e: CustomEvent<{ query: string }>) => {
+        combo.items = matchIcons(e.detail.query ?? '');
+      }) as EventListener);
+
+      combo.addEventListener('onComboboxChange', ((e: CustomEvent<{ value: string }>) => {
+        icon.name = e.detail.value;
+        icon.on = true;
+        const toggle = document.querySelector<HTMLButtonElement>(`[data-icon-toggle="${side}"]`);
+        toggle?.setAttribute('aria-pressed', 'true');
+        const searchWrap = document.querySelector<HTMLElement>(`[data-icon-search="${side}"]`);
+        if (searchWrap) searchWrap.hidden = false;
+        render();
+      }) as EventListener);
+    }
 
     for (const tab of document.querySelectorAll<HTMLButtonElement>('[data-tab]')) {
       tab.addEventListener('click', () => {
