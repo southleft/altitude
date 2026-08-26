@@ -276,6 +276,33 @@ the build if a parity-tracked tag has no contract, an invalid one, or one
 that has drifted from the CEM (see `.altitude/contracts/README.md` "CI
 gate").
 
+### Regenerate the reference doc (T20)
+
+```bash
+pnpm run contracts:docs
+```
+
+Builds `.altitude/contracts/altitude/../docs/altitude/al-<name>.md` (or
+`contracts:docs:sl` / `.../docs/southleft/...` for a brand-layer component) —
+a GENERATED, human-readable Markdown twin of the contract you just seeded:
+structure, props, variant axes, slots (with the Figma placeholder convention
+when a slot names one), states, token bindings including per-variant/per-
+state `conditionalBindings`, and the Figma set's name/nodeId or the by-name
+resolution rule for a set with no pinned id. This is what
+`altitude_get_component` serves back as `referenceDoc`, and what
+`altitude-figma-sync` reads BEFORE touching this component's Figma set — see
+that skill's §0. Run it every time the contract changes; a stale doc is
+caught the same way a stale contract is:
+
+### Trap: another warning, not a blocker — but a REAL CI gate
+
+`scripts/component-check.mjs` reports a missing generated doc the same
+severity as a missing contract — a warning (see step 10). `pnpm run
+gate:contracts`'s `check:contract-docs[:sl]` leg fails the build if a
+tracked component's doc is missing OR has drifted from what its contract +
+the parity manifest would regenerate — same discipline as `check:llms` for
+`llms.txt`. Never hand-edit a file under `.altitude/contracts/docs/`.
+
 ---
 
 ## 9. Machine docs regeneration
@@ -355,7 +382,7 @@ Run locally before pushing, or let CI tell you (slower feedback loop):
 | `node scripts/check-bundle-completeness.js` | Missing `bundle.ts` export |
 | `pnpm lint` | ESLint 9 flat config, typescript-eslint 8 |
 | `pnpm run check:llms` | `llms.txt` drifted from the CEM/digests/registry |
-| `pnpm run gate:contracts` | Missing/invalid contract for a parity-tracked tag, contract drifted from the CEM, non-deterministic contract derivation |
+| `pnpm run gate:contracts` | Missing/invalid contract for a parity-tracked tag, contract drifted from the CEM, non-deterministic contract derivation, missing/drifted generated reference doc (T20) |
 | `pnpm test:vrt` | Visual regression (Playwright) |
 | `pnpm gate:self-test` | The P0 migration/baseline gates themselves |
 | `node scripts/component-check.mjs <tag> --strict` | Every item in this skill, mechanically, warnings included |
@@ -380,6 +407,7 @@ pnpm --filter @southleft/al-react plop                                       # 4
 # 6. apps/docs/src/content/guidance/<name>.yaml — 7 required sections + sources[]
 pnpm run parity:seed                                                         # 7. Figma manifest entry (not sync)
 node scripts/contracts/emit-contracts.mjs --seed --component al-<name>       # 8. seed the contract
+pnpm run contracts:docs                                                      # 8. regenerate its reference doc
 pnpm run llms:build                                                          # 9. regenerate llms.txt
 pnpm run a11y:report                                                         # 9. regenerate a11y report (static build first)
 node scripts/component-check.mjs al-<name>                                   # 10. verify

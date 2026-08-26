@@ -33,6 +33,8 @@
  *     - a parity manifest entry (.altitude/figma-sync/parity-manifest.json)
  *     - a component contract (.altitude/contracts/altitude/<tag>.contract.json —
  *       T15/T16, spec 2026-08-25-contract-backed-figma-parity-and-generation)
+ *     - a generated reference doc (.altitude/contracts/docs/altitude/<tag>.md —
+ *       T20, same spec)
  *     - a React wrapper (libs/al-react/src/components/<Pascal>/)
  *     - guidance YAML (apps/docs/src/content/guidance/<slug>.yaml)
  *     - the tag appears in the generated root llms.txt
@@ -63,6 +65,7 @@ const MIGRATION = join(REPO, '.altitude/migration.json');
 const CEM = join(REPO, 'libs/al-web-components/custom-elements.json');
 const PARITY_MANIFEST = join(REPO, '.altitude/figma-sync/parity-manifest.json');
 const CONTRACTS_DIR = join(REPO, '.altitude/contracts/altitude');
+const CONTRACT_DOCS_DIR = join(REPO, '.altitude/contracts/docs/altitude');
 const REACT_COMPONENTS_DIR = join(REPO, 'libs/al-react/src/components');
 const GUIDANCE_DIR = join(REPO, 'apps/docs/src/content/guidance');
 const LLMS_TXT = join(REPO, 'llms.txt');
@@ -262,6 +265,27 @@ function checkComponent(name) {
       pass,
       detail: pass ? `.altitude/contracts/altitude/${tag}.contract.json present` : `no .altitude/contracts/altitude/${tag}.contract.json`,
       fix: `Run: node scripts/contracts/emit-contracts.mjs --seed --component ${tag} (needs a CEM entry and a parity-manifest entry for "${tag}" first). Gated in CI by \`pnpm run gate:contracts\`.`,
+    });
+  }
+
+  // --- WARNING: generated reference doc (T20, spec 2026-08-25-contract- --
+  // --- backed-figma-parity-and-generation) -------------------------------
+  // Sibling to the contract check above, same severity: a doc can only be
+  // BUILT from a contract that already exists (build-component-docs.mjs
+  // skips a tracked tag with no contract file, same as emit-contracts.mjs's
+  // --seed skips a tag with no CEM record), so a missing contract already
+  // implies a missing doc — this makes that specific gap nameable on its
+  // own, mirroring the contract item's own rationale.
+  {
+    const docPath = join(CONTRACT_DOCS_DIR, `${tag}.md`);
+    const pass = existsSync(docPath);
+    items.push({
+      key: 'contract-doc',
+      severity: 'warning',
+      label: 'generated reference doc (.altitude/contracts/docs/altitude)',
+      pass,
+      detail: pass ? `.altitude/contracts/docs/altitude/${tag}.md present` : `no .altitude/contracts/docs/altitude/${tag}.md`,
+      fix: `Run: pnpm run contracts:docs (regenerates every tracked component's doc from its contract; needs the contract from the item above first). Gated in CI by \`pnpm run gate:contracts\` (check:contract-docs).`,
     });
   }
 

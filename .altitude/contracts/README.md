@@ -325,6 +325,54 @@ tag one-to-one (e.g. `al-button--icon` is a separate measured "tag" for the
 icon-only case, distinct from `al-button`) — those simply contribute nothing
 extra; the base tag's own measured entries still drive its contract.
 
+## Generated per-component reference docs (T20)
+
+T20 (spec 2026-08-25-contract-backed-figma-parity-and-generation) adds one
+more artifact on top of every contract: a GENERATED, human-readable Markdown
+twin at `.altitude/contracts/docs/<project>/<tag>.md` — built by
+`scripts/contracts/build-component-docs.mjs` from the tag's contract PLUS
+that project's parity manifest (never the reverse; the contract and manifest
+remain the facts of record, this file only re-shapes them for reading).
+Each doc spells out the structure/variants/slots/token-binding story a
+design tool — or an agent driving the Figma MCP — needs before touching a
+component's Figma set: description, semantics, the full props table
+(including any Figma `VARIANT`-bound axis and its unmapped option labels),
+states, slots (with the `figmaPlaceholder` icon-instance convention, T19,
+when a slot names one), events, a11y facts, the measured anatomy's root
+token bindings and state overrides, the SCSS-derived `conditionalBindings`
+(T18) rendered as one table per variant/state, the code bindings, and —
+read live from the parity manifest, not the contract's own possibly-stale
+embedded copy — the Figma component set's name and pinned node id, or, for
+a set mapped by name only (`nodeId: null` — see "Molecules must be resolved
+BY NAME" in `altitude-figma-sync`'s `SKILL.md` and `.altitude/PARITY.md`),
+the by-name resolution rule instead of a node id that would go stale.
+
+```bash
+pnpm run contracts:docs                              # write, altitude
+pnpm run contracts:docs:sl                           # write, southleft
+node scripts/contracts/build-component-docs.mjs --component al-button   # one tag
+pnpm run check:contract-docs[:sl]                    # drift gate — CI, part of gate:contracts
+```
+
+**GENERATED — never hand-edit a file under `.altitude/contracts/docs/`.**
+Every doc opens with an HTML comment saying so and naming the regen command.
+`check:contract-docs` re-derives every doc in memory and byte-compares it
+against what's on disk — including ORPHAN detection, a doc file left behind
+by a component that is no longer tracked or no longer has a contract — and
+fails naming exactly which file(s) drifted, the same discipline `check:llms`
+applies to `llms.txt`. Scope matches `contracts:seed`/`--check-drift`
+exactly: every parity-tracked, non-`excluded` tag that already has a
+contract on disk; a tracked tag with no contract yet is skipped with a
+logged line, never silently dropped.
+
+**Served over the MCP.** `altitude_get_component({ tag, project })` carries
+the doc's content as `referenceDoc` (plus the raw `contract` itself)
+whenever both exist for the resolved project — omitted entirely, never an
+error, for a tag with no contract (an `excluded` component, or one not yet
+seeded). `altitude-component-authoring`'s checklist (§8) runs
+`contracts:docs` right after seeding a new contract; `altitude-figma-sync`
+reads the doc before building or repairing a set.
+
 ## Deviations from `ds-contracts-poc`
 
 The upstream schema is a small generative-layout DSL (rows/columns/areas,

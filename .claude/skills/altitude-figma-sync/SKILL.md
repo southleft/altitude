@@ -42,7 +42,17 @@ Two MCP servers get conflated constantly:
 Also available: the **`altitude` MCP** (`libs/altitude-mcp`, already in `.mcp.json`) —
 `altitude_list_components`, `altitude_get_tokens`, `altitude_get_component`,
 `altitude_validate`, `altitude_search_icons`. Use it for code-side facts instead of
-grepping.
+grepping. **Before building or repairing a component's set**, call
+`altitude_get_component({ tag, project })` and read its `referenceDoc` field (or open
+`.altitude/contracts/docs/<project>/<tag>.md` directly) — the GENERATED, per-component
+reference doc (T20, spec 2026-08-25-contract-backed-figma-parity-and-generation) spells
+out exactly this: structure, variant axes + values, slots and the icon-placeholder
+convention, states, token bindings (including per-variant/per-state
+`conditionalBindings`), and the Figma set's name/nodeId — or, for a component mapped by
+name only, the by-name resolution rule instead of a node id that would go stale. It is
+built from the same contract + parity manifest this skill's other steps already read, so
+it's the fast summary; the contract JSON is still the fact of record for anything the doc
+abridges.
 
 ---
 

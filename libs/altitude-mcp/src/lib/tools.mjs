@@ -21,6 +21,7 @@ import { searchIcons } from './icons.mjs';
 import { generateTheme } from './theme.mjs';
 import { computeParity, STATUS } from './parity.mjs';
 import { resolveProject, listProjectIds } from './ds-project.mjs';
+import { loadComponentContract, loadComponentDoc } from './component-docs.mjs';
 import { MissingArtifactError } from './paths.mjs';
 
 /** Uniform JSON tool response, with MissingArtifactError surfaced as structured data (not a thrown protocol error) so an agent can read `hint` and self-heal. */
@@ -120,15 +121,39 @@ export const TOOLS = [
       description:
         'Full detail for one @southleft/al-web-components custom element: its CEM entry (attributes, slots, ' +
         'events, CSS parts/properties), its JSON Schema from schemas/, its migration state, and its ' +
-        'Storybook docs URL.',
+        'Storybook docs URL. Also carries, when available for the resolved `project` (T20, spec ' +
+        '2026-08-25-contract-backed-figma-parity-and-generation): `contract` — the component\'s canvas-' +
+        'expressible API contract (variant axes, slots + Figma placeholder convention, states, token ' +
+        'bindings incl. per-variant/per-state conditionalBindings, the Figma set name/nodeId or by-name ' +
+        'rule); and `referenceDoc` — the generated human-readable Markdown twin of that contract ' +
+        '(.altitude/contracts/docs/<project>/<tag>.md), the fastest thing to read before touching this ' +
+        'component\'s Figma set. Both are OMITTED (never an error) for a tag with no contract yet — e.g. ' +
+        'al-icon, which parity excludes.',
       inputSchema: {
         tag: z.string().describe('The custom element tag name, e.g. "al-button".'),
+        // Getter, not a plain property — see describeProjectArg()'s header.
+        get project() {
+          return z.string().optional().describe(describeProjectArg());
+        },
       },
     },
-    handler: toolHandler(({ tag }) => {
+    handler: toolHandler(({ tag, project }) => {
       const component = getComponent(tag);
       if (!component) {
         return { error: `No CEM entry for tag "${tag}".`, code: 'ERR_UNKNOWN_COMPONENT' };
+      }
+      // Contract/doc lookup is per-project, but a missing/unknown project id
+      // here must not fail a request that only asked for CEM facts — the
+      // rest of this tool's response has nothing to do with ds-projects.json.
+      let contract = null;
+      let referenceDoc = null;
+      try {
+        const resolved = resolveProject(project);
+        contract = loadComponentContract(component.tag, resolved.id);
+        referenceDoc = loadComponentDoc(component.tag, resolved.id);
+      } catch {
+        // Unknown/misconfigured project — leave contract/referenceDoc null,
+        // same graceful-degradation discipline as a tag with no contract.
       }
       return {
         tag: component.tag,
@@ -143,6 +168,8 @@ export const TOOLS = [
         migration: getMigrationState(component.tag),
         schema: loadSchema(component.tag),
         story: getStoryInfo(component.modulePath),
+        ...(contract ? { contract } : {}),
+        ...(referenceDoc ? { referenceDoc } : {}),
       };
     }),
   },
