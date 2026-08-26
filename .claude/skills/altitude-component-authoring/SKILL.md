@@ -158,9 +158,23 @@ Router / RSC import of the wrapper throws.
 
 CSF3 stories with `tags: ['autodocs']` were already required in step 2.
 There's no separate "register for VRT" step — `pnpm test:vrt` (Playwright)
-discovers stories automatically. If this component introduces a new
-visually-meaningful state, add a story for it now, not as a follow-up; the
-VRT baseline is generated from whatever stories exist at capture time.
+discovers stories automatically off the story fixture's own index. If this
+component introduces a new visually-meaningful state, add a story for it
+now, not as a follow-up; the VRT baseline is generated from whatever stories
+exist at capture time.
+
+### Trap: test:vrt needs the story fixture built first, and Windows will show 9 false failures
+
+`tests/components.vrt.spec.ts` reads
+`libs/al-web-components/story-fixture/dist/index.json` and Playwright's
+`webServer` serves it on `:5178` — build it first (`pnpm run
+build:story-fixture`, or `pnpm run build:fixtures` for all fixtures) or the
+spec throws instead of running. Separately, 9 of 67 baselines are text-heavy
+enough that Linux (CI) and Windows rasterise them differently (alert, banner,
+breadcrumbs, heading, pagination, tab-panel, tabs, testimonial, text-block) —
+running `test:vrt` on a Windows dev machine reports those 9 as failing even
+with no real regression. CI (Linux) is authoritative; never `--update-snapshots`
+locally to "fix" that, or the committed baseline stops matching CI.
 
 ---
 
@@ -282,7 +296,7 @@ gate").
 pnpm run contracts:docs
 ```
 
-Builds `.altitude/contracts/altitude/../docs/altitude/al-<name>.md` (or
+Builds `.altitude/contracts/docs/altitude/al-<name>.md` (or
 `contracts:docs:sl` / `.../docs/southleft/...` for a brand-layer component) —
 a GENERATED, human-readable Markdown twin of the contract you just seeded:
 structure, props, variant axes, slots (with the Figma placeholder convention
@@ -325,18 +339,18 @@ pnpm run a11y:report
 Regenerates `.altitude/a11y/report.json`, which the docs accessibility
 panels read.
 
-### Trap: a11y:report needs a STATIC Storybook build, never a dev server
+### Trap: a11y:report needs a STATIC fixture build, never a dev server
 
 `scripts/build-a11y-report.mjs` refuses to take a URL and serves the static
-build itself, on its own port. Pointing this at a dev server on 6006 (or
-leaving one running) silently absorbs the run and reports ~300+ false
-failures that are 15s mount timeouts, not real violations — this was
-expensive enough to find that it's recorded twice (script header and
-`.mm/specs/2026-08-22-accessibility-remediation/axe-baseline.md`). Build
-Storybook first if you need a report that includes the new component:
+build itself, on its own port. Pointing this at a dev server (or leaving one
+running) silently absorbs the run and reports ~300+ false failures that are
+15s mount timeouts, not real violations — this was expensive enough to find
+that it's recorded twice (script header and
+`.mm/specs/2026-08-22-accessibility-remediation/axe-baseline.md`). Storybook
+was retired 2026-08-25; use the story fixture instead, which builds and
+points this at it in one step:
 ```bash
-pnpm --filter @southleft/al-web-components build:storybook --output-dir ../../dist/storybook/web-components
-pnpm run a11y:report
+pnpm run a11y:report:fixture
 ```
 
 ---
@@ -404,12 +418,12 @@ pnpm --filter @southleft/al-web-components plop                              # 1
 pnpm --filter @southleft/al-web-components build:custom-elements.json        # 3. CEM
 pnpm --filter @southleft/al-react plop                                       # 4. React wrapper
 # 5. stories already required in step 2 — nothing extra to run
-# 6. apps/docs/src/content/guidance/<name>.yaml — 7 required sections + sources[]
+# 6. apps/docs/src/content/guidance/<name>.yaml — 8 required sections (incl. sources[])
 pnpm run parity:seed                                                         # 7. Figma manifest entry (not sync)
 node scripts/contracts/emit-contracts.mjs --seed --component al-<name>       # 8. seed the contract
 pnpm run contracts:docs                                                      # 8. regenerate its reference doc
 pnpm run llms:build                                                          # 9. regenerate llms.txt
-pnpm run a11y:report                                                         # 9. regenerate a11y report (static build first)
+pnpm run a11y:report:fixture                                                 # 9. regenerate a11y report (builds the story fixture first)
 node scripts/component-check.mjs al-<name>                                   # 10. verify
 pnpm dlx changeset                                                           # 11. release notes
 ```

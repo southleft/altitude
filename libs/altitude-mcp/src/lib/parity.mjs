@@ -698,7 +698,7 @@ function promptFooter(tag, p) {
   const projectFlag = p.isDefault ? '' : ` --project ${p.id}`;
   return [
     `Verify with: node ${p.prompts.atomsScriptsDir}/check-parity.mjs${projectFlag}`,
-    `When both sides match, stamp the sync so Storybook shows green: node ${p.prompts.parityScriptsDir}/mark-synced.mjs${projectFlag} ${tag ?? '<tag>'}`,
+    `When both sides match, stamp the sync so it reports in-sync: node ${p.prompts.parityScriptsDir}/mark-synced.mjs${projectFlag} ${tag ?? '<tag>'}`,
   ];
 }
 

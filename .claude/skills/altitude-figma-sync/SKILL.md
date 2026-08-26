@@ -122,6 +122,28 @@ node scripts/figma-atoms/build-spec.mjs
 
 `dist/` ships bare `lit` specifiers a browser cannot resolve — hence the esbuild step.
 
+### After a repair verifies clean — re-baseline the parity manifest
+
+A repair or new build is only "done" once the parity manifest says so. This
+skill's job ends at a verified Figma set; it does NOT automatically flip that
+component to `in-sync` — a separate operator step stamps it:
+
+```bash
+node scripts/figma-atoms/check-parity.mjs         # Figma sizes vs BROWSER sizes — must be clean
+pnpm run parity:synced <al-tag...>                # or parity:synced:sl for southleft
+```
+
+Skipping this leaves the component reporting stale drift (`code-drift` /
+`missing-in-figma`) in `altitude_check_parity`, `GET /parity.json` and the
+docs-site ParityPanel even though the Figma side is now correct — a Figma-
+side agent that follows this skill alone, without this step, leaves the
+status red after a genuinely correct repair. `parity:synced` also reads the
+tag's tracked contract (if any — `.altitude/contracts/<project>/<tag>.contract.json`)
+and stamps `lastSync.contractHash` / `lastSync.contractVersion` alongside the
+code hash and Figma digest, so a later edit to the contract itself shows up
+as `contractDrifted` even when code and Figma both still match. See
+`.altitude/PARITY.md` for the full model.
+
 ---
 
 ## 3. Library conventions (copy these exactly)

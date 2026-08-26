@@ -1,9 +1,22 @@
-# Figma ↔ Code Parity (Storybook badges + MCP)
+# Figma ↔ Code Parity (MCP tool + docs-site panel)
 
-Every component in the @southleft/al-web-components Storybook sidebar carries a parity
-badge showing whether it is 1:1 with its Figma component set, and every
-autodocs page opens with a parity banner offering actions (open the Figma
-node, copy its id, copy a ready-to-run AI reconciliation prompt).
+> **Storybook was retired 2026-08-25** (commit `23c5f3a`) — every mention of a
+> Storybook sidebar badge or docs-page banner below is history, not a live
+> surface. The live surfaces today are:
+> - **`altitude_check_parity`** (MCP tool) — the same report, agent-facing,
+>   filterable by `tag` / `status` / `project`; each entry carries the
+>   `aiPrompt` reconciliation string.
+> - **`GET /parity.json`** — served by the `altitude` MCP server in
+>   streamable-HTTP mode (loopback-only; see "Serving the report" below).
+> - **The docs site's `ParityPanel`** (`apps/docs/src/components/ParityPanel.astro`)
+>   — a read-only, build-time-rendered per-component panel on every component's
+>   docs page. It has no interactive actions (no "Open in Figma" / "Copy AI fix
+>   prompt" buttons — those were Storybook-sidebar-only and did not survive the
+>   retirement); an agent reconciling drift uses `altitude_check_parity`
+>   instead, which is where the copy-paste `aiPrompt` still lives.
+
+Every component tracked by a design-system project carries a parity status
+(1:1 with Figma, drifted, missing) computed from the snapshot manifest below.
 
 > **Parity is MULTI-PROJECT.** One component library backs several design
 > systems (Altitude, Southleft), each checked against its own Figma file. Which
@@ -34,21 +47,22 @@ records:
 
 Status is computed live in `libs/altitude-mcp/src/lib/parity.mjs`:
 
-| Status | Sidebar badge | Meaning |
+| Status | Docs-panel tone | Meaning |
 | --- | --- | --- |
-| `in-sync` | green check | code hash and Figma digest both match `lastSync` |
-| `code-drift` | yellow `</>` | component source changed since last sync — Figma is behind |
-| `figma-drift` | yellow Figma mark | Figma changed since last sync — code is behind |
-| `conflict` | yellow `</>` + Figma | both drifted; reconcile deliberately |
-| `missing-in-figma` | red `</>` | exists in code, no Figma set at all |
-| `missing-in-code` | red Figma mark | Figma set with no code component (report/MCP only — no sidebar node exists) |
+| `in-sync` | green | code hash and Figma digest both match `lastSync` |
+| `code-drift` | yellow | component source changed since last sync — Figma is behind |
+| `figma-drift` | yellow | Figma changed since last sync — code is behind |
+| `conflict` | yellow | both drifted; reconcile deliberately |
+| `missing-in-figma` | red | exists in code, no Figma set at all |
+| `missing-in-code` | red | Figma set with no code component (report/MCP only — no docs page exists for it) |
 | `excluded` | none | deliberately untracked (Foundations/*, `al-icon`, `al-theme-switcher`) |
 
 **Code drift is always live** — the component's `.ts`/`.scss` (stories and
-tests excluded, CRLF-normalised) are re-hashed on every read, and Storybook
-watches the sources so a save flips the badge within a second. **Figma drift
+tests excluded, CRLF-normalised) are re-hashed on every read. Since the docs
+site renders `ParityPanel` at Astro build time (not a client-side poll), a
+source edit shows up on the next docs build, not instantly. **Figma drift
 is as fresh as the last refresh run** (`figmaLastRefreshed` in the manifest);
-no network or Figma dependency at Storybook startup.
+no network or Figma dependency at build time.
 
 **`contractDrifted` is an annotation, not a status (T11).** When a component
 was stamped with a `contractHash` and the tracked contract file's CURRENT
@@ -61,34 +75,63 @@ no stamped `contractHash` — which, until an operator runs `parity:synced` on
 a component whose contract is tracked, is every component today; see the
 regression note on `computeParity()` in `libs/altitude-mcp/src/lib/parity.mjs`.
 
-## How it flows into Storybook
+## How it reaches the docs site
 
-`libs/al-web-components/.storybook/parity-emitter.mjs` (called from
-`main.ts` `viteFinal`) writes `dist/parity.json`, served at `/parity.json` in
-dev and baked into static builds. `manager.js` renders the sidebar badges via
-`sidebar.renderLabel` (polls every 10s); `.storybook/blocks/figma-parity.tsx`
-renders the docs-page banner (wired in `docs-page.tsx`, same pattern as the
-a11y report — docsMode has no addon panels).
+`apps/docs/src/lib/parity.mjs` calls the same engine
+(`libs/altitude-mcp/src/lib/parity.mjs`) at Astro **build time** and keys the
+result by tag; `apps/docs/src/components/ParityPanel.astro` renders one row
+per design-system project that tracks the component. There is no client-side
+fetch and no poll — a docs page is a static artifact, so a parity change only
+shows up on the next docs build. `publicParityReport()` is a strict allowlist
+that drops the `aiPrompt` field (and everything else agent-only) before it
+reaches this public projection — see "Full report vs. public projection"
+below for the two paths this splits into.
 
-## The MCP pairing
+## The MCP tool + HTTP endpoint
 
-`pnpm --filter @southleft/al-web-components start` now runs **Storybook (6006) and the
-altitude MCP in streamable-HTTP mode (6017)** via concurrently. Endpoints on
-6017: `POST /mcp` (stateless MCP — any client can attach while Storybook is
-up), `GET /parity.json`, `GET /healthz`. Stdio mode (what `.mcp.json`
-launches) is unchanged and remains the default when `--http` is absent.
+`pnpm --filter @southleft/al-web-components start` runs the altitude MCP in
+streamable-HTTP mode on **:6017** (Storybook, which used to share this dev
+command, was retired 2026-08-25). Endpoints: `POST /mcp` (stateless MCP — any
+client can attach), `GET /parity.json`, `GET /healthz`. Stdio mode (what
+`.mcp.json` launches for an agent session) is unchanged and remains the
+default when `--http` is absent.
 
-New MCP tool: **`altitude_check_parity`** — the same report the sidebar
-renders, filterable by `tag`, `status`, or **`project`**; each entry carries the
-`aiPrompt` string the "Copy AI fix prompt" button hands out, naming that
-project's Figma file, skill and commands. **`altitude_list_ds_projects`**
-enumerates the design systems and what each points at. Over HTTP:
-`GET /parity.json?project=<id>` and `GET /ds-projects.json`.
+**`altitude_check_parity`** (MCP tool) — the full report, filterable by
+`tag`, `status`, or **`project`**; each entry carries the `aiPrompt` string an
+agent uses to reconcile drift, naming that project's Figma file, skill and
+commands. **`altitude_list_ds_projects`** enumerates the design systems and
+what each points at. Over HTTP: `GET /parity.json?project=<id>` and
+`GET /ds-projects.json`.
+
+## Full report vs. public projection
+
+**`GET /parity.json` serves the FULL report, `aiPrompt` included** —
+`libs/altitude-mcp/src/server.mjs`'s HTTP handler calls `computeParity()`
+directly and returns it verbatim (`server.mjs:103-122`). That `aiPrompt`
+string embeds the Figma file key, the component's node id, every
+`scripts/figma-*` path and the `.claude/skills` path — repo internals, not
+something meant to leave a developer's machine. This is safe ONLY because the
+server is loopback-only by construction: it binds `127.0.0.1` by default,
+rejects any request whose `Host` header is not a loopback hostname, and only
+reflects a loopback `Origin` in its CORS header (`server.mjs`'s
+`isLoopbackOrigin` check, ~line 55-75) — there is no code path that serves
+this port to a non-loopback client today, and no auth layer if that ever
+changed.
+
+**The docs site never uses this endpoint.** `apps/docs/src/lib/parity.mjs`
+imports the parity engine directly at Astro build time and calls
+`publicParityReport()` — a separate allowlist function that drops `aiPrompt`
+(and every other agent-only field) before a single byte reaches a page that
+`altitude.pages.dev` will serve publicly. `apps/docs/scripts/check-status-panels.mjs`
+re-checks the BUILT HTML for those dropped strings, so the rule is enforced
+on the output, not just trusted at the source. Two different consumers, two
+different projections, by design — `GET /parity.json` for a trusted local
+agent, `publicParityReport()` for anything that reaches the public site.
 
 ## Commands
 
 ```bash
-pnpm run parity:projects          # every design system: Figma file, Storybook port, manifest, live summary
+pnpm run parity:projects          # every design system: Figma file, manifest, live summary
 pnpm run parity:seed              # (re)build the manifest from instance-map + ops + CEM; merges new components
 pnpm run parity:synced <tag...>   # stamp components as confirmed-matching (turns them green); --all for everything
 pnpm run parity:refresh           # observe live Figma digests + figma-only sets (needs scripts/figma-atoms/mcp-shim.mjs running)
@@ -122,8 +165,11 @@ still stamps normally; it just warns and stamps neither field.
 
 ## Reconciliation loop
 
-Badge shows drift → open the component's docs page → **Copy AI fix prompt** →
-paste into a Claude session. The prompt names the component, the Figma set and
+Docs panel shows drift → call `altitude_check_parity({ tag })` (or `GET
+/parity.json?project=<id>` from a loopback session) → its `aiPrompt` field is
+a ready-to-paste reconciliation prompt naming the component, the Figma set and
 node, the status, and the exact pipeline (altitude-figma-sync skill →
 measure/build ops → repair in place → `check-parity.mjs` → `parity:synced`).
-`altitude_check_parity` gives an agent the same data programmatically.
+There is no docs-page button for this today — it is agent-only via the MCP
+tool / HTTP endpoint (see `.mm/ideas/` for the open question on whether a UI
+entry point should replace the retired Storybook one).

@@ -109,7 +109,7 @@ node -e "import('./libs/altitude-mcp/src/lib/parity.mjs').then(async m => {
 | Brand layer | none | `@southleft/sl-web-components` — `al-hero`, `al-cta-band`, `al-marquee`, `al-logo-wall`, `al-page-hero`, `al-section-header`, plus `al-card` / `al-header` / `al-footer` superseding the base three via define-order (`al-card` folds the former `al-media-card` in as its `article` / `work` variants) (classes remain `SL*`; see `.altitude/BRAND-LAYER.md`) |
 | Component sets mapped in Figma | 36 | **0 — the file starts empty** |
 | Parity | `in-sync + code-drift = 36`, `missing-in-figma=66`, `excluded=3` | `missing-in-figma=18 excluded=3` |
-| Storybook | port 6006 | retired 2026-08-23 — documented at `/docs/southleft` instead |
+| Documentation site | `/docs` (altitude scope) | `/docs/southleft` (Storybook retired for both projects 2026-08-25; see `apps/docs`) |
 | Brand deltas | none by design (neutral reference) | 46 of 392 properties |
 
 Southleft reporting 18 `missing-in-figma` is **correct, not a bug** — the Figma

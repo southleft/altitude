@@ -38,7 +38,12 @@ Altitude's source of truth is the hand-authored DTCG tree in
 surface — see [`TOKENS.md`](./TOKENS.md)). Style Dictionary v5 builds directly
 from it; there is no intermediate tree and no converter. **Code is upstream of
 Figma**: `scripts/build-figma-payload.mjs` generates the Figma variable payload
-*from* these files. Nothing imports Figma back into them automatically.
+*from* these files, writing `.altitude/figma-sync/altitude-figma-payload.json`
+(the token values `scripts/figma-atoms/build-spec.mjs` reads back in when
+building a component spec). It is **manually invoked** — no `pnpm run` alias,
+no CI step — run it by hand (`node scripts/build-figma-payload.mjs`) whenever
+`build-spec.mjs` needs a fresh payload after a token change. Nothing imports
+Figma back into them automatically.
 
 Figma organizes the same decisions as **collections** (an axis) containing
 **modes** (the axis's variants):

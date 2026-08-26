@@ -39,9 +39,11 @@ The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with 
 - Lint: `pnpm lint`
 
 ### Figma ↔ code parity
-- The WC Storybook sidebar shows per-component parity badges (green = 1:1 with Figma,
-  yellow code/Figma glyph = that side drifted, red = missing on the other side); each docs
-  page has a parity banner with "Open in Figma" / "Copy AI fix prompt" actions.
+- Storybook was retired 2026-08-25; the live surfaces are the `altitude_check_parity` /
+  `audit_component_parity` MCP tools (green = 1:1 with Figma, yellow = that side drifted, red =
+  missing on the other side, each entry carrying a ready-to-paste `aiPrompt` reconciliation
+  string), `GET /parity.json`, and each docs page's read-only `ParityPanel` (no interactive
+  actions — reconciliation is agent-driven via the MCP tool, not a docs-page button).
 - **Parity is multi-project.** One component library backs several design systems, each
   checked against its own Figma file. The registry is `.altitude/ds-projects.json`
   (schema alongside it) — see `.altitude/DS-PROJECTS.md`. `altitude` is the default;
@@ -80,7 +82,8 @@ The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with 
 - The legacy Tokens Studio tree (`styles/tokens/`, `value`/`type` shape) and its converter
   `scripts/convert-tokens-to-dtcg.js` were **deleted** — Tokens Studio is no longer part of
   this pipeline. Figma Variables are generated FROM these tokens
-  (`scripts/build-figma-payload.mjs`), never the reverse.
+  (`scripts/build-figma-payload.mjs` — manually invoked, no `pnpm run` alias or CI step),
+  never the reverse.
 - **Every token carries two types, and they answer different questions:**
   - `$type` — the DTCG standard type. Deliberately coarse: `sizing`, `spacing`,
     `borderRadius`, `borderWidth`, `fontSizes` and `lineHeights` all collapse to `dimension`.

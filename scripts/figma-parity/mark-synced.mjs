@@ -5,8 +5,10 @@
  * Run AFTER a verified sync (check-parity.mjs passing, or a deliberate human
  * confirmation). It sets lastSync.codeHash to the CURRENT source hash and
  * lastSync.figmaDigest to the last observed Figma digest (or the ops digest as
- * the code-derived stand-in when Figma has not been read), which turns the
- * component green in the Storybook sidebar.
+ * the code-derived stand-in when Figma has not been read), which flips the
+ * component to `in-sync` for `altitude_check_parity` / GET /parity.json / the
+ * docs-site ParityPanel (Storybook, the surface this line used to name, was
+ * retired 2026-08-25).
  *
  * MULTI-PROJECT: the target design system comes from `--project <id>` /
  * `DS_PROJECT` / the registry default in `.altitude/ds-projects.json`, which

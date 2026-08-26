@@ -14,9 +14,10 @@ planned. See `CLAUDE.md` / `.claude/CLAUDE.md` for that.
 - **The `altitude` MCP server** (`libs/altitude-mcp/`, 8 tools —
   `server.registerTool` in `libs/altitude-mcp/src/server.mjs`). Registered
   stdio in `.mcp.json` for any agent session; also runs streamable-HTTP on
-  **:6017** alongside `@southleft/al-web-components` Storybook's **:6006** when
-  you `pnpm --filter @southleft/al-web-components start` (`POST /mcp`,
-  `GET /parity.json`, `GET /healthz`). Use it instead of grepping for
+  **:6017** when you `pnpm --filter @southleft/al-web-components start`
+  (`POST /mcp`, `GET /parity.json`, `GET /healthz`) — that command runs the MCP
+  server alone (`start:mcp`) since Storybook was retired 2026-08-25; it no
+  longer starts a Storybook alongside it. Use it instead of grepping for
   component/token facts: `altitude_list_components`, `altitude_get_tokens`,
   `altitude_get_component`, `altitude_validate`, `altitude_search_icons`,
   `altitude_check_parity`, `altitude_list_ds_projects`.
@@ -34,7 +35,8 @@ planned. See `CLAUDE.md` / `.claude/CLAUDE.md` for that.
 | Build the library | `pnpm --filter @southleft/al-web-components build` |
 | Regenerate the CEM (part of the library build above — no separate step) | — |
 | Unit tests | `pnpm run test:unit` (browser-mode Vitest; run `pnpm run build` first if testing the React wrapper, since it resolves the library through `dist/`) |
-| Storybook a11y | `pnpm --filter @southleft/al-web-components build:storybook --output-dir /tmp/sb-static && pnpm --filter @southleft/al-web-components test` |
+| Accessibility (story fixture) | `pnpm run a11y:report:fixture` — builds the story fixture then runs axe against it (`libs/al-web-components/story-fixture`; Storybook was retired 2026-08-25) |
+| Visual regression | `pnpm run build:fixtures && pnpm test:vrt` — needs `libs/al-web-components/story-fixture/dist/index.json` built first (`build:story-fixture`, part of `build:fixtures`); Playwright serves the fixture itself on `:5178` via `webServer` (see `playwright.config.ts`). **9 of 67 baselines are text-heavy and rasterise differently on Windows vs. the Linux CI runner** (alert, banner, breadcrumbs, heading, pagination, tab-panel, tabs, testimonial, text-block) — a Windows run reporting those 9 as failing is the platform difference, not a regression; CI is authoritative (see `tests/components.vrt.spec.ts` header) |
 | Lint | `pnpm run lint`, `pnpm run lint:styles` |
 | Docs coverage | `pnpm run gate:docs`, `pnpm run gate:guidance` (after `pnpm --filter al-app-docs build`) |
 | Migration ledger | Add the component to `.altitude/migration.json` — **all-or-nothing per PR**: if you emit any component file you must emit the whole `migration.json` entry too |
@@ -165,7 +167,9 @@ been refreshed (a manifest with `figmaLastRefreshed: null` looks identical to
 cadence exists.
 
 Depth: `.altitude/PARITY.md` (the snapshot manifest model, the reconciliation
-loop, the "Copy AI fix prompt" flow the docs sidebar drives from).
+loop, the `aiPrompt` reconciliation string `altitude_check_parity` / `GET
+/parity.json` hand an agent — Storybook, the surface that used to drive this,
+was retired 2026-08-25).
 
 ---
 
@@ -280,7 +284,7 @@ same way any other doc does.
 ### Figma / parity
 
 - `audit-figma-vs-code.mjs`, `figma-var-fixes.mjs` — variable audit/fix loop (§ "Code → Figma sync").
-- `build-figma-payload.mjs` — generates the Altitude → Figma variable payload (see ORPHANS).
+- `build-figma-payload.mjs` — generates the Altitude → Figma variable payload (`.altitude/figma-sync/altitude-figma-payload.json`), consumed by `figma-atoms/build-spec.mjs`. **Manually invoked** — no `pnpm run` alias, no CI — run by hand (`node scripts/build-figma-payload.mjs`) when the payload needs refreshing after a token change; NOT an orphan despite having no alias (see FIGMA-SYNC.md § "What maps to what").
 - `check-figma-drift.mjs` — token-level Figma↔code drift (v1: values, brand/mode buckets, renames); alias `pnpm run parity:tokens-drift`.
 - `check-parity-freshness.mjs` — is the Figma side of parity actually being refreshed. See "Figma → code" above; not yet aliased.
 - `figma-atoms/` — the write-channel toolkit: `bridge-io.mjs` (Desktop Bridge I/O), `mcp-shim.mjs` (HTTP shim on :9401), `measure-components.mjs` / `measure-lib.js` (DOM measurement), `build-component-ops.mjs` / `build-button-ops.mjs` (ops generation — `build-component-ops.mjs` is `build-button-ops.mjs`'s per-component generalisation), `build-molecules.mjs`, `build-page.mjs`, `build-spec.mjs`, `check-parity.mjs`, `delete-page.mjs`, `export-png.mjs`, `harness.mjs`, `instance-map.mjs`, `plan.mjs`, `reorder-pages.mjs`, `tiers.mjs`, `token-map.mjs`, `push-variables.mjs`, `repairs/` (fix scripts). See `scripts/figma-atoms/README.md` and the skill for which of these are live vs. historical.
@@ -313,7 +317,6 @@ own file and (for two of them) one sibling script that itself is unreferenced.
 Candidates for deletion or adoption, not for silent reliance:
 
 - `build-axe-baseline.mjs` — superseded in function by `build-a11y-report.mjs`, which structures results per-component instead of grepping a jest log.
-- `build-figma-payload.mjs` — token → Figma payload generator; the live sync loop (`figma-atoms/`) does this differently now.
 - `verify-motion-axis.mjs` — motion-axis behavioural verification; no `pnpm run` wraps it.
 - `visual-compare.mjs`, `visual-compare-storybook.mjs`, `visual-parity-sweep.mjs` — T2.x-era Storybook-migration comparison scripts; the migration they verified is long done.
 - `figma-atoms/build-button-ops.mjs` — superseded by `figma-atoms/build-component-ops.mjs` (its own header calls itself "the per-component generalisation of build-button-ops.mjs").
