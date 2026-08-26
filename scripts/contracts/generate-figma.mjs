@@ -114,6 +114,38 @@ const STATE_ORDER = ['Default', 'Hover', 'Active', 'Focus', 'Disabled'];
  */
 const ICON_SIZE_FIGMA_VAR = 'theme/icon/md';
 
+/**
+ * T21: the "site" background token — CONFIRMED via token-map.mjs
+ * (`--al-theme-color-body-background` -> `theme/color/body/background`) and
+ * `libs/al-web-components/styles/core/base.scss:29` (`body { background: var(
+ * --al-theme-color-body-background); }`), i.e. the literal CSS `<body>`
+ * background, not a guess and not the same token T18's page-background
+ * workaround used (`theme/color/background/default` — a general-purpose
+ * surface token, plausible but not the one the app's own body rule reads).
+ * Used for BOTH the presentation frame's fill (a real bound variable — unlike
+ * PageNode, FrameNode.fills CAN bind variables) and the page-background
+ * literal (kept from T18 as a belt-and-braces fallback for anyone viewing the
+ * page without the frame in view; PageNode.backgrounds still cannot bind a
+ * variable, so that one stays a resolved literal by API limitation).
+ */
+const SITE_BG_FIGMA_VAR = 'theme/color/body/background';
+
+/** T21: padding around the presentation frame — a real spacing token (not a
+ * literal pixel guess), same "bind everything to a token" convention as the
+ * rest of this generator. */
+const FRAME_PADDING_FIGMA_VAR = 'theme/space/xl';
+
+/** T21: the variable COLLECTION whose mode drives whether bound `theme/*`
+ * variables resolve Light or Dark — CONFIRMED live via
+ * `figma.variables.getLocalVariableCollectionsAsync()` (exact name "Tier 2 |
+ * Theme", modes Light/Dark, `defaultModeId` currently resolving to "Dark" —
+ * matches SKILL.md's "library's default theme mode is DARK"). The
+ * presentation frame gets this collection's OWN default mode explicitly set
+ * via `setExplicitVariableModeForCollection` — "dep on defaults" per the
+ * task: never hardcode Light or Dark, always follow whatever the collection's
+ * `defaultModeId` currently says. */
+const THEME_MODE_COLLECTION_NAME = 'Tier 2 | Theme';
+
 /** Anatomy node (contract.schema.json shape) -> build-tree node carrying only
  * resolved Figma variable NAMES (contract tokens already carry `.figma`). */
 function convertAnatomyNode(node) {
@@ -371,6 +403,9 @@ function buildPluginCode(ops, SC) {
     const OPS = ${JSON.stringify(ops)};
     const PAGE_NAME = ${JSON.stringify(ops.page)};
     const ICON_SIZE_FIGMA_VAR = ${JSON.stringify(ICON_SIZE_FIGMA_VAR)};
+    const SITE_BG_FIGMA_VAR = ${JSON.stringify(SITE_BG_FIGMA_VAR)};
+    const FRAME_PADDING_FIGMA_VAR = ${JSON.stringify(FRAME_PADDING_FIGMA_VAR)};
+    const THEME_MODE_COLLECTION_NAME = ${JSON.stringify(THEME_MODE_COLLECTION_NAME)};
 
     await figma.loadAllPagesAsync();
     const V = {};
@@ -488,16 +523,18 @@ function buildPluginCode(ops, SC) {
     }
     await figma.setCurrentPageAsync(page);
 
-    // T18: the library's default theme mode is DARK (main.css bakes dark into
-    // root — SKILL.md), and the content colors this generator binds (e.g.
-    // content-primary-weak) are authored to read on a dark surface. A page
-    // left on Figma's default WHITE background is why the T12 pilot's light
-    // text read as invisible — mirror the real file's page convention here.
+    // T18/T21: the library's default theme mode is DARK (main.css bakes dark
+    // into root — SKILL.md), and the content colors this generator binds
+    // (e.g. content-primary-weak) are authored to read on a dark surface. A
+    // page left on Figma's default WHITE background is why the T12 pilot's
+    // light text read as invisible — mirror the real file's page convention
+    // here (kept as a belt-and-braces fallback now that the presentation
+    // frame below carries the REAL bound fill — see SITE_BG_FIGMA_VAR).
     // NOTE: PageNode.backgrounds throws "cannot be bound to variables" — this
     // is the one paint in this whole generator that is a resolved LITERAL,
     // not a bound variable (a Figma API limitation on Page, not a choice).
     {
-      const bgVarName = 'theme/color/background/default';
+      const bgVarName = SITE_BG_FIGMA_VAR;
       const vv = V[bgVarName];
       if (vv) {
         try {
@@ -646,6 +683,33 @@ function buildPluginCode(ops, SC) {
     const comps = [];
     for (const v of OPS.variants) comps.push(await buildVariant(v.state, hasVariantAxis ? v.variant : null, v.tokens || {}));
 
+    // T21: pitch must reserve room for the WIDEST a variant can ever render,
+    // not just its built (icons-hidden) default — Slot Before/After default
+    // to false, but a reviewer previewing a specific variant COMPONENT
+    // in-place (or an earlier verification pass, see the T19 report) can
+    // flip an icon layer's own visibility independent of the shared
+    // property default, since each variant is its own component with its
+    // own layer tree. Measuring with every icon layer forced VISIBLE first,
+    // then hiding them again (restoring the true Slot Before/After default),
+    // means the reserved cell size is correct for either state — this is
+    // "measure max variant width" from the T21 task, chosen over wrapping
+    // the grid in its own auto-layout because combineAsVariants'
+    // ABSOLUTE-positioned variant siblings are how Figma's own component
+    // sets are structured (switching variants must not reflow siblings).
+    const iconLayerNamesForMeasurement = ['Icon Before', 'Icon After'];
+    for (const comp of comps) {
+      for (const child of comp.children) {
+        if (child.type === 'INSTANCE' && iconLayerNamesForMeasurement.includes(child.name)) child.visible = true;
+      }
+    }
+    const maxWWithIcons = Math.max(...comps.map((c) => c.width), 60);
+    const maxHWithIcons = Math.max(...comps.map((c) => c.height), 24);
+    for (const comp of comps) {
+      for (const child of comp.children) {
+        if (child.type === 'INSTANCE' && iconLayerNamesForMeasurement.includes(child.name)) child.visible = false;
+      }
+    }
+
     // Grid layout: columns = Variant (or a single column when there is no
     // Variant axis), rows = State. Sizes are hug/content-driven (no pixel
     // geometry to plan a grid from ahead of time), so the pitch is computed
@@ -654,8 +718,8 @@ function buildPluginCode(ops, SC) {
     const stateAxisDef = OPS.axes.find((a) => a.name === 'State');
     const cols = variantAxisDef ? variantAxisDef.values : [null];
     const rows = stateAxisDef ? stateAxisDef.values : ['Default'];
-    const maxW = Math.max(...comps.map((c) => c.width), 60);
-    const maxH = Math.max(...comps.map((c) => c.height), 24);
+    const maxW = maxWWithIcons;
+    const maxH = maxHWithIcons;
     const pitchX = Math.ceil((maxW + 40) / 2) * 2;
     const pitchY = Math.ceil((maxH + 40) / 2) * 2;
     for (let i = 0; i < OPS.variants.length; i++) {
@@ -670,6 +734,66 @@ function buildPluginCode(ops, SC) {
     const set = figma.combineAsVariants(comps, page);
     set.name = OPS.componentSetName;
     set.x = 0; set.y = 0;
+
+    // T21: combineAsVariants sizes the resulting COMPONENT_SET (layoutMode
+    // NONE — a static bounding box, not a HUG frame) from its children's
+    // geometry AT THIS MOMENT, i.e. icons-HIDDEN (their true default) — the
+    // icons-visible measurement above only fixed the PITCH between siblings,
+    // so nothing overlaps arithmetically, but the set's own reported
+    // width/height still under-counts the icons-visible worst case. Since
+    // that static size does NOT recompute when a reviewer later toggles a
+    // Slot Before/After layer's visibility on a specific variant (each
+    // variant is its own component; the shared boolean default stays
+    // false), the set — and the presentation frame hugging it below — must
+    // be explicitly sized to the FULL grid footprint up front, or the last
+    // row/column clips against that frame's edge instead of showing its
+    // reserved padding. Never shrinks below what combineAsVariants already
+    // measured — only grows to the reserved worst case.
+    {
+      const footprintW = 40 + Math.max(cols.length - 1, 0) * pitchX + maxW;
+      const footprintH = 40 + Math.max(rows.length - 1, 0) * pitchY + maxH;
+      if (footprintW > set.width || footprintH > set.height) {
+        try { set.resize(Math.max(set.width, footprintW), Math.max(set.height, footprintH)); }
+        catch (e) { misses.add('set-resize-for-icon-worst-case'); }
+      }
+    }
+
+    // T21: presentation FRAME — real padding (bound to a spacing token, not
+    // a literal), fill bound to the site's own background token (unlike
+    // PageNode, FrameNode.fills CAN bind a variable — this is the real
+    // presentation surface now; the page-background literal above stays a
+    // secondary fallback). HUG auto-layout with ONE child (the set) is a
+    // padding box, nothing more — no manual size math needed, and no
+    // resize() is ever called (Sizing Modes ref trap stays avoided).
+    const presentationFrame = figma.createFrame();
+    presentationFrame.name = OPS.componentSetName + ' — Generated';
+    page.appendChild(presentationFrame);
+    presentationFrame.layoutMode = 'HORIZONTAL';
+    presentationFrame.primaryAxisSizingMode = 'AUTO';
+    presentationFrame.counterAxisSizingMode = 'AUTO';
+    bindNum(presentationFrame, 'paddingTop', FRAME_PADDING_FIGMA_VAR);
+    bindNum(presentationFrame, 'paddingBottom', FRAME_PADDING_FIGMA_VAR);
+    bindNum(presentationFrame, 'paddingLeft', FRAME_PADDING_FIGMA_VAR);
+    bindNum(presentationFrame, 'paddingRight', FRAME_PADDING_FIGMA_VAR);
+    { const p = await boundSolid(SITE_BG_FIGMA_VAR); if (p) presentationFrame.fills = [p]; }
+    presentationFrame.appendChild(set); // auto-layout repositions set itself; the manual x/y above is moot post-reparent
+    presentationFrame.x = 0; presentationFrame.y = 0;
+
+    // T21: "dep on defaults" — never hardcode Light or Dark; read whichever
+    // mode the collection's OWN defaultModeId currently names and set THAT
+    // explicitly on the frame, so bound theme variables under it always
+    // resolve consistently regardless of the file's own current appearance.
+    const themeModeCollection = (await figma.variables.getLocalVariableCollectionsAsync())
+      .find((c) => c.name === THEME_MODE_COLLECTION_NAME);
+    let appliedThemeMode = null;
+    if (themeModeCollection) {
+      try {
+        presentationFrame.setExplicitVariableModeForCollection(themeModeCollection, themeModeCollection.defaultModeId);
+        appliedThemeMode = themeModeCollection.modes.find((m) => m.modeId === themeModeCollection.defaultModeId)?.name ?? themeModeCollection.defaultModeId;
+      } catch (e) { misses.add('explicit-variable-mode:' + THEME_MODE_COLLECTION_NAME); }
+    } else {
+      misses.add('variable-collection:' + THEME_MODE_COLLECTION_NAME);
+    }
 
     const addedProps = [];
     for (const prop of OPS.componentProperties) {
@@ -737,6 +861,13 @@ function buildPluginCode(ops, SC) {
       missingVars: [...misses],
       textStylesLinked: linked,
       textNodesTotal: textNodes.length,
+      presentationFrame: presentationFrame.id,
+      presentationFrameFill: SITE_BG_FIGMA_VAR,
+      presentationFramePadding: FRAME_PADDING_FIGMA_VAR,
+      explicitThemeModeCollection: THEME_MODE_COLLECTION_NAME,
+      explicitThemeMode: appliedThemeMode,
+      maxVariantWidthWithIcons: maxWWithIcons,
+      maxVariantHeightWithIcons: maxHWithIcons,
     });
   `;
 }
