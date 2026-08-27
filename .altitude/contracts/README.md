@@ -263,6 +263,30 @@ plugin-free Propstar-equivalent documentation grid of every property
 combination next to the (lean, property-mode) set, without folding that
 fan-out into the set's own variants.
 
+**Module layout (2026-08-26 modularization).** `generate-figma.mjs` is now a
+thin CLI/orchestrator; the generator lives in `scripts/contracts/figma/`:
+`derive-ops.mjs` (the parity core — `buildOps()`, conditional-binding
+resolution, enum-axis selection), `derive-sheet-plan.mjs` (`buildSheetPlan()`
++ label humanizers + border-collapse rules), `conventions.mjs` (library-wide
+conventions: State order, canonical boolean-axis order, theme collection,
+site background, Phosphor resolution rules incl. the T29 wrong-library
+incident record), `sheet-style.mjs` (pure presentation: separator purple,
+dash pattern, cell pitch defaults, doc-header wiring), `plugin-snippets.mjs`
+(the single copy of the plugin-side guard/variable/text-style/cell-frame
+helpers both emitters compose), `build-set-code.mjs` and
+`build-sheet-code.mjs` (the two figma_execute code emitters).
+
+**Per-component config (`figma.gen.json`).** Component-specific generation
+judgment calls — icon size variable, full-width margin, label typography,
+sheet cell pitch, an explicit enum-prop pick — live WITH the component in
+`libs/al-web-components/components/<name>/figma.gen.json` (optional; defaults
+documented in `scripts/contracts/figma/component-config.mjs`; al-button ships
+the worked exemplar). Facts stay in the contract; judgment calls live next to
+the component. The enum ("Variant") axis itself is contract-driven and no
+longer assumes a prop literally named `variant`: any prop whose
+`bindings.figma.kind` is `VARIANT` fans out under its own `property` name
+(al-range's `behavior` -> a "Behavior" axis, al-input's `label` -> "Label").
+
 ```bash
 node scripts/figma-atoms/mcp-shim.mjs                          # keep running (Figma Desktop open, Bridge plugin running)
 node scripts/contracts/generate-figma.mjs --component al-button              # build/rebuild the lean, property-mode set
@@ -388,7 +412,7 @@ now available a different way — see "Documentation sheet (`--sheet`, T31)"
 below.
 
 **The fan-out machinery itself is NOT removed** — the schema fields, the
-`booleanAxisDefs`/cartesian derivation in `generate-figma.mjs`'s `buildOps()`,
+`booleanAxisDefs`/cartesian derivation in `scripts/contracts/figma/derive-ops.mjs`'s `buildOps()`,
 and this whole section's mechanics remain fully live, for two reasons: (1) a
 FUTURE component's real Figma set might genuinely fan a boolean out as its
 own axis, in which case curating `figmaAxis`/`axis: true` for THAT component
@@ -432,7 +456,7 @@ a static per-variant bake if its slot were ever curated as an axis.
 geometry at all (see "Deviations" below) and no real Figma set exposes this
 as an axis to inspect — a component that DID curate this into axis mode would
 render it as the variant's own natural hug width plus a fixed margin
-(`FULL_WIDTH_EXTRA_PX` in generate-figma.mjs), a documented judgment call,
+(`fullWidthExtraPx` in the component's `figma.gen.json`, default in `scripts/contracts/figma/component-config.mjs`), a documented judgment call,
 not an observed target width. al-button's own `fullWidth` is curated
 `omit: true` instead (see "Figma-expression opt-out" below) — not built at
 all, axis or property.
@@ -493,7 +517,7 @@ upgraded to `SHEET_SEPARATOR_GROUP_WEIGHT` (2px vs the ordinary 1px) — one
 line, heavier, never a second frame or a banner-side stroke. `itemSpacing: 0`
 on every row AND every group/grid-level frame is what makes these
 single-edge strokes read as ONE continuous line rather than a gap-then-a-line
-— see `rowBottomWeight()`/`cellRightWeight()` in `generate-figma.mjs` for the
+— see `rowBottomWeight()`/`cellRightWeight()` in `scripts/contracts/figma/derive-sheet-plan.mjs` for the
 exact pure-function rule, and `.mm/specs/2026-08-25-contract-backed-figma-
 parity-and-generation/verification/screenshots/t32-prop-sheet-borders-detail.png`
 for a zoomed crop proving no gaps/doubles. Every cell also gets real
@@ -534,7 +558,7 @@ sharing the same noun collapse and pluralize (`"Icons before + after"`),
 different nouns join as separate singular terms (`"Icon before + Content
 after"`); a non-slot boolean (a future component's, e.g. a curated `Is Full
 Width` axis) reads `"With full width"`. See `humanizeAxisValue()`/
-`humanizeBooleanCombo()` in `generate-figma.mjs` — pure string derivation
+`humanizeBooleanCombo()` in `scripts/contracts/figma/derive-sheet-plan.mjs` — pure string derivation
 from the contract, covered by the same `--check-determinism` proof as
 everything else in this plan.
 
@@ -549,7 +573,7 @@ other placement in the whole file (the master itself, used directly as the
 file's own "Documentation" landing page banner) — there is no established
 "component doc header" reuse convention to mirror, so this is new territory,
 not a copied pattern; see `SHEET_DOC_HEADER_MASTER_NAME`'s own comment in
-`generate-figma.mjs` for the full discovery. Content, all contract-derived
+`scripts/contracts/figma/sheet-style.mjs` for the full discovery. Content, all contract-derived
 and deterministic: the master's "Heading" text becomes the component's own
 display name (`contract.name`, e.g. "Button"); "Sub Heading" is left
 UNTOUCHED ("Altitude Design System" — the task named a title and a

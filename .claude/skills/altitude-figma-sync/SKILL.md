@@ -166,6 +166,19 @@ as `contractDrifted` even when code and Figma both still match. See
 - Icon-only is a SEPARATE set (`Button (Icon)`), not an axis.
 - Focus renders as a **2px stroke**, not a CSS-style outline.
 
+**Generator layout (modularized 2026-08-26).** `scripts/contracts/
+generate-figma.mjs` is a thin CLI; the generator's parts live in
+`scripts/contracts/figma/` — `derive-ops.mjs` (parity core), `derive-sheet-
+plan.mjs` (+ `sheet-style.mjs`, pure presentation), `conventions.mjs`
+(library-wide rules incl. Phosphor resolution and the T29 wrong-library
+incident), `plugin-snippets.mjs`, `build-set-code.mjs`, `build-sheet-code.mjs`.
+Per-component generation judgment calls (icon size var, full-width margin,
+label typography, sheet pitch, enum-prop pick) come from the OPTIONAL
+`libs/al-web-components/components/<name>/figma.gen.json`, merged over
+defaults in `scripts/contracts/figma/component-config.mjs` — al-button ships
+the worked exemplar. The enum axis is contract-driven (`bindings.figma.kind:
+"VARIANT"` + `property`), not a hard-coded prop named `variant`.
+
 **Fan-out convention for GENERATED sets (T23, spec 2026-08-25-contract-backed-
 figma-parity-and-generation; reverted to property mode as the DEFAULT, T31,
 same spec).** `scripts/contracts/generate-figma.mjs` reads a per-prop/per-slot
