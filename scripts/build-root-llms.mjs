@@ -103,8 +103,25 @@ try {
 }
 
 /** Every `server.registerTool(` in the MCP server — counted, not asserted in prose. */
-const mcpSource = fs.readFileSync(path.join(REPO_ROOT, 'libs/altitude-mcp/src/server.mjs'), 'utf8');
-const mcpTools = [...mcpSource.matchAll(/server\.registerTool\(\s*'([a-z_]+)'/g)].map((m) => m[1]);
+// Reads the TOOLS array in lib/tools.mjs. Tool registrations MOVED there from
+// inline server.registerTool('name', ...) calls in server.mjs (index.mjs now
+// registers them generically), and this script kept the old regex against
+// server.mjs long after it stopped matching anything. The failure mode was
+// quiet and misleading: zero matches was not an error, so the generator
+// emitted "MCP server - 0 tools" and the only symptom was check:llms saying
+// llms.txt "has drifted from the artifacts it is generated from" - when in
+// fact llms.txt was right and the GENERATOR had drifted. check-mcp-docs.mjs
+// took the same refactor but HAD a zero-match guard, so it failed loudly and
+// was repaired first (2026-08-27). Same source of record and same guard here
+// now; keep the two in step.
+const TOOLS_SOURCE = path.join(REPO_ROOT, 'libs/altitude-mcp/src/lib/tools.mjs');
+const mcpSource = fs.readFileSync(TOOLS_SOURCE, 'utf8');
+const mcpTools = [...mcpSource.matchAll(/name:\s*'(altitude_[a-z0-9_]+)'/g)].map((m) => m[1]);
+
+if (mcpTools.length === 0) {
+  console.error(`build-root-llms: found no tool names in ${TOOLS_SOURCE} - regex or file moved?`);
+  process.exit(1);
+}
 
 const projectIds = Object.keys(dsProjects.projects);
 const defaultProject = dsProjects.projects[dsProjects.default];
