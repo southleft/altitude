@@ -1,9 +1,13 @@
 import { defineConfig } from 'vite';
 
 // The landing page is published at the site root on Cloudflare Pages, so it
-// builds straight into the shared dist/ root. emptyOutDir:false because the
-// sibling app/storybook builds and copy:components have already populated
-// dist/ by the time this runs (it's the last step of build:all).
+// builds straight into the shared dist/ root. emptyOutDir:false because this
+// app shares dist/ with every sibling app build and copy:components — it owns
+// only dist/index.html and its own assets, never the whole directory. That is
+// what frees build:all to order the product surfaces (docs, then this) AHEAD of
+// the fixture apps rather than last, so a broken fixture cannot take the
+// documentation site down with it. See the "//build:all" note in the root
+// package.json.
 //
 // AI Showcase Homepage (2026-08-20-ai-showcase-homepage, descoped 2026-08-20
 // — see spec.md's Tasks note) — this app composes already-built
