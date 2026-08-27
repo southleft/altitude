@@ -17,15 +17,18 @@
 # asset path, the pagefind index (`pagefind --site ../../dist/docs`) and the
 # gates that hardcode dist/docs (gate:docs-panels, check:coverage).
 #
-# WHY THIS WORKS EVEN THOUGH dist/index.html EXISTS. Cloudflare's rule is
+# NOTHING SERVES `/` ANY MORE. apps/home was dropped from build:all on
+# 2026-08-27 ("i dont want to show it"), so no step writes dist/index.html and
+# this redirect is the only thing answering the root. The app's source is still
+# in the repo, parked and built by nothing -- see the "//build:app-home" note in
+# the root package.json.
+#
+# IT WOULD WORK EITHER WAY. Cloudflare's rule is
 # explicit: "Redirects are always followed, regardless of whether or not an
 # asset matches the incoming request."
-# (developers.cloudflare.com/pages/configuration/redirects/). So this fires on
-# `/` despite apps/home writing dist/index.html. The homepage is still built
-# and still deployed — it is simply no longer reachable at the root. If it
-# should stay reachable, give it its own path (build apps/home to dist/home/
-# with base '/home/'); if it should not be built at all, drop build:app-home
-# from build:all. Both are deliberate calls, so neither is made here.
+# (developers.cloudflare.com/pages/configuration/redirects/) -- so the rule fired
+# even while dist/index.html still existed, which is how it was verified live
+# before the homepage was dropped.
 #
 # `302`, NOT `301`, ON PURPOSE. A permanent redirect is cached hard by browsers
 # and CDNs and is genuinely painful to walk back — anyone who loaded the root
@@ -36,8 +39,8 @@
 # SCOPE: `/` matches the root path ONLY. A splat (`/*`) would capture the whole
 # site, including /docs/ itself, and loop.
 #
-# Vite copies apps/home/public/ verbatim into dist/, which IS the published
-# root (apps/home/vite.config.js:build.outDir), so this lands at dist/_redirects
-# — the same mechanism as _headers beside it.
+# HOW THIS REACHES THE ROOT. `pnpm run copy:pages-root` copies pages-root/ into
+# dist/ during build:all, so this lands at dist/_redirects -- the same mechanism
+# as _headers beside it. See pages-root/README.md.
 
 /    /docs/    302

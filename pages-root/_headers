@@ -28,8 +28,15 @@
 # sufficient and correct; check-llms-content-type.mjs now fails on a
 # comma-joined content-type so the class cannot come back silently.
 #
-# Vite copies apps/home/public/ verbatim into dist/, which IS the published
-# root (apps/home/vite.config.js:build.outDir), so this lands at dist/_headers.
+# HOW THIS REACHES THE ROOT. `pnpm run copy:pages-root` copies pages-root/ into
+# dist/ during build:all, so this lands at dist/_headers. Cloudflare reads
+# _headers ONLY from the published root -- a nested copy is ignored.
+#
+# It used to ride along inside apps/home/public/, because apps/home was the one
+# app that built straight into dist/. The homepage was dropped from the deploy
+# on 2026-08-27, which would have silently stopped shipping this file: the
+# artifacts would have kept serving, just with the wrong content-type and no
+# error anywhere. Hence pages-root/ -- see its README.
 
 /docs/*.txt
   Content-Type: text/plain; charset=utf-8

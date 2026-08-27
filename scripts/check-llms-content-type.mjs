@@ -30,7 +30,7 @@
  *
  *   npx serve dist -l 6345 & node scripts/check-llms-content-type.mjs http://localhost:6345
  *
- * The deployed content-type itself is declared in `apps/home/public/_headers`,
+ * The deployed content-type itself is declared in `pages-root/_headers`,
  * which Vite copies to the published root.
  */
 
@@ -95,7 +95,7 @@ for (const target of targets) {
   // and so passes a duplicated header happily -- which is exactly how this
   // shipped unnoticed on every `/docs/southleft/*` artifact until it was
   // observed on a live deployment. The cause was two overlapping rules in
-  // apps/home/public/_headers, where `*` matches across `/`; see that file.
+  // pages-root/_headers, where `*` matches across `/`; see that file.
   if (type.includes(',')) {
     problems.push(`content-type "${type}" repeats the field (RFC 9110 permits one); two _headers rules probably match this path`);
   }
