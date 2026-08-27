@@ -276,6 +276,22 @@ dash pattern, cell pitch defaults, doc-header wiring), `plugin-snippets.mjs`
 helpers both emitters compose), `build-set-code.mjs` and
 `build-sheet-code.mjs` (the two figma_execute code emitters).
 
+**Composition & nested components (spec 2026-08-26-contract-coverage…).**
+Every contract carries a derived `composition` section (the al-* components
+its own source renders — template tags + sibling imports) and its measured
+anatomy annotates nodes with `component: "al-<name>"` where a node's class
+list bears another component's `al-c-<name>` BEM block (measured anatomy
+flattens shadow DOM, so nesting is recoverable from block classes). The
+generator acts on this: a COMPOSITE component's variants are built by walking
+the anatomy — annotated nodes become INSTANCES of that component's own set
+(resolved BY NAME: its "🛠 " page first, then the scratch page; the DS "Icon"
+lone component via the wrapper path; outermost annotation wins, the subtree
+is never rebuilt), everything else becomes a coarse auto-layout frame.
+Unresolved tags (al-layout by design; unmapped components) degrade to frames
+and are reported per miss. Scratch-page clearing is NAME-SCOPED per component
+so sibling generated sets survive a sweep. Coverage snapshot + blockers:
+`.altitude/contracts/COVERAGE.md`.
+
 **Per-component config (`figma.gen.json`).** Component-specific generation
 judgment calls — icon size variable, full-width margin, label typography,
 sheet cell pitch, an explicit enum-prop pick — live WITH the component in
