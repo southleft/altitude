@@ -26,6 +26,7 @@
  */
 import { readManifest, writeManifest, digestOf } from '../../libs/altitude-mcp/src/lib/parity.mjs';
 import { resolveProject } from '../../libs/altitude-mcp/src/lib/ds-project.mjs';
+import { call as shimCall, parsePayload, shimPortFromArgv, checkDecoyGuard } from '../lib/figma-shim.mjs';
 
 const project = resolveProject();
 const projectFlag = project.isDefault ? '' : ` --project ${project.id}`;
@@ -33,40 +34,19 @@ const EXPECTED_KEY = project.figma.fileKey;
 const EXPECTED_NAME = project.figma.fileName;
 const PAGE_PREFIX = project.figma.componentPagePrefix ?? '';
 
-const portArg = process.argv.indexOf('--port');
-const PORT = portArg > -1 ? Number(process.argv[portArg + 1]) : 9401;
-const SHIM = `http://127.0.0.1:${PORT}/call`;
+const PORT = shimPortFromArgv();
 
+// Shared transport (scripts/lib/figma-shim.mjs); this wrapper keeps the CLI's
+// exit-1-on-unreachable behavior.
 async function call(name, args) {
-  let res;
   try {
-    res = await fetch(SHIM, { method: 'POST', body: JSON.stringify({ name, arguments: args }) });
-  } catch {
-    console.error(
-      `Cannot reach the figma-console shim on :${PORT}.\n` +
-        'Start it first:  node scripts/figma-atoms/mcp-shim.mjs\n' +
-        `(Figma Desktop must be open on "${EXPECTED_NAME}" with the Desktop Bridge plugin running.)`,
-    );
-    process.exit(1);
-  }
-  const body = await res.json();
-  if (body.error || body.isError) throw new Error(`${name} failed: ${JSON.stringify(body.error ?? body.text).slice(0, 500)}`);
-  return body.text;
-}
-
-/** figma_execute wraps output unpredictably — dig the JSON payload out. */
-function parsePayload(text) {
-  try {
-    const outer = JSON.parse(text);
-    // Common shapes: the value itself, or { result: <json-string> }.
-    if (typeof outer === 'string') return JSON.parse(outer);
-    if (outer && typeof outer.result === 'string') return JSON.parse(outer.result);
-    return outer?.result ?? outer;
-  } catch {
-    const start = text.indexOf('{');
-    const end = text.lastIndexOf('}');
-    if (start === -1 || end <= start) throw new Error(`unparseable figma_execute payload: ${text.slice(0, 300)}`);
-    return JSON.parse(text.slice(start, end + 1));
+    return await shimCall(name, args, { port: PORT, fileName: EXPECTED_NAME });
+  } catch (e) {
+    if (e?.code === 'ERR_SHIM_UNREACHABLE') {
+      console.error(e.message);
+      process.exit(1);
+    }
+    throw e;
   }
 }
 
@@ -109,18 +89,16 @@ if (manifest.project && manifest.project !== project.id) {
   process.exit(1);
 }
 
-// Guard against this project's decoy files before trusting anything we read.
+// Guard against this project's decoy files before trusting anything we read
+// (shared rule: checkDecoyGuard in scripts/lib/figma-shim.mjs).
 const status = parsePayload(await call('figma_get_status', {}));
-const statusStr = JSON.stringify(status);
-for (const decoy of project.figma.decoys ?? []) {
-  if (statusStr.includes(decoy.fileKey)) {
-    console.error(
-      `Refusing to refresh: Figma is on the "${decoy.fileName}" DECOY file. Open "${EXPECTED_NAME}" (${EXPECTED_KEY}).` +
-        (decoy.why ? `
-  ${decoy.why}` : ''),
-    );
-    process.exit(1);
-  }
+const guard = checkDecoyGuard(project, JSON.stringify(status));
+if (guard.blocked) {
+  console.error(
+    `Refusing to refresh: Figma is on the "${guard.decoy.fileName}" DECOY file. Open "${EXPECTED_NAME}" (${EXPECTED_KEY}).` +
+      (guard.decoy.why ? `\n  ${guard.decoy.why}` : ''),
+  );
+  process.exit(1);
 }
 
 const payload = parsePayload(await call('figma_execute', { code: SNAPSHOT_CODE }));

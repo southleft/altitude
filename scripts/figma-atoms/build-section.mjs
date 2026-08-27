@@ -25,6 +25,7 @@ import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { scope, projectArg } from './project-scope.mjs';
 import { figmaVariableFor } from './token-map.mjs';
+import { shimPortFromArgv } from '../lib/figma-shim.mjs';
 
 const SC = scope(projectArg());
 // A nested al-* component should be a real INSTANCE of its set, so fixing the
@@ -65,7 +66,7 @@ const PAGE = arg('--page', 'Home');
 // own tools page next to its set, not lumped onto one shared page.
 const PAGE_RAW = arg('--page-raw', null);
 const PAGE_ICON = String.fromCodePoint(0x1F4C4);
-const SHIM = Number(arg('--shim', '9401'));
+const SHIM = shimPortFromArgv(); // --port canonical, --shim legacy alias
 if (!SECTION || SECTION.startsWith('--')) {
   console.error('usage: build-section.mjs <section-id> [--project id] [--mode dark] [--page Home]');
   process.exit(1);

@@ -53,6 +53,13 @@ import { createRequire } from 'node:module';
 
 import { resolveProject, figmaNodeUrlFor } from '../../libs/altitude-mcp/src/lib/ds-project.mjs';
 import { readManifest, digestOf } from '../../libs/altitude-mcp/src/lib/parity.mjs';
+import { argOf } from '../lib/argv.mjs';
+import { call as shimCall, parsePayload, shimPortFromArgv, checkDecoyGuard } from '../lib/figma-shim.mjs';
+
+// Re-export for compatibility: this used to be the canonical home; the
+// import-safe home is now scripts/lib/figma-shim.mjs (this module runs
+// `await main()` at top level, so importing IT runs the extractor).
+export { checkDecoyGuard };
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(HERE, '..', '..');
@@ -77,18 +84,10 @@ const STATE_NAMES = ['hover', 'focus', 'active', 'disabled'];
 
 // ── argv ─────────────────────────────────────────────────────────────────
 
-function argOf(flag) {
-  const eq = process.argv.find((a) => a.startsWith(`${flag}=`));
-  if (eq) return eq.slice(flag.length + 1) || null;
-  const i = process.argv.indexOf(flag);
-  return i > -1 && process.argv[i + 1] && !process.argv[i + 1].startsWith('-') ? process.argv[i + 1] : null;
-}
-
 const COMPONENT = argOf('--component');
 const FROM_FIXTURE = argOf('--from-fixture');
 const SELF_TEST = process.argv.includes('--self-test');
-const PORT = Number(argOf('--port') ?? 9401);
-const SHIM = `http://127.0.0.1:${PORT}/call`;
+const PORT = shimPortFromArgv();
 const ANATOMY_DEPTH = Number(argOf('--depth') ?? DEFAULT_ANATOMY_DEPTH);
 // T23: a fan-out set (Slot Before/After + Is Full Width as VARIANT axes, e.g.
 // al-button's 200-variant pilot) is far bigger than the 25-variant sets this
@@ -118,22 +117,7 @@ function normPropKey(key) {
 
 const normState = (s) => String(s ?? '').toLowerCase().replace(/[^a-z]/g, '');
 
-// ── decoy guard (mirrors scripts/figma-parity/refresh-figma-digests.mjs) ──
-
-/**
- * Refuse to trust a Figma read if the connected file is a known decoy for
- * this project. `statusText` is the raw JSON.stringify of `figma_get_status`'s
- * response — same substring check refresh-figma-digests.mjs uses, since the
- * decoy fileKey appearing anywhere in that payload is enough to distrust it.
- *
- * @returns {{blocked: boolean, decoy: object|null}}
- */
-export function checkDecoyGuard(project, statusText) {
-  for (const decoy of project.figma?.decoys ?? []) {
-    if (statusText.includes(decoy.fileKey)) return { blocked: true, decoy };
-  }
-  return { blocked: false, decoy: null };
-}
+// ── decoy guard — moved to scripts/lib/figma-shim.mjs (imported + re-exported above) ──
 
 function runSelfTest() {
   const fakeProject = {
@@ -408,36 +392,18 @@ function validateWithAjv(contracts) {
   return true;
 }
 
-// ── shim transport (mirrors refresh-figma-digests.mjs's call()/parsePayload()) ──
+// ── shim transport — shared copy in scripts/lib/figma-shim.mjs; this wrapper
+//    only keeps the CLI's exit-1-on-unreachable behavior ──
 
 async function call(name, args) {
-  let res;
   try {
-    res = await fetch(SHIM, { method: 'POST', body: JSON.stringify({ name, arguments: args }) });
-  } catch {
-    console.error(
-      `Cannot reach the figma-console shim on :${PORT}.\n` +
-        'Start it first:  node scripts/figma-atoms/mcp-shim.mjs\n' +
-        '(Figma Desktop must be open with the Desktop Bridge plugin running, on the project\'s file.)',
-    );
-    process.exit(1);
-  }
-  const body = await res.json();
-  if (body.error || body.isError) throw new Error(`${name} failed: ${JSON.stringify(body.error ?? body.text).slice(0, 500)}`);
-  return body.text;
-}
-
-function parsePayload(text) {
-  try {
-    const outer = JSON.parse(text);
-    if (typeof outer === 'string') return JSON.parse(outer);
-    if (outer && typeof outer.result === 'string') return JSON.parse(outer.result);
-    return outer?.result ?? outer;
-  } catch {
-    const start = text.indexOf('{');
-    const end = text.lastIndexOf('}');
-    if (start === -1 || end <= start) throw new Error(`unparseable figma_execute payload: ${text.slice(0, 300)}`);
-    return JSON.parse(text.slice(start, end + 1));
+    return await shimCall(name, args, { port: PORT, fileName: null });
+  } catch (e) {
+    if (e?.code === 'ERR_SHIM_UNREACHABLE') {
+      console.error(e.message);
+      process.exit(1);
+    }
+    throw e;
   }
 }
 

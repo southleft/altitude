@@ -42,6 +42,7 @@ import { fileURLToPath } from 'node:url';
 
 import { resolveProject, figmaNodeUrlFor } from '../../libs/altitude-mcp/src/lib/ds-project.mjs';
 import { readManifest } from '../../libs/altitude-mcp/src/lib/parity.mjs';
+import { argOf } from '../lib/argv.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(HERE, '..', '..');
@@ -49,13 +50,6 @@ const CONTRACTS_DIR = join(REPO_ROOT, '.altitude', 'contracts');
 const DOCS_DIR = join(CONTRACTS_DIR, 'docs');
 
 // ── argv ────────────────────────────────────────────────────────────────
-
-function argOf(flag) {
-  const eq = process.argv.find((a) => a.startsWith(`${flag}=`));
-  if (eq) return eq.slice(flag.length + 1) || null;
-  const i = process.argv.indexOf(flag);
-  return i > -1 && process.argv[i + 1] && !process.argv[i + 1].startsWith('-') ? process.argv[i + 1] : null;
-}
 
 const COMPONENT = argOf('--component');
 const CHECK = process.argv.includes('--check');

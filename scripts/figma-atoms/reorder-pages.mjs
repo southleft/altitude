@@ -11,6 +11,9 @@
  * `Banner` moves too. Its Storybook title is `Molecules/Banner` while its Figma page sat
  * under ATOMS; the code is the source of truth, so Figma follows the code.
  */
+import { shimPortFromArgv } from '../lib/figma-shim.mjs';
+
+const SHIM = shimPortFromArgv();
 const DRY = process.argv.includes('--dry');
 
 // Order shown in the Figma page list. Banner first — it is the pre-existing page.
@@ -45,7 +48,7 @@ const order = figma.root.children.map((p) => p.name);
 return JSON.stringify({ moved, missing, order });
 `;
 
-const res = await fetch('http://localhost:9401/call', {
+const res = await fetch(`http://127.0.0.1:${SHIM}/call`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ name: 'figma_execute', arguments: { code, timeout: 180000 } }),

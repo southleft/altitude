@@ -12,11 +12,11 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { scope, projectArg } from './project-scope.mjs';
+import { shimPortFromArgv } from '../lib/figma-shim.mjs';
 
 const SC = scope(projectArg());
 const DRY = process.argv.includes('--dry');
-const shimArg = process.argv.indexOf('--shim');
-const SHIM = shimArg > -1 ? Number(process.argv[shimArg + 1]) : 9401;
+const SHIM = shimPortFromArgv(); // --port canonical, --shim legacy alias (scripts/lib/figma-shim.mjs)
 
 if (!SC.instanceMapPath) {
   console.error(`project "${SC.id}" has no instanceMap registered — nothing to sync.`);

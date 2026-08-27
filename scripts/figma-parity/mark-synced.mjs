@@ -31,17 +31,14 @@
  *   node scripts/figma-parity/mark-synced.mjs --project southleft al-button
  *   node scripts/figma-parity/mark-synced.mjs --project southleft al-hero  # brand-only tag
  */
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
-
 import { resolveProject } from '../../libs/altitude-mcp/src/lib/ds-project.mjs';
 import {
   readManifest,
   writeManifest,
   hashComponentSource,
   contractDigest,
-  digestOf,
   resolveComponentRoster,
+  opsDigestFor,
   contractFileHash,
   readCodeContract,
 } from '../../libs/altitude-mcp/src/lib/parity.mjs';
@@ -77,11 +74,8 @@ if (tags.length === 0) {
   process.exit(1);
 }
 
-function opsDigestFor(tag) {
-  const p = join(project.resolved.opsDir, `${tag}.json`);
-  if (!existsSync(p)) return null;
-  return digestOf(JSON.parse(readFileSync(p, 'utf8')));
-}
+// opsDigestFor — shared from parity.mjs since 2026-08-27 (R4).
+const opsDigest = (tag) => opsDigestFor(project, tag);
 
 const now = new Date().toISOString();
 let stamped = 0;
@@ -130,7 +124,7 @@ for (const tag of tags) {
     // still written beside it so an older reader keeps working, but a JSDoc
     // edit moves only the hash and no longer flips the badge.
     contractDigest: contractDigest(component),
-    figmaDigest: entry.figmaCurrentDigest ?? entry.lastSync?.figmaDigest ?? opsDigestFor(tag),
+    figmaDigest: entry.figmaCurrentDigest ?? entry.lastSync?.figmaDigest ?? opsDigest(tag),
     // OPTIONAL (T11) — omitted entirely (not written as null) when no
     // tracked contract file exists yet, so a manifest entry for a tag never
     // seeded stays exactly as small as it was before this existed.

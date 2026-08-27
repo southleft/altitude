@@ -23,7 +23,7 @@
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { resolveProject } from '../../libs/altitude-mcp/src/lib/ds-project.mjs';
+import { projectFromArgv, resolveProject } from '../../libs/altitude-mcp/src/lib/ds-project.mjs';
 
 /** Resolve the project honouring `--project <id>`, then `DS_PROJECT`, then the registry default. */
 export function scope(explicitId = null) {
@@ -111,8 +111,14 @@ export function brandCssHref(sc, mode, libraryRoot) {
   return mode === 'light' ? '/css/css/theme/tokens-light.css' : null;
 }
 
-/** Read `--project <id>` without pulling an arg parser in. */
+/**
+ * Read `--project <id>` / `--project=<id>` out of argv.
+ *
+ * Delegates to ds-project.mjs's projectFromArgv so every CLI parses the flag
+ * identically — the old local indexOf-only parse silently dropped the
+ * `--project=southleft` spelling, resolving the DEFAULT project for the one
+ * script in this tree that writes to Figma (generate-figma.mjs).
+ */
 export function projectArg(argv = process.argv) {
-  const i = argv.indexOf('--project');
-  return i > -1 ? argv[i + 1] : null;
+  return projectFromArgv(argv);
 }

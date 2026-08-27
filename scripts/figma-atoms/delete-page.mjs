@@ -12,10 +12,11 @@
  * Refuses to touch anything that is not a `🛠 ` page, so a typo cannot delete Cover,
  * a divider, or the Playground.
  */
+import { shimPortFromArgv } from '../lib/figma-shim.mjs';
+
 const name = process.argv[2];
 if (!name) { console.error('usage: delete-page.mjs "<Component Name>"'); process.exit(1); }
-const shimArg = process.argv.indexOf('--shim');
-const SHIM = shimArg > -1 ? Number(process.argv[shimArg + 1]) : 9401;
+const SHIM = shimPortFromArgv(); // --port canonical, --shim legacy alias (scripts/lib/figma-shim.mjs)
 
 const code = `
 await figma.loadAllPagesAsync();

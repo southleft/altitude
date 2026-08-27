@@ -39,11 +39,10 @@
  *   node scripts/contracts/emit-contracts.mjs --check-drift           # re-derive every tracked component in memory, diff vs. on-disk (status/version excluded); exit 1 on any drift
  *   node scripts/contracts/emit-contracts.mjs --check                 # ajv-validate the on-disk contracts against contract.schema.json, read-only — refuses an illegal contract file BY NAME (path + failing rule)
  *   node scripts/contracts/emit-contracts.mjs --check-determinism     # T15 CI gate: re-derive every tracked contract TWICE in memory, byte-compare the two serializations; exit 1 + names any component whose two derivations differ
- *   node scripts/contracts/emit-contracts.mjs --adopt                 # ONE-OFF: flip status derived -> source and bump version 0.1.0 -> 1.0.0 on every on-disk contract (the T10 adoption pass; safe to re-run, idempotent)
  *   node scripts/contracts/emit-contracts.mjs                         # no mode flag: prints this usage note, does nothing, exit 1
  *   ... any of the above + --project southleft / DS_PROJECT
  *   pnpm run contracts:seed / contracts:seed:sl / contracts:check / contracts:validate / contracts:check-determinism
- *   pnpm run gate:contracts   # T15 — all three legs, both projects (CI)
+ *   pnpm run gate:contracts   # the CI gate — five legs, both projects (see package.json //gate:contracts)
  */
 import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
@@ -51,8 +50,10 @@ import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 
 import { resolveProject, figmaNodeUrlFor } from '../../libs/altitude-mcp/src/lib/ds-project.mjs';
-import { readManifest, resolveComponentRoster } from '../../libs/altitude-mcp/src/lib/parity.mjs';
+import { readManifest, resolveComponentRoster, unionValues } from '../../libs/altitude-mcp/src/lib/parity.mjs';
+import { normKey } from '../../libs/altitude-mcp/src/lib/contract-diff.mjs';
 import { CSS_TO_TOKEN } from '../figma-atoms/token-map.mjs';
+import { argOf } from '../lib/argv.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(HERE, '..', '..');
@@ -63,19 +64,9 @@ const SEED = process.argv.includes('--seed');
 const CHECK_DRIFT = process.argv.includes('--check-drift');
 const CHECK = process.argv.includes('--check');
 const CHECK_DETERMINISM = process.argv.includes('--check-determinism');
-const ADOPT = process.argv.includes('--adopt');
-const ADD_CONDITIONAL_BINDINGS = process.argv.includes('--add-conditional-bindings');
 const REFRESH = process.argv.includes('--refresh');
 const FORCE = process.argv.includes('--force');
 const STATES = ['hover', 'focus', 'active', 'disabled'];
-
-/** `--flag value` or `--flag=value` -> `value`; absent -> null. Mirrors extract-canvas.mjs's argOf(). */
-function argOf(flag) {
-  const eq = process.argv.find((a) => a.startsWith(`${flag}=`));
-  if (eq) return eq.slice(flag.length + 1) || null;
-  const i = process.argv.indexOf(flag);
-  return i > -1 && process.argv[i + 1] && !process.argv[i + 1].startsWith('-') ? process.argv[i + 1] : null;
-}
 
 /** `--seed --component al-button` — bootstrap ONE tag only (T16: what the WC plop generator's
  * documented follow-up command runs once a freshly-scaffolded component has a CEM entry). */
@@ -104,10 +95,6 @@ Pick one:
   --check-drift       re-derive every tracked component and diff it against the on-disk contract (status/version excluded; anatomy/tokens/states/semantics also excluded when spec-light.json is unavailable in this environment); exit 1 on drift
   --check             ajv-validate the on-disk contracts against contract.schema.json, read-only — refuses an illegal contract file BY NAME
   --check-determinism re-derive every tracked contract TWICE in memory and byte-compare the two serializations; exit 1 + names any component whose two derivations differ
-  --adopt             one-off: flip status derived -> source, bump version 0.1.0 -> 1.0.0 (idempotent)
-  --add-conditional-bindings  one-off (T18): merge the derived \`conditionalBindings\` field into every
-                      on-disk contract that has none yet drift-free otherwise; skips (loudly) any
-                      contract whose OTHER fields already drift from derivation, rather than clobber it
   --refresh           (T25) re-derive every tracked contract and OVERWRITE its derived fields in
                       place with the fresh derivation — status/version, slots[].figmaPlaceholder,
                       slots[].figmaAxis, slots[].figmaOmit (T27), and axis-or-omit-curated
@@ -125,19 +112,9 @@ Pick one:
   node scripts/contracts/emit-contracts.mjs --check --project <id>
 `;
 
-// ── small, dependency-free CEM-text helpers (mirrors parity.mjs's private
-//    unionValues()/normKey() — not exported from there, so re-derived here
-//    rather than reaching into another module's internals) ─────────────────
-
-/** `'a' | 'b'` -> ['a','b']; a non-union type -> []. */
-function unionValues(typeText) {
-  const parts = String(typeText ?? '').split('|').map((s) => s.trim());
-  if (parts.length < 2) return [];
-  const literals = parts.filter((s) => /^'[^']*'$/.test(s)).map((s) => s.slice(1, -1));
-  return literals.length === parts.length ? literals.sort() : [];
-}
-
-const normKey = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+// unionValues/normKey — imported from their canonical homes since 2026-08-27
+// (spec parity-system-audit-remediation R4); the byte-identical private
+// copies that used to live here are gone.
 
 function titleCase(tag) {
   return tag
@@ -1106,130 +1083,17 @@ function runCheckOnly() {
   if (!validateWithAjv(loaded)) process.exit(1);
 }
 
-// ── --adopt: one-off status/version flip (T10 adoption pass) ──────────────
-//
-// Mechanical and deterministic on purpose: parses each on-disk contract,
-// mutates ONLY `status`/`version`, and re-serializes with the emitter's own
-// stable formatting (2-space indent, trailing newline). Every other key's
-// value and the object's own key ORDER is exactly what was already on disk —
-// JSON.parse->mutate->JSON.stringify never reorders untouched keys — so this
-// is a curation-metadata rewrite, not a re-derivation; doing the same edit by
-// hand across 128 files would have been unreviewable.
-
-function runAdopt() {
-  const project = resolveProject();
-  const dir = join(CONTRACTS_DIR, project.id);
-  if (!existsSync(dir)) {
-    console.error(`[contracts] no contracts directory for "${project.id}" at ${relative(REPO_ROOT, dir)} — nothing to adopt.`);
-    process.exit(2);
-  }
-  const files = readdirSync(dir).filter((f) => f.endsWith('.contract.json')).sort();
-
-  let adopted = 0;
-  let alreadySource = 0;
-  let unexpectedVersion = 0;
-  let unexpectedStatus = 0;
-
-  for (const f of files) {
-    const p = join(dir, f);
-    const contract = JSON.parse(readFileSync(p, 'utf8'));
-    if (contract.status === 'source') {
-      alreadySource++;
-      continue;
-    }
-    if (contract.status !== 'derived') {
-      unexpectedStatus++;
-      console.warn(`[contracts] skip ${f}: status is "${contract.status}", not "derived" — not touching.`);
-      continue;
-    }
-    if (contract.version !== '0.1.0') {
-      unexpectedVersion++;
-      console.warn(`[contracts] ${f}: version is "${contract.version}", not the expected "0.1.0" — flipping status only, version left as-is.`);
-    } else {
-      contract.version = '1.0.0';
-    }
-    contract.status = 'source';
-    writeFileSync(p, JSON.stringify(contract, null, 2) + '\n', 'utf8');
-    adopted++;
-  }
-
-  console.log(
-    `[contracts] --adopt ${project.id}: adopted ${adopted}, already-source ${alreadySource}, unexpected status ${unexpectedStatus}, unexpected version ${unexpectedVersion} (of ${files.length}).`,
-  );
-}
-
-// ── --add-conditional-bindings: one-off T18 migration ──────────────────────
-//
-// Mirrors --adopt's shape (parse on-disk JSON, mutate ONE thing, re-serialize
-// with the emitter's own stable formatting) but the "one thing" here is a
-// brand-new derived field, not curation metadata. Safety check before writing
-// ANY file: re-derive the contract and diff it against disk with the same
-// driftedFields() --check-drift uses, ignoring status/version AND
-// conditionalBindings itself (that field differing — disk has none yet,
-// derived may have one — is the expected, desired change this pass makes).
-// If anything ELSE differs too, this contract has drifted from derivation for
-// an unrelated reason; skip it loudly rather than silently overwrite whatever
-// hand edit caused that drift.
-
-function runAddConditionalBindings() {
-  const { project, manifest, byTag, measuredSpec, outDir, trackedTags } = loadContext();
-  const ignored = new Set([...DRIFT_IGNORED_FIELDS, 'conditionalBindings']);
-
-  let added = 0;
-  let unchanged = 0;
-  let skippedNoBindings = 0;
-  let skippedOtherDrift = 0;
-  let skipped = 0;
-
-  for (const tag of trackedTags) {
-    const { reason, contract: derived } = deriveOne({ tag, manifest, byTag, project, measuredSpec });
-    if (reason) {
-      skipped++;
-      continue;
-    }
-
-    const outPath = join(outDir, `${tag}.contract.json`);
-    if (!existsSync(outPath)) {
-      skipped++;
-      console.error(`[contracts] MISSING — ${tag} has no contract on disk, skipping.`);
-      continue;
-    }
-
-    const disk = JSON.parse(readFileSync(outPath, 'utf8'));
-    const otherDrift = driftedFields(disk, derived, ignored);
-    if (otherDrift.length) {
-      skippedOtherDrift++;
-      console.error(`[contracts] SKIP ${tag} — unrelated drift on ${otherDrift.join(', ')}; not touching (fix drift first).`);
-      continue;
-    }
-
-    if (!derived.conditionalBindings) {
-      skippedNoBindings++;
-      continue; // this component's .scss has no BEM modifiers / nested state rules — nothing to add
-    }
-
-    if (JSON.stringify(disk.conditionalBindings) === JSON.stringify(derived.conditionalBindings)) {
-      unchanged++;
-      continue;
-    }
-
-    disk.conditionalBindings = derived.conditionalBindings;
-    writeFileSync(outPath, JSON.stringify(disk, null, 2) + '\n', 'utf8');
-    added++;
-  }
-
-  console.log(
-    `[contracts] --add-conditional-bindings ${project.id}: added ${added}, unchanged ${unchanged}, ` +
-      `no-bindings-in-scss ${skippedNoBindings}, skipped-other-drift ${skippedOtherDrift}, skipped ${skipped} ` +
-      `(of ${trackedTags.length} tracked).`,
-  );
-  if (skippedOtherDrift) process.exit(1);
-}
+// ── the one-off --adopt (T10) and --add-conditional-bindings (T18) migration
+//    modes lived here until 2026-08-27 — both had already run to completion on
+//    every tracked contract, so they were deleted (spec
+//    parity-system-audit-remediation, R7). Their story is in
+//    .altitude/contracts/DECISIONS.md; --refresh below is the general-purpose
+//    successor for re-derivation with curation preserved. ──
 
 // ── --refresh (T25): re-derive every tracked contract, curation preserved ─
 //
-// The general-purpose successor to the one-off --adopt/--add-conditional-bindings
-// migrations: every DERIVED field (everything the table in README.md's "Contract
+// The general-purpose successor to the (since-deleted) one-off --adopt /
+// --add-conditional-bindings migrations — see .altitude/contracts/DECISIONS.md: every DERIVED field (everything the table in README.md's "Contract
 // field | Source" names) becomes exactly what a fresh derivation produces; every
 // CURATED field (status, version, slots[].figmaPlaceholder, slots[].figmaAxis,
 // slots[].figmaOmit (T27), axis-or-omit-mode props[].bindings.figma) is carried
@@ -1291,8 +1155,6 @@ function runRefresh() {
 // ── main ─────────────────────────────────────────────────────────────────
 
 function main() {
-  if (ADOPT) return runAdopt();
-  if (ADD_CONDITIONAL_BINDINGS) return runAddConditionalBindings();
   if (REFRESH) return runRefresh();
   if (CHECK_DRIFT) return runCheckDrift();
   if (CHECK_DETERMINISM) return runCheckDeterminism();

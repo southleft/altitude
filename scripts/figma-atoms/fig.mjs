@@ -13,12 +13,12 @@
  */
 import { readFileSync } from 'node:fs';
 import { scope, projectArg } from './project-scope.mjs';
+import { shimPortFromArgv } from '../lib/figma-shim.mjs';
 
 const SC = scope(projectArg());
 const argv = process.argv;
 const arg = (flag) => { const i = argv.indexOf(flag); return i > -1 ? argv[i + 1] : null; };
-const shimArg = argv.indexOf('--shim');
-const SHIM = shimArg > -1 ? Number(argv[shimArg + 1]) : 9401;
+const SHIM = shimPortFromArgv(argv); // --port canonical, --shim legacy alias
 
 let code = arg('-e');
 const file = arg('-f');

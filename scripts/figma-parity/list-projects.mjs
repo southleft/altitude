@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * list-projects.mjs — show every design system declared in
- * `.altitude/ds-projects.json`, with its Figma file, Storybook port, parity
+ * `.altitude/ds-projects.json`, with its Figma file, docs base, parity
  * manifest and live parity summary.
  *
  * This is the "what's what" view: one command that answers which design systems
@@ -38,10 +38,8 @@ for (const id of listProjectIds()) {
     figmaFileName: p.figma.fileName,
     figmaFileKey: p.figma.fileKey,
     figmaUrl: p.resolved.figmaUrlBase,
-    // Optional: Southleft's Storybook was retired 2026-08-23 (docs site instead).
-    storybookPort: p.storybook?.port ?? null,
-    storybookConfigDir: p.storybook?.configDir ?? null,
     docs: p.docs?.productionBase ?? null,
+    docsRoute: p.docs?.route ?? null,
     parityManifest: p.paths.parityManifest,
     manifestExists,
     summary,
@@ -60,7 +58,7 @@ for (const r of rows) {
   console.log(`  brand      ${r.brand}`);
   console.log(`  figma      "${r.figmaFileName}" (${r.figmaFileKey})`);
   console.log(`             ${r.figmaUrl}`);
-  console.log(`  storybook  port ${r.storybookPort} — ${r.storybookConfigDir}`);
+  console.log(`  docs       ${r.docs ?? '(none)'}`);
   console.log(`  manifest   ${r.parityManifest}${r.manifestExists ? '' : '  [MISSING — run parity:seed]'}`);
   if (r.error) {
     console.log(`  parity     ERROR: ${r.error}`);

@@ -29,20 +29,14 @@ import { fileURLToPath } from 'node:url';
 
 import { resolveProject } from '../../libs/altitude-mcp/src/lib/ds-project.mjs';
 import { diffContracts } from '../../libs/altitude-mcp/src/lib/contract-diff.mjs';
+import { contractFilePath } from '../../libs/altitude-mcp/src/lib/parity.mjs';
+import { argOf } from '../lib/argv.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(HERE, '..', '..');
-const CONTRACTS_DIR = join(REPO_ROOT, '.altitude', 'contracts');
 const FIXTURES_DIR = join(HERE, '__fixtures__');
 
 // ── argv ────────────────────────────────────────────────────────────────
-
-function argOf(flag) {
-  const eq = process.argv.find((a) => a.startsWith(`${flag}=`));
-  if (eq) return eq.slice(flag.length + 1) || null;
-  const i = process.argv.indexOf(flag);
-  return i > -1 && process.argv[i + 1] && !process.argv[i + 1].startsWith('-') ? process.argv[i + 1] : null;
-}
 
 const COMPONENT = argOf('--component');
 const ALL = process.argv.includes('--all');
@@ -62,7 +56,7 @@ function loadJson(path) {
 }
 
 function diffOne(project, tag, canvasFileOverride = null) {
-  const codeContract = loadJson(join(CONTRACTS_DIR, project.id, `${tag}.contract.json`));
+  const codeContract = loadJson(contractFilePath(project, tag));
   const canvasPath = canvasFileOverride
     ? join(REPO_ROOT, canvasFileOverride)
     : join(project.resolved.figmaSyncDir, 'canvas-contracts', `${tag}.canvas.json`);
@@ -72,7 +66,7 @@ function diffOne(project, tag, canvasFileOverride = null) {
 
 function printResult({ tag, codeContract, canvasContract, diff }) {
   if (!codeContract) {
-    console.log(`[diff] ${tag}: no code contract at .altitude/contracts/<project>/${tag}.contract.json — run contracts:emit.`);
+    console.log(`[diff] ${tag}: no code contract at .altitude/contracts/<project>/${tag}.contract.json — run contracts:seed.`);
     return;
   }
   if (!canvasContract) {
@@ -168,9 +162,10 @@ function main() {
   const project = resolveProject();
 
   if (ALL) {
-    const dir = join(CONTRACTS_DIR, project.id);
+    // dirname of the canonical per-tag path — one path rule (parity.mjs).
+    const dir = dirname(contractFilePath(project, '_'));
     if (!existsSync(dir)) {
-      console.error(`[diff] no contracts emitted for "${project.id}" — run contracts:emit first.`);
+      console.error(`[diff] no contracts for "${project.id}" — run contracts:seed first.`);
       process.exit(2);
     }
     const tags = readdirSync(dir)

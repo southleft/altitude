@@ -2,17 +2,30 @@
 /**
  * check-parity.mjs — built Figma variant sizes vs the measured browser sizes.
  *
- *   node scripts/figma-atoms/check-parity.mjs [key ...]
+ *   node scripts/figma-atoms/check-parity.mjs [key ...] [--project <id>] [--port <n>]
  *
  * The ops files carry each row's `expected` box straight from the real rendered
  * component, so this compares Figma against the browser rather than against itself.
  * Auto-layout resizes, so an exact match is not the bar — anything over TOL is worth
  * a look, and a variant MISSING from Figma is always a real failure.
+ *
+ * MULTI-PROJECT (2026-08-27, spec parity-system-audit-remediation R1b): ops files
+ * are read from the ACTIVE project's ops dir (`--project <id>` / DS_PROJECT /
+ * registry default), absolute — not the old cwd-relative Altitude literal. The
+ * old positional parse also kept `--project`'s VALUE as a component key, so the
+ * exact command parity.mjs's aiPrompt hands out used to die on
+ * `ops/southleft.json` ENOENT.
  */
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { scope, projectArg } from './project-scope.mjs';
+import { call, parsePayload, shimPortFromArgv } from '../lib/figma-shim.mjs';
+import { positionals } from '../lib/argv.mjs';
 
+const sc = scope(projectArg());
+const PORT = shimPortFromArgv();
 const TOL = 4; // px
-const keys = process.argv.slice(2).filter((a) => !a.startsWith('--'));
+const keys = positionals(process.argv, { valueFlags: ['--project', '--port', '--shim'] });
 
 const MOLECULES = [
   'al-checkbox-group', 'al-radio-group',
@@ -22,9 +35,21 @@ const MOLECULES = [
 ];
 const targets = keys.length ? keys : MOLECULES;
 
+const opsFor = (key) => {
+  const p = join(sc.dirs.ops, `${key}.json`);
+  try {
+    return JSON.parse(readFileSync(p, 'utf8'));
+  } catch (e) {
+    console.error(`[check-parity] Cannot read ops file for "${key}" (${p}): ${e.message}`);
+    console.error(`Is "${key}" a component tag with generated ops for project "${sc.id}"?`);
+    process.exit(1);
+  }
+};
+const opsByKey = new Map(targets.map((k) => [k, opsFor(k)]));
+
 const code = `
 await figma.loadAllPagesAsync();
-const want = ${JSON.stringify(targets.map((k) => JSON.parse(readFileSync('.altitude/figma-sync/ops/' + k + '.json', 'utf8')).name))};
+const want = ${JSON.stringify([...opsByKey.values()].map((o) => o.name))};
 const out = {};
 for (const name of want) {
   const page = figma.root.children.find((p) => p.name === '\\u{1F6E0} ' + name);
@@ -37,20 +62,19 @@ for (const name of want) {
 return JSON.stringify(out);
 `;
 
-const res = await fetch('http://localhost:9401/call', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ name: 'figma_execute', arguments: { code, timeout: 180000 } }),
-});
-const out = await res.json();
-if (out.isError) { console.error(String(out.text).slice(0, 300)); process.exit(1); }
-const inner = JSON.parse(out.text);
-if (!inner.success) { console.error(String(inner.error).slice(0, 300)); process.exit(1); }
-const live = JSON.parse(inner.result);
+let live;
+try {
+  const payload = parsePayload(await call('figma_execute', { code, timeout: 180000 }, { port: PORT, fileName: sc.fileName }));
+  if (payload && payload.success === false) throw new Error(String(payload.error ?? 'figma_execute reported success:false'));
+  live = typeof payload === 'string' ? JSON.parse(payload) : payload;
+} catch (e) {
+  console.error(String(e.message).slice(0, 500));
+  process.exit(1);
+}
 
 let totalOff = 0; let totalMissing = 0; let totalChecked = 0;
 for (const key of targets) {
-  const ops = JSON.parse(readFileSync(`.altitude/figma-sync/ops/${key}.json`, 'utf8'));
+  const ops = opsByKey.get(key);
   const built = live[ops.name];
   if (!built) { console.log(`${ops.name.padEnd(18)} NO PAGE/SET IN FIGMA`); totalMissing++; continue; }
   const byName = new Map(built.map((b) => [b.n, b]));
@@ -73,4 +97,4 @@ for (const key of targets) {
   for (const o of offs.slice(0, 3)) console.log(`    OFF      ${o}`);
   if (offs.length > 3) console.log(`    ... ${offs.length - 3} more off`);
 }
-console.log(`\nchecked ${totalChecked} variants | ${totalOff} outside ${TOL}px | ${totalMissing} missing`);
+console.log(`\n[${sc.id}] checked ${totalChecked} variants | ${totalOff} outside ${TOL}px | ${totalMissing} missing`);

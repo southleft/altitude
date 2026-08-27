@@ -37,8 +37,8 @@ import {
   readManifest,
   writeManifest,
   hashComponentSource,
-  digestOf,
   resolveComponentRoster,
+  opsDigestFor,
 } from '../../libs/altitude-mcp/src/lib/parity.mjs';
 
 const force = process.argv.includes('--force');
@@ -74,11 +74,8 @@ if (existsSync(opsIndexPath)) {
   for (const c of idx.components ?? []) opsNames.set(c.key, c.name);
 }
 
-function opsDigestFor(tag) {
-  const p = join(project.resolved.opsDir, `${tag}.json`);
-  if (!existsSync(p)) return null;
-  return digestOf(JSON.parse(readFileSync(p, 'utf8')));
-}
+// opsDigestFor — shared from parity.mjs since 2026-08-27 (R4).
+const opsDigest = (tag) => opsDigestFor(project, tag);
 
 const existing = force ? null : readManifest(project);
 const manifest = existing ?? {
@@ -163,7 +160,7 @@ for (const { component: c, view } of roster) {
 
   const entry = {
     figma,
-    lastSync: figma ? { date: now, codeHash, figmaDigest: opsDigestFor(c.tag) } : null,
+    lastSync: figma ? { date: now, codeHash, figmaDigest: opsDigest(c.tag) } : null,
     figmaCurrentDigest: null,
   };
   if (EXCLUDED[c.tag]) {

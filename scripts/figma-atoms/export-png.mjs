@@ -7,6 +7,9 @@
  * figma_get_component_image needs a REST token this setup does not have; the plugin
  * sandbox can export bytes directly, so the image comes back base64 over the bridge.
  */
+import { shimPortFromArgv } from '../lib/figma-shim.mjs';
+
+const SHIM = shimPortFromArgv();
 const [nodeId, outFile] = process.argv.slice(2);
 if (!nodeId || !outFile) { console.error('usage: export-png.mjs <nodeId> <outFile> [--scale N]'); process.exit(1); }
 const si = process.argv.indexOf('--scale');
@@ -23,7 +26,7 @@ for (let i = 0; i < bytes.length; i += CH) s += String.fromCharCode.apply(null, 
 return btoa(s);
 `;
 
-const res = await fetch('http://localhost:9401/call', {
+const res = await fetch(`http://127.0.0.1:${SHIM}/call`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ name: 'figma_execute', arguments: { code, timeout: 180000 } }),

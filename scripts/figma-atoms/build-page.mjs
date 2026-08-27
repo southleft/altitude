@@ -19,6 +19,7 @@ import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { isMolecule, tierOf } from './tiers.mjs';
 import { scope, projectArg } from './project-scope.mjs';
+import { shimPortFromArgv } from '../lib/figma-shim.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const SC = scope(projectArg());
@@ -28,8 +29,7 @@ const { resolveInstance, MISSING_IN_FIGMA } = SC.instanceMapPath
 const key = process.argv[2];
 if (!key) { console.error('usage: build-page.mjs <ops-key> [--dry]'); process.exit(1); }
 const DRY = process.argv.includes('--dry');
-const shimArg = process.argv.indexOf('--shim');
-const SHIM = shimArg > -1 ? Number(process.argv[shimArg + 1]) : 9401;
+const SHIM = shimPortFromArgv(); // --port canonical, --shim legacy alias (scripts/lib/figma-shim.mjs)
 
 const ops = JSON.parse(readFileSync(join(SC.dirs.ops, `${key}.json`), 'utf8'));
 

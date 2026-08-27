@@ -66,6 +66,11 @@ import { buildOps } from './figma/derive-ops.mjs';
 import { buildSheetPlan } from './figma/derive-sheet-plan.mjs';
 import { buildPluginCode } from './figma/build-set-code.mjs';
 import { buildSheetSetupPluginCode, buildSheetGroupPluginCode } from './figma/build-sheet-code.mjs';
+import { argOf } from '../lib/argv.mjs';
+// NOT from ./extract-canvas.mjs — that module is a CLI that runs `await main()`
+// at top level; the shared lib is the import-safe home for all three.
+import { call as shimCall, parsePayload, shimPortFromArgv, checkDecoyGuard } from '../lib/figma-shim.mjs';
+import { contractFilePath } from '../../libs/altitude-mcp/src/lib/parity.mjs';
 
 // Re-exported so existing importers (tests, capture harnesses) keep working —
 // the implementations live in scripts/contracts/figma/.
@@ -76,20 +81,14 @@ export { buildSheetSetupPluginCode, buildSheetGroupPluginCode } from './figma/bu
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, '..', '..');
-const CONTRACTS_DIR = join(REPO_ROOT, '.altitude', 'contracts');
 
 // ── argv ────────────────────────────────────────────────────────────────
 
-function argOf(flag) {
-  const eq = process.argv.find((a) => a.startsWith(`${flag}=`));
-  if (eq) return eq.slice(flag.length + 1) || null;
-  const i = process.argv.indexOf(flag);
-  return i > -1 && process.argv[i + 1] && !process.argv[i + 1].startsWith('-') ? process.argv[i + 1] : null;
-}
-
 const COMPONENT = argOf('--component') || 'al-button';
 const PAGE_NAME = argOf('--page') || 'Contract Pilot';
-const SHIM_PORT = Number(argOf('--shim') ?? 9401);
+// `--port` is the canonical flag repo-wide; `--shim` stays as this script's
+// historical alias (both handled by shimPortFromArgv).
+const SHIM_PORT = shimPortFromArgv();
 const OPS_ONLY = process.argv.includes('--ops-only');
 const CHECK_DETERMINISM = process.argv.includes('--check-determinism');
 /**
@@ -108,52 +107,27 @@ function serialize(ops) {
   return `${JSON.stringify(ops, null, 2)}\n`;
 }
 
-// ── decoy guard (mirrors scripts/contracts/extract-canvas.mjs's checkDecoyGuard) ──
-
-function checkDecoyGuard(project, statusText) {
-  for (const decoy of (project.figma && project.figma.decoys) || []) {
-    if (statusText.includes(decoy.fileKey)) return { blocked: true, decoy };
-  }
-  return { blocked: false, decoy: null };
-}
-
-// ── shim transport ─────────────────────────────────────────────────────────
+// ── decoy guard + shim transport — shared copies in scripts/lib/figma-shim.mjs;
+//    this wrapper keeps the CLI's exit-1-on-unreachable behavior and the local
+//    call(port, name, args) signature ──
 
 async function call(port, name, args) {
-  let res;
   try {
-    res = await fetch(`http://127.0.0.1:${port}/call`, { method: 'POST', body: JSON.stringify({ name, arguments: args }) });
-  } catch {
-    console.error(
-      `Cannot reach the figma-console shim on :${port}.\n` +
-      'Start it first:  node scripts/figma-atoms/mcp-shim.mjs\n' +
-      "(Figma Desktop must be open with the Desktop Bridge plugin running, on the project's file.)",
-    );
-    process.exit(1);
-  }
-  const body = await res.json();
-  if (body.error || body.isError) throw new Error(`${name} failed: ${JSON.stringify(body.error ?? body.text).slice(0, 500)}`);
-  return body.text;
-}
-
-function parsePayload(text) {
-  try {
-    const outer = JSON.parse(text);
-    if (typeof outer === 'string') return JSON.parse(outer);
-    if (outer && typeof outer.result === 'string') return JSON.parse(outer.result);
-    return (outer && outer.result) ?? outer;
-  } catch {
-    const start = text.indexOf('{');
-    const end = text.lastIndexOf('}');
-    if (start === -1 || end <= start) throw new Error(`unparseable figma_execute payload: ${text.slice(0, 300)}`);
-    return JSON.parse(text.slice(start, end + 1));
+    return await shimCall(name, args, { port });
+  } catch (e) {
+    if (e?.code === 'ERR_SHIM_UNREACHABLE') {
+      console.error(e.message);
+      process.exit(1);
+    }
+    throw e;
   }
 }
 
 // ── main ────────────────────────────────────────────────────────────────
 
 function loadContract(projectId, tag) {
-  const path = join(CONTRACTS_DIR, projectId, `${tag}.contract.json`);
+  // One path rule for contract files: parity.mjs's contractFilePath().
+  const path = contractFilePath(projectId, tag);
   return { path, contract: JSON.parse(readFileSync(path, 'utf8')) };
 }
 
@@ -167,7 +141,7 @@ function loadContract(projectId, tag) {
  * (reads only tracked, committed contracts).
  */
 function loadNestedSetNames(projectId) {
-  const dir = join(CONTRACTS_DIR, projectId);
+  const dir = dirname(contractFilePath(projectId, '_'));
   const map = {};
   for (const f of readdirSync(dir).filter((x) => x.endsWith('.contract.json')).sort()) {
     try {

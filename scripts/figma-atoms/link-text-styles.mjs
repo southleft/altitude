@@ -17,11 +17,11 @@
  *   node scripts/figma-atoms/link-text-styles.mjs --project southleft [--dry]
  */
 import { scope, projectArg } from './project-scope.mjs';
+import { shimPortFromArgv } from '../lib/figma-shim.mjs';
 
 const SC = scope(projectArg());
 const DRY = process.argv.includes('--dry');
-const shimArg = process.argv.indexOf('--shim');
-const SHIM = shimArg > -1 ? Number(process.argv[shimArg + 1]) : 9401;
+const SHIM = shimPortFromArgv(); // --port canonical, --shim legacy alias (scripts/lib/figma-shim.mjs)
 
 // 434 setTextStyleIdAsync calls do not fit in one 30s figma_execute. Chunk them and
 // drive the loop from here; each call re-walks the tree but skips nodes already linked.

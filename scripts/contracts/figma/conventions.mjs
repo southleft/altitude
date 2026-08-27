@@ -14,11 +14,11 @@
  * comments moved here with their constants; do not strip them.
  */
 
-/** Case/dash-insensitive key, mirrors emit-contracts.mjs's normKey — used to pair a Figma
- * variant option ("Secondary") or Title Case state ("Hover") with a conditionalBindings
- * key ("secondary" / "hover"); not exported from there, so re-derived here (same
- * dependency-free-helper convention emit-contracts documents for parity.mjs's privates). */
-export const normKey = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+/** Case/dash-insensitive key — used to pair a Figma variant option ("Secondary") or
+ * Title Case state ("Hover") with a conditionalBindings key ("secondary" / "hover").
+ * Re-exported from its canonical home (libs/altitude-mcp/src/lib/contract-diff.mjs,
+ * a pure leaf module) since 2026-08-27 — one normalisation rule, one definition. */
+export { normKey } from '../../../libs/altitude-mcp/src/lib/contract-diff.mjs';
 
 /** Interaction-state axis order, the library's own convention (SKILL.md §3,
  * confirmed against the REAL al-button set's "State" VARIANT options). */
