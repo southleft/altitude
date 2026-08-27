@@ -159,6 +159,40 @@
         }
       }
     },
+    "composition": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["renders"],
+          "properties": {
+            "renders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["tag", "evidence"],
+                "properties": {
+                  "tag": {
+                    "type": "string",
+                    "pattern": "^al-",
+                    "description": "An al-* component this component's OWN source renders internally. A trailing \"-*\" (e.g. \"al-icon-*\") records a dynamically-interpolated tag family (`<al-icon-${...}>`) — a real nesting fact whose concrete member is chosen at runtime."
+                  },
+                  "evidence": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": { "type": "string", "enum": ["template", "import"] },
+                    "description": "How the nesting was observed in source: \"template\" — a literal `<al-...` tag in the component's render; \"import\" — a sibling component module import (composites import the classes of the components they instantiate under the registry's scoped-tag model, so an import is nesting evidence even when the tag is built dynamically)."
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "description": "DERIVED (spec 2026-08-26-contract-coverage…): the code-side NESTING graph — which other al-* components this component renders inside itself, from a deterministic scan of its own committed source (never fabricated, never hand-curated; --refresh re-derives it). This is the contract fact a generator MUST honor for molecules/organisms: a composed component's Figma set nests INSTANCES of these components' own sets rather than rebuilding their internals as raw frames. `null` only when the component's source file could not be read in this environment."
+    },
     "states": {
       "type": "array",
       "items": { "type": "string", "enum": ["hover", "focus", "active", "disabled"] },
@@ -182,6 +216,19 @@
           "required": ["root"],
           "properties": {
             "root": { "$ref": "#/definitions/anatomyNode" },
+            "cases": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["case", "root"],
+                "properties": {
+                  "case": { "type": "string", "description": "The measured case string, e.g. \"Current=Yes,Separator=no\"." },
+                  "root": { "$ref": "#/definitions/anatomyNode" }
+                }
+              },
+              "description": "DERIVED (spec 2026-08-26-contract-coverage…, Breadcrumbs Item walkthrough): the FULL anatomy tree of EVERY measured default-state case, sorted by case string. `root`/`anatomyCase` remain the sampled base (back-compat); these are what let a generator fan a measured case DIMENSION (Current, Separator, Shape…) out as a real Figma variant axis with each combination built from its own true structure — a separator child that only exists in Separator=yes cases, a dot form that replaces the label. Structural facts, not just token deltas, so this is full trees rather than a diff format."
+            },
             "stateOverrides": {
               "type": "object",
               "additionalProperties": false,
@@ -279,6 +326,22 @@
       "properties": {
         "tag": { "type": "string", "description": "The rendered HTML tag for this node." },
         "cls": { "type": ["string", "null"], "description": "The node's authored class, when present." },
+        "text": {
+          "type": "string",
+          "description": "DERIVED (spec 2026-08-26-contract-coverage…, Checkbox walkthrough): the node's rendered text content as measured (capped at 300 chars) — the breadcrumbs '/' separator, a checkbox's 'Checkbox label', a button's 'Button'. Present only on nodes the measurement pass saw text in. This supersedes the interim figma.gen.json textContent curation for components measured after the field landed."
+        },
+        "box": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["w", "h"],
+          "properties": { "w": { "type": "number" }, "h": { "type": "number" } },
+          "description": "DERIVED (spec 2026-08-26-contract-coverage…, Checkbox walkthrough): the node's measured rendered size, rounded to 0.1px. A deliberate revision of the T12-era 'no pixel geometry' rule: container ARRANGEMENT stays coarse (flex facts + tokens — this is still not a layout DSL), but a leaf GLYPH's fixed size (an 18×18 custom-check square, a 40×40 hit target) is itself a canvas-expressible code fact — Sass size() literals never surface as custom-property tokens, so without this a generated checkbox has no box at all. Generators use it for childless glyph nodes; a 0×0 box marks a node invisible in this case (a resting ripple) and is skipped."
+        },
+        "component": {
+          "type": "string",
+          "pattern": "^al-",
+          "description": "DERIVED (spec 2026-08-26-contract-coverage…): present when this node IS another component's root — its class list carries that component's own `al-c-<name>` BEM block class (measured anatomy flattens shadow boundaries, so a nested al-checkbox appears as `div.al-c-checkbox`). The node's subtree is that component's INTERNALS: a generator should place an INSTANCE of that component's set here (same by-name discipline as the DS Icon wrapper) instead of rebuilding the subtree as raw frames. Never set on the anatomy root itself (path \"0\" is this contract's own component)."
+        },
         "layout": {
           "anyOf": [
             { "type": "null" },

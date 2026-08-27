@@ -543,8 +543,78 @@ function loadMeasuredSpec(syncDir) {
   }
 }
 
-/** Raw measured `root` node -> the contract's anatomyNode shape (tag/cls/layout/tokens/children). */
-function buildAnatomyNode(raw) {
+// ── composition (spec 2026-08-26-contract-coverage…): the code-side nesting graph ──
+
+/**
+ * The set of component BASE NAMES (tag minus `al-`) that exist as source
+ * directories for this project — base library plus its brand layer when one
+ * exists. Derived from the committed source tree (readdirSync, sorted-stable),
+ * so it is available in every environment (unlike measured anatomy). Cached
+ * per project id: the roster cannot change mid-run.
+ */
+const knownComponentNamesCache = new Map();
+function knownComponentNames(project) {
+  if (knownComponentNamesCache.has(project.id)) return knownComponentNamesCache.get(project.id);
+  const names = new Set();
+  for (const root of [project.resolved.libraryRoot, project.resolved.brandLibrary?.root].filter(Boolean)) {
+    const dir = join(root, 'components');
+    if (!existsSync(dir)) continue;
+    for (const d of readdirSync(dir)) names.add(d);
+  }
+  knownComponentNamesCache.set(project.id, names);
+  return names;
+}
+
+/**
+ * Deterministic source scan of the component's OWN .ts module for the al-*
+ * components it renders internally — the caveat that matters most for
+ * molecules/organisms ("make sure we're nesting existing components"):
+ *   - `template` evidence: a literal `<al-foo` tag in the render. A
+ *     dynamically-interpolated family (`<al-icon-${...}`) captures as
+ *     `al-icon-*` — a real nesting fact whose concrete member is runtime-
+ *     chosen, recorded honestly rather than dropped or guessed.
+ *   - `import` evidence: a sibling component module import
+ *     (`from '../checkbox/checkbox'`). Under the registry's scoped-tag model
+ *     (see .altitude/REGISTRATION.md) composites import the classes of the
+ *     components they instantiate — load-bearing, so an import is nesting
+ *     evidence even when no literal tag appears.
+ * Excludes the component itself; entries sorted by tag; returns null (never
+ * a fabricated empty result) when the source file cannot be read.
+ */
+function buildComposition({ tag, component, origin, project }) {
+  const root = origin === 'brand' ? project.resolved.brandLibrary?.root : project.resolved.libraryRoot;
+  if (!root) return null;
+  const srcPath = join(root, component.modulePath);
+  if (!existsSync(srcPath)) return null;
+  const src = readFileSync(srcPath, 'utf8');
+  const selfBase = tag.replace(/^al-/, '');
+
+  const evidence = new Map(); // base name (or 'name-*') -> Set<'template'|'import'>
+  const add = (name, kind) => {
+    if (!name || name === selfBase) return;
+    if (!evidence.has(name)) evidence.set(name, new Set());
+    evidence.get(name).add(kind);
+  };
+
+  for (const m of src.matchAll(/<al-([a-z][a-z-]*)/g)) {
+    let name = m[1];
+    // `<al-icon-${expr}` captures as "icon-" — a dynamic tag FAMILY.
+    if (name.endsWith('-')) name = `${name}*`;
+    add(name, 'template');
+  }
+  for (const m of src.matchAll(/from '\.\.\/([a-z][a-z-]*)\//g)) add(m[1], 'import');
+
+  const renders = [...evidence.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([name, kinds]) => ({ tag: `al-${name}`, evidence: ['template', 'import'].filter((k) => kinds.has(k)) }));
+  return { renders };
+}
+
+/** Raw measured `root` node -> the contract's anatomyNode shape
+ * (tag/cls/component?/layout/tokens/children). `ctx` carries the component's
+ * own base name plus the project's known component names; `isRoot` guards the
+ * anatomy root (path "0" IS this contract's component — never annotated). */
+function buildAnatomyNode(raw, ctx, isRoot = false) {
   const computed = raw.computed ?? {};
   const layoutEntries = Object.entries({
     display: computed.display,
@@ -557,12 +627,40 @@ function buildAnatomyNode(raw) {
   const tokenEntries = Object.entries(raw.tokens ?? {}).sort(([a], [b]) => a.localeCompare(b));
   const tokens = Object.fromEntries(tokenEntries.map(([cssProp, suffix]) => [cssProp, tokenBindingFor(suffix)]));
 
+  // Nested-component annotation (spec 2026-08-26-contract-coverage…):
+  // measured anatomy flattens shadow boundaries, so a nested al-checkbox
+  // renders as `div.al-c-checkbox ...` — its own BEM BLOCK class as a whole
+  // class token (modifiers are separate tokens, `al-c-checkbox--x`; element
+  // classes `al-c-checkbox__y` never match a bare block). A node whose class
+  // list carries ANOTHER known component's block class IS that component's
+  // root — recorded so a generator places an INSTANCE of that component's
+  // set here instead of rebuilding the subtree as raw frames. The anatomy
+  // root itself (this contract's own component) is never annotated.
+  let component;
+  if (!isRoot && ctx && raw.cls) {
+    for (const token of String(raw.cls).split(/\s+/)) {
+      const m = /^al-c-([a-z][a-z-]*)$/.exec(token);
+      if (m && m[1] !== ctx.selfBase && ctx.knownNames.has(m[1])) { component = `al-${m[1]}`; break; }
+    }
+  }
+
+  // Spec 2026-08-26-contract-coverage… (Checkbox walkthrough): the raw
+  // measurement has ALWAYS carried per-node text and w/h — the contract just
+  // never kept them. `text` is the node's real rendered copy (the '/'
+  // separator, 'Checkbox label'); `box` is the measured size, rounded to
+  // 0.1px for byte-stable serialization — see the schema's own notes on the
+  // deliberate revision of the T12-era no-pixel-geometry rule.
+  const round1 = (n) => Math.round(Number(n) * 10) / 10;
+
   return {
     tag: raw.tag,
     cls: raw.cls ?? null,
+    ...(component ? { component } : {}),
+    ...(raw.text ? { text: String(raw.text).slice(0, 300) } : {}),
+    ...(raw.w !== undefined && raw.h !== undefined ? { box: { w: round1(raw.w), h: round1(raw.h) } } : {}),
     layout,
     tokens,
-    children: (raw.kids ?? []).map(buildAnatomyNode),
+    children: (raw.kids ?? []).map((kid) => buildAnatomyNode(kid, ctx, false)),
   };
 }
 
@@ -573,20 +671,52 @@ function flattenRawTokens(raw, path, out) {
 }
 
 
+/** The component's own figma.gen.json `anatomyCase` curation (spec
+ * 2026-08-26-contract-coverage…) — which measured case to sample anatomy
+ * from. Read straight from the component's source dir (committed,
+ * deterministic); absent file/key -> null (alphabetical-first rule). */
+function preferredAnatomyCase({ component, origin, project }) {
+  const root = origin === 'brand' ? project.resolved.brandLibrary?.root : project.resolved.libraryRoot;
+  if (!root) return null;
+  const p = join(root, dirname(component.modulePath), 'figma.gen.json');
+  if (!existsSync(p)) return null;
+  try {
+    return JSON.parse(readFileSync(p, 'utf8')).anatomyCase ?? null;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Best-effort anatomy for one tag: sample the alphabetically-first `case` in
- * the default-state array, then diff the SAME case's root-token maps across
- * the other 4 measured states to build `stateOverrides` (root path only —
- * see README § Deviations).
+ * the default-state array (or the case the component's figma.gen.json
+ * `anatomyCase` names — see preferredAnatomyCase), then diff the SAME case's
+ * root-token maps across the other 4 measured states to build
+ * `stateOverrides` (root path only — see README § Deviations).
  */
-function buildAnatomy(measuredSpec, tag) {
+function buildAnatomy(measuredSpec, tag, ctx) {
   if (!measuredSpec) return { anatomy: null, anatomySource: 'unavailable', anatomyCase: null, states: [] };
 
   const defaultEntries = (measuredSpec.default ?? []).filter((e) => e.tag === tag && e.root);
   if (!defaultEntries.length) return { anatomy: null, anatomySource: 'unavailable', anatomyCase: null, states: [] };
 
-  const sampled = defaultEntries.slice().sort((a, b) => a.case.localeCompare(b.case))[0];
-  const root = buildAnatomyNode(sampled.root);
+  // Case selection (spec 2026-08-26-contract-coverage…, found on al-badge):
+  // alphabetical-first sampled "Variant=danger,Shape=dot" — the DOT form —
+  // so every generated Badge rendered as a dot, not a label. A component may
+  // curate its preferred sample in its own figma.gen.json (`anatomyCase`,
+  // exact case string — committed source, so derivation stays deterministic
+  // and --check-drift-safe); otherwise the old alphabetical-first rule holds.
+  const sortedEntries = defaultEntries.slice().sort((a, b) => a.case.localeCompare(b.case));
+  const sampled = (ctx?.preferredCase && sortedEntries.find((e) => e.case === ctx.preferredCase)) || sortedEntries[0];
+  const root = buildAnatomyNode(sampled.root, ctx, true);
+
+  // Spec 2026-08-26-contract-coverage… (Breadcrumbs Item walkthrough): keep
+  // EVERY measured default-state case's full tree, so a generator can fan a
+  // case DIMENSION (Current, Separator, Shape…) out as a real variant axis
+  // with each combination built from its own true structure — differences
+  // between cases are structural (a separator child that only exists when
+  // Separator=yes), not just token deltas, so full trees, not diffs.
+  const cases = sortedEntries.map((e) => ({ case: e.case, root: buildAnatomyNode(e.root, ctx, true) }));
 
   const defaultFlat = new Map();
   flattenRawTokens(sampled.root, '0', defaultFlat);
@@ -611,7 +741,7 @@ function buildAnatomy(measuredSpec, tag) {
   }
 
   return {
-    anatomy: { root, ...(Object.keys(stateOverrides).length ? { stateOverrides } : {}) },
+    anatomy: { root, ...(cases.length > 1 ? { cases } : {}), ...(Object.keys(stateOverrides).length ? { stateOverrides } : {}) },
     anatomySource: 'measured',
     anatomyCase: sampled.case,
     states: STATES.filter((s) => (measuredSpec[s] ?? []).some((e) => e.tag === tag)),
@@ -666,7 +796,12 @@ function buildSemantics(anatomy) {
 // ── contract assembly for one component ────────────────────────────────────
 
 function buildContract({ tag, component, origin, project, manifestEntry, measuredSpec }) {
-  const { anatomy, anatomySource, anatomyCase, states } = buildAnatomy(measuredSpec, tag);
+  const ctx = {
+    selfBase: tag.replace(/^al-/, ''),
+    knownNames: knownComponentNames(project),
+    preferredCase: preferredAnatomyCase({ component, origin, project }),
+  };
+  const { anatomy, anatomySource, anatomyCase, states } = buildAnatomy(measuredSpec, tag, ctx);
   const props = buildProps(component, manifestEntry);
   const conditionalBindings = buildConditionalBindings({ tag, props, component, origin, project });
 
@@ -681,6 +816,7 @@ function buildContract({ tag, component, origin, project, manifestEntry, measure
     props,
     events: buildEvents(component),
     slots: buildSlots(component),
+    composition: buildComposition({ tag, component, origin, project }),
     states,
     anatomySource,
     anatomyCase,
