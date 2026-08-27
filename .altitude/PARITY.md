@@ -55,7 +55,7 @@ Status is computed live in `libs/altitude-mcp/src/lib/parity.mjs`:
 | `conflict` | yellow | both drifted; reconcile deliberately |
 | `missing-in-figma` | red | exists in code, no Figma set at all |
 | `missing-in-code` | red | Figma set with no code component (report/MCP only — no docs page exists for it) |
-| `excluded` | none | deliberately untracked (Foundations/*, `al-icon`, `al-theme-switcher`) |
+| `excluded` | none | deliberately untracked (per-project `excluded` in `ds-projects.json` — e.g. `al-icon`, `al-theme`, `al-theme-switcher` — plus titles under `library.excludeTitlePrefixes`, e.g. `Foundations/`) |
 
 **Code drift is always live** — the component's `.ts`/`.scss` (stories and
 tests excluded, CRLF-normalised) are re-hashed on every read. Since the docs
@@ -130,13 +130,20 @@ agent, `publicParityReport()` for anything that reaches the public site.
 
 ## Commands
 
+**This table is the canonical home of the parity CLIs** — other docs link here
+rather than carrying their own copies.
+
 ```bash
-pnpm run parity:projects          # every design system: Figma file, manifest, live summary
+pnpm run parity:projects          # every design system: Figma file, manifest, live summary (--json for machine output)
 pnpm run parity:seed              # (re)build the manifest from instance-map + ops + CEM; merges new components
+                                  #   --force rebuilds EVERY entry — destructive: discards lastSync history
 pnpm run parity:synced <tag...>   # stamp components as confirmed-matching (turns them green); --all for everything
 pnpm run parity:refresh           # observe live Figma digests + figma-only sets (needs scripts/figma-atoms/mcp-shim.mjs running)
+                                  #   --port <n> if the shim is not on :9401
+pnpm run parity:freshness         # figmaLastRefreshed age + everObserved per project; --max-age-days N turns it into a gate
+pnpm run parity:tokens-drift -- .altitude/figma-sync/last-export.json   # token VALUE drift vs a saved figma_export_tokens dump
 
-# Same three against another design system (or pass `--project <id>` to any of them):
+# Same against another design system (or pass `--project <id>` / `--project=<id>` to any of them):
 pnpm run parity:seed:sl
 pnpm run parity:synced:sl <tag...>
 pnpm run parity:refresh:sl
@@ -148,15 +155,9 @@ The refresh script guards against the active project's declared decoy files
 stand-in that can never equal a live digest).
 
 **Contracts (T10/T11)** — `.altitude/contracts/**/*.contract.json` are
-editable source, not a derived artifact; see `.altitude/contracts/README.md`
-for the full contract-PR flow. The commands that matter here:
-
-```bash
-pnpm run contracts:seed           # bootstrap a contract for a NEW component only (refuses to overwrite; --force to override)
-pnpm run contracts:seed:sl
-pnpm run contracts:check          # contract <-> code DRIFT CHECK (--check-drift): re-derives every tracked component and diffs it against the on-disk contract
-node scripts/contracts/emit-contracts.mjs --check-drift --project southleft
-```
+editable source, not a derived artifact. **`.altitude/contracts/README.md` is
+the canonical home of the contract CLIs and the contract-PR flow** — no copy
+of that command table here.
 
 `parity:synced` reads the tag's tracked contract (if any) and stamps
 `lastSync.contractHash`/`lastSync.contractVersion` alongside the code hash

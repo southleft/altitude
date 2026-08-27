@@ -40,9 +40,12 @@ Two MCP servers get conflated constantly:
   **Never audit names with it** — use `figma_get_variables` through the bridge.
 
 Also available: the **`altitude` MCP** (`libs/altitude-mcp`, already in `.mcp.json`) —
-`altitude_list_components`, `altitude_get_tokens`, `altitude_get_component`,
-`altitude_validate`, `altitude_search_icons`. Use it for code-side facts instead of
-grepping. **Before building or repairing a component's set**, call
+eight tools: `altitude_list_components`, `altitude_get_tokens`, `altitude_get_component`,
+`altitude_validate`, `altitude_search_icons`, `altitude_check_parity`,
+`altitude_list_ds_projects`, `altitude_generate_theme` (roster of record:
+`libs/altitude-mcp/src/lib/tools.mjs`; `check:mcp-docs` gates this list). Use it for
+code-side facts instead of grepping — `altitude_check_parity` in particular is the
+tool this skill's own reconciliation loop starts from. **Before building or repairing a component's set**, call
 `altitude_get_component({ tag, project })` and read its `referenceDoc` field (or open
 `.altitude/contracts/docs/<project>/<tag>.md` directly) — the GENERATED, per-component
 reference doc (T20, spec 2026-08-25-contract-backed-figma-parity-and-generation) spells
@@ -67,7 +70,13 @@ node scripts/figma-var-fixes.mjs                     # emit ops -> apply via fig
 
 Four collections, and the shape is deliberate — do not "simplify" it:
 `Tier 1` (primitives) · `Tier 2` (semantic non-colour) · `Tier 2 Theme` (Light/Dark) ·
-`Tier 2 Brand` (Altitude/Northright/Southleft/Odyssey).
+`Tier 2 Brand`. **Read the exact collection names live before matching on them** — two
+spellings have been observed at different dates (`Tier 2 Theme` in
+`audit-figma-vs-code.mjs:130`, 2026-08-20; `Tier 2 | Theme` in
+`scripts/contracts/figma/conventions.mjs:68`, live-read 2026-08-26). The CODE has exactly
+two brands (altitude, southleft — `tokens-config.v5.mjs:591-603`); if the Figma file
+still carries stray `Northright`/`Odyssey` brand modes, delete them rather than
+re-adding code (`.altitude/FIGMA-SYNC.md` § verified corrections, `BRANDS.md` §7).
 
 The audit needs an **alias table** because the two systems genuinely disagree on names:
 `font-size.*` ↔ `typography/font-size/*`, `color.brand.paper.*` ↔ `color/neutral/paper/*`,
@@ -166,99 +175,12 @@ as `contractDrifted` even when code and Figma both still match. See
 - Icon-only is a SEPARATE set (`Button (Icon)`), not an axis.
 - Focus renders as a **2px stroke**, not a CSS-style outline.
 
-**Generator layout (modularized 2026-08-26).** `scripts/contracts/
-generate-figma.mjs` is a thin CLI; the generator's parts live in
-`scripts/contracts/figma/` — `derive-ops.mjs` (parity core), `derive-sheet-
-plan.mjs` (+ `sheet-style.mjs`, pure presentation), `conventions.mjs`
-(library-wide rules incl. Phosphor resolution and the T29 wrong-library
-incident), `plugin-snippets.mjs`, `build-set-code.mjs`, `build-sheet-code.mjs`.
-Per-component generation judgment calls (icon size var, full-width margin,
-label typography, sheet pitch, enum-prop pick) come from the OPTIONAL
-`libs/al-web-components/components/<name>/figma.gen.json`, merged over
-defaults in `scripts/contracts/figma/component-config.mjs` — al-button ships
-the worked exemplar. The enum axis is contract-driven (`bindings.figma.kind:
-"VARIANT"` + `property`), not a hard-coded prop named `variant`.
-
-**Fan-out convention for GENERATED sets (T23, spec 2026-08-25-contract-backed-
-figma-parity-and-generation; reverted to property mode as the DEFAULT, T31,
-same spec).** `scripts/contracts/generate-figma.mjs` reads a per-prop/per-slot
-curation field — `bindings.figma.axis: true` on a prop, `figmaAxis: true` on a
-`before`/`after` slot (`.altitude/contracts/*/al-*.contract.json`, schema in
-`contract.schema.json`) — and, ONLY when curated, fans that boolean out as its
-own True/False **VARIANT axis** (a separately-built component per combination,
-cartesian with every other axis) instead of a single shared BOOLEAN component
-property. **Property mode (the shared-BOOLEAN behavior) is the library's own
-convention and this generator's default** — VERIFIED live against the real
-Button set (node `4271:9562`): its `Is Full Width`/`Slot Before`/`Slot After`
-have always been plain BOOLEAN properties (25 variants total, State × Variant
-only), never axes. T22/T23 curated al-button's contract into axis mode anyway
-(a 200→100-variant Contract Pilot regeneration) as a pilot of the fan-out
-convention, reasoning from a Propstar documentation-sheet screenshot that
-turned out to show a DOCUMENTATION artifact (every property combination as a
-labeled instance), not the real set's own variant structure — T31 corrected
-this, removed the curation, and the pilot is back to the real set's own lean
-25 variants. The fan-out MACHINERY is not removed (a future component's real
-set might genuinely fan a boolean out as its own axis, and `--sheet` mode
-below reuses it internally) — see `.altitude/contracts/README.md` § Fan-out
-convention for the full history. Generalized default for any OTHER
-component: an enum prop is always an axis (unchanged); a slot or layout
-boolean is a component property UNLESS curated `figmaAxis`/`axis: true` for a
-component whose real set demonstrably fans it out.
-
-**Documentation sheet, plugin-free (`--sheet`, T31; a real bordered table,
-humanized labels, and a doc-page header, T32).** The Propstar-style fan-out
-grid the T22/T23 screenshot actually showed is still buildable — without
-folding it into the live set's own variants, and without requiring the
-Propstar plugin at all (an agent cannot launch a Figma plugin, and a
-colleague may not have Propstar installed). `generate-figma.mjs --component
-al-button --sheet` (run AFTER the plain, non-`--sheet` build) creates/replaces
-a `"Button — Prop Sheet"` frame next to the set's own presentation frame:
-an instance of the file's own "Documentation Header" master at the top
-(title/description/link all contract-derived — the link a dummy placeholder
-until per-component docs publish), then a genuine nested-auto-layout TABLE of
-real INSTANCES of the (lean, property-mode) set below it, one per State ×
-Variant × every other boolean property combination (100 for al-button), each
-switched via `setProperties`. The Propstar-purple gridlines are a CSS
-`border-collapse`-simple rule (corrected mid-task after the owner reviewed a
-zoomed screenshot of a first, over-complicated per-cell 4-side attempt that
-rendered as separate floating boxes): the outer grid frame draws one full
-four-side border, every ROW draws only its own bottom edge (none on the
-table's absolute last row), every CELL draws only its own right edge (none
-on a row's last cell), `itemSpacing: 0` throughout so adjacent single-edge
-strokes read as one continuous line — a Variant-group boundary is just that
-group's own last row's bottom weight at double weight, never a second frame;
-row labels are humanized ("Icon before", "Icons before + after", "Default"),
-never a raw `Prop=Value` dump. Internally reuses the SAME T23 cartesian
-derivation (`buildOps(contract, { forceAllBooleanAxes: true })`), just
-re-grouped for rendering rather than re-derived — "repurposed, not
-duplicated." Batched across one setup call + one call per Variant row group
-(6 total for al-button) to stay under the Desktop Bridge's ~30s per-call
-ceiling. Idempotent (replaces the prior sheet frame by name). Propstar itself
-remains a valid optional interactive alternative for building the same kind
-of sheet by hand; `--sheet` is the canonical, automatable, plugin-free path.
-See `.altitude/contracts/README.md` § Documentation sheet (`--sheet`, T31)
-for the full grouping/layout/batching rationale.
-
-**Figma-expression opt-out (T27).** The inverse curation: `bindings.figma.omit:
-true` (props) / `figmaOmit: true` (slots) means the generator builds NOTHING
-for it at all — no axis, no property, no instance. al-button's `fullWidth` is
-curated this way in both projects' contracts (owner: "I don't need that in
-figma"), independent of the (T31, now off-by-default) axis-mode curation —
-`fullWidth` was never built at all, at any point, regardless of which mode
-`before`/`after` were in. `contract-diff.mjs` treats an omitted-and-absent prop/slot
-as a named `intentional-omission` skip, never a disagreement — but canvas
-still exposing it is flagged `present-despite-omission`.
-
-**Icon source for GENERATED sets is the Phosphor library, not "🛠 Icons"
-(T28).** `generate-figma.mjs`'s slot-icon instances are resolved from the
-Phosphor Figma library — `findPhosphorComponentByName`, never a lookup
-against "🛠 Icons" (that convention above is for the HAND-BUILT set only).
-The Figma plugin API has no team-library component enumeration, so
-resolution is either a hand-maintained key registry or a live scan for an
-existing REMOTE instance with a matching name; a miss degrades to "no icon
-instance," logged, never a silent fallback to the old page. See
-`.altitude/contracts/README.md` § Phosphor icon source for the full
-mechanism and its confirmed environment limits.
+**Generating a set FROM a contract is a different skill.** The conventions
+above are for HAND-repairing the library. Everything about
+`scripts/contracts/generate-figma.mjs` — generator module layout,
+`figma.gen.json` curation, the fan-out/omit conventions (T23/T27/T31), the
+`--sheet` prop sheet, the Phosphor icon source (T28/T29) — lives in the
+sibling skill **`altitude-figma-generate`**. Read that one before generating.
 
 **Prefer repairing an existing set over rebuilding it** — rebuilding discards the
 property surface, the instances and the documentation scaffold.
@@ -282,9 +204,13 @@ Useful tools: `figma_analyze_component_set` (variant axes + per-state diffs + pr
 4. `setBoundVariableForPaint` keeps the LITERAL colour you pass as a fallback and Figma
    does not always refresh it — pass black and a variant can render **black** despite a
    correct binding. Resolve the variable inside Figma and use its real RGBA as the literal.
-5. **Opacity variables are PERCENTAGES (0–100).** Binding a variable holding `0.4`
-   produces a node opacity of `0.004`. The code stores fractions; that is a unit
-   convention difference, NOT drift. Do not "fix" `opacity/40` to `0.4`.
+5. **Opacity variables are FRACTIONS (0–1) — `opacity/40` = `0.4`, matching the code.**
+   (Corrected 2026-08-22 — this trap previously said the opposite, describing the file
+   BEFORE `scripts/figma-var-fixes.mjs:39-43` deliberately rewrote the four opacity
+   variables to fractions; verified live: `opacity/40` → `0.4000000059604645`.) Opacity
+   is a straight value comparison now, no unit conversion in either direction. Do not
+   "fix" a fraction back to a percentage. See `.altitude/FIGMA-SYNC.md` § "Opacity is a
+   FRACTION on the Figma side".
 
 **CSS reading**
 6. `shadowRoot.textContent` does NOT include slotted light-DOM text. Resolve
@@ -359,53 +285,25 @@ https://www.giorris.dev/figma/refs/refs-map.md.
 
 ---
 
-## 5. Known state (2026-08-20)
+## 5. Known state — live sources, not a dated snapshot
 
-- Variables: **360 matching, 0 code tokens missing from Figma**. Six remaining mismatches
-  are understood and deliberate (`%` units Figma cannot hold, alias-vs-literal with equal
-  values, and `font-family/mono` where the two genuinely disagree).
-- `theme.color.background.inverse-strong` Dark added to code (`{color.neutral.light.100}`,
-  the value Figma held) — token baseline recaptured.
-- `Button` repaired in place — 25 variants, correct tokens, IBM Plex Sans.
-- **Ops generated for all 33 planned components** (`.altitude/figma-sync/ops/`), zero
-  unresolved tokens; the new pipeline reproduces the proven Button repair ops exactly
-  (regression-checked against `button-ops.json`).
-- Known code/Figma divergence found by the pipeline: Figma's Toggle has Hover variants
-  but al-toggle has NO `:hover` rule (its only pseudo styling is `:focus-visible`) —
-  resolved 2026-08-21: Hover kept pixel-identical to Default (Button/Active precedent).
-- **2026-08-21: T1 repairs DONE** (Banner, Badge, Toggle, Button (Icon) — binding-gated,
-  scripts in `scripts/figma-atoms/repairs/`), and **16 atom pages BUILT** via
-  `build-page.mjs` (from-ops builder). Bespoke builds still needed: Toast, Accordion
-  Panel, Stepper Item, Dropdown Panel, Tooltip, Progress, Spinner, Logo, Calendar,
-  Time Selector List; Alert + Avatar deferred on the Playground name-collision decision.
-- **Write channel without session MCP registration**: `scripts/figma-atoms/mcp-shim.mjs`
-  spawns figma-console-mcp itself and exposes tools/call as `POST localhost:9401/call`.
-  Kill zombie server instances holding ports 9223-9226 first (check `ListAgents` for
-  live sessions before killing); the Desktop Bridge auto-reconnects within ~1s.
-- Two more traps: (16) a COMPONENT page cannot be `remove()`d while it is the CURRENT
-  page — `setCurrentPageAsync` elsewhere first. (17) `::before`/`::after` content
-  (checkbox check mask, radio dot, toggle knob styling) is INVISIBLE to the DOM walk —
-  glyphs must be placed as icon instances by hand (`done`, `minus` on 🛠 Icons; the
-  library's check icon is named `done`, not `check`).
-- **72 components still missing** (30 atoms, 33 molecules, 9 organisms); Banner, Badge,
-  Toggle and Button (Icon) still need the same repair Button got.
-- Five Playground prototypes (`Alert`, `Pagination`, `Accordion`, `Chip Group`, `Avatar`)
-  will collide by name with proper `🛠` pages. Alert/Pagination/Accordion/Avatar exist in
-  code, so they were not deleted — decide before building those pages. `Chip Group` no
-  longer exists in code (see the layout-first note below); its prototype and any built
-  set are orphans a human should decide on.
-- **2026-08-22 — layout-first removals (code side).** `al-button-group`,
-  `al-layout-container`, `al-layout-section`, `al-bento-grid`, `al-split-content`,
-  `al-chip-group` and `al-toast-group` were REMOVED from `al-web-components`
-  (arrangement belongs to `<al-layout>`; see AGENTS.md "Arrangement vs. semantics").
-  **Never build or repair a Figma set for these** — the earlier "Chip Group" molecule
-  result above is now historical. Their orphan ops files
-  (`ops/al-button-group.json`, `ops/al-chip-group.json`) were deleted and pruned from
-  `ops/index.json`; the parity manifest no longer lists them. Component counts quoted
-  in older entries here predate the removals. The roster source of truth is the CEM /
-  `altitude_list_components`, never this file's history.
-- Open code-side issues filed: `al-button` disabled state unreachable;
-  `typography.preset.36/40/44` misnamed (36 is 28px).
+Do not trust coverage numbers written into any doc, this one included. The live answers:
+
+- **Coverage roster**: `.altitude/contracts/COVERAGE.md` — per-component table of real
+  sets, contract/anatomy readiness, and which components are BLOCKED on measured anatomy
+  (snapshot 2026-08-26: 37 real sets live, 36 mapped to code, 35 components generated in
+  one sweep, 15 of them composites nesting real-set instances).
+- **Parity**: `pnpm run parity:projects` / the `altitude_check_parity` MCP tool /
+  `GET /parity.json` — per-component drift status, refreshed by the tools themselves.
+- Two durable traps live here: (16) a COMPONENT page cannot be `remove()`d while it is
+  the CURRENT page — `setCurrentPageAsync` elsewhere first. (17) `::before`/`::after`
+  content (checkbox check mask, radio dot, toggle knob styling) is INVISIBLE to the DOM
+  walk — hand-built sets place glyphs as icon instances (the library's check icon is
+  named `done`, not `check`); generated sets curate `glyphs` in `figma.gen.json` instead.
+- The layout-first removals (`al-button-group`, `al-chip-group`, `al-toast-group`, etc. —
+  AGENTS.md "Arrangement vs. semantics") have no code component: **never build or repair
+  a Figma set for them**. The roster of record is the CEM / `altitude_list_components`,
+  never any doc's history.
 
 Full history and rationale: `.mm/specs/2026-08-20-altitude-figma-atoms/spec.md`.
 
@@ -425,9 +323,12 @@ node scripts/figma-atoms/reorder-pages.mjs        # molecules live AFTER the div
 ```
 
 - `instance-map.mjs` — the join between the code's ATTRIBUTES and Figma's VARIANT
-  PROPERTIES, plus the atom set node ids. It is the inverse of `plan.mjs`. Icons resolve
-  BY NAME against the 71 flat components on `🛠 Icons` (`al-icon-search` → `search`,
-  `<al-icon name="x">` → `x`).
+  PROPERTIES, plus the atom set node ids. It is the inverse of `plan.mjs`. In THIS
+  hand-built/ops pipeline, icons resolve BY NAME against the flat components on
+  `🛠 Icons` (`al-icon-search` → `search`, `<al-icon name="x">` → `x`). GENERATED sets
+  do NOT use that page as their icon source — since T28 they resolve icons from the
+  Phosphor library (see `altitude-figma-generate`); `🛠 Icons` stays live as the DS
+  "Icon" wrapper host and the Phosphor bootstrap-scan target.
 - `tiers.mjs` — which keys are molecules. Placement depends on it.
 - `export-png.mjs` / `check-parity.mjs` / `delete-page.mjs` — verification and iteration.
 

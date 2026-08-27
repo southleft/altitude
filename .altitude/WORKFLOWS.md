@@ -279,18 +279,22 @@ same way any other doc does.
 - `build-axe-baseline.mjs` — turns a `test-storybook` log into a one-off axe baseline table (predates `build-a11y-report.mjs`; see ORPHANS).
 - `build-root-llms.mjs` — generates root `llms.txt` from CEM + ai-readiness digests + axe report + ds-project registry + MCP tool roster. `llms:build` / `check:llms`.
 - `check-llms-content-type.mjs` — `check:llms-content-type`, deployed-artifact content-type check (run against a live URL, not local).
-- `check-mcp-docs.mjs` — hand-written MCP tool-roster docs (AGENTS.md, MCP README, southleft.com tools page) vs. what the server actually registers. See ORPHANS caveat below — not yet aliased.
+- `check-mcp-docs.mjs` — hand-written MCP tool-roster docs (AGENTS.md, MCP README, southleft.com tools page, `.claude/skills/`) vs. what the server actually registers. Alias `check:mcp-docs`.
 
 ### Figma / parity
 
 - `audit-figma-vs-code.mjs`, `figma-var-fixes.mjs` — variable audit/fix loop (§ "Code → Figma sync").
 - `build-figma-payload.mjs` — generates the Altitude → Figma variable payload (`.altitude/figma-sync/altitude-figma-payload.json`), consumed by `figma-atoms/build-spec.mjs`. **Manually invoked** — no `pnpm run` alias, no CI — run by hand (`node scripts/build-figma-payload.mjs`) when the payload needs refreshing after a token change; NOT an orphan despite having no alias (see FIGMA-SYNC.md § "What maps to what").
 - `check-figma-drift.mjs` — token-level Figma↔code drift (v1: values, brand/mode buckets, renames); alias `pnpm run parity:tokens-drift`.
-- `check-parity-freshness.mjs` — is the Figma side of parity actually being refreshed. See "Figma → code" above; not yet aliased.
-- `figma-atoms/` — the write-channel toolkit: `bridge-io.mjs` (Desktop Bridge I/O), `mcp-shim.mjs` (HTTP shim on :9401), `measure-components.mjs` / `measure-lib.js` (DOM measurement), `build-component-ops.mjs` / `build-button-ops.mjs` (ops generation — `build-component-ops.mjs` is `build-button-ops.mjs`'s per-component generalisation), `build-molecules.mjs`, `build-page.mjs`, `build-spec.mjs`, `check-parity.mjs`, `delete-page.mjs`, `export-png.mjs`, `harness.mjs`, `instance-map.mjs`, `plan.mjs`, `reorder-pages.mjs`, `tiers.mjs`, `token-map.mjs`, `push-variables.mjs`, `repairs/` (fix scripts). See `scripts/figma-atoms/README.md` and the skill for which of these are live vs. historical.
-- `figma-atoms/pack.mjs` — packs an atoms spec into a compact figma_execute payload (see ORPHANS).
+- `check-parity-freshness.mjs` — is the Figma side of parity actually being refreshed. See "Figma → code" above; alias `parity:freshness` (warning-only CI step in repo-hygiene).
+- `figma-atoms/` — the write-channel toolkit: `bridge-io.mjs` (Desktop Bridge I/O), `mcp-shim.mjs` (HTTP shim on :9401), `measure-components.mjs` / `measure-lib.js` (DOM measurement), `build-component-ops.mjs` (ops generation), `build-molecules.mjs`, `build-page.mjs`, `build-spec.mjs`, `check-parity.mjs` (project-aware since 2026-08-27), `delete-page.mjs`, `export-png.mjs`, `fig.mjs`, `harness.mjs`, `instance-map.mjs` / `instance-map.southleft.mjs` (registry `paths.instanceMap` targets), `link-text-styles.mjs`, `plan.mjs`, `project-scope.mjs`, `reorder-pages.mjs`, `sync-instance-map.mjs`, `tiers.mjs`, `token-map.mjs`, `repairs/` (historical one-off fix scripts — `badge.js` is cited as the boundVariables read-pattern reference by `scripts/contracts/__fixtures__/canvas-sample.json`). `push-variables.mjs` lives in `figma-southleft/`, not here. Every shim-talking script takes `--port` (canonical; `--shim` kept as a legacy alias) via `scripts/lib/figma-shim.mjs`. See `scripts/figma-atoms/README.md` and the skill for which of these are live vs. historical.
 - `figma-parity/` — `list-projects.mjs` (`parity:projects`), `seed-manifest.mjs` (`parity:seed`), `mark-synced.mjs` (`parity:synced`), `refresh-figma-digests.mjs` (`parity:refresh`).
-- `figma-southleft/verify-fingerprint.mjs` — computes the canonical fingerprint of a plan to cross-check against Figma's own computed fingerprint (see ORPHANS).
+- **`contracts/`** — the contract pipeline (spec 2026-08-25-contract-backed-figma-parity-and-generation; see `.altitude/contracts/README.md` for the full model):
+  `emit-contracts.mjs` (`contracts:seed` / `contracts:check` = `--check-drift` / `contracts:validate` = `--check` / `contracts:check-determinism`, plus un-aliased `--refresh`),
+  `extract-canvas.mjs` (`contracts:canvas`), `diff-contracts.mjs` (`contracts:diff`),
+  `build-component-docs.mjs` (`contracts:docs` / `check:contract-docs`),
+  `generate-figma.mjs` (contract → Figma set/prop-sheet generation; `contracts:ops-determinism` runs its al-button ops leg), with the generator's modules under `contracts/figma/` and shared helpers in `scripts/lib/{argv,figma-shim}.mjs`. CI gate: `gate:contracts` (five legs, both projects).
+- `lib/` — shared script helpers: `argv.mjs` (`argOf`/`hasFlag`/`positionals`), `figma-shim.mjs` (shim transport + decoy guard + port flag), `dtcg-token.mjs`, `token-metadata-rules.mjs`.
 
 ### Visual regression / behavioural verification
 
@@ -319,13 +323,13 @@ Candidates for deletion or adoption, not for silent reliance:
 - `build-axe-baseline.mjs` — superseded in function by `build-a11y-report.mjs`, which structures results per-component instead of grepping a jest log.
 - `verify-motion-axis.mjs` — motion-axis behavioural verification; no `pnpm run` wraps it.
 - `visual-compare.mjs`, `visual-compare-storybook.mjs`, `visual-parity-sweep.mjs` — T2.x-era Storybook-migration comparison scripts; the migration they verified is long done.
-- `figma-atoms/build-button-ops.mjs` — superseded by `figma-atoms/build-component-ops.mjs` (its own header calls itself "the per-component generalisation of build-button-ops.mjs").
-- `figma-atoms/pack.mjs` — no import site found in any other `figma-atoms/*` script, no alias, no doc mention.
-- `figma-southleft/verify-fingerprint.mjs` — no import site, no alias, no doc mention.
+- ~~`figma-atoms/build-button-ops.mjs`~~, ~~`figma-atoms/pack.mjs`~~,
+  ~~`figma-southleft/verify-fingerprint.mjs`~~ — **deleted 2026-08-27**
+  (spec parity-system-audit-remediation, R7) after re-verifying zero references;
+  `build-component-ops.mjs` is the live successor of the first.
 
-Four *other* new scripts — `check-brand-conformance.mjs`, `check-mcp-docs.mjs`,
-`check-parity-freshness.mjs`, `component-check.mjs` — are **not** on this
-list even though they currently have no `package.json` alias either: they are
-in-flight sibling tasks of the same spec that added this document (each
-names itself in its own header comment) and are referenced above at their
-relevant workflow step, not here.
+`check-brand-conformance.mjs` and `component-check.mjs` are **not** on this
+list even though they currently have no `package.json` alias: they are
+referenced above at their relevant workflow step, not here.
+(`check-mcp-docs.mjs` and `check-parity-freshness.mjs`, once in the same
+boat, now have aliases — `check:mcp-docs`, `parity:freshness`.)

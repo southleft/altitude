@@ -6,9 +6,10 @@
 > [`DS-PROJECTS.md`](./DS-PROJECTS.md) and `.altitude/ds-projects.json`. The
 > method below transfers unchanged; only the target file, manifest and ops dir
 > differ, and all three come from the project record rather than from constants.
-> Southleft's file (`Southleft V5`, `rdhBS9t89V42E7EfiPjmSa`) started EMPTY, so
-> for that project every component reads `missing-in-figma` and the generated
-> prompts are build-it instructions, not reconcile instructions.
+> Southleft's file (`Southleft V5`, `rdhBS9t89V42E7EfiPjmSa`) started EMPTY in
+> 2026-08-23 but has since been populated (24 mapped sets as of 2026-08-27 —
+> `pnpm run parity:projects` is the live answer), so its generated prompts are
+> ordinary reconcile instructions now, same as Altitude's.
 
 > How Altitude's token source (`libs/al-web-components/styles/tokens-dtcg/`)
 > stays in agreement with the Figma variables library, using the
@@ -46,13 +47,19 @@ no CI step — run it by hand (`node scripts/build-figma-payload.mjs`) whenever
 Figma back into them automatically.
 
 Figma organizes the same decisions as **collections** (an axis) containing
-**modes** (the axis's variants):
+**modes** (the axis's variants). The table below names the CONCEPTUAL axes; the
+live file's collection names are tier-styled and have been observed with TWO
+spellings at different dates — `Tier 2 Theme` / `Tier 2 Brand`
+(`scripts/audit-figma-vs-code.mjs:130,135`, 2026-08-20) vs `Tier 2 | Theme`
+(`scripts/contracts/figma/conventions.mjs:68`, read live via
+`getLocalVariableCollectionsAsync` on 2026-08-26). **Read the collection names
+live before matching on them; never trust a doc's spelling.**
 
-| Figma collection | Modes | Altitude source |
+| Axis (conceptual) | Modes | Altitude source |
 |---|---|---|
-| Primitive | Default | `tokens-dtcg/tier-1/*.json` |
-| Semantic | Default | `tokens-dtcg/tier-2/*.json` (borders, spacing, shadows, typography, …) |
-| Color Scheme | Light, Dark | `tokens-dtcg/tier-2/theme/{light,dark}/` |
+| Primitives (tier 1) | Default | `tokens-dtcg/tier-1/*.json` |
+| Semantic (tier 2) | Default | `tokens-dtcg/tier-2/*.json` (borders, spacing, shadows, typography, …) |
+| Theme | Light, Dark | `tokens-dtcg/tier-2/theme/{light,dark}/` |
 | Brand | Altitude, Southleft | `tokens-dtcg/tier-2/brand/<brand>/` (sparse overrides) |
 | Composed (tier 3) | Light, Dark | `tokens-dtcg/tier-3/theme/{light,dark}/` |
 | Density / Shape / Motion / Contrast | per axis | hand-written `:host([attr])` rules in `components/theme/theme.scss` (see `.altitude/AXES.md` / `REGISTRATION.md` era docs) — **not** token-file axes today; model in Figma only once they become token roles |
@@ -85,8 +92,9 @@ and values, not judgment:
 
 For agents especially: a brand's *look* is **brand tokens + mode + density +
 shape + motion together** (plus assets like the logo). "Render as Southleft"
-is never a single attribute flip — southleft is single-mode by design (dark
-only), enforced by the `PresetBundle` union in `.storybook/presets.ts`. When
+is never a single attribute flip — both brands build in both modes (the 2×2
+`brands` matrix in `styles/tokens-config.v5.mjs:591-603`; southleft's light
+"paper" mode was added by spec 2026-08-20-southleft-example-app). When
 syncing or generating in Figma, apply the full recipe; when documenting a
 brand, state its recipe explicitly.
 
@@ -166,9 +174,10 @@ convention. `Southleft V5` was seeded the same way
 (`scripts/figma-southleft/push-variables.mjs`, which keeps an `--opacity-percent` escape
 hatch should this ever be revisited).
 
-**Southleft is no longer dark-only.** `.storybook/presets.ts:34-35` types the pairs as
-`altitude|southleft` x `light|dark`, and `styles/tokens-config.v5.mjs:486-489` builds
-exactly those four — 2 brands x 2 modes. The Figma file may still carry `Northright` and
+**Southleft is no longer dark-only.** The `brands` matrix in
+`styles/tokens-config.v5.mjs:591-603` builds exactly four bundles — 2 brands x 2 modes.
+(An earlier wording here also cited `.storybook/presets.ts`; that file went with the
+Storybook retirement — the token config is the one live source of the pairing.) The Figma file may still carry `Northright` and
 `Odyssey` brand modes; the CODE has neither, and neither does any other brand beyond these
 two (spec `2026-08-20-brand-pruning-and-storybook-de-bloat` removed six — see
 [`BRANDS.md` §7](./BRANDS.md)). Delete stray Figma modes rather than re-adding code for them.
