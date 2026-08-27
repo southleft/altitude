@@ -23,9 +23,7 @@ in sync with `libs/al-web-components`.
 | `measure-components.mjs` | THE DRIVER: harness + headless Chromium, 5 states x 2 modes → spec-{light,dark}.json |
 | `build-component-ops.mjs` | Measured specs → per-component Figma binding ops (`.altitude/figma-sync/ops/<key>.json`) |
 | `build-spec.mjs` | LEGACY colour-pair matching path (superseded by the authored-token pipeline) |
-| `pack.mjs` | Compact the spec for transport |
 | `token-map.mjs` | `--al-theme-space` → `theme/space/@` |
-| `build-button-ops.mjs` | LEGACY Button-only template — kept as the regression reference for build-component-ops |
 
 ## Variable audit
 
@@ -71,8 +69,10 @@ that matters). Then:
 
 ```bash
 node scripts/figma-atoms/build-spec.mjs
-node scripts/figma-atoms/pack.mjs
 ```
+
+(`pack.mjs` and `build-button-ops.mjs`, once listed here, were deleted 2026-08-27 —
+unreferenced orphans; `build-component-ops.mjs` is the live ops generator.)
 
 ## The one idea worth remembering
 
