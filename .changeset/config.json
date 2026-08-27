@@ -13,10 +13,11 @@
   "_provenance": "Provenance is set via NPM_CONFIG_PROVENANCE=true on the release workflow (.github/workflows/release.yml). Changesets honors that env var when running npm publish.",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "_ignore": "Every workspace that is NOT part of a release must be listed, or changeset status surfaces it as a spurious patch bump. al-app-astro, al-app-home and al-app-southleft were missing — three fixture/marketing apps added after this list was last touched. @southleft/sl-web-components is deliberately listed too, but for a different reason: it is a LIBRARY, not a fixture, and whether it ships is an open decision in the publish-altitude-v2 spec. Listing it keeps the release surface honest until that decision is made; remove it here the moment it is meant to publish.",
+  "_ignore": "Every workspace that is NOT part of a release must be listed here, or `changeset status` surfaces it as a spurious patch bump (changesets versions private packages by default). al-app-docs was missing \u2014 added 2026-08-27; apps/docs landed after this list was last touched, which is the same drift that once left the deleted al-app-enhance in here. @southleft/altitude-mcp is listed for the sl-web-components reason, only sharper: it is NOT private and carries publishConfig.access=public, so without an entry a release could version and publish it before that was ever a decision. Whether it and @southleft/sl-web-components ship is an open question in the publish-altitude-v2 spec \u2014 listing both keeps the release surface honest until it is settled. Remove an entry the moment that package is meant to publish. check-changesets-config.js now enforces this list in BOTH directions.",
   "ignore": [
     "al-app-angular",
     "al-app-astro",
+    "al-app-docs",
     "al-app-home",
     "al-app-mfe",
     "al-app-react",
@@ -24,6 +25,7 @@
     "al-app-ssr",
     "al-app-svelte",
     "al-app-web-components",
+    "@southleft/altitude-mcp",
     "@southleft/sl-web-components"
   ]
 }

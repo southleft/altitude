@@ -11,6 +11,17 @@ on:
       - 'feature/**'
   pull_request:
     branches: [main, 'feature/**']
+  # Re-running the matrix required pushing a commit. It is ~25 jobs; being able
+  # to retry a flaky runner without polluting history is worth one line.
+  workflow_dispatch:
+
+# A push to a branch that already has a run in flight superseded nothing: both
+# ran the full ~25-job matrix to completion. Cancel the older one instead.
+# `main` is deliberately EXCLUDED from cancellation -- release.yml publishes from
+# it, so every commit that lands there must keep its own complete check record.
+concurrency:
+  group: v2-checks-${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   changesets:
@@ -106,11 +117,18 @@ jobs:
         run: pnpm run build:fixtures
 
   build-all:
-    # Cloudflare Pages parity: no other job runs the full build:all (libs +
-    # angular/react/svelte/astro), so app/framework build
-    # breakage — e.g. an Angular-22 Node-version mismatch — previously only
-    # surfaced at deploy. Pin Node to .nvmrc (Cloudflare's source of truth)
-    # and run the exact deploy command to catch it in PRs instead.
+    # Cloudflare Pages parity: no other job runs the full build:all, so
+    # app/framework build breakage - e.g. an Angular-22 Node-version mismatch -
+    # previously only surfaced at deploy. Pin Node to .nvmrc (Cloudflare's
+    # source of truth) and run the exact deploy command to catch it in PRs.
+    #
+    # build:all is libs -> docs -> home -> angular/react/svelte/astro/southleft.
+    # The two PRODUCT surfaces (the docs site at /docs and the homepage at /)
+    # build immediately after the libraries they depend on and AHEAD of the
+    # demo fixtures, deliberately: build:all is a strict && chain, so a broken
+    # fixture must not be able to take the documentation site down with it.
+    # See the `//build:all` note in the root package.json -- the order is
+    # load-bearing, not alphabetical.
     name: build:all (Cloudflare parity)
     runs-on: ubuntu-latest
     steps:
@@ -125,7 +143,7 @@ jobs:
         # No --ignore-scripts: mirror Cloudflare's plain install so the
         # onlyBuiltDependencies (esbuild, @swc/core) postinstalls run.
         run: pnpm install --frozen-lockfile
-      - name: Build everything (libs + angular/react/svelte/astro)
+      - name: Build everything (libs, docs, home, then the framework fixtures)
         run: pnpm run build:all
       # The four docs gates existed as `pnpm run` scripts that only ever ran by
       # hand — the exact "documented but not enforced" pattern the repo-hygiene
@@ -160,7 +178,10 @@ jobs:
         run: pnpm run gate:self-test
 
   baselines-vrt:
-    name: T0.1 - VRT vs committed baselines (5 pilots + 65 components)
+    # No component count in the name: components.vrt.spec.ts derives its list
+    # from the filesystem (componentEntries()), so any number written here is
+    # wrong the next time a component lands. It was "65" against 70 on disk.
+    name: T0.1 - VRT vs committed baselines (pilots + every component)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -194,7 +215,10 @@ jobs:
       # which is platform-stable and is the property that actually regressed
       # before (`brand` was inert for a whole release with every gate green).
       # Reuses this job's build + chromium; it renders its own page on :5198.
-      - name: Scoped theming (four brands, one document)
+      # Two brands, not four: 2026-08-20-brand-pruning-and-storybook-de-bloat
+      # pruned the set, and check-scoped-theming.mjs pins BRANDS to
+      # ['altitude', 'southleft'].
+      - name: Scoped theming (two brands, one document)
         run: pnpm run test:scoped-theming -- --no-screenshot
       - name: Upload diffs on failure
         if: failure()
@@ -270,8 +294,25 @@ jobs:
             exit 1
           fi
 
-  vite-build-and-parity:
-    name: T2.1/T2.2 Vite parity gates
+  bundle-completeness:
+    # WAS `vite-build-and-parity` (T2.1/T2.2). The webpack -> Vite migration it
+    # gated is finished, and two of its three steps had quietly become dead:
+    #
+    #   * "Build webpack lib (baseline)" ran `pnpm run build`, which is Vite.
+    #     There is no webpack config or webpack dependency left in this repo.
+    #   * check-vite-export-parity.js diffed dist/ against dist-vite/ -- but
+    #     `build` and `build:vite` were the SAME `vite build -c vite.config.mjs`
+    #     differing only in --outDir, so it asserted a build was a superset of
+    #     itself and could not fail. (.altitude/BUILD.md already recorded that
+    #     dist-vite/ "was retired at T2.2 finalization"; CI kept gating it.)
+    #   * check-vite-spike.js was a T2.1 SPIKE proving Vite *could* get SCSS
+    #     into a shadow root the way webpack+sass-loader did. It shipped.
+    #
+    # Both scripts, `build:vite`, `build:vite-spike` and vite.spike.config.mjs
+    # are deleted. check-bundle-completeness.js survives because it never had
+    # anything to do with the migration: it catches a component that exists on
+    # disk but is missing from bundle.ts, which is a live drift risk today.
+    name: bundle.ts completeness (no component drift)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -283,19 +324,10 @@ jobs:
           cache: 'pnpm'
       - name: Install
         run: pnpm install --frozen-lockfile --ignore-scripts
-      - name: Build webpack lib (baseline)
+      - name: Build libraries
         run: pnpm run build
-      - name: Build Vite spike
-        run: pnpm --filter @southleft/al-web-components build:vite-spike
-      - name: T2.1 — Vite spike bundle assertions
-        run: node scripts/check-vite-spike.js
-      - name: Build Vite lib
-        run: pnpm --filter @southleft/al-web-components build:vite
-      - name: T2.2 — Vite vs webpack export parity (zero removals)
-        run: node scripts/check-vite-export-parity.js
-      - name: T2.2 — bundle.ts completeness (no component drift)
+      - name: bundle.ts completeness (no component drift)
         run: node scripts/check-bundle-completeness.js
-
   cem-and-contracts:
     name: T3.1/T3.2/T3.4 CEM + schemas + contract validator
     runs-on: ubuntu-latest
@@ -438,10 +470,14 @@ jobs:
         run: node scripts/check-react-wrapper-contract.js
 
   lint:
-    name: T2.3.c ESLint 9 flat
+    name: T2.3.c ESLint 9 flat + changed-line styles
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        # fetch-depth: 0 for gate:styles-new below, which diffs against the
+        # merge-base with the target branch.
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -451,6 +487,19 @@ jobs:
         run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Lint repo
         run: pnpm run lint
+      # lint:styles (repo-hygiene) is the hard gate, but it can only cover .scss:
+      # the sites' hand-written .css carries 21 pre-existing violations, so
+      # gating all of it would be permanently red. gate:styles-new is the half
+      # that holds the line -- stylelint on the lines a branch actually CHANGED,
+      # .scss and .css alike. It was documented as "what holds the line over the
+      # site CSS" and never ran anywhere. PR-only: it needs a base to diff from.
+      - name: Styles lint on changed lines only (.scss and .css)
+        if: github.event_name == 'pull_request'
+        # Invoked as `node scripts/...` rather than `pnpm run gate:styles-new --`
+        # so argv is clean: `pnpm run X -- --flag` forwards a literal "--" too,
+        # which is exactly the shape the sibling base-diff gates avoid
+        # (check-migration-gate.js, check-baselines-gate.js).
+        run: node scripts/check-styles-changed.mjs --base origin/${{ github.base_ref }}
 
   ai-readiness-dry-run:
     # R7 / eval-harness-with-treatments spec — runs on EVERY PR (this
@@ -631,6 +680,13 @@ jobs:
         run: pnpm --filter @southleft/al-web-components build:tokens && pnpm --filter @southleft/al-web-components build:custom-elements.json
       - name: MCP smoke test
         run: pnpm --filter @southleft/altitude-mcp test
+      # CAPABILITY-MATRIX.md is generated from the live server's registrations
+      # and had no drift gate -- the same gap that let the tool roster rot to
+      # "six tools" in three hand-written docs (check:mcp-docs now guards those).
+      # The smoke test proves the tools WORK; this proves the doc still
+      # describes them.
+      - name: Capability matrix matches the live server
+        run: pnpm --filter @southleft/altitude-mcp capability-matrix:check
 
   unit-tests:
     # B2 - the component libraries had zero unit tests. Vitest 3 in browser mode
@@ -732,21 +788,38 @@ jobs:
         run: pnpm run gate:contracts
       - name: Build tokens (brand distinctiveness reads built output)
         run: pnpm --filter @southleft/al-web-components build:tokens
-      # After build:tokens on purpose: R9 verifies each project's brand token
-      # set exists under styles/tokens-dtcg/, which is GENERATED (gitignored)
-      # and absent on a fresh clone until build:tokens produces it.
+      # Kept after build:tokens because the rest of R9 reads built output.
+      # NOTE the brand-token-set half does NOT need it: styles/tokens-dtcg/ is
+      # the tracked, hand-authored DTCG source (32 files in git), not build
+      # output -- it is present on a fresh clone. The old comment here claimed
+      # the opposite; the generated tree it was describing is styles/dist-v5/.
+      # See CLAUDE.md "Design Tokens".
       - name: DS project registry is coherent
         run: pnpm run check:ds-projects
       - name: Brands are distinguishable
         run: pnpm run test:brands
       - name: No phantom tokens (read via var(), never emitted)
         run: pnpm run gate:token-usage
+      # generate:token-metadata MUTATES the tracked DTCG source, writing a
+      # $extensions block per token -- and its own drift gate ran nowhere. It
+      # asserts uuid coverage and, crucially, uuid STABILITY (each token's uuid
+      # compared against `git show HEAD:<file>`), so a regenerate that silently
+      # reissues identities fails here instead of landing. Needs no build.
+      - name: Token metadata is complete and uuids are stable
+        run: pnpm run check:token-metadata
       - name: Dependency audit (shipped packages are fatal at high)
         run: pnpm run check:audit
       - name: llms.txt matches its sources
         run: pnpm run check:llms
       - name: MCP tool docs match the server's registered tools
         run: pnpm run check:mcp-docs
+      # Same discipline as check:llms and check:mcp-docs, applied to the agent
+      # skill: .claude/skills/altitude-facts/GENERATED-FACTS.md is generated
+      # from the CEM, the digests and the MCP registrations, and is what grounds
+      # agents writing al-* markup. It is the last generated artifact in this
+      # family that had no drift gate.
+      - name: Agent skill facts match their sources
+        run: pnpm run check:skills
       - name: Styles lint (the hard style gate)
         run: pnpm run lint:styles
       # Parity freshness — visibility, not a gate: prints figmaLastRefreshed age,

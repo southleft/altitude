@@ -242,7 +242,6 @@ same way any other doc does.
 ### Components / build
 
 - `check-cem-coverage.js` — custom-elements-manifest completeness (distinct from `gate:coverage`, which is V8 code coverage).
-- `check-vite-export-parity.js`, `check-vite-spike.js` — Vite build output vs. expected export surface.
 - `check-exports-map.js` — `check:exports`, package `exports` map correctness.
 - `check-react-wrapper-contract.js` — `@southleft/al-react` wrapper conformance.
 - `check-register-altitude.js` — the three registration modes (stable/versioned/manual) stay consistent.

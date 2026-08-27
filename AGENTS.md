@@ -48,10 +48,12 @@ no script can check them, so they are on you and the PR reviewer:
 - **G7 — Decorator semantics frozen**: `experimentalDecorators: true`,
   `useDefineForClassFields: false`. Don't touch. *(review obligation — no
   script asserts it)* The setting that decides the **shipped** semantics is
-  esbuild's, not tsc's: `libs/al-web-components/vite.config.mjs:119-123` (and
-  `vite.spike.config.mjs:44-45`), plus both Storybook configs
-  (`@southleft/al-web-components/.storybook/main.ts:177-178`,
-  `@southleft/al-react/.storybook/main.ts:152-153`). `libs/al-web-components/tsconfig.json:21`
+  esbuild's, not tsc's, and after the 2026-08-27 cleanup there is exactly ONE
+  place that sets it: `libs/al-web-components/vite.config.mjs:119-123`. The two
+  Storybook configs this used to also cite went with Storybook (retired
+  2026-08-25) and `vite.spike.config.mjs` went with the dead Vite-migration
+  scaffolding (retired 2026-08-27) - all three paths no longer exist, so do not
+  go looking for them. `libs/al-web-components/tsconfig.json:21`
   sets only `useDefineForClassFields: false` and deliberately omits
   `experimentalDecorators` — it is `emitDeclarationOnly`, and `@property accessor`
   auto-accessors type-check identically either way (verified: `tsc --noEmit`
