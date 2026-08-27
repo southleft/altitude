@@ -109,9 +109,9 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Checked=Off,Label=hidden` (source: `measured`)
+**Anatomy case measured:** `Checked=Off,Label=shown` (source: `measured`)
 
-### Root — `<div class="al-c-radio al-has-hidden-label">`
+### Root — `<div class="al-c-radio">`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |

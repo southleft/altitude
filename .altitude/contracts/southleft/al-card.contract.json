@@ -286,6 +286,28 @@
       "description": "Tag chips under the body. Each slotted node gets the brand's square-cornered chip treatment, so plain `<span>`s are enough. Collapses entirely when empty."
     }
   ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-avatar",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-heading",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-layout",
+        "evidence": [
+          "template"
+        ]
+      }
+    ]
+  },
   "states": [
     "hover",
     "focus",
@@ -298,6 +320,10 @@
     "root": {
       "tag": "div",
       "cls": "al-c-card al-c-card--media",
+      "box": {
+        "w": 484.4,
+        "h": 158
+      },
       "layout": {
         "display": "flex",
         "direction": "column",
@@ -374,6 +400,10 @@
         {
           "tag": "div",
           "cls": "al-c-card__content",
+          "box": {
+            "w": 482.4,
+            "h": 156
+          },
           "layout": {
             "display": "flex",
             "direction": "column",
@@ -418,6 +448,10 @@
             {
               "tag": "div",
               "cls": "al-c-card__header",
+              "box": {
+                "w": 434.4,
+                "h": 20
+              },
               "layout": {
                 "display": "flex",
                 "direction": "row",
@@ -442,6 +476,11 @@
                 {
                   "tag": "span",
                   "cls": "",
+                  "text": "Design systems",
+                  "box": {
+                    "w": 111.8,
+                    "h": 20
+                  },
                   "layout": {
                     "display": "block",
                     "direction": "row",
@@ -456,6 +495,10 @@
             {
               "tag": "div",
               "cls": "al-c-card__body",
+              "box": {
+                "w": 434.4,
+                "h": 20
+              },
               "layout": {
                 "display": "flex",
                 "direction": "column",
@@ -480,6 +523,11 @@
                 {
                   "tag": "div",
                   "cls": "al-c-card__body",
+                  "text": "A single source of truth for product surface, shipped as code.",
+                  "box": {
+                    "w": 434.4,
+                    "h": 20
+                  },
                   "layout": {
                     "display": "flex",
                     "direction": "column",
@@ -507,6 +555,10 @@
             {
               "tag": "div",
               "cls": "al-c-card__footer",
+              "box": {
+                "w": 434.4,
+                "h": 44
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -523,6 +575,11 @@
                 {
                   "tag": "span",
                   "cls": "",
+                  "text": "Read more",
+                  "box": {
+                    "w": 69.3,
+                    "h": 17
+                  },
                   "layout": {
                     "display": "inline",
                     "direction": "row",
@@ -538,6 +595,1527 @@
         }
       ]
     },
+    "cases": [
+      {
+        "case": "Variant=article",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-card al-c-card--media",
+          "box": {
+            "w": 484.4,
+            "h": 158
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "background": {
+              "code": "--al-theme-color-background-default-strong",
+              "figma": "theme/color/background/default-strong"
+            },
+            "background-color": {
+              "code": "--al-theme-color-background-default-strong",
+              "figma": "theme/color/background/default-strong"
+            },
+            "border": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-color": {
+              "code": "--al-theme-color-border-default-weak",
+              "figma": "theme/color/border/default-weak"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-width": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "padding": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "padding-bottom": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "padding-left": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "padding-right": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "padding-top": {
+              "code": "--al-card-padding",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-card__content",
+              "box": {
+                "w": 482.4,
+                "h": 156
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "column",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "padding": {
+                  "code": "--al-theme-space-lg",
+                  "figma": "theme/space/lg"
+                },
+                "padding-bottom": {
+                  "code": "--al-theme-space-lg",
+                  "figma": "theme/space/lg"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space-lg",
+                  "figma": "theme/space/lg"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space-lg",
+                  "figma": "theme/space/lg"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-lg",
+                  "figma": "theme/space/lg"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__header",
+                  "box": {
+                    "w": 434.4,
+                    "h": 20
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "flex-start",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "",
+                      "text": "Design systems",
+                      "box": {
+                        "w": 111.8,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__body",
+                  "box": {
+                    "w": 434.4,
+                    "h": 20
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-card__body",
+                      "text": "A single source of truth for product surface, shipped as code.",
+                      "box": {
+                        "w": 434.4,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-sm",
+                          "figma": "theme/space/sm"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-sm",
+                          "figma": "theme/space/sm"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-sm",
+                          "figma": "theme/space/sm"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__footer",
+                  "box": {
+                    "w": 434.4,
+                    "h": 44
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-primary-default",
+                      "figma": "theme/color/content/primary-default"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "",
+                      "text": "Read more",
+                      "box": {
+                        "w": 69.3,
+                        "h": 17
+                      },
+                      "layout": {
+                        "display": "inline",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=bare",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-card al-c-card--bare",
+          "box": {
+            "w": 640.1,
+            "h": 76
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-card__content",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "layout": {
+                "display": "contents",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__header",
+                  "box": {
+                    "w": 640.1,
+                    "h": 20
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "flex-start",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "",
+                      "text": "Design systems",
+                      "box": {
+                        "w": 111.8,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__body",
+                  "box": {
+                    "w": 640.1,
+                    "h": 20
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-card__body",
+                      "text": "A single source of truth for product surface, shipped as code.",
+                      "box": {
+                        "w": 434.4,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__footer",
+                  "box": {
+                    "w": 640.1,
+                    "h": 20
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "",
+                      "text": "Read more",
+                      "box": {
+                        "w": 77.9,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "inline",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=default",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-card",
+          "box": {
+            "w": 672.1,
+            "h": 108
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "background-color": {
+              "code": "--al-theme-color-background-default",
+              "figma": "theme/color/background/default"
+            },
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "box-shadow": {
+              "code": "--al-theme-box-shadow",
+              "figma": "theme/box-shadow/@"
+            },
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-left": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-right": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-top": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-card__content",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "layout": {
+                "display": "contents",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__header",
+                  "box": {
+                    "w": 640.1,
+                    "h": 20
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "flex-start",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "",
+                      "text": "Design systems",
+                      "box": {
+                        "w": 111.8,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__body",
+                  "box": {
+                    "w": 640.1,
+                    "h": 20
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-card__body",
+                      "text": "A single source of truth for product surface, shipped as code.",
+                      "box": {
+                        "w": 434.4,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__footer",
+                  "box": {
+                    "w": 640.1,
+                    "h": 20
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "",
+                      "text": "Read more",
+                      "box": {
+                        "w": 77.9,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "inline",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=service",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-card al-c-card--service",
+          "box": {
+            "w": 516.4,
+            "h": 178.8
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "background": {
+              "code": "--al-theme-color-background-default-strong",
+              "figma": "theme/color/background/default-strong"
+            },
+            "background-color": {
+              "code": "--al-theme-color-background-default-strong",
+              "figma": "theme/color/background/default-strong"
+            },
+            "border": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-color": {
+              "code": "--al-theme-color-border-default-weak",
+              "figma": "theme/color/border/default-weak"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-width": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "padding": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "padding-bottom": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "padding-left": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "padding-right": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "padding-top": {
+              "code": "--al-card-padding",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-card__content",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "layout": {
+                "display": "contents",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__header",
+                  "box": {
+                    "w": 434.4,
+                    "h": 35.2
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "flex-start",
+                    "justify": "space-between"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-lg",
+                      "figma": "theme/space/lg"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-lg",
+                      "figma": "theme/space/lg"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-lg",
+                      "figma": "theme/space/lg"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "",
+                      "text": "Design systems",
+                      "box": {
+                        "w": 247.5,
+                        "h": 35.2
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__body",
+                  "box": {
+                    "w": 434.4,
+                    "h": 25.6
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default-weak",
+                      "figma": "theme/color/content/default-weak"
+                    },
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-card__body",
+                      "text": "A single source of truth for product surface, shipped as code.",
+                      "box": {
+                        "w": 434.4,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default-weak",
+                          "figma": "theme/color/content/default-weak"
+                        },
+                        "column-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__footer",
+                  "box": {
+                    "w": 434.4,
+                    "h": 20
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "",
+                      "text": "Read more",
+                      "box": {
+                        "w": 77.9,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "inline",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=tool",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-card al-c-card--tool",
+          "box": {
+            "w": 438.1,
+            "h": 152.8
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "background": {
+              "code": "--al-theme-color-background-default-strong",
+              "figma": "theme/color/background/default-strong"
+            },
+            "background-color": {
+              "code": "--al-theme-color-background-default-strong",
+              "figma": "theme/color/background/default-strong"
+            },
+            "border": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-color": {
+              "code": "--al-theme-color-border-default-weak",
+              "figma": "theme/color/border/default-weak"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-width": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "padding": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "padding-bottom": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "padding-left": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "padding-right": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "padding-top": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "row-gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-card__content",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "layout": {
+                "display": "contents",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__header",
+                  "box": {
+                    "w": 380.1,
+                    "h": 20
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "flex-start",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "",
+                      "text": "Design systems",
+                      "box": {
+                        "w": 111.8,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__body",
+                  "box": {
+                    "w": 380.1,
+                    "h": 22.8
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default-weak",
+                      "figma": "theme/color/content/default-weak"
+                    },
+                    "column-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-card__body",
+                      "text": "A single source of truth for product surface, shipped as code.",
+                      "box": {
+                        "w": 380.1,
+                        "h": 18
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default-weak",
+                          "figma": "theme/color/content/default-weak"
+                        },
+                        "column-gap": {
+                          "code": "--al-theme-space-sm",
+                          "figma": "theme/space/sm"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-sm",
+                          "figma": "theme/space/sm"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-sm",
+                          "figma": "theme/space/sm"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__footer",
+                  "box": {
+                    "w": 380.1,
+                    "h": 28
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-primary-default",
+                      "figma": "theme/color/content/primary-default"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "",
+                      "text": "Read more",
+                      "box": {
+                        "w": 79.2,
+                        "h": 19
+                      },
+                      "layout": {
+                        "display": "inline",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=work",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-card al-c-card--media",
+          "box": {
+            "w": 484.4,
+            "h": 150
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "background": {
+              "code": "--al-theme-color-background-default-strong",
+              "figma": "theme/color/background/default-strong"
+            },
+            "background-color": {
+              "code": "--al-theme-color-background-default-strong",
+              "figma": "theme/color/background/default-strong"
+            },
+            "border": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-color": {
+              "code": "--al-theme-color-border-default-weak",
+              "figma": "theme/color/border/default-weak"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-width": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "padding": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "padding-bottom": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "padding-left": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "padding-right": {
+              "code": "--al-card-padding",
+              "figma": null
+            },
+            "padding-top": {
+              "code": "--al-card-padding",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-card__content",
+              "box": {
+                "w": 482.4,
+                "h": 148
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "column",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding": {
+                  "code": "--al-theme-space-lg",
+                  "figma": "theme/space/lg"
+                },
+                "padding-bottom": {
+                  "code": "--al-theme-space-lg",
+                  "figma": "theme/space/lg"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space-lg",
+                  "figma": "theme/space/lg"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space-lg",
+                  "figma": "theme/space/lg"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-lg",
+                  "figma": "theme/space/lg"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__header",
+                  "box": {
+                    "w": 434.4,
+                    "h": 20
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "flex-start",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "",
+                      "text": "Design systems",
+                      "box": {
+                        "w": 111.8,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__body",
+                  "box": {
+                    "w": 434.4,
+                    "h": 20
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-card__body",
+                      "text": "A single source of truth for product surface, shipped as code.",
+                      "box": {
+                        "w": 434.4,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-sm",
+                          "figma": "theme/space/sm"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-sm",
+                          "figma": "theme/space/sm"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-sm",
+                          "figma": "theme/space/sm"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-card__footer",
+                  "box": {
+                    "w": 434.4,
+                    "h": 44
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-primary-default",
+                      "figma": "theme/color/content/primary-default"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "",
+                      "text": "Read more",
+                      "box": {
+                        "w": 69.3,
+                        "h": 17
+                      },
+                      "layout": {
+                        "display": "inline",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
     "stateOverrides": {
       "hover": {
         "0": {

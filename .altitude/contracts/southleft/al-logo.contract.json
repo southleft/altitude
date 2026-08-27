@@ -55,6 +55,9 @@
       "description": "The component content"
     }
   ],
+  "composition": {
+    "renders": []
+  },
   "states": [
     "hover",
     "focus",
@@ -67,6 +70,10 @@
     "root": {
       "tag": "a",
       "cls": "al-c-logo",
+      "box": {
+        "w": 201.9,
+        "h": 28
+      },
       "layout": {
         "display": "flex",
         "direction": "column",
@@ -95,6 +102,10 @@
         {
           "tag": "svg",
           "cls": "",
+          "box": {
+            "w": 201.7,
+            "h": 24
+          },
           "layout": {
             "display": "block",
             "direction": "row",
@@ -106,6 +117,10 @@
             {
               "tag": "path",
               "cls": "",
+              "box": {
+                "w": 20.2,
+                "h": 23.5
+              },
               "layout": {
                 "display": "inline",
                 "direction": "row",
@@ -118,6 +133,10 @@
             {
               "tag": "path",
               "cls": "",
+              "box": {
+                "w": 173.9,
+                "h": 24
+              },
               "layout": {
                 "display": "inline",
                 "direction": "row",
@@ -132,6 +151,10 @@
         {
           "tag": "div",
           "cls": "al-c-logo__tagline",
+          "box": {
+            "w": 0,
+            "h": 0
+          },
           "layout": {
             "display": "block",
             "direction": "row",
@@ -155,7 +178,223 @@
           "children": []
         }
       ]
-    }
+    },
+    "cases": [
+      {
+        "case": "Brand=default",
+        "root": {
+          "tag": "a",
+          "cls": "al-c-logo",
+          "box": {
+            "w": 201.9,
+            "h": 28
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "flex-start",
+            "justify": "center"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default-weak",
+              "figma": "theme/color/content/default-weak"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            }
+          },
+          "children": [
+            {
+              "tag": "svg",
+              "cls": "",
+              "box": {
+                "w": 201.7,
+                "h": 24
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 20.2,
+                    "h": 23.5
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 173.9,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-logo__tagline",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Brand=southleft",
+        "root": {
+          "tag": "a",
+          "cls": "al-c-logo al-c-logo--southleft",
+          "box": {
+            "w": 190.1,
+            "h": 28
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "flex-start",
+            "justify": "center"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default-weak",
+              "figma": "theme/color/content/default-weak"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            }
+          },
+          "children": [
+            {
+              "tag": "svg",
+              "cls": "",
+              "box": {
+                "w": 189.9,
+                "h": 24
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 189.9,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-logo__tagline",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      }
+    ]
   },
   "tokens": [
     "--al-font-weight-bold",

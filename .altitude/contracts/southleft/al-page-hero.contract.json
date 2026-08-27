@@ -99,6 +99,40 @@
       "description": "Anything below the lead paragraph — CTAs, a token strip, a form. Laid out as further children of the stack."
     }
   ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-button",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-chip",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-heading",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-layout",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-text-block",
+        "evidence": [
+          "template"
+        ]
+      }
+    ]
+  },
   "states": [
     "hover",
     "focus",
@@ -111,6 +145,10 @@
     "root": {
       "tag": "div",
       "cls": "sl-c-page-hero",
+      "box": {
+        "w": 1280,
+        "h": 314
+      },
       "layout": {
         "display": "block",
         "direction": "row",
@@ -122,6 +160,11 @@
         {
           "tag": "div",
           "cls": "al-c-layout al-c-layout--gap-md",
+          "component": "al-layout",
+          "box": {
+            "w": 1184,
+            "h": 154
+          },
           "layout": {
             "display": "flex",
             "direction": "column",
@@ -146,6 +189,10 @@
             {
               "tag": "div",
               "cls": "sl-c-page-hero__eyebrow",
+              "box": {
+                "w": 58.6,
+                "h": 30
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -157,6 +204,11 @@
                 {
                   "tag": "button",
                   "cls": "al-c-chip al-c-chip--secondary",
+                  "component": "al-chip",
+                  "box": {
+                    "w": 58.6,
+                    "h": 30
+                  },
                   "layout": {
                     "display": "inline-flex",
                     "direction": "row",
@@ -249,6 +301,12 @@
                     {
                       "tag": "button",
                       "cls": "al-c-chip al-c-chip--secondary",
+                      "component": "al-chip",
+                      "text": "Work",
+                      "box": {
+                        "w": 32.6,
+                        "h": 18
+                      },
                       "layout": {
                         "display": "inline-flex",
                         "direction": "row",
@@ -346,6 +404,11 @@
             {
               "tag": "h1",
               "cls": "al-c-heading al-c-heading--display-md al-is-bold",
+              "component": "al-heading",
+              "box": {
+                "w": 1184,
+                "h": 72
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -374,6 +437,12 @@
                 {
                   "tag": "h1",
                   "cls": "al-c-heading al-c-heading--display-md al-is-bold",
+                  "component": "al-heading",
+                  "text": "Selected work",
+                  "box": {
+                    "w": 523,
+                    "h": 72
+                  },
                   "layout": {
                     "display": "block",
                     "direction": "row",
@@ -405,6 +474,11 @@
             {
               "tag": "div",
               "cls": "al-c-text-block",
+              "component": "al-text-block",
+              "box": {
+                "w": 1184,
+                "h": 20
+              },
               "layout": {
                 "display": "flex",
                 "direction": "column",
@@ -433,6 +507,12 @@
                 {
                   "tag": "div",
                   "cls": "al-c-text-block",
+                  "component": "al-text-block",
+                  "text": "A few of the systems we have designed, built and handed over.",
+                  "box": {
+                    "w": 447,
+                    "h": 20
+                  },
                   "layout": {
                     "display": "flex",
                     "direction": "column",

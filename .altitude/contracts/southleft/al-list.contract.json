@@ -49,6 +49,16 @@
       "description": "The list items"
     }
   ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-list-item",
+        "evidence": [
+          "import"
+        ]
+      }
+    ]
+  },
   "states": [
     "hover",
     "focus",
@@ -61,6 +71,10 @@
     "root": {
       "tag": "ul",
       "cls": "al-c-list",
+      "box": {
+        "w": 98.3,
+        "h": 110
+      },
       "layout": {
         "display": "block",
         "direction": "row",
@@ -72,6 +86,11 @@
         {
           "tag": "li",
           "cls": "al-c-list-item",
+          "component": "al-list-item",
+          "box": {
+            "w": 98.3,
+            "h": 36
+          },
           "layout": {
             "display": "list-item",
             "direction": "row",
@@ -83,6 +102,10 @@
             {
               "tag": "button",
               "cls": "al-c-list-item__link",
+              "box": {
+                "w": 94.3,
+                "h": 36
+              },
               "layout": {
                 "display": "flex",
                 "direction": "row",
@@ -107,6 +130,10 @@
                 {
                   "tag": "span",
                   "cls": "al-c-list-item__body",
+                  "box": {
+                    "w": 78.3,
+                    "h": 20
+                  },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
@@ -131,6 +158,10 @@
                     {
                       "tag": "div",
                       "cls": "al-c-list-item__text",
+                      "box": {
+                        "w": 59.7,
+                        "h": 20
+                      },
                       "layout": {
                         "display": "block",
                         "direction": "row",
@@ -142,6 +173,11 @@
                         {
                           "tag": "div",
                           "cls": "al-c-list-item__text",
+                          "text": "First item",
+                          "box": {
+                            "w": 59.7,
+                            "h": 18
+                          },
                           "layout": {
                             "display": "block",
                             "direction": "row",
@@ -162,6 +198,11 @@
         {
           "tag": "li",
           "cls": "al-c-list-item",
+          "component": "al-list-item",
+          "box": {
+            "w": 98.3,
+            "h": 36
+          },
           "layout": {
             "display": "list-item",
             "direction": "row",
@@ -173,6 +214,10 @@
             {
               "tag": "button",
               "cls": "al-c-list-item__link",
+              "box": {
+                "w": 94.3,
+                "h": 36
+              },
               "layout": {
                 "display": "flex",
                 "direction": "row",
@@ -197,6 +242,10 @@
                 {
                   "tag": "span",
                   "cls": "al-c-list-item__body",
+                  "box": {
+                    "w": 78.3,
+                    "h": 20
+                  },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
@@ -221,6 +270,10 @@
                     {
                       "tag": "div",
                       "cls": "al-c-list-item__text",
+                      "box": {
+                        "w": 78.3,
+                        "h": 20
+                      },
                       "layout": {
                         "display": "block",
                         "direction": "row",
@@ -232,6 +285,11 @@
                         {
                           "tag": "div",
                           "cls": "al-c-list-item__text",
+                          "text": "Second item",
+                          "box": {
+                            "w": 78.3,
+                            "h": 18
+                          },
                           "layout": {
                             "display": "block",
                             "direction": "row",
@@ -252,6 +310,11 @@
         {
           "tag": "li",
           "cls": "al-c-list-item",
+          "component": "al-list-item",
+          "box": {
+            "w": 98.3,
+            "h": 36
+          },
           "layout": {
             "display": "list-item",
             "direction": "row",
@@ -263,6 +326,10 @@
             {
               "tag": "button",
               "cls": "al-c-list-item__link",
+              "box": {
+                "w": 94.3,
+                "h": 36
+              },
               "layout": {
                 "display": "flex",
                 "direction": "row",
@@ -287,6 +354,10 @@
                 {
                   "tag": "span",
                   "cls": "al-c-list-item__body",
+                  "box": {
+                    "w": 78.3,
+                    "h": 20
+                  },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
@@ -311,6 +382,10 @@
                     {
                       "tag": "div",
                       "cls": "al-c-list-item__text",
+                      "box": {
+                        "w": 64.2,
+                        "h": 20
+                      },
                       "layout": {
                         "display": "block",
                         "direction": "row",
@@ -322,6 +397,11 @@
                         {
                           "tag": "div",
                           "cls": "al-c-list-item__text",
+                          "text": "Third item",
+                          "box": {
+                            "w": 64.2,
+                            "h": 18
+                          },
                           "layout": {
                             "display": "block",
                             "direction": "row",
@@ -340,7 +420,734 @@
           ]
         }
       ]
-    }
+    },
+    "cases": [
+      {
+        "case": "Direction=default",
+        "root": {
+          "tag": "ul",
+          "cls": "al-c-list",
+          "box": {
+            "w": 98.3,
+            "h": 110
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "li",
+              "cls": "al-c-list-item",
+              "component": "al-list-item",
+              "box": {
+                "w": 98.3,
+                "h": 36
+              },
+              "layout": {
+                "display": "list-item",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "button",
+                  "cls": "al-c-list-item__link",
+                  "box": {
+                    "w": 94.3,
+                    "h": 36
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "space-between"
+                  },
+                  "tokens": {
+                    "font": {
+                      "code": "--al-theme-typography-body-sm",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
+                      "figma": null
+                    },
+                    "width": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "al-c-list-item__body",
+                      "box": {
+                        "w": 78.3,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-list-item__text",
+                          "box": {
+                            "w": 59.7,
+                            "h": 20
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "al-c-list-item__text",
+                              "text": "First item",
+                              "box": {
+                                "w": 59.7,
+                                "h": 18
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "li",
+              "cls": "al-c-list-item",
+              "component": "al-list-item",
+              "box": {
+                "w": 98.3,
+                "h": 36
+              },
+              "layout": {
+                "display": "list-item",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "button",
+                  "cls": "al-c-list-item__link",
+                  "box": {
+                    "w": 94.3,
+                    "h": 36
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "space-between"
+                  },
+                  "tokens": {
+                    "font": {
+                      "code": "--al-theme-typography-body-sm",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
+                      "figma": null
+                    },
+                    "width": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "al-c-list-item__body",
+                      "box": {
+                        "w": 78.3,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-list-item__text",
+                          "box": {
+                            "w": 78.3,
+                            "h": 20
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "al-c-list-item__text",
+                              "text": "Second item",
+                              "box": {
+                                "w": 78.3,
+                                "h": 18
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "li",
+              "cls": "al-c-list-item",
+              "component": "al-list-item",
+              "box": {
+                "w": 98.3,
+                "h": 36
+              },
+              "layout": {
+                "display": "list-item",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "button",
+                  "cls": "al-c-list-item__link",
+                  "box": {
+                    "w": 94.3,
+                    "h": 36
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "space-between"
+                  },
+                  "tokens": {
+                    "font": {
+                      "code": "--al-theme-typography-body-sm",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
+                      "figma": null
+                    },
+                    "width": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "al-c-list-item__body",
+                      "box": {
+                        "w": 78.3,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-list-item__text",
+                          "box": {
+                            "w": 64.2,
+                            "h": 20
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "al-c-list-item__text",
+                              "text": "Third item",
+                              "box": {
+                                "w": 64.2,
+                                "h": 18
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Direction=row",
+        "root": {
+          "tag": "ul",
+          "cls": "al-c-list al-c-list--row",
+          "box": {
+            "w": 278.2,
+            "h": 37
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "li",
+              "cls": "al-c-list-item",
+              "component": "al-list-item",
+              "box": {
+                "w": 79.7,
+                "h": 36
+              },
+              "layout": {
+                "display": "list-item",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "button",
+                  "cls": "al-c-list-item__link",
+                  "box": {
+                    "w": 75.7,
+                    "h": 36
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "space-between"
+                  },
+                  "tokens": {
+                    "font": {
+                      "code": "--al-theme-typography-body-sm",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
+                      "figma": null
+                    },
+                    "width": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "al-c-list-item__body",
+                      "box": {
+                        "w": 59.7,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-list-item__text",
+                          "box": {
+                            "w": 59.7,
+                            "h": 20
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "al-c-list-item__text",
+                              "text": "First item",
+                              "box": {
+                                "w": 59.7,
+                                "h": 18
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "li",
+              "cls": "al-c-list-item",
+              "component": "al-list-item",
+              "box": {
+                "w": 98.3,
+                "h": 36
+              },
+              "layout": {
+                "display": "list-item",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "button",
+                  "cls": "al-c-list-item__link",
+                  "box": {
+                    "w": 94.3,
+                    "h": 36
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "space-between"
+                  },
+                  "tokens": {
+                    "font": {
+                      "code": "--al-theme-typography-body-sm",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
+                      "figma": null
+                    },
+                    "width": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "al-c-list-item__body",
+                      "box": {
+                        "w": 78.3,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-list-item__text",
+                          "box": {
+                            "w": 78.3,
+                            "h": 20
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "al-c-list-item__text",
+                              "text": "Second item",
+                              "box": {
+                                "w": 78.3,
+                                "h": 18
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "li",
+              "cls": "al-c-list-item",
+              "component": "al-list-item",
+              "box": {
+                "w": 84.2,
+                "h": 37
+              },
+              "layout": {
+                "display": "list-item",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "button",
+                  "cls": "al-c-list-item__link",
+                  "box": {
+                    "w": 80.2,
+                    "h": 36
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "space-between"
+                  },
+                  "tokens": {
+                    "font": {
+                      "code": "--al-theme-typography-body-sm",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
+                      "figma": null
+                    },
+                    "width": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "al-c-list-item__body",
+                      "box": {
+                        "w": 64.2,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-list-item__text",
+                          "box": {
+                            "w": 64.2,
+                            "h": 20
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "al-c-list-item__text",
+                              "text": "Third item",
+                              "box": {
+                                "w": 64.2,
+                                "h": 18
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
   },
   "tokens": [
     "--al-theme-space-xs",

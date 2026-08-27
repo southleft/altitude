@@ -53,6 +53,9 @@
   ],
   "events": [],
   "slots": [],
+  "composition": {
+    "renders": []
+  },
   "states": [
     "hover",
     "focus",
@@ -65,6 +68,10 @@
     "root": {
       "tag": "div",
       "cls": "al-c-skeleton al-c-skeleton--circle",
+      "box": {
+        "w": 32,
+        "h": 32
+      },
       "layout": {
         "display": "block",
         "direction": "row",
@@ -114,7 +121,189 @@
         }
       },
       "children": []
-    }
+    },
+    "cases": [
+      {
+        "case": "Shape=circle",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-skeleton al-c-skeleton--circle",
+          "box": {
+            "w": 32,
+            "h": 32
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius-round",
+              "figma": "theme/border/radius/round"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius-round",
+              "figma": "theme/border/radius/round"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius-round",
+              "figma": "theme/border/radius/round"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius-round",
+              "figma": "theme/border/radius/round"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius-round",
+              "figma": "theme/border/radius/round"
+            },
+            "padding": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-left": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-right": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-top": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": []
+        }
+      },
+      {
+        "case": "Shape=default",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-skeleton",
+          "box": {
+            "w": 32,
+            "h": 16
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "padding": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-left": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-right": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-top": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": []
+        }
+      },
+      {
+        "case": "Shape=square",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-skeleton al-c-skeleton--square",
+          "box": {
+            "w": 32,
+            "h": 32
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "padding": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-left": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-right": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-top": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": []
+        }
+      }
+    ]
   },
   "tokens": [
     "--al-theme-border-radius-round",

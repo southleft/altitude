@@ -155,9 +155,9 @@ an option has been chosen.
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Label=hidden` (source: `measured`)
+**Anatomy case measured:** `Label=shown` (source: `measured`)
 
-### Root — `<div class="al-c-combobox al-has-hidden-label al-c-combobox--align-bottom">`
+### Root — `<div class="al-c-combobox al-c-combobox--align-bottom">`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |

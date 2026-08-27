@@ -118,6 +118,22 @@
       "description": "The trailing position, for a control the link cannot express — a filter, a segmented toggle. Use it INSTEAD of `linkHref`; both render if both are set."
     }
   ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-heading",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-layout",
+        "evidence": [
+          "template"
+        ]
+      }
+    ]
+  },
   "states": [
     "hover",
     "focus",
@@ -130,6 +146,10 @@
     "root": {
       "tag": "div",
       "cls": "sl-c-section-header",
+      "box": {
+        "w": 821.9,
+        "h": 170.1
+      },
       "layout": {
         "display": "block",
         "direction": "row",
@@ -141,6 +161,10 @@
         {
           "tag": "div",
           "cls": "sl-c-section-header__rule",
+          "box": {
+            "w": 821.9,
+            "h": 20
+          },
           "layout": {
             "display": "flex",
             "direction": "row",
@@ -169,6 +193,11 @@
             {
               "tag": "span",
               "cls": "",
+              "text": "01 / Insights",
+              "box": {
+                "w": 98.3,
+                "h": 20
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -183,6 +212,11 @@
         {
           "tag": "div",
           "cls": "al-c-layout al-c-layout--row al-c-layout--gap-lg al-c-layout--align-end al-c-layout--justify-between al-c-layout--wrap",
+          "component": "al-layout",
+          "box": {
+            "w": 821.9,
+            "h": 122.1
+          },
           "layout": {
             "display": "flex",
             "direction": "row",
@@ -207,6 +241,11 @@
             {
               "tag": "div",
               "cls": "al-c-layout al-c-layout--gap-sm al-c-layout--grow",
+              "component": "al-layout",
+              "box": {
+                "w": 821.9,
+                "h": 122.1
+              },
               "layout": {
                 "display": "flex",
                 "direction": "column",
@@ -231,6 +270,11 @@
                 {
                   "tag": "p",
                   "cls": "sl-c-section-header__kicker",
+                  "text": "<insights>",
+                  "box": {
+                    "w": 821.9,
+                    "h": 20
+                  },
                   "layout": {
                     "display": "block",
                     "direction": "row",
@@ -243,6 +287,11 @@
                 {
                   "tag": "h2",
                   "cls": "al-c-heading al-c-heading--lg al-is-bold",
+                  "component": "al-heading",
+                  "box": {
+                    "w": 821.9,
+                    "h": 52
+                  },
                   "layout": {
                     "display": "block",
                     "direction": "row",
@@ -271,6 +320,12 @@
                     {
                       "tag": "h2",
                       "cls": "al-c-heading al-c-heading--lg al-is-bold",
+                      "component": "al-heading",
+                      "text": "What we have been thinking about",
+                      "box": {
+                        "w": 821.9,
+                        "h": 48
+                      },
                       "layout": {
                         "display": "block",
                         "direction": "row",
@@ -302,6 +357,11 @@
                 {
                   "tag": "p",
                   "cls": "sl-c-section-header__dek",
+                  "text": "Notes from the studio on design systems, tooling and craft.",
+                  "box": {
+                    "w": 821.9,
+                    "h": 34.1
+                  },
                   "layout": {
                     "display": "block",
                     "direction": "row",
@@ -316,7 +376,500 @@
           ]
         }
       ]
-    }
+    },
+    "cases": [
+      {
+        "case": "Link=default",
+        "root": {
+          "tag": "div",
+          "cls": "sl-c-section-header",
+          "box": {
+            "w": 821.9,
+            "h": 170.1
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "div",
+              "cls": "sl-c-section-header__rule",
+              "box": {
+                "w": 821.9,
+                "h": 20
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "",
+                  "text": "01 / Insights",
+                  "box": {
+                    "w": 98.3,
+                    "h": 20
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-layout al-c-layout--row al-c-layout--gap-lg al-c-layout--align-end al-c-layout--justify-between al-c-layout--wrap",
+              "component": "al-layout",
+              "box": {
+                "w": 821.9,
+                "h": 122.1
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "flex-end",
+                "justify": "space-between"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-lg",
+                  "figma": "theme/space/lg"
+                },
+                "gap": {
+                  "code": "--al-theme-space-lg",
+                  "figma": "theme/space/lg"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-lg",
+                  "figma": "theme/space/lg"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-layout al-c-layout--gap-sm al-c-layout--grow",
+                  "component": "al-layout",
+                  "box": {
+                    "w": 821.9,
+                    "h": 122.1
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "stretch",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "p",
+                      "cls": "sl-c-section-header__kicker",
+                      "text": "<insights>",
+                      "box": {
+                        "w": 821.9,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    },
+                    {
+                      "tag": "h2",
+                      "cls": "al-c-heading al-c-heading--lg al-is-bold",
+                      "component": "al-heading",
+                      "box": {
+                        "w": 821.9,
+                        "h": 52
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-heading-lg",
+                          "figma": null
+                        },
+                        "font-weight": {
+                          "code": "--al-font-weight-bold",
+                          "figma": "typography/font-weight/bold"
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-heading-lg-bold-letter-spacing",
+                          "figma": null
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "h2",
+                          "cls": "al-c-heading al-c-heading--lg al-is-bold",
+                          "component": "al-heading",
+                          "text": "What we have been thinking about",
+                          "box": {
+                            "w": 821.9,
+                            "h": 48
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default",
+                              "figma": "theme/color/content/default"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-heading-lg",
+                              "figma": null
+                            },
+                            "font-weight": {
+                              "code": "--al-font-weight-bold",
+                              "figma": "typography/font-weight/bold"
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-heading-lg-bold-letter-spacing",
+                              "figma": null
+                            }
+                          },
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "p",
+                      "cls": "sl-c-section-header__dek",
+                      "text": "Notes from the studio on design systems, tooling and craft.",
+                      "box": {
+                        "w": 821.9,
+                        "h": 34.1
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Link=with-link",
+        "root": {
+          "tag": "div",
+          "cls": "sl-c-section-header",
+          "box": {
+            "w": 951.5,
+            "h": 170.1
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "div",
+              "cls": "sl-c-section-header__rule",
+              "box": {
+                "w": 951.5,
+                "h": 20
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "",
+                  "text": "01 / Insights",
+                  "box": {
+                    "w": 98.3,
+                    "h": 20
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-layout al-c-layout--row al-c-layout--gap-lg al-c-layout--align-end al-c-layout--justify-between al-c-layout--wrap",
+              "component": "al-layout",
+              "box": {
+                "w": 951.5,
+                "h": 122.1
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "flex-end",
+                "justify": "space-between"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-lg",
+                  "figma": "theme/space/lg"
+                },
+                "gap": {
+                  "code": "--al-theme-space-lg",
+                  "figma": "theme/space/lg"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-lg",
+                  "figma": "theme/space/lg"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-layout al-c-layout--gap-sm al-c-layout--grow",
+                  "component": "al-layout",
+                  "box": {
+                    "w": 821.9,
+                    "h": 122.1
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "stretch",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "p",
+                      "cls": "sl-c-section-header__kicker",
+                      "text": "<insights>",
+                      "box": {
+                        "w": 821.9,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    },
+                    {
+                      "tag": "h2",
+                      "cls": "al-c-heading al-c-heading--lg al-is-bold",
+                      "component": "al-heading",
+                      "box": {
+                        "w": 821.9,
+                        "h": 52
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-heading-lg",
+                          "figma": null
+                        },
+                        "font-weight": {
+                          "code": "--al-font-weight-bold",
+                          "figma": "typography/font-weight/bold"
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-heading-lg-bold-letter-spacing",
+                          "figma": null
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "h2",
+                          "cls": "al-c-heading al-c-heading--lg al-is-bold",
+                          "component": "al-heading",
+                          "text": "What we have been thinking about",
+                          "box": {
+                            "w": 821.9,
+                            "h": 48
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default",
+                              "figma": "theme/color/content/default"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-heading-lg",
+                              "figma": null
+                            },
+                            "font-weight": {
+                              "code": "--al-font-weight-bold",
+                              "figma": "typography/font-weight/bold"
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-heading-lg-bold-letter-spacing",
+                              "figma": null
+                            }
+                          },
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "p",
+                      "cls": "sl-c-section-header__dek",
+                      "text": "Notes from the studio on design systems, tooling and craft.",
+                      "box": {
+                        "w": 821.9,
+                        "h": 34.1
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "a",
+                  "cls": "sl-c-section-header__link",
+                  "text": "All insights",
+                  "box": {
+                    "w": 105.6,
+                    "h": 20
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
   },
   "tokens": [
     "--al-font-weight-bold",

@@ -81,6 +81,46 @@
       "description": "The breadcrumbs content, a set of breadcrumb items"
     }
   ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-breadcrumbs-item",
+        "evidence": [
+          "import"
+        ]
+      },
+      {
+        "tag": "al-button",
+        "evidence": [
+          "import"
+        ]
+      },
+      {
+        "tag": "al-icon",
+        "evidence": [
+          "import"
+        ]
+      },
+      {
+        "tag": "al-menu",
+        "evidence": [
+          "import"
+        ]
+      },
+      {
+        "tag": "al-menu-item",
+        "evidence": [
+          "import"
+        ]
+      },
+      {
+        "tag": "al-popover",
+        "evidence": [
+          "import"
+        ]
+      }
+    ]
+  },
   "states": [
     "hover",
     "focus",
@@ -93,6 +133,10 @@
     "root": {
       "tag": "nav",
       "cls": "al-c-breadcrumbs",
+      "box": {
+        "w": 322.5,
+        "h": 32
+      },
       "layout": {
         "display": "block",
         "direction": "row",
@@ -104,6 +148,10 @@
         {
           "tag": "ol",
           "cls": "al-c-breadcrumbs__list",
+          "box": {
+            "w": 322.5,
+            "h": 32
+          },
           "layout": {
             "display": "flex",
             "direction": "row",
@@ -128,6 +176,11 @@
             {
               "tag": "li",
               "cls": "al-c-breadcrumbs-item",
+              "component": "al-breadcrumbs-item",
+              "box": {
+                "w": 103.6,
+                "h": 32
+              },
               "layout": {
                 "display": "flex",
                 "direction": "row",
@@ -164,6 +217,10 @@
                 {
                   "tag": "a",
                   "cls": "al-c-breadcrumbs-item__label",
+                  "box": {
+                    "w": 92.7,
+                    "h": 32
+                  },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
@@ -244,6 +301,11 @@
                     {
                       "tag": "a",
                       "cls": "al-c-breadcrumbs-item__label",
+                      "text": "Page One",
+                      "box": {
+                        "w": 76.7,
+                        "h": 23
+                      },
                       "layout": {
                         "display": "flex",
                         "direction": "row",
@@ -327,6 +389,11 @@
                 {
                   "tag": "div",
                   "cls": "al-c-breadcrumbs__separator",
+                  "text": "/",
+                  "box": {
+                    "w": 6.9,
+                    "h": 24
+                  },
                   "layout": {
                     "display": "block",
                     "direction": "row",
@@ -341,6 +408,11 @@
             {
               "tag": "li",
               "cls": "al-c-breadcrumbs-item",
+              "component": "al-breadcrumbs-item",
+              "box": {
+                "w": 104.2,
+                "h": 32
+              },
               "layout": {
                 "display": "flex",
                 "direction": "row",
@@ -377,6 +449,10 @@
                 {
                   "tag": "a",
                   "cls": "al-c-breadcrumbs-item__label",
+                  "box": {
+                    "w": 93.3,
+                    "h": 32
+                  },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
@@ -457,6 +533,11 @@
                     {
                       "tag": "a",
                       "cls": "al-c-breadcrumbs-item__label",
+                      "text": "Page Two",
+                      "box": {
+                        "w": 77.3,
+                        "h": 23
+                      },
                       "layout": {
                         "display": "flex",
                         "direction": "row",
@@ -540,6 +621,11 @@
                 {
                   "tag": "div",
                   "cls": "al-c-breadcrumbs__separator",
+                  "text": "/",
+                  "box": {
+                    "w": 6.9,
+                    "h": 24
+                  },
                   "layout": {
                     "display": "block",
                     "direction": "row",
@@ -554,6 +640,11 @@
             {
               "tag": "li",
               "cls": "al-c-breadcrumbs-item al-is-current",
+              "component": "al-breadcrumbs-item",
+              "box": {
+                "w": 106.7,
+                "h": 32
+              },
               "layout": {
                 "display": "flex",
                 "direction": "row",
@@ -590,6 +681,10 @@
                 {
                   "tag": "a",
                   "cls": "al-c-breadcrumbs-item__label",
+                  "box": {
+                    "w": 106.7,
+                    "h": 32
+                  },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
@@ -670,6 +765,11 @@
                     {
                       "tag": "a",
                       "cls": "al-c-breadcrumbs-item__label",
+                      "text": "Page Three",
+                      "box": {
+                        "w": 90.7,
+                        "h": 23
+                      },
                       "layout": {
                         "display": "flex",
                         "direction": "row",

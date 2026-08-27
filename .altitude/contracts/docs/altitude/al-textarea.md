@@ -176,9 +176,9 @@ Value attribute
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Label=hidden` (source: `measured`)
+**Anatomy case measured:** `Label=shown` (source: `measured`)
 
-### Root — `<div class="al-c-textarea al-has-hidden-label">`
+### Root — `<div class="al-c-textarea">`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |

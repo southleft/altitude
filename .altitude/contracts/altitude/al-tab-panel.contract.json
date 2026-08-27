@@ -67,6 +67,9 @@
       "description": "The tab panel content"
     }
   ],
+  "composition": {
+    "renders": []
+  },
   "states": [
     "hover",
     "focus",
@@ -79,6 +82,10 @@
     "root": {
       "tag": "div",
       "cls": "al-c-tab-panel al-is-active",
+      "box": {
+        "w": 128.5,
+        "h": 40
+      },
       "layout": {
         "display": "flex",
         "direction": "column",
@@ -111,6 +118,11 @@
         {
           "tag": "div",
           "cls": "al-c-tab-panel al-is-active",
+          "text": "Tab panel content",
+          "box": {
+            "w": 128.5,
+            "h": 20
+          },
           "layout": {
             "display": "flex",
             "direction": "column",

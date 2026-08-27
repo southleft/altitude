@@ -73,9 +73,9 @@ Variant
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Variant=danger,Dismissible=no` (source: `measured`)
+**Anatomy case measured:** `Variant=default,Dismissible=no` (source: `measured`)
 
-### Root — `<div class="al-c-banner al-c-banner--danger">`
+### Root — `<div class="al-c-banner">`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |

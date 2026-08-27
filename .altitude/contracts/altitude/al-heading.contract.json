@@ -83,6 +83,9 @@
       "description": "The heading content"
     }
   ],
+  "composition": {
+    "renders": []
+  },
   "states": [
     "hover",
     "focus",
@@ -95,6 +98,10 @@
     "root": {
       "tag": "h2",
       "cls": "al-c-heading al-is-bold",
+      "box": {
+        "w": 78.3,
+        "h": 28
+      },
       "layout": {
         "display": "block",
         "direction": "row",
@@ -123,6 +130,11 @@
         {
           "tag": "h2",
           "cls": "al-c-heading al-is-bold",
+          "text": "Heading",
+          "box": {
+            "w": 78.3,
+            "h": 27
+          },
           "layout": {
             "display": "block",
             "direction": "row",
@@ -150,7 +162,947 @@
           "children": []
         }
       ]
-    }
+    },
+    "cases": [
+      {
+        "case": "Variant=default,Weight=bold",
+        "root": {
+          "tag": "h2",
+          "cls": "al-c-heading al-is-bold",
+          "box": {
+            "w": 78.3,
+            "h": 28
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "font": {
+              "code": "--al-theme-typography-heading-sm",
+              "figma": null
+            },
+            "font-weight": {
+              "code": "--al-font-weight-bold",
+              "figma": "typography/font-weight/bold"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-heading-sm-bold-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "h2",
+              "cls": "al-c-heading al-is-bold",
+              "text": "Heading",
+              "box": {
+                "w": 78.3,
+                "h": 27
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-heading-sm",
+                  "figma": null
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-heading-sm-bold-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=default,Weight=regular",
+        "root": {
+          "tag": "h2",
+          "cls": "al-c-heading",
+          "box": {
+            "w": 74.3,
+            "h": 28
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "font": {
+              "code": "--al-theme-typography-heading-sm",
+              "figma": null
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-heading-sm-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "h2",
+              "cls": "al-c-heading",
+              "text": "Heading",
+              "box": {
+                "w": 74.3,
+                "h": 27
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-heading-sm",
+                  "figma": null
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-heading-sm-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=display-lg,Weight=bold",
+        "root": {
+          "tag": "h2",
+          "cls": "al-c-heading al-c-heading--display-lg al-is-bold",
+          "box": {
+            "w": 187.9,
+            "h": 52
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "font": {
+              "code": "--al-theme-typography-display-lg",
+              "figma": null
+            },
+            "font-weight": {
+              "code": "--al-font-weight-bold",
+              "figma": "typography/font-weight/bold"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-display-lg-bold-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "h2",
+              "cls": "al-c-heading al-c-heading--display-lg al-is-bold",
+              "text": "Heading",
+              "box": {
+                "w": 187.9,
+                "h": 62
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-display-lg",
+                  "figma": null
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-display-lg-bold-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=display-lg,Weight=regular",
+        "root": {
+          "tag": "h2",
+          "cls": "al-c-heading al-c-heading--display-lg",
+          "box": {
+            "w": 178.4,
+            "h": 52
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "font": {
+              "code": "--al-theme-typography-display-lg",
+              "figma": null
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-display-lg-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "h2",
+              "cls": "al-c-heading al-c-heading--display-lg",
+              "text": "Heading",
+              "box": {
+                "w": 178.4,
+                "h": 62
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-display-lg",
+                  "figma": null
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-display-lg-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=display-md,Weight=bold",
+        "root": {
+          "tag": "h2",
+          "cls": "al-c-heading al-c-heading--display-md al-is-bold",
+          "box": {
+            "w": 140.9,
+            "h": 44
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "font": {
+              "code": "--al-theme-typography-display-md",
+              "figma": null
+            },
+            "font-weight": {
+              "code": "--al-font-weight-bold",
+              "figma": "typography/font-weight/bold"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-display-md-bold-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "h2",
+              "cls": "al-c-heading al-c-heading--display-md al-is-bold",
+              "text": "Heading",
+              "box": {
+                "w": 140.9,
+                "h": 47
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-display-md",
+                  "figma": null
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-display-md-bold-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=display-md,Weight=regular",
+        "root": {
+          "tag": "h2",
+          "cls": "al-c-heading al-c-heading--display-md",
+          "box": {
+            "w": 133.8,
+            "h": 44
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "font": {
+              "code": "--al-theme-typography-display-md",
+              "figma": null
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-display-md-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "h2",
+              "cls": "al-c-heading al-c-heading--display-md",
+              "text": "Heading",
+              "box": {
+                "w": 133.8,
+                "h": 47
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-display-md",
+                  "figma": null
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-display-md-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=display-sm,Weight=bold",
+        "root": {
+          "tag": "h2",
+          "cls": "al-c-heading al-c-heading--display-sm al-is-bold",
+          "box": {
+            "w": 125.3,
+            "h": 40
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "font": {
+              "code": "--al-theme-typography-display-sm",
+              "figma": null
+            },
+            "font-weight": {
+              "code": "--al-font-weight-bold",
+              "figma": "typography/font-weight/bold"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-display-sm-bold-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "h2",
+              "cls": "al-c-heading al-c-heading--display-sm al-is-bold",
+              "text": "Heading",
+              "box": {
+                "w": 125.3,
+                "h": 42
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-display-sm",
+                  "figma": null
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-display-sm-bold-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=display-sm,Weight=regular",
+        "root": {
+          "tag": "h2",
+          "cls": "al-c-heading al-c-heading--display-sm",
+          "box": {
+            "w": 118.9,
+            "h": 40
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "font": {
+              "code": "--al-theme-typography-display-sm",
+              "figma": null
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-display-sm-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "h2",
+              "cls": "al-c-heading al-c-heading--display-sm",
+              "text": "Heading",
+              "box": {
+                "w": 118.9,
+                "h": 42
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-display-sm",
+                  "figma": null
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-display-sm-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=lg,Weight=bold",
+        "root": {
+          "tag": "h2",
+          "cls": "al-c-heading al-c-heading--lg al-is-bold",
+          "box": {
+            "w": 109.6,
+            "h": 36
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "font": {
+              "code": "--al-theme-typography-heading-lg",
+              "figma": null
+            },
+            "font-weight": {
+              "code": "--al-font-weight-bold",
+              "figma": "typography/font-weight/bold"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-heading-lg-bold-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "h2",
+              "cls": "al-c-heading al-c-heading--lg al-is-bold",
+              "text": "Heading",
+              "box": {
+                "w": 109.6,
+                "h": 37
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-heading-lg",
+                  "figma": null
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-heading-lg-bold-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=lg,Weight=regular",
+        "root": {
+          "tag": "h2",
+          "cls": "al-c-heading al-c-heading--lg",
+          "box": {
+            "w": 104.1,
+            "h": 36
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "font": {
+              "code": "--al-theme-typography-heading-lg",
+              "figma": null
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-heading-lg-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "h2",
+              "cls": "al-c-heading al-c-heading--lg",
+              "text": "Heading",
+              "box": {
+                "w": 104.1,
+                "h": 37
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-heading-lg",
+                  "figma": null
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-heading-lg-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=md,Weight=bold",
+        "root": {
+          "tag": "h2",
+          "cls": "al-c-heading al-c-heading--md al-is-bold",
+          "box": {
+            "w": 93.9,
+            "h": 32
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "font": {
+              "code": "--al-theme-typography-heading-md",
+              "figma": null
+            },
+            "font-weight": {
+              "code": "--al-font-weight-bold",
+              "figma": "typography/font-weight/bold"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-heading-md-bold-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "h2",
+              "cls": "al-c-heading al-c-heading--md al-is-bold",
+              "text": "Heading",
+              "box": {
+                "w": 93.9,
+                "h": 32
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-heading-md",
+                  "figma": null
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-heading-md-bold-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=md,Weight=regular",
+        "root": {
+          "tag": "h2",
+          "cls": "al-c-heading al-c-heading--md",
+          "box": {
+            "w": 89.2,
+            "h": 32
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "font": {
+              "code": "--al-theme-typography-heading-md",
+              "figma": null
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-heading-md-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "h2",
+              "cls": "al-c-heading al-c-heading--md",
+              "text": "Heading",
+              "box": {
+                "w": 89.2,
+                "h": 32
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-heading-md",
+                  "figma": null
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-heading-md-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=sm,Weight=bold",
+        "root": {
+          "tag": "h2",
+          "cls": "al-c-heading al-c-heading--sm al-is-bold",
+          "box": {
+            "w": 78.3,
+            "h": 28
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "font": {
+              "code": "--al-theme-typography-heading-sm",
+              "figma": null
+            },
+            "font-weight": {
+              "code": "--al-font-weight-bold",
+              "figma": "typography/font-weight/bold"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-heading-sm-bold-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "h2",
+              "cls": "al-c-heading al-c-heading--sm al-is-bold",
+              "text": "Heading",
+              "box": {
+                "w": 78.3,
+                "h": 27
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-heading-sm",
+                  "figma": null
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-heading-sm-bold-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=sm,Weight=regular",
+        "root": {
+          "tag": "h2",
+          "cls": "al-c-heading al-c-heading--sm",
+          "box": {
+            "w": 74.3,
+            "h": 28
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "font": {
+              "code": "--al-theme-typography-heading-sm",
+              "figma": null
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-heading-sm-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": [
+            {
+              "tag": "h2",
+              "cls": "al-c-heading al-c-heading--sm",
+              "text": "Heading",
+              "box": {
+                "w": 74.3,
+                "h": 27
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-heading-sm",
+                  "figma": null
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-heading-sm-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      }
+    ]
   },
   "tokens": [
     "--al-font-weight-bold",

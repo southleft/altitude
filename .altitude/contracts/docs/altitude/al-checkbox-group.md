@@ -100,9 +100,9 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Orientation=default,Legend=hidden` (source: `measured`)
+**Anatomy case measured:** `Orientation=default,Legend=shown` (source: `measured`)
 
-### Root — `<fieldset class="al-c-checkbox-group al-has-hidden-legend">`
+### Root — `<fieldset class="al-c-checkbox-group">`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |

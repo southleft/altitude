@@ -59,6 +59,16 @@
       "description": "Optional avatar (typically an `<al-avatar>`)."
     }
   ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-avatar",
+        "evidence": [
+          "template"
+        ]
+      }
+    ]
+  },
   "states": [
     "hover",
     "focus",
@@ -71,6 +81,10 @@
     "root": {
       "tag": "figure",
       "cls": "al-c-testimonial",
+      "box": {
+        "w": 1074.1,
+        "h": 96
+      },
       "layout": {
         "display": "flex",
         "direction": "column",
@@ -95,6 +109,10 @@
         {
           "tag": "blockquote",
           "cls": "al-c-testimonial__quote",
+          "box": {
+            "w": 1050.1,
+            "h": 36
+          },
           "layout": {
             "display": "block",
             "direction": "row",
@@ -119,6 +137,11 @@
             {
               "tag": "blockquote",
               "cls": "al-c-testimonial__quote",
+              "text": "Altitude let us ship a coherent product surface in a quarter, not a year.",
+              "box": {
+                "w": 1050.1,
+                "h": 32
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -146,6 +169,10 @@
         {
           "tag": "figcaption",
           "cls": "al-c-testimonial__attribution",
+          "box": {
+            "w": 1050.1,
+            "h": 40
+          },
           "layout": {
             "display": "flex",
             "direction": "row",
@@ -170,6 +197,10 @@
             {
               "tag": "div",
               "cls": "al-c-testimonial__meta",
+              "box": {
+                "w": 149.4,
+                "h": 40
+              },
               "layout": {
                 "display": "flex",
                 "direction": "column",
@@ -181,6 +212,11 @@
                 {
                   "tag": "span",
                   "cls": "al-c-testimonial__name",
+                  "text": "Jane Cooper",
+                  "box": {
+                    "w": 149.4,
+                    "h": 20
+                  },
                   "layout": {
                     "display": "block",
                     "direction": "row",
@@ -206,6 +242,11 @@
                 {
                   "tag": "span",
                   "cls": "al-c-testimonial__role",
+                  "text": "Design Lead, Northwind",
+                  "box": {
+                    "w": 149.4,
+                    "h": 20
+                  },
                   "layout": {
                     "display": "block",
                     "direction": "row",

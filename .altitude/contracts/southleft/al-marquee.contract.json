@@ -37,6 +37,9 @@
       "description": "The items. Each element's text becomes one item; `data-variant=\"solid\"` fills it in the accent colour and `data-variant=\"mono\"` renders it as small mono type."
     }
   ],
+  "composition": {
+    "renders": []
+  },
   "states": [
     "hover",
     "focus",
@@ -49,6 +52,10 @@
     "root": {
       "tag": "div",
       "cls": "sl-c-marquee",
+      "box": {
+        "w": 1280,
+        "h": 162
+      },
       "layout": {
         "display": "block",
         "direction": "row",
@@ -60,6 +67,10 @@
         {
           "tag": "div",
           "cls": "sl-c-marquee__track",
+          "box": {
+            "w": 2645.4,
+            "h": 80
+          },
           "layout": {
             "display": "flex",
             "direction": "row",
@@ -71,6 +82,11 @@
             {
               "tag": "span",
               "cls": "sl-c-marquee__item sl-c-marquee__item--outline",
+              "text": "Design systems",
+              "box": {
+                "w": 657.4,
+                "h": 80
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -88,6 +104,11 @@
             {
               "tag": "span",
               "cls": "sl-c-marquee__item sl-c-marquee__item--solid",
+              "text": "/",
+              "box": {
+                "w": 27.4,
+                "h": 80
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -109,6 +130,11 @@
             {
               "tag": "span",
               "cls": "sl-c-marquee__item sl-c-marquee__item--outline",
+              "text": "Tooling",
+              "box": {
+                "w": 351.2,
+                "h": 80
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -126,6 +152,11 @@
             {
               "tag": "span",
               "cls": "sl-c-marquee__item sl-c-marquee__item--mono",
+              "text": "est. 2011",
+              "box": {
+                "w": 118.8,
+                "h": 24
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -143,6 +174,11 @@
             {
               "tag": "span",
               "cls": "sl-c-marquee__item sl-c-marquee__item--outline",
+              "text": "Design systems",
+              "box": {
+                "w": 657.4,
+                "h": 80
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -160,6 +196,11 @@
             {
               "tag": "span",
               "cls": "sl-c-marquee__item sl-c-marquee__item--solid",
+              "text": "/",
+              "box": {
+                "w": 27.4,
+                "h": 80
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -181,6 +222,11 @@
             {
               "tag": "span",
               "cls": "sl-c-marquee__item sl-c-marquee__item--outline",
+              "text": "Tooling",
+              "box": {
+                "w": 351.2,
+                "h": 80
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -198,6 +244,11 @@
             {
               "tag": "span",
               "cls": "sl-c-marquee__item sl-c-marquee__item--mono",
+              "text": "est. 2011",
+              "box": {
+                "w": 118.8,
+                "h": 24
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -215,7 +266,451 @@
           ]
         }
       ]
-    }
+    },
+    "cases": [
+      {
+        "case": "Paused=paused",
+        "root": {
+          "tag": "div",
+          "cls": "sl-c-marquee",
+          "box": {
+            "w": 1280,
+            "h": 162
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "div",
+              "cls": "sl-c-marquee__track",
+              "box": {
+                "w": 2645.4,
+                "h": 80
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "sl-c-marquee__item sl-c-marquee__item--outline",
+                  "text": "Design systems",
+                  "box": {
+                    "w": 657.4,
+                    "h": 80
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "font-family": {
+                      "code": "--al-font-family-secondary",
+                      "figma": "typography/font-family/secondary"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "sl-c-marquee__item sl-c-marquee__item--solid",
+                  "text": "/",
+                  "box": {
+                    "w": 27.4,
+                    "h": 80
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-primary-default",
+                      "figma": "theme/color/content/primary-default"
+                    },
+                    "font-family": {
+                      "code": "--al-font-family-secondary",
+                      "figma": "typography/font-family/secondary"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "sl-c-marquee__item sl-c-marquee__item--outline",
+                  "text": "Tooling",
+                  "box": {
+                    "w": 351.2,
+                    "h": 80
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "font-family": {
+                      "code": "--al-font-family-secondary",
+                      "figma": "typography/font-family/secondary"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "sl-c-marquee__item sl-c-marquee__item--mono",
+                  "text": "est. 2011",
+                  "box": {
+                    "w": 118.8,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default-weak",
+                      "figma": "theme/color/content/default-weak"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "sl-c-marquee__item sl-c-marquee__item--outline",
+                  "text": "Design systems",
+                  "box": {
+                    "w": 657.4,
+                    "h": 80
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "font-family": {
+                      "code": "--al-font-family-secondary",
+                      "figma": "typography/font-family/secondary"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "sl-c-marquee__item sl-c-marquee__item--solid",
+                  "text": "/",
+                  "box": {
+                    "w": 27.4,
+                    "h": 80
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-primary-default",
+                      "figma": "theme/color/content/primary-default"
+                    },
+                    "font-family": {
+                      "code": "--al-font-family-secondary",
+                      "figma": "typography/font-family/secondary"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "sl-c-marquee__item sl-c-marquee__item--outline",
+                  "text": "Tooling",
+                  "box": {
+                    "w": 351.2,
+                    "h": 80
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "font-family": {
+                      "code": "--al-font-family-secondary",
+                      "figma": "typography/font-family/secondary"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "sl-c-marquee__item sl-c-marquee__item--mono",
+                  "text": "est. 2011",
+                  "box": {
+                    "w": 118.8,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default-weak",
+                      "figma": "theme/color/content/default-weak"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Paused=running",
+        "root": {
+          "tag": "div",
+          "cls": "sl-c-marquee",
+          "box": {
+            "w": 1280,
+            "h": 162
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "div",
+              "cls": "sl-c-marquee__track",
+              "box": {
+                "w": 2645.4,
+                "h": 80
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "sl-c-marquee__item sl-c-marquee__item--outline",
+                  "text": "Design systems",
+                  "box": {
+                    "w": 657.4,
+                    "h": 80
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "font-family": {
+                      "code": "--al-font-family-secondary",
+                      "figma": "typography/font-family/secondary"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "sl-c-marquee__item sl-c-marquee__item--solid",
+                  "text": "/",
+                  "box": {
+                    "w": 27.4,
+                    "h": 80
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-primary-default",
+                      "figma": "theme/color/content/primary-default"
+                    },
+                    "font-family": {
+                      "code": "--al-font-family-secondary",
+                      "figma": "typography/font-family/secondary"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "sl-c-marquee__item sl-c-marquee__item--outline",
+                  "text": "Tooling",
+                  "box": {
+                    "w": 351.2,
+                    "h": 80
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "font-family": {
+                      "code": "--al-font-family-secondary",
+                      "figma": "typography/font-family/secondary"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "sl-c-marquee__item sl-c-marquee__item--mono",
+                  "text": "est. 2011",
+                  "box": {
+                    "w": 118.8,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default-weak",
+                      "figma": "theme/color/content/default-weak"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "sl-c-marquee__item sl-c-marquee__item--outline",
+                  "text": "Design systems",
+                  "box": {
+                    "w": 657.4,
+                    "h": 80
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "font-family": {
+                      "code": "--al-font-family-secondary",
+                      "figma": "typography/font-family/secondary"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "sl-c-marquee__item sl-c-marquee__item--solid",
+                  "text": "/",
+                  "box": {
+                    "w": 27.4,
+                    "h": 80
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-primary-default",
+                      "figma": "theme/color/content/primary-default"
+                    },
+                    "font-family": {
+                      "code": "--al-font-family-secondary",
+                      "figma": "typography/font-family/secondary"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "sl-c-marquee__item sl-c-marquee__item--outline",
+                  "text": "Tooling",
+                  "box": {
+                    "w": 351.2,
+                    "h": 80
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "font-family": {
+                      "code": "--al-font-family-secondary",
+                      "figma": "typography/font-family/secondary"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "sl-c-marquee__item sl-c-marquee__item--mono",
+                  "text": "est. 2011",
+                  "box": {
+                    "w": 118.8,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default-weak",
+                      "figma": "theme/color/content/default-weak"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
   },
   "tokens": [
     "--al-font-family-secondary",

@@ -37,6 +37,16 @@
       "description": "The logo images. Sized and treated by the component; pass them at their natural dimensions."
     }
   ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-layout",
+        "evidence": [
+          "template"
+        ]
+      }
+    ]
+  },
   "states": [
     "hover",
     "focus",
@@ -49,6 +59,10 @@
     "root": {
       "tag": "div",
       "cls": "sl-c-logo-wall",
+      "box": {
+        "w": 1280,
+        "h": 32
+      },
       "layout": {
         "display": "block",
         "direction": "row",
@@ -60,6 +74,11 @@
         {
           "tag": "div",
           "cls": "al-c-layout al-c-layout--row al-c-layout--align-center al-c-layout--wrap",
+          "component": "al-layout",
+          "box": {
+            "w": 1280,
+            "h": 32
+          },
           "layout": {
             "display": "flex",
             "direction": "row",
@@ -84,6 +103,10 @@
             {
               "tag": "img",
               "cls": "",
+              "box": {
+                "w": 137.1,
+                "h": 32
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -96,6 +119,10 @@
             {
               "tag": "img",
               "cls": "",
+              "box": {
+                "w": 137.1,
+                "h": 32
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -108,6 +135,10 @@
             {
               "tag": "img",
               "cls": "",
+              "box": {
+                "w": 137.1,
+                "h": 32
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -120,6 +151,10 @@
             {
               "tag": "img",
               "cls": "",
+              "box": {
+                "w": 137.1,
+                "h": 32
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -132,7 +167,239 @@
           ]
         }
       ]
-    }
+    },
+    "cases": [
+      {
+        "case": "Vivid=default",
+        "root": {
+          "tag": "div",
+          "cls": "sl-c-logo-wall",
+          "box": {
+            "w": 1280,
+            "h": 32
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-layout al-c-layout--row al-c-layout--align-center al-c-layout--wrap",
+              "component": "al-layout",
+              "box": {
+                "w": 1280,
+                "h": 32
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-layout-gap",
+                  "figma": null
+                },
+                "gap": {
+                  "code": "--al-layout-gap",
+                  "figma": null
+                },
+                "row-gap": {
+                  "code": "--al-layout-gap",
+                  "figma": null
+                }
+              },
+              "children": [
+                {
+                  "tag": "img",
+                  "cls": "",
+                  "box": {
+                    "w": 137.1,
+                    "h": 32
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "img",
+                  "cls": "",
+                  "box": {
+                    "w": 137.1,
+                    "h": 32
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "img",
+                  "cls": "",
+                  "box": {
+                    "w": 137.1,
+                    "h": 32
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "img",
+                  "cls": "",
+                  "box": {
+                    "w": 137.1,
+                    "h": 32
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Vivid=vivid",
+        "root": {
+          "tag": "div",
+          "cls": "sl-c-logo-wall",
+          "box": {
+            "w": 1280,
+            "h": 32
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-layout al-c-layout--row al-c-layout--align-center al-c-layout--wrap",
+              "component": "al-layout",
+              "box": {
+                "w": 1280,
+                "h": 32
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-layout-gap",
+                  "figma": null
+                },
+                "gap": {
+                  "code": "--al-layout-gap",
+                  "figma": null
+                },
+                "row-gap": {
+                  "code": "--al-layout-gap",
+                  "figma": null
+                }
+              },
+              "children": [
+                {
+                  "tag": "img",
+                  "cls": "",
+                  "box": {
+                    "w": 137.1,
+                    "h": 32
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "img",
+                  "cls": "",
+                  "box": {
+                    "w": 137.1,
+                    "h": 32
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "img",
+                  "cls": "",
+                  "box": {
+                    "w": 137.1,
+                    "h": 32
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "img",
+                  "cls": "",
+                  "box": {
+                    "w": 137.1,
+                    "h": 32
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
   },
   "tokens": [
     "--al-layout-gap"

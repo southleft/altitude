@@ -69,6 +69,28 @@
       "description": "The band's actions. Wrap them in an `<al-layout>` to arrange them — a row that wraps to a stack is the usual choice."
     }
   ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-button",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-heading",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-layout",
+        "evidence": [
+          "template"
+        ]
+      }
+    ]
+  },
   "states": [
     "hover",
     "focus",
@@ -81,6 +103,10 @@
     "root": {
       "tag": "div",
       "cls": "sl-c-cta-band",
+      "box": {
+        "w": 1280,
+        "h": 623.1
+      },
       "layout": {
         "display": "block",
         "direction": "row",
@@ -92,6 +118,10 @@
         {
           "tag": "div",
           "cls": "sl-c-cta-band__texture",
+          "box": {
+            "w": 1280,
+            "h": 622.1
+          },
           "layout": {
             "display": "block",
             "direction": "row",
@@ -104,6 +134,10 @@
         {
           "tag": "div",
           "cls": "sl-c-cta-band__inner",
+          "box": {
+            "w": 1280,
+            "h": 622.1
+          },
           "layout": {
             "display": "block",
             "direction": "row",
@@ -115,6 +149,11 @@
             {
               "tag": "p",
               "cls": "sl-c-cta-band__kicker",
+              "text": "<cta>",
+              "box": {
+                "w": 1184,
+                "h": 20
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -132,6 +171,11 @@
             {
               "tag": "h2",
               "cls": "al-c-heading al-c-heading--display-md al-is-bold",
+              "component": "al-heading",
+              "box": {
+                "w": 768,
+                "h": 216
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -160,6 +204,12 @@
                 {
                   "tag": "h2",
                   "cls": "al-c-heading al-c-heading--display-md al-is-bold",
+                  "component": "al-heading",
+                  "text": "Ready to build a system your team will actually use?",
+                  "box": {
+                    "w": 654.5,
+                    "h": 216
+                  },
                   "layout": {
                     "display": "block",
                     "direction": "row",
@@ -191,6 +241,11 @@
             {
               "tag": "p",
               "cls": "sl-c-cta-band__dek",
+              "text": "Tell us what you are working on.",
+              "box": {
+                "w": 512,
+                "h": 34.1
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -208,6 +263,10 @@
             {
               "tag": "div",
               "cls": "sl-c-cta-band__actions",
+              "box": {
+                "w": 1184,
+                "h": 36
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -219,6 +278,11 @@
                 {
                   "tag": "button",
                   "cls": "al-c-button",
+                  "component": "al-button",
+                  "box": {
+                    "w": 140.2,
+                    "h": 36
+                  },
                   "layout": {
                     "display": "inline-flex",
                     "direction": "row",
@@ -299,6 +363,10 @@
                     {
                       "tag": "span",
                       "cls": "al-c-button__text",
+                      "box": {
+                        "w": 108.2,
+                        "h": 20
+                      },
                       "layout": {
                         "display": "block",
                         "direction": "row",
@@ -310,6 +378,11 @@
                         {
                           "tag": "span",
                           "cls": "al-c-button__text",
+                          "text": "Start a project",
+                          "box": {
+                            "w": 108.2,
+                            "h": 20
+                          },
                           "layout": {
                             "display": "block",
                             "direction": "row",

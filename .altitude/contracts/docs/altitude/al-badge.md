@@ -70,26 +70,29 @@ _No events declared._
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Variant=danger,Shape=dot` (source: `measured`)
+**Anatomy case measured:** `Variant=default,Shape=label` (source: `measured`)
 
-### Root — `<div class="al-c-badge al-c-badge--danger al-is-dot">`
+### Root — `<div class="al-c-badge">`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-danger-default` | `theme/color/background/danger-default` |
-| background-color | `--al-theme-color-background-danger-default` | `theme/color/background/danger-default` |
-| border-bottom-left-radius | `--al-theme-space-xs` | `theme/space/xs` |
-| border-bottom-right-radius | `--al-theme-space-xs` | `theme/space/xs` |
-| border-radius | `--al-theme-space-xs` | `theme/space/xs` |
-| border-top-left-radius | `--al-theme-space-xs` | `theme/space/xs` |
-| border-top-right-radius | `--al-theme-space-xs` | `theme/space/xs` |
-| color | `--al-theme-color-content-danger-weak` | `theme/color/content/danger-weak` |
+| background | `--al-theme-color-background-default-stronger` | `theme/color/background/default-stronger` |
+| background-color | `--al-theme-color-background-default-stronger` | `theme/color/background/default-stronger` |
+| border-bottom-left-radius | `--al-base-space` | `base/space` |
+| border-bottom-right-radius | `--al-base-space` | `base/space` |
+| border-radius | `--al-base-space` | `base/space` |
+| border-top-left-radius | `--al-base-space` | `base/space` |
+| border-top-right-radius | `--al-base-space` | `base/space` |
+| color | `--al-theme-color-content-default` | `theme/color/content/default` |
 | column-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 | font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
 | gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 | letter-spacing | `--al-theme-typography-body-xs-bold-letter-spacing` | — |
-| min-height | `--al-theme-space-xs` | `theme/space/xs` |
-| min-width | `--al-theme-space-xs` | `theme/space/xs` |
+| min-height | `--al-base-space` | `base/space` |
+| min-width | `--al-base-space` | `base/space` |
+| padding | `--al-theme-space-xxs` | `theme/space/xxs` |
+| padding-left | `--al-theme-space-xxs` | `theme/space/xxs` |
+| padding-right | `--al-theme-space-xxs` | `theme/space/xxs` |
 | row-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
@@ -167,7 +170,7 @@ _No events declared._
 
 ## Tokens referenced (6)
 
-`--al-font-weight-bold`, `--al-theme-color-background-danger-default`, `--al-theme-color-content-danger-weak`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
+`--al-base-space`, `--al-font-weight-bold`, `--al-theme-color-background-default-stronger`, `--al-theme-color-content-default`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
 
 ---
 

@@ -79,6 +79,9 @@
     }
   ],
   "slots": [],
+  "composition": {
+    "renders": []
+  },
   "states": [
     "hover",
     "focus",
@@ -91,6 +94,10 @@
     "root": {
       "tag": "div",
       "cls": "al-c-toggle",
+      "box": {
+        "w": 40,
+        "h": 22
+      },
       "layout": {
         "display": "block",
         "direction": "row",
@@ -102,6 +109,10 @@
         {
           "tag": "input",
           "cls": "al-c-toggle__checkbox",
+          "box": {
+            "w": 40,
+            "h": 22
+          },
           "layout": {
             "display": "block",
             "direction": "row",
@@ -143,6 +154,10 @@
         {
           "tag": "label",
           "cls": "al-c-toggle__label",
+          "box": {
+            "w": 40,
+            "h": 22
+          },
           "layout": {
             "display": "flex",
             "direction": "row",
@@ -187,6 +202,11 @@
             {
               "tag": "span",
               "cls": "al-c-toggle__label-text",
+              "text": "Toggle",
+              "box": {
+                "w": 1,
+                "h": 1
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -200,6 +220,546 @@
         }
       ]
     },
+    "cases": [
+      {
+        "case": "Checked=Off",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-toggle",
+          "box": {
+            "w": 40,
+            "h": 22
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "input",
+              "cls": "al-c-toggle__checkbox",
+              "box": {
+                "w": 40,
+                "h": 22
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "border-bottom-left-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-bottom-right-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-top-left-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-top-right-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "height": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "width": {
+                  "code": "--al-toggle-width",
+                  "figma": null
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "label",
+              "cls": "al-c-toggle__label",
+              "box": {
+                "w": 40,
+                "h": 22
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "space-between"
+              },
+              "tokens": {
+                "background-color": {
+                  "code": "--al-theme-color-background-default-strong",
+                  "figma": "theme/color/background/default-strong"
+                },
+                "border-bottom-left-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-bottom-right-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-top-left-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-top-right-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "height": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "width": {
+                  "code": "--al-toggle-width",
+                  "figma": null
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "al-c-toggle__label-text",
+                  "text": "Toggle",
+                  "box": {
+                    "w": 1,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Checked=Off, State=Disabled",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-toggle al-is-disabled",
+          "box": {
+            "w": 40,
+            "h": 22
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "opacity": {
+              "code": "--al-theme-opacity-disabled",
+              "figma": "theme/opacity/disabled"
+            }
+          },
+          "children": [
+            {
+              "tag": "input",
+              "cls": "al-c-toggle__checkbox",
+              "box": {
+                "w": 40,
+                "h": 22
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "border-bottom-left-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-bottom-right-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-top-left-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-top-right-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "height": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "width": {
+                  "code": "--al-toggle-width",
+                  "figma": null
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "label",
+              "cls": "al-c-toggle__label",
+              "box": {
+                "w": 40,
+                "h": 22
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "space-between"
+              },
+              "tokens": {
+                "background-color": {
+                  "code": "--al-theme-color-background-default-strong",
+                  "figma": "theme/color/background/default-strong"
+                },
+                "border-bottom-left-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-bottom-right-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-top-left-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-top-right-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "height": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "width": {
+                  "code": "--al-toggle-width",
+                  "figma": null
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "al-c-toggle__label-text",
+                  "text": "Toggle",
+                  "box": {
+                    "w": 1,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Checked=On",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-toggle al-is-checked",
+          "box": {
+            "w": 40,
+            "h": 22
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "input",
+              "cls": "al-c-toggle__checkbox",
+              "box": {
+                "w": 40,
+                "h": 22
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "border-bottom-left-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-bottom-right-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-top-left-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-top-right-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "height": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "width": {
+                  "code": "--al-toggle-width",
+                  "figma": null
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "label",
+              "cls": "al-c-toggle__label",
+              "box": {
+                "w": 40,
+                "h": 22
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "space-between"
+              },
+              "tokens": {
+                "background-color": {
+                  "code": "--al-theme-color-background-primary-default",
+                  "figma": "theme/color/background/primary-default"
+                },
+                "border-bottom-left-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-bottom-right-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-top-left-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-top-right-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "height": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "width": {
+                  "code": "--al-toggle-width",
+                  "figma": null
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "al-c-toggle__label-text",
+                  "text": "Toggle",
+                  "box": {
+                    "w": 1,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Checked=On, State=Disabled",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-toggle al-is-checked al-is-disabled",
+          "box": {
+            "w": 40,
+            "h": 22
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "opacity": {
+              "code": "--al-theme-opacity-disabled",
+              "figma": "theme/opacity/disabled"
+            }
+          },
+          "children": [
+            {
+              "tag": "input",
+              "cls": "al-c-toggle__checkbox",
+              "box": {
+                "w": 40,
+                "h": 22
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "border-bottom-left-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-bottom-right-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-top-left-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-top-right-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "height": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "width": {
+                  "code": "--al-toggle-width",
+                  "figma": null
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "label",
+              "cls": "al-c-toggle__label",
+              "box": {
+                "w": 40,
+                "h": 22
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "space-between"
+              },
+              "tokens": {
+                "background-color": {
+                  "code": "--al-theme-color-background-primary-default",
+                  "figma": "theme/color/background/primary-default"
+                },
+                "border-bottom-left-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-bottom-right-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-top-left-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "border-top-right-radius": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "height": {
+                  "code": "--al-toggle-height",
+                  "figma": null
+                },
+                "width": {
+                  "code": "--al-toggle-width",
+                  "figma": null
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "al-c-toggle__label-text",
+                  "text": "Toggle",
+                  "box": {
+                    "w": 1,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
     "stateOverrides": {
       "focus": {
         "0.0": {

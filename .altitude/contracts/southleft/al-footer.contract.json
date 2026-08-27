@@ -62,6 +62,22 @@
       "description": "Links for the bottom bar, beside the copyright."
     }
   ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-layout",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-logo",
+        "evidence": [
+          "template"
+        ]
+      }
+    ]
+  },
   "states": [
     "hover",
     "focus",
@@ -74,6 +90,10 @@
     "root": {
       "tag": "footer",
       "cls": "sl-c-footer",
+      "box": {
+        "w": 1280,
+        "h": 418.2
+      },
       "layout": {
         "display": "flex",
         "direction": "column",
@@ -102,6 +122,11 @@
         {
           "tag": "div",
           "cls": "al-c-layout al-c-layout--constrained",
+          "component": "al-layout",
+          "box": {
+            "w": 1280,
+            "h": 306.2
+          },
           "layout": {
             "display": "grid",
             "direction": "column",
@@ -122,6 +147,11 @@
             {
               "tag": "div",
               "cls": "al-c-layout al-c-layout--grid al-c-layout--gap-xl al-c-layout--no-collapse",
+              "component": "al-layout",
+              "box": {
+                "w": 1160,
+                "h": 84
+              },
               "layout": {
                 "display": "grid",
                 "direction": "column",
@@ -146,6 +176,10 @@
                 {
                   "tag": "div",
                   "cls": "sl-c-footer__brand",
+                  "box": {
+                    "w": 451.3,
+                    "h": 84
+                  },
                   "layout": {
                     "display": "flex",
                     "direction": "column",
@@ -157,6 +191,10 @@
                     {
                       "tag": "span",
                       "cls": "",
+                      "box": {
+                        "w": 451.3,
+                        "h": 28
+                      },
                       "layout": {
                         "display": "block",
                         "direction": "row",
@@ -168,6 +206,11 @@
                         {
                           "tag": "a",
                           "cls": "al-c-logo",
+                          "component": "al-logo",
+                          "box": {
+                            "w": 451.3,
+                            "h": 28
+                          },
                           "layout": {
                             "display": "flex",
                             "direction": "column",
@@ -196,6 +239,10 @@
                             {
                               "tag": "svg",
                               "cls": "",
+                              "box": {
+                                "w": 201.9,
+                                "h": 24
+                              },
                               "layout": {
                                 "display": "block",
                                 "direction": "row",
@@ -208,6 +255,10 @@
                             {
                               "tag": "div",
                               "cls": "al-c-logo__tagline",
+                              "box": {
+                                "w": 0,
+                                "h": 0
+                              },
                               "layout": {
                                 "display": "block",
                                 "direction": "row",
@@ -239,6 +290,10 @@
                 {
                   "tag": "span",
                   "cls": "",
+                  "box": {
+                    "w": 322.4,
+                    "h": 84
+                  },
                   "layout": {
                     "display": "flex",
                     "direction": "column",
@@ -250,6 +305,11 @@
                     {
                       "tag": "a",
                       "cls": "",
+                      "text": "Work",
+                      "box": {
+                        "w": 322.4,
+                        "h": 20
+                      },
                       "layout": {
                         "display": "block",
                         "direction": "row",
@@ -262,6 +322,11 @@
                     {
                       "tag": "a",
                       "cls": "",
+                      "text": "Insights",
+                      "box": {
+                        "w": 322.4,
+                        "h": 20
+                      },
                       "layout": {
                         "display": "block",
                         "direction": "row",
@@ -274,6 +339,11 @@
                     {
                       "tag": "a",
                       "cls": "",
+                      "text": "About",
+                      "box": {
+                        "w": 322.4,
+                        "h": 20
+                      },
                       "layout": {
                         "display": "block",
                         "direction": "row",
@@ -290,6 +360,10 @@
             {
               "tag": "blockquote",
               "cls": "sl-c-footer__quote",
+              "box": {
+                "w": 1160,
+                "h": 85.2
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",
@@ -301,6 +375,11 @@
                 {
                   "tag": "cite",
                   "cls": "sl-c-footer__cite",
+                  "text": "Southleft",
+                  "box": {
+                    "w": 1160,
+                    "h": 20.4
+                  },
                   "layout": {
                     "display": "block",
                     "direction": "row",
@@ -315,6 +394,10 @@
             {
               "tag": "div",
               "cls": "sl-c-footer__bar",
+              "box": {
+                "w": 1160,
+                "h": 45
+              },
               "layout": {
                 "display": "flex",
                 "direction": "row",
@@ -326,6 +409,11 @@
                 {
                   "tag": "p",
                   "cls": "sl-c-footer__copyright",
+                  "text": "(c) 2026 Southleft, LLC",
+                  "box": {
+                    "w": 123.3,
+                    "h": 20
+                  },
                   "layout": {
                     "display": "block",
                     "direction": "row",
@@ -338,6 +426,11 @@
                 {
                   "tag": "div",
                   "cls": "al-c-layout al-c-layout--row al-c-layout--gap-md al-c-layout--wrap",
+                  "component": "al-layout",
+                  "box": {
+                    "w": 38.8,
+                    "h": 20
+                  },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
@@ -362,6 +455,10 @@
                     {
                       "tag": "span",
                       "cls": "",
+                      "box": {
+                        "w": 38.8,
+                        "h": 20
+                      },
                       "layout": {
                         "display": "block",
                         "direction": "row",
@@ -373,6 +470,11 @@
                         {
                           "tag": "a",
                           "cls": "",
+                          "text": "Privacy",
+                          "box": {
+                            "w": 38.8,
+                            "h": 15
+                          },
                           "layout": {
                             "display": "inline",
                             "direction": "row",

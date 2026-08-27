@@ -52,19 +52,17 @@ _No events declared._
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Variant=background,Orientation=default,Gap=default` (source: `measured`)
+**Anatomy case measured:** `Variant=default,Orientation=default,Gap=default` (source: `measured`)
 
-### Root — `<div class="al-c-toggle-button-group al-c-toggle-button-group--background">`
+### Root — `<div class="al-c-toggle-button-group">`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
 | border-bottom-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-bottom-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-top-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-top-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
-| box-shadow | `--al-theme-box-shadow-md` | `theme/box-shadow/md` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -76,9 +74,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-toggle-button-group`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (10)
+## Tokens referenced (8)
 
-`--al-base-space`, `--al-theme-border-radius`, `--al-theme-border-radius-lg`, `--al-theme-box-shadow-md`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-base-space`, `--al-theme-border-radius`, `--al-theme-border-radius-lg`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

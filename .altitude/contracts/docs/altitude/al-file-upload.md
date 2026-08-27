@@ -138,9 +138,9 @@ Value associated with the field
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Label=hidden` (source: `measured`)
+**Anatomy case measured:** `Label=shown` (source: `measured`)
 
-### Root — `<div class="al-c-file-upload al-has-hidden-label">`
+### Root — `<div class="al-c-file-upload">`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |

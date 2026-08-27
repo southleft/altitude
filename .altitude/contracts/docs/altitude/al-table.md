@@ -86,7 +86,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Selectable=no,Sort=ascending` (source: `measured`)
+**Anatomy case measured:** `Selectable=no,Sort=none` (source: `measured`)
 
 ### Root — `<div class="al-c-table">`
 

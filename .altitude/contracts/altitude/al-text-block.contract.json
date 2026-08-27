@@ -30,6 +30,9 @@
       "description": "The text passage content"
     }
   ],
+  "composition": {
+    "renders": []
+  },
   "states": [
     "hover",
     "focus",
@@ -42,6 +45,10 @@
     "root": {
       "tag": "div",
       "cls": "al-c-text-block",
+      "box": {
+        "w": 425.3,
+        "h": 24
+      },
       "layout": {
         "display": "flex",
         "direction": "column",
@@ -70,6 +77,11 @@
         {
           "tag": "p",
           "cls": "",
+          "text": "A passage of body copy used to verify measure and rhythm.",
+          "box": {
+            "w": 425.3,
+            "h": 24
+          },
           "layout": {
             "display": "block",
             "direction": "row",
@@ -80,7 +92,117 @@
           "children": []
         }
       ]
-    }
+    },
+    "cases": [
+      {
+        "case": "Width=default",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-text-block",
+          "box": {
+            "w": 425.3,
+            "h": 24
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "flex-start",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "font": {
+              "code": "--al-typography-preset-16",
+              "figma": null
+            },
+            "gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "row-gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            }
+          },
+          "children": [
+            {
+              "tag": "p",
+              "cls": "",
+              "text": "A passage of body copy used to verify measure and rhythm.",
+              "box": {
+                "w": 425.3,
+                "h": 24
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Width=sm",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-text-block al-c-text-block--max-width-sm",
+          "box": {
+            "w": 425.3,
+            "h": 24
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "flex-start",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "font": {
+              "code": "--al-typography-preset-16",
+              "figma": null
+            },
+            "gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "row-gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            }
+          },
+          "children": [
+            {
+              "tag": "p",
+              "cls": "",
+              "text": "A passage of body copy used to verify measure and rhythm.",
+              "box": {
+                "w": 425.3,
+                "h": 24
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            }
+          ]
+        }
+      }
+    ]
   },
   "tokens": [
     "--al-theme-space",

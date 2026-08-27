@@ -46,6 +46,22 @@
   ],
   "events": [],
   "slots": [],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-icon",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-phosphor",
+        "evidence": [
+          "import"
+        ]
+      }
+    ]
+  },
   "states": [
     "hover",
     "focus",
@@ -58,6 +74,10 @@
     "root": {
       "tag": "span",
       "cls": "al-c-icon",
+      "box": {
+        "w": 16,
+        "h": 16
+      },
       "layout": {
         "display": "block",
         "direction": "row",
@@ -69,6 +89,10 @@
         {
           "tag": "svg",
           "cls": "",
+          "box": {
+            "w": 16,
+            "h": 16
+          },
           "layout": {
             "display": "flex",
             "direction": "row",
@@ -89,6 +113,10 @@
             {
               "tag": "path",
               "cls": "",
+              "box": {
+                "w": 14,
+                "h": 12.5
+              },
               "layout": {
                 "display": "block",
                 "direction": "row",

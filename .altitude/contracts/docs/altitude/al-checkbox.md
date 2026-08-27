@@ -124,9 +124,9 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Checked=Indeterminate,Label=hidden` (source: `measured`)
+**Anatomy case measured:** `Checked=Off,Label=shown` (source: `measured`)
 
-### Root — `<div class="al-c-checkbox al-is-indeterminate al-has-hidden-label">`
+### Root — `<div class="al-c-checkbox">`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
@@ -167,9 +167,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-checkbox`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (16)
+## Tokens referenced (14)
 
-`--al-base-space`, `--al-theme-border-radius-lg`, `--al-theme-border-radius-round`, `--al-theme-border-radius-xs`, `--al-theme-border-width-md`, `--al-theme-color-background-default-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-primary-weak`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`
+`--al-base-space`, `--al-theme-border-radius-lg`, `--al-theme-border-radius-round`, `--al-theme-border-radius-xs`, `--al-theme-border-width-md`, `--al-theme-color-background-default-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`
 
 ---
 

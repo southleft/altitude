@@ -79,20 +79,20 @@ Variant
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Variant=danger,Shape=default,Dismissible=no` (source: `measured`)
+**Anatomy case measured:** `Variant=default,Shape=default,Dismissible=no` (source: `measured`)
 
-### Root — `<button class="al-c-chip al-c-chip--danger">`
+### Root — `<button class="al-c-chip">`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-| background-color | `--al-theme-color-background-danger-default` | `theme/color/background/danger-default` |
+| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
 | border-bottom-left-radius | `--al-base-space` | `base/space` |
 | border-bottom-right-radius | `--al-base-space` | `base/space` |
 | border-radius | `--al-base-space` | `base/space` |
 | border-top-left-radius | `--al-base-space` | `base/space` |
 | border-top-right-radius | `--al-base-space` | `base/space` |
-| color | `--al-theme-color-content-danger-weak` | `theme/color/content/danger-weak` |
+| color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
 | letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
@@ -176,9 +176,9 @@ Variant
 - Tag: `al-chip`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (10)
+## Tokens referenced (9)
 
-`--al-base-space`, `--al-theme-border-width-md`, `--al-theme-color-background-danger-default`, `--al-theme-color-background-default-strong`, `--al-theme-color-content-danger-weak`, `--al-theme-color-focus-ring`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-base-space`, `--al-theme-border-width-md`, `--al-theme-color-background-default-strong`, `--al-theme-color-content-default-weak`, `--al-theme-color-focus-ring`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

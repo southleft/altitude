@@ -25,6 +25,9 @@
   ],
   "events": [],
   "slots": [],
+  "composition": {
+    "renders": []
+  },
   "states": [
     "hover",
     "focus",
@@ -37,6 +40,10 @@
     "root": {
       "tag": "hr",
       "cls": "al-c-divider",
+      "box": {
+        "w": 0,
+        "h": 1
+      },
       "layout": {
         "display": "block",
         "direction": "row",
@@ -54,7 +61,65 @@
         }
       },
       "children": []
-    }
+    },
+    "cases": [
+      {
+        "case": "Orientation=default",
+        "root": {
+          "tag": "hr",
+          "cls": "al-c-divider",
+          "box": {
+            "w": 0,
+            "h": 1
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "background-color": {
+              "code": "--al-theme-color-border-default",
+              "figma": "theme/color/border/default"
+            },
+            "height": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            }
+          },
+          "children": []
+        }
+      },
+      {
+        "case": "Orientation=vertical",
+        "root": {
+          "tag": "hr",
+          "cls": "al-c-divider al-c-divider--vertical",
+          "box": {
+            "w": 1,
+            "h": 0
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "background-color": {
+              "code": "--al-theme-color-border-default",
+              "figma": "theme/color/border/default"
+            },
+            "width": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            }
+          },
+          "children": []
+        }
+      }
+    ]
   },
   "tokens": [
     "--al-theme-border-width",

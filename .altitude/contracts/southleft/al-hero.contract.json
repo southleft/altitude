@@ -66,6 +66,34 @@
       "description": "The annotation strip beneath the actions — the site's \"loose tokens\" row."
     }
   ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-button",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-heading",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-layout",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-text-block",
+        "evidence": [
+          "template"
+        ]
+      }
+    ]
+  },
   "states": [
     "hover",
     "focus",
@@ -78,6 +106,10 @@
     "root": {
       "tag": "div",
       "cls": "sl-c-hero",
+      "box": {
+        "w": 1280,
+        "h": 728.2
+      },
       "layout": {
         "display": "block",
         "direction": "row",
@@ -89,6 +121,10 @@
         {
           "tag": "div",
           "cls": "sl-c-hero__texture",
+          "box": {
+            "w": 1280,
+            "h": 728.2
+          },
           "layout": {
             "display": "block",
             "direction": "row",
@@ -101,6 +137,10 @@
         {
           "tag": "canvas",
           "cls": "sl-c-hero__murmur",
+          "box": {
+            "w": 1280,
+            "h": 728.2
+          },
           "layout": {
             "display": "block",
             "direction": "row",
@@ -113,6 +153,10 @@
         {
           "tag": "div",
           "cls": "sl-c-hero__content",
+          "box": {
+            "w": 1280,
+            "h": 728.2
+          },
           "layout": {
             "display": "block",
             "direction": "row",
@@ -124,6 +168,11 @@
             {
               "tag": "div",
               "cls": "al-c-layout al-c-layout--constrained",
+              "component": "al-layout",
+              "box": {
+                "w": 1280,
+                "h": 728.2
+              },
               "layout": {
                 "display": "grid",
                 "direction": "column",
@@ -164,6 +213,11 @@
                 {
                   "tag": "div",
                   "cls": "al-c-layout al-c-layout--gap-none",
+                  "component": "al-layout",
+                  "box": {
+                    "w": 1160,
+                    "h": 472.2
+                  },
                   "layout": {
                     "display": "flex",
                     "direction": "column",
@@ -175,6 +229,11 @@
                     {
                       "tag": "p",
                       "cls": "sl-c-hero__kicker",
+                      "text": "Southleft",
+                      "box": {
+                        "w": 1160,
+                        "h": 16
+                      },
                       "layout": {
                         "display": "block",
                         "direction": "row",
@@ -187,6 +246,11 @@
                     {
                       "tag": "h1",
                       "cls": "al-c-heading al-c-heading--display-lg al-is-bold",
+                      "component": "al-heading",
+                      "box": {
+                        "w": 1160,
+                        "h": 220
+                      },
                       "layout": {
                         "display": "block",
                         "direction": "row",
@@ -215,6 +279,12 @@
                         {
                           "tag": "h1",
                           "cls": "al-c-heading al-c-heading--display-lg al-is-bold",
+                          "component": "al-heading",
+                          "text": "Design systems that ship",
+                          "box": {
+                            "w": 882,
+                            "h": 222
+                          },
                           "layout": {
                             "display": "block",
                             "direction": "row",
@@ -246,6 +316,11 @@
                     {
                       "tag": "div",
                       "cls": "al-c-layout al-c-layout--grid al-c-layout--align-end al-c-layout--no-collapse",
+                      "component": "al-layout",
+                      "box": {
+                        "w": 1160,
+                        "h": 216.2
+                      },
                       "layout": {
                         "display": "grid",
                         "direction": "column",
@@ -270,6 +345,11 @@
                         {
                           "tag": "div",
                           "cls": "al-c-layout al-c-layout--gap-none",
+                          "component": "al-layout",
+                          "box": {
+                            "w": 583.8,
+                            "h": 216.2
+                          },
                           "layout": {
                             "display": "flex",
                             "direction": "column",
@@ -281,6 +361,11 @@
                             {
                               "tag": "div",
                               "cls": "al-c-text-block",
+                              "component": "al-text-block",
+                              "box": {
+                                "w": 583.8,
+                                "h": 68.2
+                              },
                               "layout": {
                                 "display": "flex",
                                 "direction": "column",
@@ -309,6 +394,12 @@
                                 {
                                   "tag": "div",
                                   "cls": "al-c-text-block",
+                                  "component": "al-text-block",
+                                  "text": "We design, build and hand over the system your product team builds on.",
+                                  "box": {
+                                    "w": 552,
+                                    "h": 63.1
+                                  },
                                   "layout": {
                                     "display": "flex",
                                     "direction": "column",
@@ -340,6 +431,11 @@
                             {
                               "tag": "div",
                               "cls": "al-c-layout al-c-layout--row al-c-layout--gap-sm al-c-layout--align-center al-c-layout--wrap",
+                              "component": "al-layout",
+                              "box": {
+                                "w": 583.8,
+                                "h": 72
+                              },
                               "layout": {
                                 "display": "flex",
                                 "direction": "row",
@@ -385,6 +481,10 @@
                             {
                               "tag": "div",
                               "cls": "sl-c-hero__chips",
+                              "box": {
+                                "w": 583.8,
+                                "h": 28
+                              },
                               "layout": {
                                 "display": "block",
                                 "direction": "row",
@@ -399,6 +499,10 @@
                         {
                           "tag": "div",
                           "cls": "sl-c-hero__aside",
+                          "box": {
+                            "w": 496.2,
+                            "h": 0
+                          },
                           "layout": {
                             "display": "block",
                             "direction": "row",
