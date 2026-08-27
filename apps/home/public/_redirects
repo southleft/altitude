@@ -1,0 +1,43 @@
+# Cloudflare Pages redirects for the whole published site.
+#
+# WHY THIS FILE EXISTS. The site root served apps/home (the AI showcase
+# homepage, dist/index.html) while the DOCS — the thing people come here for —
+# sat a click away at /docs/. Landing on the docs is the intent, so the root
+# now sends visitors there.
+#
+# WHY A REDIRECT RATHER THAN SERVING THE DOCS AT `/`. Moving apps/docs to
+# base:'/' would collide with the Southleft marketing site. The docs app emits
+# its scoped design-system pages under `southleft/` (dist/docs/southleft/...,
+# served at /docs/southleft/), and apps/southleft publishes the MARKETING site
+# to dist/southleft/ (astro.config.mjs base:'/southleft'). Rebase the docs to
+# the root and both want /southleft/ — two different sites merging into one
+# directory, with build:all's order silently deciding which files survive.
+# Serving the docs at `/` therefore means relocating the marketing site first;
+# it is not a one-line base change. It would also mean rebasing every docs
+# asset path, the pagefind index (`pagefind --site ../../dist/docs`) and the
+# gates that hardcode dist/docs (gate:docs-panels, check:coverage).
+#
+# WHY THIS WORKS EVEN THOUGH dist/index.html EXISTS. Cloudflare's rule is
+# explicit: "Redirects are always followed, regardless of whether or not an
+# asset matches the incoming request."
+# (developers.cloudflare.com/pages/configuration/redirects/). So this fires on
+# `/` despite apps/home writing dist/index.html. The homepage is still built
+# and still deployed — it is simply no longer reachable at the root. If it
+# should stay reachable, give it its own path (build apps/home to dist/home/
+# with base '/home/'); if it should not be built at all, drop build:app-home
+# from build:all. Both are deliberate calls, so neither is made here.
+#
+# `302`, NOT `301`, ON PURPOSE. A permanent redirect is cached hard by browsers
+# and CDNs and is genuinely painful to walk back — anyone who loaded the root
+# once keeps getting sent to /docs/ long after the rule changes. Keep it
+# temporary until the docs-at-root question above is actually settled, then
+# promote it.
+#
+# SCOPE: `/` matches the root path ONLY. A splat (`/*`) would capture the whole
+# site, including /docs/ itself, and loop.
+#
+# Vite copies apps/home/public/ verbatim into dist/, which IS the published
+# root (apps/home/vite.config.js:build.outDir), so this lands at dist/_redirects
+# — the same mechanism as _headers beside it.
+
+/    /docs/    302
