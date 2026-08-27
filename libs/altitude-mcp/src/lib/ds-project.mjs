@@ -125,9 +125,23 @@ export function activeProjectId(explicitId = null) {
  * every repo-root-relative path turned absolute and the Figma URL base with
  * `{fileKey}` already substituted — so callers never re-implement either.
  */
+// Resolved-record cache, keyed by registry path + final project id — same
+// convention as loadRegistry()'s cache (keyed so a configurePaths() switch
+// invalidates naturally). computeParity() alone used to rebuild this record
+// once per component via getStoryInfo → docsBaseFor (spec 2026-08-27-parity-
+// system-audit-remediation, R5). The cached record is SHARED — treat it as
+// read-only; derive views by spreading ({...p, resolved: {...p.resolved}}),
+// which is what resolveComponentRoster() already does.
+const resolvedCache = new Map();
+
 export function resolveProject(explicitId = null) {
   const registry = loadRegistry();
   const id = activeProjectId(explicitId);
+
+  const cacheKey = `${registryPath()}::${id}`;
+  const cached = resolvedCache.get(cacheKey);
+  if (cached) return cached;
+
   const project = registry.projects[id];
 
   if (!project) {
@@ -144,7 +158,7 @@ export function resolveProject(explicitId = null) {
     project.figma.fileKey,
   );
 
-  return {
+  const record = {
     ...project,
     id,
     isDefault: id === registry.default,
@@ -184,6 +198,8 @@ export function resolveProject(explicitId = null) {
       docsRoute: project.docs?.route ?? null,
     },
   };
+  resolvedCache.set(cacheKey, record);
+  return record;
 }
 
 /**

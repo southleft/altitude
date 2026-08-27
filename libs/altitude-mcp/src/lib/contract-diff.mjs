@@ -12,12 +12,12 @@
 // PURE. No fs, no network, no imports from sibling modules — every input is a
 // plain parsed-JSON object, so this runs identically whether the caller read
 // its two contracts from disk, a fixture, or an in-memory object built by a
-// test. (`normKey` below intentionally duplicates parity.mjs's private
-// helper of the same name rather than importing it — same call
-// emit-contracts.mjs already made for the same reason: this stays a leaf
-// module with zero sibling imports, and parity.mjs is free to import THIS
-// module in turn (T7) without any risk of a circular import. Keep the two
-// definitions identical; they encode one normalisation rule.)
+// test. `normKey` below is EXPORTED as the one canonical definition
+// (2026-08-27, spec parity-system-audit-remediation R4): this module is the
+// leaf everyone else already imports (parity.mjs, diff-contracts.mjs), so it
+// is the cycle-free home — parity.mjs, emit-contracts.mjs and
+// scripts/contracts/figma/conventions.mjs import it from here instead of
+// carrying four identical private copies.
 //
 // R2 (spec 2026-08-25-contract-backed-figma-parity-and-generation): this
 // module never decides a parity STATUS — that vocabulary (in-sync,
@@ -38,7 +38,7 @@
  * "Figma spells it differently", only "Figma doesn't have it at all" or
  * "the set of values genuinely differs".
  */
-const normKey = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+export const normKey = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
 const normSet = (arr) => new Set((arr ?? []).map(normKey));
 

@@ -67,6 +67,14 @@ function storiesPathFor(modulePath, libraryRoot = WC_ROOT) {
   return `${libraryRoot}/${storiesRelative}`.replace(/\\/g, '/');
 }
 
+// Memoized per (stories file, project identity) — computeParity() calls this
+// once per roster component per report, which used to mean ~105 existsSync +
+// readFileSync + regex runs on every report (spec 2026-08-27-parity-system-
+// audit-remediation, R5). Same convention as cem.mjs's path-keyed cache: a
+// story TITLE edit during a long-lived server session needs a restart to show,
+// which was already true of the CEM it renders next to.
+const storyInfoCache = new Map();
+
 /**
  * @param {string} modulePath CEM module path, e.g. "components/button/button.ts"
  * @param {object|string} [project] resolved DS project, id, or omit for default —
@@ -76,6 +84,14 @@ function storiesPathFor(modulePath, libraryRoot = WC_ROOT) {
 export function getStoryInfo(modulePath, project) {
   const resolved = project && typeof project === 'object' && project.resolved ? project : null;
   const storiesFile = storiesPathFor(modulePath, resolved?.resolved?.libraryRoot ?? WC_ROOT);
+  const cacheKey = `${storiesFile}::${resolved?.id ?? (typeof project === 'string' ? project : '')}`;
+  if (storyInfoCache.has(cacheKey)) return storyInfoCache.get(cacheKey);
+  const result = computeStoryInfo(modulePath, project, storiesFile);
+  storyInfoCache.set(cacheKey, result);
+  return result;
+}
+
+function computeStoryInfo(modulePath, project, storiesFile) {
   if (!existsSync(storiesFile)) return null;
   const src = readFileSync(storiesFile, 'utf8');
   const m = /title:\s*['"]([^'"]+)['"]/.exec(src);

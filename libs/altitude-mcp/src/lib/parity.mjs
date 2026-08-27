@@ -37,14 +37,14 @@
 // the scripts/figma-parity CLIs. Keep it dependency-free (node: builtins only).
 
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync, readdirSync, writeFileSync, mkdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, writeFileSync, mkdirSync, renameSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
 import { WC_ROOT, REPO_ROOT } from './paths.mjs';
 import { resolveProject, figmaNodeUrlFor } from './ds-project.mjs';
 import { loadComponents, loadComponentsFrom } from './cem.mjs';
 import { getStoryInfo } from './stories.mjs';
-import { diffContracts } from './contract-diff.mjs';
+import { diffContracts, normKey } from './contract-diff.mjs';
 
 /**
  * Normalise whatever a caller passed into a resolved project record.
@@ -74,18 +74,43 @@ export const STATUS = Object.freeze({
 
 // ── manifest io ─────────────────────────────────────────────────────────
 
+/** Thrown when a parity manifest exists but is not parseable JSON. */
+export class InvalidManifestError extends Error {
+  constructor(path, cause) {
+    super(`Parity manifest is not valid JSON: ${path}\n${cause?.message ?? cause}`);
+    this.code = 'ERR_INVALID_PARITY_MANIFEST';
+    this.path = path;
+  }
+}
+
 export function readManifest(project) {
   const p = asProject(project);
   if (!existsSync(p.resolved.parityManifest)) return null;
-  return JSON.parse(readFileSync(p.resolved.parityManifest, 'utf8'));
+  const raw = readFileSync(p.resolved.parityManifest, 'utf8');
+  try {
+    return JSON.parse(raw);
+  } catch (e) {
+    // The manifest is durable, git-tracked state — a truncated or hand-mangled
+    // file must fail BY NAME (path + parse error), not as a bare SyntaxError
+    // three layers up in an MCP tool response. Mirrors ds-project.mjs's
+    // ERR_INVALID_DS_REGISTRY convention.
+    throw new InvalidManifestError(p.resolved.parityManifest, e);
+  }
 }
 
 export function writeManifest(manifest, project) {
   const p = asProject(project);
   mkdirSync(dirname(p.resolved.parityManifest), { recursive: true });
-  manifest.updated = new Date().toISOString();
-  writeFileSync(p.resolved.parityManifest, JSON.stringify(manifest, null, 2) + '\n', 'utf8');
-  return manifest;
+  // Stamp `updated` on a shallow copy — the caller's object is input, not a
+  // scratchpad (use the RETURN value if you need the stamped record).
+  const out = { ...manifest, updated: new Date().toISOString() };
+  // Atomic: write a sibling temp file, then rename over the target. An
+  // interrupted `mark-synced --all` / `refresh-figma-digests` used to truncate
+  // the manifest mid-write, which readManifest() then threw on forever after.
+  const tmp = `${p.resolved.parityManifest}.tmp-${process.pid}`;
+  writeFileSync(tmp, JSON.stringify(out, null, 2) + '\n', 'utf8');
+  renameSync(tmp, p.resolved.parityManifest);
+  return out;
 }
 
 // ── code hashing ────────────────────────────────────────────────────────
@@ -123,6 +148,20 @@ export function digestOf(value) {
   return createHash('sha1').update(JSON.stringify(value)).digest('hex');
 }
 
+/**
+ * Digest of a tag's ops artifact (`<opsDir>/<tag>.json`), or null when none
+ * exists. The ops-derived STAND-IN for a live Figma digest that seeding and
+ * stamping both use — shared here (R4, spec 2026-08-27-parity-system-audit-
+ * remediation) so seed-manifest.mjs and mark-synced.mjs cannot drift apart on
+ * what the stand-in is.
+ */
+export function opsDigestFor(project, tag) {
+  const p = asProject(project);
+  const path = join(p.resolved.opsDir, `${tag}.json`);
+  if (!existsSync(path)) return null;
+  return digestOf(JSON.parse(readFileSync(path, 'utf8')));
+}
+
 // ── the contract (what Figma actually mirrors) ──────────────────────────
 //
 // `hashComponentSource` above hashes BYTES. That makes it wrong in both
@@ -145,8 +184,10 @@ export function digestOf(value) {
 // only signal available for a manifest entry stamped before contracts existed,
 // and `driftBasis` on every report entry says which one decided the status.
 
-/** `'a' | 'b'` → ['a','b']; a non-union type → []. */
-function unionValues(typeText) {
+/** `'a' | 'b'` → ['a','b']; a non-union type → [].
+ * Exported (R4, spec 2026-08-27-parity-system-audit-remediation) so
+ * emit-contracts.mjs stops carrying a byte-identical private copy. */
+export function unionValues(typeText) {
   const parts = String(typeText ?? '').split('|').map((s) => s.trim());
   if (parts.length < 2) return [];
   const literals = parts.filter((s) => /^'[^']*'$/.test(s)).map((s) => s.slice(1, -1));
@@ -195,7 +236,8 @@ export function contractDigest(component) {
  * attribute at all, and the plan (scripts/figma-atoms/plan.mjs:18) deliberately
  * withholds behavioural props from the axis list. Curation is not drift.
  */
-const normKey = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+// Canonical definition lives in contract-diff.mjs (the leaf module this file
+// already imports) — see its header for why that is the cycle-free home.
 
 /**
  * Diff the code contract against an OBSERVED Figma component-set contract.
@@ -353,11 +395,14 @@ export function figmaNodeUrl(nodeId, project) {
  * came to render identically to "Figma matches". Every entry now carries
  * `driftBasis` and `figmaObserved` so a consumer can render the difference.
  *
+ * Exported for libs/altitude-mcp/test/parity-status.mjs — production callers
+ * go through `computeParity()`; nothing else should call this directly.
+ *
  * @returns {{status:string, driftBasis:'contract'|'source-hash'|'never-synced',
  *            figmaObserved:boolean, codeDrift:boolean, figmaDrift:boolean,
  *            contractMismatches:number}}
  */
-function assessEntry(entry, current) {
+export function assessEntry(entry, current) {
   const observed = entry?.figmaCurrentDigest ?? null;
   const figmaObserved = observed !== null;
   const last = entry?.lastSync ?? {};
@@ -584,7 +629,22 @@ export function computeParity(project) {
           }
         : {}),
     };
-    item.aiPrompt = buildAiPrompt(item, p);
+    // LAZY, cached on first read (R5, spec 2026-08-27-parity-system-audit-
+    // remediation). The prompt is a multi-paragraph string built per entry;
+    // eager construction paid that cost ~105× per report even for consumers
+    // that never read it — publicParityReport() (the docs build) drops the
+    // field without touching it, and a single-tag MCP query serializes one.
+    // The getter is enumerable, so JSON.stringify(report) still includes
+    // aiPrompt exactly as before — full-report consumers see identical bytes.
+    let builtPrompt;
+    Object.defineProperty(item, 'aiPrompt', {
+      enumerable: true,
+      configurable: true,
+      get() {
+        builtPrompt ??= buildAiPrompt(item, p);
+        return builtPrompt;
+      },
+    });
     entries.push(item);
   }
 

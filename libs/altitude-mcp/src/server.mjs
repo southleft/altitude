@@ -52,6 +52,11 @@ if (httpFlag === -1) {
       req.on('error', reject);
     });
 
+  // /parity.json response cache — see the handler below for why.
+  const PARITY_CACHE_TTL_MS = 3000;
+  /** @type {Map<string, {at:number, payload:string}>} keyed by requested project id ('' = default) */
+  const parityCache = new Map();
+
   /** Is this a loopback origin/host? Any port, http or https. */
   const isLoopback = (value) => {
     if (!value) return false;
@@ -102,13 +107,25 @@ if (httpFlag === -1) {
       }
       if (url.pathname === '/parity.json') {
         // `?project=<id>` selects the design system; omitted falls back to
-        // DS_PROJECT (set by each Storybook's config) then the registry default.
+        // DS_PROJECT then the registry default.
         const requested = url.searchParams.get('project') ?? undefined;
         // Compute BEFORE writing any header: an unknown project id must be able
         // to come back as a 400, and writeHead is not reversible.
         let payload;
         try {
-          payload = JSON.stringify(computeParity(requested));
+          // Short-TTL cache (R5, spec 2026-08-27-parity-system-audit-
+          // remediation): computeParity() is several hundred synchronous file
+          // reads on the event loop; a burst of requests (a panel polling, an
+          // agent looping) used to pay that per request. 3s is short enough
+          // that "edit a component, re-poll" still reads fresh.
+          const key = requested ?? '';
+          const hit = parityCache.get(key);
+          if (hit && Date.now() - hit.at < PARITY_CACHE_TTL_MS) {
+            payload = hit.payload;
+          } else {
+            payload = JSON.stringify(computeParity(requested));
+            parityCache.set(key, { at: Date.now(), payload });
+          }
         } catch (err) {
           if (err?.code === 'ERR_UNKNOWN_DS_PROJECT') {
             res.writeHead(400, { 'content-type': 'application/json' });
