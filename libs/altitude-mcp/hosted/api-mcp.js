@@ -1,4 +1,51 @@
 /**
+ * PARKED 2026-08-27 - NOT DEPLOYED. This file used to live at
+ * `functions/api/mcp.js`, where Cloudflare Pages bundles it automatically.
+ * It was moved OUT of `functions/` because it broke the Pages build, and a
+ * Pages Functions build failure fails the WHOLE deploy - it was taking the
+ * docs site, the homepage and functions/api/theme.js down with it.
+ *
+ * THE ERROR (real Pages build log, 2026-08-27T17:06:55Z):
+ *
+ *   Found Functions directory at /functions. Uploading.
+ *   wrangler 3.114.17
+ *   X [ERROR] Expected ";" but found "with"
+ *       libs/altitude-mcp/src/lib/registry-data.mjs:27:85
+ *   Failed building Pages Functions.
+ *
+ * WHY IT IS A REAL BIND, NOT A TYPO. This file imports worker.mjs, which
+ * imports lib/registry-data.mjs, which imports JSON with import attributes
+ * (`with { type: 'json' }`). Node 22 REQUIRES that attribute to import JSON;
+ * the esbuild inside wrangler 3.114.17 - the version Cloudflare Pages builds
+ * Functions with, which this repo does not choose - CANNOT PARSE it. The same
+ * module is loaded by both runtimes (here for the Worker, and by
+ * test/worker-smoke.mjs under Node), so no single spelling satisfies both.
+ *
+ * This endpoint had never deployed successfully. It landed in 7dc5e94
+ * (2026-08-25) and every Cloudflare Pages deploy failed from that commit
+ * onward. Its header claimed verification "under real workerd
+ * (`wrangler pages dev`)" - a NEWER local wrangler than Pages runs, which is
+ * exactly why the gap went unnoticed. Nothing working was lost by parking it:
+ * without ALTITUDE_MCP_TOKEN set in the Pages dashboard (still unset, see
+ * below) this endpoint returns 503 by design.
+ *
+ * TO RESTORE, all three are required:
+ *   1. Resolve the import-attribute conflict. The least invasive option is to
+ *      dependency-inject the registry: have handleMcpRequest() take the data
+ *      as an argument, so the Worker-bundled file can import the JSON WITHOUT
+ *      attributes (esbuild's json loader needs none) while test/worker-smoke.mjs
+ *      keeps importing WITH them under Node.
+ *   2. Check the bundle size. registry-data.mjs statically pulls in ~1.2MB of
+ *      JSON (888K is custom-elements.json alone), which may exceed the Worker
+ *      size limit even once it parses. Nobody has measured this.
+ *   3. `git mv libs/altitude-mcp/hosted/api-mcp.js functions/api/mcp.js` and set
+ *      ALTITUDE_MCP_TOKEN in the Pages dashboard.
+ *
+ * Anything placed under `functions/` is bundled by Cloudflare's wrangler, not
+ * by this repo's toolchain - see functions/README.md before adding a file there.
+ */
+
+/**
  * POST /api/mcp — the hosted Altitude MCP endpoint (R9: "an agent can reach
  * the MCP server without a local checkout").
  *

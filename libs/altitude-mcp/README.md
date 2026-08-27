@@ -167,8 +167,8 @@ answers here — do not read "implemented" on one as implying it on another:
 | Piece | Status |
 |---|---|
 | A Fetch-standard transport (works on Workers, Deno, Bun, plain Node) | **Implemented**, `src/worker.mjs` |
-| A deployable adapter using it (Cloudflare Pages Function) | **Implemented**, `functions/api/mcp.js` (repo root) |
-| Verified under the actual target runtime, not just Node | **Verified locally** — `wrangler pages dev` (`workerd`), see below |
+| A deployable adapter using it (Cloudflare Pages Function) | **Written, but PARKED and NOT DEPLOYED** — `libs/altitude-mcp/hosted/api-mcp.js`. It lived at `functions/api/mcp.js` until 2026-08-27, where it broke the Cloudflare Pages build and took the whole deploy (docs site, homepage, `theme.js`) down with it. See that file's header for the diagnosis and what restoring it requires. |
+| Verified under the actual target runtime, not just Node | **No.** It was verified under `pnpm dlx wrangler@4 pages dev` — but Cloudflare Pages builds Functions with **wrangler 3.114.17**, whose esbuild cannot parse the import attributes in `lib/registry-data.mjs`. Testing against a newer local wrangler than the platform runs is what hid this for two days. |
 | A public deployment: DNS, TLS, the live secret | **Not done — needs a human** with Cloudflare dashboard access this session does not have |
 
 **What's hosted.** `src/worker.mjs` builds a SEPARATE, smaller `McpServer` (`name:
@@ -205,6 +205,13 @@ proof: it wasn't.
 dlx` fetches wrangler into its own throwaway store):
 
 ```bash
+# NOTE the version: `wrangler@4`. Cloudflare Pages builds Functions with its own
+# pinned wrangler (3.114.17 as of 2026-08-27), whose esbuild CANNOT parse the
+# import attributes in lib/registry-data.mjs. Passing here therefore proves the
+# code runs under workerd - it does NOT prove Pages can build it, and it did not:
+# every Pages deploy failed from 7dc5e94 until the adapter was parked on
+# 2026-08-27. These commands also require the adapter to be back at
+# functions/api/mcp.js; it is currently at libs/altitude-mcp/hosted/api-mcp.js.
 echo 'ALTITUDE_MCP_TOKEN=test-secret' > .dev.vars      # gitignored; local only
 pnpm dlx wrangler@4 pages dev <any-static-dir> --port 8793 \
   --compatibility-date=2025-06-01 --compatibility-flags=nodejs_compat
@@ -487,5 +494,7 @@ libs/altitude-mcp/
     ├── smoke.mjs                # spawns server.mjs, real MCP handshake over stdio, calls every tool/resource/prompt
     └── worker-smoke.mjs         # calls worker.mjs's handleMcpRequest() directly with real Request/Response
 
-../../functions/api/mcp.js       # repo root — the Cloudflare Pages Function adapter (auth + delegates to worker.mjs)
+../hosted/api-mcp.js             # PARKED Cloudflare Pages Function adapter (auth + delegates to worker.mjs).
+                                 # Was functions/api/mcp.js; moved out of functions/ 2026-08-27 because it
+                                 # failed the Pages build. Not deployed. See its header.
 ```
