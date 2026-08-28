@@ -92,6 +92,32 @@ export const DEFAULT_COMPONENT_CONFIG = Object.freeze({
   // nestedIconGlyphs: { "<component tag>": "<phosphor name>" } - which glyph
   // a nested al-icon instance swaps to (chip's ALIconClose import -> 'x').
   nestedIconGlyphs: null,
+  // nestedProps: { "<component tag>": { "<friendly property name>": value } }
+  // - which PROPERTIES a nested non-icon instance is switched to after it is
+  // placed. Without this every nested instance renders its set's DEFAULT
+  // variant, which is why al-banner's dismiss control (code: <al-button
+  // variant="bare" hideText label="Dismiss"> wrapping an x icon) came out as a
+  // labelled "Button". The measured anatomy records the nested component's own
+  // BEM classes, but mapping those to another set's variant-axis spellings is
+  // a judgment call per component pair, not a derivable fact - so it lives
+  // here (layer 2) rather than in the generator (layer 3).
+  //
+  // Property names are the FRIENDLY ones ("Variant", "Text", "Slot Before");
+  // the builder resolves each to the instance's real "<name>#<id>" key at
+  // generation time, because those ids differ per set and per regeneration.
+  //
+  // Ordered array form - { "al-button": [{...}, {...}] } - applies per
+  // occurrence in document order within a variant (input-stepper's [-][+]
+  // pair), exactly like nestedIconGlyphs. The object form applies to every
+  // occurrence.
+  nestedProps: null,
+  // rootWidth: a FULL-BLEED component's width, which its content does not
+  // imply. true -> use the measured root box width; a number -> that width.
+  // al-banner is the standing case: inline-size:100%, so hugging sized it by
+  // whatever the message happened to be. Also switches on FILL-through for
+  // children that measured as wide as the space they sit in. Leave null for
+  // anything that genuinely hugs (cards, chips, buttons).
+  rootWidth: null,
   fullWidthProp: 'fullWidth',
   fullWidthExtraPx: 160,
   iconSizeVar: 'theme/icon/md',
@@ -125,7 +151,7 @@ export function loadComponentConfig(repoRoot, tag) {
   }
   const config = {
     ...DEFAULT_COMPONENT_CONFIG,
-    ...pick(overrides, ['enumProp', 'fullWidthProp', 'fullWidthExtraPx', 'iconSizeVar', 'caseAxes', 'textContent', 'glyphs', 'nestedIconGlyphs']),
+    ...pick(overrides, ['enumProp', 'fullWidthProp', 'fullWidthExtraPx', 'iconSizeVar', 'caseAxes', 'textContent', 'glyphs', 'nestedIconGlyphs', 'nestedProps', 'rootWidth']),
     label: { ...DEFAULT_COMPONENT_CONFIG.label, ...(overrides.label || {}) },
     sheet: { ...DEFAULT_COMPONENT_CONFIG.sheet, ...(overrides.sheet || {}) },
   };

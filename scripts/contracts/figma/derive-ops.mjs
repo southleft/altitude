@@ -324,11 +324,38 @@ export function buildOps(contract, {
   // that only exists when Separator=yes), which token deltas alone could
   // never express. A dimension matching the enum axis, mapping to no prop,
   // or mapping to an omitted prop stays un-fanned at its base-case value.
-  const parseCase = (s) => Object.fromEntries(String(s || '').split(',').filter(Boolean).map((kv) => kv.split('=')));
+  // Dimension keys are TRIMMED. The harness joins state cases as
+  // `${base}, State=Disabled` (plan.mjs), so the split yields a key with a
+  // LEADING SPACE — ' State' — which matched no prop and no curation, and was
+  // recorded as an accepted quirk (altitude-figma-generate trap 15). That is
+  // what kept Checkbox Group's and Radio Group's Error/Disabled rows out of
+  // their generated sets even though both are measurably distinct (Error adds
+  // an error-note subtree; Disabled adds theme/opacity/disabled to 11 nodes)
+  // and both are drawn in the design library's own reference frames.
+  const parseCase = (s) => Object.fromEntries(
+    String(s || '').split(',').filter(Boolean).map((kv) => {
+      const eq = kv.indexOf('=');
+      return eq === -1 ? [kv.trim(), ''] : [kv.slice(0, eq).trim(), kv.slice(eq + 1).trim()];
+    }),
+  );
   const dimKeyOf = (dims) => Object.entries(dims).sort(([a], [b]) => a.localeCompare(b)).map(([k, v]) => `${k}=${v}`).join(',');
-  const anatomyCases = (contract.anatomy?.cases || []).map((c, i) => ({ ...c, dims: parseCase(c.case), index: i }));
+  // `implicitDefault` on a curated case axis: a dimension the harness only
+  // spells out when it is NON-default. State is the standing example — the
+  // base case is `Legend=shown` and the state cases are
+  // `Legend=shown, State=Error`, so "no State key" IS State=Default. Without
+  // this the base rows key differently from the state rows and the dimension
+  // can never be fanned into a complete axis.
+  const implicitDefaults = new Map(
+    (config.caseAxes || []).filter((e) => e.implicitDefault).map((e) => [e.dimension, e.implicitDefault]),
+  );
+  const anatomyCases = (contract.anatomy?.cases || []).map((c, i) => {
+    const dims = parseCase(c.case);
+    for (const [dim, dflt] of implicitDefaults) if (!(dim in dims)) dims[dim] = dflt;
+    return { ...c, dims, index: i };
+  });
   const caseIndexByKey = new Map(anatomyCases.map((c) => [dimKeyOf(c.dims), c.index]));
   const baseDims = parseCase(contract.anatomyCase);
+  for (const [dim, dflt] of implicitDefaults) if (!(dim in baseDims)) baseDims[dim] = dflt;
   const titleize = (v) => (v ? String(v)[0].toUpperCase() + String(v).slice(1) : v);
   const strippedPropKey = (name) => normKey(String(name).replace(/^(is|has)(?=[A-Z])/, ''));
   const caseAxisDefs = [];
@@ -343,11 +370,26 @@ export function buildOps(contract, {
       if (values.size < 2) continue;
       if (variantProp && (normKey(dim) === normKey(variantProp.name) || normKey(dim) === normKey(variantProp.bindings?.figma?.property || ''))) continue; // the enum axis owns this dimension (conditionalBindings), never a case axis
       const cur = curated.get(dim);
-      const prop = cur
-        ? (contract.props || []).find((p) => p.name === cur.prop)
-        : (contract.props || []).find((p) => strippedPropKey(p.name) === normKey(dim));
-      if (!prop) continue; // no code prop backs this dimension — stays at its base value, never fabricated
-      if (prop.bindings?.figma?.omit) continue; // T27 opt-out applies to case axes too
+      // A dimension may be backed by ONE prop (the common case, auto-matched
+      // or curated via `prop`) or by SEVERAL (`props: [...]`). State is the
+      // compound case: its values are driven by isError and isDisabled, so no
+      // single prop names it, and the old single-prop lookup dropped the whole
+      // dimension. Every named prop must exist on the contract — a dimension
+      // is still never fabricated, it just no longer has to be spelled by one
+      // prop to count as backed.
+      const curProps = cur && Array.isArray(cur.props) ? cur.props : null;
+      let backing;
+      if (curProps) {
+        backing = curProps.map((n) => (contract.props || []).find((p) => p.name === n)).filter(Boolean);
+        if (backing.length !== curProps.length) continue; // a named prop does not exist — curation is stale
+      } else {
+        const prop = cur
+          ? (contract.props || []).find((p) => p.name === cur.prop)
+          : (contract.props || []).find((p) => strippedPropKey(p.name) === normKey(dim));
+        if (!prop) continue; // no code prop backs this dimension — stays at its base value, never fabricated
+        backing = [prop];
+      }
+      if (backing.every((p) => p.bindings?.figma?.omit)) continue; // T27 opt-out applies to case axes too
       const valueMap = cur?.valueMap || {};
       const optionOf = (raw) => valueMap[raw] || titleize(raw);
       const optionToRaw = {};

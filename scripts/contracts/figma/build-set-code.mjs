@@ -332,6 +332,51 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
       if ('children' in node) for (const child of node.children) recolorIconTree(child, paint);
     }
 
+    /**
+     * CSS 'display' -> the axis this node's children ACTUALLY stack on.
+     *
+     * 'layout.direction' is only meaningful when 'display' is flex or
+     * inline-flex. getComputedStyle returns flex-direction's INITIAL value
+     * ('row') on every non-flex element, so the measured facts carry a
+     * meaningless direction of 'row' on 432 of the 433 non-flex anatomy
+     * nodes across the contract set. Reading it unconditionally is what
+     * forced HORIZONTAL auto-layout onto block-level containers — the defect
+     * recorded as trap 24 in the altitude-figma-sync skill, where al-tabs'
+     * tablist and its panel were laid SIDE BY SIDE at 557x40 against a real
+     * 291x79.
+     *
+     * The faithful translation of a block container is VERTICAL, not
+     * HORIZONTAL and not NONE: block-level boxes stack their children DOWN.
+     * NONE would be worse than either — nothing in this builder assigns x/y
+     * to a walked anatomy child, so a NONE frame piles every child at 0,0
+     * and keeps createFrame's 100x100 default. Always return an axis.
+     *
+     * 'grid' maps to HORIZONTAL+WRAP (see layoutWrapsFor): a multi-column
+     * grid flows its items across and then wraps, which is the closest thing
+     * Figma auto-layout has. Only 3 nodes in the set are grid today.
+     */
+    var BLOCK_LEVEL_DISPLAYS = ['block', 'flow-root', 'list-item', 'table', 'table-row-group', 'table-header-group', 'table-footer-group', 'table-cell', 'table-caption'];
+    var INLINE_LEVEL_DISPLAYS = ['inline', 'inline-block', 'table-row'];
+    function layoutAxisFor(layout) {
+      var d = layout && layout.display;
+      if (!d) return 'VERTICAL';
+      if (d === 'flex' || d === 'inline-flex') return layout.direction === 'column' ? 'VERTICAL' : 'HORIZONTAL';
+      if (d === 'grid') return 'HORIZONTAL';
+      if (INLINE_LEVEL_DISPLAYS.indexOf(d) !== -1) return 'HORIZONTAL';
+      if (BLOCK_LEVEL_DISPLAYS.indexOf(d) !== -1) return 'VERTICAL';
+      // Anything unrecognised ('contents', 'ruby-*', a future value): block
+      // flow is the safe default — an unknown container is far more often a
+      // stack than a row, and every axis beats NONE (see above).
+      return 'VERTICAL';
+    }
+    /** Does this node wrap? flex-wrap as measured, plus grid (which always
+     *  wraps by definition). Figma only honours layoutWrap on HORIZONTAL. */
+    function layoutWrapsFor(layout) {
+      if (!layout) return false;
+      if (layout.display === 'grid') return true;
+      return layout.wrap === 'wrap' || layout.wrap === 'wrap-reverse';
+    }
+
     // Fonts — a contract typically has no font-size/family token (they are
     // inherited, not custom-property-bound, so anatomy never captured one);
     // IBM Plex Sans is the library's own base default (SKILL.md "Known
@@ -357,6 +402,28 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
     // source-verifiable (chip.ts imports ALIconClose -> 'x'). Resolved by
     // the same verified-Phosphor scan as slot icons.
     const NESTED_ICON_GLYPHS = ${JSON.stringify(config.nestedIconGlyphs || {})};
+    // Nested-instance PROPERTIES (figma.gen.json nestedProps): which properties
+    // a placed nested instance is switched to, keyed by component tag. Without
+    // it every nested instance renders its set's DEFAULT variant — al-banner's
+    // dismiss control came out as a labelled "Button" instead of a bare icon
+    // button. Object form applies to every occurrence; ordered array form
+    // applies per occurrence in document order (input-stepper's [-][+]).
+    const NESTED_PROPS = ${JSON.stringify(config.nestedProps || {})};
+    // Full-bleed root width — see the ROOT_WIDTH block in buildVariant.
+    const ROOT_WIDTH = ${JSON.stringify(config.rootWidth === undefined ? null : config.rootWidth)};
+    let rootFixedWidth = 0;
+    /** Resolve a FRIENDLY property name ("Text", "Slot Before", "Variant") to
+     * the instance's real key. Figma suffixes non-variant properties with the
+     * defining node id ("Text#3538:3669"), and those ids change every time the
+     * target set is regenerated — so curation names the property and we look
+     * up the suffixed key live. Variant properties carry no suffix. */
+    function resolveNestedPropKey(inst, friendly) {
+      let keys = [];
+      try { keys = Object.keys(inst.componentProperties || {}); } catch (e) { return null; }
+      if (keys.indexOf(friendly) !== -1) return friendly;
+      for (const k of keys) if (k.split('#')[0] === friendly) return k;
+      return null;
+    }
     /** A node's own font-weight VARIABLE binding -> the Figma font style.
      * Owner correction (Breadcrumbs walkthrough): text weight is the NODE's
      * fact — badge binds typography/font-weight/bold, breadcrumbs' label is
@@ -495,7 +562,17 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
     // Resolve each distinct nested-icon glyph once (same discipline and
     // budget as slot icons).
     const nestedGlyphByName = {};
-    for (const gname of [...new Set(Object.values(NESTED_ICON_GLYPHS).flat())]) {
+    // Glyphs come from two curation keys: nestedIconGlyphs (a nested al-icon's
+    // own glyph) and nestedProps' "$glyphs" (glyphs living inside a nested
+    // NON-icon instance's icon slots — al-banner's dismiss al-button wraps an
+    // x). Both resolve through the same verified-Phosphor scan, once each.
+    const glyphsFromNestedProps = [];
+    for (const spec of Object.values(NESTED_PROPS)) {
+      for (const one of (Array.isArray(spec) ? spec : [spec])) {
+        for (const g of ((one && one.$glyphs) || [])) glyphsFromNestedProps.push(g);
+      }
+    }
+    for (const gname of [...new Set([...Object.values(NESTED_ICON_GLYPHS).flat(), ...glyphsFromNestedProps])]) {
       const comp = await findPhosphorComponentByName(gname);
       if (comp) nestedGlyphByName[gname] = comp;
       else misses.add('phosphor-component-not-found:' + gname);
@@ -606,7 +683,7 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
      * token binds only — no pixel geometry exists in a contract, so HUG both
      * axes throughout (a childless token-bearing node renders as its padding
      * box — coarse by design, per the ops degradation note). */
-    async function buildAnatomyChildren(node, parent, state, path, inheritedColor, axisValues, caseRootColor, iconCursor) {
+    async function buildAnatomyChildren(node, parent, state, path, inheritedColor, axisValues, caseRootColor, iconCursor, propsCursor) {
       const kids = node.children || [];
       // Variant-aware color inheritance (Chip walkthrough): a node whose own
       // color binding merely EQUALS the case root's (i.e. it inherited it in
@@ -649,6 +726,89 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           const inst = base.createInstance();
           inst.name = child.component;
           parent.appendChild(inst);
+          // Switch the instance to its curated properties BEFORE anything else
+          // touches it: setProperties on a variant property swaps the backing
+          // component, which discards direct child edits made beforehand (and
+          // would undo the icon swap/recolor below).
+          const propSpec = NESTED_PROPS[child.component];
+          if (propSpec !== undefined) {
+            let wanted = propSpec;
+            if (Array.isArray(propSpec)) {
+              // Positional: entry N applies to the Nth occurrence of this tag
+              // in document order within the variant. A group's Error case
+              // renders TWO al-field-notes (helper, then error), so [Default,
+              // Error] colours them correctly with no condition needed.
+              const pcur = propsCursor || {};
+              const pi = pcur[child.component] || 0;
+              wanted = propSpec[Math.min(pi, propSpec.length - 1)];
+              pcur[child.component] = pi + 1;
+            }
+            // Variant-conditional curation. A nested instance often has to
+            // follow the OWNER's axis: a Disabled group's checkboxes must read
+            // Disabled, an Error group's radios must read Error. Two hooks,
+            // both matched against this variant's own axis values:
+            //   "$when"      gates the whole entry (no match -> nothing applied)
+            //   "$overrides" merges extra props on top of the base ones, first
+            //                match onward, so the common props stay written once
+            const matches = (cond) => {
+              const av = axisValues || {};
+              for (const k of Object.keys(cond || {})) {
+                if (String(av[k]) !== String(cond[k])) return false;
+              }
+              return true;
+            };
+            if (wanted && wanted.$when && !matches(wanted.$when)) wanted = null;
+            if (wanted && Array.isArray(wanted.$overrides)) {
+              const merged = { ...wanted };
+              delete merged.$overrides;
+              for (const ov of wanted.$overrides) {
+                if (!ov || (ov.$when && !matches(ov.$when))) continue;
+                for (const k of Object.keys(ov)) if (k !== '$when') merged[k] = ov[k];
+              }
+              wanted = merged;
+            }
+            const applied = {};
+            for (const friendly of Object.keys(wanted || {})) {
+              if (friendly === '$glyphs' || friendly === '$when' || friendly === '$overrides') continue; // not properties
+              const key = resolveNestedPropKey(inst, friendly);
+              // A curated property the target set does not expose is a real
+              // disagreement between curation and the live set (a renamed axis,
+              // a regenerated dependency) — reported, never silently dropped.
+              if (key) applied[key] = wanted[friendly];
+              else misses.add('nested-prop-not-found:' + child.component + ':' + friendly);
+            }
+            if (Object.keys(applied).length) {
+              try { inst.setProperties(applied); }
+              catch (e) { misses.add('nested-prop-set-failed:' + child.component + ':' + e.message); }
+            }
+            // $glyphs: the icons that live INSIDE this nested instance's own
+            // icon slots. The library's convention (T29) is that an icon is the
+            // DS "Icon" WRAPPER instance with a Phosphor glyph instance inside
+            // it, so the swap target is the wrapper's inner instance — reached
+            // through the nested instance's override tree, in document order.
+            // Runs AFTER setProperties, which would otherwise discard it.
+            const wantGlyphs = (wanted && wanted.$glyphs) || null;
+            if (wantGlyphs && wantGlyphs.length) {
+              const wrappers = [];
+              (function collectWrappers(n) {
+                if (!('children' in n)) return;
+                for (const c of n.children) {
+                  if (c.type === 'INSTANCE' && c.visible && c.children && c.children.some((g) => g.type === 'INSTANCE')) wrappers.push(c);
+                  collectWrappers(c);
+                }
+              })(inst);
+              for (let gi = 0; gi < wantGlyphs.length; gi += 1) {
+                const gname = wantGlyphs[gi];
+                const wrapper = wrappers[gi];
+                if (!wrapper) { misses.add('nested-prop-glyph-slot-missing:' + child.component + ':' + gname); continue; }
+                if (!nestedGlyphByName[gname]) continue; // already reported by the resolve pass
+                const inner = wrapper.children.find((g) => g.type === 'INSTANCE');
+                if (!inner) { misses.add('nested-prop-glyph-slot-missing:' + child.component + ':' + gname); continue; }
+                try { inner.swapComponent(nestedGlyphByName[gname]); }
+                catch (e) { misses.add('nested-prop-glyph-swap-failed:' + child.component + ':' + gname); }
+              }
+            }
+          }
           // Nested-icon glyph (chip's ALIconClose -> Phosphor 'x'): swap the
           // wrapper's nested instance, size to the MEASURED box, recolor to
           // the inherited (variant-aware) content color — same swap/recolor
@@ -665,16 +825,35 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
             glyphName = glyphSpec[Math.min(i, glyphSpec.length - 1)];
             cur[child.component] = i + 1;
           }
-          if (glyphName && nestedGlyphByName[glyphName]) {
+          // SIZE / SWAP / RECOLOR ARE THREE INDEPENDENT STEPS (fixed 2026-08-27).
+          // They used to share one "if (glyphName && nestedGlyphByName[glyphName])"
+          // guard, so an UNRESOLVED Phosphor glyph skipped the recolor too — the
+          // wrapper instance was still placed, keeping the cached glyph its owner
+          // last bootstrapped (PaperPlaneTilt) AND a hardcoded white fill. That
+          // presented as "al-chip's dismiss icon is the wrong COLOR" when the real
+          // cause was a missing icon two steps upstream, and it made every variant's
+          // icon ignore the row's content-color delta. Being declared in
+          // NESTED_ICON_GLYPHS is what marks this child as an icon; whether its glyph
+          // resolved is a separate question, and must not gate the other two steps.
+          if (glyphSpec !== undefined) {
             if (child.box && child.box.w >= 1) {
               try { inst.layoutSizingHorizontal = 'FIXED'; inst.layoutSizingVertical = 'FIXED'; } catch (e) { /* not an auto-layout child */ }
               try { inst.resize(child.box.w, child.box.h); } catch (e) { /* keep natural size */ }
             }
-            let nestedIconInst = null;
-            try { nestedIconInst = inst.children.find((c) => c.type === 'INSTANCE'); } catch (e) { nestedIconInst = null; }
-            if (nestedIconInst) {
-              try { nestedIconInst.swapComponent(nestedGlyphByName[glyphName]); } catch (e) { misses.add('nested-icon-swap-failed:' + child.component); }
+            if (glyphName && nestedGlyphByName[glyphName]) {
+              let nestedIconInst = null;
+              try { nestedIconInst = inst.children.find((c) => c.type === 'INSTANCE'); } catch (e) { nestedIconInst = null; }
+              if (nestedIconInst) {
+                try { nestedIconInst.swapComponent(nestedGlyphByName[glyphName]); } catch (e) { misses.add('nested-icon-swap-failed:' + child.component); }
+              }
+            } else if (glyphName) {
+              // Named but unresolvable — a new glyph needs a human to bootstrap one
+              // in-file instance first (T28/trap 8). Reported, never silently ignored.
+              misses.add('nested-icon-glyph-unresolved:' + child.component + ':' + glyphName);
             }
+            // Recolor regardless: an icon inherits "currentColor" in the browser, so
+            // it must follow this row's resolved content color even when the glyph
+            // itself could not be swapped.
             const ip = await boundSolid(nodeColor);
             if (ip) recolorIconChildren(inst, ip);
           }
@@ -730,6 +909,17 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           tn.characters = child.text || (textProp && textProp.default) || 'Label';
           tn.fontSize = LABEL_FONT_SIZE;
           parent.appendChild(tn);
+          // Inside a parent with a DEFINITE width, a text leaf must WRAP to
+          // that width rather than dictate it. Left auto-sizing, a sentence
+          // renders as one very long line and overflows every ancestor - the
+          // banner's message did exactly that at 581px inside a 528px row.
+          try {
+            const ps = parent.layoutSizingHorizontal;
+            if (ps === 'FIXED' || ps === 'FILL') {
+              tn.textAutoResize = 'HEIGHT';
+              tn.layoutSizingHorizontal = 'FILL';
+            }
+          } catch (e) { /* not an auto-layout child */ }
           const ownColor = t['color'] && t['color'] !== caseRootColor ? t['color'] : null;
           const paint = await boundSolid(ownColor || nodeColor);
           if (paint) tn.fills = [paint];
@@ -823,13 +1013,55 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         parent.appendChild(f);
         f.fills = [];
         const isFlex = !!(child.layout && (child.layout.display === 'flex' || child.layout.display === 'inline-flex'));
-        f.layoutMode = isFlex && child.layout.direction === 'column' ? 'VERTICAL' : 'HORIZONTAL';
+        // Axis comes from 'display', NOT from 'direction' — see layoutAxisFor.
+        // Reading 'direction' unconditionally forced HORIZONTAL onto every
+        // block-level container (193 block + 62 list-item + 65 table-cell +
+        // the table groups = 327 of the 433 non-flex nodes, across 53 of the
+        // 103 contracts), which is trap 24's al-tabs defect reproduced on
+        // every composite's INNER frames rather than on its root.
+        f.layoutMode = layoutAxisFor(child.layout);
+        // Figma honours layoutWrap on HORIZONTAL auto-layout only, so the
+        // gate is on the RESOLVED axis. The try/catch is belt-and-braces for
+        // older plugin API versions — not verified to throw, just not worth
+        // failing a whole generation run over.
+        if (f.layoutMode === 'HORIZONTAL' && layoutWrapsFor(child.layout)) {
+          try { f.layoutWrap = 'WRAP'; } catch (e) { /* older plugin API */ }
+        }
         if (isFlex) {
           f.counterAxisAlignItems = child.layout.align === 'center' ? 'CENTER' : child.layout.align === 'flex-end' ? 'MAX' : 'MIN';
           f.primaryAxisAlignItems = child.layout.justify === 'center' ? 'CENTER' : child.layout.justify === 'flex-end' ? 'MAX' : child.layout.justify === 'space-between' ? 'SPACE_BETWEEN' : 'MIN';
         }
         f.primaryAxisSizingMode = 'AUTO';
         f.counterAxisSizingMode = 'AUTO';
+        // FILL, from the node's OWN measured flex-grow. This is a real
+        // contract fact now (measure-lib records flex-grow when non-zero), not
+        // a width heuristic: a growing child fills its parent's MAIN axis,
+        // exactly as the browser lays it out. It is the fix for the
+        // hug-everywhere defect - a filling message used to render at its
+        // max-content width and overflow its own container.
+        if (child.layout && child.layout.grow) {
+          try {
+            if (parent.layoutMode === 'HORIZONTAL') f.layoutSizingHorizontal = 'FILL';
+            else if (parent.layoutMode === 'VERTICAL') f.layoutSizingVertical = 'FILL';
+          } catch (e) { /* parent is not an auto-layout frame */ }
+        }
+        // CROSS-AXIS STRETCH. In CSS a block-level child fills its
+        // container's inline size, and so does a flex child under the default
+        // 'align-items: stretch'. Figma has no block model, so without this a
+        // 600px-wide bar renders its content bunched at the left. Gated on the
+        // parent having a DEFINITE size on that axis - stretching inside a
+        // hugging parent is circular, and hug stays the right default for the
+        // cards and chips that make up most of the library.
+        {
+          const pAlign = node && node.layout ? node.layout.align : null;
+          const stretches = !pAlign || pAlign === 'normal' || pAlign === 'stretch';
+          if (stretches && parent.layoutMode === 'VERTICAL') {
+            try {
+              const ps = parent.layoutSizingHorizontal;
+              if (ps === 'FIXED' || ps === 'FILL') f.layoutSizingHorizontal = 'FILL';
+            } catch (e) { /* parent is not an auto-layout frame */ }
+          }
+        }
         { const p = await boundSolid(t['background-color']); if (p) f.fills = [p]; }
         bindNum(f, 'itemSpacing', t['column-gap'] || t['gap']);
         bindNum(f, 'paddingTop', t['padding-top'] || t['padding']);
@@ -847,7 +1079,7 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           }
         }
         bindNum(f, 'opacity', t['opacity']);
-        await buildAnatomyChildren(child, f, state, childPath, nodeColor, axisValues, caseRootColor, iconCursor);
+        await buildAnatomyChildren(child, f, state, childPath, nodeColor, axisValues, caseRootColor, iconCursor, propsCursor);
         // A container whose children ALL got skipped (paintless inputs,
         // CSS-drawn thumbs, 0-box ripples) is really a glyph: a childless
         // hug frame keeps Figma's 100x100 createFrame default (the Toggle
@@ -872,20 +1104,79 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
       // already layered this case's root tokens in buildOps.
       const vrootTokens = (vroot && vroot.tokens) || {};
       const isFlex = !!(vroot && vroot.layout && (vroot.layout.display === 'flex' || vroot.layout.display === 'inline-flex'));
+      // The ROOT takes its axis from 'display' too — same rule as the child
+      // frames, and for the same reason (see layoutAxisFor).
+      //
+      // This used to be gated on isFlex, so a NON-flex root got no auto-layout
+      // at all. Trap 24 in the altitude-figma-sync skill records that gate as
+      // the fix for al-tabs rendering its tablist and panel side by side, and
+      // justifies it as "non-flex roots keep their measured absolute
+      // geometry". They do not: NOTHING in this builder assigns x/y to a
+      // walked anatomy child, and resize() is never called on a component. So
+      // a non-flex root kept createComponent's untouched 100x100 default while
+      // its content ran outside its own bounds.
+      //
+      // Measured live on al-table (root 'display: block') before this change:
+      //   COMPONENT "State=Default, …"  layoutMode NONE  100x100
+      //     └─ FRAME "al-c-table__scroll"  x0 y0  243x100   <- 143px outside
+      // and the run reported maxVariantWidth/Height 100 — the number the
+      // presentation frame and prop sheet lay themselves out against.
+      //
+      // HORIZONTAL was the wrong axis for a block root; the answer is the
+      // RIGHT axis, not no axis. VERTICAL also happens to be what trap 24
+      // actually wanted for al-tabs (tablist ABOVE panel, matching its real
+      // 291x79), so this subsumes that fix rather than reverting it.
+      comp.layoutMode = layoutAxisFor(vroot && vroot.layout);
+      if (comp.layoutMode === 'HORIZONTAL' && layoutWrapsFor(vroot && vroot.layout)) {
+        try { comp.layoutWrap = 'WRAP'; } catch (e) { /* older plugin API */ }
+      }
+      // Alignment is the ONE thing that stays flex-only: 'align'/'justify' are
+      // flexbox properties, and on a non-flex node they carry their initial
+      // values ('normal'), which say nothing about how the box lays out.
       if (isFlex) {
-        comp.layoutMode = vroot.layout.direction === 'column' ? 'VERTICAL' : 'HORIZONTAL';
         comp.counterAxisAlignItems = vroot.layout.align === 'center' ? 'CENTER' : vroot.layout.align === 'flex-end' ? 'MAX' : 'MIN';
         comp.primaryAxisAlignItems = vroot.layout.justify === 'center' ? 'CENTER' : vroot.layout.justify === 'flex-end' ? 'MAX' : vroot.layout.justify === 'space-between' ? 'SPACE_BETWEEN' : 'MIN';
-        // HUG both axes — no pixel geometry exists to target a FIXED size
-        // against, and resize() is never called (Sizing Modes ref trap).
-        comp.primaryAxisSizingMode = 'AUTO';
-        comp.counterAxisSizingMode = 'AUTO';
-        bindNum(comp, 'itemSpacing', tokens['column-gap'] || tokens['gap'] || vrootTokens['column-gap'] || vrootTokens['gap']);
-        bindNum(comp, 'paddingTop', tokens['padding-top'] || tokens['padding'] || vrootTokens['padding-top'] || vrootTokens['padding']);
-        bindNum(comp, 'paddingBottom', tokens['padding-bottom'] || tokens['padding'] || vrootTokens['padding-bottom'] || vrootTokens['padding']);
-        bindNum(comp, 'paddingLeft', tokens['padding-left'] || tokens['padding'] || vrootTokens['padding-left'] || vrootTokens['padding']);
-        bindNum(comp, 'paddingRight', tokens['padding-right'] || tokens['padding'] || vrootTokens['padding-right'] || vrootTokens['padding']);
       }
+      // HUG both axes — no pixel geometry exists to target a FIXED size
+      // against, and resize() is never called (Sizing Modes ref trap). These
+      // must be set for EVERY root, not just flex ones: hug is what replaces
+      // createComponent's 100x100 default with the content's real size, and a
+      // non-flex root is exactly the case that was stuck at 100x100.
+      comp.primaryAxisSizingMode = 'AUTO';
+      comp.counterAxisSizingMode = 'AUTO';
+      // ROOT_WIDTH (figma.gen.json rootWidth): a FULL-BLEED component has a
+      // width its content does not imply. al-banner is 'inline-size: 100%' - a
+      // page-level bar - so hugging produced a ~729px stub whose width was
+      // just "however long the message happened to be", and whose two variants
+      // came out different widths. Hug is right for a card or a chip; it is
+      // wrong for a bar, and no contract fact distinguishes them (the known
+      // hug-vs-fill blind spot), so this is curation.
+      //
+      // true -> use the measured root box width; a number -> that width.
+      // Applied AFTER the hug assignment above so it wins, and the primary
+      // axis is put back to AUTO because resize() sets BOTH axes FIXED.
+      if (ROOT_WIDTH) {
+        const wantW = ROOT_WIDTH === true ? (vroot && vroot.box && vroot.box.w) : Number(ROOT_WIDTH);
+        if (wantW && wantW >= 1) {
+          rootFixedWidth = wantW;
+          try {
+            comp.resize(wantW, Math.max(comp.height, 1));
+            // Vertical root: width is the COUNTER axis, height the primary.
+            // Horizontal root: the reverse. Keep the height axis hugging so
+            // the bar still grows with its content.
+            if (comp.layoutMode === 'VERTICAL') { comp.counterAxisSizingMode = 'FIXED'; comp.primaryAxisSizingMode = 'AUTO'; }
+            else { comp.primaryAxisSizingMode = 'FIXED'; comp.counterAxisSizingMode = 'AUTO'; }
+          } catch (e) { misses.add('root-width-failed:' + variantName); }
+        }
+      }
+      // Padding and gap are box-model facts, not flex facts — a block
+      // container has padding too, and bindNum is a no-op when the token is
+      // absent, so binding unconditionally cannot invent one.
+      bindNum(comp, 'itemSpacing', tokens['column-gap'] || tokens['gap'] || vrootTokens['column-gap'] || vrootTokens['gap']);
+      bindNum(comp, 'paddingTop', tokens['padding-top'] || tokens['padding'] || vrootTokens['padding-top'] || vrootTokens['padding']);
+      bindNum(comp, 'paddingBottom', tokens['padding-bottom'] || tokens['padding'] || vrootTokens['padding-bottom'] || vrootTokens['padding']);
+      bindNum(comp, 'paddingLeft', tokens['padding-left'] || tokens['padding'] || vrootTokens['padding-left'] || vrootTokens['padding']);
+      bindNum(comp, 'paddingRight', tokens['padding-right'] || tokens['padding'] || vrootTokens['padding-right'] || vrootTokens['padding']);
 
       // T18: tokens is this ROW's resolved facts — anatomy root overridden by
       // conditionalBindings.variant[<variant>] then a state delta (compound
@@ -912,7 +1203,7 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         // per-path state overrides), the rest as coarse frames. The
         // icon/label recipe below is the NON-walk pilot path and is skipped
         // entirely.
-        await buildAnatomyChildren(vroot, comp, state, '0', tokens['color'] || ((vroot && vroot.tokens) ? vroot.tokens['color'] : null) || null, axisValues, (vroot && vroot.tokens) ? (vroot.tokens['color'] || null) : null, {});
+        await buildAnatomyChildren(vroot, comp, state, '0', tokens['color'] || ((vroot && vroot.tokens) ? vroot.tokens['color'] : null) || null, axisValues, (vroot && vroot.tokens) ? (vroot.tokens["color"] || null) : null, {}, {});
       } else {
       // T19: this row's content-color paint, resolved ONCE and shared by the
       // label text AND both slot icons — confirmed live against the real set
@@ -1156,14 +1447,22 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
     // of fanned-out axes for any component. Sizes are hug/content-driven —
     // pitch computed from the components AFTER building, same pattern as
     // build-page.mjs.
-    const stateAxisDef = OPS.axes.find((a) => a.name === 'State');
+    // The INTERACTION-state axis, whose value lives on v.state. A CASE axis can
+    // also legitimately be called "State" (Checkbox Group / Radio Group model
+    // Error and Disabled as attribute-driven cases, not pseudo-classes), and
+    // its value lives in v.axisValues instead — so match on the axis having no
+    // 'kind' as well as on the name, and compare by IDENTITY below. Matching on
+    // the name alone made valueForAxis return an undefined v.state for those
+    // components, which collapsed every column onto x=0 and stacked all three
+    // State variants on top of each other.
+    const stateAxisDef = OPS.axes.find((a) => a.name === 'State' && !a.kind);
     const colAxisDef = stateAxisDef || OPS.axes[0] || null;
     const rowAxisDefs = OPS.axes.filter((a) => a !== colAxisDef);
     const cols = colAxisDef ? colAxisDef.values : [null];
 
     function valueForAxis(v, axisDef) {
       if (!axisDef) return null;
-      if (axisDef.name === 'State') return v.state;
+      if (axisDef === stateAxisDef) return v.state;
       if (!axisDef.kind) return v.variant; // the enum (Variant-like) axis — the only non-State axis without a boolean 'kind'
       return (v.axisValues || {})[axisDef.name];
     }
