@@ -1,5 +1,5 @@
 {
-  "$comment": "Per-component Figma-generation config (see altitude-figma-generate skill). Molecules batch, 2026-08-26. anatomyCase: unsorted base. caseAxes: Sort pairs with sortDirection (none/ascending); Selectable auto-maps via isSelectable.",
+  "$comment": "Per-component Figma-generation config (see altitude-figma-generate skill). Molecules batch, 2026-08-26. anatomyCase: unsorted base. caseAxes: Sort pairs with sortDirection (none/ascending); Selectable auto-maps via isSelectable. sheet.cellWidth: this component's natural width exceeds the library's default 200px sheet pitch (sheet-style.mjs SHEET_CELL_WIDTH_PX), so its instances bled across the border-collapse grid lines and clipped their own helper text. Measured live 2026-08-27 from the widest instance in its own prop sheet, rounded up with breathing room. This is the documented per-component override the generator expects - do NOT re-measure instances inside the build (the sheet-style.mjs header explains why: ~30s per-call ceiling).",
   "anatomyCase": "Selectable=no,Sort=none",
   "caseAxes": [
     {
@@ -11,5 +11,8 @@
         "ascending": "Ascending"
       }
     }
-  ]
+  ],
+  "sheet": {
+    "cellWidth": 360
+  }
 }

@@ -1,4 +1,9 @@
 {
-  "$comment": "Per-component Figma-generation config (scripts/contracts/figma/component-config.mjs). textContent: the separator div renders a literal '/' — breadcrumbs-item.ts line ~117: `${this.hasSeparator === true ? html` <div class=\"al-c-breadcrumbs__separator\" aria-hidden=\"true\">${'/'}</div> ` : html``}` — curated here until the measurement pass captures leaf text generically (walkthrough, 2026-08-26).",
-  "textContent": { "al-c-breadcrumbs__separator": "/" }
+  "$comment": "Per-component Figma-generation config (scripts/contracts/figma/component-config.mjs). textContent: the separator div renders a literal '/' — breadcrumbs-item.ts line ~117: `${this.hasSeparator === true ? html` <div class=\"al-c-breadcrumbs__separator\" aria-hidden=\"true\">${'/'}</div> ` : html``}` — curated here until the measurement pass captures leaf text generically (walkthrough, 2026-08-26). sheet.cellWidth: this component's natural width exceeds the library's default 200px sheet pitch (sheet-style.mjs SHEET_CELL_WIDTH_PX), so its instances bled across the border-collapse grid lines and clipped their own helper text. Measured live 2026-08-27 from the widest instance in its own prop sheet, rounded up with breathing room. This is the documented per-component override the generator expects - do NOT re-measure instances inside the build (the sheet-style.mjs header explains why: ~30s per-call ceiling).",
+  "textContent": {
+    "al-c-breadcrumbs__separator": "/"
+  },
+  "sheet": {
+    "cellWidth": 210
+  }
 }
