@@ -32,7 +32,6 @@ export default {
     noCollapse: { control: 'boolean', description: 'grid only — keep columns at every width' },
     wrap: { control: 'boolean' },
     grow: { control: 'boolean' },
-    stretchItems: { control: 'boolean' },
     responsive: { control: 'boolean' },
     fullHeight: { control: 'boolean' }
   }
@@ -40,8 +39,8 @@ export default {
 
 /**
  * **Flow** — the default. A column, or a row with `direction="row"`. Use the
- * controls to explore `direction`, `gap`, `align`, `justify`, `wrap`,
- * `responsive` and `stretchItems`.
+ * controls to explore `direction`, `gap`, `align`, `justify`, `wrap` and
+ * `responsive`.
  *
  * A row of buttons is `<al-layout direction="row" justify="end" grow>`.
  */

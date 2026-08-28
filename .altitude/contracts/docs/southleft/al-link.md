@@ -74,11 +74,12 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 `hover`, `focus`, `active`, `disabled`
 
-## Slots (1)
+## Slots (2)
 
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
 | `(default)` | The link text | — | — |
+| `after` | Content to display after the link text, typically an icon (an external-link or chevron affordance). The link is `inline-flex` with a `--al-theme-space-xs` gap, and each size variant re-binds `--al-icon-width` / `--al-icon-height`, so a slotted icon is sized by the variant automatically. <al-link href="/docs">Read the docs<al-icon-chevron-right slot="after"></al-icon-chevron-right></al-link> | — | — |
 
 ## Events (0)
 

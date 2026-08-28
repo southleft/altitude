@@ -14,7 +14,7 @@
  *                    `.al-u-grid__item.col:N` classes
  *   bento          - a 12-column auto-row grid for asymmetric feature tiles
  *
- * Semantic components (checkbox-group, radio-group, toggle-button-group) must
+ * Semantic components (checkbox-group, radio-group) must
  * NOT re-implement any of this - they nest their slotted content in an
  * `<al-layout>` instead.
  */
@@ -207,19 +207,6 @@
    */
   .al-c-layout--full-height {
     min-height: var(--al-layout-min-height, 100vh);
-  }
-
-  /**
-   * Stretch items
-   * - Slotted children fill the main axis.
-   */
-  .al-c-layout--stretch-items {
-    width: 100%;
-
-    ::slotted(*) {
-      width: 100%;
-      --al-button-width: 100%;
-    }
   }
 
   /**

@@ -126,12 +126,6 @@ export class ALLayout extends ALElement {
   accessor grow: boolean;
 
   /**
-   * Stretch children to fill the main axis
-   */
-  @property({ type: Boolean })
-  accessor stretchItems: boolean;
-
-  /**
    * Collapse a row into a column on small screens
    */
   @property({ type: Boolean })
@@ -180,7 +174,6 @@ export class ALLayout extends ALElement {
       'al-c-layout--no-collapse': this.noCollapse === true,
       'al-c-layout--wrap': this.wrap === true,
       'al-c-layout--grow': this.grow === true,
-      'al-c-layout--stretch-items': this.stretchItems === true,
       'al-c-layout--responsive': this.responsive === true,
       'al-c-layout--full-height': this.fullHeight === true
     });

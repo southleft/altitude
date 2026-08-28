@@ -18,6 +18,21 @@
   }
 
   /**
+   * Trailing slot ("after") — typically an icon. The link itself is already
+   * `inline-flex` with a `--al-theme-space-xs` gap (the `al-link` mixin), so this
+   * box only has to center the glyph on the text baseline box; its SIZE comes from
+   * the `--al-icon-*` hooks each size variant re-binds above, and its COLOR from
+   * `currentColor` (icon.scss `fill: var(--al-icon-fill, currentColor)`), which is
+   * what keeps a trailing icon matching the link's own hover/disabled color.
+   */
+  .al-c-link__after {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /**
    * Link extra small
    */
   .al-c-link--xs {

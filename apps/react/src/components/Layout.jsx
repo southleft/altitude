@@ -127,11 +127,9 @@ export default function Dashboard() {
               </ALLayout>
               </ALLayout>
             </ALHeader>
-            <div className="al-l-dashboard__body">
-              <ALLayout variant="constrained" size="xl" gutter="sm">
+            <ALLayout variant="constrained" size="xl" gutter="sm" className="al-l-dashboard__body">
                 <Outlet />
-              </ALLayout>
-            </div>
+            </ALLayout>
           </div>
         </ALLayout>
     </div>

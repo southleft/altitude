@@ -156,11 +156,9 @@
         </al-layout>
         </al-layout>
       </al-header>
-      <div class="al-l-dashboard__body">
-      <al-layout variant="constrained" size="xl" gutter="sm">
+      <al-layout variant="constrained" size="xl" gutter="sm" class="al-l-dashboard__body">
         <slot></slot>
       </al-layout>
-      </div>
     </div>
   </al-layout>
 </main>

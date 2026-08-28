@@ -29,7 +29,7 @@ nests its slotted content in an `<al-layout>`.
 - Node id: `10:3195` (pinned)
 - [Open in Figma](https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-3195)
 
-## Props (14)
+## Props (13)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
@@ -44,7 +44,6 @@ nests its slotted content in an `<al-layout>`.
 | `noCollapse` | boolean | — | — | — |
 | `responsive` | boolean | — | — | — |
 | `size` | enum | `full`, `lg`, `md`, `sm`, `xl`, `xxl` | — | — |
-| `stretchItems` | boolean | — | — | — |
 | `variant` | enum | `bento`, `constrained`, `grid` | — | **Variant** (VARIANT): `Bento`, `Constrained`, `Default`, `Grid` |
 | `wrap` | boolean | — | — | — |
 
@@ -108,10 +107,6 @@ Collapse a row into a column on small screens
 Measure — the width of the centred content column under
 `variant="constrained"`. Defaults to the theme's container width.
 
-#### `stretchItems`
-
-Stretch children to fill the main axis
-
 #### `variant`
 
 Style variant
@@ -158,9 +153,9 @@ _No events declared._
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Variant=bento,Direction=column` (source: `measured`)
+**Anatomy case measured:** `Variant=default,Direction=default` (source: `measured`)
 
-### Root — `<div class="al-c-layout al-c-layout--bento al-c-layout--gap-md">`
+### Root — `<div class="al-c-layout al-c-layout--gap-md">`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |

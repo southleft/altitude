@@ -34,18 +34,20 @@ a {
 }
 
 /*
- * `.al-l-dashboard__body` stays a plain paint box on its own wrapper `<div>` —
- * it is NOT `<al-layout>` itself. `<al-layout>`'s host is `display: contents`
- * (layout.scss), so this padding would be a silent no-op if applied to the
- * `<al-layout variant="constrained">` host directly (no box is generated to
- * paint padding onto). It used to "work" only because a stray `display: flex`
- * on this class forced a real box on the host (unlayered CSS beats
- * `@layer al.component`, so it won the cascade over `:host { display: contents }`)
- * — that was a bug, not a feature; removing it without also moving the class
- * off the host made the padding disappear. Keep the class on the wrapper div.
+ * Dashboard body
+ * - The block rhythm is set through `--al-layout-padding`, the hook
+ *   `<al-layout>` exposes for exactly this. It needs no wrapper element and
+ *   no `display` override: `:host` is `display: contents`, but custom
+ *   properties still INHERIT through it to the shadow `.al-c-layout` box
+ *   that does the painting (layout.scss). The component also resets every
+ *   `--al-layout-*` hook on `::slotted(*)`, so this value cannot leak into
+ *   the nested layouts inside.
+ * - Block-only on purpose. Under `variant="constrained"` the inline insets
+ *   are gutter TRACKS; inline padding would stack on top of them and push
+ *   the content column off its measure.
  */
 .al-l-dashboard__body {
-  padding: var(--al-theme-space-lg) 0 var(--al-theme-space-super) 0;
+  --al-layout-padding: var(--al-theme-space-lg) 0 var(--al-theme-space-super) 0;
 }
 
 /*

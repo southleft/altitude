@@ -23,19 +23,18 @@
 
 /**
  * Dashboard body
- * - Applied to the `<al-layout variant="constrained">` host, whose `:host`
- *   is `display: contents` (layout.scss) — padding on a `contents` element
- *   is a no-op, there's no box to pad. `display: block` gives the host a
- *   real box to carry the padding; this is safe here specifically because
- *   the parent (`.al-l-dashboard__content`) is a plain block div, not a
- *   flex/grid context the al-layout would need to flatten into, and the
- *   inner `.al-c-layout--constrained` shadow div is its own `display: grid`
- *   box regardless of the host's display, sized `inline-size: 100%` so it
- *   fills the now-block host normally.
+ * - The block rhythm is set through `--al-layout-padding`, the hook
+ *   `<al-layout>` exposes for exactly this. No `display: block` crutch is
+ *   needed: `:host` is `display: contents`, but custom properties still
+ *   INHERIT through it to the shadow `.al-c-layout` box that paints
+ *   (layout.scss), and the component resets every `--al-layout-*` hook on
+ *   `::slotted(*)` so the value cannot leak into the layouts nested inside.
+ * - Block-only on purpose. Under `variant="constrained"` the inline insets
+ *   are gutter TRACKS; inline padding would stack on them and push the
+ *   content column off its measure.
  */
 .al-l-dashboard__body {
-  display: block;
-  padding: var(--al-theme-space-lg) 0 var(--al-theme-space-super) 0;
+  --al-layout-padding: var(--al-theme-space-lg) 0 var(--al-theme-space-super) 0;
 }
 
 /**

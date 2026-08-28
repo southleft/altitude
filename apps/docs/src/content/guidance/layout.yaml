@@ -44,11 +44,14 @@ dos:
   - >-
     Reach for `<al-layout>` FIRST when a new component needs its slotted
     children arranged. Nesting the slot content in a layout is the pattern
-    `al-checkbox-group`, `al-radio-group` and `al-toggle-button-group` all use.
+    `al-checkbox-group` and `al-radio-group` both use.
   - >-
     Use `--al-layout-padding` for the layout's own inset. `:host` is `display:
     contents`, so padding set on `<al-layout>` from outside is dropped — the
-    custom property is the supported way in.
+    custom property is the supported way in. It reaches the shadow box by
+    INHERITANCE, which `display: contents` does not interrupt, so it needs no
+    `display` override and no wrapper element. The four demo-app shells and the
+    homepage hero all set it this way.
   - >-
     Span grid children with the shared `.al-u-grid__item.col:N` classes. There
     is deliberately no second span system.
@@ -78,6 +81,12 @@ donts:
     Don't use `--al-layout-padding` for inline insets under
     `variant="constrained"`. The inline space there is the gutter tracks — use
     it for block padding only.
+  - >-
+    Don't wrap an `<al-layout>` in a `<div>` just to pad it, and don't force
+    `display: block` on the host to make padding stick. Both are the workaround
+    for a hook that already exists; five call sites had independently invented
+    them, each with its own comment re-deriving the `display: contents` trap.
+    Set `--al-layout-padding` on the layout itself instead.
 
 accessibility:
   - >-
@@ -115,6 +124,13 @@ sources:
     note: >-
       The escape hatch for a track list the props cannot express, and the note
       that three dashboard apps use it for sidebar shells.
+  - path: libs/al-web-components/components/layout/layout.scss
+    contains: '--al-layout-padding: initial'
+    note: >-
+      The `::slotted(*)` reset of every `--al-layout-*` hook — what makes
+      setting one on a layout safe, because the value cannot leak into the
+      layouts nested inside it. The cited symptom is a hero's own block rhythm
+      padding the button and chip rows within it.
   - path: libs/al-web-components/components/layout/layout.ts
     contains: al-layout-padding
     note: >-

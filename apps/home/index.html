@@ -108,10 +108,9 @@
             </al-text-block>
 
             <!-- KPI band. `al-stat`'s own doc comment recommends composing several
-                 instances inside a grid (or `variant="bento"`) — used here instead
-                 of a flex row, since `stretchItems` forces each slotted child to
-                 100% width, which would stack a wrapped row into one column
-                 per line rather than sharing it. -->
+                 instances inside a grid (or `variant="bento"`) rather than a flex
+                 row: a wrapped row would stack one KPI per line instead of sharing
+                 the width. A grid states the column count outright. -->
             <al-layout class="al-l-home__stats" variant="grid" columns="4" gap="lg" role="list" aria-label="Altitude by the numbers">
               <al-stat data-stat="components" label="Components" role="listitem"></al-stat>
               <al-stat data-stat="presets" label="Theme presets" role="listitem"></al-stat>
