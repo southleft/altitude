@@ -942,12 +942,31 @@ function carryForwardSlotExtensions(disk, derived) {
  * (kind/property/options/omit change together as one curated unit) — carry
  * it forward wholesale, matched by prop name, same transient/comparison-only
  * mutation as carryForwardSlotExtensions above. */
-function carryForwardPropAxisCuration(disk, derived) {
+function carryForwardPropAxisCuration(disk, derived, figmaContract) {
   if (!Array.isArray(disk?.props) || !Array.isArray(derived?.props)) return derived;
   const diskPropByName = new Map(disk.props.map((p) => [p.name, p]));
   for (const prop of derived.props) {
     const diskProp = diskPropByName.get(prop.name);
-    if (diskProp?.bindings?.figma?.axis || diskProp?.bindings?.figma?.omit) prop.bindings.figma = diskProp.bindings.figma;
+    if (diskProp?.bindings?.figma?.axis || diskProp?.bindings?.figma?.omit) {
+      prop.bindings.figma = diskProp.bindings.figma;
+      continue;
+    }
+    // `pairWith` (2026-08-27): the two sides deliberately use DIFFERENT names
+    // for the same axis, and no normalisation can bridge them — al-divider's
+    // code prop `variant` is the Figma set's `Orientation` axis, because
+    // "orientation" is what a designer reads and "variant" is what the CEM
+    // calls it. normKey only lowercases and strips non-alphanumerics (plus the
+    // is/has prefixes in NAME_ALIAS_PREFIXES), so the pairing is UNDERIVABLE
+    // and has to be curated. Only the PAIRING is hand-owned: kind and options
+    // are still read from the manifest's observed digest of the real set, so
+    // this can never assert a Figma axis that isn't there — if the named
+    // property disappears from Figma, the binding drops to null and drift
+    // reports it, exactly like an unaliased prop.
+    const pairWith = diskProp?.bindings?.figma?.pairWith;
+    if (pairWith) {
+      const derivedFromAlias = figmaPropBindingFor(pairWith, figmaContract);
+      prop.bindings.figma = derivedFromAlias ? { ...derivedFromAlias, pairWith } : null;
+    }
   }
   return derived;
 }
@@ -1007,7 +1026,11 @@ function runCheckDrift() {
       continue;
     }
 
-    const curated = carryForwardPropAxisCuration(disk, carryForwardSlotExtensions(disk, derived));
+    const curated = carryForwardPropAxisCuration(
+      disk,
+      carryForwardSlotExtensions(disk, derived),
+      manifest?.components?.[tag]?.figmaContract ?? null,
+    );
     const fields = driftedFields(disk, curated, ignoredThisRun);
     if (fields.length) {
       drifted++;
@@ -1128,7 +1151,11 @@ function runRefresh() {
     }
 
     const disk = JSON.parse(readFileSync(outPath, 'utf8'));
-    const merged = carryForwardPropAxisCuration(disk, carryForwardSlotExtensions(disk, derived));
+    const merged = carryForwardPropAxisCuration(
+      disk,
+      carryForwardSlotExtensions(disk, derived),
+      manifest?.components?.[tag]?.figmaContract ?? null,
+    );
     merged.status = disk.status;
     merged.version = disk.version;
     if (!measuredSpec) {
