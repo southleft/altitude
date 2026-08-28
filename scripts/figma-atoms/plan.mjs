@@ -461,7 +461,12 @@ export const PLAN = [
   // .al-is-disabled), not pseudo-classes, so they are attribute-driven State values.
   atom('al-checkbox-group', 'Checkbox Group',
     {
-      Orientation: enumAxis('variant', ['horizontal']),
+      // `direction` forwards to the group's own nested <al-layout> (2026-08-28).
+      // It used to measure `variant="horizontal"`, a prop that does not exist —
+      // so both Orientation cases rendered identically and the axis was dropped
+      // as un-backed, while the design library's "Horizontal" column kept
+      // showing it. Now it is a real prop and a real axis.
+      Orientation: { values: ['default', 'horizontal'], attrs: (v) => (v === 'horizontal' ? { direction: 'row' } : {}) },
       Legend: boolAxis('hideLegend', 'shown', 'hidden'),
     },
     {
@@ -473,7 +478,12 @@ export const PLAN = [
   // Deps: al-radio, al-field-note. Identical prop surface and SCSS to Checkbox Group.
   atom('al-radio-group', 'Radio Group',
     {
-      Orientation: enumAxis('variant', ['horizontal']),
+      // `direction` forwards to the group's own nested <al-layout> (2026-08-28).
+      // It used to measure `variant="horizontal"`, a prop that does not exist —
+      // so both Orientation cases rendered identically and the axis was dropped
+      // as un-backed, while the design library's "Horizontal" column kept
+      // showing it. Now it is a real prop and a real axis.
+      Orientation: { values: ['default', 'horizontal'], attrs: (v) => (v === 'horizontal' ? { direction: 'row' } : {}) },
       Legend: boolAxis('hideLegend', 'shown', 'hidden'),
     },
     {

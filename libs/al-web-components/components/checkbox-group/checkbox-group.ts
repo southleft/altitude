@@ -67,6 +67,22 @@ export class ALCheckboxGroup extends ALElement {
   accessor hideLegend: boolean;
 
   /**
+   * Direction
+   * - **column** (default) stacks the checkboxes
+   * - **row** lays them out inline, wrapping when they run out of room
+   *
+   * This does NOT re-introduce a hand-rolled arrangement prop. The group
+   * already renders an `<al-layout>` around its slotted items; this
+   * parameterises THAT layout rather than styling the items here, so
+   * `<al-layout>` remains the single arrangement primitive. The row form is
+   * a documented variant of the group in the design library (Checkbox Group
+   * example, "Horizontal" column), which is why it earns a prop instead of
+   * being left to each consumer to compose.
+   */
+  @property()
+  accessor direction: 'row' | 'column';
+
+  /**
    * Label
    * - Displays inside the legend
    */
@@ -182,7 +198,11 @@ export class ALCheckboxGroup extends ALElement {
     return html`
       <fieldset class="${componentClassNames}">
         ${this.label && html` <legend class="al-c-checkbox-group__legend" aria-describedby="${this.ariaDescribedBy}">${this.label}</legend> `}
-        <${this.layoutEl} gap="none">
+        <${this.layoutEl}
+          direction=${ifDefined(this.direction)}
+          gap=${this.direction === 'row' ? 'md' : 'none'}
+          ?wrap=${this.direction === 'row'}
+        >
           <slot></slot>
         </${this.layoutEl}>
         ${this.fieldNote || this.slotNotEmpty('field-note')

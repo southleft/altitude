@@ -61,6 +61,14 @@
           "description": "Hide legend?\n- If true, hides the legend from displaying",
           "type": "boolean"
         },
+        "direction": {
+          "description": "Direction\n- **column** (default) stacks the radios\n- **row** lays them out inline, wrapping when they run out of room\n\nThis does NOT re-introduce a hand-rolled arrangement prop. The group\nalready renders an `<al-layout>` around its slotted items; this\nparameterises THAT layout rather than styling the items here, so\n`<al-layout>` remains the single arrangement primitive. The row form is\na documented variant of the group in the design library (Radio Group\nexample, \"Horizontal\" column), which is why it earns a prop instead of\nbeing left to each consumer to compose.",
+          "type": "string",
+          "enum": [
+            "row",
+            "column"
+          ]
+        },
         "label": {
           "description": "Label\n- Displays inside the legend",
           "type": "string"
