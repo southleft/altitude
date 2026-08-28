@@ -213,7 +213,7 @@ const scaffoldComponent = {
           'al-toast-group were all removed for exactly this reason.',
         code: 'ERR_LAYOUT_SUSPECT',
         hint: 'If this genuinely owns semantics (fieldset/legend, roving keyboard selection, single-select ' +
-          'state — like checkbox-group/radio-group/toggle-button-group), proceed and be ready to justify ' +
+          'state — like checkbox-group/radio-group), proceed and be ready to justify ' +
           'the override plop itself will ask for.',
       });
     }

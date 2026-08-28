@@ -11,7 +11,15 @@ border-collapse table) — via `scripts/contracts/generate-figma.mjs`.
 
 Sibling skills: `altitude-figma-sync` (hand-repairing the library, token audits — its
 traps 1/3/27/32 apply here too); `altitude-component-authoring` (creating the CODE
-component this pipeline reads).
+component this pipeline reads); **`altitude-figma-repair`** (patch ONE wrong fact in an
+existing set in place).
+
+**Do not generate to fix one wrong binding.** Generation deletes and rebuilds the set,
+minting a new component-set node id — every pinned id (parity manifest, contract
+`bindings.figma.nodeId`, nested instances in other components' sets) goes stale, and the
+prop sheet must be re-run or it renders ghosts (trap 2). If the set's STRUCTURE is right
+and a colour / axis name / token binding / variant label is wrong, use
+`altitude-figma-repair` instead.
 
 **Can this component be generated at all? Check `.altitude/contracts/COVERAGE.md`
 FIRST** — the per-component table of real sets, anatomy readiness, composition, and
@@ -59,6 +67,112 @@ the OPTIONAL `figma.gen.json` (layer 2 above), merged over defaults in
 (`bindings.figma.kind: "VARIANT"` + `property`), not a hard-coded prop named
 `variant`.
 
+## CSS → Figma Auto Layout (the translation the generator performs)
+
+Auto layout is the single largest source of "the set looks nothing like the app".
+This is the whole mapping. Anything not in this table does not reach Figma at all.
+
+| Figma property | Source | Notes |
+| --- | --- | --- |
+| `layoutMode` | **derived** from `anatomy[].layout.display` via `layoutAxisFor()` in `build-set-code.mjs` | See the display→axis rule below. NOT from `direction` alone. |
+| `layoutWrap` | **derived** from `layout.wrap` (+ always for `display: grid`) | Figma honours it on HORIZONTAL frames only; the emitters gate on the resolved axis. |
+| `itemSpacing` | **derived** — `bindNum` to the `column-gap`/`gap` token | Bound to a Figma variable, not a literal. |
+| `paddingTop/Bottom/Left/Right` | **derived** — bound to the `padding-*`/`padding` tokens | A `calc()` multiple of a token is silently dropped (Figma variables can't do arithmetic) — sync skill trap 22. |
+| `counterAxisAlignItems` | **derived** from `layout.align`, flex nodes only | Lossy 3-value map: `stretch` and `baseline` both collapse to `MIN`. Costs nothing today (3 and 1 nodes respectively across the whole set). |
+| `primaryAxisAlignItems` | **derived** from `layout.justify`, flex nodes only | Lossy 4-value map: `space-around`/`space-evenly` collapse to `MIN`. Zero occurrences today. |
+| `primaryAxisSizingMode` / `counterAxisSizingMode` | **hardcoded `'AUTO'`** everywhere | Hug on both axes. See "hug vs fill" below — this is a known limitation, not a decision you should replicate by hand. |
+| `layoutSizingHorizontal` / `layoutSizingVertical` | **hardcoded `'FIXED'`**, nested instances only | Stops instances stretching. `'FILL'` is never set on component anatomy. |
+| `counterAxisAlignContent`, `clipsContent`, `layoutAlign`, `layoutGrow`, absolute positioning | **unmapped** | No contract fact backs them. Don't hand-add them to a generated set; it will be wiped on the next run. |
+
+### The display→axis rule (trap 24, generalised — fixed 2026-08-27)
+
+`layout.direction` is `flex-direction`, and **`getComputedStyle` returns its initial
+value `'row'` on every non-flex element.** 432 of the 433 non-flex anatomy nodes in
+the contract set therefore carry a meaningless `direction: 'row'`. Reading it without
+gating on `display` is what laid al-tabs' tablist and its panel side by side (557x40
+against a real 291x79) — recorded as trap 24 in `altitude-figma-sync`.
+
+That trap was fixed on the variant ROOT only. The same bug was live on every
+composite's inner frames until 2026-08-27: **327 nodes across 53 of 103 components**
+were emitting HORIZONTAL for block-level containers. `layoutAxisFor()` now maps:
+
+- `flex` / `inline-flex` → `direction === 'column' ? VERTICAL : HORIZONTAL` (the only
+  case where `direction` may be read)
+- `block`, `flow-root`, `list-item`, `table`, `table-*-group`, `table-cell`,
+  `table-caption`, **and anything unrecognised** → `VERTICAL` (block boxes stack down)
+- `inline`, `inline-block`, `table-row` → `HORIZONTAL`
+- `grid` → `HORIZONTAL` + `layoutWrap: 'WRAP'`
+
+**Never map a non-flex node to `layoutMode: 'NONE'`** to "keep its measured geometry."
+It has none. Nothing in `buildAnatomyChildren` assigns x/y to a walked child, and
+`resize()` is never called on a component, so a NONE node keeps `createFrame`/
+`createComponent`'s untouched 100x100 default while its content spills outside its own
+bounds. An axis is always the right answer; hug sizing is what gives it a real size.
+
+This applies to the variant ROOT as well — measured live on al-table (root
+`display: block`) before the fix:
+
+```
+COMPONENT "State=Default, …"   layoutMode NONE   100x100
+  └─ FRAME "al-c-table__scroll"   x0 y0   243x100      <- 143px outside the component
+```
+
+and that run reported `maxVariantWidth/Height: 100` — the number the presentation frame
+and the prop sheet lay themselves out against. After: `VERTICAL`, `AUTO/AUTO`, 243x100,
+no overflow on any of the 12 components, `maxVariant` 301x162.
+
+`primaryAxisSizingMode`/`counterAxisSizingMode` and the padding/gap binds therefore run
+for EVERY root, not just flex ones. Only `counterAxisAlignItems`/`primaryAxisAlignItems`
+stay flex-gated, because `align`/`justify` are flexbox properties that carry meaningless
+initial values (`normal`) on a non-flex box.
+
+### Hug vs fill — the generator's known blind spot
+
+The generator sets `primaryAxisSizingMode`/`counterAxisSizingMode` to `'AUTO'` (hug) on
+every frame it creates and **never sets `layoutSizing* = 'FILL'` on component anatomy.**
+It cannot infer fill: a contract carries no pixel geometry for containers, and
+`resize()` is deliberately never called on components (it sets BOTH axes FIXED as a
+side effect — the ordering trap in the external Sizing Modes reference).
+
+This is exactly the defect the Figma MCP server flags as a top recurring issue —
+*"elements using hug contents instead of fill container (causes lopsided layouts)"*.
+So: **when a generated set looks lopsided, suspect hug before you suspect anything
+else**, and fix it as a generic rule or as curation, never by hand-editing the canvas.
+
+A CSS fact that MEANS fill, and currently reaches Figma as hug:
+- `flex: 1` / `flex-grow: 1` on a child — no contract fact captures it today
+- `width: 100%` on a child of a flex row
+- `align-items: stretch` on the container (collapses to `MIN`, 3 nodes)
+
+If you need one of these, add the fact to `anatomyNode.layout` in
+`contract.schema.json`, populate it in `measure-lib.js` + `emit-contracts.mjs`, carry
+it through `derive-ops.mjs`, and emit it in BOTH emitters in `build-set-code.mjs`.
+That five-file path is the one `wrap` took; copy it.
+
+### How `al-layout` pairs with auto layout
+
+`<al-layout>` is the library's single arrangement primitive and **has no Figma set of
+its own, by design** (`COVERAGE.md:19`). `nested-set-not-found:al-layout` in a run's
+`missingVars` is expected noise — but "expected" means *do not go build a set for it*,
+NOT *ignore the arrangement*. An `al-layout` in a composite's anatomy degrades to a
+coarse auto-layout frame, and that frame is where the component's real arrangement
+lives, so it must translate correctly:
+
+- Its host is `:host { display: contents }`, which generates **no box**. The measured
+  anatomy therefore records the inner `div.al-c-layout`, not the host — that inner div
+  is the node whose `display`/`gap`/`padding` facts you are reading.
+- The default flow variant is `display: flex; flex-direction: column; align-items:
+  stretch; gap: var(--al-theme-space)` → VERTICAL, MIN counter-align (stretch collapses),
+  `itemSpacing` bound to the space token.
+- `variant="grid"` / `"bento"` are `display: grid` → HORIZONTAL + WRAP.
+- `variant="constrained"` is a three-track grid whose outer tracks are fluid GUTTERS,
+  not padding. Auto layout has no equivalent; expect it to degrade.
+- Its `wrap` prop is now a real contract fact and reaches Figma as `layoutWrap`.
+
+Known gap: `al-layout`'s own contract pins `anatomyCase: "Variant=bento,Direction=column"`,
+so the recorded root is the GRID variant and the default flow behaviour is captured
+nowhere. Re-measure from the default case before trusting its contract.
+
 ## Per-component recipe (the walkthrough loop)
 
 ```bash
@@ -91,7 +205,9 @@ node scripts/figma-atoms/export-png.mjs <sheetFrameId> out.png --scale 1.5
 
 Read `missingVars` in every run's output — the generator degrades honestly and
 reports every miss; an empty array is the goal, and `nested-set-not-found:al-layout`
-is expected noise (arrangement primitive, no set of its own, by design).
+is expected noise (arrangement primitive, no set of its own, by design — but see
+"How `al-layout` pairs with auto layout" below: expected means don't build a set for
+it, NOT ignore its arrangement).
 
 ## Owner conventions (decided during the walkthrough — do not re-litigate)
 

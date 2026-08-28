@@ -73,7 +73,7 @@ code, and each is machine-checkable.
 5. You must set the arrangement of sibling components with \`<al-layout>\` and
    its props, not with hand-rolled flex or grid on a wrapper of your own, and
    not by inventing a \`*-group\` wrapper. The groups that exist
-   (\`al-checkbox-group\`, \`al-radio-group\`, \`al-toggle-button-group\`) exist
+   (\`al-checkbox-group\`, \`al-radio-group\`) exist
    for their SEMANTICS — fieldset/legend, roving keyboard selection,
    single-select state — not for their spacing.
 6. You must register the elements by the path that matches what you are

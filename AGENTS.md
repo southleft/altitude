@@ -280,14 +280,17 @@ something a layout box cannot express:
 |---|---|
 | `al-checkbox-group` | `<fieldset>` / `<legend>` grouping, field-note + error-note, cascades `isRequired` / `isDisabled` to children |
 | `al-radio-group` | the above, plus arrow-key roving selection and single-selection enforcement |
-| `al-toggle-button-group` | single-select state and click-outside deselection |
 
 `al-button-group`, `al-layout-container`, `al-layout-section`, `al-bento-grid`
 and `al-split-content` have all been **removed** — none owned semantics, only
-arrangement. `al-chip-group` and `al-toast-group` were removed too: they DID
-own behaviour (the "+N" overflow counter; viewport-fixed positioning and
-auto-close), but nothing in the system used it, so the components were cut
-rather than carried. Chips now sit in an `<al-layout direction="row" wrap>`,
+arrangement. `al-chip-group`, `al-toast-group` and `al-toggle-button-group`
+were removed too: they DID own behaviour (the "+N" overflow counter;
+viewport-fixed positioning and auto-close; single-select state and
+click-outside deselection), but nothing in the system used it, so the
+components were cut rather than carried. `al-toggle-button-group` went on
+2026-08-27 at the owner's call, after its Figma page was deleted — a row of
+`al-toggle-button` now sits in an `<al-layout direction="row" gap="none">` and
+whatever owns the selection state owns it explicitly. Chips now sit in an `<al-layout direction="row" wrap>`,
 and a toast positions itself. The replacements, in order: `al-button-group` →
 `<al-layout direction="row">`, `al-layout-container` →
 `<al-layout variant="constrained">`, `al-layout-section` → a plain child of the

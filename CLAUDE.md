@@ -129,12 +129,11 @@ All components follow consistent patterns:
   `orientation`/`gap`/`alignment` prop or hand-rolling flex/grid for slotted
   children. **Do not create new `*-group` wrapper components** — a wrapper that
   owns no behavior, ARIA relationship, or state is `<al-layout>` with props.
-  Groups that survive (`checkbox-group`, `radio-group`,
-  `toggle-button-group`) exist for their semantics — fieldset / legend, roving
-  keyboard selection, single-select state — not their spacing.
+  Groups that survive (`checkbox-group`, `radio-group`) exist for their
+  semantics — fieldset / legend, roving keyboard selection — not their spacing.
   `al-button-group`, `al-layout-container`, `al-layout-section`,
-  `al-bento-grid`, `al-split-content`, `al-chip-group` and `al-toast-group`
-  have been **removed**, along with the `sidebar-*` variants — a page declares
+  `al-bento-grid`, `al-split-content`, `al-chip-group`, `al-toast-group` and
+  `al-toggle-button-group` have been **removed**, along with the `sidebar-*` variants — a page declares
   its own track list via `--al-layout-template`. See "Arrangement vs. semantics" in AGENTS.md.
 
 ### Registry (T4.6)

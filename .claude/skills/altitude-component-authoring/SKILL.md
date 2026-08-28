@@ -1,6 +1,6 @@
 ---
 name: altitude-component-authoring
-description: "Add a new al- component or change an existing one's public API in libs/al-web-components. Triggers: 'add a new component', 'create a component', 'new al- component', 'component checklist', 'update a component's API', 'scaffold a component', 'ship a component PR'. The checklist is fragmented across plop's console output, AGENTS.md's deliverable table, and steps documented NOWHERE (parity:seed, guidance YAML, llms:build, a11y:report, a changeset) — this skill is the single ordered flow plus every trap that costs an hour to find. Read this BEFORE running plop."
+description: "Add a new al- component or change an existing one's public API in libs/al-web-components, and the rule against hand-rolling arrangement anywhere in the repo. Triggers: 'add a new component', 'create a component', 'new al- component', 'component checklist', 'update a component's API', 'scaffold a component', 'ship a component PR', plus 'wrap this in a div for spacing', 'add padding/margin around an al-layout', 'add a spacing/orientation/alignment prop', or any inline width/height/flex/margin style on a slotted child. The checklist is fragmented across plop's console output, AGENTS.md's deliverable table, and steps documented NOWHERE (parity:seed, guidance YAML, llms:build, a11y:report, a changeset) — this skill is the single ordered flow plus every trap that costs an hour to find. Read this BEFORE running plop, and BEFORE writing any wrapper element that carries only spacing, direction or sizing."
 ---
 
 # altitude-component-authoring
@@ -32,6 +32,42 @@ semantics — that gate is `LAYOUT_SUSPECT` in
 `libs/al-web-components/plop/plop-config.js:9` and
 `libs/al-react/plop/plop-config.js:9`. Don't fight it; if it's really layout,
 stop here.
+
+### Never hand-roll arrangement — use the primitive, or fix the primitive
+
+The `LAYOUT_SUSPECT` gate only catches people who reach for `plop`. The far
+more common failure is quieter: writing a wrapper element with a bit of CSS on
+it instead of using what already exists. **A `<div>` that carries only spacing,
+direction, or sizing is a bug**, whether it lives in a component's shadow root,
+in a page, or in a docs example. It is invisible to every gate in this
+checklist, so it is on you.
+
+These four are the ones that actually happen in this repo. Audited 2026-08-27;
+counts are real, and each has a correct alternative that already ships:
+
+| Instead of | Write | Why |
+| --- | --- | --- |
+| A wrapper element whose only job is padding around an `<al-layout>` — plus a `display: block` to make padding stick | `--al-layout-padding` on the `<al-layout>` itself | 5 sites hand-rolled this and each wrote its own multi-line comment re-deriving the `:host { display: contents }` trap: `apps/astro/src/styles/dashboard.css:37-49`, `apps/react/src/components/Layout.scss:21-29`, `apps/svelte/src/lib/Layout.css:21-31`, `apps/angular/src/app/app.component.scss:36-39`, `apps/home/src/home.scss:110-119`. The hook already existed; nobody found it. |
+| `<div style="margin-top: var(--al-theme-space-xl)">` around each sibling | A parent `<al-layout gap="xl">` | 77 of these across 18 files in `apps/southleft/src/pages` (~145 margin-only inline styles repo-wide). Each one is a meaningless element the DS exists to delete. |
+| `style="height:100%; box-sizing:border-box"` on a card inside a grid layout | `.al-u-grid__item` (optionally `.col:N`) on that child | 26 sites. `.al-u-grid__item` is `display: grid`, which stretches the child on BOTH axes — the reason it is grid and not flex is written out at `styles/core/utilities/grid.scss` (a flex item only stretches on the CROSS axis, so no flex direction gets both). The inline style is re-solving a solved problem, badly. |
+| `style="width:100%"` / `style="flex:1"` on a slotted child | Check `al-layout`'s props first; if none fit, treat it as evidence and raise it | `stretchItems` used to look like the answer. It was REMOVED in v2 — zero call sites repo-wide, and the only two comments mentioning it explained why it didn't fit. Don't reintroduce it under a new name. |
+| Re-implementing `direction`/`gap`/`align` inside a new component's shadow root | Nest the slotted content in `<al-layout>` | `checkbox-group`, `radio-group` and `toggle-button-group` all do it correctly — see `checkbox-group.ts:185`. They keep only their SEMANTICS (fieldset/legend, roving selection). |
+
+**When the primitive genuinely cannot express it**, the answer is still not an
+inline style. In order of preference: (1) an existing escape-hatch custom
+property — `--al-layout-gap`, `--al-layout-padding`, `--al-layout-template`;
+(2) a change to `al-layout` itself, with evidence; (3) a documented exception
+with a comment saying why. Option 2 needs the evidence *first* — a proposal to
+grow `al-layout` toward Figma's Auto Layout panel (padding props,
+`.al-u-fill`/`.al-u-hug`, clip, align-content) was killed on 2026-08-27
+because an audit of every call site found the demand wasn't there; see
+`.mm/specs/2026-08-27-layout-figma-auto-layout-parity/spec.md` § "Rejected —
+and why" before re-proposing any of it.
+
+**Changing an existing component's API counts too.** If you are adding a prop
+that names an arrangement concept (`spacing`, `orientation`, `alignment`,
+`fullWidth`, `stacked`), stop and check whether `<al-layout>` already says it.
+Full rule: AGENTS.md "Arrangement vs. semantics".
 
 **Where** — base library vs. a brand layer. `libs/al-web-components/plop/plop-config.js`
 prompts for a target when `.altitude/ds-projects.json` declares more than one

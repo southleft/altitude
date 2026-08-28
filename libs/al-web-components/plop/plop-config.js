@@ -10,7 +10,7 @@ const LAYOUT_SUSPECT = /(?:^|-)((?:button|chip|toast|tag|card|avatar|badge|icon|
 
 // Groups that survive do so for semantics (fieldset/legend, roving selection,
 // single-select state) — they already exist; never re-scaffold them.
-const EXISTING_SEMANTIC_GROUPS = ['checkbox-group', 'radio-group', 'toggle-button-group'];
+const EXISTING_SEMANTIC_GROUPS = ['checkbox-group', 'radio-group'];
 
 /**
  * WHERE A COMPONENT CAN BE SCAFFOLDED.

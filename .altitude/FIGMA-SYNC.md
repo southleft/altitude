@@ -158,21 +158,36 @@ and are legitimately synced. Only `z-index` and `breakpoint` are genuinely code-
 alongside `animation.duration.*` / `animation.timing.*` (no Figma variable type) and
 `border.radius.round` (a `%` Figma's unitless FLOAT cannot hold).
 
-**Opacity is a FRACTION on the Figma side — `opacity/40` = `0.4`.**
+**Opacity is a PERCENTAGE on the Figma side — `opacity/40` = `40`, and the code's `0.4`
+is the SAME value. The two sides differ by a factor of 100 by design.**
 
-> **Corrected 2026-08-22.** This paragraph previously said the opposite ("`opacity/40` = `40`,
-> not `0.4` … do not 'fix' it in either direction"). That was an observation of the file
-> BEFORE `scripts/figma-var-fixes.mjs` ran; that script then deliberately rewrote the four
-> opacity variables to fractions (`:39-43`, rationale: "Figma opacity fields are 0-1 … `40`
-> bound to a layer opacity is meaningless"). Verified against the live library snapshot
-> `.altitude/figma-sync/figma-live-vars.json`: `opacity/40` → `0.4000000059604645` (float32
-> of 0.4). Fractions are correct and match the code; the old wording would have had the next
-> agent "fix" a correct value back to broken.
+> **Re-corrected 2026-08-27, this time by measuring what a binding RENDERS rather than
+> what it stores.** The 2026-08-22 correction below was wrong, and the wording it replaced
+> was right.
+>
+> Proven live against `al-field-note` `State=Disabled` — a TEXT node whose `opacity` is
+> bound to `theme/opacity/disabled` → `opacity/40`:
+>
+> | `opacity/40` stored as | resulting `node.opacity` | |
+> |---|---|---|
+> | `0.4` | `0.004` | 0.4% — effectively invisible |
+> | `40`  | `0.4`   | 40% — correct |
+>
+> Figma's `opacity` FIELD is 0–1, but a variable BOUND to it is resolved in the unit the
+> UI displays (percent) and divided by 100. The 2026-08-22 correction reasoned from the
+> field's 0–1 range and then "verified" only that the STORED number equalled the code
+> token (`0.4 === 0.4`) — a value comparison that cannot see the 100x the binding applies.
+> That is the trap: for opacity, agreement in the audit means breakage on the canvas.
+>
+> The four `setValue('opacity/*', …)` calls in `scripts/figma-var-fixes.mjs` that enforced
+> fractions have been removed (2026-08-27); re-adding them re-breaks every disabled state
+> in the library. `opacity/80` (code `0.8`) was missing from Figma entirely and was created
+> as `80` in the same pass.
 
-Both sides now store fractions, so opacity is a straight value comparison, not a unit
-convention. `Southleft V5` was seeded the same way
-(`scripts/figma-southleft/push-variables.mjs`, which keeps an `--opacity-percent` escape
-hatch should this ever be revisited).
+So opacity is a UNIT CONVENTION, not a straight value comparison: an audit must multiply
+the code fraction by 100 before comparing, and report drift only on the converted values.
+`Southleft V5` was seeded via `scripts/figma-southleft/push-variables.mjs`, whose
+`--opacity-percent` escape hatch is the correct mode for that file too.
 
 **Southleft is no longer dark-only.** The `brands` matrix in
 `styles/tokens-config.v5.mjs:591-603` builds exactly four bundles — 2 brands x 2 modes.

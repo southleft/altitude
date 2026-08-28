@@ -175,6 +175,12 @@ as `contractDrifted` even when code and Figma both still match. See
 - Icon-only is a SEPARATE set (`Button (Icon)`), not an axis.
 - Focus renders as a **2px stroke**, not a CSS-style outline.
 
+**Fixing ONE wrong fact in an existing set is a different skill.** When the set is broadly
+right and a single colour / axis / binding / typo is wrong, read
+**`altitude-figma-repair`** — the contract-driven in-place patch loop (observe → patch →
+`parity:refresh` → re-derive → stamp), plus the ghost-node-id, opacity-percentage and
+unbound-fill traps. Repair keeps the set's node id; generation does not.
+
 **Generating a set FROM a contract is a different skill.** The conventions
 above are for HAND-repairing the library. Everything about
 `scripts/contracts/generate-figma.mjs` — generator module layout,
@@ -204,13 +210,16 @@ Useful tools: `figma_analyze_component_set` (variant axes + per-state diffs + pr
 4. `setBoundVariableForPaint` keeps the LITERAL colour you pass as a fallback and Figma
    does not always refresh it — pass black and a variant can render **black** despite a
    correct binding. Resolve the variable inside Figma and use its real RGBA as the literal.
-5. **Opacity variables are FRACTIONS (0–1) — `opacity/40` = `0.4`, matching the code.**
-   (Corrected 2026-08-22 — this trap previously said the opposite, describing the file
-   BEFORE `scripts/figma-var-fixes.mjs:39-43` deliberately rewrote the four opacity
-   variables to fractions; verified live: `opacity/40` → `0.4000000059604645`.) Opacity
-   is a straight value comparison now, no unit conversion in either direction. Do not
-   "fix" a fraction back to a percentage. See `.altitude/FIGMA-SYNC.md` § "Opacity is a
-   FRACTION on the Figma side".
+5. **Opacity variables are PERCENTAGES (0–100) — `opacity/40` = `40`, which IS the code's
+   `0.4`. The two sides differ by 100x on purpose.** A variable bound to a node's
+   `opacity` is resolved in the unit the UI shows (percent) and divided by 100, even
+   though the FIELD is 0–1. Measured live 2026-08-27 on al-field-note `State=Disabled`:
+   stored `0.4` → `node.opacity === 0.004` (invisible); stored `40` → `0.4` (correct).
+   **Never compare opacity by value — convert first.** This trap has now flipped twice,
+   because a stored-value check (`0.4 === 0.4`) *passes* precisely when the canvas is
+   broken; the only valid verification is to bind it and read back `node.opacity`. The
+   fraction-enforcing `setValue` calls in `scripts/figma-var-fixes.mjs` were removed
+   2026-08-27. See `.altitude/FIGMA-SYNC.md` § "Opacity is a PERCENTAGE on the Figma side".
 
 **CSS reading**
 6. `shadowRoot.textContent` does NOT include slotted light-DOM text. Resolve
@@ -365,9 +374,30 @@ Empty State (-20px, paragraph margins auto-layout cannot reproduce), Pagination 
 23. **Visually-hidden also comes as a 1px CLIP**, not just `al-u-is-vishidden`.
     checkbox-group's hidden legend measures 1x1 and kept full-size glyphs, printing the
     legend across the first checkbox. Treat text in a ≤2x2 box as hidden.
-24. **Never force an auto-layout onto a root that is not flex in the browser.** Defaulting
-    to HORIZONTAL laid al-tabs' tablist and its panel side by side — 557x40 against a real
-    291x79. Non-flex roots keep their measured absolute geometry.
+24. **SUPERSEDED 2026-08-27 — read the replacement below before acting on this.** The
+    original trap read: *"Never force an auto-layout onto a root that is not flex in the
+    browser. Defaulting to HORIZONTAL laid al-tabs' tablist and its panel side by side —
+    557x40 against a real 291x79. Non-flex roots keep their measured absolute geometry."*
+
+    The **symptom** was real; the **diagnosis and the fix were both wrong**, and the last
+    sentence is false. Non-flex roots have no measured absolute geometry to keep: nothing
+    in the generator assigns x/y to a walked anatomy child, and `resize()` is never called
+    on a component. Turning auto-layout OFF just left the component at
+    `createComponent`'s untouched 100x100 default with its content spilling outside it —
+    measured live on al-table, whose root frame was 243px wide inside a 100x100 component,
+    and whose run reported `maxVariantWidth/Height: 100` to the prop sheet.
+
+    The real cause was reading `layout.direction` (i.e. `flex-direction`) on a non-flex
+    node, where `getComputedStyle` returns the initial value `'row'` — true of 432 of the
+    433 non-flex anatomy nodes in the set. **The answer is the RIGHT axis, not no axis:**
+    map CSS `display` to the axis its children actually stack on (`layoutAxisFor()` in
+    `scripts/contracts/figma/build-set-code.mjs`). A block box stacks DOWN, so al-tabs
+    becomes VERTICAL — tablist ABOVE panel, which is what this trap wanted all along.
+    Verified on canvas: `al-c-tabs__header` at y0, `al-c-tabs__body` at y36, component
+    426x168, zero overflow.
+
+    See the "CSS → Figma Auto Layout" section of the `altitude-figma-generate` skill for
+    the full mapping.
 25. **A text node auto-resizes and throws away a measured box that is taller than one
     line** (al-range's 64px label on a 24px line → component 40px short). Pin the size —
     but CAP it at ~3 lines: some nodes carry text while their box is really a layout

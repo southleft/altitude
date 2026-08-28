@@ -88,7 +88,6 @@ Column key — **Real set**: parity-manifest mapping; **Anatomy**: measured = ge
 | al-theme | — | — | — | BLOCKED: no measured anatomy |
 | al-time-selector-list | — | measured | — | ready (no real set) |
 | al-toast | — | measured | al-button, al-icon, al-progress | ready (no real set) |
-| al-toggle-button-group | Toggle Button Group | measured | al-layout, al-toggle-button | composite, 10 variants [al-layout✗ al-toggle-button✓] |
 | al-toggle-button | Toggle Button | measured | al-menu, al-popover | 10 variants |
 | al-toggle | Toggle | measured | — | 5 variants |
 | al-tooltip | — | measured | al-button | ready (no real set) |
