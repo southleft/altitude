@@ -71,5 +71,4 @@ export * from './time-selector-list/time-selector-list';
 export * from './toast/toast';
 export * from './toggle/toggle';
 export * from './toggle-button/toggle-button';
-export * from './toggle-button-group/toggle-button-group';
 export * from './tooltip/tooltip';

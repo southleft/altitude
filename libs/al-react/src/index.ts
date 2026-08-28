@@ -104,5 +104,4 @@ export * from './components/TimeSelectorList';
 export * from './components/Toast';
 export * from './components/Toggle';
 export * from './components/ToggleButton';
-export * from './components/ToggleButtonGroup';
 export * from './components/Tooltip';

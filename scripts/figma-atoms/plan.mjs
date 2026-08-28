@@ -635,17 +635,6 @@ export const PLAN = [
         + 'component. Its content is also viewport-anchored (inset-block-start:15vh, '
         + 'translateX(-50%), max-width 560px) rather than laid out in the document.',
     }),
-  // Deps: al-toggle-button (an ATOM already in Figma). No states of its own.
-  atom('al-toggle-button-group', 'Toggle Button Group',
-    {
-      Variant: enumAxis('variant', ['background']),
-      Orientation: enumAxis('orientation', ['vertical']),
-      Gap: enumAxis('gap', ['sm']),
-    },
-    {
-      slots: () => [{ html: '<al-toggle-button>One</al-toggle-button><al-toggle-button>Two</al-toggle-button><al-toggle-button>Three</al-toggle-button>' }],
-      states: ['Default'],
-    }),
 
   // Deps: al-input (a MOLECULE, instanced by name), al-icon, al-field-note.
   // Measured CLOSED: the open panel needs al-dropdown-panel + al-list, neither of which
