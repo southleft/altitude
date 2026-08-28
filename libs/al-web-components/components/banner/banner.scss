@@ -9,15 +9,16 @@
   }
 
   /**
-   * Full-width, edge-to-edge announcement bar. Neutral surface with a
-   * tone-colored icon — mirrors al-alert/al-toast's tone treatment
-   * ("reusing alert-tone tokens") rather than inventing a new palette.
-   * No radius/shadow: this is a page-level bar, not a card.
+   * Full-width, edge-to-edge announcement bar. Neutral surface with an
+   * accented leading icon. No radius/shadow: this is a page-level bar, not a
+   * card.
+   *
+   * 1. This element is the component's BOX only — surface, padding, bottom
+   *    rule. Arrangement lives in the `<al-layout>` inside it (see banner.ts),
+   *    so there is deliberately no flex here.
    */
   .al-c-banner {
-    display: flex;
-    align-items: center;
-    gap: var(--al-theme-space);
+    display: block; /* 1 */
     inline-size: 100%;
     box-sizing: border-box;
     padding: var(--al-theme-space-sm) var(--al-theme-space);
@@ -29,39 +30,38 @@
     }
   }
 
+  /**
+   * Leading icon
+   * 1. The single colour hook. The banner has no tone `variant`; a consumer
+   *    retones it by pointing this at another content token.
+   */
   .al-c-banner__icon {
-    --al-icon-width: #{var(--al-theme-icon)};
-    --al-icon-height: #{var(--al-theme-icon)};
-    --al-icon-fill: var(--al-theme-color-content-info-default);
+    /**
+     * 24px (icon-lg), not the 16px default: measured off the "Banner example"
+     * reference frame, whose leading Icon instance and dismiss mark are both
+     * 24x24. At 16px the leading mark read a size smaller than the dismiss
+     * control beside it.
+     */
+    --al-icon-width: #{var(--al-theme-icon-lg)};
+    --al-icon-height: #{var(--al-theme-icon-lg)};
+    --al-icon-fill: var(--al-banner-icon-fill, var(--al-theme-color-content-info-default)); /* 1 */
 
     display: flex;
     align-items: center;
     flex: 0 0 auto;
-
-    .al-c-banner--success & {
-      --al-icon-fill: var(--al-theme-color-content-success-default);
-    }
-
-    .al-c-banner--warning & {
-      --al-icon-fill: var(--al-theme-color-content-warning-default);
-    }
-
-    .al-c-banner--danger & {
-      --al-icon-fill: var(--al-theme-color-content-danger-default);
-    }
   }
 
-  .al-c-banner__body {
-    display: flex;
-    flex: 1 1 auto;
-    flex-flow: row wrap;
-    align-items: center;
-    gap: var(--al-theme-space-sm);
-    min-inline-size: 0;
-  }
-
+  /**
+   * Message
+   * 1. The message must SHRINK, not push. Without this the text takes its
+   *    max-content width, fills the wrapping row on its own and drops the
+   *    trailing CTA onto a second line — the design keeps message and CTA on
+   *    one row, message left, CTA hard right.
+   */
   .al-c-banner__content {
     @include al-theme-typography-body-sm;
+    flex: 1 1 auto; /* 1 */
+    min-inline-size: 0; /* 1 */
     color: var(--al-theme-color-content-default);
   }
 

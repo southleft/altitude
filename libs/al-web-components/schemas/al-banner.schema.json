@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://southleft.com/altitude/al-banner.schema.json",
   "title": "ALBanner (al-banner)",
-  "description": "Component: al-banner\n\nA page-level, full-width announcement bar — distinct from `<al-alert>`\n(which is a card-surfaced, contextual message). Reuses the same tone\nvocabulary as `<al-alert>`/`<al-toast>` (icon color by `variant`) so the\ntwo read as siblings.",
+  "description": "Component: al-banner\n\nA page-level, full-width announcement bar — distinct from `<al-alert>`\n(which is a card-surfaced, contextual message).\n\nThe banner carries no tone `variant`. A banner is a single structural\nshape whose only behavioural prop is `isDismissible`; its leading icon and\nthat icon's color are the two things a consumer changes, and everything\nelse — the message, the trailing CTA — is slotted content. Override the\nglyph via the `icon` slot and its color via `--al-banner-icon-fill`.",
   "type": "object",
   "altitude": {
     "tagName": "al-banner",
@@ -24,7 +24,7 @@
         "name": "link"
       },
       {
-        "description": "Slot in an icon to override the tone-default one.",
+        "description": "Slot in an icon to override the default one.",
         "name": "icon"
       }
     ],
@@ -35,7 +35,12 @@
       }
     ],
     "cssParts": [],
-    "cssProperties": []
+    "cssProperties": [
+      {
+        "description": "Fill of the leading icon. Defaults to the informational content color; set it to any content token to retone the banner (e.g. `var(--al-theme-color-content-danger-default)`).",
+        "name": "--al-banner-icon-fill"
+      }
+    ]
   },
   "properties": {
     "tagName": {
@@ -45,15 +50,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "variant": {
-          "description": "Variant\n- **default** renders a banner that represents an informative announcement\n- **success** renders a banner that represents a success state\n- **warning** renders a banner that represents a warning state\n- **danger** renders a banner that represents a danger/incident state",
-          "type": "string",
-          "enum": [
-            "success",
-            "warning",
-            "danger"
-          ]
-        },
         "isDismissible": {
           "description": "Whether the banner shows a dismiss control.",
           "type": "boolean"

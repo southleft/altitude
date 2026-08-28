@@ -2,6 +2,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './banner';
 import '../link/link';
+import '../icon/icons/warning-circle';
 
 export default {
   title: 'Molecules/Banner',
@@ -13,10 +14,6 @@ export default {
     actions: { handles: ['onBannerClose'] }
   },
   argTypes: {
-    variant: {
-      control: 'radio',
-      options: ['default', 'success', 'warning', 'danger']
-    },
     isDismissible: {
       control: 'boolean'
     }
@@ -33,14 +30,18 @@ const Template = (args) => html`
 export const Default = Template.bind({});
 Default.args = {};
 
-export const Success = Template.bind({});
-Success.args = { variant: 'success' };
-
-export const Warning = Template.bind({});
-Warning.args = { variant: 'warning' };
-
-export const Danger = Template.bind({});
-Danger.args = { variant: 'danger' };
-
 export const Dismissible = Template.bind({});
 Dismissible.args = { isDismissible: true };
+
+/**
+ * The banner has no tone `variant`. Retone it by slotting a different glyph
+ * and pointing `--al-banner-icon-fill` at another content token — the two
+ * knobs, and nothing else, that change a banner's appearance.
+ */
+export const CustomIcon = () => html`
+  <al-banner isDismissible style="--al-banner-icon-fill: var(--al-theme-color-content-danger-default);">
+    <al-icon-warning-circle slot="icon"></al-icon-warning-circle>
+    Payment failed — update your billing details to avoid an interruption.
+    <al-link slot="link" href="#" variant="sm">Update billing</al-link>
+  </al-banner>
+`;

@@ -189,14 +189,29 @@ export const PLAN = [
 
   // Molecule, but a REPAIR TARGET: the Figma `🛠 Banner` page predates this pipeline.
   // Figma's axes are Expanded x Variant; the token truth per variant comes from here.
+  // al-banner carries NO tone variant (2026-08-28). A banner is one structural
+  // shape whose only behavioural prop is isDismissible; its leading glyph and
+  // that glyph's colour are slot/custom-property overrides, not axes, and the
+  // message + CTA are content. So Dismissible is the whole matrix.
   atom('al-banner', 'Banner',
     {
-      Variant: enumAxis('variant', ['success', 'warning', 'danger']),
       Dismissible: boolAxis('isDismissible', 'no', 'yes'),
     },
     {
-      valueNames: { Variant: { default: 'Info' } },
-      slots: text('Banner message'),
+      // Measured FULL-BLEED at the reference frame's own width. al-banner is
+      // `inline-size: 100%` — a page-level bar, not a hugging card — so a
+      // default (hug) measurement reported a ~245px stub that looked nothing
+      // like "Banner example" (600px, message left, CTA hard right). fill +
+      // fillWidth is the same mechanism the brand page sections use.
+      fill: () => true,
+      fillWidth: 600,
+      // The reference frame's own copy and trailing CTA. The link slot is what
+      // makes the inner layout's space-between visible at all; measuring with
+      // a bare message could never produce the design's two-part body.
+      slots: () => [
+        { html: "We're rolling out a new theming engine this week — some screens may look slightly different." },
+        { name: 'link', el: 'al-link', html: 'Learn more' },
+      ],
     }),
 
   atom('al-badge', 'Badge',
