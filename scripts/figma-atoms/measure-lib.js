@@ -52,6 +52,16 @@
     'border-top-left-radius', 'border-top-right-radius',
     'border-bottom-right-radius', 'border-bottom-left-radius',
     'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
+    // LOGICAL padding — the library authors these, not the physical longhands, in 27 of
+    // its components (list-item, menu-item, input, chip, field-note, tab-panel, …).
+    // Reading only the physical names returns '' for every one of them, so the spacing
+    // token was never recorded and the component generated into Figma with NO PADDING.
+    // That is the single largest reason a generated set "looks nothing like the app"
+    // (found 2026-08-27 via al-list-item: `padding-block-start: var(--al-theme-space-xs)`
+    // at list-item.scss:43-46 produced a contract whose link node bound no padding at
+    // all). expand() below folds these onto the physical sides.
+    'padding-block-start', 'padding-block-end', 'padding-inline-start', 'padding-inline-end',
+    'padding-block', 'padding-inline',
     'gap', 'column-gap', 'row-gap',
     'font-family', 'font-size', 'font-weight', 'line-height', 'letter-spacing',
     'text-decoration-line', 'text-transform',
@@ -128,6 +138,35 @@
   /** Rewrite shorthands into the longhands the Figma builder consumes. */
   function expand(auth) {
     const out = { ...auth };
+    // LOGICAL -> PHYSICAL padding, applied BEFORE the `padding` shorthand below so a
+    // logical longhand beats the shorthand (it is the more specific declaration), while
+    // an explicitly authored PHYSICAL longhand still beats both (it is already in `out`
+    // and every assignment here is `||`-guarded).
+    //
+    // LTR is assumed: `inline-start` -> left, `inline-end` -> right. This library ships
+    // no RTL sheet and Figma auto-layout padding is physical, so there is nothing to
+    // carry a direction-aware value into. If RTL is ever added, this is the seam.
+    if (out['padding-block']) {
+      const p = parts(out['padding-block']);
+      const [t, b] = p.length === 1 ? [p[0], p[0]] : [p[0], p[1]];
+      out['padding-top'] = out['padding-top'] || t;
+      out['padding-bottom'] = out['padding-bottom'] || b;
+    }
+    if (out['padding-inline']) {
+      const p = parts(out['padding-inline']);
+      const [s, e] = p.length === 1 ? [p[0], p[0]] : [p[0], p[1]];
+      out['padding-left'] = out['padding-left'] || s;
+      out['padding-right'] = out['padding-right'] || e;
+    }
+    if (out['padding-block-start']) out['padding-top'] = out['padding-top'] || out['padding-block-start'];
+    if (out['padding-block-end']) out['padding-bottom'] = out['padding-bottom'] || out['padding-block-end'];
+    if (out['padding-inline-start']) out['padding-left'] = out['padding-left'] || out['padding-inline-start'];
+    if (out['padding-inline-end']) out['padding-right'] = out['padding-right'] || out['padding-inline-end'];
+    // Drop the logical names once folded: they are an AUTHORING detail, and everything
+    // downstream (token-map's CSS_TO_TOKEN, the Figma auto-layout emitters) speaks
+    // physical sides only. Leaving them in would add anatomy keys that resolve to a null
+    // Figma variable and read as unmapped tokens.
+    for (const k of ['padding-block', 'padding-inline', 'padding-block-start', 'padding-block-end', 'padding-inline-start', 'padding-inline-end']) delete out[k];
     if (out.padding) {
       const [t, r, b, l] = box(parts(out.padding));
       out['padding-top'] = out['padding-top'] || t;
@@ -424,7 +463,20 @@
       w: Math.round(b.width * 100) / 100,
       h: Math.round(b.height * 100) / 100,
       computed: {
+        // `dir` is flex-direction, which computes to its initial value 'row'
+        // on every NON-flex element — meaningless there. Consumers must gate
+        // it on `display` (see layoutAxisFor in build-set-code.mjs).
         display: cs.display, dir: cs.flexDirection, align: cs.alignItems, justify: cs.justifyContent,
+        // Recorded only when it actually wraps: `nowrap` is the initial value
+        // on every element, so storing it unconditionally would add a dead
+        // key to all ~680 anatomy nodes in the contract set.
+        wrap: cs.flexWrap === 'wrap' || cs.flexWrap === 'wrap-reverse' ? cs.flexWrap : null,
+        // flex-grow, recorded only when non-zero (same discipline as `wrap`:
+        // 0 is the initial value on every element). This is the ONE CSS fact
+        // that means "fill the container" — without it a generator can only
+        // hug, which is the top recurring defect in the generated Figma sets
+        // (a filling message renders at its max-content width and overflows).
+        grow: (parseFloat(cs.flexGrow) || 0) > 0 ? (parseFloat(cs.flexGrow) || 0) : null,
         pos: cs.position, vis: cs.visibility, opacityRaw: cs.opacity,
         gap: cs.columnGap === 'normal' ? 0 : px(cs.columnGap),
         pad: [px(cs.paddingTop), px(cs.paddingRight), px(cs.paddingBottom), px(cs.paddingLeft)],

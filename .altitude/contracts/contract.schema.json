@@ -353,7 +353,9 @@
                 "display": { "type": "string" },
                 "direction": { "type": "string" },
                 "align": { "type": "string" },
-                "justify": { "type": "string" }
+                "justify": { "type": "string" },
+                "wrap": {"type": ["string", "null"], "description": "`flex-wrap`, recorded ONLY when the node genuinely wraps — measure-lib.js nulls the `nowrap` initial value rather than storing it on every node (measure-lib.js:431). Reaches Figma as `layoutWrap` via build-set-code.mjs's layoutWrapsFor, which Figma honours on HORIZONTAL auto-layout only; `display: grid` implies WRAP regardless of this value."},
+                "grow": {"type": ["number", "null"], "description": "`flex-grow`, recorded ONLY when non-zero — measure-lib.js nulls the 0 initial value rather than storing it on every node. This is the only captured fact that means FILL rather than hug: build-set-code.mjs turns it into `layoutSizingHorizontal`/`layoutSizingVertical` = 'FILL' along the PARENT's main axis. Without it every generated frame hugs, which is why a filling message rendered at its max-content width and overflowed its own container."}
               }
             }
           ],

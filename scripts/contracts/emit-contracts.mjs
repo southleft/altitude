@@ -595,9 +595,17 @@ function buildAnatomyNode(raw, ctx, isRoot = false) {
   const computed = raw.computed ?? {};
   const layoutEntries = Object.entries({
     display: computed.display,
+    // `direction` is flex-direction and is ONLY meaningful when `display` is
+    // flex/inline-flex — it computes to 'row' on every other element. Kept
+    // verbatim (dropping it would invalidate every existing contract), but
+    // consumers MUST gate on `display`; see layoutAxisFor in build-set-code.mjs.
     direction: computed.dir,
     align: computed.align,
     justify: computed.justify,
+    // Present only when the node genuinely wraps (measure-lib nulls 'nowrap').
+    wrap: computed.wrap,
+    // Present only when the node genuinely grows (measure-lib nulls 0).
+    grow: computed.grow,
   }).filter(([, v]) => v);
   const layout = layoutEntries.length ? Object.fromEntries(layoutEntries) : null;
 
