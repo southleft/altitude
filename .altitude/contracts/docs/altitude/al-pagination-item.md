@@ -2,15 +2,15 @@
 
 # al-pagination-item — Pagination Item
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<li>`
+**Status:** `source` · **Version:** `1.1.0` · **Element:** `<li>`
 
 Component: al-pagination-item
 
 ## Figma
 
 - Component set: **Pagination Item**
-- Node id: `3436:1807` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3436-1807)
+- Node id: `3543:47406` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47406)
 
 ## Props (5)
 
@@ -18,9 +18,9 @@ Component: al-pagination-item
 | --- | --- | --- | --- | --- |
 | `ariaLabel` | string | — | — | — |
 | `href` | string | — | — | — |
-| `isDisabled` | boolean | — | — | — |
-| `isExpandable` | boolean | — | — | — |
-| `isSelected` | boolean | — | — | — |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Hover` |
+| `isExpandable` | boolean | — | — | **Kind** (VARIANT): `Expandable`, `Number` |
+| `isSelected` | boolean | — | — | **Selected** (VARIANT): `No`, `Yes` |
 
 #### `ariaLabel`
 
@@ -46,7 +46,20 @@ Selected state
 
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Hover`
+
+### `isExpandable` (Figma property "Kind")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Expandable`, `Number`
+
+### `isSelected` (Figma property "Selected")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `No`, `Yes`
 
 ## States
 

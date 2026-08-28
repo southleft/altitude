@@ -2,26 +2,28 @@
 
 # al-progress — Progress
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
+**Status:** `source` · **Version:** `1.1.0` · **Element:** `<div>`
 
 Component: al-progress
 
 ## Figma
 
-No Figma component set is mapped for `al-progress` in the **Altitude Design System** parity manifest (parity status: `missing-in-figma`). Map one in Figma, then run `pnpm run parity:seed`.
+- Component set: **Progress**
+- Node id: `3557:58565` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3557-58565)
 
 ## Props (8)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `circleSize` | enum | `lg`, `md`, `xl` | — | — |
+| `circleSize` | enum | `lg`, `md`, `xl` | — | **Size** (VARIANT): `Default`, `Lg`, `Md`, `Xl` |
 | `currentProgress` | number | — | `0` | — |
 | `duration` | number | — | `0` | — |
 | `endProgress` | number | — | `100` | — |
-| `isCircle` | boolean | — | `false` | — |
+| `isCircle` | boolean | — | `false` | **Shape** (VARIANT): `Bar`, `Circle` |
 | `labelAria` | string | — | `'progress'` | — |
 | `labelType` | string | `'ratio'` | — | — |
-| `showLabel` | boolean | — | `false` | — |
+| `showLabel` | boolean | — | `false` | **Label** (VARIANT): `Hidden`, `Shown` |
 
 #### `circleSize`
 
@@ -72,7 +74,20 @@ Show label?
 
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `circleSize` (Figma property "Size")
+
+- Code values: `lg`, `md`, `xl`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Lg`, `Md`, `Xl`
+
+### `isCircle` (Figma property "Shape")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bar`, `Circle`
+
+### `showLabel` (Figma property "Label")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
 
 ## States
 

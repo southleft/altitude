@@ -153,6 +153,36 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ### State overrides (measured, root node)
 
+**`hover`** (node #0.1.0.1.0.1.0)
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+
+**`hover`** (node #0.1.0.1.0.2.0)
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+
+**`hover`** (node #0.1.0.1.0.3.0)
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+
+**`hover`** (node #0.1.0.1.0.4.0)
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+
+**`hover`** (node #0.1.0.1.0.5.0)
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+
 **`hover`** (node #0.1.0.1.0.6.0)
 
 | CSS property | Code token | Figma variable |
@@ -303,41 +333,40 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
 
-**`hover`** (node #0.1.0.1.4.3.0)
+**`focus`** (node #0.1.0.1.0.1.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
-**`hover`** (node #0.1.0.1.4.4.0)
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-
-**`hover`** (node #0.1.0.1.4.5.0)
+**`focus`** (node #0.1.0.1.0.2.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
-**`hover`** (node #0.1.0.1.4.6.0)
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-
-**`hover`** (node #0.1.0.1.5.0.0)
+**`focus`** (node #0.1.0.1.0.3.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
-**`hover`** (node #0.1.0.1.5.1.0)
+**`focus`** (node #0.1.0.1.0.4.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
+
+**`focus`** (node #0.1.0.1.0.5.0)
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.0.6.0)
 
@@ -514,47 +543,35 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 | background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
-**`focus`** (node #0.1.0.1.4.3.0)
+**`disabled`** (node #0.1.0.1.0.1.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-| outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
+| opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
 
-**`focus`** (node #0.1.0.1.4.4.0)
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-| outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
-
-**`focus`** (node #0.1.0.1.4.5.0)
+**`disabled`** (node #0.1.0.1.0.2.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-| outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
+| opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
 
-**`focus`** (node #0.1.0.1.4.6.0)
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-| outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
-
-**`focus`** (node #0.1.0.1.5.0.0)
+**`disabled`** (node #0.1.0.1.0.3.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-| outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
+| opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
 
-**`focus`** (node #0.1.0.1.5.1.0)
+**`disabled`** (node #0.1.0.1.0.4.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-| outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
+| opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
+
+**`disabled`** (node #0.1.0.1.0.5.0)
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
 
 **`disabled`** (node #0.1.0.1.0.6.0)
 
@@ -701,42 +718,6 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 | opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
 
 **`disabled`** (node #0.1.0.1.4.2.0)
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
-
-**`disabled`** (node #0.1.0.1.4.3.0)
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
-
-**`disabled`** (node #0.1.0.1.4.4.0)
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
-
-**`disabled`** (node #0.1.0.1.4.5.0)
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
-
-**`disabled`** (node #0.1.0.1.4.6.0)
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
-
-**`disabled`** (node #0.1.0.1.5.0.0)
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
-
-**`disabled`** (node #0.1.0.1.5.1.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |

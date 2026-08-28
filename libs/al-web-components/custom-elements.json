@@ -822,8 +822,14 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-banner\n\nA page-level, full-width announcement bar — distinct from `<al-alert>`\n(which is a card-surfaced, contextual message). Reuses the same tone\nvocabulary as `<al-alert>`/`<al-toast>` (icon color by `variant`) so the\ntwo read as siblings.",
+          "description": "Component: al-banner\n\nA page-level, full-width announcement bar — distinct from `<al-alert>`\n(which is a card-surfaced, contextual message).\n\nThe banner carries no tone `variant`. A banner is a single structural\nshape whose only behavioural prop is `isDismissible`; its leading icon and\nthat icon's color are the two things a consumer changes, and everything\nelse — the message, the trailing CTA — is slotted content. Override the\nglyph via the `icon` slot and its color via `--al-banner-icon-fill`.",
           "name": "ALBanner",
+          "cssProperties": [
+            {
+              "description": "Fill of the leading icon. Defaults to the informational content color; set it to any content token to retone the banner (e.g. `var(--al-theme-color-content-danger-default)`).",
+              "name": "--al-banner-icon-fill"
+            }
+          ],
           "slots": [
             {
               "description": "The banner's message content.",
@@ -834,7 +840,7 @@
               "name": "link"
             },
             {
-              "description": "Slot in an icon to override the tone-default one.",
+              "description": "Slot in an icon to override the default one.",
               "name": "icon"
             }
           ],
@@ -865,12 +871,8 @@
             },
             {
               "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'success' | 'warning' | 'danger'"
-              },
-              "description": "Variant\n- **default** renders a banner that represents an informative announcement\n- **success** renders a banner that represents a success state\n- **warning** renders a banner that represents a warning state\n- **danger** renders a banner that represents a danger/incident state",
-              "attribute": "variant"
+              "name": "layoutEl",
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -895,15 +897,6 @@
               "name": "close",
               "privacy": "public",
               "description": "Dismiss the banner.\n1. Set isDismissed to true so the `.al-is-dismissed` rule hides it.\n2. Dispatch onBannerClose."
-            },
-            {
-              "kind": "field",
-              "name": "bannerIconName",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "readonly": true
             }
           ],
           "events": [
@@ -913,14 +906,6 @@
             }
           ],
           "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'success' | 'warning' | 'danger'"
-              },
-              "description": "Variant\n- **default** renders a banner that represents an informative announcement\n- **success** renders a banner that represents a success state\n- **warning** renders a banner that represents a warning state\n- **danger** renders a banner that represents a danger/incident state",
-              "fieldName": "variant"
-            },
             {
               "name": "isDismissible",
               "type": {
@@ -2562,6 +2547,15 @@
             },
             {
               "kind": "field",
+              "name": "direction",
+              "type": {
+                "text": "'row' | 'column'"
+              },
+              "description": "Direction\n- **column** (default) stacks the checkboxes\n- **row** lays them out inline, wrapping when they run out of room\n\nThis does NOT re-introduce a hand-rolled arrangement prop. The group\nalready renders an `<al-layout>` around its slotted items; this\nparameterises THAT layout rather than styling the items here, so\n`<al-layout>` remains the single arrangement primitive. The row form is\na documented variant of the group in the design library (Checkbox Group\nexample, \"Horizontal\" column), which is why it earns a prop instead of\nbeing left to each consumer to compose.",
+              "attribute": "direction"
+            },
+            {
+              "kind": "field",
               "name": "label",
               "type": {
                 "text": "string"
@@ -2666,6 +2660,14 @@
               },
               "description": "Hide legend?\n- If true, hides the legend from displaying",
               "fieldName": "hideLegend"
+            },
+            {
+              "name": "direction",
+              "type": {
+                "text": "'row' | 'column'"
+              },
+              "description": "Direction\n- **column** (default) stacks the checkboxes\n- **row** lays them out inline, wrapping when they run out of room\n\nThis does NOT re-introduce a hand-rolled arrangement prop. The group\nalready renders an `<al-layout>` around its slotted items; this\nparameterises THAT layout rather than styling the items here, so\n`<al-layout>` remains the single arrangement primitive. The row form is\na documented variant of the group in the design library (Checkbox Group\nexample, \"Horizontal\" column), which is why it earns a prop instead of\nbeing left to each consumer to compose.",
+              "fieldName": "direction"
             },
             {
               "name": "label",
@@ -15380,15 +15382,6 @@
             },
             {
               "kind": "field",
-              "name": "stretchItems",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Stretch children to fill the main axis",
-              "attribute": "stretchItems"
-            },
-            {
-              "kind": "field",
               "name": "responsive",
               "type": {
                 "text": "boolean"
@@ -15496,14 +15489,6 @@
               "fieldName": "grow"
             },
             {
-              "name": "stretchItems",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Stretch children to fill the main axis",
-              "fieldName": "stretchItems"
-            },
-            {
               "name": "responsive",
               "type": {
                 "text": "boolean"
@@ -15566,6 +15551,10 @@
             {
               "description": "The link text",
               "name": ""
+            },
+            {
+              "description": "Content to display after the link text, typically an icon (an external-link or chevron affordance). The link is `inline-flex` with a `--al-theme-space-xs` gap, and each size variant re-binds `--al-icon-width` / `--al-icon-height`, so a slotted icon is sized by the variant automatically. <al-link href=\"/docs\">Read the docs<al-icon-chevron-right slot=\"after\"></al-icon-chevron-right></al-link>",
+              "name": "after"
             }
           ],
           "members": [
@@ -18581,6 +18570,15 @@
             },
             {
               "kind": "field",
+              "name": "direction",
+              "type": {
+                "text": "'row' | 'column'"
+              },
+              "description": "Direction\n- **column** (default) stacks the radios\n- **row** lays them out inline, wrapping when they run out of room\n\nThis does NOT re-introduce a hand-rolled arrangement prop. The group\nalready renders an `<al-layout>` around its slotted items; this\nparameterises THAT layout rather than styling the items here, so\n`<al-layout>` remains the single arrangement primitive. The row form is\na documented variant of the group in the design library (Radio Group\nexample, \"Horizontal\" column), which is why it earns a prop instead of\nbeing left to each consumer to compose.",
+              "attribute": "direction"
+            },
+            {
+              "kind": "field",
               "name": "label",
               "type": {
                 "text": "string"
@@ -18727,6 +18725,14 @@
               },
               "description": "Hide legend?\n- If true, hides the legend from displaying",
               "fieldName": "hideLegend"
+            },
+            {
+              "name": "direction",
+              "type": {
+                "text": "'row' | 'column'"
+              },
+              "description": "Direction\n- **column** (default) stacks the radios\n- **row** lays them out inline, wrapping when they run out of room\n\nThis does NOT re-introduce a hand-rolled arrangement prop. The group\nalready renders an `<al-layout>` around its slotted items; this\nparameterises THAT layout rather than styling the items here, so\n`<al-layout>` remains the single arrangement primitive. The row form is\na documented variant of the group in the design library (Radio Group\nexample, \"Horizontal\" column), which is why it earns a prop instead of\nbeing left to each consumer to compose.",
+              "fieldName": "direction"
             },
             {
               "name": "label",
@@ -24325,128 +24331,6 @@
           "declaration": {
             "name": "ALToast",
             "module": "components/toast/toast.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/toggle-button-group/toggle-button-group.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Component: al-toggle-button-group",
-          "name": "ALToggleButtonGroup",
-          "slots": [
-            {
-              "description": "A set of toggle buttons. Arranged in a row by default; for a column or a gap, nest them in `<al-layout>` with the props you need.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "el",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "'al-toggle-button-group'"
-            },
-            {
-              "kind": "field",
-              "name": "elementMap",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "layoutEl",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'background'"
-              },
-              "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles",
-              "attribute": "variant"
-            },
-            {
-              "kind": "field",
-              "name": "selectedItem",
-              "type": {
-                "text": "ALToggleButton"
-              },
-              "description": "Selected item\n- The currently selected Toggle Button in the group"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnToggleButtonSelect",
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "ALToggleButton"
-                  }
-                }
-              ],
-              "description": "Handle when a Toggle Button in the group is selected\n1. Set the previously selected item's isSelected state to false\n2. Store the newly selected item on the toggle button's state"
-            },
-            {
-              "kind": "method",
-              "name": "handleOnClickOutside",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ],
-              "description": "Handles the click event outside the component:\n1. Check if the toggle button is selected\n2. Determine if the click occurred inside the selected toggle button\n3. Check if the click occurred outside the selected toggle button\n4. Close the toggle button if the click occurred outside it"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'background'"
-              },
-              "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles",
-              "fieldName": "variant"
-            }
-          ],
-          "superclass": {
-            "name": "ALElement",
-            "module": "/components/ALElement"
-          },
-          "tagName": "al-toggle-button-group",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ALToggleButtonGroup",
-          "declaration": {
-            "name": "ALToggleButtonGroup",
-            "module": "components/toggle-button-group/toggle-button-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "al-toggle-button-group",
-          "declaration": {
-            "name": "ALToggleButtonGroup",
-            "module": "components/toggle-button-group/toggle-button-group.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ALToggleButtonGroup",
-            "module": "components/toggle-button-group/toggle-button-group.ts"
           }
         }
       ]

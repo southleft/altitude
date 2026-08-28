@@ -2,15 +2,15 @@
 
 # al-file-upload — File Upload
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
+**Status:** `source` · **Version:** `1.1.0` · **Element:** `<div>`
 
 Component: al-file-upload
 
 ## Figma
 
 - Component set: **File Upload**
-- Node id: not pinned (`nodeId: null`) — resolve this set by **NAME** via the parity manifest (`.altitude/figma-sync/parity-manifest.json`) or the `altitude_check_parity` MCP tool at need. Node ids for by-name-mapped components are re-minted when their Figma page is rebuilt, so a value hard-coded here would go stale — see `.altitude/PARITY.md`.
-- File: https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/
+- Node id: `3544:51718` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3544-51718)
 
 ## Props (17)
 
@@ -22,11 +22,11 @@ Component: al-file-upload
 | `fieldId` | string | — | — | — |
 | `fieldNote` | string | — | — | — |
 | `fileSizeLimit` | number | — | `75` | — |
-| `hideLabel` | boolean | — | — | — |
-| `isDisabled` | boolean | — | — | — |
-| `isError` | boolean | — | — | — |
+| `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Hover` |
+| `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Hover` |
 | `isRequired` | boolean | — | — | — |
-| `label` | string | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
+| `label` | string | — | — | _not expressed in Figma (by design)_ |
 | `multiple` | boolean | — | — | — |
 | `name` | string | — | — | — |
 | `textConfig` | string | `FileUploadTextConfig` | `{ fileFormatErrorText: defaultTextConfig.fileFormatErrorText, fileSizeErrorText: defaultTextConfig.fileSizeErrorText }` | — |
@@ -107,12 +107,24 @@ Time taken for uploading
 
 Value associated with the field
 
+**Figma-expression opt-out (T27):** `label` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
 
-### `label` (Figma property "Label")
+### `hideLabel` (Figma property "Label")
 
 - Code values: —
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
+
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`, `Hover`
+
+### `isError` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`, `Hover`
 
 ## States
 

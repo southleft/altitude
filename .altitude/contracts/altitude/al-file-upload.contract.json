@@ -2,7 +2,7 @@
   "$schema": "../contract.schema.json",
   "id": "al-file-upload",
   "name": "File Upload",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "status": "source",
   "description": "Component: al-file-upload",
   "semantics": {
@@ -92,7 +92,15 @@
         "code": {
           "attribute": "hideLabel"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Label",
+          "options": [
+            "Hidden",
+            "Shown"
+          ],
+          "pairWith": "Label"
+        }
       }
     },
     {
@@ -104,7 +112,17 @@
         "code": {
           "attribute": "isDisabled"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Default",
+            "Disabled",
+            "Error",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
       }
     },
     {
@@ -116,7 +134,17 @@
         "code": {
           "attribute": "isError"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Default",
+            "Disabled",
+            "Error",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
       }
     },
     {
@@ -141,12 +169,7 @@
           "attribute": "label"
         },
         "figma": {
-          "kind": "VARIANT",
-          "property": "Label",
-          "options": [
-            "Hidden",
-            "Shown"
-          ]
+          "omit": true
         }
       }
     },
@@ -4632,8 +4655,8 @@
     "figma": {
       "fileKey": "y83n4o9LOGs74oAoguFcGS",
       "componentSetName": "File Upload",
-      "nodeId": null,
-      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/"
+      "nodeId": "3544:51718",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3544-51718"
     }
   }
 }

@@ -27,7 +27,7 @@ nests its slotted content in an `<al-layout>`.
 
 No Figma component set is mapped for `al-layout` in the **Altitude Design System** parity manifest (parity status: `missing-in-figma`). Map one in Figma, then run `pnpm run parity:seed`.
 
-## Props (14)
+## Props (13)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
@@ -42,7 +42,6 @@ No Figma component set is mapped for `al-layout` in the **Altitude Design System
 | `noCollapse` | boolean | — | — | — |
 | `responsive` | boolean | — | — | — |
 | `size` | enum | `full`, `lg`, `md`, `sm`, `xl`, `xxl` | — | — |
-| `stretchItems` | boolean | — | — | — |
 | `variant` | enum | `bento`, `constrained`, `grid` | — | — |
 | `wrap` | boolean | — | — | — |
 
@@ -106,10 +105,6 @@ Collapse a row into a column on small screens
 Measure — the width of the centred content column under
 `variant="constrained"`. Defaults to the theme's container width.
 
-#### `stretchItems`
-
-Stretch children to fill the main axis
-
 #### `variant`
 
 Style variant
@@ -148,9 +143,9 @@ _No events declared._
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Variant=bento,Direction=column` (source: `measured`)
+**Anatomy case measured:** `Variant=default,Direction=default` (source: `measured`)
 
-### Root — `<div class="al-c-layout al-c-layout--bento al-c-layout--gap-md">`
+### Root — `<div class="al-c-layout al-c-layout--gap-md">`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |

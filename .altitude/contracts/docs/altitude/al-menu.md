@@ -9,8 +9,8 @@ Component: al-menu
 ## Figma
 
 - Component set: **Menu**
-- Node id: not pinned (`nodeId: null`) — resolve this set by **NAME** via the parity manifest (`.altitude/figma-sync/parity-manifest.json`) or the `altitude_check_parity` MCP tool at need. Node ids for by-name-mapped components are re-minted when their Figma page is rebuilt, so a value hard-coded here would go stale — see `.altitude/PARITY.md`.
-- File: https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/
+- Node id: `3558:61424` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558-61424)
 
 ## Props (6)
 
@@ -113,9 +113,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-menu`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (13)
+## Tokens referenced (14)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-menu-item-height`, `--al-theme-border-radius`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-opacity-disabled`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-base-space`, `--al-font-weight-bold`, `--al-menu-item-height`, `--al-theme-border-radius`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

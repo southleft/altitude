@@ -143,9 +143,9 @@ _None._
 - Tag: `al-toast`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (9)
+## Tokens referenced (10)
 
-`--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-md`, `--al-theme-box-shadow-lg`, `--al-theme-color-background-default`, `--al-theme-space`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`
+`--al-base-space`, `--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-md`, `--al-theme-box-shadow-lg`, `--al-theme-color-background-default`, `--al-theme-space`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`
 
 ---
 

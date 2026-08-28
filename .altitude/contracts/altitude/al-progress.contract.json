@@ -2,7 +2,7 @@
   "$schema": "../contract.schema.json",
   "id": "al-progress",
   "name": "Progress",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "status": "source",
   "description": "Component: al-progress",
   "semantics": {
@@ -24,7 +24,17 @@
         "code": {
           "attribute": "circleSize"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Size",
+          "options": [
+            "Default",
+            "Lg",
+            "Md",
+            "Xl"
+          ],
+          "pairWith": "Size"
+        }
       }
     },
     {
@@ -76,7 +86,15 @@
         "code": {
           "attribute": "isCircle"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Shape",
+          "options": [
+            "Bar",
+            "Circle"
+          ],
+          "pairWith": "Shape"
+        }
       }
     },
     {
@@ -114,7 +132,15 @@
         "code": {
           "attribute": "showLabel"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Label",
+          "options": [
+            "Hidden",
+            "Shown"
+          ],
+          "pairWith": "Label"
+        }
       }
     }
   ],
@@ -1904,9 +1930,9 @@
     },
     "figma": {
       "fileKey": "y83n4o9LOGs74oAoguFcGS",
-      "componentSetName": null,
-      "nodeId": null,
-      "url": null
+      "componentSetName": "Progress",
+      "nodeId": "3557:58565",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3557-58565"
     }
   }
 }

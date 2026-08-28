@@ -2,7 +2,7 @@
   "$schema": "../contract.schema.json",
   "id": "al-pagination-item",
   "name": "Pagination Item",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "status": "source",
   "description": "Component: al-pagination-item",
   "semantics": {
@@ -43,7 +43,16 @@
         "code": {
           "attribute": "isDisabled"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Default",
+            "Disabled",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
       }
     },
     {
@@ -55,7 +64,15 @@
         "code": {
           "attribute": "isExpandable"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Kind",
+          "options": [
+            "Expandable",
+            "Number"
+          ],
+          "pairWith": "Kind"
+        }
       }
     },
     {
@@ -67,7 +84,15 @@
         "code": {
           "attribute": "isSelected"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Selected",
+          "options": [
+            "No",
+            "Yes"
+          ],
+          "pairWith": "Selected"
+        }
       }
     }
   ],
@@ -1044,8 +1069,8 @@
     "figma": {
       "fileKey": "y83n4o9LOGs74oAoguFcGS",
       "componentSetName": "Pagination Item",
-      "nodeId": "3436:1807",
-      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3436-1807"
+      "nodeId": "3543:47406",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47406"
     }
   }
 }

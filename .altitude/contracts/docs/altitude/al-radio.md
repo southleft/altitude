@@ -2,15 +2,15 @@
 
 # al-radio — Radio
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
+**Status:** `source` · **Version:** `1.1.0` · **Element:** `<div>`
 
 Component: al-radio
 
 ## Figma
 
 - Component set: **Radio**
-- Node id: `3436:1613` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3436-1613)
+- Node id: `3543:47540` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47540)
 
 ## Props (11)
 
@@ -20,10 +20,10 @@ Component: al-radio
 | `errorNote` | string | — | — | — |
 | `fieldId` | string | — | — | — |
 | `fieldNote` | string | — | — | — |
-| `hideLabel` | boolean | — | — | — |
-| `isChecked` | boolean | — | — | — |
-| `isDisabled` | boolean | — | — | — |
-| `isError` | boolean | — | — | — |
+| `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
+| `isChecked` | boolean | — | — | **Checked** (VARIANT): `Off`, `On` |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
+| `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isRequired` | boolean | — | — | — |
 | `name` | string | — | — | — |
 | `value` | string | — | — | — |
@@ -82,7 +82,25 @@ Value attribute
 
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `hideLabel` (Figma property "Label")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
+
+### `isChecked` (Figma property "Checked")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Off`, `On`
+
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`, `Focus`, `Hover`
+
+### `isError` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`, `Focus`, `Hover`
 
 ## States
 

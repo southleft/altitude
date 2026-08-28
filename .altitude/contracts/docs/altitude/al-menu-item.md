@@ -2,15 +2,15 @@
 
 # al-menu-item — Menu Item
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<li>`
+**Status:** `source` · **Version:** `1.1.0` · **Element:** `<li>`
 
 Component: al-menu-item
 
 ## Figma
 
 - Component set: **Menu Item**
-- Node id: `3436:1779` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3436-1779)
+- Node id: `3543:47347` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47347)
 
 ## Props (16)
 
@@ -21,13 +21,13 @@ Component: al-menu-item
 | `href` | string | — | — | — |
 | `idx` | number | — | — | — |
 | `indentation` | number | — | `0` | — |
-| `isDisabled` | boolean | — | — | — |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled` |
 | `isExpandableHeader` | boolean | — | — | — |
 | `isExpanded` | boolean | — | — | — |
 | `isFocused` | boolean | — | — | — |
-| `isHeader` | boolean | — | — | — |
+| `isHeader` | boolean | — | — | **Role** (VARIANT): `Expandable`, `Header`, `Item` |
 | `isHidden` | boolean | — | `false` | — |
-| `isSelected` | boolean | — | — | — |
+| `isSelected` | boolean | — | — | **Selected** (VARIANT): `No`, `Yes` |
 | `label` | string | — | — | — |
 | `linkTitle` | string | — | — | — |
 | `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | — |
@@ -138,7 +138,20 @@ accessible name.
 
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`
+
+### `isHeader` (Figma property "Role")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Expandable`, `Header`, `Item`
+
+### `isSelected` (Figma property "Selected")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `No`, `Yes`
 
 ## States
 
@@ -183,9 +196,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-menu-item`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (6)
+## Tokens referenced (7)
 
-`--al-menu-item-height`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-menu-item-height`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

@@ -2,7 +2,7 @@
   "$schema": "../contract.schema.json",
   "id": "al-radio",
   "name": "Radio",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "status": "source",
   "description": "Component: al-radio",
   "semantics": {
@@ -67,7 +67,15 @@
         "code": {
           "attribute": "hideLabel"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Label",
+          "options": [
+            "Hidden",
+            "Shown"
+          ],
+          "pairWith": "Label"
+        }
       }
     },
     {
@@ -79,7 +87,15 @@
         "code": {
           "attribute": "isChecked"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Checked",
+          "options": [
+            "Off",
+            "On"
+          ],
+          "pairWith": "Checked"
+        }
       }
     },
     {
@@ -91,7 +107,18 @@
         "code": {
           "attribute": "isDisabled"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Default",
+            "Disabled",
+            "Error",
+            "Focus",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
       }
     },
     {
@@ -103,7 +130,18 @@
         "code": {
           "attribute": "isError"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Default",
+            "Disabled",
+            "Error",
+            "Focus",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
       }
     },
     {
@@ -4109,8 +4147,8 @@
     "figma": {
       "fileKey": "y83n4o9LOGs74oAoguFcGS",
       "componentSetName": "Radio",
-      "nodeId": "3436:1613",
-      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3436-1613"
+      "nodeId": "3543:47540",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47540"
     }
   }
 }

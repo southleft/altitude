@@ -2,15 +2,15 @@
 
 # al-link — Link
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<a>`
+**Status:** `source` · **Version:** `1.1.0` · **Element:** `<a>`
 
 Component: al-link
 
 ## Figma
 
 - Component set: **Link**
-- Node id: `3435:964` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3435-964)
+- Node id: `3543:47075` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47075)
 
 ## Props (7)
 
@@ -74,11 +74,14 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 `hover`, `focus`, `active`, `disabled`
 
-## Slots (1)
+## Slots (2)
 
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
 | `(default)` | The link text | — | — |
+| `after` | Content to display after the link text, typically an icon (an external-link or chevron affordance). The link is `inline-flex` with a `--al-theme-space-xs` gap, and each size variant re-binds `--al-icon-width` / `--al-icon-height`, so a slotted icon is sized by the variant automatically. <al-link href="/docs">Read the docs<al-icon-chevron-right slot="after"></al-icon-chevron-right></al-link> | `paper-plane` | — |
+
+**Figma placeholder convention (T19):** a `before`/`after` slot with a `figmaPlaceholder` value names the real Figma set's own icon-instance placeholder this slot resolves to when generating or reconciling a set — matched by **name**, never a node id (icon libraries re-mint ids on republish). See `.altitude/contracts/README.md` § Slot placeholder instances (T19) and the Icon Recoloring reference in `altitude-figma-sync`'s `SKILL.md`.
 
 ## Events (0)
 

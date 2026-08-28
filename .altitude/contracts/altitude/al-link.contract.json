@@ -2,7 +2,7 @@
   "$schema": "../contract.schema.json",
   "id": "al-link",
   "name": "Link",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "status": "source",
   "description": "Component: al-link",
   "semantics": {
@@ -111,10 +111,22 @@
     {
       "name": "",
       "description": "The link text"
+    },
+    {
+      "name": "after",
+      "description": "Content to display after the link text, typically an icon (an external-link or chevron affordance). The link is `inline-flex` with a `--al-theme-space-xs` gap, and each size variant re-binds `--al-icon-width` / `--al-icon-height`, so a slotted icon is sized by the variant automatically. <al-link href=\"/docs\">Read the docs<al-icon-chevron-right slot=\"after\"></al-icon-chevron-right></al-link>",
+      "figmaPlaceholder": "paper-plane"
     }
   ],
   "composition": {
-    "renders": []
+    "renders": [
+      {
+        "tag": "al-icon-chevron-right",
+        "evidence": [
+          "template"
+        ]
+      }
+    ]
   },
   "states": [
     "hover",
@@ -1414,8 +1426,8 @@
     "figma": {
       "fileKey": "y83n4o9LOGs74oAoguFcGS",
       "componentSetName": "Link",
-      "nodeId": "3435:964",
-      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3435-964"
+      "nodeId": "3543:47075",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47075"
     }
   }
 }

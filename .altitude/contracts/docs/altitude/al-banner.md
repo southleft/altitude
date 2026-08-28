@@ -14,8 +14,8 @@ two read as siblings.
 ## Figma
 
 - Component set: **Banner**
-- Node id: `729:229` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=729-229)
+- Node id: `3558:60780` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558-60780)
 
 ## Props (3)
 

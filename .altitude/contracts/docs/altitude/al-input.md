@@ -2,15 +2,15 @@
 
 # al-input — Input
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
+**Status:** `source` · **Version:** `1.1.0` · **Element:** `<div>`
 
 Component: al-input
 
 ## Figma
 
 - Component set: **Input**
-- Node id: not pinned (`nodeId: null`) — resolve this set by **NAME** via the parity manifest (`.altitude/figma-sync/parity-manifest.json`) or the `altitude_check_parity` MCP tool at need. Node ids for by-name-mapped components are re-minted when their Figma page is rebuilt, so a value hard-coded here would go stale — see `.altitude/PARITY.md`.
-- File: https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/
+- Node id: `3544:48650` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3544-48650)
 
 ## Props (23)
 
@@ -21,15 +21,15 @@ Component: al-input
 | `errorNote` | string | — | — | — |
 | `fieldId` | string | — | — | — |
 | `fieldNote` | string | — | — | — |
-| `hideLabel` | boolean | — | — | — |
-| `isActive` | boolean | — | — | — |
-| `isDisabled` | boolean | — | — | — |
-| `isError` | boolean | — | — | — |
-| `isFocused` | boolean | — | — | — |
+| `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
+| `isActive` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
+| `isError` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
+| `isFocused` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isOptional` | boolean | — | — | — |
 | `isReadonly` | boolean | — | — | — |
 | `isRequired` | boolean | — | — | — |
-| `label` | string | — | `'Label'` | **Label** (VARIANT): `Hidden`, `Shown` |
+| `label` | string | — | `'Label'` | _not expressed in Figma (by design)_ |
 | `max` | number | — | — | — |
 | `maxLength` | number | — | — | — |
 | `maxLengthValue` | number | — | — | — |
@@ -161,12 +161,34 @@ Type variants
 Value attribute
 - Specifies the value of an input element
 
+**Figma-expression opt-out (T27):** `label` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
 
-### `label` (Figma property "Label")
+### `hideLabel` (Figma property "Label")
 
 - Code values: —
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
+
+### `isActive` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
+
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
+
+### `isError` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
+
+### `isFocused` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
 
 ## States
 

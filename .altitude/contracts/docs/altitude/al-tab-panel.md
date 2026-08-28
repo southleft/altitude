@@ -9,8 +9,8 @@ Component: al-tab-panel
 ## Figma
 
 - Component set: **Tab Panel**
-- Node id: `3436:2090` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3436-2090)
+- Node id: `3543:47875` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47875)
 
 ## Props (4)
 
@@ -75,6 +75,7 @@ _No events declared._
 | font | `--al-theme-typography-body-md` | — |
 | gap | `--al-theme-space` | `theme/space/@` |
 | letter-spacing | `--al-theme-typography-body-md-letter-spacing` | — |
+| padding-top | `--al-theme-space` | `theme/space/@` |
 | row-gap | `--al-theme-space` | `theme/space/@` |
 
 ### State overrides (measured, root node)

@@ -2,21 +2,21 @@
 
 # al-divider — Divider
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<hr>`
+**Status:** `source` · **Version:** `1.1.0` · **Element:** `<hr>`
 
 Component: al-divider
 
 ## Figma
 
 - Component set: **Divider**
-- Node id: `3435:877` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3435-877)
+- Node id: `3543:46933` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-46933)
 
 ## Props (1)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `variant` | string | `'vertical'` | — | — |
+| `variant` | string | `'vertical'` | — | **Orientation** (VARIANT): `Horizontal`, `Vertical` |
 
 #### `variant`
 
@@ -26,7 +26,10 @@ Variant
 
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `variant` (Figma property "Orientation")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Horizontal`, `Vertical`
 
 ## States
 

@@ -2,7 +2,7 @@
   "$schema": "../contract.schema.json",
   "id": "al-menu-item",
   "name": "Menu Item",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "status": "source",
   "description": "Component: al-menu-item",
   "semantics": {
@@ -81,7 +81,15 @@
         "code": {
           "attribute": "isDisabled"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Default",
+            "Disabled"
+          ],
+          "pairWith": "State"
+        }
       }
     },
     {
@@ -129,7 +137,16 @@
         "code": {
           "attribute": "isHeader"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Role",
+          "options": [
+            "Expandable",
+            "Header",
+            "Item"
+          ],
+          "pairWith": "Role"
+        }
       }
     },
     {
@@ -154,7 +171,15 @@
         "code": {
           "attribute": "isSelected"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Selected",
+          "options": [
+            "No",
+            "Yes"
+          ],
+          "pairWith": "Selected"
+        }
       }
     },
     {
@@ -337,6 +362,22 @@
               "code": "--al-theme-typography-body-sm-letter-spacing",
               "figma": null
             },
+            "padding-bottom": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-left": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-right": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-top": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
             "row-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
@@ -390,6 +431,22 @@
                 "letter-spacing": {
                   "code": "--al-theme-typography-body-sm-letter-spacing",
                   "figma": null
+                },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 },
                 "row-gap": {
                   "code": "--al-theme-space-xs",
@@ -472,6 +529,22 @@
                   "code": "--al-theme-typography-body-sm-letter-spacing",
                   "figma": null
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
@@ -525,6 +598,22 @@
                     "letter-spacing": {
                       "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-theme-space-xs",
@@ -611,6 +700,22 @@
                   "code": "--al-theme-opacity-disabled",
                   "figma": "theme/opacity/disabled"
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
@@ -668,6 +773,22 @@
                     "opacity": {
                       "code": "--al-theme-opacity-disabled",
                       "figma": "theme/opacity/disabled"
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-theme-space-xs",
@@ -750,6 +871,22 @@
                   "code": "--al-theme-typography-body-sm-letter-spacing",
                   "figma": null
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
@@ -804,6 +941,22 @@
                       "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
                     "row-gap": {
                       "code": "--al-theme-space-xs",
                       "figma": "theme/space/xs"
@@ -849,7 +1002,8 @@
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "normal"
+                "justify": "normal",
+                "grow": 1
               },
               "tokens": {
                 "column-gap": {
@@ -872,6 +1026,22 @@
                   "code": "--al-theme-typography-body-md-bold-letter-spacing",
                   "figma": null
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-base-space",
                   "figma": "base/space"
@@ -890,7 +1060,8 @@
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "grow": 1
                   },
                   "tokens": {
                     "column-gap": {
@@ -912,6 +1083,22 @@
                     "letter-spacing": {
                       "code": "--al-theme-typography-body-md-bold-letter-spacing",
                       "figma": null
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-base-space",
@@ -958,7 +1145,8 @@
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "normal"
+                "justify": "normal",
+                "grow": 1
               },
               "tokens": {
                 "column-gap": {
@@ -981,6 +1169,22 @@
                   "code": "--al-theme-typography-body-md-bold-letter-spacing",
                   "figma": null
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-base-space",
                   "figma": "base/space"
@@ -999,7 +1203,8 @@
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "grow": 1
                   },
                   "tokens": {
                     "column-gap": {
@@ -1021,6 +1226,22 @@
                     "letter-spacing": {
                       "code": "--al-theme-typography-body-md-bold-letter-spacing",
                       "figma": null
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-base-space",
@@ -1067,7 +1288,8 @@
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "normal"
+                "justify": "normal",
+                "grow": 1
               },
               "tokens": {
                 "column-gap": {
@@ -1090,6 +1312,22 @@
                   "code": "--al-theme-typography-body-md-bold-letter-spacing",
                   "figma": null
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-base-space",
                   "figma": "base/space"
@@ -1108,7 +1346,8 @@
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "grow": 1
                   },
                   "tokens": {
                     "column-gap": {
@@ -1130,6 +1369,22 @@
                     "letter-spacing": {
                       "code": "--al-theme-typography-body-md-bold-letter-spacing",
                       "figma": null
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-base-space",
@@ -1212,6 +1467,22 @@
                   "code": "--al-theme-typography-body-sm-letter-spacing",
                   "figma": null
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
@@ -1265,6 +1536,22 @@
                     "letter-spacing": {
                       "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-theme-space-xs",
@@ -1351,6 +1638,22 @@
                   "code": "--al-theme-opacity-disabled",
                   "figma": "theme/opacity/disabled"
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
@@ -1408,6 +1711,22 @@
                     "opacity": {
                       "code": "--al-theme-opacity-disabled",
                       "figma": "theme/opacity/disabled"
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-theme-space-xs",
@@ -1490,6 +1809,22 @@
                   "code": "--al-theme-typography-body-sm-letter-spacing",
                   "figma": null
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
@@ -1543,6 +1878,22 @@
                     "letter-spacing": {
                       "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-theme-space-xs",
@@ -1625,6 +1976,22 @@
                   "code": "--al-theme-typography-body-sm-letter-spacing",
                   "figma": null
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
@@ -1678,6 +2045,22 @@
                     "letter-spacing": {
                       "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-theme-space-xs",
@@ -1764,6 +2147,22 @@
                   "code": "--al-theme-opacity-disabled",
                   "figma": "theme/opacity/disabled"
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
@@ -1821,6 +2220,22 @@
                     "opacity": {
                       "code": "--al-theme-opacity-disabled",
                       "figma": "theme/opacity/disabled"
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-theme-space-xs",
@@ -1903,6 +2318,22 @@
                   "code": "--al-theme-typography-body-sm-letter-spacing",
                   "figma": null
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
@@ -1957,6 +2388,22 @@
                       "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
                     "row-gap": {
                       "code": "--al-theme-space-xs",
                       "figma": "theme/space/xs"
@@ -2002,7 +2449,8 @@
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "normal"
+                "justify": "normal",
+                "grow": 1
               },
               "tokens": {
                 "column-gap": {
@@ -2025,6 +2473,22 @@
                   "code": "--al-theme-typography-body-md-bold-letter-spacing",
                   "figma": null
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-base-space",
                   "figma": "base/space"
@@ -2043,7 +2507,8 @@
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "grow": 1
                   },
                   "tokens": {
                     "column-gap": {
@@ -2065,6 +2530,22 @@
                     "letter-spacing": {
                       "code": "--al-theme-typography-body-md-bold-letter-spacing",
                       "figma": null
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-base-space",
@@ -2111,7 +2592,8 @@
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "normal"
+                "justify": "normal",
+                "grow": 1
               },
               "tokens": {
                 "column-gap": {
@@ -2134,6 +2616,22 @@
                   "code": "--al-theme-typography-body-md-bold-letter-spacing",
                   "figma": null
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-base-space",
                   "figma": "base/space"
@@ -2152,7 +2650,8 @@
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "grow": 1
                   },
                   "tokens": {
                     "column-gap": {
@@ -2174,6 +2673,22 @@
                     "letter-spacing": {
                       "code": "--al-theme-typography-body-md-bold-letter-spacing",
                       "figma": null
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-base-space",
@@ -2220,7 +2735,8 @@
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "normal"
+                "justify": "normal",
+                "grow": 1
               },
               "tokens": {
                 "column-gap": {
@@ -2243,6 +2759,22 @@
                   "code": "--al-theme-typography-body-md-bold-letter-spacing",
                   "figma": null
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-base-space",
                   "figma": "base/space"
@@ -2261,7 +2793,8 @@
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "grow": 1
                   },
                   "tokens": {
                     "column-gap": {
@@ -2283,6 +2816,22 @@
                     "letter-spacing": {
                       "code": "--al-theme-typography-body-md-bold-letter-spacing",
                       "figma": null
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-base-space",
@@ -2365,6 +2914,22 @@
                   "code": "--al-theme-typography-body-sm-letter-spacing",
                   "figma": null
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
@@ -2418,6 +2983,22 @@
                     "letter-spacing": {
                       "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-theme-space-xs",
@@ -2504,6 +3085,22 @@
                   "code": "--al-theme-opacity-disabled",
                   "figma": "theme/opacity/disabled"
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
@@ -2561,6 +3158,22 @@
                     "opacity": {
                       "code": "--al-theme-opacity-disabled",
                       "figma": "theme/opacity/disabled"
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-theme-space-xs",
@@ -2643,6 +3256,22 @@
                   "code": "--al-theme-typography-body-sm-letter-spacing",
                   "figma": null
                 },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
                 "row-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
@@ -2697,6 +3326,22 @@
                       "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
                     "row-gap": {
                       "code": "--al-theme-space-xs",
                       "figma": "theme/space/xs"
@@ -2715,6 +3360,7 @@
     "--al-menu-item-height",
     "--al-theme-color-background-transparent-default",
     "--al-theme-color-content-default",
+    "--al-theme-space",
     "--al-theme-space-xs",
     "--al-theme-typography-body-sm",
     "--al-theme-typography-body-sm-letter-spacing"
@@ -2734,8 +3380,8 @@
     "figma": {
       "fileKey": "y83n4o9LOGs74oAoguFcGS",
       "componentSetName": "Menu Item",
-      "nodeId": "3436:1779",
-      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3436-1779"
+      "nodeId": "3543:47347",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47347"
     }
   }
 }

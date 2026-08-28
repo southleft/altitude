@@ -2,7 +2,7 @@
   "$schema": "../contract.schema.json",
   "id": "al-input",
   "name": "Input",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "status": "source",
   "description": "Component: al-input",
   "semantics": {
@@ -83,7 +83,15 @@
         "code": {
           "attribute": "hideLabel"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Label",
+          "options": [
+            "Hidden",
+            "Shown"
+          ],
+          "pairWith": "Label"
+        }
       }
     },
     {
@@ -95,7 +103,19 @@
         "code": {
           "attribute": "isActive"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Active",
+            "Default",
+            "Disabled",
+            "Error",
+            "Focus",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
       }
     },
     {
@@ -107,7 +127,19 @@
         "code": {
           "attribute": "isDisabled"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Active",
+            "Default",
+            "Disabled",
+            "Error",
+            "Focus",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
       }
     },
     {
@@ -119,7 +151,19 @@
         "code": {
           "attribute": "isError"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Active",
+            "Default",
+            "Disabled",
+            "Error",
+            "Focus",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
       }
     },
     {
@@ -131,7 +175,19 @@
         "code": {
           "attribute": "isFocused"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Active",
+            "Default",
+            "Disabled",
+            "Error",
+            "Focus",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
       }
     },
     {
@@ -181,12 +237,7 @@
           "attribute": "label"
         },
         "figma": {
-          "kind": "VARIANT",
-          "property": "Label",
-          "options": [
-            "Hidden",
-            "Shown"
-          ]
+          "omit": true
         }
       }
     },
@@ -588,7 +639,8 @@
                 "display": "flex",
                 "direction": "column",
                 "align": "normal",
-                "justify": "normal"
+                "justify": "normal",
+                "grow": 1
               },
               "tokens": {
                 "column-gap": {
@@ -936,7 +988,8 @@
                     "display": "flex",
                     "direction": "column",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "grow": 1
                   },
                   "tokens": {
                     "column-gap": {
@@ -1293,7 +1346,8 @@
                     "display": "flex",
                     "direction": "column",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "grow": 1
                   },
                   "tokens": {
                     "column-gap": {
@@ -1653,7 +1707,8 @@
                     "display": "flex",
                     "direction": "column",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "grow": 1
                   },
                   "tokens": {
                     "column-gap": {
@@ -2087,7 +2142,8 @@
                     "display": "flex",
                     "direction": "column",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "grow": 1
                   },
                   "tokens": {
                     "column-gap": {
@@ -2435,7 +2491,8 @@
                     "display": "flex",
                     "direction": "column",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "grow": 1
                   },
                   "tokens": {
                     "column-gap": {
@@ -2792,7 +2849,8 @@
                     "display": "flex",
                     "direction": "column",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "grow": 1
                   },
                   "tokens": {
                     "column-gap": {
@@ -3152,7 +3210,8 @@
                     "display": "flex",
                     "direction": "column",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "grow": 1
                   },
                   "tokens": {
                     "column-gap": {
@@ -3586,7 +3645,8 @@
                     "display": "flex",
                     "direction": "column",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "grow": 1
                   },
                   "tokens": {
                     "column-gap": {
@@ -3829,8 +3889,8 @@
     "figma": {
       "fileKey": "y83n4o9LOGs74oAoguFcGS",
       "componentSetName": "Input",
-      "nodeId": null,
-      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/"
+      "nodeId": "3544:48650",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3544-48650"
     }
   }
 }

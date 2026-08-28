@@ -75,6 +75,7 @@ _No events declared._
 | --- | --- | --- |
 | column-gap | `--al-theme-space-md` | `theme/space/md` |
 | gap | `--al-theme-space-md` | `theme/space/md` |
+| padding-left | `--al-theme-space-md` | `theme/space/md` |
 | row-gap | `--al-theme-space-md` | `theme/space/md` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)

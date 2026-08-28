@@ -2,7 +2,7 @@
   "$schema": "../contract.schema.json",
   "id": "al-toggle",
   "name": "Toggle",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "status": "source",
   "description": "Component: al-toggle",
   "semantics": {
@@ -31,7 +31,15 @@
         "code": {
           "attribute": "isChecked"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Checked",
+          "options": [
+            "Off",
+            "On"
+          ],
+          "pairWith": "Checked"
+        }
       }
     },
     {
@@ -43,7 +51,17 @@
         "code": {
           "attribute": "isDisabled"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Default",
+            "Disabled",
+            "Focus",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
       }
     },
     {
@@ -803,8 +821,8 @@
     "figma": {
       "fileKey": "y83n4o9LOGs74oAoguFcGS",
       "componentSetName": "Toggle",
-      "nodeId": "2874:20",
-      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=2874-20"
+      "nodeId": "3543:48094",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-48094"
     }
   }
 }

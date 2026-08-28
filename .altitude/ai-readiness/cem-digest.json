@@ -208,11 +208,6 @@
     "tag": "al-banner",
     "attributes": [
       {
-        "name": "variant",
-        "type": "'success' | 'warning' | 'danger'",
-        "description": "Variant\n- **default** renders a banner that represents an informative announcement\n- **success** renders a banner that represents a success state\n- **warning** renders a banner that represents a warning state\n- **danger** renders a banner that represents a danger/incident state"
-      },
-      {
         "name": "isDismissible",
         "type": "boolean",
         "description": "Whether the banner shows a dismiss control."
@@ -241,11 +236,13 @@
       },
       {
         "name": "icon",
-        "description": "Slot in an icon to override the tone-default one."
+        "description": "Slot in an icon to override the default one."
       }
     ],
     "cssParts": [],
-    "cssProperties": [],
+    "cssProperties": [
+      "--al-banner-icon-fill"
+    ],
     "doNotFlag": []
   },
   "al-breadcrumbs-item": {
@@ -622,6 +619,11 @@
         "name": "hideLegend",
         "type": "boolean",
         "description": "Hide legend?\n- If true, hides the legend from displaying"
+      },
+      {
+        "name": "direction",
+        "type": "'row' | 'column'",
+        "description": "Direction\n- **column** (default) stacks the checkboxes\n- **row** lays them out inline, wrapping when they run out of room\n\nThis does NOT re-introduce a hand-rolled arrangement prop. The group\nalready renders an `<al-layout>` around its slotted items; this\nparameterises THAT layout rather than styling the items here, so\n`<al-layout>` remains the single arrangement primitive. The row form is\na documented variant of the group in the design library (Checkbox Group\nexample, \"Horizontal\" column), which is why it earns a prop instead of\nbeing left to each consumer to compose."
       },
       {
         "name": "label",
@@ -3031,11 +3033,6 @@
         "description": "Absorb the free space of a flex parent\n- Needed when the layout is slotted into a flex container (such as a\n  dialog or popover footer) and `justify` needs room to act on"
       },
       {
-        "name": "stretchItems",
-        "type": "boolean",
-        "description": "Stretch children to fill the main axis"
-      },
-      {
         "name": "responsive",
         "type": "boolean",
         "description": "Collapse a row into a column on small screens"
@@ -3108,6 +3105,10 @@
       {
         "name": "(default)",
         "description": "The link text"
+      },
+      {
+        "name": "after",
+        "description": "Content to display after the link text, typically an icon (an external-link or chevron affordance). The link is `inline-flex` with a `--al-theme-space-xs` gap, and each size variant re-binds `--al-icon-width` / `--al-icon-height`, so a slotted icon is sized by the variant automatically. <al-link href=\"/docs\">Read the docs<al-icon-chevron-right slot=\"after\"></al-icon-chevron-right></al-link>"
       }
     ],
     "cssParts": [],
@@ -3670,6 +3671,11 @@
         "name": "hideLegend",
         "type": "boolean",
         "description": "Hide legend?\n- If true, hides the legend from displaying"
+      },
+      {
+        "name": "direction",
+        "type": "'row' | 'column'",
+        "description": "Direction\n- **column** (default) stacks the radios\n- **row** lays them out inline, wrapping when they run out of room\n\nThis does NOT re-introduce a hand-rolled arrangement prop. The group\nalready renders an `<al-layout>` around its slotted items; this\nparameterises THAT layout rather than styling the items here, so\n`<al-layout>` remains the single arrangement primitive. The row form is\na documented variant of the group in the design library (Radio Group\nexample, \"Horizontal\" column), which is why it earns a prop instead of\nbeing left to each consumer to compose."
       },
       {
         "name": "label",
@@ -4950,26 +4956,6 @@
       {
         "name": "icon",
         "description": "Slot in an icon to override the default one"
-      }
-    ],
-    "cssParts": [],
-    "cssProperties": [],
-    "doNotFlag": []
-  },
-  "al-toggle-button-group": {
-    "tag": "al-toggle-button-group",
-    "attributes": [
-      {
-        "name": "variant",
-        "type": "'background'",
-        "description": "Variant\n- **default** renders the toggle button group without background styles\n- **background** renders the toggle button group with background styles"
-      }
-    ],
-    "events": [],
-    "slots": [
-      {
-        "name": "(default)",
-        "description": "A set of toggle buttons. Arranged in a row by default; for a column or a gap, nest them in `<al-layout>` with the props you need."
       }
     ],
     "cssParts": [],

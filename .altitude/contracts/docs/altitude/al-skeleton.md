@@ -8,9 +8,7 @@ Component: al-skeleton
 
 ## Figma
 
-- Component set: **Skeleton**
-- Node id: `3435:882` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3435-882)
+No Figma component set is mapped for `al-skeleton` in the **Altitude Design System** parity manifest (parity status: `missing-in-figma`). Map one in Figma, then run `pnpm run parity:seed`.
 
 ## Props (3)
 

@@ -17,8 +17,8 @@ inside a `<al-theme density="...">` scope.
 ## Figma
 
 - Component set: **Table**
-- Node id: not pinned (`nodeId: null`) — resolve this set by **NAME** via the parity manifest (`.altitude/figma-sync/parity-manifest.json`) or the `altitude_check_parity` MCP tool at need. Node ids for by-name-mapped components are re-minted when their Figma page is rebuilt, so a value hard-coded here would go stale — see `.altitude/PARITY.md`.
-- File: https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/
+- Node id: `3558:62965` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558-62965)
 
 ## Props (6)
 

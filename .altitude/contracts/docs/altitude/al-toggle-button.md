@@ -2,23 +2,23 @@
 
 # al-toggle-button — Toggle Button
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
+**Status:** `source` · **Version:** `1.1.0` · **Element:** `<div>`
 
 Component: al-toggle-button
 
 ## Figma
 
 - Component set: **Toggle Button**
-- Node id: `3435:1154` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3435-1154)
+- Node id: `3543:47985` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47985)
 
 ## Props (4)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
 | `hasToggle` | boolean | — | — | — |
-| `isSelected` | boolean | — | `false` | — |
-| `isSmall` | boolean | — | — | — |
+| `isSelected` | boolean | — | `false` | **Selected** (VARIANT): `No`, `Yes` |
+| `isSmall` | boolean | — | — | **Size** (VARIANT): `Default`, `Small` |
 | `variant` | string | `'background'` | — | **Variant** (VARIANT): `Background`, `Default` |
 
 #### `hasToggle`
@@ -44,6 +44,16 @@ Variant
 - **background** renders the toggle button with background styles
 
 ## Variant axes
+
+### `isSelected` (Figma property "Selected")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `No`, `Yes`
+
+### `isSmall` (Figma property "Size")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Small`
 
 ### `variant` (Figma property "Variant")
 

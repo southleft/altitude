@@ -23,6 +23,22 @@
       }
     },
     {
+      "name": "direction",
+      "description": "Direction\n- **column** (default) stacks the radios\n- **row** lays them out inline, wrapping when they run out of room\n\nThis does NOT re-introduce a hand-rolled arrangement prop. The group\nalready renders an `<al-layout>` around its slotted items; this\nparameterises THAT layout rather than styling the items here, so\n`<al-layout>` remains the single arrangement primitive. The row form is\na documented variant of the group in the design library (Radio Group\nexample, \"Horizontal\" column), which is why it earns a prop instead of\nbeing left to each consumer to compose.",
+      "type": "enum",
+      "rawType": "'row' | 'column'",
+      "values": [
+        "column",
+        "row"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "direction"
+        },
+        "figma": null
+      }
+    },
+    {
       "name": "errorNote",
       "description": "Error message\n- An error field note that displays below the radio input",
       "type": "string",
@@ -7694,8 +7710,8 @@
           "tag": "fieldset",
           "cls": "al-c-radio-group al-has-hidden-legend",
           "box": {
-            "w": 116.7,
-            "h": 144
+            "w": 326.8,
+            "h": 64
           },
           "layout": {
             "display": "flex",
@@ -7750,26 +7766,40 @@
             },
             {
               "tag": "div",
-              "cls": "al-c-layout al-c-layout--gap-none",
+              "cls": "al-c-layout al-c-layout--row al-c-layout--gap-md al-c-layout--wrap",
               "component": "al-layout",
               "box": {
-                "w": 116.7,
-                "h": 120
+                "w": 326.8,
+                "h": 40
               },
               "layout": {
                 "display": "flex",
-                "direction": "column",
-                "align": "stretch",
-                "justify": "normal"
+                "direction": "row",
+                "align": "center",
+                "justify": "normal",
+                "wrap": "wrap"
               },
-              "tokens": {},
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
               "children": [
                 {
                   "tag": "div",
                   "cls": "al-c-radio",
                   "component": "al-radio",
                   "box": {
-                    "w": 116.7,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -7797,7 +7827,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 116.7,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -8059,7 +8089,7 @@
                   "cls": "al-c-radio",
                   "component": "al-radio",
                   "box": {
-                    "w": 116.7,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -8087,7 +8117,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 116.7,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -8349,7 +8379,7 @@
                   "cls": "al-c-radio",
                   "component": "al-radio",
                   "box": {
-                    "w": 116.7,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -8377,7 +8407,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 116.7,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -8641,7 +8671,7 @@
               "cls": "al-c-field-note",
               "component": "al-field-note",
               "box": {
-                "w": 116.7,
+                "w": 326.8,
                 "h": 20
               },
               "layout": {
@@ -8731,8 +8761,8 @@
           "tag": "fieldset",
           "cls": "al-c-radio-group al-is-disabled al-has-hidden-legend",
           "box": {
-            "w": 116.7,
-            "h": 144
+            "w": 326.8,
+            "h": 64
           },
           "layout": {
             "display": "flex",
@@ -8787,26 +8817,40 @@
             },
             {
               "tag": "div",
-              "cls": "al-c-layout al-c-layout--gap-none",
+              "cls": "al-c-layout al-c-layout--row al-c-layout--gap-md al-c-layout--wrap",
               "component": "al-layout",
               "box": {
-                "w": 116.7,
-                "h": 120
+                "w": 326.8,
+                "h": 40
               },
               "layout": {
                 "display": "flex",
-                "direction": "column",
-                "align": "stretch",
-                "justify": "normal"
+                "direction": "row",
+                "align": "center",
+                "justify": "normal",
+                "wrap": "wrap"
               },
-              "tokens": {},
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
               "children": [
                 {
                   "tag": "div",
                   "cls": "al-c-radio al-is-disabled",
                   "component": "al-radio",
                   "box": {
-                    "w": 116.7,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -8834,7 +8878,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 116.7,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -9108,7 +9152,7 @@
                   "cls": "al-c-radio al-is-disabled",
                   "component": "al-radio",
                   "box": {
-                    "w": 116.7,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -9136,7 +9180,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 116.7,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -9410,7 +9454,7 @@
                   "cls": "al-c-radio al-is-disabled",
                   "component": "al-radio",
                   "box": {
-                    "w": 116.7,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -9438,7 +9482,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 116.7,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -9714,7 +9758,7 @@
               "cls": "al-c-field-note al-is-disabled",
               "component": "al-field-note",
               "box": {
-                "w": 116.7,
+                "w": 326.8,
                 "h": 20
               },
               "layout": {
@@ -9812,8 +9856,8 @@
           "tag": "fieldset",
           "cls": "al-c-radio-group al-is-error al-has-hidden-legend",
           "box": {
-            "w": 128,
-            "h": 168
+            "w": 326.8,
+            "h": 88
           },
           "layout": {
             "display": "flex",
@@ -9868,26 +9912,40 @@
             },
             {
               "tag": "div",
-              "cls": "al-c-layout al-c-layout--gap-none",
+              "cls": "al-c-layout al-c-layout--row al-c-layout--gap-md al-c-layout--wrap",
               "component": "al-layout",
               "box": {
-                "w": 128,
-                "h": 120
+                "w": 326.8,
+                "h": 40
               },
               "layout": {
                 "display": "flex",
-                "direction": "column",
-                "align": "stretch",
-                "justify": "normal"
+                "direction": "row",
+                "align": "center",
+                "justify": "normal",
+                "wrap": "wrap"
               },
-              "tokens": {},
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
               "children": [
                 {
                   "tag": "div",
                   "cls": "al-c-radio",
                   "component": "al-radio",
                   "box": {
-                    "w": 128,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -9915,7 +9973,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 128,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -10177,7 +10235,7 @@
                   "cls": "al-c-radio",
                   "component": "al-radio",
                   "box": {
-                    "w": 128,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -10205,7 +10263,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 128,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -10467,7 +10525,7 @@
                   "cls": "al-c-radio",
                   "component": "al-radio",
                   "box": {
-                    "w": 128,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -10495,7 +10553,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 128,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -10759,7 +10817,7 @@
               "cls": "al-c-field-note",
               "component": "al-field-note",
               "box": {
-                "w": 128,
+                "w": 326.8,
                 "h": 20
               },
               "layout": {
@@ -10845,7 +10903,7 @@
               "cls": "al-c-field-note al-is-error",
               "component": "al-field-note",
               "box": {
-                "w": 128,
+                "w": 326.8,
                 "h": 20
               },
               "layout": {
@@ -10935,8 +10993,8 @@
           "tag": "fieldset",
           "cls": "al-c-radio-group",
           "box": {
-            "w": 155.5,
-            "h": 164
+            "w": 326.8,
+            "h": 84
           },
           "layout": {
             "display": "flex",
@@ -10991,26 +11049,40 @@
             },
             {
               "tag": "div",
-              "cls": "al-c-layout al-c-layout--gap-none",
+              "cls": "al-c-layout al-c-layout--row al-c-layout--gap-md al-c-layout--wrap",
               "component": "al-layout",
               "box": {
-                "w": 155.5,
-                "h": 120
+                "w": 326.8,
+                "h": 40
               },
               "layout": {
                 "display": "flex",
-                "direction": "column",
-                "align": "stretch",
-                "justify": "normal"
+                "direction": "row",
+                "align": "center",
+                "justify": "normal",
+                "wrap": "wrap"
               },
-              "tokens": {},
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
               "children": [
                 {
                   "tag": "div",
                   "cls": "al-c-radio",
                   "component": "al-radio",
                   "box": {
-                    "w": 155.5,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -11038,7 +11110,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 155.5,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -11300,7 +11372,7 @@
                   "cls": "al-c-radio",
                   "component": "al-radio",
                   "box": {
-                    "w": 155.5,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -11328,7 +11400,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 155.5,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -11590,7 +11662,7 @@
                   "cls": "al-c-radio",
                   "component": "al-radio",
                   "box": {
-                    "w": 155.5,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -11618,7 +11690,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 155.5,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -11882,7 +11954,7 @@
               "cls": "al-c-field-note",
               "component": "al-field-note",
               "box": {
-                "w": 155.5,
+                "w": 326.8,
                 "h": 20
               },
               "layout": {
@@ -11972,8 +12044,8 @@
           "tag": "fieldset",
           "cls": "al-c-radio-group al-is-disabled",
           "box": {
-            "w": 155.5,
-            "h": 164
+            "w": 326.8,
+            "h": 84
           },
           "layout": {
             "display": "flex",
@@ -12028,26 +12100,40 @@
             },
             {
               "tag": "div",
-              "cls": "al-c-layout al-c-layout--gap-none",
+              "cls": "al-c-layout al-c-layout--row al-c-layout--gap-md al-c-layout--wrap",
               "component": "al-layout",
               "box": {
-                "w": 155.5,
-                "h": 120
+                "w": 326.8,
+                "h": 40
               },
               "layout": {
                 "display": "flex",
-                "direction": "column",
-                "align": "stretch",
-                "justify": "normal"
+                "direction": "row",
+                "align": "center",
+                "justify": "normal",
+                "wrap": "wrap"
               },
-              "tokens": {},
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
               "children": [
                 {
                   "tag": "div",
                   "cls": "al-c-radio al-is-disabled",
                   "component": "al-radio",
                   "box": {
-                    "w": 155.5,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -12075,7 +12161,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 155.5,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -12349,7 +12435,7 @@
                   "cls": "al-c-radio al-is-disabled",
                   "component": "al-radio",
                   "box": {
-                    "w": 155.5,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -12377,7 +12463,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 155.5,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -12651,7 +12737,7 @@
                   "cls": "al-c-radio al-is-disabled",
                   "component": "al-radio",
                   "box": {
-                    "w": 155.5,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -12679,7 +12765,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 155.5,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -12955,7 +13041,7 @@
               "cls": "al-c-field-note al-is-disabled",
               "component": "al-field-note",
               "box": {
-                "w": 155.5,
+                "w": 326.8,
                 "h": 20
               },
               "layout": {
@@ -13053,8 +13139,8 @@
           "tag": "fieldset",
           "cls": "al-c-radio-group al-is-error",
           "box": {
-            "w": 155.5,
-            "h": 188
+            "w": 326.8,
+            "h": 108
           },
           "layout": {
             "display": "flex",
@@ -13109,26 +13195,40 @@
             },
             {
               "tag": "div",
-              "cls": "al-c-layout al-c-layout--gap-none",
+              "cls": "al-c-layout al-c-layout--row al-c-layout--gap-md al-c-layout--wrap",
               "component": "al-layout",
               "box": {
-                "w": 155.5,
-                "h": 120
+                "w": 326.8,
+                "h": 40
               },
               "layout": {
                 "display": "flex",
-                "direction": "column",
-                "align": "stretch",
-                "justify": "normal"
+                "direction": "row",
+                "align": "center",
+                "justify": "normal",
+                "wrap": "wrap"
               },
-              "tokens": {},
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
               "children": [
                 {
                   "tag": "div",
                   "cls": "al-c-radio",
                   "component": "al-radio",
                   "box": {
-                    "w": 155.5,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -13156,7 +13256,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 155.5,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -13418,7 +13518,7 @@
                   "cls": "al-c-radio",
                   "component": "al-radio",
                   "box": {
-                    "w": 155.5,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -13446,7 +13546,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 155.5,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -13708,7 +13808,7 @@
                   "cls": "al-c-radio",
                   "component": "al-radio",
                   "box": {
-                    "w": 155.5,
+                    "w": 98.3,
                     "h": 40
                   },
                   "layout": {
@@ -13736,7 +13836,7 @@
                       "tag": "div",
                       "cls": "al-c-radio__container",
                       "box": {
-                        "w": 155.5,
+                        "w": 98.3,
                         "h": 40
                       },
                       "layout": {
@@ -14000,7 +14100,7 @@
               "cls": "al-c-field-note",
               "component": "al-field-note",
               "box": {
-                "w": 155.5,
+                "w": 326.8,
                 "h": 20
               },
               "layout": {
@@ -14086,7 +14186,7 @@
               "cls": "al-c-field-note al-is-error",
               "component": "al-field-note",
               "box": {
-                "w": 155.5,
+                "w": 326.8,
                 "h": 20
               },
               "layout": {
@@ -14201,8 +14301,8 @@
     "figma": {
       "fileKey": "y83n4o9LOGs74oAoguFcGS",
       "componentSetName": "Radio Group",
-      "nodeId": null,
-      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/"
+      "nodeId": "3558:61632",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558-61632"
     }
   }
 }

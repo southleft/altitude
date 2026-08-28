@@ -9,8 +9,8 @@ Component: al-button
 ## Figma
 
 - Component set: **Button**
-- Node id: `4271:9562` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=4271-9562)
+- Node id: `3538:36730` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3538-36730)
 
 ## Props (14)
 

@@ -2,15 +2,15 @@
 
 # al-list-item — List Item
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<li>`
+**Status:** `source` · **Version:** `1.1.0` · **Element:** `<li>`
 
 Component: al-list-item
 
 ## Figma
 
 - Component set: **List Item**
-- Node id: `3436:1747` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3436-1747)
+- Node id: `3543:47175` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47175)
 
 ## Props (11)
 
@@ -19,10 +19,10 @@ Component: al-list-item
 | `behavior` | string | `'flyout'` | — | — |
 | `flyoutPosition` | enum | `bottom`, `left`, `top` | — | — |
 | `href` | string | — | — | — |
-| `isActive` | boolean | — | — | — |
-| `isCurrent` | boolean | — | — | — |
-| `isDisabled` | boolean | — | — | — |
-| `isError` | boolean | — | — | — |
+| `isActive` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
+| `isCurrent` | boolean | — | — | **Current** (VARIANT): `No`, `Yes` |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
+| `isError` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `onClick` | string | `() => void` | — | — |
 | `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | — |
 | `value` | string | `string \| { label: string; value: any; [key: string]: unknown }` | — | — |
@@ -84,6 +84,26 @@ Variants
 - **static** renders a list item that isn't interactive. Use for typeahead dropdowns
 
 ## Variant axes
+
+### `isActive` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
+
+### `isCurrent` (Figma property "Current")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `No`, `Yes`
+
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
+
+### `isError` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
 
 ### `variant` (Figma property "Variant")
 

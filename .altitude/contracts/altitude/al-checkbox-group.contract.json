@@ -23,6 +23,22 @@
       }
     },
     {
+      "name": "direction",
+      "description": "Direction\n- **column** (default) stacks the checkboxes\n- **row** lays them out inline, wrapping when they run out of room\n\nThis does NOT re-introduce a hand-rolled arrangement prop. The group\nalready renders an `<al-layout>` around its slotted items; this\nparameterises THAT layout rather than styling the items here, so\n`<al-layout>` remains the single arrangement primitive. The row form is\na documented variant of the group in the design library (Checkbox Group\nexample, \"Horizontal\" column), which is why it earns a prop instead of\nbeing left to each consumer to compose.",
+      "type": "enum",
+      "rawType": "'row' | 'column'",
+      "values": [
+        "column",
+        "row"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "direction"
+        },
+        "figma": null
+      }
+    },
+    {
       "name": "errorNote",
       "description": "Error message\n- An error field note that displays below the checkbox input",
       "type": "string",
@@ -7695,8 +7711,8 @@
           "tag": "fieldset",
           "cls": "al-c-checkbox-group al-has-hidden-legend",
           "box": {
-            "w": 127.8,
-            "h": 144
+            "w": 415.5,
+            "h": 64
           },
           "layout": {
             "display": "flex",
@@ -7751,19 +7767,33 @@
             },
             {
               "tag": "div",
-              "cls": "al-c-layout al-c-layout--gap-none",
+              "cls": "al-c-layout al-c-layout--row al-c-layout--gap-md al-c-layout--wrap",
               "component": "al-layout",
               "box": {
-                "w": 127.8,
-                "h": 120
+                "w": 415.5,
+                "h": 40
               },
               "layout": {
                 "display": "flex",
-                "direction": "column",
-                "align": "stretch",
-                "justify": "normal"
+                "direction": "row",
+                "align": "center",
+                "justify": "normal",
+                "wrap": "wrap"
               },
-              "tokens": {},
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
               "children": [
                 {
                   "tag": "div",
@@ -8642,7 +8672,7 @@
               "cls": "al-c-field-note",
               "component": "al-field-note",
               "box": {
-                "w": 127.8,
+                "w": 415.5,
                 "h": 20
               },
               "layout": {
@@ -8732,8 +8762,8 @@
           "tag": "fieldset",
           "cls": "al-c-checkbox-group al-is-disabled al-has-hidden-legend",
           "box": {
-            "w": 127.8,
-            "h": 144
+            "w": 415.5,
+            "h": 64
           },
           "layout": {
             "display": "flex",
@@ -8788,19 +8818,33 @@
             },
             {
               "tag": "div",
-              "cls": "al-c-layout al-c-layout--gap-none",
+              "cls": "al-c-layout al-c-layout--row al-c-layout--gap-md al-c-layout--wrap",
               "component": "al-layout",
               "box": {
-                "w": 127.8,
-                "h": 120
+                "w": 415.5,
+                "h": 40
               },
               "layout": {
                 "display": "flex",
-                "direction": "column",
-                "align": "stretch",
-                "justify": "normal"
+                "direction": "row",
+                "align": "center",
+                "justify": "normal",
+                "wrap": "wrap"
               },
-              "tokens": {},
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
               "children": [
                 {
                   "tag": "div",
@@ -9715,7 +9759,7 @@
               "cls": "al-c-field-note al-is-disabled",
               "component": "al-field-note",
               "box": {
-                "w": 127.8,
+                "w": 415.5,
                 "h": 20
               },
               "layout": {
@@ -9813,8 +9857,8 @@
           "tag": "fieldset",
           "cls": "al-c-checkbox-group al-is-error al-has-hidden-legend",
           "box": {
-            "w": 128,
-            "h": 168
+            "w": 415.5,
+            "h": 88
           },
           "layout": {
             "display": "flex",
@@ -9869,26 +9913,40 @@
             },
             {
               "tag": "div",
-              "cls": "al-c-layout al-c-layout--gap-none",
+              "cls": "al-c-layout al-c-layout--row al-c-layout--gap-md al-c-layout--wrap",
               "component": "al-layout",
               "box": {
-                "w": 128,
-                "h": 120
+                "w": 415.5,
+                "h": 40
               },
               "layout": {
                 "display": "flex",
-                "direction": "column",
-                "align": "stretch",
-                "justify": "normal"
+                "direction": "row",
+                "align": "center",
+                "justify": "normal",
+                "wrap": "wrap"
               },
-              "tokens": {},
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
               "children": [
                 {
                   "tag": "div",
                   "cls": "al-c-checkbox",
                   "component": "al-checkbox",
                   "box": {
-                    "w": 128,
+                    "w": 127.8,
                     "h": 40
                   },
                   "layout": {
@@ -9916,7 +9974,7 @@
                       "tag": "div",
                       "cls": "al-c-checkbox__container",
                       "box": {
-                        "w": 128,
+                        "w": 127.8,
                         "h": 40
                       },
                       "layout": {
@@ -10178,7 +10236,7 @@
                   "cls": "al-c-checkbox",
                   "component": "al-checkbox",
                   "box": {
-                    "w": 128,
+                    "w": 127.8,
                     "h": 40
                   },
                   "layout": {
@@ -10206,7 +10264,7 @@
                       "tag": "div",
                       "cls": "al-c-checkbox__container",
                       "box": {
-                        "w": 128,
+                        "w": 127.8,
                         "h": 40
                       },
                       "layout": {
@@ -10468,7 +10526,7 @@
                   "cls": "al-c-checkbox",
                   "component": "al-checkbox",
                   "box": {
-                    "w": 128,
+                    "w": 127.8,
                     "h": 40
                   },
                   "layout": {
@@ -10496,7 +10554,7 @@
                       "tag": "div",
                       "cls": "al-c-checkbox__container",
                       "box": {
-                        "w": 128,
+                        "w": 127.8,
                         "h": 40
                       },
                       "layout": {
@@ -10760,7 +10818,7 @@
               "cls": "al-c-field-note",
               "component": "al-field-note",
               "box": {
-                "w": 128,
+                "w": 415.5,
                 "h": 20
               },
               "layout": {
@@ -10846,7 +10904,7 @@
               "cls": "al-c-field-note al-is-error",
               "component": "al-field-note",
               "box": {
-                "w": 128,
+                "w": 415.5,
                 "h": 20
               },
               "layout": {
@@ -10936,8 +10994,8 @@
           "tag": "fieldset",
           "cls": "al-c-checkbox-group",
           "box": {
-            "w": 181.4,
-            "h": 164
+            "w": 415.5,
+            "h": 84
           },
           "layout": {
             "display": "flex",
@@ -10992,26 +11050,40 @@
             },
             {
               "tag": "div",
-              "cls": "al-c-layout al-c-layout--gap-none",
+              "cls": "al-c-layout al-c-layout--row al-c-layout--gap-md al-c-layout--wrap",
               "component": "al-layout",
               "box": {
-                "w": 181.4,
-                "h": 120
+                "w": 415.5,
+                "h": 40
               },
               "layout": {
                 "display": "flex",
-                "direction": "column",
-                "align": "stretch",
-                "justify": "normal"
+                "direction": "row",
+                "align": "center",
+                "justify": "normal",
+                "wrap": "wrap"
               },
-              "tokens": {},
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
               "children": [
                 {
                   "tag": "div",
                   "cls": "al-c-checkbox",
                   "component": "al-checkbox",
                   "box": {
-                    "w": 181.4,
+                    "w": 127.8,
                     "h": 40
                   },
                   "layout": {
@@ -11039,7 +11111,7 @@
                       "tag": "div",
                       "cls": "al-c-checkbox__container",
                       "box": {
-                        "w": 181.4,
+                        "w": 127.8,
                         "h": 40
                       },
                       "layout": {
@@ -11301,7 +11373,7 @@
                   "cls": "al-c-checkbox",
                   "component": "al-checkbox",
                   "box": {
-                    "w": 181.4,
+                    "w": 127.8,
                     "h": 40
                   },
                   "layout": {
@@ -11329,7 +11401,7 @@
                       "tag": "div",
                       "cls": "al-c-checkbox__container",
                       "box": {
-                        "w": 181.4,
+                        "w": 127.8,
                         "h": 40
                       },
                       "layout": {
@@ -11591,7 +11663,7 @@
                   "cls": "al-c-checkbox",
                   "component": "al-checkbox",
                   "box": {
-                    "w": 181.4,
+                    "w": 127.8,
                     "h": 40
                   },
                   "layout": {
@@ -11619,7 +11691,7 @@
                       "tag": "div",
                       "cls": "al-c-checkbox__container",
                       "box": {
-                        "w": 181.4,
+                        "w": 127.8,
                         "h": 40
                       },
                       "layout": {
@@ -11883,7 +11955,7 @@
               "cls": "al-c-field-note",
               "component": "al-field-note",
               "box": {
-                "w": 181.4,
+                "w": 415.5,
                 "h": 20
               },
               "layout": {
@@ -11973,8 +12045,8 @@
           "tag": "fieldset",
           "cls": "al-c-checkbox-group al-is-disabled",
           "box": {
-            "w": 181.4,
-            "h": 164
+            "w": 415.5,
+            "h": 84
           },
           "layout": {
             "display": "flex",
@@ -12029,26 +12101,40 @@
             },
             {
               "tag": "div",
-              "cls": "al-c-layout al-c-layout--gap-none",
+              "cls": "al-c-layout al-c-layout--row al-c-layout--gap-md al-c-layout--wrap",
               "component": "al-layout",
               "box": {
-                "w": 181.4,
-                "h": 120
+                "w": 415.5,
+                "h": 40
               },
               "layout": {
                 "display": "flex",
-                "direction": "column",
-                "align": "stretch",
-                "justify": "normal"
+                "direction": "row",
+                "align": "center",
+                "justify": "normal",
+                "wrap": "wrap"
               },
-              "tokens": {},
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
               "children": [
                 {
                   "tag": "div",
                   "cls": "al-c-checkbox al-is-disabled",
                   "component": "al-checkbox",
                   "box": {
-                    "w": 181.4,
+                    "w": 127.8,
                     "h": 40
                   },
                   "layout": {
@@ -12076,7 +12162,7 @@
                       "tag": "div",
                       "cls": "al-c-checkbox__container",
                       "box": {
-                        "w": 181.4,
+                        "w": 127.8,
                         "h": 40
                       },
                       "layout": {
@@ -12350,7 +12436,7 @@
                   "cls": "al-c-checkbox al-is-disabled",
                   "component": "al-checkbox",
                   "box": {
-                    "w": 181.4,
+                    "w": 127.8,
                     "h": 40
                   },
                   "layout": {
@@ -12378,7 +12464,7 @@
                       "tag": "div",
                       "cls": "al-c-checkbox__container",
                       "box": {
-                        "w": 181.4,
+                        "w": 127.8,
                         "h": 40
                       },
                       "layout": {
@@ -12652,7 +12738,7 @@
                   "cls": "al-c-checkbox al-is-disabled",
                   "component": "al-checkbox",
                   "box": {
-                    "w": 181.4,
+                    "w": 127.8,
                     "h": 40
                   },
                   "layout": {
@@ -12680,7 +12766,7 @@
                       "tag": "div",
                       "cls": "al-c-checkbox__container",
                       "box": {
-                        "w": 181.4,
+                        "w": 127.8,
                         "h": 40
                       },
                       "layout": {
@@ -12956,7 +13042,7 @@
               "cls": "al-c-field-note al-is-disabled",
               "component": "al-field-note",
               "box": {
-                "w": 181.4,
+                "w": 415.5,
                 "h": 20
               },
               "layout": {
@@ -13054,8 +13140,8 @@
           "tag": "fieldset",
           "cls": "al-c-checkbox-group al-is-error",
           "box": {
-            "w": 181.4,
-            "h": 188
+            "w": 415.5,
+            "h": 108
           },
           "layout": {
             "display": "flex",
@@ -13110,26 +13196,40 @@
             },
             {
               "tag": "div",
-              "cls": "al-c-layout al-c-layout--gap-none",
+              "cls": "al-c-layout al-c-layout--row al-c-layout--gap-md al-c-layout--wrap",
               "component": "al-layout",
               "box": {
-                "w": 181.4,
-                "h": 120
+                "w": 415.5,
+                "h": 40
               },
               "layout": {
                 "display": "flex",
-                "direction": "column",
-                "align": "stretch",
-                "justify": "normal"
+                "direction": "row",
+                "align": "center",
+                "justify": "normal",
+                "wrap": "wrap"
               },
-              "tokens": {},
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
               "children": [
                 {
                   "tag": "div",
                   "cls": "al-c-checkbox",
                   "component": "al-checkbox",
                   "box": {
-                    "w": 181.4,
+                    "w": 127.8,
                     "h": 40
                   },
                   "layout": {
@@ -13157,7 +13257,7 @@
                       "tag": "div",
                       "cls": "al-c-checkbox__container",
                       "box": {
-                        "w": 181.4,
+                        "w": 127.8,
                         "h": 40
                       },
                       "layout": {
@@ -13419,7 +13519,7 @@
                   "cls": "al-c-checkbox",
                   "component": "al-checkbox",
                   "box": {
-                    "w": 181.4,
+                    "w": 127.8,
                     "h": 40
                   },
                   "layout": {
@@ -13447,7 +13547,7 @@
                       "tag": "div",
                       "cls": "al-c-checkbox__container",
                       "box": {
-                        "w": 181.4,
+                        "w": 127.8,
                         "h": 40
                       },
                       "layout": {
@@ -13709,7 +13809,7 @@
                   "cls": "al-c-checkbox",
                   "component": "al-checkbox",
                   "box": {
-                    "w": 181.4,
+                    "w": 127.8,
                     "h": 40
                   },
                   "layout": {
@@ -13737,7 +13837,7 @@
                       "tag": "div",
                       "cls": "al-c-checkbox__container",
                       "box": {
-                        "w": 181.4,
+                        "w": 127.8,
                         "h": 40
                       },
                       "layout": {
@@ -14001,7 +14101,7 @@
               "cls": "al-c-field-note",
               "component": "al-field-note",
               "box": {
-                "w": 181.4,
+                "w": 415.5,
                 "h": 20
               },
               "layout": {
@@ -14087,7 +14187,7 @@
               "cls": "al-c-field-note al-is-error",
               "component": "al-field-note",
               "box": {
-                "w": 181.4,
+                "w": 415.5,
                 "h": 20
               },
               "layout": {
@@ -14204,8 +14304,8 @@
     "figma": {
       "fileKey": "y83n4o9LOGs74oAoguFcGS",
       "componentSetName": "Checkbox Group",
-      "nodeId": null,
-      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/"
+      "nodeId": "3558:60896",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558-60896"
     }
   }
 }

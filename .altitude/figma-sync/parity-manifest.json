@@ -2,7 +2,7 @@
   "$comment": "Figma <-> code parity manifest. Seeded by scripts/figma-parity/seed-manifest.mjs; lastSync stamped by scripts/figma-parity/mark-synced.mjs; figmaCurrentDigest updated by scripts/figma-parity/refresh-figma-digests.mjs. Read by libs/altitude-mcp/src/lib/parity.mjs.",
   "figmaFileId": "y83n4o9LOGs74oAoguFcGS",
   "created": "2026-08-22T03:30:29.826Z",
-  "figmaLastRefreshed": "2026-08-26T13:50:25.657Z",
+  "figmaLastRefreshed": "2026-08-28T02:10:02.319Z",
   "components": {
     "al-accordion-panel": {
       "figma": null,
@@ -30,7 +30,7 @@
     "al-badge": {
       "figma": {
         "name": "Badge",
-        "nodeId": "2626:541"
+        "nodeId": "3538:35772"
       },
       "lastSync": {
         "date": "2026-08-22T03:30:30.419Z",
@@ -38,118 +38,86 @@
         "figmaDigest": "d49c0532cf2014a3f9dfaccafe46ac9564b01664",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "d49c0532cf2014a3f9dfaccafe46ac9564b01664",
+      "figmaCurrentDigest": "c00e03fcaf6a2b2f1ff6da6f225b8dd53ae9dad4",
       "figmaContract": {
         "props": {
           "Text": {
             "type": "TEXT",
             "options": null
           },
-          "Type": {
-            "type": "VARIANT",
-            "options": [
-              "Dot",
-              "Text"
-            ]
-          },
           "Variant": {
             "type": "VARIANT",
             "options": [
+              "Danger",
               "Default",
               "Info",
-              "Success",
-              "Warning",
-              "Danger"
-            ]
-          },
-          "Size": {
-            "type": "VARIANT",
-            "options": [
-              "sm"
-            ]
-          }
-        },
-        "variants": [
-          "Type=Dot, Variant=Danger, Size=sm",
-          "Type=Dot, Variant=Default, Size=sm",
-          "Type=Dot, Variant=Info, Size=sm",
-          "Type=Dot, Variant=Success, Size=sm",
-          "Type=Dot, Variant=Warning, Size=sm",
-          "Type=Text, Variant=Danger, Size=sm",
-          "Type=Text, Variant=Default, Size=sm",
-          "Type=Text, Variant=Info, Size=sm",
-          "Type=Text, Variant=Success, Size=sm",
-          "Type=Text, Variant=Warning, Size=sm"
-        ]
-      }
-    },
-    "al-banner": {
-      "figma": {
-        "name": "Banner",
-        "nodeId": "729:229"
-      },
-      "lastSync": {
-        "date": "2026-08-22T03:30:29.827Z",
-        "codeHash": "3630694d8ccb6bf06f91060b43df27acc7954611",
-        "figmaDigest": "f135582ec542be5ee736f0299f1d963f60dca3d2",
-        "figmaObserved": true
-      },
-      "figmaCurrentDigest": "f135582ec542be5ee736f0299f1d963f60dca3d2",
-      "figmaContract": {
-        "props": {
-          "Is everything all good?": {
-            "type": "BOOLEAN",
-            "options": null
-          },
-          "Title Text": {
-            "type": "TEXT",
-            "options": null
-          },
-          "Description Text": {
-            "type": "TEXT",
-            "options": null
-          },
-          "Actions": {
-            "type": "BOOLEAN",
-            "options": null
-          },
-          "Description": {
-            "type": "BOOLEAN",
-            "options": null
-          },
-          "Expanded": {
-            "type": "VARIANT",
-            "options": [
-              "False",
-              "True"
-            ]
-          },
-          "Variant": {
-            "type": "VARIANT",
-            "options": [
-              "Info",
-              "Danger",
               "Success",
               "Warning"
             ]
           }
         },
         "variants": [
-          "Expanded=False, Variant=Danger",
-          "Expanded=False, Variant=Info",
-          "Expanded=False, Variant=Success",
-          "Expanded=False, Variant=Warning",
-          "Expanded=True, Variant=Danger",
-          "Expanded=True, Variant=Info",
-          "Expanded=True, Variant=Success",
-          "Expanded=True, Variant=Warning"
+          "Variant=Danger",
+          "Variant=Default",
+          "Variant=Info",
+          "Variant=Success",
+          "Variant=Warning"
+        ]
+      }
+    },
+    "al-banner": {
+      "figma": {
+        "name": "Banner",
+        "nodeId": "3558:60780"
+      },
+      "lastSync": {
+        "date": "2026-08-28T02:12:32.490Z",
+        "codeHash": "3630694d8ccb6bf06f91060b43df27acc7954611",
+        "contractDigest": "934407ca1414bff595b19b130e9b708e8beff833",
+        "figmaDigest": "ca3b73ea507e65fc2c254161853942043e668b62",
+        "contractHash": "074d416891da3b80b6386e8f8d87e57414aca7c2ae4af5cf5d858c001454952f",
+        "contractVersion": "1.0.0"
+      },
+      "figmaCurrentDigest": "ca3b73ea507e65fc2c254161853942043e668b62",
+      "figmaContract": {
+        "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
+          "Variant": {
+            "type": "VARIANT",
+            "options": [
+              "Danger",
+              "Info",
+              "Success",
+              "Warning"
+            ]
+          },
+          "Dismissible": {
+            "type": "VARIANT",
+            "options": [
+              "No",
+              "Yes"
+            ]
+          }
+        },
+        "variants": [
+          "Variant=Danger, Dismissible=No",
+          "Variant=Danger, Dismissible=Yes",
+          "Variant=Info, Dismissible=No",
+          "Variant=Info, Dismissible=Yes",
+          "Variant=Success, Dismissible=No",
+          "Variant=Success, Dismissible=Yes",
+          "Variant=Warning, Dismissible=No",
+          "Variant=Warning, Dismissible=Yes"
         ]
       }
     },
     "al-breadcrumbs-item": {
       "figma": {
         "name": "Breadcrumbs Item",
-        "nodeId": "3436:1837"
+        "nodeId": "3538:36342"
       },
       "lastSync": {
         "date": "2026-08-23T20:05:04.657Z",
@@ -158,9 +126,13 @@
         "figmaDigest": "1f720a2af3eab6ed53edccbb84436ed8b27ec19a",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "1f720a2af3eab6ed53edccbb84436ed8b27ec19a",
+      "figmaCurrentDigest": "7c3add9dadfa25fdb3cafcee413606ca6a9a2df0",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
@@ -198,18 +170,23 @@
     "al-breadcrumbs": {
       "figma": {
         "name": "Breadcrumbs",
-        "nodeId": null
+        "nodeId": "3558:60804"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
+        "date": "2026-08-28T02:12:32.490Z",
         "codeHash": "ff2abbe87651e92f47d170d03e9f61affd16d877",
         "contractDigest": "32f5cde6ce08554e210d10c29d76473c5d0ab75a",
-        "figmaDigest": "049aa0050240d593b26dd79b6677ce9580bd02c4",
-        "figmaObserved": true
+        "figmaDigest": "99dfc0d9505a7d84b2efa87ee6c785e3319cfe37",
+        "contractHash": "6b7729cd0cde7f875829b8f67d7ea45769381aae24d68c51a1ac3615d3719c13",
+        "contractVersion": "1.0.0"
       },
-      "figmaCurrentDigest": "049aa0050240d593b26dd79b6677ce9580bd02c4",
+      "figmaCurrentDigest": "99dfc0d9505a7d84b2efa87ee6c785e3319cfe37",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
@@ -225,7 +202,7 @@
     "al-button": {
       "figma": {
         "name": "Button",
-        "nodeId": "4271:9562"
+        "nodeId": "3538:36730"
       },
       "lastSync": {
         "date": "2026-08-22T03:30:29.827Z",
@@ -233,17 +210,9 @@
         "figmaDigest": "18828c1c7395c3b053821c991fa6b7e9f69d9e30",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "a1474ef59293a9e22741a9b0cdddd8bddd8b32c5",
+      "figmaCurrentDigest": "1924f352895ce477be3106326212f5a5fd5006f5",
       "figmaContract": {
         "props": {
-          "Is Full Width": {
-            "type": "BOOLEAN",
-            "options": null
-          },
-          "Slot After": {
-            "type": "BOOLEAN",
-            "options": null
-          },
           "Text": {
             "type": "TEXT",
             "options": null
@@ -256,6 +225,10 @@
             "type": "INSTANCE_SWAP",
             "options": null
           },
+          "Slot After": {
+            "type": "BOOLEAN",
+            "options": null
+          },
           "Icon After": {
             "type": "INSTANCE_SWAP",
             "options": null
@@ -264,29 +237,23 @@
             "type": "VARIANT",
             "options": [
               "Default",
-              "Hover",
-              "Active",
+              "Disabled",
               "Focus",
-              "Disabled"
+              "Hover"
             ]
           },
           "Variant": {
             "type": "VARIANT",
             "options": [
-              "Primary",
-              "Secondary",
               "Bare",
               "Danger",
+              "Primary",
+              "Secondary",
               "Tertiary"
             ]
           }
         },
         "variants": [
-          "State=Active, Variant=Bare",
-          "State=Active, Variant=Danger",
-          "State=Active, Variant=Primary",
-          "State=Active, Variant=Secondary",
-          "State=Active, Variant=Tertiary",
           "State=Default, Variant=Bare",
           "State=Default, Variant=Danger",
           "State=Default, Variant=Primary",
@@ -324,61 +291,41 @@
     "al-checkbox-group": {
       "figma": {
         "name": "Checkbox Group",
-        "nodeId": null
+        "nodeId": "3558:60896"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
+        "date": "2026-08-28T02:12:32.490Z",
         "codeHash": "4877023a0b1570c87e3981d77e2cf29fd769cd3e",
         "contractDigest": "063ddcfa3f94a3ab3249e41bae806f141764d539",
-        "figmaDigest": "d00254c877becf82580a62d4b22bbd5c08b0ac94",
-        "figmaObserved": true
+        "figmaDigest": "5e52998c69c916cb02f8797323834ad95940a495",
+        "contractHash": "2b4ae9737127c286fee250bb4a93ba56f780613dd7678761141f8989715e5b1a",
+        "contractVersion": "1.0.0"
       },
-      "figmaCurrentDigest": "d00254c877becf82580a62d4b22bbd5c08b0ac94",
+      "figmaCurrentDigest": "5e52998c69c916cb02f8797323834ad95940a495",
       "figmaContract": {
         "props": {
-          "State": {
-            "type": "VARIANT",
-            "options": [
-              "Default",
-              "Error",
-              "Disabled"
-            ]
-          },
-          "Orientation": {
-            "type": "VARIANT",
-            "options": [
-              "Default",
-              "Horizontal"
-            ]
+          "Text": {
+            "type": "TEXT",
+            "options": null
           },
           "Legend": {
             "type": "VARIANT",
             "options": [
-              "Shown",
-              "Hidden"
+              "Hidden",
+              "Shown"
             ]
           }
         },
         "variants": [
-          "State=Default, Orientation=Default, Legend=Hidden",
-          "State=Default, Orientation=Default, Legend=Shown",
-          "State=Default, Orientation=Horizontal, Legend=Hidden",
-          "State=Default, Orientation=Horizontal, Legend=Shown",
-          "State=Disabled, Orientation=Default, Legend=Hidden",
-          "State=Disabled, Orientation=Default, Legend=Shown",
-          "State=Disabled, Orientation=Horizontal, Legend=Hidden",
-          "State=Disabled, Orientation=Horizontal, Legend=Shown",
-          "State=Error, Orientation=Default, Legend=Hidden",
-          "State=Error, Orientation=Default, Legend=Shown",
-          "State=Error, Orientation=Horizontal, Legend=Hidden",
-          "State=Error, Orientation=Horizontal, Legend=Shown"
+          "Legend=Hidden",
+          "Legend=Shown"
         ]
       }
     },
     "al-checkbox": {
       "figma": {
         "name": "Checkbox",
-        "nodeId": "3435:1422"
+        "nodeId": "3539:42167"
       },
       "lastSync": {
         "date": "2026-08-23T20:05:04.657Z",
@@ -387,32 +334,35 @@
         "figmaDigest": "d25ae5c815b9feccf32b361b1ca92c0914964e47",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "d25ae5c815b9feccf32b361b1ca92c0914964e47",
+      "figmaCurrentDigest": "1fbe66ce45c239ea9e4058b0eca86a9d4bac7970",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
               "Default",
-              "Hover",
-              "Focus",
               "Disabled",
-              "Error"
+              "Focus",
+              "Hover"
             ]
           },
           "Checked": {
             "type": "VARIANT",
             "options": [
+              "Indeterminate",
               "Off",
-              "On",
-              "Indeterminate"
+              "On"
             ]
           },
           "Label": {
             "type": "VARIANT",
             "options": [
-              "Shown",
-              "Hidden"
+              "Hidden",
+              "Shown"
             ]
           }
         },
@@ -429,10 +379,6 @@
           "State=Disabled, Checked=Off, Label=Shown",
           "State=Disabled, Checked=On, Label=Hidden",
           "State=Disabled, Checked=On, Label=Shown",
-          "State=Error, Checked=Indeterminate, Label=Hidden",
-          "State=Error, Checked=Indeterminate, Label=Shown",
-          "State=Error, Checked=Off, Label=Hidden",
-          "State=Error, Checked=Off, Label=Shown",
           "State=Focus, Checked=Indeterminate, Label=Hidden",
           "State=Focus, Checked=Indeterminate, Label=Shown",
           "State=Focus, Checked=Off, Label=Hidden",
@@ -451,17 +397,24 @@
     "al-chip": {
       "figma": {
         "name": "Chip",
-        "nodeId": "3435:1086"
+        "nodeId": "3540:43526"
       },
       "lastSync": {
-        "date": "2026-08-22T03:30:29.827Z",
-        "codeHash": "2d573a20bcc0c8453235572044151eebc7190798",
-        "figmaDigest": "f8cc5b7f1c009c9460749ebe9a989c2e990c09ec",
+        "date": "2026-08-28T01:00:00.380Z",
+        "codeHash": "62bf6d8268e17d81d54614a68cdbf13082264054",
+        "contractDigest": "693728de024c0ec57b8af9a5414d3a9750d142c5",
+        "figmaDigest": "f4a48b8e10fe8442a66a6cbd81e1b6f08b9fcb3b",
+        "contractHash": "d27e86b07c55ed1caf81f33d10b09b105a2d16fc4fdb436ba5130fedc0f58a63",
+        "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "f8cc5b7f1c009c9460749ebe9a989c2e990c09ec",
+      "figmaCurrentDigest": "f4a48b8e10fe8442a66a6cbd81e1b6f08b9fcb3b",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
@@ -472,19 +425,12 @@
           "Variant": {
             "type": "VARIANT",
             "options": [
+              "Danger",
               "Default",
-              "Secondary",
               "Info",
+              "Secondary",
               "Success",
-              "Warning",
-              "Danger"
-            ]
-          },
-          "Shape": {
-            "type": "VARIANT",
-            "options": [
-              "Default",
-              "Squared"
+              "Warning"
             ]
           },
           "Dismissible": {
@@ -493,98 +439,98 @@
               "No",
               "Yes"
             ]
+          },
+          "Shape": {
+            "type": "VARIANT",
+            "options": [
+              "Default",
+              "Squared"
+            ]
           }
         },
         "variants": [
-          "State=Default, Variant=Danger, Shape=Default, Dismissible=No",
-          "State=Default, Variant=Danger, Shape=Default, Dismissible=Yes",
-          "State=Default, Variant=Danger, Shape=Squared, Dismissible=No",
-          "State=Default, Variant=Danger, Shape=Squared, Dismissible=Yes",
-          "State=Default, Variant=Default, Shape=Default, Dismissible=No",
-          "State=Default, Variant=Default, Shape=Default, Dismissible=Yes",
-          "State=Default, Variant=Default, Shape=Squared, Dismissible=No",
-          "State=Default, Variant=Default, Shape=Squared, Dismissible=Yes",
-          "State=Default, Variant=Info, Shape=Default, Dismissible=No",
-          "State=Default, Variant=Info, Shape=Default, Dismissible=Yes",
-          "State=Default, Variant=Info, Shape=Squared, Dismissible=No",
-          "State=Default, Variant=Info, Shape=Squared, Dismissible=Yes",
-          "State=Default, Variant=Secondary, Shape=Default, Dismissible=No",
-          "State=Default, Variant=Secondary, Shape=Default, Dismissible=Yes",
-          "State=Default, Variant=Secondary, Shape=Squared, Dismissible=No",
-          "State=Default, Variant=Secondary, Shape=Squared, Dismissible=Yes",
-          "State=Default, Variant=Success, Shape=Default, Dismissible=No",
-          "State=Default, Variant=Success, Shape=Default, Dismissible=Yes",
-          "State=Default, Variant=Success, Shape=Squared, Dismissible=No",
-          "State=Default, Variant=Success, Shape=Squared, Dismissible=Yes",
-          "State=Default, Variant=Warning, Shape=Default, Dismissible=No",
-          "State=Default, Variant=Warning, Shape=Default, Dismissible=Yes",
-          "State=Default, Variant=Warning, Shape=Squared, Dismissible=No",
-          "State=Default, Variant=Warning, Shape=Squared, Dismissible=Yes",
-          "State=Focus, Variant=Danger, Shape=Default, Dismissible=No",
-          "State=Focus, Variant=Danger, Shape=Default, Dismissible=Yes",
-          "State=Focus, Variant=Danger, Shape=Squared, Dismissible=No",
-          "State=Focus, Variant=Danger, Shape=Squared, Dismissible=Yes",
-          "State=Focus, Variant=Default, Shape=Default, Dismissible=No",
-          "State=Focus, Variant=Default, Shape=Default, Dismissible=Yes",
-          "State=Focus, Variant=Default, Shape=Squared, Dismissible=No",
-          "State=Focus, Variant=Default, Shape=Squared, Dismissible=Yes",
-          "State=Focus, Variant=Info, Shape=Default, Dismissible=No",
-          "State=Focus, Variant=Info, Shape=Default, Dismissible=Yes",
-          "State=Focus, Variant=Info, Shape=Squared, Dismissible=No",
-          "State=Focus, Variant=Info, Shape=Squared, Dismissible=Yes",
-          "State=Focus, Variant=Secondary, Shape=Default, Dismissible=No",
-          "State=Focus, Variant=Secondary, Shape=Default, Dismissible=Yes",
-          "State=Focus, Variant=Secondary, Shape=Squared, Dismissible=No",
-          "State=Focus, Variant=Secondary, Shape=Squared, Dismissible=Yes",
-          "State=Focus, Variant=Success, Shape=Default, Dismissible=No",
-          "State=Focus, Variant=Success, Shape=Default, Dismissible=Yes",
-          "State=Focus, Variant=Success, Shape=Squared, Dismissible=No",
-          "State=Focus, Variant=Success, Shape=Squared, Dismissible=Yes",
-          "State=Focus, Variant=Warning, Shape=Default, Dismissible=No",
-          "State=Focus, Variant=Warning, Shape=Default, Dismissible=Yes",
-          "State=Focus, Variant=Warning, Shape=Squared, Dismissible=No",
-          "State=Focus, Variant=Warning, Shape=Squared, Dismissible=Yes"
+          "State=Default, Variant=Danger, Dismissible=No, Shape=Default",
+          "State=Default, Variant=Danger, Dismissible=No, Shape=Squared",
+          "State=Default, Variant=Danger, Dismissible=Yes, Shape=Default",
+          "State=Default, Variant=Danger, Dismissible=Yes, Shape=Squared",
+          "State=Default, Variant=Default, Dismissible=No, Shape=Default",
+          "State=Default, Variant=Default, Dismissible=No, Shape=Squared",
+          "State=Default, Variant=Default, Dismissible=Yes, Shape=Default",
+          "State=Default, Variant=Default, Dismissible=Yes, Shape=Squared",
+          "State=Default, Variant=Info, Dismissible=No, Shape=Default",
+          "State=Default, Variant=Info, Dismissible=No, Shape=Squared",
+          "State=Default, Variant=Info, Dismissible=Yes, Shape=Default",
+          "State=Default, Variant=Info, Dismissible=Yes, Shape=Squared",
+          "State=Default, Variant=Secondary, Dismissible=No, Shape=Default",
+          "State=Default, Variant=Secondary, Dismissible=No, Shape=Squared",
+          "State=Default, Variant=Secondary, Dismissible=Yes, Shape=Default",
+          "State=Default, Variant=Secondary, Dismissible=Yes, Shape=Squared",
+          "State=Default, Variant=Success, Dismissible=No, Shape=Default",
+          "State=Default, Variant=Success, Dismissible=No, Shape=Squared",
+          "State=Default, Variant=Success, Dismissible=Yes, Shape=Default",
+          "State=Default, Variant=Success, Dismissible=Yes, Shape=Squared",
+          "State=Default, Variant=Warning, Dismissible=No, Shape=Default",
+          "State=Default, Variant=Warning, Dismissible=No, Shape=Squared",
+          "State=Default, Variant=Warning, Dismissible=Yes, Shape=Default",
+          "State=Default, Variant=Warning, Dismissible=Yes, Shape=Squared",
+          "State=Focus, Variant=Danger, Dismissible=No, Shape=Default",
+          "State=Focus, Variant=Danger, Dismissible=No, Shape=Squared",
+          "State=Focus, Variant=Danger, Dismissible=Yes, Shape=Default",
+          "State=Focus, Variant=Danger, Dismissible=Yes, Shape=Squared",
+          "State=Focus, Variant=Default, Dismissible=No, Shape=Default",
+          "State=Focus, Variant=Default, Dismissible=No, Shape=Squared",
+          "State=Focus, Variant=Default, Dismissible=Yes, Shape=Default",
+          "State=Focus, Variant=Default, Dismissible=Yes, Shape=Squared",
+          "State=Focus, Variant=Info, Dismissible=No, Shape=Default",
+          "State=Focus, Variant=Info, Dismissible=No, Shape=Squared",
+          "State=Focus, Variant=Info, Dismissible=Yes, Shape=Default",
+          "State=Focus, Variant=Info, Dismissible=Yes, Shape=Squared",
+          "State=Focus, Variant=Secondary, Dismissible=No, Shape=Default",
+          "State=Focus, Variant=Secondary, Dismissible=No, Shape=Squared",
+          "State=Focus, Variant=Secondary, Dismissible=Yes, Shape=Default",
+          "State=Focus, Variant=Secondary, Dismissible=Yes, Shape=Squared",
+          "State=Focus, Variant=Success, Dismissible=No, Shape=Default",
+          "State=Focus, Variant=Success, Dismissible=No, Shape=Squared",
+          "State=Focus, Variant=Success, Dismissible=Yes, Shape=Default",
+          "State=Focus, Variant=Success, Dismissible=Yes, Shape=Squared",
+          "State=Focus, Variant=Warning, Dismissible=No, Shape=Default",
+          "State=Focus, Variant=Warning, Dismissible=No, Shape=Squared",
+          "State=Focus, Variant=Warning, Dismissible=Yes, Shape=Default",
+          "State=Focus, Variant=Warning, Dismissible=Yes, Shape=Squared"
         ]
       }
     },
     "al-combobox": {
       "figma": {
         "name": "Combobox",
-        "nodeId": null
+        "nodeId": "3558:63019"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "0bdd58f9622647f93a11a4822d2e867fc28fbc64",
+        "date": "2026-08-28T02:12:32.490Z",
+        "codeHash": "e9c16acd8ff2d412395dc34c5ea8fe406f01eea7",
         "contractDigest": "506e8e225c6ac25cbbe3667cc248851f5a601bde",
-        "figmaDigest": "6303b2f02ae7cd40f55f810a7d76b1b811f5e33a",
-        "figmaObserved": true
+        "figmaDigest": "58edcf82d9d7bb8f6fa8111f915e4841c6186f35",
+        "contractHash": "4259ba2b27d2e96a08a4e090fb4cbb975731ff8aacee597260d592d1f065087b",
+        "contractVersion": "1.0.0"
       },
-      "figmaCurrentDigest": "6303b2f02ae7cd40f55f810a7d76b1b811f5e33a",
+      "figmaCurrentDigest": "58edcf82d9d7bb8f6fa8111f915e4841c6186f35",
       "figmaContract": {
         "props": {
-          "State": {
-            "type": "VARIANT",
-            "options": [
-              "Default",
-              "Error",
-              "Disabled"
-            ]
+          "Text": {
+            "type": "TEXT",
+            "options": null
           },
           "Label": {
             "type": "VARIANT",
             "options": [
-              "Shown",
-              "Hidden"
+              "Hidden",
+              "Shown"
             ]
           }
         },
         "variants": [
-          "State=Default, Label=Hidden",
-          "State=Default, Label=Shown",
-          "State=Disabled, Label=Hidden",
-          "State=Disabled, Label=Shown",
-          "State=Error, Label=Hidden",
-          "State=Error, Label=Shown"
+          "Label=Hidden",
+          "Label=Shown"
         ]
       }
     },
@@ -618,16 +564,18 @@
     "al-divider": {
       "figma": {
         "name": "Divider",
-        "nodeId": "3435:877"
+        "nodeId": "3543:46933"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
+        "date": "2026-08-28T01:00:00.380Z",
         "codeHash": "a2b2077d1d44bae6dd52e27271a4ede9a12c1243",
         "contractDigest": "c7d3e400de3c6d2fc2c1bf12efebb7b897840241",
-        "figmaDigest": "791bfec35b0242eb91c1232eed0867a02adc81ce",
+        "figmaDigest": "a8f098f050fd3c41fa7690c88dce005ca69dceb8",
+        "contractHash": "3a7b4830cdf5319c8431ecea0f387aeff92204554eeb38ec88b9783e976a6253",
+        "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "791bfec35b0242eb91c1232eed0867a02adc81ce",
+      "figmaCurrentDigest": "a8f098f050fd3c41fa7690c88dce005ca69dceb8",
       "figmaContract": {
         "props": {
           "State": {
@@ -639,13 +587,13 @@
           "Orientation": {
             "type": "VARIANT",
             "options": [
-              "Default",
+              "Horizontal",
               "Vertical"
             ]
           }
         },
         "variants": [
-          "State=Default, Orientation=Default",
+          "State=Default, Orientation=Horizontal",
           "State=Default, Orientation=Vertical"
         ]
       }
@@ -664,18 +612,23 @@
     "al-empty-state": {
       "figma": {
         "name": "Empty State",
-        "nodeId": null
+        "nodeId": "3558:60934"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
+        "date": "2026-08-28T02:12:32.490Z",
         "codeHash": "e56bdd2db1dbd6cfe127585289e35d9d20cbb661",
         "contractDigest": "ef00269886af2f4303654eb4b534f7e2dd82ca18",
-        "figmaDigest": "4f12fd7f9879eab78160a152bfb40d5bb69359af",
-        "figmaObserved": true
+        "figmaDigest": "4a73ca2e3a9417c2ccef63423ad595313a3bd0f2",
+        "contractHash": "ca0c9eb19a9b9cd3237aeb85228e8380e2063a6b64efe540f9b4b1cd8914617a",
+        "contractVersion": "1.0.0"
       },
-      "figmaCurrentDigest": "4f12fd7f9879eab78160a152bfb40d5bb69359af",
+      "figmaCurrentDigest": "4a73ca2e3a9417c2ccef63423ad595313a3bd0f2",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
@@ -691,18 +644,24 @@
     "al-field-note": {
       "figma": {
         "name": "Field Note",
-        "nodeId": "3435:896"
+        "nodeId": "3543:46961"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
+        "date": "2026-08-28T01:00:00.380Z",
         "codeHash": "1962a2bfb143af1336ba23da5db11a5636b0f982",
         "contractDigest": "d1177494d875e44f3e1ae61189dd1a68a2a4b714",
-        "figmaDigest": "24d53266ea9070eb4d111f26b1cdf8b019e9efab",
+        "figmaDigest": "245d89fee378ce9425fb1a98e7a6256bd9d44aa4",
+        "contractHash": "9c2626f000bd76a7ba6e5b0e55c1f67fd7df112fd22b43ceeb93e20dec6aa83c",
+        "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "24d53266ea9070eb4d111f26b1cdf8b019e9efab",
+      "figmaCurrentDigest": "245d89fee378ce9425fb1a98e7a6256bd9d44aa4",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
@@ -722,18 +681,24 @@
     "al-file-upload": {
       "figma": {
         "name": "File Upload",
-        "nodeId": null
+        "nodeId": "3544:51718"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "9f0ad1e97637bd58443bb6391cea3af23aa7a502",
+        "date": "2026-08-28T01:24:27.439Z",
+        "codeHash": "a04aea5349e733db281e435dc628ffb15e0a3bc4",
         "contractDigest": "f6276d3f0764fe94ffe2a3a877cf48895d7150e9",
-        "figmaDigest": "ac2847bce162a3afa1c9f24272dc0b1091474536",
+        "figmaDigest": "c52abcdab297d4677692a32877e7ba58c43541a3",
+        "contractHash": "085ef44b0bc238272aa88992e34b06b86551b141566499b122b62f78dc4dc373",
+        "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "ac2847bce162a3afa1c9f24272dc0b1091474536",
+      "figmaCurrentDigest": "c52abcdab297d4677692a32877e7ba58c43541a3",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
@@ -746,8 +711,8 @@
           "Label": {
             "type": "VARIANT",
             "options": [
-              "Shown",
-              "Hidden"
+              "Hidden",
+              "Shown"
             ]
           }
         },
@@ -781,22 +746,23 @@
     "al-heading": {
       "figma": {
         "name": "Heading",
-        "nodeId": "3435:926"
+        "nodeId": "3543:47001"
       },
       "lastSync": {
-        "date": "2026-08-22T03:30:29.827Z",
-        "codeHash": "9ef3cca1f52a2cb88c32385aec0871f4f608655b",
-        "figmaDigest": "6b64b2070dae076b2c9ec10fd361df9888d53bc7",
+        "date": "2026-08-28T01:00:00.380Z",
+        "codeHash": "63711bce7e431db05b7d83493157c096be2b2677",
+        "contractDigest": "ec9a051760a3100e656ebe483ae6ad7d9c4aac61",
+        "figmaDigest": "00005cd80e99da8741d08c7ed85af6019c8decec",
+        "contractHash": "f08e40c6d30645f7d9fd89051c234079520bab12c23bc00ca9a8cbd9c123aec2",
+        "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "50a30ef9ece87ade20c662fcfe9951a5c4994150",
+      "figmaCurrentDigest": "00005cd80e99da8741d08c7ed85af6019c8decec",
       "figmaContract": {
         "props": {
-          "State": {
-            "type": "VARIANT",
-            "options": [
-              "Default"
-            ]
+          "Text": {
+            "type": "TEXT",
+            "options": null
           },
           "Variant": {
             "type": "VARIANT",
@@ -813,26 +779,18 @@
           "Weight": {
             "type": "VARIANT",
             "options": [
-              "Regular",
-              "Bold"
+              "Default"
             ]
           }
         },
         "variants": [
-          "State=Default, Variant=Default, Weight=Bold",
-          "State=Default, Variant=Default, Weight=Regular",
-          "State=Default, Variant=Display Lg, Weight=Bold",
-          "State=Default, Variant=Display Lg, Weight=Regular",
-          "State=Default, Variant=Display Md, Weight=Bold",
-          "State=Default, Variant=Display Md, Weight=Regular",
-          "State=Default, Variant=Display Sm, Weight=Bold",
-          "State=Default, Variant=Display Sm, Weight=Regular",
-          "State=Default, Variant=Lg, Weight=Bold",
-          "State=Default, Variant=Lg, Weight=Regular",
-          "State=Default, Variant=Md, Weight=Bold",
-          "State=Default, Variant=Md, Weight=Regular",
-          "State=Default, Variant=Sm, Weight=Bold",
-          "State=Default, Variant=Sm, Weight=Regular"
+          "Variant=Default, Weight=Default",
+          "Variant=Display Lg, Weight=Default",
+          "Variant=Display Md, Weight=Default",
+          "Variant=Display Sm, Weight=Default",
+          "Variant=Lg, Weight=Default",
+          "Variant=Md, Weight=Default",
+          "Variant=Sm, Weight=Default"
         ]
       }
     },
@@ -1031,34 +989,38 @@
     "al-input-stepper": {
       "figma": {
         "name": "Input Stepper",
-        "nodeId": null
+        "nodeId": "3558:61366"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
+        "date": "2026-08-28T02:12:32.490Z",
         "codeHash": "cfbe4cd0a1198b86b40b7b63c0047b13286d9f83",
         "contractDigest": "537ba0b979218b2db4ce7d9fc8380a98862597eb",
-        "figmaDigest": "af078904b350eed81262dd72a288f818b071a1b1",
-        "figmaObserved": true
+        "figmaDigest": "025e2288c21a15b7b0ba5d1f098aa0e9c4d69a3c",
+        "contractHash": "31a80ff68a03e4d5c189065f698370aa176d12e31ba8b59fde3ec85326b9e64c",
+        "contractVersion": "1.0.0"
       },
-      "figmaCurrentDigest": "af078904b350eed81262dd72a288f818b071a1b1",
+      "figmaCurrentDigest": "025e2288c21a15b7b0ba5d1f098aa0e9c4d69a3c",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
-              "Default",
-              "Hover",
-              "Focus",
               "Active",
-              "Error",
-              "Disabled"
+              "Default",
+              "Disabled",
+              "Focus",
+              "Hover"
             ]
           },
           "Label": {
             "type": "VARIANT",
             "options": [
-              "Shown",
-              "Hidden"
+              "Hidden",
+              "Shown"
             ]
           }
         },
@@ -1069,8 +1031,6 @@
           "State=Default, Label=Shown",
           "State=Disabled, Label=Hidden",
           "State=Disabled, Label=Shown",
-          "State=Error, Label=Hidden",
-          "State=Error, Label=Shown",
           "State=Focus, Label=Hidden",
           "State=Focus, Label=Shown",
           "State=Hover, Label=Hidden",
@@ -1081,34 +1041,48 @@
     "al-input": {
       "figma": {
         "name": "Input",
-        "nodeId": null
+        "nodeId": "3544:48650"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "8bb812ece0782176125b41f26fffec5d85920d1f",
+        "date": "2026-08-28T01:24:27.439Z",
+        "codeHash": "fa0989834154299aa06c60216596503661d84ded",
         "contractDigest": "3e047c5cb5355d8273d482274f72b54ca527d94e",
-        "figmaDigest": "6f973875ef0f4a8062e0185edecd02c2b9937bd8",
+        "figmaDigest": "590ecfa1f489dd166d077818e430c83a4dcb48d7",
+        "contractHash": "09fd500459c0f51c832983a27acb723cea3cf3bbcd199af13fa023132a96a6d9",
+        "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "6f973875ef0f4a8062e0185edecd02c2b9937bd8",
+      "figmaCurrentDigest": "590ecfa1f489dd166d077818e430c83a4dcb48d7",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
+          "Slot Before": {
+            "type": "BOOLEAN",
+            "options": null
+          },
+          "Slot After": {
+            "type": "BOOLEAN",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
-              "Default",
-              "Hover",
-              "Focus",
               "Active",
-              "Error",
-              "Disabled"
+              "Default",
+              "Disabled",
+              "Focus",
+              "Hover",
+              "Error"
             ]
           },
           "Label": {
             "type": "VARIANT",
             "options": [
-              "Shown",
-              "Hidden"
+              "Hidden",
+              "Shown"
             ]
           }
         },
@@ -1136,78 +1110,75 @@
     "al-link": {
       "figma": {
         "name": "Link",
-        "nodeId": "3435:964"
+        "nodeId": "3543:47075"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "5d49b19430f03a74e359847ba4423885cf42a785",
-        "contractDigest": "544d3cf510fe4341cafb8f6952acb8d690cb0344",
-        "figmaDigest": "acefcb05f7e4543ac69ea88d8fc63627494d4e7a",
+        "date": "2026-08-28T01:25:19.335Z",
+        "codeHash": "aa4c920677e5e9a96534e9cc2dc8cb1550b48791",
+        "contractDigest": "0f20da8fc128dd83cd11b9b1137ffcac65895e6f",
+        "figmaDigest": "276e9a9ebe0c2929d5fc7052c6840c7acaf26e69",
+        "contractHash": "7f3d5e12eee377aab8c294fe3ca68aa5573bad8f229da0feb8a99372fa931987",
+        "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "acefcb05f7e4543ac69ea88d8fc63627494d4e7a",
+      "figmaCurrentDigest": "276e9a9ebe0c2929d5fc7052c6840c7acaf26e69",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
+          "Slot After": {
+            "type": "BOOLEAN",
+            "options": null
+          },
+          "Icon After": {
+            "type": "INSTANCE_SWAP",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
               "Default",
-              "Hover",
               "Focus",
-              "Disabled"
-            ]
-          },
-          "Size": {
-            "type": "VARIANT",
-            "options": [
-              "Default",
-              "Xs",
-              "Sm",
-              "Lg"
+              "Hover"
             ]
           }
         },
         "variants": [
-          "State=Default, Size=Default",
-          "State=Default, Size=Lg",
-          "State=Default, Size=Sm",
-          "State=Default, Size=Xs",
-          "State=Disabled, Size=Default",
-          "State=Disabled, Size=Lg",
-          "State=Disabled, Size=Sm",
-          "State=Disabled, Size=Xs",
-          "State=Focus, Size=Default",
-          "State=Focus, Size=Lg",
-          "State=Focus, Size=Sm",
-          "State=Focus, Size=Xs",
-          "State=Hover, Size=Default",
-          "State=Hover, Size=Lg",
-          "State=Hover, Size=Sm",
-          "State=Hover, Size=Xs"
+          "State=Default",
+          "State=Focus",
+          "State=Hover"
         ]
       }
     },
     "al-list-item": {
       "figma": {
         "name": "List Item",
-        "nodeId": "3436:1747"
+        "nodeId": "3543:47175"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "3e2b0d40c1c076844fcb3e2634406a0ff7c1db5c",
+        "date": "2026-08-28T01:24:27.439Z",
+        "codeHash": "39e55d706216cf4cbfd39fb7b159d713b4e5b2b5",
         "contractDigest": "eae3d341e977b8192210dd239a3b74dd0033a8c9",
-        "figmaDigest": "0cab7a16b9f062404ba10ba8b45f3f96587cb881",
+        "figmaDigest": "7ca7470006c45764d605ede42ec56274f735ebdd",
+        "contractHash": "8c42316d6955b94420de01ca6e62e6f5e74274fd4c43d568cef6b4d285926d04",
+        "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "0cab7a16b9f062404ba10ba8b45f3f96587cb881",
+      "figmaCurrentDigest": "7ca7470006c45764d605ede42ec56274f735ebdd",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
               "Default",
-              "Hover",
               "Focus",
+              "Hover",
               "Active",
               "Disabled",
               "Error"
@@ -1270,18 +1241,24 @@
     "al-menu-item": {
       "figma": {
         "name": "Menu Item",
-        "nodeId": "3436:1779"
+        "nodeId": "3543:47347"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "91e92230a0929c2bd2fc825ffb9d124d9b42b95e",
+        "date": "2026-08-28T01:24:27.439Z",
+        "codeHash": "5e6918578b6587083d80a3cddc8c13aa9ceab298",
         "contractDigest": "1dffa0d3a2908e22a3d8af402d0c068cce5c5c98",
-        "figmaDigest": "e29642e5dd7deca0bce1e35573264745d5091b12",
+        "figmaDigest": "6e723936bd36fa61acef4fa593e76c3a97257b18",
+        "contractHash": "a5e737c9652a390d84cbfacda17555688cde32365c4b1fe32398a70c56a288b0",
+        "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "e29642e5dd7deca0bce1e35573264745d5091b12",
+      "figmaCurrentDigest": "6e723936bd36fa61acef4fa593e76c3a97257b18",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
@@ -1322,23 +1299,22 @@
     "al-menu": {
       "figma": {
         "name": "Menu",
-        "nodeId": null
+        "nodeId": "3558:61424"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "653cf22c5d7c793d452165d0ed318a6d2f9aadcf",
+        "date": "2026-08-28T02:12:32.490Z",
+        "codeHash": "6a012ea3c80daefea64fd61514982b7abe59830e",
         "contractDigest": "a2a87533008eb64a29ffcf2a5fef389bfa4f18dc",
-        "figmaDigest": "602127f9411b7ae4f07253bf410a238822d46d7a",
-        "figmaObserved": true
+        "figmaDigest": "96f759b1cbaf63c377ef404f3e329f08200e287e",
+        "contractHash": "ea8d76f4cc05d2ca47a40eceb1e080636afeeb1fa577afc72a5ffd75c73ac2bf",
+        "contractVersion": "1.0.0"
       },
-      "figmaCurrentDigest": "602127f9411b7ae4f07253bf410a238822d46d7a",
+      "figmaCurrentDigest": "96f759b1cbaf63c377ef404f3e329f08200e287e",
       "figmaContract": {
         "props": {
-          "State": {
-            "type": "VARIANT",
-            "options": [
-              "Default"
-            ]
+          "Text": {
+            "type": "TEXT",
+            "options": null
           },
           "Variant": {
             "type": "VARIANT",
@@ -1349,26 +1325,32 @@
           }
         },
         "variants": [
-          "State=Default, Variant=Default",
-          "State=Default, Variant=Simple"
+          "Variant=Default",
+          "Variant=Simple"
         ]
       }
     },
     "al-pagination-item": {
       "figma": {
         "name": "Pagination Item",
-        "nodeId": "3436:1807"
+        "nodeId": "3543:47406"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "e14c69a1f3db9866f8125296df32cbadbcce1af8",
+        "date": "2026-08-28T01:24:27.439Z",
+        "codeHash": "56c00bcd2f324194be7fef1163c33e95695faa60",
         "contractDigest": "e47180cfd0ac75c722390fffedb938d844c41712",
-        "figmaDigest": "aee4a584feec3bee611bedaff86d52bdd40ab5e7",
+        "figmaDigest": "9e042f2754045c6750d1740b49e77d5ddf0fa2f2",
+        "contractHash": "631958c16a2689e604ed27b9bad80b55620176557bf293e6c1ad2693a6b68199",
+        "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "aee4a584feec3bee611bedaff86d52bdd40ab5e7",
+      "figmaCurrentDigest": "9e042f2754045c6750d1740b49e77d5ddf0fa2f2",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
@@ -1409,23 +1391,22 @@
     "al-pagination": {
       "figma": {
         "name": "Pagination",
-        "nodeId": null
+        "nodeId": "3558:61528"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
+        "date": "2026-08-28T02:12:32.490Z",
         "codeHash": "82f69ce618088dee42498126db1a3dbce93b6f79",
         "contractDigest": "24ea7cb4114e1f02e29601ea810543e81a607e13",
-        "figmaDigest": "4f225b85f9a9262af6cc084a0750af06767dc475",
-        "figmaObserved": true
+        "figmaDigest": "a89149a4374159fac3ee6f8e8bb3deda4e82a25e",
+        "contractHash": "2d96a71a9de8784402616ede37e0939300f74086a867d982c06b36027f8b4d61",
+        "contractVersion": "1.0.0"
       },
-      "figmaCurrentDigest": "4f225b85f9a9262af6cc084a0750af06767dc475",
+      "figmaCurrentDigest": "a89149a4374159fac3ee6f8e8bb3deda4e82a25e",
       "figmaContract": {
         "props": {
-          "State": {
-            "type": "VARIANT",
-            "options": [
-              "Default"
-            ]
+          "Text": {
+            "type": "TEXT",
+            "options": null
           },
           "Variant": {
             "type": "VARIANT",
@@ -1436,8 +1417,8 @@
           }
         },
         "variants": [
-          "State=Default, Variant=Default",
-          "State=Default, Variant=Small"
+          "Variant=Default",
+          "Variant=Small"
         ]
       }
     },
@@ -1447,87 +1428,126 @@
       "figmaCurrentDigest": null
     },
     "al-progress": {
-      "figma": null,
-      "lastSync": null,
-      "figmaCurrentDigest": null,
-      "note": "Known missing in Figma (altitude-figma-sync MISSING_IN_FIGMA) — needs a bespoke build."
-    },
-    "al-radio-group": {
       "figma": {
-        "name": "Radio Group",
-        "nodeId": null
+        "name": "Progress",
+        "nodeId": "3557:58565"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "2b71511e8cebfbf314ec9a165cc1b3aab1941d84",
-        "contractDigest": "ded3e7c0c1515fec13f91685bebef7c5a02c4843",
-        "figmaDigest": "3a764e5df143b966128066f377f0b52e6b15810d",
+        "date": "2026-08-28T01:24:27.439Z",
+        "codeHash": "d85f6778f098bb7d5214b1c59e89c7f38b8214be",
+        "contractDigest": "b50271312368d86cd81c05c0b660e77323d3f2df",
+        "figmaDigest": "6c2acafbca0e7de4d4b7d56727fde4092cc331d0",
+        "contractHash": "45cfe5111b0d4b8ef5cfb476ccb51e3e0502b5a4cc544626f2ef9686a456c34d",
+        "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "3a764e5df143b966128066f377f0b52e6b15810d",
+      "figmaCurrentDigest": "6c2acafbca0e7de4d4b7d56727fde4092cc331d0",
       "figmaContract": {
         "props": {
-          "State": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
+          "Label": {
+            "type": "VARIANT",
+            "options": [
+              "Hidden",
+              "Shown"
+            ]
+          },
+          "Shape": {
+            "type": "VARIANT",
+            "options": [
+              "Bar",
+              "Circle"
+            ]
+          },
+          "Size": {
             "type": "VARIANT",
             "options": [
               "Default",
-              "Error",
-              "Disabled"
-            ]
-          },
-          "Orientation": {
-            "type": "VARIANT",
-            "options": [
-              "Default",
-              "Horizontal"
-            ]
-          },
-          "Legend": {
-            "type": "VARIANT",
-            "options": [
-              "Shown",
-              "Hidden"
+              "Lg",
+              "Md",
+              "Xl"
             ]
           }
         },
         "variants": [
-          "State=Default, Orientation=Default, Legend=Hidden",
-          "State=Default, Orientation=Default, Legend=Shown",
-          "State=Default, Orientation=Horizontal, Legend=Hidden",
-          "State=Default, Orientation=Horizontal, Legend=Shown",
-          "State=Disabled, Orientation=Default, Legend=Hidden",
-          "State=Disabled, Orientation=Default, Legend=Shown",
-          "State=Disabled, Orientation=Horizontal, Legend=Hidden",
-          "State=Disabled, Orientation=Horizontal, Legend=Shown",
-          "State=Error, Orientation=Default, Legend=Hidden",
-          "State=Error, Orientation=Default, Legend=Shown",
-          "State=Error, Orientation=Horizontal, Legend=Hidden",
-          "State=Error, Orientation=Horizontal, Legend=Shown"
+          "Label=Hidden, Shape=Bar, Size=Default",
+          "Label=Hidden, Shape=Circle, Size=Default",
+          "Label=Hidden, Shape=Circle, Size=Lg",
+          "Label=Hidden, Shape=Circle, Size=Md",
+          "Label=Hidden, Shape=Circle, Size=Xl",
+          "Label=Shown, Shape=Bar, Size=Default",
+          "Label=Shown, Shape=Circle, Size=Default",
+          "Label=Shown, Shape=Circle, Size=Lg",
+          "Label=Shown, Shape=Circle, Size=Md",
+          "Label=Shown, Shape=Circle, Size=Xl"
+        ]
+      }
+    },
+    "al-radio-group": {
+      "figma": {
+        "name": "Radio Group",
+        "nodeId": "3558:61632"
+      },
+      "lastSync": {
+        "date": "2026-08-28T02:12:32.490Z",
+        "codeHash": "dbc04a67536313501724e6e81f3122798bccec04",
+        "contractDigest": "ded3e7c0c1515fec13f91685bebef7c5a02c4843",
+        "figmaDigest": "fe2cc63a8f914615c7840d40f4943c6d637c224e",
+        "contractHash": "2fd691d2006c5731475fc95169d23a3e71b31e441e001861b645a26a352f4390",
+        "contractVersion": "1.0.0"
+      },
+      "figmaCurrentDigest": "fe2cc63a8f914615c7840d40f4943c6d637c224e",
+      "figmaContract": {
+        "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
+          "Legend": {
+            "type": "VARIANT",
+            "options": [
+              "Hidden",
+              "Shown"
+            ]
+          }
+        },
+        "variants": [
+          "Legend=Hidden",
+          "Legend=Shown"
         ]
       }
     },
     "al-radio": {
       "figma": {
         "name": "Radio",
-        "nodeId": "3436:1613"
+        "nodeId": "3543:47540"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "9f47732b0e25e2edd6800067c582da9d84d09751",
+        "date": "2026-08-28T01:24:27.439Z",
+        "codeHash": "81dd150be85ba5a20a817102eb503f9125df613a",
         "contractDigest": "d01eb7179578a2ec398421544c63561787f32c48",
-        "figmaDigest": "4e5098361dcaf8623452f6d6235f73733d80a427",
+        "figmaDigest": "309f1700e960c097a6cc9ba9d71a8dc151647ca5",
+        "contractHash": "0a65be73ac082989d90af2b23543d0d298b39a0083f337ee07a278a753ada39c",
+        "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "4e5098361dcaf8623452f6d6235f73733d80a427",
+      "figmaCurrentDigest": "309f1700e960c097a6cc9ba9d71a8dc151647ca5",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
               "Default",
-              "Hover",
-              "Focus",
               "Disabled",
+              "Focus",
+              "Hover",
               "Error"
             ]
           },
@@ -1541,8 +1561,8 @@
           "Label": {
             "type": "VARIANT",
             "options": [
-              "Shown",
-              "Hidden"
+              "Hidden",
+              "Shown"
             ]
           }
         },
@@ -1571,28 +1591,30 @@
     "al-range": {
       "figma": {
         "name": "Range",
-        "nodeId": null
+        "nodeId": "3558:61875"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "c6f26790007c7b6187c43bcfb8245fe22b0870ef",
+        "date": "2026-08-28T02:12:32.490Z",
+        "codeHash": "66c11e7bd4ae8ec045b4fe818fc3b88c5e839530",
         "contractDigest": "b47748f8ac44690155e85da6e33027f4e28e2886",
-        "figmaDigest": "8594478776dec7a484fe6d9cb5a0a4681b314b57",
-        "figmaObserved": true
+        "figmaDigest": "5b2c2e75585fa63c98fa37d3815e4b3b5a900bcc",
+        "contractHash": "49737a8fc91840c3f06cd1f4e9712ee3d4f5a437b4610c6ac012abeaaf706565",
+        "contractVersion": "1.0.0"
       },
-      "figmaCurrentDigest": "8594478776dec7a484fe6d9cb5a0a4681b314b57",
+      "figmaCurrentDigest": "5b2c2e75585fa63c98fa37d3815e4b3b5a900bcc",
       "figmaContract": {
         "props": {
-          "State": {
-            "type": "VARIANT",
-            "options": [
-              "Default",
-              "Hover",
-              "Focus",
-              "Active",
-              "Error",
-              "Disabled"
-            ]
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
+          "Slot Before": {
+            "type": "BOOLEAN",
+            "options": null
+          },
+          "Slot After": {
+            "type": "BOOLEAN",
+            "options": null
           },
           "Behavior": {
             "type": "VARIANT",
@@ -1610,24 +1632,10 @@
           }
         },
         "variants": [
-          "State=Active, Behavior=Default, Output=Yes",
-          "State=Active, Behavior=Range, Output=Yes",
-          "State=Default, Behavior=Default, Output=No",
-          "State=Default, Behavior=Default, Output=Yes",
-          "State=Default, Behavior=Range, Output=No",
-          "State=Default, Behavior=Range, Output=Yes",
-          "State=Disabled, Behavior=Default, Output=No",
-          "State=Disabled, Behavior=Default, Output=Yes",
-          "State=Disabled, Behavior=Range, Output=No",
-          "State=Disabled, Behavior=Range, Output=Yes",
-          "State=Error, Behavior=Default, Output=No",
-          "State=Error, Behavior=Default, Output=Yes",
-          "State=Error, Behavior=Range, Output=No",
-          "State=Error, Behavior=Range, Output=Yes",
-          "State=Focus, Behavior=Default, Output=Yes",
-          "State=Focus, Behavior=Range, Output=Yes",
-          "State=Hover, Behavior=Default, Output=Yes",
-          "State=Hover, Behavior=Range, Output=Yes"
+          "Behavior=Default, Output=No",
+          "Behavior=Default, Output=Yes",
+          "Behavior=Range, Output=No",
+          "Behavior=Range, Output=Yes"
         ]
       }
     },
@@ -1642,18 +1650,9 @@
       "figmaCurrentDigest": null
     },
     "al-skeleton": {
-      "figma": {
-        "name": "Skeleton",
-        "nodeId": "3435:882"
-      },
-      "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "9f334d0ebce82d82dd976d988ba9e8854314f241",
-        "contractDigest": "c153c05144d838f7530dfc6167d806cdc464fe65",
-        "figmaDigest": "5fad6181a01a60deffc501216b5a4cc15618b4ba",
-        "figmaObserved": true
-      },
-      "figmaCurrentDigest": "5fad6181a01a60deffc501216b5a4cc15618b4ba",
+      "figma": null,
+      "lastSync": null,
+      "figmaCurrentDigest": null,
       "figmaContract": {
         "props": {
           "State": {
@@ -1676,7 +1675,8 @@
           "State=Default, Shape=Default",
           "State=Default, Shape=Square"
         ]
-      }
+      },
+      "note": "Intentionally NOT in Figma - the owner deleted the Skeleton set/page on 2026-08-27. Do not re-add without an explicit request."
     },
     "al-spinner": {
       "figma": null,
@@ -1703,16 +1703,18 @@
     "al-tab-panel": {
       "figma": {
         "name": "Tab Panel",
-        "nodeId": "3436:2090"
+        "nodeId": "3543:47875"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
+        "date": "2026-08-28T01:24:27.439Z",
         "codeHash": "5b19f5fad8ac51b20d56557a7be118ae020197b0",
         "contractDigest": "5ce7e9628ecd06d5940eb1dca76228e31379dfd5",
-        "figmaDigest": "69fba8e336302c2df4ad44f97f8587411ff34991",
+        "figmaDigest": "bf08a6b6de126b3908420af219b3c355fef12060",
+        "contractHash": "51978a1f3062e432ed603d274cff9831c764f7606093d1ab73fae2f7944558b2",
+        "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "69fba8e336302c2df4ad44f97f8587411ff34991",
+      "figmaCurrentDigest": "bf08a6b6de126b3908420af219b3c355fef12060",
       "figmaContract": {
         "props": {
           "State": {
@@ -1721,24 +1723,18 @@
               "Default",
               "Focus"
             ]
-          },
-          "Active": {
-            "type": "VARIANT",
-            "options": [
-              "Yes"
-            ]
           }
         },
         "variants": [
-          "State=Default, Active=Yes",
-          "State=Focus, Active=Yes"
+          "State=Default",
+          "State=Focus"
         ]
       }
     },
     "al-tab": {
       "figma": {
         "name": "Tab",
-        "nodeId": "3435:1128"
+        "nodeId": "3543:47793"
       },
       "lastSync": {
         "date": "2026-08-23T20:05:04.657Z",
@@ -1747,16 +1743,21 @@
         "figmaDigest": "32277d5ac3d0d607db31acf450765670a4d28a7a",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "32277d5ac3d0d607db31acf450765670a4d28a7a",
+      "figmaCurrentDigest": "c4032036c96a5a00f78d1c6ae990211b07627f76",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
+              "Active",
               "Default",
-              "Hover",
+              "Disabled",
               "Focus",
-              "Disabled"
+              "Hover"
             ]
           },
           "Active": {
@@ -1768,6 +1769,8 @@
           }
         },
         "variants": [
+          "State=Active, Active=No",
+          "State=Active, Active=Yes",
           "State=Default, Active=No",
           "State=Default, Active=Yes",
           "State=Disabled, Active=No",
@@ -1782,24 +1785,29 @@
     "al-table": {
       "figma": {
         "name": "Table",
-        "nodeId": null
+        "nodeId": "3558:62965"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "5f1d740d4593b6a352e3ce03ea0d5e4a7696adc1",
+        "date": "2026-08-28T02:12:32.490Z",
+        "codeHash": "31bfb6b7627c459ede357d96ebe40a3d1a78a013",
         "contractDigest": "9cf5196a7aa796c988ea596d899d4ade5c01226e",
-        "figmaDigest": "fc95813c7ece26b71a03297bdfb6b7be30c6da68",
-        "figmaObserved": true
+        "figmaDigest": "6c1e71b0a3de794136bd8ff43cba67fafc259231",
+        "contractHash": "5980998042ce808d7ce6633cbc07aef955c8abc1c350939d9aeda658722db858",
+        "contractVersion": "1.0.0"
       },
-      "figmaCurrentDigest": "fc95813c7ece26b71a03297bdfb6b7be30c6da68",
+      "figmaCurrentDigest": "6c1e71b0a3de794136bd8ff43cba67fafc259231",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
               "Default",
-              "Hover",
-              "Focus"
+              "Focus",
+              "Hover"
             ]
           },
           "Selectable": {
@@ -1812,8 +1820,8 @@
           "Sort": {
             "type": "VARIANT",
             "options": [
-              "None",
-              "Ascending"
+              "Ascending",
+              "None"
             ]
           }
         },
@@ -1836,23 +1844,22 @@
     "al-tabs": {
       "figma": {
         "name": "Tabs",
-        "nodeId": null
+        "nodeId": "3558:61955"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "815cb7fe949dbbbdd45fdecdbd79283e1e6ce5dd",
+        "date": "2026-08-28T02:12:32.490Z",
+        "codeHash": "6a33b633dae02132987114480590b8b4da019b85",
         "contractDigest": "13333fd679d8b6cb707f829eeea0bc3b363ed859",
-        "figmaDigest": "8949ed006ce5257f628916b75eb2c2d42cbf3fb1",
-        "figmaObserved": true
+        "figmaDigest": "220e45388165eec337054564441ea9088cb712c7",
+        "contractHash": "192717003eadeaf63ab800e23d66fda882dc0e1c7f73e1393b18088d9b7b64a1",
+        "contractVersion": "1.0.0"
       },
-      "figmaCurrentDigest": "8949ed006ce5257f628916b75eb2c2d42cbf3fb1",
+      "figmaCurrentDigest": "220e45388165eec337054564441ea9088cb712c7",
       "figmaContract": {
         "props": {
-          "State": {
-            "type": "VARIANT",
-            "options": [
-              "Default"
-            ]
+          "Text": {
+            "type": "TEXT",
+            "options": null
           },
           "Variant": {
             "type": "VARIANT",
@@ -1863,8 +1870,8 @@
           }
         },
         "variants": [
-          "State=Default, Variant=Default",
-          "State=Default, Variant=Stretch"
+          "Variant=Default",
+          "Variant=Stretch"
         ]
       }
     },
@@ -1875,7 +1882,7 @@
     },
     "al-text-block": {
       "figma": {
-        "name": "Text Block",
+        "name": "Text Passage",
         "nodeId": "3435:888"
       },
       "lastSync": {
@@ -1883,39 +1890,65 @@
         "codeHash": "8137040f321a2503759f0c51d8dd5d05b06dd8f7",
         "figmaDigest": null
       },
-      "figmaCurrentDigest": "absent"
-    },
-    "al-textarea": {
-      "figma": {
-        "name": "Textarea",
-        "nodeId": null
-      },
-      "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "17c646c87b72ac38801f1c903e3b2d40afba7a73",
-        "contractDigest": "88a328c872cc80b0993ce83f78edd3b74d085520",
-        "figmaDigest": "721c0aef8337f234487be8929f82bb57d8e7cafa",
-        "figmaObserved": true
-      },
-      "figmaCurrentDigest": "721c0aef8337f234487be8929f82bb57d8e7cafa",
+      "figmaCurrentDigest": "b652ddabd4314c4df540a99ee0c18faf5bd3498e",
       "figmaContract": {
         "props": {
           "State": {
             "type": "VARIANT",
             "options": [
+              "Default"
+            ]
+          },
+          "Width": {
+            "type": "VARIANT",
+            "options": [
               "Default",
-              "Hover",
-              "Focus",
+              "Sm"
+            ]
+          }
+        },
+        "variants": [
+          "State=Default, Width=Default",
+          "State=Default, Width=Sm"
+        ]
+      }
+    },
+    "al-textarea": {
+      "figma": {
+        "name": "Textarea",
+        "nodeId": "3544:49378"
+      },
+      "lastSync": {
+        "date": "2026-08-28T02:12:32.490Z",
+        "codeHash": "d97119ebaadfa022f210dc05a984bc840768884f",
+        "contractDigest": "88a328c872cc80b0993ce83f78edd3b74d085520",
+        "figmaDigest": "255f4b46f47f65b1089f63230d15477cab7fcd40",
+        "contractHash": "edf458ae6dd18623f6df70bd83d0e463bdac328059bb721f3ff76b74f7363441",
+        "contractVersion": "1.0.0"
+      },
+      "figmaCurrentDigest": "255f4b46f47f65b1089f63230d15477cab7fcd40",
+      "figmaContract": {
+        "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
+          "State": {
+            "type": "VARIANT",
+            "options": [
               "Active",
-              "Error",
-              "Disabled"
+              "Default",
+              "Disabled",
+              "Focus",
+              "Hover",
+              "Error"
             ]
           },
           "Label": {
             "type": "VARIANT",
             "options": [
-              "Shown",
-              "Hidden"
+              "Hidden",
+              "Shown"
             ]
           }
         },
@@ -1959,76 +1992,27 @@
       "figmaCurrentDigest": null,
       "note": "Known missing in Figma (altitude-figma-sync MISSING_IN_FIGMA) — needs a bespoke build."
     },
-    "al-toggle-button-group": {
-      "figma": {
-        "name": "Toggle Button Group",
-        "nodeId": null
-      },
-      "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "a16ecdde3278e4e22a049ad86104e32619eb20da",
-        "contractDigest": "d23107014801a7a793d0313fc600188fd9cd372b",
-        "figmaDigest": "f763ae89729c731744ecd21870cb5a0ad82ca40b",
-        "figmaObserved": true
-      },
-      "figmaCurrentDigest": "f763ae89729c731744ecd21870cb5a0ad82ca40b",
-      "figmaContract": {
-        "props": {
-          "State": {
-            "type": "VARIANT",
-            "options": [
-              "Default"
-            ]
-          },
-          "Variant": {
-            "type": "VARIANT",
-            "options": [
-              "Default",
-              "Background"
-            ]
-          },
-          "Orientation": {
-            "type": "VARIANT",
-            "options": [
-              "Default",
-              "Vertical"
-            ]
-          },
-          "Gap": {
-            "type": "VARIANT",
-            "options": [
-              "Default",
-              "Sm"
-            ]
-          }
-        },
-        "variants": [
-          "State=Default, Variant=Background, Orientation=Default, Gap=Default",
-          "State=Default, Variant=Background, Orientation=Default, Gap=Sm",
-          "State=Default, Variant=Background, Orientation=Vertical, Gap=Default",
-          "State=Default, Variant=Background, Orientation=Vertical, Gap=Sm",
-          "State=Default, Variant=Default, Orientation=Default, Gap=Default",
-          "State=Default, Variant=Default, Orientation=Default, Gap=Sm",
-          "State=Default, Variant=Default, Orientation=Vertical, Gap=Default",
-          "State=Default, Variant=Default, Orientation=Vertical, Gap=Sm"
-        ]
-      }
-    },
     "al-toggle-button": {
       "figma": {
         "name": "Toggle Button",
-        "nodeId": "3435:1154"
+        "nodeId": "3543:47985"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "12e9f82010bf025bbb83189dade40612a2871848",
+        "date": "2026-08-28T01:24:27.439Z",
+        "codeHash": "e503e98089a51f59c03dd822471945d7b1387a4b",
         "contractDigest": "f14c9ec6d6397939eb8b37480eae7f2aa91315a3",
-        "figmaDigest": "7a20e6a8882e14995db6bbc3e1867ce8a343b049",
+        "figmaDigest": "7cf3684ba3111899ed393f69bc222bb5f8afee01",
+        "contractHash": "df28c80e1aabd5ea89d33eea3de49ce87a6c75ca395d0943b8630971caa5ec2b",
+        "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "7a20e6a8882e14995db6bbc3e1867ce8a343b049",
+      "figmaCurrentDigest": "7cf3684ba3111899ed393f69bc222bb5f8afee01",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
@@ -2039,8 +2023,8 @@
           "Variant": {
             "type": "VARIANT",
             "options": [
-              "Default",
-              "Background"
+              "Background",
+              "Default"
             ]
           },
           "Selected": {
@@ -2077,18 +2061,24 @@
     "al-toggle": {
       "figma": {
         "name": "Toggle",
-        "nodeId": "2874:20"
+        "nodeId": "3543:48094"
       },
       "lastSync": {
-        "date": "2026-08-23T20:05:04.657Z",
-        "codeHash": "f9b21524610eddff997762eed19e827015fde749",
+        "date": "2026-08-28T01:24:27.439Z",
+        "codeHash": "f441405773f010a1a3a98a5d17a8ff1ce0c26f73",
         "contractDigest": "acd270967a61d1e223f4e9175b6db56f7f129b9d",
-        "figmaDigest": "2080874b7824774b99447bcb1dfc216934f3e848",
+        "figmaDigest": "059ebd6d6949315622487c7e2bae14d85c90dd6f",
+        "contractHash": "2ebfaad853acb4d469415660a6bf7511cafb228ac7a628e53f85423c0f374e7f",
+        "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "2080874b7824774b99447bcb1dfc216934f3e848",
+      "figmaCurrentDigest": "059ebd6d6949315622487c7e2bae14d85c90dd6f",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "Checked": {
             "type": "VARIANT",
             "options": [
@@ -2100,8 +2090,8 @@
             "type": "VARIANT",
             "options": [
               "Default",
-              "Hover",
               "Focus",
+              "Hover",
               "Disabled"
             ]
           }
@@ -2127,27 +2117,52 @@
   },
   "figmaOnly": [
     {
-      "name": "Button (Icon)",
+      "name": "List Item (reference)",
       "nodeId": null,
-      "note": "Observed on page \"🛠 Button\" with no mapped code component."
+      "note": "Observed on page \"🛠 List Item\" with no mapped code component."
     },
     {
-      "name": "Text Passage",
+      "name": "Menu Item (reference)",
       "nodeId": null,
-      "note": "Observed on page \"🛠 Text Passage\" with no mapped code component."
+      "note": "Observed on page \"🛠 Menu Item\" with no mapped code component."
     },
     {
-      "name": "Button Group",
+      "name": "Pagination Item (reference)",
       "nodeId": null,
-      "note": "Observed on page \"🛠 Button Group\" with no mapped code component."
+      "note": "Observed on page \"🛠 Pagination Item\" with no mapped code component."
     },
     {
-      "name": "Chip Group",
+      "name": "Radio (reference)",
       "nodeId": null,
-      "note": "Observed on page \"🛠 Chip Group\" with no mapped code component."
+      "note": "Observed on page \"🛠 Radio\" with no mapped code component."
+    },
+    {
+      "name": "Toggle (reference)",
+      "nodeId": null,
+      "note": "Observed on page \"🛠 Toggle\" with no mapped code component."
+    },
+    {
+      "name": "Toggle Button (reference)",
+      "nodeId": null,
+      "note": "Observed on page \"🛠 Toggle Button\" with no mapped code component."
+    },
+    {
+      "name": "Input (reference)",
+      "nodeId": null,
+      "note": "Observed on page \"🛠 Input\" with no mapped code component."
+    },
+    {
+      "name": "File Upload (reference)",
+      "nodeId": null,
+      "note": "Observed on page \"🛠 File Upload\" with no mapped code component."
+    },
+    {
+      "name": "Textarea (reference)",
+      "nodeId": null,
+      "note": "Observed on page \"🛠 Textarea\" with no mapped code component."
     }
   ],
-  "updated": "2026-08-26T13:50:25.659Z",
+  "updated": "2026-08-28T02:12:32.559Z",
   "project": "altitude",
   "figmaFileName": "Altitude Design System"
 }

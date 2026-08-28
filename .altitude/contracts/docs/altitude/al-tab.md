@@ -9,8 +9,8 @@ Component: al-tab
 ## Figma
 
 - Component set: **Tab**
-- Node id: `3435:1128` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3435-1128)
+- Node id: `3543:47793` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47793)
 
 ## Props (5)
 
