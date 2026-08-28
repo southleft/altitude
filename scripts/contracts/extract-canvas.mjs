@@ -213,10 +213,25 @@ function snapshotCode(wanted) {
       }
     }
 
+    // LIVENESS: a pinned node id keeps RESOLVING after the node is deleted —
+    // getNodeByIdAsync returns the detached node, so "it resolved" is NOT proof
+    // it is still in the document. Found live 2026-08-27: the owner deleted the
+    // "Skeleton" page, yet 3435:882 still returned a COMPONENT_SET whose parent
+    // chain reaches no PAGE, so extraction reported it present and the parity
+    // manifest kept calling a deleted set in-sync. Require an attached ancestor
+    // page that is still one of figma.root.children.
+    function isLive(n) {
+      try { if (n.removed) return false; } catch (e) { return false; }
+      let q = n;
+      while (q && q.type !== 'PAGE') q = q.parent;
+      return !!q && figma.root.children.indexOf(q) !== -1;
+    }
+
     const out = [];
     for (const w of WANTED) {
       let node = null;
       if (w.nodeId) { try { node = await figma.getNodeByIdAsync(w.nodeId); } catch (e) { node = null; } }
+      if (node && !isLive(node)) node = null;
       if (!node) node = setsByName[w.name] || null;
       if (!node) { out.push({ tag: w.tag, name: w.name, nodeId: w.nodeId, missing: true }); continue; }
 

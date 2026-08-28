@@ -31,7 +31,7 @@ const MOLECULES = [
   'al-checkbox-group', 'al-radio-group',
   'al-breadcrumbs', 'al-menu', 'al-tabs', 'al-input', 'al-textarea',
   'al-input-stepper', 'al-range', 'al-empty-state', 'al-file-upload',
-  'al-table', 'al-pagination', 'al-toggle-button-group', 'al-combobox'
+  'al-table', 'al-pagination', 'al-combobox'
 ];
 const targets = keys.length ? keys : MOLECULES;
 

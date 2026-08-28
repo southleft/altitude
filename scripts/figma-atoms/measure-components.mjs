@@ -114,6 +114,36 @@ try {
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1400, height: 4000 } });
 
+  /**
+   * Pin the wall clock, or the measurement is not reproducible.
+   *
+   * `al-calendar` stamps `al-is-today` onto whichever cell matches the current
+   * date (calendar.ts, `setToday(day)`). That class is recorded in the node's
+   * `cls`, so re-measuring on any other day moved it to a different cell and
+   * produced a spurious two-line diff in al-calendar's contract — the ENTIRE
+   * diff for that component on a 2026-08-27 re-run. Worse, it made
+   * `contracts:check` date-dependent for anyone who has measured data locally,
+   * while CI stayed green only because CI has no spec-light.json and skips the
+   * anatomy fields altogether: the gate passed for the wrong reason.
+   *
+   * Pinning is the right fix rather than filtering the class out of `cls`.
+   * `al-is-today` is a real visual state with real styles (calendar.scss's
+   * `.al-is-today` and its `:after` marker), so a generated Figma calendar
+   * should still show it — it just has to land on the same cell every run. A
+   * blanket "drop `al-is-*`" filter would have been actively wrong: the same
+   * prefix carries genuine authored structure elsewhere (`al-is-dot` is the
+   * dimension al-badge fans its variants out on, `al-is-circle-lg` sizes
+   * al-progress).
+   *
+   * MIDDAY UTC on purpose: a midnight instant lands on the previous or next
+   * local date for any machine at a negative or large positive UTC offset, so
+   * the pin would only be reproducible within one timezone. 12:00 is safe
+   * across the whole ±11h range. Mid-month for the same reason — the 15th is
+   * unambiguously in the current month's grid, never in a leading or trailing
+   * adjacent-month cell.
+   */
+  await page.clock.setFixedTime(new Date('2026-06-15T12:00:00Z'));
+
   for (const mode of ['light', 'dark']) {
     await page.goto(`http://localhost:${PORT}/?mode=${mode}`, { waitUntil: 'networkidle' });
     await page.waitForFunction('window.__ATOMS_READY__ === true', null, { timeout: 30000 });

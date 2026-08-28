@@ -94,7 +94,7 @@ function discoverComponents() {
   return out.sort();
 }
 
-/** al-toggle-button-group -> ToggleButtonGroup — same algorithm as
+/** al-checkbox-group -> CheckboxGroup — same algorithm as
  * apps/docs/src/lib/registry.mjs `pascal()`, kept in step deliberately. */
 function pascalCase(name) {
   return name

@@ -35,12 +35,23 @@ for (const [n, v] of Object.entries(secondary)) {
 }
 
 /* --- 2. Value mismatches where code is authoritative -------------------- */
-// Figma stores opacity as a percentage; Figma opacity fields are 0-1, and the code
-// tokens are fractions. 40 bound to a layer opacity is meaningless.
-ops.push(setValue('opacity/0', 'Tier 1', 'Default', 0));
-ops.push(setValue('opacity/24', 'Tier 1', 'Default', 0.24));
-ops.push(setValue('opacity/40', 'Tier 1', 'Default', 0.4));
-ops.push(setValue('opacity/100', 'Tier 1', 'Default', 1));
+// OPACITY IS A PERCENTAGE ON THE FIGMA SIDE — 100x the code's fraction. DO NOT
+// "fix" these to fractions; that is what the four setValue() calls removed here
+// used to do, and it silently broke every disabled state in the library.
+//
+// PROVEN LIVE 2026-08-27 (al-field-note State=Disabled, a TEXT node whose
+// `opacity` is bound to theme/opacity/disabled -> opacity/40):
+//     opacity/40 = 0.4  ->  node.opacity === 0.004   (0.4%, invisible)
+//     opacity/40 = 40   ->  node.opacity === 0.4     (40%, correct)
+// Figma's opacity FIELD is 0-1, but a variable BOUND to it is interpreted in the
+// unit the UI shows (percent) and divided by 100 on resolve. The earlier
+// correction reasoned from the field's 0-1 range and verified only that the
+// STORED number matched the code token (0.4 === 0.4) — it never checked what the
+// binding actually renders, which is the only thing that matters.
+//
+// So the two sides legitimately disagree BY A FACTOR OF 100 for opacity, and an
+// audit must convert rather than report drift. See .altitude/FIGMA-SYNC.md
+// "Opacity is a PERCENTAGE on the Figma side".
 // Rounding drift: 0.7*255 = 178.5. Code rounds up (B3), Figma down (B2).
 ops.push(setValue('color/transparent/dark/70', 'Tier 1', 'Default', '#000000B3'));
 ops.push(setValue('color/transparent/dark/90', 'Tier 1', 'Default', '#000000E6'));

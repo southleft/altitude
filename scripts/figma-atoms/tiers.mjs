@@ -17,7 +17,7 @@ export const MOLECULE_KEYS = new Set([
   // Parked / deferred, listed so they place correctly when they are eventually built.
   'al-command-palette', 'al-combobox', 'al-accordion', 'al-card', 'al-dialog',
   'al-drawer', 'al-list', 'al-popover', 'al-search', 'al-select', 'al-stat',
-  'al-stepper', 'al-testimonial', 'al-toggle-button-group',
+  'al-stepper', 'al-testimonial',
   // al-layout is the library's single layout primitive: it owns arrangement for
   // every other component (AGENTS.md 'Arrangement vs. semantics'), so it composes
   // rather than being composed. Absent from this set it defaulted to ATOM silently.
