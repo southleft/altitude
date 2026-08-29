@@ -68,7 +68,18 @@ for (const name of want) {
   const page = figma.root.children.find((p) => p.name === '\\u{1F6E0} ' + name);
   if (!page) { out[name] = null; continue; }
   await page.loadAsync();
-  const set = page.children.find((n) => n.type === 'COMPONENT_SET');
+  // The set is NOT a direct child of the page. generate-figma.mjs nests it
+  // inside a "<Name> — Generated" frame alongside the prop sheet, so a
+  // direct-children scan finds zero sets for EVERY component and reports the
+  // whole library missing from Figma. Verified live 2026-08-29: direct 0 /
+  // nested 1 for Badge, Button, Divider and Banner alike. Fail-closed, so
+  // nothing false was ever stamped — but "missing" was a false reason, which
+  // is the defect class this gate exists to remove.
+  const sets = page.findAllWithCriteria({ types: ['COMPONENT_SET'] });
+  // Prefer the set named for the component; fall back to a lone set. Two sets
+  // sharing a name is this repo's own documented trap, so ambiguity is
+  // reported, never guessed.
+  const set = sets.find((n) => n.name === name) ?? (sets.length === 1 ? sets[0] : null);
   if (!set) { out[name] = null; continue; }
   out[name] = set.children.map((c) => ({ n: c.name, w: Math.round(c.width * 100) / 100, h: Math.round(c.height * 100) / 100 }));
 }
