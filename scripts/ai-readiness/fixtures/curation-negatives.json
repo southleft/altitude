@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "$comment": "T8, spec 2026-08-29-parity-judgement-gates-and-evals. HAND-AUTHORED cases reproducing curation decisions this repository actually got WRONG and later reverted. Anthropic's eval guidance is explicit that a suite should start from real failures rather than imagined ones; these are the two the repo has written down. An eval that cannot reproduce a failure you already had is not yet measuring anything.",
+  "cases": [
+    {
+      "id": "al-button.axis-from-screenshot.wrong",
+      "tag": "al-button",
+      "key": "bindings.figma.axis",
+      "presented": "true (on al-button's `variant` prop, fanning the set out into a Variant axis with every value)",
+      "expected": "wrong",
+      "why": "T22/T23 curated al-button into axis mode after reading a Propstar SCREENSHOT that was a documentation artifact, not the real component set. The result was a ~200-variant fan-out that did not match the live set. T31 reverted it. The rule the reversal established: curation must be grounded in the REAL set (or the contract), never in an image of a set — a screenshot cannot tell you what a Figma component actually contains.",
+      "source": "spec 2026-08-25-contract-backed-figma-parity-and-generation, T22/T23 -> T31; altitude-figma-generate/SKILL.md 'Axis vs property vs omitted'"
+    },
+    {
+      "id": "al-badge.alphabetical-anatomy.wrong",
+      "tag": "al-badge",
+      "key": "anatomyCase",
+      "presented": "Variant=danger,Shape=dot",
+      "expected": "wrong",
+      "why": "This is what the ALPHABETICAL-FIRST default picked, and it made every generated Badge render as a dot — the badge's own figma.gen.json $comment records the walkthrough finding from 2026-08-26. The anatomy sample has to be the component's DEFAULT, representative form (the label badge), not whichever case sorts first. The dot form is a future second-case expression, not the default sample.",
+      "source": "libs/al-web-components/components/badge/figma.gen.json $comment; altitude-figma-generate/SKILL.md trap table, anatomyCase row"
+    },
+    {
+      "id": "al-checkbox.hidden-anatomy.wrong",
+      "tag": "al-checkbox",
+      "key": "anatomyCase",
+      "presented": "Checked=Indeterminate,Label=hidden",
+      "expected": "wrong",
+      "why": "Same failure mode as al-badge, and the second component the 2026-08-26 walkthrough caught it on: alphabetical-first sampled the Indeterminate form with the label HIDDEN, so the generated set's anatomy had no label node at all. The representative sample is the default, label-shown form.",
+      "source": "altitude-figma-generate/SKILL.md, anatomyCase trap ('Checkbox sampled Indeterminate+hidden')"
+    },
+    {
+      "id": "al-banner.dismiss-nested-prop.correct",
+      "tag": "al-banner",
+      "key": "nestedProps",
+      "presented": "the dismiss control's nested instance is switched to the icon-only button variant",
+      "expected": "correct",
+      "why": "This is the curation the trap exists to produce, not the trap itself. component-config.mjs calls nestedProps 'a judgment call per component pair, not a derivable fact', and names al-banner's dismiss control as the example: WITHOUT the curation it renders as a labelled \"Button\". Pointing the nested instance at the icon-only variant is the correct answer.",
+      "source": "scripts/contracts/figma/component-config.mjs:96-113"
+    }
+  ]
+}

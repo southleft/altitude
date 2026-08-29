@@ -42,6 +42,54 @@ export const TASKS = {
     expectedMcpTools: ['mcp__altitude__altitude_get_component', 'mcp__altitude__altitude_validate'],
     axeRenderable: false,
   },
+  // T6, spec 2026-08-29-parity-judgement-gates-and-evals. The PRODUCER lane:
+  // A/B/C/G all measure whether an outside consumer can build with Altitude's
+  // published docs; D measures whether OUR OWN reconciliation agent can read a
+  // component's two contracts and correctly say what disagrees.
+  //
+  // `cases: 'drift'` is what makes it different from every task above: instead
+  // of one fixed prompt, each attempt is posed from one case in the tracked
+  // drift corpus (.altitude/ai-readiness/drift-cases.<project>.json), and the
+  // grader is handed that case's computed answer key. See
+  // lib/reconcile-cases.mjs.
+  D: {
+    id: 'D-reconcile',
+    schema: 'reconcile.schema.json',
+    prompt: 'D-reconcile.md',
+    grader: 'gradeTaskD',
+    expectedMcpTools: ['mcp__altitude__altitude_check_parity', 'mcp__altitude__altitude_get_component'],
+    axeRenderable: false,
+    cases: 'drift',
+  },
+  // T7. The DIRECTION-POLICY eval: given one disagreement, which side is the
+  // source of truth? Unlike D, no differ can compute the answer — "who wins"
+  // is policy, so the answer key IS the policy, hand-authored in
+  // fixtures/direction-cases.json with each case citing the rule it tests.
+  E: {
+    id: 'E-direction',
+    schema: 'direction.schema.json',
+    prompt: 'E-direction.md',
+    grader: 'gradeTaskE',
+    expectedMcpTools: [],
+    axeRenderable: false,
+    cases: 'direction',
+  },
+  // T8. The CURATION eval. Deliberately a REVIEW task, not a generation task:
+  // the curated `anatomyCase` values are MEASURED CASE NAMES from a gitignored
+  // artifact, not code prop values (al-badge's curation is
+  // `Variant=default,Shape=label` while its contract declares
+  // `variant: [danger, info, success, warning]` and no Shape prop at all), so
+  // "produce the curation" cannot be posed fairly from tracked data. "Is this
+  // curation right?" can. See lib/curation-cases.mjs.
+  F: {
+    id: 'F-curation',
+    schema: 'curation.schema.json',
+    prompt: 'F-curation.md',
+    grader: 'gradeTaskF',
+    expectedMcpTools: ['mcp__altitude__altitude_get_component'],
+    axeRenderable: false,
+    cases: 'curation',
+  },
   G: {
     id: 'G-llms-docs',
     schema: 'llms-docs.schema.json',

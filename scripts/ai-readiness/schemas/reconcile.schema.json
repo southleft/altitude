@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["findings", "verdict", "sourceUsed"],
+  "additionalProperties": false,
+  "properties": {
+    "findings": {
+      "type": "array",
+      "description": "Every disagreement between the two contracts. Empty when they agree.",
+      "items": {
+        "type": "object",
+        "required": ["dimension", "key", "kind", "detail"],
+        "additionalProperties": false,
+        "properties": {
+          "dimension": {
+            "enum": ["prop", "variant-axis", "variant-value", "state", "slot", "token-binding", "anatomy"]
+          },
+          "key": {
+            "type": "string",
+            "description": "The prop name, axis name, state name, or Figma variable name the disagreement is about."
+          },
+          "kind": {
+            "enum": ["missing-in-canvas", "missing-in-code", "value-mismatch", "present-despite-omission"]
+          },
+          "detail": { "type": "string" },
+          "winner": {
+            "enum": ["code", "canvas", "ask-a-human"],
+            "description": "Which side should be treated as correct when reconciling this one disagreement."
+          }
+        }
+      }
+    },
+    "verdict": {
+      "enum": ["in-sync", "drifted"],
+      "description": "in-sync only when findings is empty."
+    },
+    "sourceUsed": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Files, tools or documents actually consulted."
+    },
+    "notes": { "type": "string" }
+  }
+}

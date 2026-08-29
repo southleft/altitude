@@ -5,6 +5,10 @@ description: Generate a Figma page from a REAL RENDERED PAGE SECTION (the snippe
 
 # altitude-figma-snippet
 
+**Binding first:** `.altitude/FIGMA-CLEANLINESS.md` — the owner's Figma rules
+(component reuse, hug preservation, organism widths/breakpoints, naming, the
+mandatory screenshot loop). Every generation and edit answers to it.
+
 Generate Figma from what a VISITOR sees — a real route's real section — not from a
 component's synthetic harness case. Born from the hero benchmark: the component
 lane produced a "Hero" from fixture copy on a white background, because the
@@ -17,6 +21,23 @@ loop; the numeric verify + auto-exported image pair are the critic, not the
 human's eyeballs. When output diverges: read the verify report, classify each
 miss (generic rule / measurement fact / curation), fix at that layer, re-run.
 Never hand-edit the canvas.
+
+**The verify is no longer geometry-only (T4, spec
+2026-08-29-parity-judgement-gates-and-evals).** Every paired row in
+`<section>-verify.json` now carries `facts[]` alongside its box deltas:
+`text` (measured words vs the Figma TEXT node's characters), `fill` (colour,
+canonicalized both ways — a TEXT node compares against `computed.fc`, anything
+else against `computed.bg`), and `fill-binding` (is the paint bound to a
+variable, or a literal that will not follow a mode switch — repair-skill trap
+4; note the `fill` check PASSES on such a node, which is why binding is
+separate). `skipped` is a real outcome with a reason attached: a gradient is
+not comparable to a flat paint and never counts as agreement.
+
+They **report** by default. `--gate-facts` makes them fail the run. Nobody has
+run them against a live build yet, so their false-positive rate is unmeasured
+— read the volume on the first real run before turning them on. This is the
+direct answer to trap 9 below: colour and copy are now compared by number
+instead of by eye.
 
 ## The one command
 

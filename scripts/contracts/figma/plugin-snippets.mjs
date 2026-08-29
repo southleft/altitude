@@ -73,15 +73,27 @@ export function variableHelpersSnippet() {
     const V = {};
     for (const v of await figma.variables.getLocalVariablesAsync()) V[v.name] = v;
     const misses = new Set();
+    // RESOLUTION CACHES (2026-08-29): rawOf made 2-4 async hops per call
+    // with NO caching, and an organism build binds the same few tokens
+    // (content/default, space/*) dozens of times — the hops alone pushed
+    // organism-scale builds into the bridge's 30s ceiling.
+    const COLL_CACHE = new Map();
+    async function collOf(id) {
+      if (!COLL_CACHE.has(id)) COLL_CACHE.set(id, await figma.variables.getVariableCollectionByIdAsync(id));
+      return COLL_CACHE.get(id);
+    }
+    const RAW_CACHE = new Map();
     async function rawOf(v) {
-      const c = await figma.variables.getVariableCollectionByIdAsync(v.variableCollectionId);
+      if (RAW_CACHE.has(v.id)) return RAW_CACHE.get(v.id);
+      const c = await collOf(v.variableCollectionId);
       let val = v.valuesByMode[c.defaultModeId];
       let g = 0;
       while (val && val.type === 'VARIABLE_ALIAS' && g++ < 8) {
         const nv = await figma.variables.getVariableByIdAsync(val.id);
-        const nc = await figma.variables.getVariableCollectionByIdAsync(nv.variableCollectionId);
+        const nc = await collOf(nv.variableCollectionId);
         val = nv.valuesByMode[nc.defaultModeId];
       }
+      RAW_CACHE.set(v.id, val);
       return val;
     }
     async function boundSolid(name) {

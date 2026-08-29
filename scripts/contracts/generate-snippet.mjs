@@ -60,6 +60,12 @@ const CHECK_DETERMINISM = process.argv.includes('--check-determinism');
 const DO_MEASURE = process.argv.includes('--measure');
 const DO_VERIFY = process.argv.includes('--verify');
 const BASE_URL = argOf('--base') || null; // argOf's 2nd param is an argv ARRAY, not a default
+// PROMOTION NAMING (owner, 2026-08-29: real pages carry the real name —
+// "Hero", never "Site Hero"): --set-name overrides the scratch-lane
+// "Site <Section>" default everywhere it appears (set name, clearing scope,
+// verify lookup). Scratch builds keep the Site prefix so bare names never
+// collide with real sets during nested by-name resolution.
+const SET_NAME_ARG = argOf('--set-name') || null;
 
 if (!SECTION) {
   console.error('usage: generate-snippet.mjs --section <sectionId> [--project <id>] [--mode dark] [--route /] [--source page] [--page "Site Sections"] [--ops-only] [--check-determinism]');
@@ -164,6 +170,20 @@ function attachTypeLiterals(raw, node, parentRaw) {
   // recoverable as padding when all children share the inset. Generalizes
   // the single-child gutter-centering rule to multi-child grids (the
   // footer's constrained layout slots three rows).
+  // GRID TRACK COUNT (owner, 2026-08-29: "should be 3 for some, 2 for
+  // others"): group sized children into y-rows; the max row width in
+  // children IS the column count. The builder splits the track width
+  // EXACTLY (rounding drift in measured widths made 3-across wrap to 2+1).
+  if (disp === 'grid' && !process.env.SNIPPET_NO_COLS && (raw.kids ?? []).length >= 2) {
+    const gks = (raw.kids ?? []).filter((k) => k.w > 2 && k.h > 2);
+    const rows = [];
+    for (const k of [...gks].sort((a, b) => a.y - b.y)) {
+      const row = rows.find((r) => Math.abs(r.y - k.y) < Math.max(8, k.h * 0.5));
+      if (row) { row.n += 1; } else rows.push({ y: k.y, n: 1 });
+    }
+    const cols = Math.max(...rows.map((r) => r.n), 1);
+    if (cols > 1) node.gridCols = cols;
+  }
   if (disp === 'grid' && !node.padPx && (raw.kids ?? []).length) {
     const gk = (raw.kids ?? []).filter((k) => k.w > 2 && k.h > 2);
     if (gk.length) {
@@ -310,9 +330,23 @@ function buildPseudoContract(section) {
   const ctx = { selfBase: `site-${SECTION}`, knownNames: knownComponentNames(SC.id) };
   const root = buildAnatomyNode(section.root, ctx, true);
   attachTypeLiterals(section.root, root);
+  // ORGANISM WIDTH (FIGMA-CLEANLINESS.md #9 — owner: "inconsistent organism
+  // widths"): desktop organisms are 1440 wide. A contained section measures
+  // narrower because its auto margins live OUTSIDE the element — normalize
+  // by widening the root and carrying the difference as symmetric padding,
+  // leaving the content geometry untouched.
+  const DESKTOP_W = 1440;
+  if (root.box && root.box.w < DESKTOP_W - 1) {
+    const mAuto = Math.round(((DESKTOP_W - root.box.w) / 2) * 10) / 10;
+    root.padPx = root.padPx
+      ? [root.padPx[0], root.padPx[1] + mAuto, root.padPx[2], root.padPx[3] + mAuto]
+      : [0, mAuto, 0, mAuto];
+    root.box = { ...root.box, w: DESKTOP_W };
+  }
+  const setName = SET_NAME_ARG || `Site ${titleCase(SECTION)}`;
   return {
     id: `al-site-${SECTION}`,
-    name: `Site ${titleCase(SECTION)}`,
+    name: setName,
     version: '0.0.0',
     status: 'derived',
     description: `PAGE SECTION snippet — measured live from route "${ROUTE}" (mode ${MODE}) by measure-page.mjs, selector [data-section-id="${SECTION}"]. Not a library component; built by generate-snippet.mjs (spec 2026-08-28-snippet-capture-code-to-figma).`,
@@ -329,7 +363,7 @@ function buildPseudoContract(section) {
     a11y: { ariaAttributes: [], cssParts: [] },
     bindings: {
       code: { tagName: `site-${SECTION}`, importPath: null, workspace: null },
-      figma: { componentSetName: `Site ${titleCase(SECTION)}` },
+      figma: { componentSetName: setName },
     },
   };
 }
@@ -381,6 +415,8 @@ async function main() {
   }
 
   const ops = buildOps(contract, opsInputs);
+  if (process.env.SNIPPET_NO_DIVERGE) ops.noDiverge = true; // bisect toggle
+  if (process.env.SNIPPET_DBG_PATH) ops.dbgPath = process.env.SNIPPET_DBG_PATH; // TEMP walk trace
   const degradations = collectDegradations(section.root, '0', [], contract.anatomy.root);
   const dir = join(SC.dirs.sync, 'generated-ops');
   mkdirSync(dir, { recursive: true });
@@ -405,7 +441,18 @@ async function main() {
     process.exit(1);
   }
 
-  const code = buildPluginCode(ops, SC, config);
+  // DEFERRED IMAGE FILLS (2026-08-29): strip base64 payloads out of the
+  // main build call — work's card rasters pushed it past the bridge's hard
+  // ~30s ceiling, deterministically — and apply each in its own tiny
+  // follow-up call against the tagged node ids the build returns.
+  const imageByPath = new Map();
+  const buildOpsCopy = JSON.parse(JSON.stringify(ops));
+  (function stripImages(n, p) {
+    if (!n) return;
+    if (n.imgB64) { imageByPath.set(p, n.imgB64); delete n.imgB64; n.imgRef = true; }
+    (n.children || []).forEach((k, i) => stripImages(k, `${p}.${i}`));
+  })(buildOpsCopy.root, '0');
+  const code = buildPluginCode(buildOpsCopy, SC, config);
   const text = await call('figma_execute', { code, fileKey: SC.fileKey, timeout: 90000 });
   let payload;
   try { payload = JSON.parse(text); } catch { console.error(text); process.exit(1); }
@@ -414,11 +461,26 @@ async function main() {
     process.exit(1);
   }
   const result = typeof payload.result === 'string' ? JSON.parse(payload.result) : payload.result;
+  const imgTargets = Array.isArray(result.imageTargets) ? result.imageTargets : [];
+  let imgApplied = 0;
+  for (const tgt of imgTargets) {
+    const b64 = imageByPath.get(tgt.path);
+    if (!b64) continue;
+    const icode = `const img = figma.createImage(figma.base64Decode(${JSON.stringify(b64)})); const n = await figma.getNodeByIdAsync(${JSON.stringify(tgt.id)}); if (n) { n.fills = [{ type: 'IMAGE', scaleMode: 'FILL', imageHash: img.hash }]; return 'ok'; } return 'missing';`;
+    try {
+      const itext = await call('figma_execute', { code: icode, fileKey: SC.fileKey, timeout: 60000 });
+      const ipay = JSON.parse(itext);
+      if (ipay.success !== false) imgApplied += 1;
+    } catch (e) { console.warn(`[generate-snippet] deferred image fill failed at ${tgt.path}`); }
+  }
+  if (imgTargets.length) console.log(`[generate-snippet] deferred image fills: ${imgApplied}/${imgTargets.length}`);
+  delete result.imageTargets;
   console.log(JSON.stringify({ ...result, snippetDegradations: degradations }, null, 2));
 
   if (DO_VERIFY) {
     const vargs = ['scripts/contracts/verify-figma.mjs', '--section', SECTION, '--project', SC.id,
       '--mode', MODE, '--route', ROUTE, '--source', SOURCE, '--page', PAGE_NAME];
+    if (SET_NAME_ARG) vargs.push('--set-name', SET_NAME_ARG);
     console.log(`[generate-snippet] --verify: ${vargs.join(' ')}`);
     try {
       execFileSync(process.execPath, vargs, { stdio: 'inherit' });

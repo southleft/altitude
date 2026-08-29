@@ -111,6 +111,33 @@ function esc(text) {
   return String(text).replace(/\\/g, '\\\\').replace(/{/g, "{'{'}").replace(/}/g, "{'}'}");
 }
 
+/** al-layout token'd props from the extract's layout facts (round 2 of the
+ * reverse lane — spacing rides as real props, not comments, wherever a value
+ * maps EXACTLY to the theme scale; anything off-scale stays a comment).
+ * Space scale from libs/al-web-components (dist css): xs=8 sm=12 md=20 lg=24
+ * xl=28; 16 is the unnamed default (gap prop omitted). */
+const GAP_TOKEN_BY_PX = { 0: 'none', 8: 'xs', 12: 'sm', 20: 'md', 24: 'lg', 28: 'xl' };
+const ALIGN_BY_FIGMA = { CENTER: 'center', MAX: 'end' };
+const JUSTIFY_BY_FIGMA = { CENTER: 'center', MAX: 'end', SPACE_BETWEEN: 'between' };
+function layoutAttrs(node) {
+  const attrs = [];
+  const meta = [];
+  const L = node.layout || {};
+  if (L.mode === 'HORIZONTAL') attrs.push('direction="row"');
+  if (L.wrap) attrs.push('wrap');
+  if (L.gap !== undefined && L.gap !== null) {
+    const hit = Object.keys(GAP_TOKEN_BY_PX).find((k) => Math.abs(L.gap - Number(k)) <= 1);
+    if (hit !== undefined) { if (GAP_TOKEN_BY_PX[hit] !== 'none' || L.gap === 0) attrs.push(`gap="${GAP_TOKEN_BY_PX[hit]}"`); }
+    else if (Math.abs(L.gap - 16) <= 1) { /* theme default — omit */ }
+    else meta.push(`gap ${L.gap}px (off-scale)`);
+  }
+  if (L.alignItems && ALIGN_BY_FIGMA[L.alignItems]) attrs.push(`align="${ALIGN_BY_FIGMA[L.alignItems]}"`);
+  if (L.justify && JUSTIFY_BY_FIGMA[L.justify]) attrs.push(`justify="${JUSTIFY_BY_FIGMA[L.justify]}"`);
+  if (L.rowGap && Math.abs(L.rowGap - (L.gap ?? -1)) > 1) meta.push(`row-gap ${L.rowGap}px`);
+  if (L.pad && L.pad.some((p) => p > 0)) meta.push(`pad [${L.pad.join(',')}]`);
+  return { attrs, meta };
+}
+
 function emit(node, setMap, depth, out, degradations, imports) {
   const ind = '  '.repeat(depth + 2);
   if (node.hidden) { degradations.push(`hidden:${node.name}`); return; }
@@ -150,17 +177,7 @@ function emit(node, setMap, depth, out, degradations, imports) {
   const kids = node.children || [];
   if (!kids.length) { degradations.push(`empty-frame:${node.name}`); return; }
   imports.add('ALLayout');
-  const attrs = [];
-  if (node.layout?.mode === 'HORIZONTAL') attrs.push('direction="row"');
-  if (node.layout?.wrap) attrs.push('wrap');
-  const meta = [];
-  if (node.layout) {
-    if (node.layout.gap) meta.push(`gap ${node.layout.gap}px`);
-    if (node.layout.rowGap) meta.push(`row-gap ${node.layout.rowGap}px`);
-    if (node.layout.pad && node.layout.pad.some((p) => p > 0)) meta.push(`pad [${node.layout.pad.join(',')}]`);
-    if (node.layout.alignItems && node.layout.alignItems !== 'MIN') meta.push(`align ${node.layout.alignItems}`);
-    if (node.layout.justify && node.layout.justify !== 'MIN') meta.push(`justify ${node.layout.justify}`);
-  }
+  const { attrs, meta } = layoutAttrs(node);
   const metaStr = meta.length ? `${ind}{/* ${node.name}: ${meta.join(' · ')} — map to al-layout token props by hand */}\n` : '';
   out.push(`${metaStr}${ind}<ALLayout${attrs.length ? ' ' + attrs.join(' ') : ''}>`);
   for (const k of kids) emit(k, setMap, depth + 1, out, degradations, imports);
@@ -226,9 +243,7 @@ function emitHtml(node, setMap, depth, out) {
   }
   const kids = node.children || [];
   if (!kids.length) return;
-  const attrs = [];
-  if (node.layout?.mode === 'HORIZONTAL') attrs.push('direction="row"');
-  if (node.layout?.wrap) attrs.push('wrap');
+  const { attrs } = layoutAttrs(node);
   out.push(`${ind}<al-layout${attrs.length ? ' ' + attrs.join(' ') : ''}>`);
   for (const k of kids) emitHtml(k, setMap, depth + 1, out);
   out.push(`${ind}</al-layout>`);

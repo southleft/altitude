@@ -62,13 +62,46 @@ try {
   };
   writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n', 'utf8');
 
+  // ── T1 (spec 2026-08-29-parity-judgement-gates-and-evals) ──────────────
+  // The gate: with no fresh passing check-parity receipt, this must REFUSE
+  // rather than stamp. Before T1 the same invocation stamped silently, which
+  // is how `in-sync` came to mean "an agent said so".
+  const beforeGate = readFileSync(manifestPath, 'utf8');
+  let refusal = null;
+  try {
+    execFileSync(
+      process.execPath,
+      ['--experimental-strip-types', '--no-warnings', SCRIPT, '--project', 'southleft', 'al-header', 'al-hero'],
+      { cwd: REPO_ROOT, stdio: 'pipe' }
+    );
+  } catch (e) {
+    refusal = `${e.stdout ?? ''}${e.stderr ?? ''}`;
+  }
+  ok(refusal !== null, 'mark-synced exits non-zero when nothing has verified the components');
+  ok(
+    /REFUSED|No check-parity receipt/.test(refusal ?? ''),
+    'the refusal names why it refused rather than failing silently'
+  );
+  ok(readFileSync(manifestPath, 'utf8') === beforeGate, 'a refused run stamps nothing at all');
+
+  // ── the brand-layer hashing this test was originally written for ───────
+  // `--human-verified` is the documented escape hatch; it is what lets this
+  // test reach the hashing logic under test without a live Figma connection.
   execFileSync(
     process.execPath,
-    ['--experimental-strip-types', '--no-warnings', SCRIPT, '--project', 'southleft', 'al-header', 'al-hero'],
+    [
+      '--experimental-strip-types', '--no-warnings', SCRIPT,
+      '--project', 'southleft', 'al-header', 'al-hero',
+      '--human-verified', 'unit test fixture — not a real reconciliation',
+    ],
     { cwd: REPO_ROOT, stdio: 'pipe' }
   );
 
   const stamped = JSON.parse(readFileSync(manifestPath, 'utf8'));
+  ok(
+    stamped.components['al-header'].lastSync?.verifiedBy?.how === 'human',
+    'an overridden stamp records verifiedBy.how = "human", so the manifest never loses the distinction'
+  );
 
   // Independently derive the expected hashes via the SAME roster mark-synced
   // now uses, so this test fails if either side's resolution ever disagrees.

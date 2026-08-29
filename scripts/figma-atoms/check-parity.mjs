@@ -15,12 +15,25 @@
  * old positional parse also kept `--project`'s VALUE as a component key, so the
  * exact command parity.mjs's aiPrompt hands out used to die on
  * `ops/southleft.json` ENOENT.
+ *
+ * IT IS A GATE NOW (T1, spec 2026-08-29-parity-judgement-gates-and-evals).
+ * Until 2026-08-29 this script exited non-zero only when it could not READ an
+ * ops file or reach the shim — a variant 40px off, or missing from Figma
+ * entirely, printed a line and returned 0. It now:
+ *   (a) exits 1 when any checked variant is outside tolerance or missing, and
+ *   (b) writes a RECEIPT (scripts/lib/parity-receipt.mjs) naming what passed
+ *       and against which source digests, which `mark-synced.mjs` requires
+ *       before it will stamp a component as in-sync.
+ * `--no-fail` restores the old print-and-exit-0 behaviour for exploratory
+ * surveys. The receipt is written either way — the flag changes this process's
+ * exit code, never what the receipt says happened.
  */
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { scope, projectArg } from './project-scope.mjs';
 import { call, parsePayload, shimPortFromArgv } from '../lib/figma-shim.mjs';
-import { positionals } from '../lib/argv.mjs';
+import { hasFlag, positionals } from '../lib/argv.mjs';
+import { rosterIndex, sourceKeyFor, writeReceipt } from '../lib/parity-receipt.mjs';
 
 const sc = scope(projectArg());
 const PORT = shimPortFromArgv();
@@ -72,17 +85,34 @@ try {
   process.exit(1);
 }
 
+// The roster mark-synced.mjs and computeParity() use — read once, so the
+// digests recorded here are the same ones the stamp gate will recompute.
+const rosterByTag = rosterIndex(sc.project);
+
 let totalOff = 0; let totalMissing = 0; let totalChecked = 0;
+const results = {};
 for (const key of targets) {
   const ops = opsByKey.get(key);
   const built = live[ops.name];
-  if (!built) { console.log(`${ops.name.padEnd(18)} NO PAGE/SET IN FIGMA`); totalMissing++; continue; }
+  // `sourceKey` is null for a key the roster does not know (an ops file for
+  // something outside this project's component roster). The comparison below
+  // still runs and still reports; what a null buys is that the receipt cannot
+  // authorise a stamp for it — see receiptAuthorises() in parity-receipt.mjs.
+  const sourceKey = sourceKeyFor(rosterByTag, key);
+  const base = { figmaSetName: ops.name, sourceKey };
+  if (!built) {
+    console.log(`${ops.name.padEnd(18)} NO PAGE/SET IN FIGMA`);
+    totalMissing++;
+    results[key] = { ...base, ok: false, checked: 0, off: 0, missing: 1, unverifiable: 'no page or component set in Figma' };
+    continue;
+  }
   const byName = new Map(built.map((b) => [b.n, b]));
   const rows = ops.rows.filter((r) => r.state === 'Default' || r.differsFromDefault);
   const offs = []; const missing = [];
+  let checkedHere = 0;
   for (const r of rows) {
     if (!r.expected) continue;
-    totalChecked++;
+    totalChecked++; checkedHere++;
     const b = byName.get(r.variant);
     if (!b) { missing.push(r.variant); totalMissing++; continue; }
     const dw = Math.abs(b.w - r.expected.w); const dh = Math.abs(b.h - r.expected.h);
@@ -96,5 +126,30 @@ for (const key of targets) {
   for (const m of missing.slice(0, 3)) console.log(`    MISSING  ${m}`);
   for (const o of offs.slice(0, 3)) console.log(`    OFF      ${o}`);
   if (offs.length > 3) console.log(`    ... ${offs.length - 3} more off`);
+  results[key] = {
+    ...base,
+    ok: !offs.length && !missing.length && checkedHere > 0,
+    checked: checkedHere,
+    off: offs.length,
+    missing: missing.length,
+    // A set whose every row carries no `expected` box compares nothing at all.
+    // Reporting that as OK is how a component with no measurements would have
+    // sailed through the stamp gate; it is named instead.
+    ...(checkedHere === 0 ? { unverifiable: 'no ops row carried an expected box — nothing was compared' } : {}),
+  };
 }
 console.log(`\n[${sc.id}] checked ${totalChecked} variants | ${totalOff} outside ${TOL}px | ${totalMissing} missing`);
+
+const receipt = writeReceipt(sc.project, { tolerancePx: TOL, components: results });
+console.log(`[${sc.id}] receipt written: ${receipt}`);
+
+const failed = totalOff > 0 || totalMissing > 0;
+if (failed && hasFlag('--no-fail')) {
+  console.log('[check-parity] --no-fail: reporting only. mark-synced.mjs will still refuse the failing components.');
+  process.exit(0);
+}
+if (failed) {
+  console.error(`\n[check-parity] FAIL — ${totalOff} variant(s) outside ${TOL}px, ${totalMissing} missing. Fix the set (or the measurement) and re-run; mark-synced.mjs will not stamp these.`);
+  process.exit(1);
+}
+console.log('[check-parity] PASS');

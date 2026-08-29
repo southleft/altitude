@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "$comment": "T12, spec 2026-08-29-parity-judgement-gates-and-evals. THE LEDGER of every point in the Figma<->code pipeline where an agent makes a judgement rather than a computation. The 13 below were found by a one-off read-only sweep on 2026-08-29; nothing would have surfaced the 14th, which is what this file plus scripts/check-judgement-ledger.mjs exist to fix. `disposition` is what NOW checks each one: `gated` = a deterministic check refuses the bad answer, `evaluated` = an eval measures how often the agent gets it right, `open` = still nothing. An `open` entry is not a bug in this file; it is the honest state, and the file exists so it stays visible.",
+  "dispositions": {
+    "gated": "a deterministic check now refuses the wrong answer outright",
+    "evaluated": "an eval measures it; the wrong answer is possible but scored",
+    "open": "nothing checks it yet"
+  },
+  "points": [
+    {
+      "id": "J1",
+      "decision": "Adopt the Figma change into code, or revert Figma to the code truth?",
+      "location": "libs/altitude-mcp/src/lib/parity.mjs",
+      "anchor": "First decide direction with a human",
+      "disposition": "evaluated",
+      "coveredBy": ["task E (direction policy) — fixtures/direction-cases.json"],
+      "wrongAnswer": "Figma silently becomes the source of truth for a token value, reversing the DTCG generation direction CLAUDE.md calls one-way."
+    },
+    {
+      "id": "J2",
+      "decision": "On `conflict`, which side wins per property?",
+      "location": "libs/altitude-mcp/src/lib/parity.mjs",
+      "anchor": "Merge deliberately",
+      "disposition": "evaluated",
+      "coveredBy": ["task E — the `both-sides-changed` case, whose answer is ask-a-human"],
+      "wrongAnswer": "A half-merge; one side's intent is silently lost with no record that it existed."
+    },
+    {
+      "id": "J3",
+      "decision": "Should a Figma-only set exist in code at all?",
+      "location": "libs/altitude-mcp/src/lib/parity.mjs",
+      "anchor": "Decide with a human whether it should exist in code",
+      "disposition": "evaluated",
+      "coveredBy": ["task E — the `figma-only-set-no-code` case"],
+      "wrongAnswer": "Scaffolding a layout wrapper the repo's arrangement guardrails ban, to turn a badge green."
+    },
+    {
+      "id": "J4",
+      "decision": "Repair the set in place, or regenerate it?",
+      "location": "libs/altitude-mcp/src/lib/parity.mjs",
+      "anchor": "never delete+rebuild a pinned atom set",
+      "disposition": "evaluated",
+      "coveredBy": [
+        "trajectory assertion `repair-not-regenerate` (scripts/ai-readiness/lib/trajectory.mjs)",
+        "scripts/figma-parity/check-pinned-nodes.mjs catches the orphaned ids afterwards"
+      ],
+      "wrongAnswer": "New node ids are minted; every pinned reference and prop-sheet entry is orphaned."
+    },
+    {
+      "id": "J5",
+      "decision": "Is it actually reconciled — may I stamp `in-sync`?",
+      "location": "scripts/figma-parity/mark-synced.mjs",
+      "anchor": "IT NOW REQUIRES THAT VERIFICATION",
+      "disposition": "gated",
+      "coveredBy": [
+        "T1: check-parity.mjs exits non-zero and writes a receipt; mark-synced refuses without a fresh passing one",
+        "trajectory assertion `verify-before-stamp`"
+      ],
+      "wrongAnswer": "A green `in-sync` badge over a broken set — the state every parity surface reports."
+    },
+    {
+      "id": "J6",
+      "decision": "Is this reconciliation plan any good?",
+      "location": "libs/altitude-mcp/src/lib/prompts.mjs",
+      "anchor": "confirm status is",
+      "disposition": "evaluated",
+      "coveredBy": [
+        "task D (reconciliation accuracy) — precision/recall against contract-diff.mjs",
+        "trajectory assertion `refresh-before-acting`"
+      ],
+      "wrongAnswer": "A confident plan written against a Figma observation that was never refreshed."
+    },
+    {
+      "id": "J7",
+      "decision": "Every per-component `figma.gen.json` curation value.",
+      "location": "scripts/contracts/figma/component-config.mjs",
+      "anchor": "JUDGMENT CALLS",
+      "disposition": "evaluated",
+      "coveredBy": ["task F (curation review) — derived live from the 33 tracked curation files"],
+      "wrongAnswer": "al-badge sampled as a dot; al-banner sized by whatever message text happened to be there."
+    },
+    {
+      "id": "J8",
+      "decision": "Fan a prop out as an `axis`, `omit` it, or curate `pairWith`?",
+      "location": "scripts/contracts/emit-contracts.mjs",
+      "anchor": "carryForwardPropAxisCuration",
+      "disposition": "evaluated",
+      "coveredBy": ["task F — including the al-button T22/T23 -> T31 reversal as a hand-authored negative case"],
+      "wrongAnswer": "The real one: a ~200-variant fan-out curated from a documentation screenshot mistaken for the live set."
+    },
+    {
+      "id": "J9",
+      "decision": "Is this verify miss a generic-rule gap, a missing measured fact, a curation call, or a site bug?",
+      "location": "scripts/contracts/verify-figma.mjs",
+      "anchor": "three-layer discipline",
+      "disposition": "open",
+      "coveredBy": [],
+      "wrongAnswer": "A per-component hack lands in shared generator code — the one thing the generate skill forbids outright.",
+      "note": "Not evaluated yet. The classification only exists inside a live generation session, so a case would have to be captured from a real verify report rather than derived."
+    },
+    {
+      "id": "J10",
+      "decision": "Has it converged — is a remaining row an accepted degradation?",
+      "location": ".claude/skills/altitude-figma-snippet/SKILL.md",
+      "anchor": "the numeric verify + auto-exported image pair are the critic",
+      "disposition": "open",
+      "coveredBy": [],
+      "wrongAnswer": "Stopping early and declaring residual drift acceptable, with no record of what was accepted."
+    },
+    {
+      "id": "J11",
+      "decision": "Does the render actually look right — colour, glyph, label text?",
+      "location": "scripts/contracts/verify-figma.mjs",
+      "anchor": "BEYOND GEOMETRY",
+      "disposition": "gated",
+      "coveredBy": [
+        "T4: verify-figma.mjs now compares text, fill colour and fill-boundness (scripts/lib/visual-facts.mjs)"
+      ],
+      "wrongAnswer": "The snippet skill's trap 9: the chips 'looked right' red at thumbnail scale and the eyeball was wrong.",
+      "note": "The comparator half is gated but REPORT-ONLY until someone runs it live and reads the false-positive rate (`--gate-facts`). Whatever the comparator cannot express is still open — see spec task T10."
+    },
+    {
+      "id": "J12",
+      "decision": "Is this `missingVars` entry expected noise or a real loss?",
+      "location": "scripts/contracts/figma/build-set-code.mjs",
+      "anchor": "missingVars",
+      "disposition": "open",
+      "coveredBy": [],
+      "wrongAnswer": "Real arrangement loss dismissed as 'expected', silently."
+    },
+    {
+      "id": "J13",
+      "decision": "Applying the library's Figma conventions by hand — page name, axis order, Title Case values.",
+      "location": "libs/altitude-mcp/src/lib/parity.mjs",
+      "anchor": "State axis, Title Case variant values",
+      "disposition": "gated",
+      "coveredBy": [
+        "T3: scripts/check-figma-conventions.mjs (Title Case, State vocabulary, set name)",
+        "scripts/figma-parity/check-pinned-nodes.mjs (the live page half)"
+      ],
+      "wrongAnswer": "A non-conforming set that still passes every other gate.",
+      "note": "Variant ORDER remains unverifiable from a canvas contract: extract-canvas.mjs sorts axis options, so the artifact records the set and destroys the order."
+    }
+  ],
+  "markerFilesAcknowledged": [
+    "scripts/ai-readiness/lib/curation-cases.mjs",
+    "scripts/check-token-usage.mjs",
+    "scripts/contracts/figma/build-sheet-code.mjs",
+    "scripts/contracts/figma/derive-ops.mjs",
+    "scripts/contracts/figma/derive-sheet-plan.mjs",
+    "scripts/contracts/figma/sheet-style.mjs",
+    "scripts/contracts/generate-code.mjs",
+    "scripts/contracts/generate-figma.mjs"
+  ],
+  "$acknowledgedComment": "Files that CARRY a judgment-call marker in a comment but are not themselves a ledger point: they are either generation-internal curation already covered by J7 (the figma/ modules, all reached through component-config.mjs), or unrelated to the Figma<->code lane (check-token-usage.mjs). Listing them is deliberate — it is what lets the checker fail on a marker in a file NOBODY has looked at, instead of on every marker in the repo."
+}

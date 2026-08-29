@@ -779,11 +779,25 @@ function disagreementsSection(item) {
   return ['', `What disagrees (${item.disagreements.length}, from the canvas contract diff):`, ...lines];
 }
 
+/**
+ * The verify-then-stamp footer.
+ *
+ * T1 (spec 2026-08-29-parity-judgement-gates-and-evals) made this an ORDER,
+ * not a suggestion: check-parity.mjs now exits non-zero on a real miss and
+ * writes a receipt, and mark-synced.mjs refuses to stamp a component with no
+ * fresh passing receipt for it. The footer names the component in the verify
+ * command too — the old text told an agent to run a bare check-parity, whose
+ * default target list is 14 molecules and therefore would not have covered
+ * the component it had just reconciled.
+ */
 function promptFooter(tag, p) {
   const projectFlag = p.isDefault ? '' : ` --project ${p.id}`;
+  const t = tag ?? '<tag>';
   return [
-    `Verify with: node ${p.prompts.atomsScriptsDir}/check-parity.mjs${projectFlag}`,
-    `When both sides match, stamp the sync so it reports in-sync: node ${p.prompts.parityScriptsDir}/mark-synced.mjs${projectFlag} ${tag ?? '<tag>'}`,
+    `Verify with: node ${p.prompts.atomsScriptsDir}/check-parity.mjs${projectFlag} ${t}`,
+    `  It exits non-zero on a real miss and writes a receipt. Do not stamp until it passes.`,
+    `Then stamp the sync so it reports in-sync: node ${p.prompts.parityScriptsDir}/mark-synced.mjs${projectFlag} ${t}`,
+    `  This REFUSES to stamp without that fresh passing receipt. If you verified it another way, say so explicitly: --human-verified "<reason>" — it is recorded in the manifest as a human call, not a measurement.`,
   ];
 }
 

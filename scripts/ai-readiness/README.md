@@ -11,6 +11,9 @@ Four task surfaces, each run by N agents per model per treatment:
 | **A — Composition** | Compose a user profile card pattern using only real `<al-*>` components | Tests discoverability + comprehension of the composition surface |
 | **B — Scaffold** | Generate a new `<al-stat-card>` component from scratch | Tests authoring conventions + token-name knowledge |
 | **C — Violation spotting** | Audit a deliberately non-conformant `<al-tag>` PR | Tests how legible the conventions are to a reviewer |
+| **D — Reconcile** | Read one component's code contract and its Figma canvas contract and report every disagreement | Tests the PRODUCER lane — our own reconciliation agent, not an outside consumer (T6, spec 2026-08-29-parity-judgement-gates-and-evals) |
+| **E — Direction** | Given ONE code↔Figma disagreement, decide which side is the source of truth | Tests whether the repair skill's who-wins policy is legible; balanced across code / canvas / ask-a-human (T7) |
+| **F — Curation** | Review one `figma.gen.json` curation value and say whether it is right for that component | Tests the judgement calls the generator cannot derive; 50/50 correct/wrong by construction, plus the documented historical reversals (T8) |
 | **G — Docs surface** | Answer questions using ONLY the docs site's `llms.txt` family + `.md` routes, no local repo files | Tests whether the published AI-facing documentation surface actually helps (R9) |
 
 Each attempt returns strict JSON (validated against `schemas/*.schema.json`). Two independent
@@ -165,7 +168,7 @@ node scripts/ai-readiness/run-probe.mjs --tasks=A
 # what lets it run in CI with no CLI installed at all). Use this to
 # sanity-check binary discovery on a new machine, or the job-list explosion
 # across the full treatment matrix, before committing to a real (paid) run.
-node scripts/ai-readiness/run-probe.mjs --dry-run --fleet=1 --tasks=A,B,C,G --models=claude --treatments=all
+node scripts/ai-readiness/run-probe.mjs --dry-run --fleet=1 --tasks=A,B,C,D,E,F,G --models=claude --treatments=all
 
 # Pin the model (default claude-opus-5) and cap spend per invocation
 # (default $3 — the CLI's own --max-budget-usd):
@@ -363,6 +366,97 @@ scorecard with `null` scores rather than skipping the commit entirely. `null` me
 measured" — it is never filled in with a guess.
 
 This loop is how the design system actually gets more AI-ready: empirical evidence, not "this AGENTS.md feels comprehensive."
+
+## The reconciliation eval corpus (T5)
+
+`build-drift-cases.mjs` builds an eval corpus for the PRODUCER lane — the
+Figma↔code reconciliation agent — from artifacts this repo already tracks.
+
+```bash
+pnpm run evals:drift-cases              # dry run: print the corpus summary
+pnpm run evals:drift-cases -- --write   # update .altitude/ai-readiness/drift-cases.altitude.json
+pnpm run evals:drift-cases:check        # drift gate (local only, see below)
+```
+
+**The answer key is computed, not labelled.**
+`libs/altitude-mcp/src/lib/contract-diff.mjs` already decides, deterministically,
+which props / variant values / states / token bindings disagree between a
+component's code contract and its canvas contract. Take a real tracked pair,
+apply a NAMED deterministic mutation, and the differ tells you exactly what a
+competent agent should report. No human labelling, no LLM in the grading path,
+35 components of corpus for free.
+
+Today: **120 cases across 35 components**, 84 carrying an injected defect and
+36 being the components exactly as they really are. Mutations live in
+`lib/drift-mutations.mjs`: `none`, `drop-variant-value`, `add-variant-value`,
+`rename-axis`, `drop-prop`, `drop-state`, `retoken`.
+
+**`none` is not filler.** A suite that only ever asks "find the drift" measures
+an agent that always finds drift. The clean cases are how precision gets
+measured at all.
+
+**`expected` is the FULL disagreement set, `injected` is the needle.** The real
+pairs are not clean — 33 of 35 already disagree, 448 disagreements in total
+(tracked as an issue). An earlier draft subtracted the baseline and asked only
+"what did the mutation add", which reported 140 of 163 mutations as no-ops:
+on a pair that already disagrees everywhere, removing one variant value adds
+nothing new. So a case asks the honest question — "report everything that
+disagrees" — and records the planted defect separately so a grader can score
+both overall precision/recall and whether the specific needle was found.
+
+**A mutation that changes nothing is EXCLUDED and named**, in the corpus's own
+`defects[]`, with which of the two reasons applies: the differ genuinely cannot
+see it, or it saw it but only the disagreement DETAIL changed (this key already
+disagrees, and the answer key is keyed by `{dimension, key, kind}`). A case
+whose answer key is indistinguishable from its baseline would grade every agent
+identically.
+
+**Not a CI gate, and it cannot be one.** Canvas contracts are gitignored live
+observations (`.gitignore:122`) and are absent on a clone, so `--check` only
+works on a machine that has run `pnpm run contracts:canvas`. The tracked
+corpus is therefore the durable artifact — and its invariants ARE checked in
+CI, by `scripts/__tests__/drift-mutations.test.mjs` (run via `pnpm run
+test:scripts`), which deliberately splits into a corpus tier that always runs
+and a mutation tier that degrades to a named skip.
+
+## Trap coverage (T9)
+
+```bash
+pnpm run evals:traps              # inventory + coverage report
+pnpm run evals:traps -- --write   # update .altitude/ai-readiness/trap-index.json
+pnpm run evals:traps:check        # drift gate
+```
+
+The four Figma skills carry numbered TRAPS — each a real, dated failure with a
+known correct answer, written down when it cost somebody an hour. That is
+exactly the corpus Anthropic's eval guidance asks for ("start from real
+failures, not imagined ones"), and this turns the prose into a counted
+inventory with a coverage number.
+
+**MEASURED: 52 traps, not the "~70" an early estimate claimed** — generate 15,
+repair 14, snippet 10, sync 13. The first version of the extractor matched only
+list-style traps (`1. **Title**`) and reported `altitude-figma-repair` as having
+ZERO while its file carries fourteen in heading style (`### 1. Title`). For a
+coverage DENOMINATOR that is the worst failure available: it makes the gap look
+smaller by shrinking the problem. Both conventions are now matched and the
+regression is pinned in `scripts/__tests__/trap-index.test.mjs`.
+
+**Coverage today: 8 of 52 (15%),** all from `altitude-figma-repair`, all cited
+by Task E direction cases. That number is a **gap report, not a score** — it is
+supposed to be low until more cases are written, and driving it up by writing
+vague cases would make it worse, not better.
+
+**Coverage is by CITATION.** A trap counts as covered when a case's `source`
+names both the skill and the trap number ("repair SKILL.md trap 4"). A bare
+"trap 4" is not counted — four skills each have a trap 4, and guessing which
+would inflate the number. No fuzzy matching on wording either: a coverage
+figure produced by string similarity climbs every time a case is reworded,
+which is the opposite of a measurement.
+
+**The honest gap:** most of the remaining 44 are symptom-to-cause questions
+("the lead collapsed to one 1742px line — why?") rather than which-side-wins
+questions, and Task E's three-answer schema cannot express them. Covering them
+needs a task shape that does not exist yet, not more Task E cases.
 
 ## Extending
 

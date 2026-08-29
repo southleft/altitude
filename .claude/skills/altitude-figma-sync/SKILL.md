@@ -138,9 +138,21 @@ skill's job ends at a verified Figma set; it does NOT automatically flip that
 component to `in-sync` — a separate operator step stamps it:
 
 ```bash
-node scripts/figma-atoms/check-parity.mjs         # Figma sizes vs BROWSER sizes — must be clean
-pnpm run parity:synced <al-tag...>                # or parity:synced:sl for southleft
+node scripts/figma-atoms/check-parity.mjs <al-tag...>   # Figma sizes vs BROWSER sizes — must EXIT 0
+pnpm run parity:synced <al-tag...>                      # or parity:synced:sl for southleft
 ```
+
+**Name the tag in the check command.** Bare `check-parity.mjs` checks a
+default list of 14 molecules — it will happily exit 0 without ever looking at
+the component you just repaired, and the stamp below will then refuse it.
+
+**The stamp is gated (T1, spec 2026-08-29-parity-judgement-gates-and-evals).**
+`check-parity.mjs` now exits 1 on a real miss and writes a receipt; `parity:synced`
+REFUSES to stamp a component with no fresh passing receipt for it, and tells you
+which one and why. If you verified a component some other way, say so explicitly —
+`--human-verified "<reason>"` — which stamps it and records `lastSync.verifiedBy.how
+= "human"` in the manifest. Do not reach for that to get past a failing check: a
+failing check is the finding, not an obstacle.
 
 Skipping this leaves the component reporting stale drift (`code-drift` /
 `missing-in-figma`) in `altitude_check_parity`, `GET /parity.json` and the

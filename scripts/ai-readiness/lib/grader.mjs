@@ -134,10 +134,227 @@ export function gradeTaskC(parsed) {
   };
 }
 
-export const GRADERS = { gradeTaskA, gradeTaskB, gradeTaskC };
+// ---------------------------------------------------------------------------
+// Task D - reconciliation accuracy (T6, spec
+// 2026-08-29-parity-judgement-gates-and-evals).
+//
+// This is the grader the whole eval half of that spec is built around, and it
+// is the cheapest one here: the answer key is COMPUTED, not labelled.
+// `contract-diff.mjs` already decides deterministically which props / variant
+// values / states / token bindings disagree between a component's code
+// contract and its canvas contract, so `build-drift-cases.mjs` can hand this
+// grader an exact expected set. No human labelled it and no LLM is in the
+// scoring path, which means re-grading a recorded attempt costs nothing and
+// the grader is itself unit-testable.
+//
+// Findings are compared on the {dimension, key, kind} TRIPLE, normalised.
+// Deliberately NOT on `detail`: the wording is prose and two correct agents
+// will phrase the same finding differently. `key` is normalised the same way
+// contract-diff.mjs normalises it, so "Icon After" and "iconAfter" are the
+// same key - an agent should not lose points for reporting a name in the
+// casing its own side of the pair uses.
 
-/** Look up and run a task's grader by the tasks-registry.mjs `grader` key (a string name), or return null if the task has none. */
-export function runGrader(graderName, parsed) {
+/** Same normalisation contract-diff.mjs uses, so grading agrees with the answer key. */
+const normFindingKey = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+const findingId = (f) => `${String(f?.dimension ?? '').toLowerCase()}|${normFindingKey(f?.key)}|${String(f?.kind ?? '').toLowerCase()}`;
+
+/**
+ * @param {object} parsed the agent's structured output
+ * @param {object} context `{ case: <corpus case> }` - carries `expected` (the
+ *   full answer key) and `injected` (the defect this case planted, if any).
+ */
+export function gradeTaskD(parsed, context) {
+  const caseRecord = context && context.case;
+  if (!caseRecord) {
+    // No case, no answer key. Returning a zero score here would look like a
+    // measured failure; this says "not measured" instead, which is the only
+    // honest thing an ungraded attempt can report.
+    return { score: null, reason: 'no case attached to this attempt - nothing to grade against' };
+  }
+
+  const reported = Array.isArray(parsed?.findings) ? parsed.findings : [];
+  const reportedIds = new Set(reported.map(findingId));
+  const expectedIds = new Set((caseRecord.expected ?? []).map(findingId));
+  const injectedIds = new Set((caseRecord.injected ?? []).map(findingId));
+
+  const truePositives = [...expectedIds].filter((id) => reportedIds.has(id));
+  const missed = [...expectedIds].filter((id) => !reportedIds.has(id));
+  const spurious = [...reportedIds].filter((id) => !expectedIds.has(id));
+
+  const precision = reportedIds.size ? truePositives.length / reportedIds.size : (expectedIds.size ? 0 : 1);
+  const recall = expectedIds.size ? truePositives.length / expectedIds.size : 1;
+  const f1 = (precision + recall) ? (2 * precision * recall) / (precision + recall) : 0;
+
+  // The planted defect, scored separately. A case with a big pre-existing
+  // disagreement set can score a respectable F1 while missing the ONE thing
+  // deliberately broken, and that distinction is the point of injecting it.
+  const injectedFound = injectedIds.size
+    ? [...injectedIds].every((id) => reportedIds.has(id))
+    : null;
+
+  // A clean case is the one where `verdict` carries real information: did the
+  // agent resist inventing drift that is not there?
+  const verdictCorrect = typeof parsed?.verdict === 'string'
+    ? (parsed.verdict === 'in-sync') === (expectedIds.size === 0)
+    : null;
+
+  return {
+    caseId: caseRecord.id,
+    mutation: caseRecord.mutation,
+    reported: reportedIds.size,
+    expected: expectedIds.size,
+    truePositives: truePositives.length,
+    missed: missed.length,
+    spurious: spurious.length,
+    precision: Number(precision.toFixed(4)),
+    recall: Number(recall.toFixed(4)),
+    f1: Number(f1.toFixed(4)),
+    injectedFound,
+    verdictCorrect,
+    // Uniform with the other graders: a single `score` callers can roll up.
+    // F1 on 0..1 rather than the matched-minus-missing integer, because
+    // precision matters as much as recall here - an agent that reports every
+    // possible finding would otherwise score perfectly.
+    score: Number(f1.toFixed(4)),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Task E - direction policy (T7, spec
+// 2026-08-29-parity-judgement-gates-and-evals).
+//
+// One disagreement, three possible answers, one right one. Exact match on
+// `winner` against the hand-authored key in fixtures/direction-cases.json.
+//
+// The interesting part is not the match, it is the DEGENERATE-STRATEGY
+// detector below. This eval has only three answers, so an agent that always
+// says "code" scores whatever fraction of the corpus happens to be code-wins.
+// Per-attempt that is invisible; across a fleet it is the single most likely
+// way for this eval to report a good number while measuring nothing. The
+// rollup names it explicitly rather than leaving it to be noticed.
+
+const DIRECTIONS = ['code', 'canvas', 'ask-a-human'];
+
+export function gradeTaskE(parsed, context) {
+  const caseRecord = context && context.case;
+  if (!caseRecord) {
+    return { score: null, reason: 'no case attached to this attempt - nothing to grade against' };
+  }
+  const answered = typeof parsed?.winner === 'string' ? parsed.winner.trim().toLowerCase() : null;
+  const expected = String(caseRecord.expected ?? '').toLowerCase();
+  const correct = answered !== null && answered === expected;
+
+  // A justification that only echoes the scenario is not a justification. This
+  // is a cheap, deterministic floor -- NOT a quality judgement, which is what
+  // the LLM judge is for. It catches the empty-shell answer, nothing subtler.
+  const justification = typeof parsed?.justification === 'string' ? parsed.justification.trim() : '';
+  const justified = justification.length >= 40;
+
+  return {
+    caseId: caseRecord.id,
+    dimension: caseRecord.dimension ?? null,
+    expected,
+    answered,
+    correct,
+    validAnswer: answered !== null && DIRECTIONS.includes(answered),
+    justified,
+    confidence: parsed?.confidence ?? null,
+    // Binary. There is no partial credit for a direction: acting on the wrong
+    // side of a disagreement is wrong however well it is argued.
+    score: correct ? 1 : 0,
+  };
+}
+
+/**
+ * Fleet-level check for Task E: did the agent actually discriminate, or did it
+ * answer the same thing every time?
+ *
+ * Call with every Task E grader result from a run. Returns null when there is
+ * too little data to say - fewer than 3 attempts cannot distinguish a constant
+ * strategy from a run of genuinely similar cases.
+ */
+export function detectConstantDirection(graderResults) {
+  const answers = (graderResults || []).map((g) => g && g.answered).filter(Boolean);
+  if (answers.length < 3) return null;
+  const distinct = new Set(answers);
+  const expectedDistinct = new Set((graderResults || []).map((g) => g && g.expected).filter(Boolean));
+  return {
+    attempts: answers.length,
+    distinctAnswers: [...distinct].sort(),
+    distinctExpected: [...expectedDistinct].sort(),
+    // Only degenerate if the CASES were varied and the ANSWERS were not.
+    // Three code-wins cases answered "code" three times is correct, not lazy.
+    constant: distinct.size === 1 && expectedDistinct.size > 1,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Task F - curation review (T8).
+//
+// Binary verdict against a corpus that is balanced 50/50 by construction, so
+// the two degenerate strategies ("everything is fine" and "everything is
+// broken") both land on 0.5 rather than either one scoring well. Same
+// detector shape as Task E, on the other axis.
+
+export function gradeTaskF(parsed, context) {
+  const caseRecord = context && context.case;
+  if (!caseRecord) {
+    return { score: null, reason: 'no case attached to this attempt - nothing to grade against' };
+  }
+  const answered = typeof parsed?.verdict === 'string' ? parsed.verdict.trim().toLowerCase() : null;
+  const expected = String(caseRecord.expected ?? '').toLowerCase();
+  const correct = answered !== null && answered === expected;
+
+  // Calling a curation wrong without saying what it should be is half an
+  // answer: it identifies a problem nobody can act on. Tracked, but NOT scored
+  // - the correction's quality is a judge question, and penalising a correct
+  // detection for a weak correction would blur two different failures.
+  const correctedValue = typeof parsed?.correctedValue === 'string' ? parsed.correctedValue.trim() : '';
+  const offeredCorrection = answered === 'wrong' ? correctedValue.length > 0 : null;
+
+  return {
+    caseId: caseRecord.id,
+    tag: caseRecord.tag ?? null,
+    key: caseRecord.key ?? null,
+    historical: caseRecord.historical === true,
+    expected,
+    answered,
+    correct,
+    validAnswer: answered === 'correct' || answered === 'wrong',
+    offeredCorrection,
+    confidence: parsed?.confidence ?? null,
+    score: correct ? 1 : 0,
+  };
+}
+
+/**
+ * Fleet-level check for Task F: did the agent review, or just answer the same
+ * thing every time? The corpus is balanced 50/50, so a constant answer scores
+ * ~0.5 - respectable-looking and completely uninformative.
+ */
+export function detectConstantVerdict(graderResults) {
+  const answers = (graderResults || []).map((g) => g && g.answered).filter(Boolean);
+  if (answers.length < 3) return null;
+  const distinct = new Set(answers);
+  const expectedDistinct = new Set((graderResults || []).map((g) => g && g.expected).filter(Boolean));
+  return {
+    attempts: answers.length,
+    distinctAnswers: [...distinct].sort(),
+    constant: distinct.size === 1 && expectedDistinct.size > 1,
+  };
+}
+
+export const GRADERS = { gradeTaskA, gradeTaskB, gradeTaskC, gradeTaskD, gradeTaskE, gradeTaskF };
+
+/**
+ * Look up and run a task's grader by the tasks-registry.mjs `grader` key (a
+ * string name), or return null if the task has none.
+ *
+ * `context` (T6) carries whatever the task needs beyond the agent's own
+ * output - Task D needs the corpus case its attempt was posed from. The
+ * older graders ignore it, so this stays backwards compatible.
+ */
+export function runGrader(graderName, parsed, context = null) {
   const fn = graderName ? GRADERS[graderName] : null;
-  return fn ? fn(parsed) : null;
+  return fn ? fn(parsed, context) : null;
 }

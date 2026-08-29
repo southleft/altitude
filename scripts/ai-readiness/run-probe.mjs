@@ -60,6 +60,8 @@ import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { findBinary, runChild, extractJson, nowStamp, TMPDIR } from './lib.mjs';
+import { caseSource } from './lib/case-sources.mjs';
+import { assertReconciliationTrajectory } from './lib/trajectory.mjs';
 import { TASKS } from './lib/tasks-registry.mjs';
 import { runGrader } from './lib/grader.mjs';
 import { extractCostUsd, extractLatencyMs } from './lib/metrics.mjs';
@@ -392,12 +394,39 @@ async function main() {
     const promptTemplate = readFileSync(resolve(TASKS_DIR, task.prompt), 'utf8');
     const schemaPath = resolve(SCHEMAS_DIR, task.schema);
     const isTaskG = tid === 'G';
+    // T6/T7: a case-driven task poses a DIFFERENT question per attempt, drawn
+    // deterministically from its corpus. Loaded once per task, not per attempt.
+    const source = caseSource(task.cases);
+    const corpus = source ? source.load() : null;
+    if (source && !corpus) {
+      console.error(`[fleet] task ${tid} needs its ${source.kind} corpus — ${source.hint}`);
+      continue;
+    }
     for (const model of MODELS) {
       const treatmentsForThisModel = model === 'claude' ? TREATMENTS_TO_RUN : ['mcp-off'];
       for (const treatment of treatmentsForThisModel) {
         for (let i = 1; i <= FLEET_SIZE; i++) {
-          const rawPrompt = promptTemplate
-            .replace(/\{\{ATTEMPT\}\}/g, String(i))
+          // T6: pose this attempt's case before building its prompt. A case
+          // that cannot be materialized (no canvas contract on this machine)
+          // THROWS rather than degrading — see lib/reconcile-cases.mjs for
+          // why a silently half-built case is worse than a loud failure.
+          let attemptCase = null;
+          let casePlaceholders = {};
+          if (source) {
+            attemptCase = source.forAttempt(corpus, i);
+            if (!attemptCase) {
+              console.error(`[fleet] the ${source.kind} corpus has no selectable cases — rebuild it.`);
+              continue;
+            }
+            const paths = DRY_RUN ? null : source.materialize(attemptCase, TMPDIR);
+            casePlaceholders = source.placeholders(attemptCase, paths);
+          }
+          let rawPrompt = promptTemplate
+            .replace(/\{\{ATTEMPT\}\}/g, String(i));
+          for (const [key, value] of Object.entries(casePlaceholders)) {
+            rawPrompt = rawPrompt.split(`{{${key}}}`).join(String(value));
+          }
+          rawPrompt = rawPrompt
             .replace(/\{\{TMPDIR\}\}/g, TMPDIR)
             .replace(/\{\{LLMS_TXT_URL\}\}/g, LLMS_TXT_URL)
             .replace(/\{\{LLMS_TOKENS_URL\}\}/g, LLMS_TOKENS_URL)
@@ -410,7 +439,7 @@ async function main() {
           const preamble = isTaskG ? '' : `${CONTEXT}${promptSuffixForTreatment(treatment)}\n\n---\n\n`;
           const prompt = isTaskG ? `${promptSuffixForTreatment(treatment)}\n\n${rawPrompt}` : `${preamble}${rawPrompt}`;
           const label = `${task.id}-${model}-${treatment}-${i}`;
-          jobs.push({ task, taskShortKey: tid, model, treatment, i, prompt, schemaPath, label });
+          jobs.push({ task, taskShortKey: tid, model, treatment, i, prompt, schemaPath, label, case: attemptCase });
         }
       }
     }
@@ -449,9 +478,13 @@ async function main() {
     console.log(`[start] ${j.label}`);
     const out = await runWithRetry(runner, { bin, prompt: j.prompt, schemaPath: j.schemaPath, label: j.label, treatment: j.treatment, mcpConfigPath });
 
-    const grader = runGrader(j.task.grader, out.parsed);
+    const grader = runGrader(j.task.grader, out.parsed, j.case ? { case: j.case } : null);
     const axe = await computeAxeForAttempt({ taskShortKey: j.taskShortKey, axeRenderable: j.task.axeRenderable, parsed: out.parsed }, axeRenderer);
     const processAssertion = assertExpectedMcpTools(out.mcpToolCalls, j.task.expectedMcpTools, j.treatment);
+    // T11: the TRAJECTORY half. Computed for every attempt because it is pure
+    // and cheap; on tasks that run no commands every step reports
+    // `not-applicable`, which is an honest reading rather than a zero.
+    const trajectory = assertReconciliationTrajectory({ commands: out.commands, allToolCalls: out.allToolCalls });
     const { latencyMs } = extractLatencyMs(out);
 
     const outPath = resolve(attemptsDir, `${j.label}.json`);
@@ -460,11 +493,16 @@ async function main() {
       model: j.model,
       treatment: j.treatment,
       attempt: j.i,
+      // T6: WHICH question this attempt was asked. Without it a Task D
+      // attempt file cannot be re-graded or compared across runs — the
+      // prompt varies per attempt, so the case id is part of the result.
+      ...(j.case ? { case: { id: j.case.id, tag: j.case.tag ?? null, mutation: j.case.mutation ?? null, expected: j.case.expected ?? null } } : {}),
       ...out,
       latencyMs,
       grader,
       axe,
       processAssertion,
+      trajectory,
     };
     writeFileSync(outPath, JSON.stringify(record, null, 2));
     const status = out.parsed && !out.void ? 'ok'

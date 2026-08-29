@@ -114,7 +114,13 @@ export function promptSuffixForTreatment(treatment) {
 export function extractToolCallsFromStreamJson(rawStreamText) {
   const allToolCalls = [];
   const mcpToolCalls = [];
-  if (!rawStreamText) return { allToolCalls, mcpToolCalls };
+  // T11 (spec 2026-08-29-parity-judgement-gates-and-evals): the SHELL COMMANDS
+  // the agent actually ran. Tool NAMES alone cannot answer "did it verify
+  // before it stamped" — every one of those steps is a Bash invocation, so the
+  // trajectory assertions need the command text, not just `Bash` repeated.
+  // Additive: the two existing keys are unchanged.
+  const commands = [];
+  if (!rawStreamText) return { allToolCalls, mcpToolCalls, commands };
   for (const line of rawStreamText.split('\n')) {
     const trimmed = line.trim();
     if (!trimmed) continue;
@@ -125,9 +131,10 @@ export function extractToolCallsFromStreamJson(rawStreamText) {
       if (block?.type !== 'tool_use' || !block.name) continue;
       allToolCalls.push(block.name);
       if (block.name.startsWith('mcp__altitude__')) mcpToolCalls.push(block.name);
+      if (block.name === 'Bash' && typeof block.input?.command === 'string') commands.push(block.input.command);
     }
   }
-  return { allToolCalls, mcpToolCalls };
+  return { allToolCalls, mcpToolCalls, commands };
 }
 
 /**

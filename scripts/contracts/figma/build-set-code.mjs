@@ -540,6 +540,12 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         : ((NEAR[style] || [style, 'Regular']).find(function (s) { return styles.includes(s); }) || (styles.includes('Regular') ? 'Regular' : styles[0]));
       const k2 = family + '/' + real;
       if (loadedFonts.has(k2)) return { family: family, style: real };
+      // NEGATIVE CACHE (2026-08-29): a failed/timed-out load MUST be
+      // remembered — without it every mono-heavy text paid the full 3s race
+      // again, and the work/tools sections deterministically blew the 30s
+      // bridge ceiling on font waits alone.
+      if (typeof FAILED_FONTS === 'undefined') { globalThis.FAILED_FONTS = new Set(); }
+      if (FAILED_FONTS.has(k2)) return font(style);
       // BOUNDED load (round 6): loadFontAsync can HANG indefinitely for
       // some family/style pairs (same async-hang class as
       // importComponentByKeyAsync — the chips' rewrap font load ate the
@@ -550,10 +556,10 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           figma.loadFontAsync({ family: family, style: real }).then(function () { return true; }),
           new Promise(function (res) { setTimeout(function () { res(false); }, 3000); }),
         ]);
-        if (!ok) { misses.add('font-load-timeout:' + family + '/' + real); return font(style); }
+        if (!ok) { misses.add('font-load-timeout:' + family + '/' + real); FAILED_FONTS.add(k2); return font(style); }
         loadedFonts.add(k2);
         return { family: family, style: real };
-      } catch (e) { return font(style); }
+      } catch (e) { FAILED_FONTS.add(k2); return font(style); }
     }
 
     // PAGE — scoped strictly to PAGE_NAME. Reuse if present; otherwise
@@ -673,6 +679,23 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
     }
 
     const nestedSetByTag = {};
+    // SHALLOW set lookup (2026-08-29): sets live at depth <= 2 — directly on
+    // a page, or inside a presentation frame. A deep findOne walked EVERY
+    // node of the scratch page — nine fat organisms after the site sweep —
+    // once per unresolved tag, and setup alone blew the bridge's 30s
+    // ceiling (the build-budget guard never even fired: the walk hadn't
+    // started).
+    function shallowFindSet(root2, name2) {
+      for (const c1 of root2.children) {
+        if (c1.type === 'COMPONENT_SET' && c1.name === name2) return c1;
+        if ('children' in c1) {
+          for (const c2 of c1.children) {
+            if (c2.type === 'COMPONENT_SET' && c2.name === name2) return c2;
+          }
+        }
+      }
+      return null;
+    }
     for (const entry of NESTED_SETS) {
       let found = null;
       // al-icon has no COMPONENT_SET anywhere — the owner's DS "Icon" is a
@@ -686,9 +709,9 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         const realPage = figma.root.children.find((p) => p.name === COMPONENT_PAGE_PREFIX + entry.setName);
         if (realPage) {
           await realPage.loadAsync();
-          found = realPage.findOne((n) => n.type === 'COMPONENT_SET' && n.name === entry.setName);
+          found = shallowFindSet(realPage, entry.setName);
         }
-        if (!found) found = page.findOne((n) => n.type === 'COMPONENT_SET' && n.name === entry.setName);
+        if (!found) found = shallowFindSet(page, entry.setName);
       }
       if (found) nestedSetByTag[entry.tag] = found;
       else misses.add('nested-set-not-found:' + entry.tag + ':' + entry.setName);
@@ -731,6 +754,14 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         : root;
     }
     const textNodes = [];
+    // DEFERRED IMAGE FILLS (2026-08-29 — the work section's card rebuilds +
+    // three embedded rasters pushed the single build call over the Desktop
+    // Bridge's hard ~30s ceiling, deterministically): a node whose imgB64
+    // was stripped to imgRef by the caller is TAGGED here and filled by
+    // follow-up calls, one image each. Same reduce-work-per-call playbook
+    // as the sheet's batching.
+    const IMAGE_TARGETS = [];
+    const BUILD_T0 = Date.now();
 
     function overrideFor(state, path, cssProp) {
       const st = OPS.stateOverrides[state.toLowerCase()];
@@ -809,6 +840,11 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         // the canvas. The whole subtree is skipped (Checkbox's Label=Hidden
         // case renders NO label, exactly like the app).
         if (child.box && child.box.w <= 2 && child.box.h <= 2) continue;
+        // BUILD BUDGET (diagnostic, 2026-08-29): fail LOUDLY with the
+        // current path before the bridge's silent 30s kill — the error
+        // message tells us where the time went.
+        if (Date.now() - BUILD_T0 > 20000) throw new Error('build-budget-exceeded at ' + childPath + ' (' + (child.cls || child.tag || child.component || '?') + ')');
+        if (OPS.dbgPath && childPath.indexOf(OPS.dbgPath) === 0) misses.add('dbg:' + childPath + ':' + (child.cls || child.tag || '?').slice(0, 20)); // TEMP walk trace
         // RASTER-PREFERRED (footer round 3): an annotated subtree whose
         // truth is a RASTER (the logo's svg wordmark) resolved to a set
         // whose only face is a Text property — the instance rendered the
@@ -823,6 +859,20 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
             const defs0 = set0.componentPropertyDefinitions || {};
             const multi = Object.keys(defs0).some(function (k0) { const d0 = defs0[k0]; return d0.type === 'VARIANT' && (d0.variantOptions || []).length > 1; });
             if (!multi) { preferRaster = true; misses.add('nested-raster-preferred:' + child.component); }
+          }
+          // FACE-DIVERGENCE probe (T24 card-collapse): the measured card
+          // subtree is COMPLETE (image, excerpt, tags, footer) but the
+          // resolved set's face is a title chip — the instance replaced the
+          // whole truth. When the master's natural height is under half the
+          // measured box AND the subtree is structurally rich (2+ children),
+          // the frame rebuild is the honest face. Atoms are safe: buttons/
+          // chips fail the height gate, heading/text-block have one child.
+          if (!preferRaster && !OPS.noDiverge && child.box && child.box.h >= 60 && (child.children || []).length >= 2) {
+            const base0 = set0.type === 'COMPONENT' ? set0 : (set0.defaultVariant || set0.children[0]);
+            if (base0 && base0.height < child.box.h * 0.5) {
+              preferRaster = true;
+              misses.add('nested-set-face-divergence:' + child.component + ':' + Math.round(base0.height) + 'vs' + Math.round(child.box.h));
+            }
           }
         }
         if (!preferRaster && child.component && nestedSetByTag[child.component]) {
@@ -988,13 +1038,21 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
                 else if (parent.layoutMode === 'VERTICAL') inst.layoutSizingVertical = 'FILL';
               } catch (e) { /* parent is not an auto-layout frame */ }
             }
-            if (stretchesI && (parentIsFlexI || childBlockLevelI) && parent.layoutMode === 'VERTICAL') {
+            // SPANS-PARENT gate (owner nit, 2026-08-29: "buttons have hug
+            // width on the button atoms — keep that on anything we
+            // generate"): an instance only FILLs when its MEASURED box
+            // actually spans the parent — a button whose measured width is
+            // its hug width stays hug, a text block that filled the column
+            // in the browser still fills.
+            const spansW = child.box && node && node.box ? child.box.w >= node.box.w * 0.95 : false;
+            const spansH = child.box && node && node.box ? child.box.h >= node.box.h * 0.95 : false;
+            if (stretchesI && spansW && (parentIsFlexI || childBlockLevelI) && parent.layoutMode === 'VERTICAL') {
               try {
                 const ps = parent.layoutSizingHorizontal;
                 if (ps === 'FIXED' || ps === 'FILL') inst.layoutSizingHorizontal = 'FILL';
               } catch (e) { /* parent is not an auto-layout frame */ }
             }
-            if (stretchesI && parentIsFlexI && parent.layoutMode === 'HORIZONTAL') {
+            if (stretchesI && spansH && parentIsFlexI && parent.layoutMode === 'HORIZONTAL') {
               try {
                 const ps = parent.layoutSizingVertical;
                 if (ps === 'FIXED' || ps === 'FILL') inst.layoutSizingVertical = 'FILL';
@@ -1334,7 +1392,7 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           // (found by walk-trace instrumentation; nothing downstream ever
           // saw them). NOTE: no backticks in comments here — trap 3.
           const hasPaint = t['background-color'] || glyphBorderColor
-            || child.imgB64 || child.gridTex || child.bgCss || (child.bcCss && child.bwPx > 0);
+            || child.imgB64 || child.imgRef || child.gridTex || child.bgCss || (child.bcCss && child.bwPx > 0);
           const bw = child.box ? child.box.w : 0;
           const bh = child.box ? child.box.h : 0;
           if (!hasPaint || bw < 1 || bh < 1) {
@@ -1385,6 +1443,8 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
                 }
               }
             }
+          } else if (child.imgRef) {
+            IMAGE_TARGETS.push({ id: g.id, path: childPath });
           } else if (child.imgB64) {
             try {
               const img = figma.createImage(figma.base64Decode(child.imgB64));
@@ -1464,7 +1524,7 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           // Page-lane literal paints count as content: a raster overlay
           // (texture/murmur) or a literal-styled surface has no token yet
           // absolutely must build (hero round 4).
-          || child.imgB64 || child.bgCss || child.bcCss;
+          || child.imgB64 || child.imgRef || child.bgCss || child.bcCss;
         if (!hasContent) continue; // bare structural leaf (ripple spans etc.) — nothing canvas-expressible to build
         const f = figma.createFrame();
         // An annotated child whose set did not resolve renders as a coarse
@@ -1582,7 +1642,9 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         // bgImage lattice) as an IMAGE fill — this is what brings the hero's
         // grid texture and murmur glyph field back.
         if (!t['background-color'] && child.bgCss) { const lp = cssSolid(child.bgCss); if (lp) f.fills = [lp]; }
-        if (child.imgB64) {
+        if (child.imgRef) {
+          IMAGE_TARGETS.push({ id: f.id, path: childPath });
+        } else if (child.imgB64) {
           try {
             const img = figma.createImage(figma.base64Decode(child.imgB64));
             f.fills = [{ type: 'IMAGE', scaleMode: 'FILL', imageHash: img.hash }];
@@ -1619,8 +1681,22 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         // are definite by layout; the child's measured box IS its slot.
         if (node && node.layout && node.layout.display === 'grid' && child.box && child.box.w >= 8) {
           try {
-            f.resize(child.box.w, Math.max(f.height, 1));
-            f.layoutSizingVertical = 'HUG';
+            // EXACT TRACK WIDTH (owner, 2026-08-29: "should be 3 for some,
+            // 2 for others"): uniform grids split the container exactly —
+            // measured-width rounding drift made 3-across wrap to 2+1.
+            // Height always HUGS via the sizing-mode pattern (a measured-
+            // height resize clipped card content — owner: "height cut offs
+            // on cards instead of 100% or hug").
+            let wTrack = child.box.w;
+            if (node.gridCols > 1 && node.box && node.box.w > 8) {
+              const padH = node.padPx ? (node.padPx[1] + node.padPx[3]) : 0;
+              const gapG = typeof parent.itemSpacing === 'number' ? parent.itemSpacing : 0;
+              const track = ((node.box.w - padH) - (node.gridCols - 1) * gapG) / node.gridCols;
+              if (track > 8) wTrack = Math.floor(track * 10) / 10;
+            }
+            f.resize(wTrack, Math.max(f.height, 1));
+            if (f.layoutMode === 'VERTICAL') { f.counterAxisSizingMode = 'FIXED'; f.primaryAxisSizingMode = 'AUTO'; }
+            else if (f.layoutMode === 'HORIZONTAL') { f.primaryAxisSizingMode = 'FIXED'; f.counterAxisSizingMode = 'AUTO'; }
           } catch (e) { /* keep hug */ }
         }
         // GRID GUTTER CENTERING — v1 of the grid-track gap (fill-facts spec
@@ -1698,9 +1774,13 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         };
         const firstKid = (child.children || [])[0];
         const tinyFirstKid = firstKid && firstKid.box && firstKid.box.w <= 12 && firstKid.box.h <= 12;
-        if (!tinyFirstKid) await emitOwnText();
+        // A leading dash/em-dash means the text CONTINUES its sibling
+        // ("<span>Jessi Hall</span> — Producer") — emit it after (T24: the
+        // testimonial attribution rendered role-then-name).
+        const textTrails = tinyFirstKid || /^[\s–—-]/.test(String(mixedText || ''));
+        if (!textTrails) await emitOwnText();
         await buildAnatomyChildren(child, f, state, childPath, nodeColor, axisValues, caseRootColor, iconCursor, propsCursor);
-        if (tinyFirstKid) await emitOwnText();
+        if (textTrails) await emitOwnText();
         // A container whose children ALL got skipped (paintless inputs,
         // CSS-drawn thumbs, 0-box ripples) is really a glyph: a childless
         // hug frame keeps Figma's 100x100 createFrame default (the Toggle
@@ -2281,6 +2361,7 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
     }
 
     return JSON.stringify({
+      imageTargets: IMAGE_TARGETS,
       page: page.name,
       reusedPage,
       set: set.id,

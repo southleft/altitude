@@ -61,6 +61,8 @@ import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, dirname, resolve, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { normHex, rgbaToHex } from './lib/color.mjs';
+
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 /* ------------------------------------------------------------------------ */
@@ -258,20 +260,11 @@ function parseNum(v) {
   const n = Number(s);
   return Number.isNaN(n) ? null : n;
 }
-function normHex(h) {
-  let s = String(h).replace('#', '').toUpperCase();
-  if (s.length === 3 || s.length === 4) s = s.split('').map((c) => c + c).join('');
-  if (s.length === 8 && s.slice(6) === 'FF') s = s.slice(0, 6);
-  return '#' + s;
-}
-function rgbaToHex(s) {
-  const m = String(s).match(/^rgba?\(([^)]+)\)$/i);
-  if (!m) return null;
-  const parts = m[1].split(',').map((x) => parseFloat(x.trim()));
-  const h = (n) => Math.round(n).toString(16).padStart(2, '0').toUpperCase();
-  const a = parts.length > 3 ? parts[3] : 1;
-  return '#' + h(parts[0]) + h(parts[1]) + h(parts[2]) + (a < 1 ? h(a * 255) : '');
-}
+// normHex / rgbaToHex moved to scripts/lib/color.mjs (T4, spec
+// 2026-08-29-parity-judgement-gates-and-evals) so the Figma<->code VISUAL
+// comparison canonicalizes colour exactly the way this drift check does. Two
+// copies of colour logic drift silently and then make two tools disagree
+// about one component.
 
 /** Authored `cssType` (and DTCG `$type`) -> comparison family. Covers BOTH
  *  vocabularies so a token is bucketed the same however it was typed — see

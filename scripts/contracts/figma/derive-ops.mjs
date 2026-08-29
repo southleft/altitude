@@ -83,6 +83,7 @@ export function convertAnatomyNode(node) {
     ...(node.mbPx ? { mbPx: node.mbPx } : {}),
     ...(node.mrPx ? { mrPx: node.mrPx } : {}),
     ...(node.inlineFlow ? { inlineFlow: true } : {}),
+    ...(node.gridCols ? { gridCols: node.gridCols } : {}),
     layout: node.layout || null,
     tokens,
     children: (node.children || []).map(convertAnatomyNode).filter(Boolean),

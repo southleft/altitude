@@ -5,6 +5,10 @@ description: "Generate a component's Figma page (lean variant set + documented p
 
 # altitude-figma-generate
 
+**Binding first:** `.altitude/FIGMA-CLEANLINESS.md` — the owner's Figma rules
+(component reuse, hug preservation, organism widths/breakpoints, naming, the
+mandatory screenshot loop). Every generation and edit answers to it.
+
 Generating a component's Figma page from `libs/al-web-components` code — the lean,
 property-mode variant set plus the documented prop sheet (doc header + purple
 border-collapse table) — via `scripts/contracts/generate-figma.mjs`.

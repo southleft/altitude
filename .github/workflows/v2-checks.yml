@@ -176,6 +176,17 @@ jobs:
           # Error nondeterministically.
       - name: Run gate self-test
         run: pnpm run gate:self-test
+      # T1, spec 2026-08-29-parity-judgement-gates-and-evals. The offline
+      # self-tests under scripts/__tests__/ had no runner at all — they were
+      # written, committed, and then never executed by anything. This job is
+      # the right home: they are zero-dependency Node scripts, and this job
+      # deliberately skips `pnpm install`.
+      - name: Offline script self-tests
+        run: pnpm run test:scripts
+      # T12: the judgement ledger must keep describing the real code, and a NEW
+      # unverified judgement point must not land unrecorded.
+      - name: Judgement ledger still true
+        run: pnpm run check:judgement-ledger
 
   baselines-vrt:
     # No component count in the name: components.vrt.spec.ts derives its list
@@ -540,7 +551,7 @@ jobs:
       # this workflow); it self-skips cleanly when its dependencies are
       # absent rather than failing, so it is safe to leave out here.
       - name: Dry-run job-list explosion across the FULL treatment matrix (spends $0 — see run-probe.mjs DRY_RUN branch)
-        run: node scripts/ai-readiness/run-probe.mjs --dry-run --fleet=2 --tasks=A,B,C,G --models=claude --treatments=all
+        run: node scripts/ai-readiness/run-probe.mjs --dry-run --fleet=2 --tasks=A,B,C,D,E,F,G --models=claude --treatments=all
       - name: node --check every harness file (catches syntax errors eslint's parser would also catch, but faster / no config needed)
         run: |
           set -e

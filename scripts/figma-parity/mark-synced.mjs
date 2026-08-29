@@ -2,8 +2,20 @@
 /**
  * mark-synced.mjs — stamp components as "code and Figma confirmed matching".
  *
- * Run AFTER a verified sync (check-parity.mjs passing, or a deliberate human
- * confirmation). It sets lastSync.codeHash to the CURRENT source hash and
+ * IT NOW REQUIRES THAT VERIFICATION (T1, spec
+ * 2026-08-29-parity-judgement-gates-and-evals). The line below used to read
+ * "Run AFTER a verified sync (check-parity.mjs passing, or a deliberate human
+ * confirmation)" and that was a COMMENT, not a check: check-parity.mjs
+ * returned 0 whatever it found, and this script stamped whatever it was
+ * given. `in-sync` — the state `altitude_check_parity`, `GET /parity.json`
+ * and the docs-site ParityPanel all report — was therefore agent-asserted,
+ * never verified. It is now gated on a fresh, passing check-parity RECEIPT
+ * (scripts/lib/parity-receipt.mjs) per component. The escape hatch is
+ * `--human-verified "<reason>"`, which stamps anyway and RECORDS that it was
+ * a human call, in `lastSync.verifiedBy`, so the manifest never loses the
+ * distinction between "measured" and "somebody said so".
+ *
+ * Run AFTER a verified sync. It sets lastSync.codeHash to the CURRENT source hash and
  * lastSync.figmaDigest to the last observed Figma digest (or the ops digest as
  * the code-derived stand-in when Figma has not been read), which flips the
  * component to `in-sync` for `altitude_check_parity` / GET /parity.json / the
@@ -30,6 +42,8 @@
  *   node scripts/figma-parity/mark-synced.mjs --all                    # every mapped component
  *   node scripts/figma-parity/mark-synced.mjs --project southleft al-button
  *   node scripts/figma-parity/mark-synced.mjs --project southleft al-hero  # brand-only tag
+ *   node scripts/figma-parity/mark-synced.mjs al-button --human-verified "checked the set by hand, ops are stale"
+ *   node scripts/figma-parity/mark-synced.mjs --all --max-receipt-age-hours 4
  */
 import { resolveProject } from '../../libs/altitude-mcp/src/lib/ds-project.mjs';
 import {
@@ -42,6 +56,14 @@ import {
   contractFileHash,
   readCodeContract,
 } from '../../libs/altitude-mcp/src/lib/parity.mjs';
+import { argOf, hasFlag, positionals } from '../lib/argv.mjs';
+import {
+  MAX_AGE_HOURS,
+  readReceipt,
+  receiptAuthorises,
+  receiptPath,
+  sourceKeyFor,
+} from '../lib/parity-receipt.mjs';
 
 const project = resolveProject();
 const projectFlag = project.isDefault ? '' : ` --project ${project.id}`;
@@ -50,17 +72,27 @@ const projectFlag = project.isDefault ? '' : ` --project ${project.id}`;
 // + brand-only additions exactly as `computeParity()` sees them.
 const rosterByTag = new Map(resolveComponentRoster(project).roster.map((r) => [r.component.tag, r]));
 
-// Positional tags only: drop `--all`, `--project` and the id that follows it.
-const raw = process.argv.slice(2);
-const args = [];
-for (let i = 0; i < raw.length; i += 1) {
-  const a = raw[i];
-  if (a === '--all') continue;
-  if (a === '--project') { i += 1; continue; }
-  if (a.startsWith('--project=')) continue;
-  args.push(a);
+// Positional tags only. This used to be a hand-rolled loop that skipped only
+// `--all` and `--project`, so ANY other flag (and any flag's value) fell
+// through as a "tag" and surfaced as a bogus "not in manifest" warning. Now it
+// goes through the shared parser, which also knows the `--flag=value` spelling.
+const args = positionals(process.argv, {
+  valueFlags: ['--project', '--human-verified', '--max-receipt-age-hours'],
+});
+const all = hasFlag('--all');
+
+// The escape hatch. A REASON is mandatory: an unexplained override is exactly
+// the "somebody said so" this gate exists to stop being invisible.
+const humanVerified = hasFlag('--human-verified') ? argOf('--human-verified') : null;
+if (hasFlag('--human-verified') && !humanVerified) {
+  console.error('--human-verified requires a reason: --human-verified "why you are confident this is reconciled"');
+  process.exit(1);
 }
-const all = raw.includes('--all');
+const maxAgeHours = Number(argOf('--max-receipt-age-hours') ?? MAX_AGE_HOURS);
+if (!Number.isFinite(maxAgeHours) || maxAgeHours <= 0) {
+  console.error(`--max-receipt-age-hours must be a positive number (got "${argOf('--max-receipt-age-hours')}")`);
+  process.exit(1);
+}
 
 const manifest = readManifest(project);
 if (!manifest) {
@@ -77,8 +109,20 @@ if (tags.length === 0) {
 // opsDigestFor — shared from parity.mjs since 2026-08-27 (R4).
 const opsDigest = (tag) => opsDigestFor(project, tag);
 
+// THE GATE (T1). One receipt per project, written by the last check-parity
+// run. Read once — a per-tag read would let the file change under a long
+// `--all` pass, which is the sort of thing that only ever fails in production.
+const receipt = readReceipt(project);
+if (!receipt && !humanVerified) {
+  console.error(`No check-parity receipt for "${project.id}" at ${receiptPath(project)}.`);
+  console.error(`Verify first:  node scripts/figma-atoms/check-parity.mjs${projectFlag} ${all ? '<tag...>' : tags.join(' ')}`);
+  console.error('Or, if you verified it yourself:  --human-verified "<reason>"');
+  process.exit(1);
+}
+
 const now = new Date().toISOString();
 let stamped = 0;
+let refused = 0;
 for (const tag of tags) {
   const entry = manifest.components[tag];
   if (!entry) {
@@ -95,6 +139,17 @@ for (const tag of tags) {
     continue;
   }
   const { component, view } = rosterEntry;
+
+  // Is this component's reconciliation actually verified? `sourceKeyFor` is
+  // the SAME function check-parity called when it wrote the receipt, so a
+  // source edit between the check and the stamp cannot slip through.
+  const auth = receiptAuthorises(receipt, tag, sourceKeyFor(rosterByTag, tag), { maxAgeHours });
+  if (!auth.ok && !humanVerified) {
+    console.error(`REFUSED ${tag}: ${auth.reason}`);
+    console.error(`         verify:  node scripts/figma-atoms/check-parity.mjs${projectFlag} ${tag}`);
+    refused += 1;
+    continue;
+  }
 
   // T11 (spec 2026-08-25-contract-backed-figma-parity-and-generation): stamp
   // the TRACKED contract's own state alongside the code/Figma digests, so a
@@ -129,9 +184,20 @@ for (const tag of tags) {
     // tracked contract file exists yet, so a manifest entry for a tag never
     // seeded stays exactly as small as it was before this existed.
     ...(trackedContractHash ? { contractHash: trackedContractHash, contractVersion: trackedContract?.version ?? null } : {}),
+    // HOW this stamp was authorised (T1). Without it the manifest records
+    // that a component is in-sync but not whether anything measured it —
+    // which is the whole distinction this gate exists to preserve. `human`
+    // entries are the ones to audit.
+    verifiedBy: (!auth.ok && humanVerified)
+      ? { how: 'human', reason: humanVerified, at: now, refusalOverridden: auth.reason }
+      : { how: 'check-parity', at: auth.checkedAt, tolerancePx: receipt?.tolerancePx ?? null },
   };
   stamped += 1;
 }
 
 writeManifest(manifest, project);
 console.log(`[${project.id}] Stamped ${stamped}/${tags.length} component(s) as synced at ${now}.`);
+if (refused > 0) {
+  console.error(`[${project.id}] REFUSED ${refused}/${tags.length} — unverified components were left as they were, not stamped.`);
+  process.exit(1);
+}
