@@ -157,6 +157,52 @@ try {
       console.log(`[measure] ${mode}/${state}: ${byState[state].length} cases`);
     }
     writeFileSync(join(OUT, `spec-${mode}.json`), JSON.stringify(byState) + '\n');
+
+    /* ---------- ground-truth screenshots (visual bookend START) -----------
+     * Spec 2026-08-28-visual-bookends-for-generation T1: one PNG per case,
+     * captured in this same session so the image and the measurement can
+     * never disagree about what was rendered. DEFAULT state only, on
+     * purpose: __spec forces hover/focus/active/disabled transiently and
+     * removes the class before returning, so a screenshot here can only see
+     * the resting state — per-state capture needs a force-hold helper in
+     * measure-lib and is a follow-up, not silently faked.
+     * Observations, not contract data: everything lands under the
+     * gitignored figma-sync dir, indexed by a sidecar JSON. Contracts stay
+     * byte-identical — no image reference ever enters a contract. */
+    const shotsDir = join(OUT, 'shots', mode);
+    mkdirSync(shotsDir, { recursive: true });
+    // Element-handle screenshots, NOT page.screenshot({clip}): clip must fall
+    // inside the captured viewport image and the harness page is far taller
+    // than the 4000px viewport — every case below the fold threw "Clipped
+    // area is either empty or outside the resulting image". A handle
+    // screenshot scrolls its element into view first.
+    const caseHandles = await page.$$('section[data-atom] .case');
+    const shotIndex = [];
+    for (const wrap of caseHandles) {
+      const meta = await wrap.evaluate((el) => {
+        const host = el.firstElementChild;
+        const r = host ? host.getBoundingClientRect() : { width: 0, height: 0 };
+        return { tag: el.closest('section[data-atom]').dataset.atom, caseName: el.dataset.case || 'default',
+          w: r.width, h: r.height };
+      });
+      if (meta.w < 1 || meta.h < 1) continue; // invisible in this case — nothing to capture
+      const host = await wrap.$(':scope > *:first-child');
+      if (!host) continue;
+      const slug = `${meta.tag}--${meta.caseName}`.replace(/[^A-Za-z0-9._-]+/g, '_');
+      const file = join(shotsDir, `${slug}.png`);
+      try {
+        await host.screenshot({ path: file, timeout: 10000 });
+        shotIndex.push({ tag: meta.tag, case: meta.caseName, mode, state: 'default',
+          file: `shots/${mode}/${slug}.png`, w: Math.round(meta.w * 100) / 100, h: Math.round(meta.h * 100) / 100 });
+      } catch (e) {
+        // Recorded, never fatal: one unscreenshotable case (zero paint area,
+        // detached overlay) must not kill the whole measurement run.
+        shotIndex.push({ tag: meta.tag, case: meta.caseName, mode, state: 'default', file: null, error: String(e.message || e).split('\n')[0] });
+      }
+    }
+    writeFileSync(join(OUT, `shots-index-${mode}.json`), JSON.stringify(shotIndex, null, 2) + '\n');
+    const shotOk = shotIndex.filter((s) => s.file).length;
+    console.log(`[measure] ${mode}/shots: ${shotOk} ground-truth PNGs (${shotIndex.length - shotOk} failed) -> ${shotsDir}`);
   }
 
   await browser.close();
