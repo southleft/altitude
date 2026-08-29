@@ -22,19 +22,36 @@
  * docs; the logo-wall preview is simply missing its images, and this says so
  * rather than failing a build over an optional app's assets.
  */
-import { cpSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { cpSync, existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
+import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DOCS = resolve(HERE, '..');
 const REPO = resolve(DOCS, '..', '..');
 
-/** [from, to] — relative to the repo root and to `apps/docs/public`. */
-const ASSETS = [['apps/southleft/public/logos', 'logos']];
+/**
+ * [from, to, only?] — relative to the repo root and to `apps/docs/public`.
+ * `only` (a RegExp on the file name) narrows a copy to the files the docs
+ * actually need, so a shared source directory doesn't spray unrelated files
+ * (licenses, READMEs, fonts the docs already ship) into the build.
+ *
+ * `brand-fonts`: Agrandir is the `southleft` brand's display face
+ * (`font-family.secondary` token). The docs render southleft-branded previews
+ * under `<al-theme brand="southleft">`, so without the file every such heading
+ * falls back to `sans-serif`. Copied — not committed — for the same
+ * one-source-of-truth reason as the logos; the license and provenance live
+ * with the owning app (apps/southleft/public/fonts/README.md). `@font-face`
+ * only downloads a face when rendered text resolves to it, so altitude-only
+ * pages never fetch it.
+ */
+const ASSETS = [
+  ['apps/southleft/public/logos', 'logos'],
+  ['apps/southleft/public/fonts', 'brand-fonts', /^Agrandir-/],
+];
 
 let copied = 0;
-for (const [from, to] of ASSETS) {
+for (const [from, to, only] of ASSETS) {
   const source = join(REPO, from);
   const dest = join(DOCS, 'public', to);
 
@@ -44,7 +61,10 @@ for (const [from, to] of ASSETS) {
   }
 
   mkdirSync(dest, { recursive: true });
-  cpSync(source, dest, { recursive: true });
+  cpSync(source, dest, {
+    recursive: true,
+    filter: (src) => !only || statSync(src).isDirectory() || only.test(basename(src)),
+  });
   const n = readdirSync(dest).length;
   copied += n;
   console.log(`[brand-assets] ${from} -> public/${to} (${n} files)`);

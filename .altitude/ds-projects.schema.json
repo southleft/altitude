@@ -330,6 +330,22 @@
             "productionBase": {
               "description": "Absolute URL of this project's deployed docs, no trailing slash.",
               "type": "string"
+            },
+            "theme": {
+              "description": "OPTIONAL theming defaults for this project's docs pages, so the docs boot on the same axes the design system's own site ships (added 2026-08-28, spec southleft-docs-parity-with-example-site R8). `defaultMode` is what a first-time visitor sees before any stored preference (omit = light, the docs default); the mode toggle still persists and overrides it. `contrast` is passed through to the `<al-theme contrast>` attribute (omit = the component default).",
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "//": {
+                  "type": "string"
+                },
+                "defaultMode": {
+                  "enum": ["light", "dark"]
+                },
+                "contrast": {
+                  "enum": ["default", "more"]
+                }
+              }
             }
           }
         }

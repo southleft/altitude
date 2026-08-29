@@ -148,22 +148,30 @@ import '@southleft/al-web-components/components/icon/lazy';`;
         aria-label={`Search ${ICON_COUNT} icons by name or tag`}
         placeholder={`SEARCH ${ICON_COUNT} ICONS BY NAME OR TAG`}
       />
-      <div class="icons-cats" role="group" aria-label="Filter by category">
-        <button class="chip-tag" type="button" data-cat-filter="" aria-pressed="true">
-          all · {ICON_COUNT}
-        </button>
-        {
-          categories.map(({ category, count }) => (
-            <button class="chip-tag chip-tag--weak" type="button" data-cat-filter={category} aria-pressed="false">
-              {category} · {count}
-            </button>
-          ))
-        }
+      <!-- ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin a
+           display:contents host cannot carry. -->
+      <div class="icons-cats-wrap">
+        <al-layout direction="row" wrap class="icons-cats" role="group" aria-label="Filter by category">
+          <button class="chip-tag" type="button" data-cat-filter="" aria-pressed="true">
+            all · {ICON_COUNT}
+          </button>
+          {
+            categories.map(({ category, count }) => (
+              <button class="chip-tag chip-tag--weak" type="button" data-cat-filter={category} aria-pressed="false">
+                {category} · {count}
+              </button>
+            ))
+          }
+        </al-layout>
       </div>
       <p class="micro" data-icon-count>SHOWING {ICON_COUNT} OF {ICON_COUNT}</p>
     </div>
 
-    <div class="icon-grid">
+    <!-- ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin.
+         .icon-tile keeps its own content-visibility/contain-intrinsic-size —
+         unaffected by the arrangement host, which sits above it. -->
+    <div class="icon-grid-wrap">
+      <al-layout variant="grid" noCollapse class="icon-grid">
       {
         ICONS.map((icon) => (
           <button
@@ -178,6 +186,7 @@ import '@southleft/al-web-components/components/icon/lazy';`;
           </button>
         ))
       }
+      </al-layout>
     </div>
     <p class="t-body-sm icons-empty" data-icon-empty hidden>
       No icon matches that name or tag.
@@ -191,9 +200,12 @@ import '@southleft/al-web-components/components/icon/lazy';`;
       Registration is explicit and per-glyph. That is the whole reason the set can be this large
       without costing anything: the glyphs you never name are never bundled.
     </p>
-    <div class="icons-code">
-      <pre class="code code--inline">{REGISTER_SAMPLE}</pre>
-      <pre class="code code--inline">{MARKUP_SAMPLE}</pre>
+    <!-- ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin. -->
+    <div class="icons-code-wrap">
+      <al-layout variant="grid" columns={2} noCollapse class="icons-code">
+        <pre class="code code--inline">{REGISTER_SAMPLE}</pre>
+        <pre class="code code--inline">{MARKUP_SAMPLE}</pre>
+      </al-layout>
     </div>
     <p class="t-body-md icons-lede">
       If icon names come from data you do not control, opt into the loader once — and only then.
@@ -274,11 +286,13 @@ import '@southleft/al-web-components/components/icon/lazy';`;
     border-color: var(--blue);
   }
 
-  .icons-cats {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
+  /* The wrapper owns the margin; 6px is off al-layout's gap scale. */
+  .icons-cats-wrap {
     margin: 14px 0 12px;
+  }
+
+  .icons-cats {
+    --al-layout-gap: 6px;
   }
 
   .icons-cats .chip-tag {
@@ -292,11 +306,14 @@ import '@southleft/al-web-components/components/icon/lazy';`;
     color: var(--blue);
   }
 
-  .icon-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
-    gap: 2px;
+  /* The wrapper owns the margin; 2px is off al-layout's gap scale. */
+  .icon-grid-wrap {
     margin-bottom: 8px;
+  }
+
+  .icon-grid {
+    --al-layout-template: repeat(auto-fill, minmax(118px, 1fr));
+    --al-layout-gap: 2px;
   }
 
   /*
@@ -349,11 +366,13 @@ import '@southleft/al-web-components/components/icon/lazy';`;
     color: var(--fg-weak);
   }
 
-  .icons-code {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
+  /* The wrapper owns the margin; 2px is off al-layout's gap scale. */
+  .icons-code-wrap {
     margin-bottom: 28px;
+  }
+
+  .icons-code {
+    --al-layout-gap: 2px;
   }
 
   .icons-code-wide {
@@ -362,7 +381,7 @@ import '@southleft/al-web-components/components/icon/lazy';`;
 
   @media (max-width: 1000px) {
     .icons-code {
-      grid-template-columns: 1fr;
+      --al-layout-columns: 1;
     }
   }
 </style>

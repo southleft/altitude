@@ -142,7 +142,12 @@
         "route": "/southleft",
         "$componentsComment": "DOCS SCOPE, and deliberately NOT the same thing as `library.components` above. Southleft's docs now show every component in the shared library, so a reader browsing /docs/southleft sees the same catalog Altitude documents, rendered under the Southleft brand. `library.components` is untouched and still means what it always meant \u2014 the subset southleft.com actually ships \u2014 which is what Figma parity builds its list from (the Southleft V5 file has sets for those, not for all 70), what scripts/check-sl-scope.mjs re-derives from apps/southleft/src, and what scripts/check-brand-conformance.mjs reads. Collapsing the two would have flooded the Southleft parity manifest with 50 components that file has never contained and switched the scope gate off entirely. Two fields, two questions: what this system SHIPS vs. what its docs SHOW.",
         "components": "all",
-        "productionBase": "https://altitude.pages.dev/docs/southleft"
+        "productionBase": "https://altitude.pages.dev/docs/southleft",
+        "theme": {
+          "//": "southleft.com boots ink (dark) and sets contrast=\"more\" on its <al-theme> (apps/southleft/src/layouts/Base.astro) - the docs previews render under the same axes so a first-time visitor sees the docs the way the site ships (spec 2026-08-28-southleft-docs-parity-with-example-site, R8). The mode toggle still persists and overrides.",
+          "defaultMode": "dark",
+          "contrast": "more"
+        }
       }
     }
   }

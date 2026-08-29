@@ -23,7 +23,7 @@ is the single place that answers "what's what". One entry per design system:
 | `paths.instanceMap` | pinned tag → Figma node ids, **or `null`** |
 | `library.*` | workspace, root, tag prefix, `excludeTitlePrefixes` (e.g. `Foundations/`) — the SHARED library, and optionally the subset of it this system ships |
 | `brandLibrary.*` | optional SECOND library belonging to this system alone, built on `library`; `supersedes` names the base components it stands in for |
-| `docs.*` | docs-site identity: `route` (`""` for the default project, `/southleft` otherwise), `productionBase`, and for southleft a `components` docs-scope (deliberately NOT `library.components` — ships vs. shows; see the registry's own comment). Replaced the removed `storybook.*` block when both Storybooks were retired (2026-08-23/25). |
+| `docs.*` | docs-site identity: `route` (`""` for the default project, `/southleft` otherwise), `productionBase`, for southleft a `components` docs-scope (deliberately NOT `library.components` — ships vs. shows; see the registry's own comment), and an optional `theme` block (`defaultMode`, `contrast`) so a project's docs boot on the axes its own site ships — southleft's site boots ink with `contrast="more"`, so its docs do too (2026-08-28, spec southleft-docs-parity-with-example-site). Replaced the removed `storybook.*` block when both Storybooks were retired (2026-08-23/25). |
 | `prompts.*` | skill, script dirs and docs spliced into the copy-paste AI prompt |
 | `excluded` | tag → why it is deliberately absent from Figma |
 

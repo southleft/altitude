@@ -23,9 +23,18 @@
  * `./components/*` export, and `theme.ts:82` self-registers when
  * `window.alAutoRegistry` is true — which Shell.astro sets inline in <head> on
  * every page, live or not (.altitude/REGISTRATION.md).
+ *
+ * `<al-layout>` rides along for the same reason (spec
+ * 2026-08-28-southleft-docs-parity-with-example-site, R4): the docs pages
+ * arrange their sections with the design system's own layout primitive
+ * instead of hand-rolled grids, and a page with no live components still has
+ * to upgrade those. Two deep imports, still not the library — and the boot
+ * blur in Shell.astro waits on both, so the moment the grids snap into place
+ * is covered by the same blur that covers the token re-resolution.
  */
 ---
 
 <script>
   import '@southleft/al-web-components/components/theme';
+  import '@southleft/al-web-components/components/layout';
 </script>

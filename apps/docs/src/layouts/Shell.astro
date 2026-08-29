@@ -85,6 +85,7 @@ const canonical = new URL(Astro.url.pathname, SITE.url).toString();
   data-docs-base={base}
   data-docs-project={project.id}
   data-docs-brand={project.brand}
+  data-docs-default-mode={project.defaultMode}
 >
   <head>
     <meta charset="utf-8" />
@@ -98,17 +99,24 @@ const canonical = new URL(Astro.url.pathname, SITE.url).toString();
     <meta property="og:description" content={description} />
     <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
 
-    <!-- Restore the saved theme before first paint. -->
+    <!--
+      Restore the saved theme before first paint. With nothing stored, the
+      PROJECT'S default mode stands (`docs.theme.defaultMode` in
+      .altitude/ds-projects.json, rendered as data-docs-default-mode): a
+      design system whose own site boots dark gets docs that boot dark
+      (spec 2026-08-28-southleft-docs-parity-with-example-site, R8). Light
+      remains the absence of the attribute, as the :root boot palette expects.
+    -->
     <script is:inline>
       (function () {
+        var mode = document.documentElement.dataset.docsDefaultMode || 'light';
         try {
           var stored = localStorage.getItem('al-docs-theme');
-          if (stored === 'dark' || stored === 'light') {
-            document.documentElement.dataset.theme = stored;
-          }
+          if (stored === 'dark' || stored === 'light') mode = stored;
         } catch (e) {
-          /* localStorage unavailable — light (the :root default) stands. */
+          /* localStorage unavailable — the default above stands. */
         }
+        if (mode === 'dark') document.documentElement.dataset.theme = 'dark';
       })();
     </script>
 
@@ -137,11 +145,15 @@ const canonical = new URL(Astro.url.pathname, SITE.url).toString();
         };
 
         /* The real signal: the theme host is what sets every --al-theme-color-*
-           the chrome reads, so "upgraded" IS "the colours are final".
-           ThemeRuntime.astro guarantees this resolves on every page, not just
-           the ones that mount live components. */
+           the chrome reads, and the layout primitive is what arranges the page
+           sections — so "both upgraded" IS "the colours are final and the
+           grids are in place". ThemeRuntime.astro guarantees both resolve on
+           every page, not just the ones that mount live components. */
         if (window.customElements) {
-          window.customElements.whenDefined('al-theme').then(function () {
+          Promise.all([
+            window.customElements.whenDefined('al-theme'),
+            window.customElements.whenDefined('al-layout'),
+          ]).then(function () {
             requestAnimationFrame(clear);
           });
         } else {
@@ -168,7 +180,20 @@ const canonical = new URL(Astro.url.pathname, SITE.url).toString();
     </noscript>
   </head>
   <body>
-    <al-theme brand={project.brand} data-brand-host>
+    {/*
+      `mode` is server-rendered as the PROJECT's default so the host upgrades
+      straight into it; the theme-switch script below re-asserts the visitor's
+      stored preference on top. `contrast` comes from the same registry block —
+      southleft.com sets contrast="more" on its own host, so its docs previews
+      render disabled states at the same opacity the site does (R8). `null`
+      omits the attribute.
+    */}
+    <al-theme
+      brand={project.brand}
+      mode={project.defaultMode}
+      contrast={project.contrast}
+      data-brand-host
+    >
       <div class="shell">
         <Sidebar context={context} active={active} activeSlug={activeSlug} />
         {/*

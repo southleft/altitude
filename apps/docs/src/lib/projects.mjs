@@ -149,6 +149,16 @@ export function docsProject(entry, { isDefault }) {
     tagPrefix: entry.library?.tagPrefix ?? '',
     libraryWorkspace: entry.library?.workspace ?? '',
     figmaFileName: entry.figma?.fileName ?? null,
+    /**
+     * DOCS THEMING DEFAULTS (`docs.theme` in the registry, optional) — the
+     * axes this project's own site ships, so its docs boot the same way
+     * (spec 2026-08-28-southleft-docs-parity-with-example-site, R8).
+     * `defaultMode` is first-visit only; the toggle's stored preference wins.
+     * `contrast` renders straight onto `<al-theme contrast>`; null = omit the
+     * attribute (component default), same as the registry omitting the field.
+     */
+    defaultMode: entry.docs?.theme?.defaultMode ?? 'light',
+    contrast: entry.docs?.theme?.contrast ?? null,
     /** tag → why this system deliberately has no Figma set for it. */
     excluded: entry.excluded ?? {},
     storybookProductionBase: entry.storybook?.productionBase ?? null,

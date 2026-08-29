@@ -55,51 +55,66 @@ const overrides = brandOverrides(project.brand);
     <span>BY {SITE.vendor}</span>
   </div>
 
+  <!--
+    ARRANGEMENT IS <al-layout>; THE WRAPPER OWNS THE BOX (spec
+    2026-08-28-southleft-docs-parity-with-example-site, R4). The layout
+    primitive's :host is `display: contents`, so padding, borders and the
+    blueprint texture stay on the .hero div while the asymmetric column split
+    rides the documented `--al-layout-template` escape hatch + `noCollapse`,
+    with this page owning the responsive story — the same wrapper/arrangement
+    split apps/southleft documents (Footer.astro, "Arrangement vs. semantics"
+    in AGENTS.md). ThemeRuntime upgrades al-layout on every page; the boot
+    blur waits on it.
+  -->
   <div class="hero blueprint">
     <span class="blueprint__tick blueprint__tick--tl">+</span>
     <span class="blueprint__tick blueprint__tick--tr">+</span>
     <span class="blueprint__tick blueprint__tick--bl">+</span>
     <span class="blueprint__tick blueprint__tick--br">+</span>
-    <div>
-      <div class="micro--lg">/// DOCUMENTATION SITE</div>
-      <h1 class="t-display-lg">
-        Design at {site.name.toLowerCase()}<span style="color:var(--blue)">.</span>
-      </h1>
-      <p class="t-body-lg hero__lede">
-        {registry.count} production components, three tiers of design tokens, light and dark themes.
-        Built on Lit web components with React wrappers, organized by atomic design.
-      </p>
-      <div class="hero__actions">
-        <a class="btn" href={href('/components')}>Browse components</a>
-        <a class="btn btn--outline" href={href('/foundations')}>Foundations</a>
-        <a class="btn btn--outline" href={href('/motion')}>Motion</a>
-      </div>
-    </div>
-    <div class="hero__plate-wrap">
-      <div class="hero__plate">
-        <span class="hero__plate-label hero__plate-label--tl">BRAND / {project.brand.toUpperCase()}</span>
-        <span class="hero__plate-label hero__plate-label--br">ACCENT: THEME-CONTENT-PRIMARY</span>
-        <Logo project={project} variant="mark" style="width:60%;max-width:220px;display:block;margin:0 auto" />
-        <div class="hero__measure">
-          <span></span>
-          <span class="micro">&lt;al-theme brand="{project.brand}"&gt;</span>
-          <span></span>
+    <al-layout variant="grid" noCollapse class="hero__grid">
+      <div>
+        <div class="micro--lg">/// DOCUMENTATION SITE</div>
+        <h1 class="t-display-lg">
+          Design at {site.name.toLowerCase()}<span class="accent">.</span>
+        </h1>
+        <p class="t-body-lg hero__lede">
+          {registry.count} production components, three tiers of design tokens, light and dark themes.
+          Built on Lit web components with React wrappers, organized by atomic design.
+        </p>
+        <div class="hero__actions">
+          <al-layout direction="row" wrap class="hero__actions-row">
+            <a class="btn" href={href('/components')}>Browse components</a>
+            <a class="btn btn--outline" href={href('/foundations')}>Foundations</a>
+            <a class="btn btn--outline" href={href('/motion')}>Motion</a>
+          </al-layout>
         </div>
       </div>
-    </div>
+      <al-layout direction="row">
+        <div class="hero__plate">
+          <span class="hero__plate-label hero__plate-label--tl">BRAND / {project.brand.toUpperCase()}</span>
+          <span class="hero__plate-label hero__plate-label--br">ACCENT: THEME-CONTENT-PRIMARY</span>
+          <Logo project={project} variant="mark" class="hero__mark" />
+          <div class="hero__measure">
+            <span></span>
+            <span class="micro">&lt;al-theme brand="{project.brand}"&gt;</span>
+            <span></span>
+          </div>
+        </div>
+      </al-layout>
+    </al-layout>
   </div>
 
   <div class="statbar">
-    {
-      stats.map((stat) => (
-        <div class="statbar__cell">
-          <div class="statbar__value">{stat.value}</div>
-          <div class="micro" style="margin-top:10px">
-            {stat.label}
+    <al-layout variant="grid" columns={4} gap="none" noCollapse>
+      {
+        stats.map((stat) => (
+          <div class="statbar__cell">
+            <div class="statbar__value">{stat.value}</div>
+            <div class="micro statbar__label">{stat.label}</div>
           </div>
-        </div>
-      ))
-    }
+        ))
+      }
+    </al-layout>
   </div>
 
   <!--
@@ -112,11 +127,11 @@ const overrides = brandOverrides(project.brand);
   {
     registry.scope.scoped && (
       <div class="stack-56">
-        <div class="micro--lg" style="margin-bottom:14px">/// SCOPE</div>
-        <h2 class="t-display-md" style="margin-bottom:12px; max-width:640px">
+        <div class="micro--lg sect-kicker">/// SCOPE</div>
+        <h2 class="t-display-md sect-title">
           {registry.count} of {COMPONENT_COUNT}.
         </h2>
-        <p class="t-body-md" style="margin:0; max-width:640px; color:var(--fg-weak)">
+        <p class="t-body-md sect-lede">
           {site.fullName} is built on the same component library as{' '}
           <a href={DEFAULT_CONTEXT.href('/')}>{DEFAULT_CONTEXT.site.fullName}</a>, and documents the{' '}
           {registry.count} components it actually ships. The list is declared in the design-system
@@ -128,11 +143,11 @@ const overrides = brandOverrides(project.brand);
   }
 
   <div class="stack-56">
-    <div class="micro--lg" style="margin-bottom:14px">/// ATOMIC BY DESIGN</div>
-    <h2 class="t-display-md" style="margin-bottom:36px; max-width:640px">
+    <div class="micro--lg sect-kicker">/// ATOMIC BY DESIGN</div>
+    <h2 class="t-display-md sect-title sect-title--roomy">
       Atoms make molecules. Molecules make organisms.
     </h2>
-    <div class="tier-cards">
+    <al-layout variant="grid" noCollapse class="tier-cards">
       {
         registry.tiers.map((tier, i) => (
           <a class="hard-card" href={`${href('/components')}#${tier.id}`}>
@@ -142,13 +157,11 @@ const overrides = brandOverrides(project.brand);
             </div>
             <div class="tier-cards__glyph" data-tier={tier.id} />
             <div class="t-heading-sm">{tier.label.charAt(0) + tier.label.slice(1).toLowerCase()}</div>
-            <p class="t-body-sm" style="margin:6px 0 0">
-              {TIER_COPY[tier.id]}
-            </p>
+            <p class="t-body-sm tier-cards__copy">{TIER_COPY[tier.id]}</p>
           </a>
         ))
       }
-    </div>
+    </al-layout>
   </div>
 
   <!--
@@ -160,17 +173,15 @@ const overrides = brandOverrides(project.brand);
     panels reading as isolated warnings.
   -->
   <div class="stack-56">
-    <div class="micro--lg" style="margin-bottom:14px">/// SYSTEM STATUS</div>
-    <h2 class="t-display-md" style="margin-bottom:12px; max-width:640px">
-      Measured, not asserted.
-    </h2>
-    <p class="t-body-md" style="margin:0 0 36px; max-width:640px; color:var(--fg-weak)">
+    <div class="micro--lg sect-kicker">/// SYSTEM STATUS</div>
+    <h2 class="t-display-md sect-title">Measured, not asserted.</h2>
+    <p class="t-body-md sect-lede sect-lede--roomy">
       Every number below is generated at build time from the artifact that produced it — the Figma
       parity manifests and an axe-core run over the component library's stories. Where something has
       not been measured, this says so instead of leaving it blank.
     </p>
 
-    <div class="status-grid">
+    <al-layout variant="grid" noCollapse class="status-grid">
       {
         parityTotals.map((total) => (
           <div class="hard-card status-card">
@@ -275,27 +286,29 @@ const overrides = brandOverrides(project.brand);
           )
         }
       </div>
-    </div>
+    </al-layout>
   </div>
 
   <div class="split">
-    <a class="split__cell" href={href('/foundations')}>
-      <div class="micro">01 — FOUNDATIONS</div>
-      <div class="split__swatches">
-        <span style="background:var(--blue)"></span>
-        <span style="background:var(--blue-hover)"></span>
-        <span style="background:var(--blue-soft)"></span>
-        <span style="background:var(--fg)"></span>
-        <span style="border:1px solid var(--line)"></span>
-        <span class="split__aa">Aa</span>
+    <al-layout variant="grid" gap="none" noCollapse class="split__grid">
+      <a class="split__cell" href={href('/foundations')}>
+        <div class="micro">01 — FOUNDATIONS</div>
+        <div class="split__swatches">
+          <span class="swatch--accent"></span>
+          <span class="swatch--accent-hover"></span>
+          <span class="swatch--accent-soft"></span>
+          <span class="swatch--ink"></span>
+          <span class="swatch--line"></span>
+          <span class="split__aa">Aa</span>
+        </div>
+        <div class="t-heading-sm">Color, type, space, elevation <span class="accent">→</span></div>
+      </a>
+      <div class="split__cell split__cell--static">
+        <div class="micro">GET STARTED</div>
+        <pre class="code code--inline split__code"><span class="accent-hover">$</span> pnpm add {site.npmPackage}</pre>
+        <div class="t-heading-sm">Ship it in Lit, React, or plain HTML</div>
       </div>
-      <div class="t-heading-sm">Color, type, space, elevation <span style="color:var(--blue)">→</span></div>
-    </a>
-    <div class="split__cell split__cell--static">
-      <div class="micro">GET STARTED</div>
-      <pre class="code code--inline" style="margin:20px 0"><span style="color:var(--blue-hover)">$</span> pnpm add {site.npmPackage}</pre>
-      <div class="t-heading-sm">Ship it in Lit, React, or plain HTML</div>
-    </div>
+    </al-layout>
   </div>
 
   <div class="site-foot">
@@ -303,11 +316,11 @@ const overrides = brandOverrides(project.brand);
     <span>TOKENS IN DTCG · STYLE DICTIONARY V5</span>
     {
       project.isDefault ? (
-        <a href={SITE.storybook} target="_blank" rel="noopener" style="letter-spacing:.12em">
+        <a href={SITE.storybook} target="_blank" rel="noopener" class="site-foot__link">
           STORYBOOK ↗
         </a>
       ) : (
-        <a href={DEFAULT_CONTEXT.href('/')} style="letter-spacing:.12em">
+        <a href={DEFAULT_CONTEXT.href('/')} class="site-foot__link">
           {DEFAULT_CONTEXT.site.name.toUpperCase()} →
         </a>
       )
@@ -316,10 +329,17 @@ const overrides = brandOverrides(project.brand);
 </Shell>
 
 <style>
+  /*
+   * Arrangement lives on <al-layout> (R4); these classes only CONFIGURE each
+   * layout through its documented hooks (--al-layout-template for a track
+   * list the `columns` prop cannot name, --al-layout-gap for an off-scale
+   * gap), plus this page's own responsive story — `noCollapse` opts out of
+   * the component's default collapse so the 1100px breakpoint below stays
+   * the single source of truth it always was.
+   */
   .status-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
+    --al-layout-template: repeat(auto-fit, minmax(260px, 1fr));
+    --al-layout-gap: 20px;
   }
 
   .status-card {
@@ -364,11 +384,13 @@ const overrides = brandOverrides(project.brand);
   }
 
   .hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-    gap: 56px;
     padding: 72px 64px;
     border-bottom: 1px solid var(--line);
+  }
+
+  .hero__grid {
+    --al-layout-template: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    --al-layout-gap: 56px;
   }
 
   .hero__lede {
@@ -376,16 +398,14 @@ const overrides = brandOverrides(project.brand);
     max-width: 520px;
   }
 
+  /* The wrapper owns the margin a display:contents layout host cannot;
+   * the row's own 12px gap is the al-layout inside it. */
   .hero__actions {
-    display: flex;
-    gap: 12px;
     margin-top: 32px;
-    flex-wrap: wrap;
   }
 
-  .hero__plate-wrap {
-    display: flex;
-    align-items: center;
+  .hero__actions-row {
+    --al-layout-gap: 12px;
   }
 
   .hero__plate {
@@ -427,10 +447,50 @@ const overrides = brandOverrides(project.brand);
     border-top: 1px solid var(--fg);
   }
 
+  .hero__plate :global(.hero__mark) {
+    display: block;
+    width: 60%;
+    max-width: 220px;
+    margin: 0 auto;
+  }
+
+  .accent {
+    color: var(--blue);
+  }
+
+  .accent-hover {
+    color: var(--blue-hover);
+  }
+
+  .sect-kicker {
+    margin-bottom: 14px;
+  }
+
+  .sect-title {
+    margin-bottom: 12px;
+    max-width: 640px;
+  }
+
+  .sect-title--roomy {
+    margin-bottom: 36px;
+  }
+
+  .sect-lede {
+    margin: 0;
+    max-width: 640px;
+  }
+
+  .sect-lede--roomy {
+    margin-bottom: 36px;
+  }
+
   .tier-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
+    --al-layout-template: repeat(auto-fit, minmax(240px, 1fr));
+    --al-layout-gap: 20px;
+  }
+
+  .tier-cards__copy {
+    margin: 6px 0 0;
   }
 
   .tier-cards__head {
@@ -470,9 +530,19 @@ const overrides = brandOverrides(project.brand);
   }
 
   .split {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     border-bottom: 1px solid var(--line);
+  }
+
+  .split__grid {
+    --al-layout-template: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .split__code {
+    margin: 20px 0;
+  }
+
+  .site-foot__link {
+    letter-spacing: 0.12em;
   }
 
   .split__cell {
@@ -507,6 +577,26 @@ const overrides = brandOverrides(project.brand);
     height: 26px;
   }
 
+  .swatch--accent {
+    background: var(--blue);
+  }
+
+  .swatch--accent-hover {
+    background: var(--blue-hover);
+  }
+
+  .swatch--accent-soft {
+    background: var(--blue-soft);
+  }
+
+  .swatch--ink {
+    background: var(--fg);
+  }
+
+  .swatch--line {
+    border: 1px solid var(--line);
+  }
+
   .split__aa {
     font: 700 26px/1 var(--sans);
     margin-left: 12px;
@@ -515,13 +605,10 @@ const overrides = brandOverrides(project.brand);
   }
 
   @media (max-width: 1100px) {
-    .hero,
-    .split {
-      grid-template-columns: 1fr;
-    }
-
+    .hero__grid,
+    .split__grid,
     .tier-cards {
-      grid-template-columns: 1fr;
+      --al-layout-template: 1fr;
     }
 
     .hero {

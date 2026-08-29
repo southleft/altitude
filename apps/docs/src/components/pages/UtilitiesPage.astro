@@ -140,15 +140,20 @@ const fullLayout = [
       <span>BREAKPOINTS — {bps.length}</span>
       <span>THE @SUFFIX ON EVERY GRID CLASS</span>
     </div>
-    <div class="util-bps">
-      {
-        bps.map((bp) => (
-          <div class="util-bp">
-            <span class="spec-table__name">@{bp.id}</span>
-            <span class="spec-table__default">min-width: {bp.value}</span>
-          </div>
-        ))
-      }
+    <!-- ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin a
+         display:contents host cannot carry. .util-bp stays CSS flex — card
+         internals, not section arrangement. -->
+    <div class="util-bps-wrap">
+      <al-layout direction="row" wrap class="util-bps">
+        {
+          bps.map((bp) => (
+            <div class="util-bp">
+              <span class="spec-table__name">@{bp.id}</span>
+              <span class="spec-table__default">min-width: {bp.value}</span>
+            </div>
+          ))
+        }
+      </al-layout>
     </div>
 
     <div class="section-rule">
@@ -197,6 +202,13 @@ const fullLayout = [
       Uniform columns declare themselves on the container. Unlike float or flexbox grid libraries
       there is no wrapper element around each column.
     </p>
+    <!--
+      EXEMPT, deliberately: every `al-u-grid` / `al-u-gap-*` div below is the
+      UTILITY CLASS being documented, not page-layout arrangement — converting
+      it to <al-layout> would demonstrate the wrong primitive (see this page's
+      "ARRANGEMENT VS. UTILITIES" lede above). `.util-demo` stays a plain div
+      for the same reason plus its own box-model (border/padding/background).
+    -->
     <div class="util-demo">
       <div class="al-u-grid cols:6@md cols:3@lg al-u-gap-lg">
         {[1, 2, 3, 4].map((n) => <div class="util-po">{n}</div>)}
@@ -292,15 +304,20 @@ const fullLayout = [
         ))
       }
     </div>
-    <div class="util-demo util-demo--pair">
-      <div class="al-u-gap-lg">
-        <div class="util-po">Item</div>
-        <div class="util-po">Item</div>
-      </div>
-      <div class="al-u-gap-sm al-u-gap--row">
-        <div class="util-po">Item</div>
-        <div class="util-po">Item</div>
-      </div>
+    <!-- ARRANGEMENT IS <al-layout> (R4) for the two DEMO PANELS side by
+         side; .util-demo keeps the box-model, the al-u-gap-* children inside
+         are the utility classes being documented (see the EXEMPT note above). -->
+    <div class="util-demo">
+      <al-layout variant="grid" columns={2} noCollapse class="util-demo--pair">
+        <div class="al-u-gap-lg">
+          <div class="util-po">Item</div>
+          <div class="util-po">Item</div>
+        </div>
+        <div class="al-u-gap-sm al-u-gap--row">
+          <div class="util-po">Item</div>
+          <div class="util-po">Item</div>
+        </div>
+      </al-layout>
     </div>
     <pre class="code code--inline util-code">{GAP_SAMPLE}</pre>
 
@@ -382,11 +399,13 @@ const fullLayout = [
     line-height: 20px;
   }
 
-  .util-bps {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2px;
+  /* The wrapper owns the margin; 2px is off al-layout's gap scale. */
+  .util-bps-wrap {
     margin-bottom: 44px;
+  }
+
+  .util-bps {
+    --al-layout-gap: 2px;
   }
 
   .util-bp {
@@ -410,10 +429,9 @@ const fullLayout = [
     background: var(--bg2);
   }
 
+  /* Arrangement lives on <al-layout> (R4); 18px is off al-layout's gap scale. */
   .util-demo--pair {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
+    --al-layout-gap: 18px;
   }
 
   .util-po {
@@ -432,7 +450,7 @@ const fullLayout = [
 
   @media (max-width: 1000px) {
     .util-demo--pair {
-      grid-template-columns: 1fr;
+      --al-layout-columns: 1;
     }
   }
 </style>

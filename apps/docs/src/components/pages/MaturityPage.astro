@@ -92,15 +92,20 @@ const flagWord = (value: boolean | null) => (value === null ? 'no answer' : valu
       <span>LIFECYCLE — {summary.lifecycle.length} PHASES</span>
       <span>DECLARED BY EACH COMPONENT'S OWN STORY</span>
     </div>
-    <div class="mat-phases">
-      {
-        summary.lifecycle.map((phase: any) => (
-          <a class="mat-phase" href={href(`/components?status=${phase.id}`)}>
-            <span class="mat-phase__count">{phase.count}</span>
-            <span class="micro">{phase.label}</span>
-          </a>
-        ))
-      }
+    <!-- ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin a
+         display:contents host cannot carry. .mat-phase stays CSS flex —
+         card internals, not section arrangement. -->
+    <div class="mat-phases-wrap">
+      <al-layout direction="row" wrap class="mat-phases">
+        {
+          summary.lifecycle.map((phase: any) => (
+            <a class="mat-phase" href={href(`/components?status=${phase.id}`)}>
+              <span class="mat-phase__count">{phase.count}</span>
+              <span class="micro">{phase.label}</span>
+            </a>
+          ))
+        }
+      </al-layout>
     </div>
 
     <div class="section-rule">
@@ -257,11 +262,13 @@ const flagWord = (value: boolean | null) => (value === null ? 'no answer' : valu
     max-width: 640px;
   }
 
-  .mat-phases {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2px;
+  /* The wrapper owns the margin; 2px is off al-layout's gap scale. */
+  .mat-phases-wrap {
     margin-bottom: 44px;
+  }
+
+  .mat-phases {
+    --al-layout-gap: 2px;
   }
 
   .mat-phase {

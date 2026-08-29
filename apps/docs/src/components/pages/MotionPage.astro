@@ -227,20 +227,25 @@ const TIERS = [
       tokens, {PRESET_COUNT} keyframe presets.
     </p>
 
-    <div class="tier-grid">
-      {
-        TIERS.map((tier) => (
-          <div class="tier-card">
-            <div class="micro micro--blue">TIER {tier.id}</div>
-            <div class="t-heading-sm tier-card__title">{tier.title}</div>
-            <code class="tier-card__where">{tier.where}</code>
-            <p class="t-body-sm tier-card__body">{tier.body}</p>
-            <div class="micro tier-card__count">
-              {tier.count} {tier.unit}
+    <!-- ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin a
+         display:contents host cannot carry. .tier-card stays CSS flex —
+         card internals, not section arrangement. -->
+    <div class="tier-grid-wrap">
+      <al-layout variant="grid" columns={3} noCollapse class="tier-grid">
+        {
+          TIERS.map((tier) => (
+            <div class="tier-card">
+              <div class="micro micro--blue">TIER {tier.id}</div>
+              <div class="t-heading-sm tier-card__title">{tier.title}</div>
+              <code class="tier-card__where">{tier.where}</code>
+              <p class="t-body-sm tier-card__body">{tier.body}</p>
+              <div class="micro tier-card__count">
+                {tier.count} {tier.unit}
+              </div>
             </div>
-          </div>
-        ))
-      }
+          ))
+        }
+      </al-layout>
     </div>
 
     <!--
@@ -261,6 +266,9 @@ const TIERS = [
       demos. If <code>reduced</code> appears to stop the page working, that is the axis working.
     </p>
 
+    <!-- EXEMPT: single-line control bar (a topbar-style toolbar), and its
+         nested chip group reuses the same border-collapse trick as
+         .pg__opt elsewhere — kept as CSS. -->
     <div class="axis-bar">
       <div class="axis-bar__opts" role="group" aria-label="Motion axis">
         {
@@ -289,7 +297,8 @@ const TIERS = [
     <div class="page page--continued">
       <div class="probe" data-motion-probe>
         <div class="micro probe__head">RESOLVED AT THIS ELEMENT, RIGHT NOW</div>
-        <div class="probe__grid">
+        <!-- ARRANGEMENT IS <al-layout> (R4). -->
+        <al-layout variant="grid" noCollapse class="probe__grid">
           {
             PROBES.map((probe) => (
               <div class="probe__cell">
@@ -300,7 +309,7 @@ const TIERS = [
               </div>
             ))
           }
-        </div>
+        </al-layout>
       </div>
 
       {
@@ -318,6 +327,7 @@ const TIERS = [
               guaranteed-invalid value, so a component's{' '}
               <code>var(--role, var(--legacy))</code> takes its fallback.
             </p>
+            {/* EXEMPT: TABULAR data (property × axis values) — stays CSS grid. */}
             <div class="axis-table">
               <div class="axis-table__head">
                 <span>PROPERTY</span>
@@ -399,17 +409,22 @@ const TIERS = [
         its <code>var()</code> chain once, at <code>:root</code>, and go blind to every{' '}
         <code>&lt;al-theme motion&gt;</code> below it.
       </p>
-      <div class="demo demo--split">
-        <div class="demo__stage">
-          <div class="css-demo" data-css-demo>
-            <div class="css-demo__box"></div>
+      <!-- ARRANGEMENT IS <al-layout> (R4); the wrapper (.demo) owns the
+           margin a display:contents host cannot carry. The 1fr / 1.4fr split
+           isn't equal columns, so it rides --al-layout-template. -->
+      <div class="demo">
+        <al-layout variant="grid" align="start" gap="lg" noCollapse class="demo--split">
+          <div class="demo__stage">
+            <div class="css-demo" data-css-demo>
+              <div class="css-demo__box"></div>
+            </div>
+            <button class="pg__opt demo__replay" type="button" data-css-toggle>Toggle</button>
           </div>
-          <button class="pg__opt demo__replay" type="button" data-css-toggle>Toggle</button>
-        </div>
-        <div class="demo__code">
-          <pre class="code">{SCSS_SAMPLE}</pre>
-          <pre class="code">{CSS_SAMPLE}</pre>
-        </div>
+          <div class="demo__code">
+            <pre class="code">{SCSS_SAMPLE}</pre>
+            <pre class="code">{CSS_SAMPLE}</pre>
+          </div>
+        </al-layout>
       </div>
 
       <div class="section-rule">
@@ -420,19 +435,23 @@ const TIERS = [
         The rungs. A component should not reach for these directly — it reads a tier-2 role token,
         which points at one of these and moves when the axis moves.
       </p>
-      <div class="scale-list">
-        {
-          durations.map((step) => (
-            <div class="track-row" data-duration-row data-ms={step.ms}>
-              <span class="spec-table__type">{step.name}</span>
-              <span class="spec-table__default">{step.value}</span>
-              <span class="track" data-track>
-                <span class="track__dot" data-dot />
-              </span>
-              <code class="track-row__token">--{step.key}</code>
-            </div>
-          ))
-        }
+      <!-- ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin.
+           .track-row stays CSS grid — TABULAR data, not section arrangement. -->
+      <div class="scale-list-wrap">
+        <al-layout class="scale-list">
+          {
+            durations.map((step) => (
+              <div class="track-row" data-duration-row data-ms={step.ms}>
+                <span class="spec-table__type">{step.name}</span>
+                <span class="spec-table__default">{step.value}</span>
+                <span class="track" data-track>
+                  <span class="track__dot" data-dot />
+                </span>
+                <code class="track-row__token">--{step.key}</code>
+              </div>
+            ))
+          }
+        </al-layout>
       </div>
 
       <div class="section-rule">
@@ -444,7 +463,10 @@ const TIERS = [
         share one scale — a control point outside the unit box is an overshoot, and{' '}
         <code>spring</code> is the only one that has one.
       </p>
-      <div class="curve-grid">
+      <!-- ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin.
+           .curve-card stays CSS flex — card internals, not section arrangement. -->
+      <div class="curve-grid-wrap">
+        <al-layout variant="grid" noCollapse class="curve-grid">
         {
           curves.map((curve) => (
             <div class="curve-card" data-easing-card data-easing={curve.value} data-ms={CURVE_MS}>
@@ -475,6 +497,7 @@ const TIERS = [
             </div>
           ))
         }
+        </al-layout>
       </div>
 
       <div class="section-rule">
@@ -486,19 +509,22 @@ const TIERS = [
         wrapper can retune intensity locally with{' '}
         <code>style="--al-animation-distance-md: 48px"</code> and no new preset.
       </p>
-      <div class="scale-list">
-        {
-          distances.map((step) => (
-            <div class="track-row" data-distance-row data-px={step.px}>
-              <span class="spec-table__type">{step.name}</span>
-              <span class="spec-table__default">{step.value}</span>
-              <span class="track" data-track>
-                <span class="track__dot" data-dot />
-              </span>
-              <code class="track-row__token">--{step.key}</code>
-            </div>
-          ))
-        }
+      <!-- ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin. -->
+      <div class="scale-list-wrap">
+        <al-layout class="scale-list">
+          {
+            distances.map((step) => (
+              <div class="track-row" data-distance-row data-px={step.px}>
+                <span class="spec-table__type">{step.name}</span>
+                <span class="spec-table__default">{step.value}</span>
+                <span class="track" data-track>
+                  <span class="track__dot" data-dot />
+                </span>
+                <code class="track-row__token">--{step.key}</code>
+              </div>
+            ))
+          }
+        </al-layout>
       </div>
 
       <div class="section-rule">
@@ -515,7 +541,9 @@ const TIERS = [
         families.map((family) => (
           <div class="family">
             <div class="micro family__head">{family.id.toUpperCase()}</div>
-            <div class="choreo-grid">
+            {/* ARRANGEMENT IS <al-layout> (R4); .choreo-card stays CSS flex
+                — card internals, not section arrangement. */}
+            <al-layout variant="grid" noCollapse class="choreo-grid">
               {family.tokens.map((token) => (
                 <div class="choreo-card">
                   <div class="choreo-card__head">
@@ -637,7 +665,7 @@ const TIERS = [
                   </dl>
                 </div>
               ))}
-            </div>
+            </al-layout>
           </div>
         ))
       }
@@ -651,21 +679,24 @@ const TIERS = [
         tile is an <code>overflow: hidden</code> wall around a mover, which is the structure the
         clip-path and mask shapes need; the rest work with or without it.
       </p>
-      <div class="preset-grid">
-        {
-          presets.map((preset) => (
-            <button class="preset-tile" type="button" data-preset={preset.name}>
-              <span class="preset-tile__wall">
-                <span class="preset-tile__mover" data-preset-mover />
-              </span>
-              <span class="preset-tile__name mono">{preset.name}</span>
-              <span class="micro preset-tile__props">
-                {preset.properties.join(' · ')}
-                {preset.multiFrame ? ` · ${preset.frames} frames` : ''}
-              </span>
-            </button>
-          ))
-        }
+      <!-- ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin. -->
+      <div class="preset-grid-wrap">
+        <al-layout variant="grid" noCollapse class="preset-grid">
+          {
+            presets.map((preset) => (
+              <button class="preset-tile" type="button" data-preset={preset.name}>
+                <span class="preset-tile__wall">
+                  <span class="preset-tile__mover" data-preset-mover />
+                </span>
+                <span class="preset-tile__name mono">{preset.name}</span>
+                <span class="micro preset-tile__props">
+                  {preset.properties.join(' · ')}
+                  {preset.multiFrame ? ` · ${preset.frames} frames` : ''}
+                </span>
+              </button>
+            ))
+          }
+        </al-layout>
       </div>
 
       <div class="section-rule">
@@ -698,27 +729,30 @@ const TIERS = [
         when more than one element has to move in a coordinated way.
       </p>
 
-      <div class="usage">
-        <div>
-          <div class="micro usage__head">FROM A LIT COMPONENT</div>
-          <p class="t-body-sm">
-            The reactive controller scopes motion to your host, owns its{' '}
-            <code>IntersectionObserver</code>, and tears it down in{' '}
-            <code>hostDisconnected()</code>. It arms a reveal with a paused, backwards-filled WAAPI
-            animation rather than a CSS class, so there is no window in which settled content
-            flashes before the animation starts — and nothing to un-hide if JS never runs.
-          </p>
-          <pre class="code">{CONTROLLER_SAMPLE}</pre>
-        </div>
-        <div>
-          <div class="micro usage__head">FROM ANY JAVASCRIPT</div>
-          <p class="t-body-sm">
-            <code>run()</code> never rejects and no-ops on the server.{' '}
-            <code>animatePreset()</code> is its single-element complement, using the same timing
-            grammar so the axis governs both identically.
-          </p>
-          <pre class="code">{RUN_SAMPLE}</pre>
-        </div>
+      <!-- ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin. -->
+      <div class="usage-wrap">
+        <al-layout variant="grid" columns={2} gap="xl" noCollapse class="usage">
+          <div>
+            <div class="micro usage__head">FROM A LIT COMPONENT</div>
+            <p class="t-body-sm">
+              The reactive controller scopes motion to your host, owns its{' '}
+              <code>IntersectionObserver</code>, and tears it down in{' '}
+              <code>hostDisconnected()</code>. It arms a reveal with a paused, backwards-filled WAAPI
+              animation rather than a CSS class, so there is no window in which settled content
+              flashes before the animation starts — and nothing to un-hide if JS never runs.
+            </p>
+            <pre class="code">{CONTROLLER_SAMPLE}</pre>
+          </div>
+          <div>
+            <div class="micro usage__head">FROM ANY JAVASCRIPT</div>
+            <p class="t-body-sm">
+              <code>run()</code> never rejects and no-ops on the server.{' '}
+              <code>animatePreset()</code> is its single-element complement, using the same timing
+              grammar so the axis governs both identically.
+            </p>
+            <pre class="code">{RUN_SAMPLE}</pre>
+          </div>
+        </al-layout>
       </div>
 
       <div class="micro usage__head usage__head--spaced">THE ONE PIECE THAT MUST LIVE IN CSS</div>
@@ -751,10 +785,9 @@ const TIERS = [
 
   /* ---------------------------------------------------------------- tiers */
 
-  .tier-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+  /* Arrangement lives on <al-layout> (R4); 16px is the component's default
+   * gap, so no hook is needed. The wrapper owns the margin. */
+  .tier-grid-wrap {
     margin: 32px 0 56px;
   }
 
@@ -823,10 +856,10 @@ const TIERS = [
     margin-bottom: 12px;
   }
 
+  /* Arrangement lives on <al-layout> (R4); hooks-only. */
   .probe__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 14px;
+    --al-layout-template: repeat(auto-fit, minmax(180px, 1fr));
+    --al-layout-gap: 14px;
   }
 
   .probe__cell {
@@ -896,13 +929,16 @@ const TIERS = [
 
   /* -------------------------------------------------------------- tracks */
 
-  .scale-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  /* The wrapper owns the margin a display:contents layout host cannot. */
+  .scale-list-wrap {
     margin-bottom: 56px;
   }
 
+  .scale-list {
+    --al-layout-gap: 10px;
+  }
+
+  /* EXEMPT: TABULAR row (name/value/track/token), not section arrangement. */
   .track-row {
     display: grid;
     grid-template-columns: 60px 60px minmax(0, 1fr) 220px;
@@ -930,11 +966,13 @@ const TIERS = [
 
   /* -------------------------------------------------------------- curves */
 
-  .curve-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 16px;
+  /* The wrapper owns the margin; 16px is the component's default gap. */
+  .curve-grid-wrap {
     margin-bottom: 56px;
+  }
+
+  .curve-grid {
+    --al-layout-template: repeat(auto-fill, minmax(200px, 1fr));
   }
 
   .curve-card {
@@ -988,11 +1026,10 @@ const TIERS = [
     margin-bottom: 56px;
   }
 
+  /* Arrangement lives on <al-layout> (R4); gap/align ride the `gap="lg"` /
+   * `align="start"` props, so only the asymmetric template needs a hook. */
   .demo--split {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
-    gap: 24px;
-    align-items: start;
+    --al-layout-template: minmax(0, 1fr) minmax(0, 1.4fr);
   }
 
   .demo__stage {
@@ -1052,10 +1089,10 @@ const TIERS = [
     margin-bottom: 12px;
   }
 
+  /* Arrangement lives on <al-layout> (R4); 16px is the component's default
+   * gap, so only the auto-fill template needs a hook. */
   .choreo-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
+    --al-layout-template: repeat(auto-fill, minmax(280px, 1fr));
   }
 
   .choreo-card {
@@ -1186,11 +1223,14 @@ const TIERS = [
 
   /* -------------------------------------------------------------- presets */
 
-  .preset-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
+  /* The wrapper owns the margin; 12px is off al-layout's gap scale. */
+  .preset-grid-wrap {
     margin-bottom: 56px;
+  }
+
+  .preset-grid {
+    --al-layout-template: repeat(auto-fill, minmax(150px, 1fr));
+    --al-layout-gap: 12px;
   }
 
   .preset-tile {
@@ -1237,10 +1277,9 @@ const TIERS = [
 
   /* ---------------------------------------------------------------- usage */
 
-  .usage {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
+  /* Arrangement lives on <al-layout> (R4); gap rides `gap="xl"` (32px is on
+   * the scale). The wrapper owns the margin. */
+  .usage-wrap {
     margin-bottom: 48px;
   }
 
@@ -1259,9 +1298,12 @@ const TIERS = [
 
   @media (max-width: 1000px) {
     .tier-grid,
-    .usage,
+    .usage {
+      --al-layout-columns: 1;
+    }
+
     .demo--split {
-      grid-template-columns: 1fr;
+      --al-layout-template: 1fr;
     }
 
     .track-row {

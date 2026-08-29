@@ -168,110 +168,124 @@ const maxSpace = Math.max(...spacing.map((s) => s.px || 0), 1);
       <span>SPACING — {spacing.length} STEPS</span>
       <span>8PX BASE</span>
     </div>
-    <div class="scale-list">
-      {
-        spacing.map((step) => (
-          <div class="scale-row">
-            <span class="spec-table__type">{step.name}</span>
-            <span class="spec-table__default">{step.value}</span>
-            <span class="scale-bar" style={`width:${Math.max((step.px / maxSpace) * 100, 1)}%`} />
-          </div>
-        ))
-      }
+    <!--
+      ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin a
+      display:contents host cannot carry. .scale-row itself stays CSS grid —
+      TABULAR data (label/value/bar), not section arrangement.
+    -->
+    <div class="scale-list-wrap">
+      <al-layout class="scale-list">
+        {
+          spacing.map((step) => (
+            <div class="scale-row">
+              <span class="spec-table__type">{step.name}</span>
+              <span class="spec-table__default">{step.value}</span>
+              <span class="scale-bar" style={`width:${Math.max((step.px / maxSpace) * 100, 1)}%`} />
+            </div>
+          ))
+        }
+      </al-layout>
     </div>
 
-    <div class="foundations-split">
-      <div>
-        <div class="section-rule"><span>RADIUS</span><span>{radii.length}</span></div>
-        <div class="radius-grid">
-          {
-            radii.map((radius) => (
-              <div class="radius-cell">
-                <div class="radius-swatch" style={`border-radius:${radius.value}`} />
-                <div class="micro">
-                  {radius.name} · {radius.value}
+    <!--
+      ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin. Equal
+      2-column split → `columns={2}`, overridden to 1 below 1000px via the
+      --al-layout-columns hook the `columns` prop itself sets.
+    -->
+    <div class="foundations-split-wrap">
+      <al-layout variant="grid" columns={2} noCollapse class="foundations-split">
+        <div>
+          <div class="section-rule"><span>RADIUS</span><span>{radii.length}</span></div>
+          <!-- ARRANGEMENT IS <al-layout> (R4); a row of swatches that wraps. -->
+          <al-layout direction="row" wrap class="radius-grid">
+            {
+              radii.map((radius) => (
+                <div class="radius-cell">
+                  <div class="radius-swatch" style={`border-radius:${radius.value}`} />
+                  <div class="micro">
+                    {radius.name} · {radius.value}
+                  </div>
                 </div>
-              </div>
-            ))
-          }
+              ))
+            }
+          </al-layout>
         </div>
-      </div>
-      <div>
-        <div class="section-rule"><span>ELEVATION</span><span>{shadows.length}</span></div>
-        <div class="shadow-grid">
-          {
-            shadows.map((shadow) => (
-              <div>
-                <div class="shadow-swatch" style={`box-shadow:${shadow.value}`} />
-                <div class="micro">{shadow.name}</div>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-      <div>
-        <div class="section-rule"><span>BORDER WIDTH</span><span>{borders.length}</span></div>
-        <div class="border-grid">
-          {
-            borders.map((border) => (
-              <div class="border-cell">
-                <div class="border-specimen" style={`border-top-width:${border.value}`} />
-                <div class="micro">
-                  {border.name} · {border.value}
-                </div>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-      <div>
-        <div class="section-rule"><span>OPACITY</span><span>{opacities.length}</span></div>
-        <div class="border-grid">
-          {
-            opacities.map((step) => (
-              <div class="border-cell">
-                <div class="opacity-specimen" style={`opacity:${step.value}`} />
-                <div class="micro">
-                  {step.name} · {step.value}
-                </div>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-      {
-        scaleTables.map((group) => (
-          <div>
-            <div class="section-rule">
-              <span>{group.label}</span>
-              <span>{group.rows.length}</span>
-            </div>
-            <div class="spec-table spec-table--pair">
-              <div class="spec-table__head">
-                <span>STEP</span>
-                <span>VALUE</span>
-              </div>
-              {group.rows.map((row) => (
-                <div class="spec-table__row">
-                  <span class="spec-table__name">{row.name}</span>
-                  <span class="spec-table__type">{row.value}</span>
-                </div>
-              ))}
-            </div>
+        <div>
+          <div class="section-rule"><span>ELEVATION</span><span>{shadows.length}</span></div>
+          <!-- ARRANGEMENT IS <al-layout> (R4); background/padding stay on the wrapper. -->
+          <div class="shadow-grid-wrap">
+            <al-layout variant="grid" columns={3} noCollapse class="shadow-grid">
+              {
+                shadows.map((shadow) => (
+                  <div>
+                    <div class="shadow-swatch" style={`box-shadow:${shadow.value}`} />
+                    <div class="micro">{shadow.name}</div>
+                  </div>
+                ))
+              }
+            </al-layout>
           </div>
-        ))
-      }
+        </div>
+        <div>
+          <div class="section-rule"><span>BORDER WIDTH</span><span>{borders.length}</span></div>
+          <!-- ARRANGEMENT IS <al-layout> (R4); 24px matches the gap="lg" step. -->
+          <al-layout direction="row" wrap gap="lg" class="border-grid">
+            {
+              borders.map((border) => (
+                <div class="border-cell">
+                  <div class="border-specimen" style={`border-top-width:${border.value}`} />
+                  <div class="micro">
+                    {border.name} · {border.value}
+                  </div>
+                </div>
+              ))
+            }
+          </al-layout>
+        </div>
+        <div>
+          <div class="section-rule"><span>OPACITY</span><span>{opacities.length}</span></div>
+          <al-layout direction="row" wrap gap="lg" class="border-grid">
+            {
+              opacities.map((step) => (
+                <div class="border-cell">
+                  <div class="opacity-specimen" style={`opacity:${step.value}`} />
+                  <div class="micro">
+                    {step.name} · {step.value}
+                  </div>
+                </div>
+              ))
+            }
+          </al-layout>
+        </div>
+        {
+          scaleTables.map((group) => (
+            <div>
+              <div class="section-rule">
+                <span>{group.label}</span>
+                <span>{group.rows.length}</span>
+              </div>
+              {/* spec-table is TABULAR data (spec 2026-08-28..., R4 exemption) — stays CSS grid. */}
+              <div class="spec-table spec-table--pair">
+                <div class="spec-table__head">
+                  <span>STEP</span>
+                  <span>VALUE</span>
+                </div>
+                {group.rows.map((row) => (
+                  <div class="spec-table__row">
+                    <span class="spec-table__name">{row.name}</span>
+                    <span class="spec-table__type">{row.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+      </al-layout>
     </div>
   </div>
 </Shell>
 
 <style>
-  .border-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-  }
-
   .border-cell {
     min-width: 96px;
   }
@@ -298,6 +312,8 @@ const maxSpace = Math.max(...spacing.map((s) => s.px || 0), 1);
     margin-bottom: 28px;
   }
 
+  /* EXEMPT: card-internal head (label + prefix on a repeating ramp row), not
+   * section arrangement — kept as CSS, matching .tier-cards__head. */
   .ramp__head {
     display: flex;
     justify-content: space-between;
@@ -305,6 +321,7 @@ const maxSpace = Math.max(...spacing.map((s) => s.px || 0), 1);
     margin-bottom: 8px;
   }
 
+  /* EXEMPT: decorative swatch strip — kept as CSS. */
   .ramp__steps {
     display: flex;
     gap: 2px;
@@ -340,6 +357,7 @@ const maxSpace = Math.max(...spacing.map((s) => s.px || 0), 1);
     margin-top: 3px;
   }
 
+  /* EXEMPT: TABULAR row (label/type/sample), not section arrangement. */
   .type-row {
     display: grid;
     grid-template-columns: 150px 220px minmax(0, 1fr);
@@ -350,13 +368,16 @@ const maxSpace = Math.max(...spacing.map((s) => s.px || 0), 1);
     overflow: hidden;
   }
 
-  .scale-list {
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
+  /* The wrapper owns the margin a display:contents layout host cannot. */
+  .scale-list-wrap {
     margin-bottom: 52px;
   }
 
+  .scale-list {
+    --al-layout-gap: 9px;
+  }
+
+  /* EXEMPT: TABULAR row (label/value/bar), not section arrangement. */
   .scale-row {
     display: grid;
     grid-template-columns: 110px 60px minmax(0, 1fr);
@@ -370,17 +391,18 @@ const maxSpace = Math.max(...spacing.map((s) => s.px || 0), 1);
     display: block;
   }
 
-  .foundations-split {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
+  /* The wrapper owns the margin; 48px is off al-layout's gap scale. */
+  .foundations-split-wrap {
     margin-bottom: 64px;
   }
 
+  .foundations-split {
+    --al-layout-gap: 48px;
+  }
+
+  /* 18px is off al-layout's gap scale (none/xs/sm/md/lg/xl). */
   .radius-grid {
-    display: flex;
-    gap: 18px;
-    flex-wrap: wrap;
+    --al-layout-gap: 18px;
   }
 
   .radius-cell {
@@ -397,12 +419,15 @@ const maxSpace = Math.max(...spacing.map((s) => s.px || 0), 1);
     margin-top: 8px;
   }
 
-  .shadow-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+  /* The wrapper owns the background/padding a display:contents layout host
+   * cannot; 20px is off al-layout's gap scale. */
+  .shadow-grid-wrap {
     background: var(--bg2);
     padding: 24px;
+  }
+
+  .shadow-grid {
+    --al-layout-gap: 20px;
   }
 
   .shadow-swatch {
@@ -416,7 +441,7 @@ const maxSpace = Math.max(...spacing.map((s) => s.px || 0), 1);
 
   @media (max-width: 1000px) {
     .foundations-split {
-      grid-template-columns: 1fr;
+      --al-layout-columns: 1;
     }
 
     .type-row {

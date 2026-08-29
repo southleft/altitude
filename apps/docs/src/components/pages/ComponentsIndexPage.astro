@@ -25,12 +25,13 @@ const { registry, site, href } = context;
 >
   <div class="page">
     <div class="micro">INDEX / 05</div>
-    <div class="components-head">
+    <!-- ARRANGEMENT IS <al-layout> (R4) — title vs. the "n SHOWN" readout. -->
+    <al-layout direction="row" wrap justify="between" align="end" class="components-head">
       <h1 class="t-page-title">Components</h1>
       <span class="micro" data-shown-readout>
         <span data-shown>{registry.count}</span> / {registry.count} SHOWN
       </span>
-    </div>
+    </al-layout>
     <p class="t-body-md components-lede">
       Every component ships as a Lit web component{
         registry.stats.withReact === registry.count ? ' with a generated React wrapper' : ''
@@ -38,6 +39,8 @@ const { registry, site, href } = context;
       from that manifest.
     </p>
 
+    <!-- EXEMPT: single-line search bar, intrinsic to this one element (not
+         section arrangement) — kept as CSS. -->
     <label class="index-search">
       <span class="micro">FILTER</span>
       <input
@@ -48,17 +51,24 @@ const { registry, site, href } = context;
       />
     </label>
 
-    <!-- Lifecycle filter chips — one per phase the library actually declares
-         (registry.mjs → buildRegistry().lifecycle). ALL is the cleared state. -->
-    <div class="index-phases">
-      <button class="pg__opt" type="button" data-status-filter="" aria-pressed="true">all</button>
-      {
-        registry.lifecycle.map((phase) => (
-          <button class="pg__opt" type="button" data-status-filter={phase.id} aria-pressed="false">
-            {phase.id} · {phase.count}
-          </button>
-        ))
-      }
+    <!--
+      Lifecycle filter chips — one per phase the library actually declares
+      (registry.mjs → buildRegistry().lifecycle). ALL is the cleared state.
+      ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin a
+      display:contents host cannot carry. gap="none" preserves the chips'
+      own border-collapse trick (.pg__opt's -1px negative margins).
+    -->
+    <div class="index-phases-wrap">
+      <al-layout direction="row" wrap gap="none">
+        <button class="pg__opt" type="button" data-status-filter="" aria-pressed="true">all</button>
+        {
+          registry.lifecycle.map((phase) => (
+            <button class="pg__opt" type="button" data-status-filter={phase.id} aria-pressed="false">
+              {phase.id} · {phase.count}
+            </button>
+          ))
+        }
+      </al-layout>
     </div>
 
     {
@@ -70,23 +80,30 @@ const { registry, site, href } = context;
             </span>
             <span data-section-count={tier.id}>{tier.count}</span>
           </div>
-          <div class="grid-tiles">
-            {tier.components.map((component) => (
-              <a
-                class="tile"
-                data-card
-                data-name={component.name.toLowerCase()}
-                data-tag={component.tag}
-                data-status={component.status ?? 'undeclared'}
-                href={href(`/components/${component.slug}`)}
-              >
-                <div class="tile__kicker">{tier.label.replace(/S$/, '')}</div>
-                <div class="tile__name">{component.name}</div>
-                <div class="tile__meta">
-                  {component.tag} · {component.status ?? 'undeclared'}
-                </div>
-              </a>
-            ))}
+          <!--
+            ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin a
+            display:contents host cannot carry. Hooks live on the .grid-tiles
+            class in docs.css (shared with the tile grid's auto-fill track).
+          -->
+          <div class="grid-tiles-wrap">
+            <al-layout variant="grid" noCollapse class="grid-tiles">
+              {tier.components.map((component) => (
+                <a
+                  class="tile"
+                  data-card
+                  data-name={component.name.toLowerCase()}
+                  data-tag={component.tag}
+                  data-status={component.status ?? 'undeclared'}
+                  href={href(`/components/${component.slug}`)}
+                >
+                  <div class="tile__kicker">{tier.label.replace(/S$/, '')}</div>
+                  <div class="tile__name">{component.name}</div>
+                  <div class="tile__meta">
+                    {component.tag} · {component.status ?? 'undeclared'}
+                  </div>
+                </a>
+              ))}
+            </al-layout>
           </div>
         </section>
       ))
@@ -99,12 +116,10 @@ const { registry, site, href } = context;
 </Shell>
 
 <style>
+  /* Arrangement lives on <al-layout> (R4); 20px is off al-layout's gap
+   * scale (none/xs/sm/md/lg/xl), so it's set via the documented hook. */
   .components-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 20px;
-    flex-wrap: wrap;
+    --al-layout-gap: 20px;
   }
 
   .components-head .micro {
@@ -133,9 +148,8 @@ const { registry, site, href } = context;
     border-color: var(--blue);
   }
 
-  .index-phases {
-    display: flex;
-    flex-wrap: wrap;
+  /* The wrapper owns the margin a display:contents layout host cannot. */
+  .index-phases-wrap {
     margin-bottom: 40px;
   }
 

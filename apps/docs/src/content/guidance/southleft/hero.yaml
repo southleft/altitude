@@ -10,6 +10,12 @@ whenToUse:
 - There is a supporting artefact worth showing beside the copy (a terminal panel, a product
   shot, a live demo), which goes in the `aside` slot.
 whenNotToUse:
+- text: 'The composition you need is "headline spans the full measure, two columns start below
+    it". This component pairs its content column WITH the aside, so the headline cannot span
+    the full width — southleft.com''s own homepage hero is that full-width shape, and it
+    deliberately composes it from `al-layout` with `al-heading`/`al-text-block`/`al-button`
+    as the primitives instead of wrapping `al-hero` ("stop fighting the component"). Reaching
+    for this component there means fighting its anatomy, not configuring it.'
 - text: This is an interior page and you want a title band, not a landing composition. The
     band shape exists as its own component and does not carry the texture.
   instead: page-hero
@@ -44,6 +50,12 @@ sources:
 - path: libs/sl-web-components/components/hero/hero.ts
   contains: export class SLHero
   note: The component this guidance describes.
+- path: apps/southleft/src/styles/layout.css
+  contains: heading spans full width
+  note: The flagship homepage's own hero documents why it composes the full-width-headline
+    shape from al-layout rather than this component (its .sl-hero comment, "Not wrapped in
+    al-hero"); the first when-not-to-use entry restates that call so docs and site cannot
+    contradict each other.
 - path: libs/sl-web-components/components/hero/hero.ts
   contains: 'prefers-reduced-motion: reduce'
   note: The glyph canvas stops animating under a reduced-motion preference; the accessibility

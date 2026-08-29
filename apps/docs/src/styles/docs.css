@@ -33,6 +33,28 @@
   font-display: swap;
 }
 
+/*
+ * Agrandir — the `southleft` brand's display face, reached ONLY through the
+ * brand token `font-family.secondary` (no docs rule sets `font-family:
+ * Agrandir`). Without this registration every southleft-branded preview and
+ * heading under `<al-theme brand="southleft">` silently fell back to
+ * `sans-serif` — the single largest docs↔site divergence (spec
+ * 2026-08-28-southleft-docs-parity-with-example-site, R1).
+ *
+ * Declared unconditionally because @font-face is inert until rendered text
+ * resolves to the family: altitude-brand pages never fetch it. The file is
+ * copied from the owning app at build time (scripts/copy-brand-assets.mjs),
+ * same one-source-of-truth arrangement as public/logos.
+ */
+@font-face {
+  font-family: 'Agrandir';
+  src:
+    url('/docs/brand-fonts/Agrandir-Variable.woff2') format('woff2-variations'),
+    url('/docs/brand-fonts/Agrandir-Variable.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 /* ---------------------------------------------------------------- tokens */
 
 /*
@@ -323,6 +345,35 @@ al-theme {
    * not fixed here — worth its own issue.
    */
   --status-gap: var(--al-theme-color-content-danger-default, #f05735);
+
+  /*
+   * THE ACCENT'S COMPANIONS, brand-bound the same way (spec
+   * 2026-08-28-southleft-docs-parity-with-example-site, R2).
+   *
+   * `--blue-ink` is the text that sits ON the accent surface (.btn). Its
+   * literal #000b29 IS `--al-color-brand-blue-900`, which is exactly what
+   * `content-primary-weak` resolves to for the reference brand — and
+   * `content-primary-weak` on `background-primary-default` is the pairing
+   * al-button's own primary variant ships (button.scss:26-27). So this is a
+   * pure refactor for altitude and a real fix for southleft, whose accent
+   * button was painting the brand's red under ALTITUDE'S navy text.
+   *
+   * `--blue-soft` was blue-100 (light) / blue-800 (dark) — ramp members with
+   * no semantic rung, and no brand-generic "soft accent" token exists. It is
+   * DERIVED from the accent instead: a 20% tint over white lands within a
+   * couple of RGB points of blue-100 for the reference brand (#d9e3ff vs
+   * #dbe5ff) and a warm soft red for southleft. The dark mix over
+   * `--blue-ink` is a looser match (#… vs blue-800's #0c3197) — acceptable
+   * for its two usages, both decorative fills (OverviewPage swatch strip,
+   * MotionPage demo panel). If a `background-primary-weak` rung ever ships,
+   * bind to it and delete both mixes.
+   */
+  --blue-ink: var(--al-theme-color-content-primary-weak, #000b29);
+  --blue-soft: color-mix(in srgb, var(--blue) 20%, #ffffff);
+}
+
+[data-theme='dark'] al-theme {
+  --blue-soft: color-mix(in srgb, var(--blue) 45%, var(--blue-ink));
 }
 
 a {
@@ -351,30 +402,69 @@ input:focus {
 
 /* --------------------------------------------------------------- type ramp
  * Named exactly as the Foundations artboard names them, so the token page and
- * the pages that use the ramp cannot drift apart. */
+ * the pages that use the ramp cannot drift apart.
+ *
+ * HEADING VOICE IS THE BRAND'S; GEOMETRY IS THE CANVAS'S (spec
+ * 2026-08-28-southleft-docs-parity-with-example-site, R1/R3). The heading
+ * classes take their `font` shorthand from the brand's own display/heading
+ * tokens — family, weight and tracking — and then re-assert the canvas's
+ * responsive sizes and line-heights on top. Same reasoning the brand host
+ * block above applies to colour ("matching the canvas is not the goal; the
+ * canvas WAS one brand"): with the ramp frozen to `700 … var(--sans)`, the
+ * southleft docs H1 rendered IBM Plex Sans 700 while southleft.com rendered
+ * Agrandir 600 — the largest visible docs↔site divergence. For the reference
+ * brand this moves headings from the canvas's 700/-0.03em to its own tokens'
+ * 600/0.01em — the brand's published display voice, not a regression.
+ *
+ * THE PRESET LEAVES, NOT THE `--al-theme-typography-*` ALIASES — for exactly
+ * the reason the brand host block reaches past `body-background` for
+ * `background-default-weak`: the aliases are declared only in the unscoped
+ * `:root` bundle, so their `var()` resolves against the BASE presets before
+ * the value ever inherits into `<al-theme>`, and the brand's Agrandir
+ * restatement (`:host([brand]) --al-typography-preset-*`) never reaches them.
+ * Verified in the built site: the alias computed `IBM Plex Sans` on a host
+ * whose own preset-48 said `Agrandir`. The leaves ARE restated per brand.
+ *
+ * Fallbacks are the DEFAULT BRAND'S RESOLVED VALUES (600 / 0.01em), per this
+ * file's boot-palette convention, so the flagship boots on what it ends on.
+ * Body classes stay literal: both brands' body face is IBM Plex Sans.
+ */
 
 .t-display-lg {
-  font: 700 clamp(44px, 6.2vw, 74px) / 0.98 var(--sans);
-  letter-spacing: -0.035em;
+  /* display-lg = preset-48 (heading.scss's own mapping). */
+  font: var(--al-typography-preset-48-bold, 600 16px var(--sans));
+  font-size: clamp(44px, 6.2vw, 74px);
+  line-height: 0.98;
+  letter-spacing: var(--al-typography-preset-48-bold-letter-spacing, 0.01em);
   text-wrap: balance;
   margin: 0;
 }
 
 .t-page-title {
-  font: 700 46px/1.05 var(--sans);
-  letter-spacing: -0.03em;
+  /* display-md = preset-44. */
+  font: var(--al-typography-preset-44-bold, 600 16px var(--sans));
+  font-size: 46px;
+  line-height: 1.05;
+  letter-spacing: var(--al-typography-preset-44-bold-letter-spacing, 0.01em);
   margin: 14px 0 8px;
 }
 
 .t-display-md {
-  font: 700 34px/1.15 var(--sans);
-  letter-spacing: -0.02em;
+  /* heading-lg = preset-36. */
+  font: var(--al-typography-preset-36-bold, 600 16px var(--sans));
+  font-size: 34px;
+  line-height: 1.15;
+  letter-spacing: var(--al-typography-preset-36-bold-letter-spacing, 0.01em);
   text-wrap: balance;
   margin: 0;
 }
 
 .t-heading-sm {
-  font: 600 18px/24px var(--sans);
+  /* heading-sm = preset-20. */
+  font: var(--al-typography-preset-20-bold, 600 16px var(--sans));
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: var(--al-typography-preset-20-bold-letter-spacing, 0.01em);
   margin: 0;
 }
 
@@ -859,7 +949,10 @@ html[data-booting] .shell {
   gap: 8px;
   padding: 8px 16px;
   border: none;
-  border-radius: 4px;
+  /* Same recipe as al-button itself (button.scss:21): the role token where a
+   * brand ships one (southleft: pill, like the site's buttons), the 4px step
+   * where it doesn't (altitude — byte-identical to the literal this replaces). */
+  border-radius: var(--al-theme-border-radius-role-action, var(--al-theme-border-radius, 4px));
   background: var(--blue);
   color: var(--blue-ink);
   cursor: pointer;
@@ -930,10 +1023,16 @@ html[data-booting] .shell {
   margin-top: 5px;
 }
 
+/* Arrangement lives on <al-layout variant="grid">; this is hooks-only
+ * (spec 2026-08-28-southleft-docs-parity-with-example-site, R4). The
+ * margin-bottom moved to .grid-tiles-wrap (ComponentsIndexPage.astro) since
+ * al-layout's :host is `display: contents` and cannot carry it. */
 .grid-tiles {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
-  gap: 10px;
+  --al-layout-template: repeat(auto-fill, minmax(168px, 1fr));
+  --al-layout-gap: 10px;
+}
+
+.grid-tiles-wrap {
   margin-bottom: 44px;
 }
 
@@ -950,14 +1049,19 @@ html[data-booting] .shell {
   color: var(--fg-weak);
 }
 
+/* The four-up arrangement is an <al-layout variant="grid" columns="4"> inside
+ * this wrapper now (OverviewPage.astro, R4); the wrapper keeps the box-model a
+ * display:contents layout host cannot carry. */
 .statbar {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
   border-bottom: 1px solid var(--line);
 }
 
 .statbar__cell {
   padding: 28px 40px;
+}
+
+.statbar__label {
+  margin-top: 10px;
 }
 
 .statbar__cell + .statbar__cell {
@@ -1078,7 +1182,7 @@ html[data-booting] .shell {
   justify-content: center;
   padding: 10px 14px;
   border: 1px dashed var(--line);
-  border-radius: 2px;
+  border-radius: var(--al-theme-border-radius-xs, 2px);
   font: 400 11px/1 var(--mono);
   letter-spacing: 0.08em;
   color: var(--fg-weak);

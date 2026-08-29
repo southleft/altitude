@@ -138,6 +138,8 @@ const sections = (rendered?.headings ?? []).filter((heading: any) => heading.dep
     margin-bottom: 12px;
   }
 
+  /* EXEMPT: CSS multi-column text reflow (`columns: 2`), not a grid/flex
+   * arrangement — <al-layout> has no equivalent variant, so this stays CSS. */
   .mig-toc__list {
     margin: 0;
     padding: 0;

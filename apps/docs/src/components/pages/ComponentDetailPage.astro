@@ -55,6 +55,9 @@ const pairTable = (rows, nameKey = 'name') =>
   liveComponents
 >
   <div class="page">
+    <!-- EXEMPT: single-line header bars (breadcrumb row, title row) — kept
+         as CSS, matching the topbar/footer exemption (spec
+         2026-08-28-southleft-docs-parity-with-example-site, R4/R5). -->
     <div class="detail-crumbs">
       <span class="micro">
         COMPONENTS / {component.tier.toUpperCase()} / {component.tag}
@@ -110,6 +113,8 @@ const pairTable = (rows, nameKey = 'name') =>
     <div class="section-rule"><span>SLOTS</span><span>{component.slots.length}</span></div>
     {
       component.slots.length ? (
+        // EXEMPT: .spec-table rows are TABULAR data semantics, not section
+        // arrangement — kept as CSS grid throughout this page.
         <div class="spec-table spec-table--pair">
           <div class="spec-table__head">
             <span>SLOT</span>

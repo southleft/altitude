@@ -57,9 +57,13 @@ export const Default: Story = {
       <al-button slot="actions" href="#">Book a call</al-button>
       ${NAV.map(([href, label], i) => html`<a slot="mobile" href=${href}>${label}<span>0${i + 1}</span></a>`)}
     </al-header>
-    <div style="block-size: 60vh;"></div>
   `
 };
+/* NOTE: the `<div style="block-size: 60vh">` scroll spacers that used to
+ * follow each story were Storybook-era scaffolding for demoing `sticky`.
+ * Storybook is retired (2026-08-25); the stories' live consumer is the docs
+ * playground, where the spacers rendered as a viewport of blank space under
+ * the bar (spec 2026-08-28-southleft-docs-parity-with-example-site, R6). */
 
 /**
  * The mobile panel open. `menu-open` is reflected, so this state is reachable
@@ -75,7 +79,6 @@ export const MenuOpen: Story = {
       <al-button slot="actions" href="#">Book a call</al-button>
       ${NAV.map(([href, label], i) => html`<a slot="mobile" href=${href}>${label}<span>0${i + 1}</span></a>`)}
     </al-header>
-    <div style="block-size: 40vh;"></div>
   `
 };
 
@@ -89,6 +92,5 @@ export const Minimal: Story = {
       <al-logo slot="brand" variant="southleft" href="#" aria-label="Southleft home"></al-logo>
       <al-button slot="actions" href="#">Book a call</al-button>
     </al-header>
-    <div style="block-size: 40vh;"></div>
   `
 };
