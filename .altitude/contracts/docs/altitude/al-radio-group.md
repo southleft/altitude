@@ -12,11 +12,12 @@ Component: al-radio-group
 - Node id: `3558:61632` (pinned)
 - [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558-61632)
 
-## Props (9)
+## Props (10)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
 | `ariaDescribedBy` | string | — | — | — |
+| `direction` | enum | `column`, `row` | — | — |
 | `errorNote` | string | — | — | — |
 | `fieldId` | string | — | — | — |
 | `fieldNote` | string | — | — | — |
@@ -30,6 +31,20 @@ Component: al-radio-group
 
 aria-describedby attribute
 - Applied to the field note or error note for A11y
+
+#### `direction`
+
+Direction
+- **column** (default) stacks the radios
+- **row** lays them out inline, wrapping when they run out of room
+
+This does NOT re-introduce a hand-rolled arrangement prop. The group
+already renders an `<al-layout>` around its slotted items; this
+parameterises THAT layout rather than styling the items here, so
+`<al-layout>` remains the single arrangement primitive. The row form is
+a documented variant of the group in the design library (Radio Group
+example, "Horizontal" column), which is why it earns a prop instead of
+being left to each consumer to compose.
 
 #### `errorNote`
 

@@ -7,9 +7,13 @@
 Component: al-banner
 
 A page-level, full-width announcement bar — distinct from `<al-alert>`
-(which is a card-surfaced, contextual message). Reuses the same tone
-vocabulary as `<al-alert>`/`<al-toast>` (icon color by `variant`) so the
-two read as siblings.
+(which is a card-surfaced, contextual message).
+
+The banner carries no tone `variant`. A banner is a single structural
+shape whose only behavioural prop is `isDismissible`; its leading icon and
+that icon's color are the two things a consumer changes, and everything
+else — the message, the trailing CTA — is slotted content. Override the
+glyph via the `icon` slot and its color via `--al-banner-icon-fill`.
 
 ## Figma
 
@@ -17,13 +21,12 @@ two read as siblings.
 - Node id: `3558:60780` (pinned)
 - [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558-60780)
 
-## Props (3)
+## Props (2)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
 | `isDismissed` | boolean | — | — | — |
 | `isDismissible` | boolean | — | — | — |
-| `variant` | enum | `danger`, `success`, `warning` | — | **Variant** (VARIANT): `Danger`, `Info`, `Success`, `Warning` |
 
 #### `isDismissed`
 
@@ -33,20 +36,9 @@ Whether the banner has been dismissed. Owned state, toggled by `close()`.
 
 Whether the banner shows a dismiss control.
 
-#### `variant`
-
-Variant
-- **default** renders a banner that represents an informative announcement
-- **success** renders a banner that represents a success state
-- **warning** renders a banner that represents a warning state
-- **danger** renders a banner that represents a danger/incident state
-
 ## Variant axes
 
-### `variant` (Figma property "Variant")
-
-- Code values: `danger`, `success`, `warning`
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Danger`, `Info`, `Success`, `Warning`
+This component has no Figma `VARIANT`-bound prop — no variant axis to document.
 
 ## States
 
@@ -57,7 +49,7 @@ Variant
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
 | `(default)` | The banner's message content. | — | — |
-| `icon` | Slot in an icon to override the tone-default one. | — | — |
+| `icon` | Slot in an icon to override the default one. | — | — |
 | `link` | Optional trailing link/CTA (typically an `<al-link>`). | — | — |
 
 ## Events (1)
@@ -68,67 +60,27 @@ Variant
 
 ## Accessibility
 
-- ARIA-bearing attributes: `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Variant=default,Dismissible=no` (source: `measured`)
+**Anatomy case measured:** `Dismissible=no` (source: `measured`)
 
 ### Root — `<div class="al-c-banner">`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
-| column-gap | `--al-theme-space` | `theme/space/@` |
-| gap | `--al-theme-space` | `theme/space/@` |
 | padding | `--al-theme-space-sm` | `theme/space/sm` |
 | padding-bottom | `--al-theme-space-sm` | `theme/space/sm` |
 | padding-left | `--al-theme-space` | `theme/space/@` |
 | padding-right | `--al-theme-space` | `theme/space/@` |
 | padding-top | `--al-theme-space-sm` | `theme/space/sm` |
-| row-gap | `--al-theme-space` | `theme/space/@` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
-### Per-variant (`variant`)
-
-#### `danger`
-
-_None._
-
-**Sub-element `icon`** (this variant's own override of that part — T25, a reversed-nesting BEM rule):
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| --al-icon-fill | `--al-theme-color-content-danger-default` | `theme/color/content/danger-default` |
-
-#### `info`
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
-| gap | `--al-theme-space` | `theme/space/@` |
-
-#### `success`
-
-_None._
-
-**Sub-element `icon`** (this variant's own override of that part — T25, a reversed-nesting BEM rule):
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| --al-icon-fill | `--al-theme-color-content-success-default` | `theme/color/content/success-default` |
-
-#### `warning`
-
-_None._
-
-**Sub-element `icon`** (this variant's own override of that part — T25, a reversed-nesting BEM rule):
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| --al-icon-fill | `--al-theme-color-content-warning-default` | `theme/color/content/warning-default` |
+This component's `.scss` has no BEM modifier classes and no nested pseudo-class/attribute state rules that resolve to a single `--al-*` token — no conditional bindings to derive (T18; see `.altitude/contracts/README.md`).
 
 ## Code
 
@@ -136,9 +88,9 @@ _None._
 - Tag: `al-banner`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (8)
+## Tokens referenced (10)
 
-`--al-icon-height`, `--al-icon-width`, `--al-theme-color-background-default`, `--al-theme-color-content-default`, `--al-theme-space`, `--al-theme-space-sm`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-xs`, `--al-theme-color-background-default`, `--al-theme-color-content-primary-default`, `--al-theme-space`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`
 
 ---
 
