@@ -606,6 +606,9 @@ function buildAnatomyNode(raw, ctx, isRoot = false) {
     wrap: computed.wrap,
     // Present only when the node genuinely grows (measure-lib nulls 0).
     grow: computed.grow,
+    // Present only when the child overrides its parent's cross-axis
+    // alignment (measure-lib nulls 'auto'/'normal').
+    alignSelf: computed.alignSelf,
   }).filter(([, v]) => v);
   const layout = layoutEntries.length ? Object.fromEntries(layoutEntries) : null;
 

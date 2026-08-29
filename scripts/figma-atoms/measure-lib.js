@@ -477,6 +477,14 @@
         // hug, which is the top recurring defect in the generated Figma sets
         // (a filling message renders at its max-content width and overflows).
         grow: (parseFloat(cs.flexGrow) || 0) > 0 ? (parseFloat(cs.flexGrow) || 0) : null,
+        // align-self, recorded only when the child OVERRIDES its parent's
+        // cross-axis alignment ('auto' is the initial value on every element,
+        // 'normal' the resolved default — same null-at-initial discipline as
+        // wrap/grow). Consumers combine it with the PARENT's align: a child
+        // that opts out of stretch (align-self: flex-start) must not FILL
+        // even under a stretching parent (spec 2026-08-28-layout-fill-and-
+        // grow-facts).
+        alignSelf: cs.alignSelf && cs.alignSelf !== 'auto' && cs.alignSelf !== 'normal' ? cs.alignSelf : null,
         pos: cs.position, vis: cs.visibility, opacityRaw: cs.opacity,
         gap: cs.columnGap === 'normal' ? 0 : px(cs.columnGap),
         pad: [px(cs.paddingTop), px(cs.paddingRight), px(cs.paddingBottom), px(cs.paddingLeft)],
