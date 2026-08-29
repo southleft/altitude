@@ -59,8 +59,8 @@ system built on the same library.
 ## Figma
 
 - Component set: **Card**
-- Node id: `10:3289` (pinned)
-- [Open in Figma](https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-3289)
+- Node id: `25:8878` (pinned)
+- [Open in Figma](https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=25-8878)
 
 ## Props (17)
 

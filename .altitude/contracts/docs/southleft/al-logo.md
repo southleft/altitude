@@ -9,8 +9,8 @@ Component: al-logo
 ## Figma
 
 - Component set: **Logo**
-- Node id: `10:2135` (pinned)
-- [Open in Figma](https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-2135)
+- Node id: `22:3781` (pinned)
+- [Open in Figma](https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=22-3781)
 
 ## Props (3)
 

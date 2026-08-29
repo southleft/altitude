@@ -59,11 +59,17 @@
       "name": "Southleft Design System",
       "brand": "southleft",
       "figma": {
-        "fileKey": "rdhBS9t89V42E7EfiPjmSa",
+        "fileKey": "2a0kqTG8i8l1q1VI2yq9or",
         "fileName": "Southleft V5",
         "urlBase": "https://www.figma.com/design/{fileKey}/",
         "componentPagePrefix": "\ud83d\udee0 ",
-        "decoys": []
+        "decoys": [
+          {
+            "fileKey": "rdhBS9t89V42E7EfiPjmSa",
+            "fileName": "Southleft V5",
+            "why": "The ORIGINAL Southleft V5 file, retired 2026-08-28 when the project repointed to the copy-of-Altitude being rebuilt as Southleft (spec sl-figma-parity-stress-test). Same display name as the new file of record - a refresh routed here would observe the wrong file silently, hence the decoy guard."
+          }
+        ]
       },
       "paths": {
         "figmaSyncDir": ".altitude/figma-sync/southleft",
@@ -128,7 +134,8 @@
       "excluded": {
         "al-theme-switcher": "Owns no pixels \u2014 an al-button + al-popover + al-menu composition; a Figma set would duplicate three components.",
         "al-icon": "Icons are a 1,512-glyph Phosphor catalog resolved by name, not a component set \u2014 nothing for a per-set parity check to bind to.",
-        "al-theme": "The theming HOST \u2014 sets brand/mode/density tokens on :host and owns no pixels of its own. Nothing for Figma to mirror."
+        "al-theme": "The theming HOST \u2014 sets brand/mode/density tokens on :host and owns no pixels of its own. Nothing for Figma to mirror.",
+        "al-layout": "Arrangement primitive with no Figma set of its own, by design (COVERAGE.md:19; layout.scss display:contents host) - composites degrade it to a coarse auto-layout frame, which is the documented behaviour, not drift."
       },
       "docs": {
         "//": "Southleft's Storybook was retired (2026-08-23). The multi-brand docs site at apps/docs serves this project at /docs/southleft/, generated from the same CEM, so a second Storybook was duplicating it. `route` is what apps/docs already derives for a non-default project; `productionBase` is where that lands when deployed.",

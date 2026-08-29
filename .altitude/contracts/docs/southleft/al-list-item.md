@@ -9,8 +9,8 @@ Component: al-list-item
 ## Figma
 
 - Component set: **List Item**
-- Node id: `10:2096` (pinned)
-- [Open in Figma](https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-2096)
+- Node id: `22:3733` (pinned)
+- [Open in Figma](https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=22-3733)
 
 ## Props (11)
 

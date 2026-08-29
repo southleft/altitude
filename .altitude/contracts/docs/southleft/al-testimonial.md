@@ -13,8 +13,8 @@ proof rows, case-study pull-quotes). Composes `<al-avatar>` via the
 ## Figma
 
 - Component set: **Testimonial**
-- Node id: `10:3137` (pinned)
-- [Open in Figma](https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-3137)
+- Node id: `19:2589` (pinned)
+- [Open in Figma](https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=19-2589)
 
 ## Props (3)
 
@@ -77,6 +77,7 @@ _No events declared._
 | --- | --- | --- |
 | column-gap | `--al-theme-space-md` | `theme/space/md` |
 | gap | `--al-theme-space-md` | `theme/space/md` |
+| padding-left | `--al-theme-space-md` | `theme/space/md` |
 | row-gap | `--al-theme-space-md` | `theme/space/md` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)

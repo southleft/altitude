@@ -36,8 +36,8 @@ animated track, not a place a consumer arranges boxes.
 ## Figma
 
 - Component set: **Marquee**
-- Node id: `10:3372` (pinned)
-- [Open in Figma](https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-3372)
+- Node id: not pinned (`nodeId: null`) — resolve this set by **NAME** via the parity manifest (`.altitude/figma-sync/southleft/parity-manifest.json`) or the `altitude_check_parity` MCP tool at need. Node ids for by-name-mapped components are re-minted when their Figma page is rebuilt, so a value hard-coded here would go stale — see `.altitude/PARITY.md`.
+- File: https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/
 
 ## Props (1)
 

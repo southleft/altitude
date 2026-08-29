@@ -9,8 +9,8 @@ Component: al-text-block
 ## Figma
 
 - Component set: **Text Block**
-- Node id: `10:1970` (pinned)
-- [Open in Figma](https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-1970)
+- Node id: `22:3577` (pinned)
+- [Open in Figma](https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=22-3577)
 
 ## Props (1)
 

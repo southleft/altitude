@@ -9,8 +9,8 @@ Component: al-list
 ## Figma
 
 - Component set: **List**
-- Node id: `10:3128` (pinned)
-- [Open in Figma](https://www.figma.com/design/rdhBS9t89V42E7EfiPjmSa/?node-id=10-3128)
+- Node id: `19:2561` (pinned)
+- [Open in Figma](https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=19-2561)
 
 ## Props (2)
 
@@ -74,9 +74,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-list`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (4)
+## Tokens referenced (5)
 
-`--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-list-item-link-padding-inline-start`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 
