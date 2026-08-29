@@ -62,6 +62,27 @@ export function convertAnatomyNode(node) {
     // copy and leaf-glyph geometry, straight from the contract.
     ...(node.text ? { text: node.text } : {}),
     ...(node.box ? { box: node.box } : {}),
+    // PAGE-lane literal type metrics (generate-snippet attaches fsPx/lhPx —
+    // the measured USED font-size/line-height; hero learnings note
+    // 2026-08-28). Never present on real contracts, so component ops are
+    // byte-identical to before.
+    ...(node.fsPx ? { fsPx: node.fsPx } : {}),
+    ...(node.lhPx ? { lhPx: node.lhPx } : {}),
+    ...(node.padPx ? { padPx: node.padPx } : {}),
+    ...(node.gapPx ? { gapPx: node.gapPx } : {}),
+    ...(node.bgCss ? { bgCss: node.bgCss } : {}),
+    ...(node.fcCss ? { fcCss: node.fcCss } : {}),
+    ...(node.fwCss ? { fwCss: node.fwCss } : {}),
+    ...(node.bcCss ? { bcCss: node.bcCss, bwPx: node.bwPx, ...(node.bw4 ? { bw4: node.bw4 } : {}) } : {}),
+    ...(node.radPx ? { radPx: node.radPx } : {}),
+    ...(node.absPos ? { absPos: node.absPos } : {}),
+    ...(node.imgB64 ? { imgB64: node.imgB64 } : {}),
+    ...(node.ffCss ? { ffCss: node.ffCss } : {}),
+    ...(node.gridTex ? { gridTex: node.gridTex } : {}),
+    ...(node.runs ? { runs: node.runs } : {}),
+    ...(node.mbPx ? { mbPx: node.mbPx } : {}),
+    ...(node.mrPx ? { mrPx: node.mrPx } : {}),
+    ...(node.inlineFlow ? { inlineFlow: true } : {}),
     layout: node.layout || null,
     tokens,
     children: (node.children || []).map(convertAnatomyNode).filter(Boolean),

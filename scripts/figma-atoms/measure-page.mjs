@@ -54,7 +54,12 @@ const MEASURE_LIB = readFileSync(join(process.cwd(), 'scripts/figma-atoms/measur
 
 const chromium = await loadChromium();
 const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: WIDTH, height: 2400 }, deviceScaleFactor: 2 });
+// deviceScaleFactor 1, deliberately (round 6): rasters ship inside the
+// figma_execute payload as base64, and 2x quadrupled the bytes — the murmur
+// alone pushed the build over the Desktop Bridge's hard ~30s ceiling. 1x is
+// visually fine for an image FILL, and vectors (gridTex) carry the crisp
+// geometry now.
+const page = await browser.newPage({ viewport: { width: WIDTH, height: 2400 }, deviceScaleFactor: 1 });
 
 const out = {};
 for (const route of ROUTES) {
@@ -113,9 +118,45 @@ for (const route of ROUTES) {
     try {
       const h = await page.$(`[data-fig-raster="${id}"]`);
       if (!h) continue;
+      // ISOLATE before shooting (hero round 4): an element screenshot clips
+      // the PAGE render to the element's bounds — everything painted above
+      // it comes along. The full-bleed texture layer's raster contained a
+      // complete picture of the hero (headline, buttons, terminal), which
+      // then rendered as a background image UNDER the rebuilt content:
+      // everything doubled. Hide every sibling subtree up to the section
+      // root for the shot, then restore. visibility (not display) keeps
+      // layout identical. A canvas's toDataURL path never needs this — it
+      // reads the element's own pixels.
+      // OPACITY, not visibility: the site's reveal animations set explicit
+      // `visibility: visible` on descendants, which OVERRIDES a hidden
+      // ancestor — the texture raster came back with both hero buttons
+      // rendered crisply inside it. opacity composites the whole subtree
+      // and no descendant can opt out. transition:none so nothing animates
+      // into the shot.
+      await page.evaluate((rid) => {
+        const el = document.querySelector(`[data-fig-raster="${rid}"]`);
+        window.__rasterHidden = [];
+        let cur = el;
+        while (cur && cur.parentElement) {
+          for (const sib of cur.parentElement.children) {
+            if (sib !== cur && sib instanceof HTMLElement) {
+              window.__rasterHidden.push([sib, sib.style.opacity, sib.style.transition]);
+              sib.style.transition = 'none';
+              sib.style.opacity = '0';
+            }
+          }
+          if (cur.parentElement.hasAttribute('data-section-id') || cur.parentElement === document.body) break;
+          cur = cur.parentElement;
+        }
+      }, id);
       const buf = await h.screenshot({ omitBackground: true });
       rasters[id] = 'data:image/png;base64,' + buf.toString('base64');
-    } catch { /* off-screen or zero-size */ }
+    } catch { /* off-screen or zero-size */ } finally {
+      await page.evaluate(() => {
+        for (const [el, prevOp, prevTr] of window.__rasterHidden || []) { el.style.opacity = prevOp || ''; el.style.transition = prevTr || ''; }
+        window.__rasterHidden = [];
+      }).catch(() => {});
+    }
   }
   const attach = (n) => {
     if (!n) return;

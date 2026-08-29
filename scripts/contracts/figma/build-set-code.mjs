@@ -439,6 +439,74 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
       if (m.endsWith('/regular')) return 'Regular';
       return null;
     }
+    // PAGE-lane literal-style helpers (hero round 4, learnings note
+    // 2026-08-28). cssSolid parses a COMPUTED rgb()/rgba() string into a
+    // solid paint (null for transparent — never a black fallback);
+    // weightStyleFromCss maps a computed font-weight to a style name for
+    // font(), which already degrades through NEAR/pickStyle.
+    // REVERSE VARIABLE LOOKUP (owner catch, round 10: "a lot of our
+    // components are not using our variables/tokens" — literal colors were
+    // baked where a theme variable holds the SAME value). Color variables
+    // are indexed by their resolved value in each collection's default mode;
+    // cssSolid binds the matching variable instead of baking the hex. A
+    // literal with NO matching variable stays literal and is REPORTED
+    // (page-lane runs only) as color-unbound — surfacing exactly what the
+    // owner caught by eye.
+    const COLOR_VAR_BY_RGBA = new Map();
+    const rgbaKey = function (c) {
+      return [Math.round(c.r * 255), Math.round(c.g * 255), Math.round(c.b * 255), Math.round((c.a === undefined ? 1 : c.a) * 100)].join(',');
+    };
+    try {
+      const collById = new Map();
+      for (const coll of await figma.variables.getLocalVariableCollectionsAsync()) collById.set(coll.id, coll);
+      for (const vv of await figma.variables.getLocalVariablesAsync('COLOR')) {
+        const coll = collById.get(vv.variableCollectionId);
+        if (!coll) continue;
+        let val = vv.valuesByMode[coll.defaultModeId];
+        if (val && val.type === 'VARIABLE_ALIAS') continue; // target is indexed directly
+        if (val && typeof val === 'object' && 'r' in val) {
+          const k = rgbaKey(val);
+          if (!COLOR_VAR_BY_RGBA.has(k)) COLOR_VAR_BY_RGBA.set(k, vv);
+        }
+      }
+    } catch (e) { /* variables API unavailable — literals stay literal */ }
+    function bindColorVar(p, cssForReport) {
+      const k = rgbaKey({ r: p.color.r, g: p.color.g, b: p.color.b, a: p.opacity });
+      const vv = COLOR_VAR_BY_RGBA.get(k);
+      if (vv) {
+        try { return figma.variables.setBoundVariableForPaint(p, 'color', vv); }
+        catch (e) { /* keep literal */ }
+      } else if (OPS.anatomySource === 'measured-page') {
+        misses.add('color-unbound:' + cssForReport);
+      }
+      return p;
+    }
+    function cssSolid(css) {
+      // color(srgb r g b / a) — how Chromium serializes wide-gamut-authored
+      // colors (the grid texture's line color arrives this way).
+      const cm2 = /color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+))?\)/.exec(String(css || ''));
+      if (cm2) {
+        const a2 = cm2[4] !== undefined ? parseFloat(cm2[4]) : 1;
+        if (a2 === 0) return null;
+        return bindColorVar({ type: 'SOLID', color: { r: parseFloat(cm2[1]), g: parseFloat(cm2[2]), b: parseFloat(cm2[3]) }, opacity: a2 }, String(css));
+      }
+      const m2 = /rgba?\(([^)]+)\)/.exec(String(css || ''));
+      if (!m2) return null;
+      const parts = m2[1].split(',').map(function (s) { return parseFloat(s); });
+      if (parts.length < 3 || parts.some(function (n) { return isNaN(n); })) return null;
+      const a = parts.length > 3 ? parts[3] : 1;
+      if (a === 0) return null;
+      return bindColorVar({ type: 'SOLID', color: { r: parts[0] / 255, g: parts[1] / 255, b: parts[2] / 255 }, opacity: a }, String(css));
+    }
+    function weightStyleFromCss(fw) {
+      const n = parseInt(fw, 10);
+      if (isNaN(n)) return String(fw).toLowerCase() === 'bold' ? 'Bold' : null;
+      if (n >= 700) return 'Bold';
+      if (n >= 600) return 'SemiBold';
+      if (n >= 500) return 'Medium';
+      if (n <= 300) return 'Light';
+      return null;
+    }
     const FAMILY_STYLES = {};
     for (const fnt of await figma.listAvailableFontsAsync()) {
       (FAMILY_STYLES[fnt.fontName.family] = FAMILY_STYLES[fnt.fontName.family] || []).push(fnt.fontName.style);
@@ -460,6 +528,32 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         loadedFonts.add(k);
       }
       return { family: FAMILY, style: real };
+    }
+    // PAGE-lane per-node font family (round 6): the measured family wins
+    // when the environment has it; every miss degrades through font() to
+    // the library FAMILY, never to a hard failure.
+    async function fontFam(family, style) {
+      if (!family || family === FAMILY) return font(style);
+      const styles = FAMILY_STYLES[family];
+      if (!styles) return font(style);
+      const real = styles.includes(style) ? style
+        : ((NEAR[style] || [style, 'Regular']).find(function (s) { return styles.includes(s); }) || (styles.includes('Regular') ? 'Regular' : styles[0]));
+      const k2 = family + '/' + real;
+      if (loadedFonts.has(k2)) return { family: family, style: real };
+      // BOUNDED load (round 6): loadFontAsync can HANG indefinitely for
+      // some family/style pairs (same async-hang class as
+      // importComponentByKeyAsync — the chips' rewrap font load ate the
+      // whole 30s bridge ceiling). Race a 3s timeout; a timeout falls back
+      // to the library family and is NAMED in misses, never silent.
+      try {
+        const ok = await Promise.race([
+          figma.loadFontAsync({ family: family, style: real }).then(function () { return true; }),
+          new Promise(function (res) { setTimeout(function () { res(false); }, 3000); }),
+        ]);
+        if (!ok) { misses.add('font-load-timeout:' + family + '/' + real); return font(style); }
+        loadedFonts.add(k2);
+        return { family: family, style: real };
+      } catch (e) { return font(style); }
     }
 
     // PAGE — scoped strictly to PAGE_NAME. Reuse if present; otherwise
@@ -715,7 +809,23 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         // the canvas. The whole subtree is skipped (Checkbox's Label=Hidden
         // case renders NO label, exactly like the app).
         if (child.box && child.box.w <= 2 && child.box.h <= 2) continue;
+        // RASTER-PREFERRED (footer round 3): an annotated subtree whose
+        // truth is a RASTER (the logo's svg wordmark) resolved to a set
+        // whose only face is a Text property — the instance rendered the
+        // master's literal "Logo". When the set has no multi-option VARIANT
+        // to switch to, the raster IS the better face: degrade to the frame
+        // path (the svg renders as an image fill), with a named miss.
+        let preferRaster = false;
         if (child.component && nestedSetByTag[child.component]) {
+          const set0 = nestedSetByTag[child.component];
+          const hasRaster = (function fR(n) { if (n.imgB64) return true; for (const c0 of (n.children || [])) { if (fR(c0)) return true; } return false; })(child);
+          if (hasRaster && set0.type === 'COMPONENT_SET') {
+            const defs0 = set0.componentPropertyDefinitions || {};
+            const multi = Object.keys(defs0).some(function (k0) { const d0 = defs0[k0]; return d0.type === 'VARIANT' && (d0.variantOptions || []).length > 1; });
+            if (!multi) { preferRaster = true; misses.add('nested-raster-preferred:' + child.component); }
+          }
+        }
+        if (!preferRaster && child.component && nestedSetByTag[child.component]) {
           // The nested component's own set, as a real INSTANCE — default
           // variant (per-state/per-variant nested switching is a refinement
           // the ops schema does not yet carry; see the degradation note).
@@ -726,6 +836,53 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           const inst = base.createInstance();
           inst.name = child.component;
           parent.appendChild(inst);
+          // FACT-DERIVED instance properties (2026-08-28, sl stress test T7).
+          // Two measured facts the walk already carries pick the right face
+          // for a nested instance instead of its set's default variant:
+          //   1. VARIANT-FROM-MODIFIER - the node's class list records the
+          //      nested component's own BEM modifiers (al-c-heading--display-lg)
+          //      and state classes (al-is-bold); each one whose Title Case is a
+          //      legal option of one of the set's VARIANT axes switches that
+          //      axis. Without this the hero's headline rendered as the 36px
+          //      Default instead of the 110px Display Lg the anatomy names.
+          //   2. TEXT-FROM-ANATOMY - the subtree's measured copy fills the
+          //      instance's TEXT property; the placeholder default only stands
+          //      when measurement captured no text.
+          // Applied BEFORE curation (NESTED_PROPS below), so explicit curation
+          // still wins on any key both speak to.
+          if (set.type === 'COMPONENT_SET') {
+            const derived = {};
+            const defs = set.componentPropertyDefinitions || {};
+            const toTitle = (s) => s.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            const mods = String(child.cls || '').split(/\s+/)
+              .map((c) => { const m = c.match(/^al-c-[a-z0-9-]+--([a-z0-9-]+)$/) || c.match(/^al-is-([a-z0-9-]+)$/) || c.match(/^sl-c-[a-z0-9-]+--([a-z0-9-]+)$/); return m ? m[1] : null; })
+              .filter(Boolean);
+            for (const mod of mods) {
+              const want = toTitle(mod);
+              for (const pname of Object.keys(defs)) {
+                const def = defs[pname];
+                if (def && def.type === 'VARIANT' && (def.variantOptions || []).includes(want)) { derived[pname.split('#')[0]] = want; break; }
+              }
+            }
+            const firstText = (function findText(n) {
+              if (n.text) return n.text;
+              for (const c of (n.children || [])) { const t = findText(c); if (t) return t; }
+              return null;
+            })(child);
+            if (firstText) {
+              const textDef = Object.keys(defs).find((k) => defs[k] && defs[k].type === 'TEXT');
+              if (textDef) derived[textDef.split('#')[0]] = firstText;
+            }
+            const appliedDerived = {};
+            for (const friendly of Object.keys(derived)) {
+              const key = resolveNestedPropKey(inst, friendly);
+              if (key) appliedDerived[key] = derived[friendly];
+            }
+            if (Object.keys(appliedDerived).length) {
+              try { inst.setProperties(appliedDerived); }
+              catch (e) { misses.add('derived-prop-set-failed:' + child.component + ':' + e.message); }
+            }
+          }
           // Switch the instance to its curated properties BEFORE anything else
           // touches it: setProperties on a variant property swaps the backing
           // component, which discards direct child edits made beforehand (and
@@ -809,6 +966,161 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
               }
             }
           }
+          // FILL for a nested INSTANCE whose measured facts say it fills
+          // (spec 2026-08-28-layout-fill-and-grow-facts): the same rules the
+          // coarse-frame path applies — flex-grow fills the parent's MAIN
+          // axis; cross-axis stretch (parent align-items, overridable by the
+          // child's own align-self, block-level gate for non-flex parents)
+          // fills the cross axis, only into a DEFINITE parent size. A nested
+          // al-input that fills its form row in the browser now fills it on
+          // canvas too. Everything else keeps its natural instance size —
+          // instances must never stretch by accident, and the icon branch
+          // below still forces FIXED onto measured icon boxes AFTER this.
+          if (child.layout) {
+            const pAlignI = node && node.layout ? node.layout.align : null;
+            const effI = child.layout.alignSelf || pAlignI;
+            const stretchesI = !effI || effI === 'normal' || effI === 'stretch';
+            const parentIsFlexI = !!(node && node.layout && (node.layout.display === 'flex' || node.layout.display === 'inline-flex'));
+            const childBlockLevelI = !child.layout.display || /^(block|flex|grid|table|list-item|flow-root)$/.test(child.layout.display);
+            if (child.layout.grow) {
+              try {
+                if (parent.layoutMode === 'HORIZONTAL') inst.layoutSizingHorizontal = 'FILL';
+                else if (parent.layoutMode === 'VERTICAL') inst.layoutSizingVertical = 'FILL';
+              } catch (e) { /* parent is not an auto-layout frame */ }
+            }
+            if (stretchesI && (parentIsFlexI || childBlockLevelI) && parent.layoutMode === 'VERTICAL') {
+              try {
+                const ps = parent.layoutSizingHorizontal;
+                if (ps === 'FIXED' || ps === 'FILL') inst.layoutSizingHorizontal = 'FILL';
+              } catch (e) { /* parent is not an auto-layout frame */ }
+            }
+            if (stretchesI && parentIsFlexI && parent.layoutMode === 'HORIZONTAL') {
+              try {
+                const ps = parent.layoutSizingVertical;
+                if (ps === 'FIXED' || ps === 'FILL') inst.layoutSizingVertical = 'FILL';
+              } catch (e) { /* parent is not an auto-layout frame */ }
+            }
+          }
+          // REWRAP an overflowing text-bearing nested instance (spec
+          // 2026-08-28-layout-fill-and-grow-facts; hero acceptance test). A
+          // TEXT property override re-renders at the master's own
+          // text-auto-resize (usually WIDTH_AND_HEIGHT), so long copy makes
+          // the instance run wide instead of wrapping the way the browser
+          // did (the hero headline measured 1160x220 wrapped; the instance
+          // rendered 1311px on one line and clipped). Verified live: an
+          // instance's inner TEXT nodes ARE writable once their fonts are
+          // loaded. Fires ONLY when the instance genuinely overflows its own
+          // measured box — an atom whose natural size already matches its
+          // measurement is untouched. Runs AFTER setProperties (text is
+          // already overridden) and BEFORE the icon branch (icons carry no
+          // TEXT, so they never enter here).
+          // UNCONDITIONAL conform (round 8): the mismatch trigger was
+          // fragile — ancestor sizing rules (the grid-child width) could
+          // make FILL succeed before this check, so the width matched and
+          // the wrap policy never ran (the lead collapsed to one clipped
+          // 1742px line). Conforming to the measured box and applying the
+          // wrap policy is idempotent truth, not a repair — run it for
+          // every text-bearing instance with a measured box.
+          if (child.box && child.box.w >= 1) {
+            const instTexts = [];
+            (function walkT(n) {
+              if (n.type === 'TEXT') instTexts.push(n);
+              if ('children' in n) for (const c of n.children) walkT(c);
+            })(inst);
+            if (instTexts.length) {
+              try {
+                // The MEASURED inner text node is the wrap authority (round
+                // 7 — owner: "the heading is supposed to break at Built"):
+                // the site constrains the heading text to 764px inside a
+                // 1264px container, so conforming the text to the INSTANCE
+                // width broke one word late. Its measured HEIGHT also tells
+                // us the line count — a single-line label (button, chip)
+                // must never wrap at all.
+                const innerMeas = (function fT(n) {
+                  if (n.text && n.box) return n;
+                  for (const c of (n.children || [])) { const r = fT(c); if (r) return r; }
+                  return null;
+                })(child);
+                for (const tnode of instTexts) {
+                  const fnts = tnode.getRangeAllFontNames(0, tnode.characters.length);
+                  for (const fnt of fnts) await figma.loadFontAsync(fnt);
+                  // Page-lane measured type metrics beat the variant's own
+                  // (see fsPx note in the text-leaf branch). Family/weight
+                  // too (round 6): a chip's mono label, a heading's page
+                  // family — fontFam degrades to the master's family on any
+                  // miss.
+                  if (child.ffCss || child.fwCss) {
+                    try { tnode.fontName = await fontFam(child.ffCss, weightStyleFromCss(child.fwCss) || 'Regular'); }
+                    catch (e2) { /* keep master font */ }
+                  }
+                  if (child.fsPx) tnode.fontSize = child.fsPx;
+                  if (child.lhPx) tnode.lineHeight = { unit: 'PIXELS', value: child.lhPx };
+                  // Adjusted instance texts join the end-of-run text-style
+                  // link pass (owner catch, round 10: the heading carried
+                  // literal 48px metrics with NO style binding — instance
+                  // inner texts never entered textNodes). Exact
+                  // family/style/size matching protects against binding a
+                  // style whose size the page clamps away.
+                  textNodes.push(tnode);
+                  const oneLine = innerMeas && innerMeas.box.h <= (child.fsPx ? child.fsPx * 1.9 : 40);
+                  if (oneLine) {
+                    // Single line in the browser -> never wrap here.
+                    tnode.textAutoResize = 'WIDTH_AND_HEIGHT';
+                  } else {
+                    // Multi-line: HEIGHT + FILL; the WRAP WIDTH is imposed
+                    // by resizing the INSTANCE below — an instance's inner
+                    // text node cannot be resized directly (silently locked,
+                    // same restriction class as nested-instance geometry;
+                    // the direct-resize attempt left the headline at the
+                    // master's 420px, centered).
+                    tnode.textAutoResize = 'HEIGHT';
+                    try { tnode.layoutSizingHorizontal = 'FILL'; } catch (e) { /* not an auto-layout child */ }
+                  }
+                }
+                // Conform the instance to the measured TEXT width for
+                // multi-line content (round 7 — the site breaks the heading
+                // at 764px inside a 1264px container; conforming to the
+                // container broke one word late), else the node's own box.
+                const oneLineInst = innerMeas && innerMeas.box.h <= (child.fsPx ? child.fsPx * 1.9 : 40);
+                const wantInstW = (!oneLineInst && innerMeas && innerMeas.box.w >= 8)
+                  ? Math.min(innerMeas.box.w, child.box.w)
+                  : child.box.w;
+                inst.resize(wantInstW, inst.height);
+              } catch (e) { misses.add('nested-text-rewrap-failed:' + child.component + ':' + e.message); }
+            }
+          }
+          // INSTANCE STYLE DIVERGENCE (page lane; user-reported on chips —
+          // learnings note 2026-08-28 #5): a page may restyle a component
+          // instance (.sl-token-chip over al-chip), which the stock set
+          // cannot show. Measured literal styles override the instance's own
+          // face: root fill/stroke/radii, and text color recolored on TEXT
+          // descendants only — never a nested instance's own root paint (the
+          // Phosphor negative-space rule, generalized). Fields exist only on
+          // snippet pseudo-contracts, so library composites are untouched.
+          if (child.bgCss || child.bcCss || child.fcCss || child.radPx) {
+            try {
+              if (child.bgCss) { const lp = cssSolid(child.bgCss); if (lp) inst.fills = [lp]; }
+              if (child.bcCss && child.bwPx > 0) {
+                const sp = cssSolid(child.bcCss);
+                if (sp) { inst.strokes = [sp]; inst.strokeAlign = 'INSIDE'; inst.strokeWeight = child.bwPx; }
+              }
+              if (child.radPx) {
+                inst.topLeftRadius = child.radPx[0]; inst.topRightRadius = child.radPx[1];
+                inst.bottomRightRadius = child.radPx[2]; inst.bottomLeftRadius = child.radPx[3];
+              }
+              if (child.fcCss) {
+                const fp = cssSolid(child.fcCss);
+                if (fp) {
+                  (function recolorTexts(n) {
+                    for (const c of (n.children || [])) {
+                      if (c.type === 'TEXT') { try { c.fills = [fp]; } catch (e2) { /* locked/uneditable */ } }
+                      if (c.type !== 'INSTANCE' && 'children' in c) recolorTexts(c);
+                    }
+                  })(inst);
+                }
+              }
+            } catch (e) { misses.add('instance-style-override-failed:' + child.component); }
+          }
           // Nested-icon glyph (chip's ALIconClose -> Phosphor 'x'): swap the
           // wrapper's nested instance, size to the MEASURED box, recolor to
           // the inherited (variant-aware) content color — same swap/recolor
@@ -890,7 +1202,11 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           tn.fontSize = LABEL_FONT_SIZE;
           parent.appendChild(tn);
           const ownColorL = t['color'] && t['color'] !== caseRootColor ? t['color'] : null;
-          const paint = await boundSolid(ownColorL || nodeColor);
+          // Fallback face: with NO measured color anywhere up the chain the
+          // text kept createText's literal black, which is invisible on a
+          // dark sheet and never re-resolves with the theme mode. Content
+          // text is content/default by definition (2026-08-28, sl T7).
+          const paint = await boundSolid(ownColorL || nodeColor || 'theme/color/content/default');
           if (paint) tn.fills = [paint];
           textNodes.push(tn);
           continue;
@@ -903,26 +1219,100 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         const isTextLeaf = !(child.children || []).length && !child.component && (child.text || t['color']);
         if (isTextLeaf) {
           const tn = figma.createText();
+          // PAGE-lane texts are ALL literal — a section is not a
+          // parameterized component, and the Text-property wiring stamps its
+          // default over whichever 'Label' it picks (it took the footer's
+          // quote, then the cite, in successive rounds). Literal: names are
+          // never wired (trap 7's convention).
           tn.name = 'Label';
-          tn.fontName = await font(styleFromWeightVar(t['font-weight']) || 'Regular');
+          // Weight: token first, then the page-lane measured font-weight
+          // literal (the lead rendered Bold when the site says 400 — hero
+          // round 4). Family: the measured per-node family (round 6 — the
+          // site mixes Plex Sans/Mono; the masters' single display family
+          // was wrong for kicker, lead, chips and terminal alike).
+          tn.fontName = await fontFam(child.ffCss, styleFromWeightVar(t['font-weight']) || weightStyleFromCss(child.fwCss) || 'Regular');
           const textProp = OPS.componentProperties.find((p) => p.name === 'Text');
           tn.characters = child.text || (textProp && textProp.default) || 'Label';
+          if (OPS.anatomySource === 'measured-page') tn.name = 'Literal: ' + String(tn.characters).slice(0, 24);
           tn.fontSize = LABEL_FONT_SIZE;
-          parent.appendChild(tn);
+          // PAGE-lane literal type metrics (hero learnings note 2026-08-28):
+          // generate-snippet attaches the measured USED font-size/line-height
+          // as fsPx/lhPx — a page legally overrides component type with
+          // clamp()/local CSS, so the measured value outranks the label
+          // default (and the token, which reports the authored var, not the
+          // clamped used size). Absent on library contracts: no-op there.
+          if (child.fsPx) tn.fontSize = child.fsPx;
+          if (child.lhPx) tn.lineHeight = { unit: 'PIXELS', value: child.lhPx };
+          // PADDING WRAPPER (round 8 — the terminal body's 20/24 padding):
+          // a text leaf emitted as bare TEXT loses its padding box. Real
+          // measured padding gets a transparent auto-layout wrapper that
+          // carries the padding (and the leaf's own bg tint), and the FILL
+          // treatment moves to the wrapper.
+          const leafPad = (child.padPx && child.padPx.some(function (p) { return p > 1; }) ? child.padPx : null)
+            // Recovered margins ride the same wrapper (round 9): trailing
+            // padding on a transparent hug box spaces siblings exactly like
+            // the margin did (the kicker's margin-bottom: 20).
+            || (child.mbPx || child.mrPx ? [0, 0, 0, 0] : null);
+          let holder = parent;
+          if (leafPad) {
+            const wrapF = figma.createFrame();
+            wrapF.name = child.cls ? String(child.cls).split(/\s+/)[0] : child.tag;
+            parent.appendChild(wrapF);
+            wrapF.fills = [];
+            wrapF.layoutMode = 'VERTICAL';
+            wrapF.primaryAxisSizingMode = 'AUTO';
+            wrapF.counterAxisSizingMode = 'AUTO';
+            wrapF.paddingTop = leafPad[0]; wrapF.paddingRight = leafPad[1] + (child.mrPx || 0);
+            wrapF.paddingBottom = leafPad[2] + (child.mbPx || 0); wrapF.paddingLeft = leafPad[3];
+            if (child.bgCss) { const bp = cssSolid(child.bgCss); if (bp) wrapF.fills = [bp]; }
+            try {
+              const psw = parent.layoutSizingHorizontal;
+              if (parent.layoutMode === 'VERTICAL' && (psw === 'FIXED' || psw === 'FILL')) wrapF.layoutSizingHorizontal = 'FILL';
+            } catch (e) { /* not an auto-layout child */ }
+            holder = wrapF;
+          }
+          holder.appendChild(tn);
           // Inside a parent with a DEFINITE width, a text leaf must WRAP to
           // that width rather than dictate it. Left auto-sizing, a sentence
           // renders as one very long line and overflows every ancestor - the
           // banner's message did exactly that at 581px inside a 528px row.
           try {
-            const ps = parent.layoutSizingHorizontal;
-            if (ps === 'FIXED' || ps === 'FILL') {
+            const ps = holder.layoutSizingHorizontal;
+            if (ps === 'FIXED' || ps === 'FILL' || (holder !== parent && holder.layoutMode === 'VERTICAL' && holder.layoutSizingHorizontal === 'FILL')) {
               tn.textAutoResize = 'HEIGHT';
               tn.layoutSizingHorizontal = 'FILL';
             }
           } catch (e) { /* not an auto-layout child */ }
           const ownColor = t['color'] && t['color'] !== caseRootColor ? t['color'] : null;
-          const paint = await boundSolid(ownColor || nodeColor);
+          // Token first; then the page-lane measured color literal; the
+          // theme content/default fallback only when neither exists.
+          const paint = await boundSolid(ownColor || nodeColor || (child.fcCss ? null : 'theme/color/content/default'));
           if (paint) tn.fills = [paint];
+          else if (child.fcCss) { const lp = cssSolid(child.fcCss); if (lp) tn.fills = [lp]; }
+          // COLORED RUNS (round 7 — the terminal's green ticks / red
+          // prompt): per-range fills measured by the preformatted-block
+          // branch, applied over the base fill. Out-of-range runs are
+          // skipped, never a throw.
+          if (child.runs && child.runs.length) {
+            for (const run of child.runs) {
+              const rp = cssSolid(run.color);
+              // measure-lib emits {start, end, color} — NOT offset/length
+              // (round 8: the offset/length reader matched nothing, so no
+              // run color ever applied and the terminal body stayed
+              // single-color).
+              const rs = run.start;
+              const re2 = run.end;
+              if (rp && typeof rs === 'number' && typeof re2 === 'number' && re2 > rs && rs >= 0 && re2 <= tn.characters.length) {
+                try { tn.setRangeFills(rs, re2, [rp]); } catch (e3) { /* range straddles style boundary */ }
+              }
+            }
+          }
+          // MARGIN-AUTO child (round 7 — the terminal title at the bar's far
+          // end): expressed as an absolute child at its measured offset.
+          if (child.absPos) {
+            try { tn.layoutPositioning = 'ABSOLUTE'; tn.x = child.absPos.x; tn.y = child.absPos.y; }
+            catch (e4) { misses.add('snippet-abs-pos-failed:Label'); }
+          }
           bindNum(tn, 'opacity', t['opacity']);
           textNodes.push(tn);
           continue;
@@ -937,7 +1327,14 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           // border-top-color with no plain border-color (Checkbox's Off box).
           const glyphBorderColor = t['border-color'] || t['border-top-color'];
           const glyphBorderWidth = t['border-width'] || t['border-top-width'];
-          const hasPaint = t['background-color'] || glyphBorderColor;
+          // Page-lane literal paints count here too (hero round 4): a
+          // rasterised texture/murmur overlay or a literal-styled surface is
+          // a childless leaf with EMPTY tokens — the token-only hasPaint
+          // check silently skipped (continue) both hero background layers
+          // (found by walk-trace instrumentation; nothing downstream ever
+          // saw them). NOTE: no backticks in comments here — trap 3.
+          const hasPaint = t['background-color'] || glyphBorderColor
+            || child.imgB64 || child.gridTex || child.bgCss || (child.bcCss && child.bwPx > 0);
           const bw = child.box ? child.box.w : 0;
           const bh = child.box ? child.box.h : 0;
           if (!hasPaint || bw < 1 || bh < 1) {
@@ -949,12 +1346,72 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           parent.appendChild(g);
           g.fills = [];
           g.resize(bw, bh);
+          // ABSOLUTE OVERLAY (texture/murmur — same rule as the container
+          // branch): measured offset, document order preserves z-order.
+          if (child.absPos) {
+            try { g.layoutPositioning = 'ABSOLUTE'; g.x = child.absPos.x; g.y = child.absPos.y; }
+            catch (e) { misses.add('snippet-abs-pos-failed:' + g.name); }
+          }
           { const p2 = await boundSolid(t['background-color']); if (p2) g.fills = [p2]; }
+          if (!t['background-color'] && child.bgCss) { const lp = cssSolid(child.bgCss); if (lp) g.fills = [lp]; }
+          // NATIVE GRID TEXTURE (round 6, owner principle: CSS-described
+          // paint becomes VECTORS, raster is last resort): hairline
+          // rectangles at the parsed pitch — crisp at any zoom,
+          // recolorable, and structurally immune to the raster-contamination
+          // class. Wins over imgB64 (generate-snippet already withholds the
+          // raster when gridTex parsed).
+          if (child.gridTex) {
+            const gt = child.gridTex;
+            const lineP = cssSolid(gt.color);
+            if (lineP) {
+              if (gt.vertical && gt.pitchX >= 4) {
+                for (let gx = 0; gx <= bw; gx += gt.pitchX) {
+                  const r = figma.createRectangle();
+                  r.name = 'grid-v';
+                  r.resize(1, Math.max(bh, 1));
+                  r.fills = [lineP];
+                  g.appendChild(r);
+                  r.x = gx; r.y = 0;
+                }
+              }
+              if (gt.horizontal && gt.pitchY >= 4) {
+                for (let gy = 0; gy <= bh; gy += gt.pitchY) {
+                  const r = figma.createRectangle();
+                  r.name = 'grid-h';
+                  r.resize(Math.max(bw, 1), 1);
+                  r.fills = [lineP];
+                  g.appendChild(r);
+                  r.x = 0; r.y = gy;
+                }
+              }
+            }
+          } else if (child.imgB64) {
+            try {
+              const img = figma.createImage(figma.base64Decode(child.imgB64));
+              g.fills = [{ type: 'IMAGE', scaleMode: 'FILL', imageHash: img.hash }];
+            } catch (e) { misses.add('snippet-image-fill-failed:' + g.name); }
+          }
           const radiusVar2 = t['border-radius'] || t['border-top-left-radius'];
           if (radiusVar2) for (const fld of ['topLeftRadius', 'topRightRadius', 'bottomRightRadius', 'bottomLeftRadius']) bindNum(g, fld, radiusVar2);
+          else if (child.radPx) {
+            g.topLeftRadius = child.radPx[0]; g.topRightRadius = child.radPx[1];
+            g.bottomRightRadius = child.radPx[2]; g.bottomLeftRadius = child.radPx[3];
+          }
           if (glyphBorderColor) {
             const sp = await boundSolid(glyphBorderColor);
             if (sp) { g.strokes = [sp]; g.strokeAlign = 'INSIDE'; g.strokeWeight = 2; bindNum(g, 'strokeWeight', glyphBorderWidth); }
+          } else if (child.bcCss && child.bwPx > 0) {
+            const sp2 = cssSolid(child.bcCss);
+            if (sp2) {
+              g.strokes = [sp2];
+              g.strokeAlign = 'INSIDE';
+              if (child.bw4) {
+                try {
+                  g.strokeTopWeight = child.bw4[0]; g.strokeRightWeight = child.bw4[1];
+                  g.strokeBottomWeight = child.bw4[2]; g.strokeLeftWeight = child.bw4[3];
+                } catch (e) { g.strokeWeight = child.bwPx; }
+              } else g.strokeWeight = child.bwPx;
+            }
           }
           bindNum(g, 'opacity', t['opacity']);
           // Curated glyph vector (check / indeterminate dash — copied from
@@ -1003,7 +1460,11 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           }
           continue;
         }
-        const hasContent = (child.children || []).length || Object.keys(t).length || child.component;
+        const hasContent = (child.children || []).length || Object.keys(t).length || child.component
+          // Page-lane literal paints count as content: a raster overlay
+          // (texture/murmur) or a literal-styled surface has no token yet
+          // absolutely must build (hero round 4).
+          || child.imgB64 || child.bgCss || child.bcCss;
         if (!hasContent) continue; // bare structural leaf (ripple spans etc.) — nothing canvas-expressible to build
         const f = figma.createFrame();
         // An annotated child whose set did not resolve renders as a coarse
@@ -1012,6 +1473,20 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         f.name = child.component ? child.component + ' (set unresolved)' : (child.cls ? String(child.cls).split(/\s+/)[0] : child.tag);
         parent.appendChild(f);
         f.fills = [];
+        // ABSOLUTE OVERLAY (page lane; hero round 4): the hero's texture and
+        // murmur layers are position:absolute stacked BEHIND the content.
+        // Auto layout would stack them as flow siblings; layoutPositioning
+        // ABSOLUTE keeps them as overlays at their measured offset, sized to
+        // their measured box (resize's both-axes-FIXED side effect is exactly
+        // right for an overlay). Document order preserves z-order.
+        if (child.absPos && child.box) {
+          try {
+            f.layoutPositioning = 'ABSOLUTE';
+            f.x = child.absPos.x;
+            f.y = child.absPos.y;
+            f.resize(Math.max(child.box.w, 1), Math.max(child.box.h, 1));
+          } catch (e) { misses.add('snippet-abs-pos-failed:' + f.name); }
+        }
         const isFlex = !!(child.layout && (child.layout.display === 'flex' || child.layout.display === 'inline-flex'));
         // Axis comes from 'display', NOT from 'direction' — see layoutAxisFor.
         // Reading 'direction' unconditionally forced HORIZONTAL onto every
@@ -1027,12 +1502,30 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         if (f.layoutMode === 'HORIZONTAL' && layoutWrapsFor(child.layout)) {
           try { f.layoutWrap = 'WRAP'; } catch (e) { /* older plugin API */ }
         }
-        if (isFlex) {
+        // INLINE FLOW (footer round 5): a block box whose children are all
+        // inline-level flows HORIZONTALLY, roughly text-axis centered.
+        if (child.inlineFlow) { f.layoutMode = 'HORIZONTAL'; f.counterAxisAlignItems = 'CENTER'; }
+        // align-items/justify-content are real facts for GRID too (round 8
+        // — the hero's two-column grid uses align-items flex-end, which is
+        // what bottom-aligns the terminal aside). No backticks here: trap 3.
+        if (isFlex || child.layout.display === 'grid') {
           f.counterAxisAlignItems = child.layout.align === 'center' ? 'CENTER' : child.layout.align === 'flex-end' ? 'MAX' : 'MIN';
           f.primaryAxisAlignItems = child.layout.justify === 'center' ? 'CENTER' : child.layout.justify === 'flex-end' ? 'MAX' : child.layout.justify === 'space-between' ? 'SPACE_BETWEEN' : 'MIN';
         }
         f.primaryAxisSizingMode = 'AUTO';
         f.counterAxisSizingMode = 'AUTO';
+        // WRAP CONTAINER WIDTH (round 7 — owner: "the multiple chip
+        // container should have a max width bc it wraps the 3rd one"): a
+        // wrapping row that HUGS its width can never actually wrap — its
+        // measured box IS the wrap width. Fixed width, height keeps
+        // hugging so rows can grow.
+        if (f.layoutMode === 'HORIZONTAL' && layoutWrapsFor(child.layout) && child.box && child.box.w >= 8) {
+          try {
+            f.resize(child.box.w, Math.max(f.height, 1));
+            f.primaryAxisSizingMode = 'FIXED';
+            f.counterAxisSizingMode = 'AUTO';
+          } catch (e) { /* keep hug */ }
+        }
         // FILL, from the node's OWN measured flex-grow. This is a real
         // contract fact now (measure-lib records flex-grow when non-zero), not
         // a width heuristic: a growing child fills its parent's MAIN axis,
@@ -1053,23 +1546,104 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         // hugging parent is circular, and hug stays the right default for the
         // cards and chips that make up most of the library.
         {
+          // Three refinements (spec 2026-08-28-layout-fill-and-grow-facts):
+          //   1. The child's own align-self override wins over the parent's
+          //      align-items — a child that opts out of stretch must not FILL.
+          //   2. Block-level gate: in a BLOCK (non-flex) vertical parent only
+          //      block-level children fill the inline size; an inline-flex
+          //      chip in a card must keep hugging. Flex items are blockified,
+          //      so a flex parent stretches regardless of the child's display.
+          //   3. HORIZONTAL flex rows stretch their children's HEIGHT under
+          //      the default align-items (the equal-height-row case) — same
+          //      definite-parent-size circularity rule as the vertical case.
           const pAlign = node && node.layout ? node.layout.align : null;
-          const stretches = !pAlign || pAlign === 'normal' || pAlign === 'stretch';
-          if (stretches && parent.layoutMode === 'VERTICAL') {
+          const selfAlign = child.layout ? child.layout.alignSelf : null;
+          const eff = selfAlign || pAlign;
+          const stretches = !eff || eff === 'normal' || eff === 'stretch';
+          const parentIsFlex = !!(node && node.layout && (node.layout.display === 'flex' || node.layout.display === 'inline-flex'));
+          const childDisplay = child.layout ? child.layout.display : null;
+          const childBlockLevel = !childDisplay || /^(block|flex|grid|table|list-item|flow-root)$/.test(childDisplay);
+          if (stretches && (parentIsFlex || childBlockLevel) && parent.layoutMode === 'VERTICAL') {
             try {
               const ps = parent.layoutSizingHorizontal;
               if (ps === 'FIXED' || ps === 'FILL') f.layoutSizingHorizontal = 'FILL';
             } catch (e) { /* parent is not an auto-layout frame */ }
           }
+          if (stretches && parentIsFlex && parent.layoutMode === 'HORIZONTAL') {
+            try {
+              const ps = parent.layoutSizingVertical;
+              if (ps === 'FIXED' || ps === 'FILL') f.layoutSizingVertical = 'FILL';
+            } catch (e) { /* parent is not an auto-layout frame */ }
+          }
         }
         { const p = await boundSolid(t['background-color']); if (p) f.fills = [p]; }
+        // PAGE-lane literal fills (token always wins): measured used
+        // background color, and a rasterised replaced element (canvas /
+        // bgImage lattice) as an IMAGE fill — this is what brings the hero's
+        // grid texture and murmur glyph field back.
+        if (!t['background-color'] && child.bgCss) { const lp = cssSolid(child.bgCss); if (lp) f.fills = [lp]; }
+        if (child.imgB64) {
+          try {
+            const img = figma.createImage(figma.base64Decode(child.imgB64));
+            f.fills = [{ type: 'IMAGE', scaleMode: 'FILL', imageHash: img.hash }];
+          } catch (e) { misses.add('snippet-image-fill-failed:' + f.name); }
+        }
         bindNum(f, 'itemSpacing', t['column-gap'] || t['gap']);
         bindNum(f, 'paddingTop', t['padding-top'] || t['padding']);
         bindNum(f, 'paddingBottom', t['padding-bottom'] || t['padding']);
         bindNum(f, 'paddingLeft', t['padding-left'] || t['padding']);
         bindNum(f, 'paddingRight', t['padding-right'] || t['padding']);
+        // PAGE-lane literal spacing fallbacks (padPx=[t,r,b,l], gapPx —
+        // attached by generate-snippet; hero learnings note 2026-08-28):
+        // measured used paddings/gaps for spacing authored with no token.
+        // A token binding above always wins, per side.
+        if (child.padPx) {
+          if (!t['padding-top'] && !t['padding'] && child.padPx[0] > 0) f.paddingTop = child.padPx[0];
+          if (!t['padding-bottom'] && !t['padding'] && child.padPx[2] > 0) f.paddingBottom = child.padPx[2];
+          if (!t['padding-left'] && !t['padding'] && child.padPx[3] > 0) f.paddingLeft = child.padPx[3];
+          if (!t['padding-right'] && !t['padding'] && child.padPx[1] > 0) f.paddingRight = child.padPx[1];
+        }
+        if (child.gapPx && !t['column-gap'] && !t['gap']) f.itemSpacing = child.gapPx;
+        // Recovered trailing margins (round 9): extra space AFTER this box,
+        // expressed as its own trailing padding (transparent hug frame —
+        // visually identical to the margin it recovers).
+        if (child.mbPx) f.paddingBottom = (f.paddingBottom || 0) + child.mbPx;
+        if (child.mrPx) f.paddingRight = (f.paddingRight || 0) + child.mrPx;
+        // WRAP ROW GAP (round 8 - the chip rows touched): CSS gap sets
+        // BOTH axes; Figma's cross-axis wrap spacing is its own property.
+        if (f.layoutMode === 'HORIZONTAL' && layoutWrapsFor(child.layout)) {
+          try { f.counterAxisSpacing = f.itemSpacing; } catch (e) { /* wrap unsupported */ }
+        }
+        // GRID CHILDREN own their measured TRACK width (round 8 — the
+        // terminal aside hugged away its right-column width): grid tracks
+        // are definite by layout; the child's measured box IS its slot.
+        if (node && node.layout && node.layout.display === 'grid' && child.box && child.box.w >= 8) {
+          try {
+            f.resize(child.box.w, Math.max(f.height, 1));
+            f.layoutSizingVertical = 'HUG';
+          } catch (e) { /* keep hug */ }
+        }
+        // GRID GUTTER CENTERING — v1 of the grid-track gap (fill-facts spec
+        // T10; hero learnings note 2026-08-28). grid→HORIZONTAL carries no
+        // track sizes, so a constrained layout's fluid outer gutters vanish
+        // and content sits 88px left of truth. With exactly ONE buildable
+        // child and measured boxes on both, the gutters are recoverable as
+        // literal symmetric padding. Token-bound padding (bindNum above)
+        // wins; sub-pixel gutters are noise, not padding.
+        if (child.layout && child.layout.display === 'grid' && !t['padding-left'] && !t['padding'] && child.box && child.box.w > 1) {
+          const gridKids = (child.children || []).filter((k) => k.box && !(k.box.w <= 2 && k.box.h <= 2));
+          if (gridKids.length === 1 && gridKids[0].box.w < child.box.w) {
+            const gpad = Math.round((child.box.w - gridKids[0].box.w) / 2);
+            if (gpad > 1) { f.paddingLeft = gpad; f.paddingRight = gpad; }
+          }
+        }
         const radiusVar = t['border-radius'] || t['border-top-left-radius'];
         if (radiusVar) for (const fld of ['topLeftRadius', 'topRightRadius', 'bottomRightRadius', 'bottomLeftRadius']) bindNum(f, fld, radiusVar);
+        else if (child.radPx) {
+          // Page-lane literal radii [tl,tr,br,bl] when no token matched.
+          f.topLeftRadius = child.radPx[0]; f.topRightRadius = child.radPx[1];
+          f.bottomRightRadius = child.radPx[2]; f.bottomLeftRadius = child.radPx[3];
+        }
         if (t['border-color']) {
           const strokePaint = await boundSolid(t['border-color']);
           if (strokePaint) {
@@ -1077,9 +1651,56 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
             f.strokeAlign = 'INSIDE';
             bindNum(f, 'strokeWeight', t['border-width']);
           }
+        } else if (child.bcCss && child.bwPx > 0) {
+          // Page-lane literal border (the terminal card's chrome). PER-SIDE
+          // weights when measured (footer round 3): a divider is border-top
+          // only — a single strokeWeight boxed the quote and legal rows.
+          const sp = cssSolid(child.bcCss);
+          if (sp) {
+            f.strokes = [sp];
+            f.strokeAlign = 'INSIDE';
+            if (child.bw4) {
+              try {
+                f.strokeTopWeight = child.bw4[0]; f.strokeRightWeight = child.bw4[1];
+                f.strokeBottomWeight = child.bw4[2]; f.strokeLeftWeight = child.bw4[3];
+              } catch (e) { f.strokeWeight = child.bwPx; }
+            } else f.strokeWeight = child.bwPx;
+          }
         }
         bindNum(f, 'opacity', t['opacity']);
+        // MIXED CONTENT (footer round 3): a frame node carries its OWN text
+        // beside element children (blockquote copy + cite; chip dot +
+        // label). Emit that text as a real TEXT child — a leading tiny
+        // glyph (a chip's <=12px dot) stays first, otherwise the text leads.
+        const mixedText = child.text && (child.children || []).length ? child.text : null;
+        const emitOwnText = async () => {
+          if (!mixedText) return;
+          const tn2 = figma.createText();
+          // Literal:-prefixed names are NEVER wired to the Text component
+          // property (trap 7's own convention) — named 'Label', this node
+          // got wired and the property default stamped the footer's
+          // description over the MLK quote.
+          tn2.name = 'Literal: ' + String(mixedText).slice(0, 24);
+          tn2.fontName = await fontFam(child.ffCss, styleFromWeightVar(t['font-weight']) || weightStyleFromCss(child.fwCss) || 'Regular');
+          tn2.characters = mixedText;
+          tn2.fontSize = LABEL_FONT_SIZE;
+          if (child.fsPx) tn2.fontSize = child.fsPx;
+          if (child.lhPx) tn2.lineHeight = { unit: 'PIXELS', value: child.lhPx };
+          f.appendChild(tn2);
+          try {
+            const psm = f.layoutSizingHorizontal;
+            if (f.layoutMode === 'VERTICAL' && (psm === 'FIXED' || psm === 'FILL')) { tn2.textAutoResize = 'HEIGHT'; tn2.layoutSizingHorizontal = 'FILL'; }
+          } catch (e) { /* not sizable */ }
+          const p3 = await boundSolid(t['color'] || null);
+          if (p3) tn2.fills = [p3];
+          else if (child.fcCss) { const lp3 = cssSolid(child.fcCss); if (lp3) tn2.fills = [lp3]; }
+          textNodes.push(tn2);
+        };
+        const firstKid = (child.children || [])[0];
+        const tinyFirstKid = firstKid && firstKid.box && firstKid.box.w <= 12 && firstKid.box.h <= 12;
+        if (!tinyFirstKid) await emitOwnText();
         await buildAnatomyChildren(child, f, state, childPath, nodeColor, axisValues, caseRootColor, iconCursor, propsCursor);
+        if (tinyFirstKid) await emitOwnText();
         // A container whose children ALL got skipped (paintless inputs,
         // CSS-drawn thumbs, 0-box ripples) is really a glyph: a childless
         // hug frame keeps Figma's 100x100 createFrame default (the Toggle
@@ -1177,6 +1798,17 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
       bindNum(comp, 'paddingBottom', tokens['padding-bottom'] || tokens['padding'] || vrootTokens['padding-bottom'] || vrootTokens['padding']);
       bindNum(comp, 'paddingLeft', tokens['padding-left'] || tokens['padding'] || vrootTokens['padding-left'] || vrootTokens['padding']);
       bindNum(comp, 'paddingRight', tokens['padding-right'] || tokens['padding'] || vrootTokens['padding-right'] || vrootTokens['padding']);
+      // PAGE-lane literal spacing fallbacks on the ROOT (padPx/gapPx — same
+      // rule as the child-frame site; a token binding above always wins).
+      // The hero's own 128px clamp() top padding lives here.
+      if (vroot && vroot.padPx) {
+        const noPad = (side) => !tokens[side] && !tokens['padding'] && !vrootTokens[side] && !vrootTokens['padding'];
+        if (noPad('padding-top') && vroot.padPx[0] > 0) comp.paddingTop = vroot.padPx[0];
+        if (noPad('padding-bottom') && vroot.padPx[2] > 0) comp.paddingBottom = vroot.padPx[2];
+        if (noPad('padding-left') && vroot.padPx[3] > 0) comp.paddingLeft = vroot.padPx[3];
+        if (noPad('padding-right') && vroot.padPx[1] > 0) comp.paddingRight = vroot.padPx[1];
+      }
+      if (vroot && vroot.gapPx && !tokens['column-gap'] && !tokens['gap'] && !vrootTokens['column-gap'] && !vrootTokens['gap']) comp.itemSpacing = vroot.gapPx;
 
       // T18: tokens is this ROW's resolved facts — anatomy root overridden by
       // conditionalBindings.variant[<variant>] then a state delta (compound
@@ -1211,7 +1843,11 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
       // Variant/State row; see component-config.mjs's iconSizeVar notes for
       // the one place this deliberately does NOT follow a per-variant
       // contract fact).
-      const contentPaint = await boundSolid(tokens['color']);
+      // content/default fallback, same as the walk path's text branches: a
+      // row with NO measured color token otherwise leaves the label at
+      // createText's literal black, which never re-resolves with theme mode
+      // (2026-08-28, sl T7 — text-block's lead was invisible on dark sheets).
+      const contentPaint = await boundSolid(tokens['color'] || 'theme/color/content/default');
 
       // Icon Before (leading) — appended FIRST so it sits before the label in
       // the auto-layout's row order. T23: visibility is STATIC per this
@@ -1631,6 +2267,18 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
     // Best-effort text-style linkage — scoped to just the text nodes THIS
     // run created (see plugin-snippets.mjs's linkTextStyles).
     const linked = await linkTextStyles(textNodes);
+    // Page-lane runs REPORT every text node that ends the run with no style
+    // binding (owner catch, round 10): what the eye caught on the heading
+    // becomes a named miss on every run.
+    if (OPS.anatomySource === 'measured-page') {
+      for (const t2 of textNodes) {
+        try {
+          if (!t2.textStyleId && t2.fontName !== figma.mixed) {
+            misses.add('text-style-unlinked:' + t2.fontName.family + '/' + t2.fontName.style + '/' + Math.round(t2.fontSize));
+          }
+        } catch (e) { /* mixed-font node */ }
+      }
+    }
 
     return JSON.stringify({
       page: page.name,

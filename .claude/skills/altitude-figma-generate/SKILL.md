@@ -126,28 +126,40 @@ for EVERY root, not just flex ones. Only `counterAxisAlignItems`/`primaryAxisAli
 stay flex-gated, because `align`/`justify` are flexbox properties that carry meaningless
 initial values (`normal`) on a non-flex box.
 
-### Hug vs fill — the generator's known blind spot
+### Hug vs fill — SOLVED as measured facts + a cascade (2026-08-28)
 
-The generator sets `primaryAxisSizingMode`/`counterAxisSizingMode` to `'AUTO'` (hug) on
-every frame it creates and **never sets `layoutSizing* = 'FILL'` on component anatomy.**
-It cannot infer fill: a contract carries no pixel geometry for containers, and
-`resize()` is deliberately never called on components (it sets BOTH axes FIXED as a
-side effect — the ordering trap in the external Sizing Modes reference).
+Hug (`'AUTO'` both axes) is still the DEFAULT, but the generator now emits
+`layoutSizing* = 'FILL'` wherever a measured fact backs it (commit 82579fe + spec
+2026-08-28-layout-fill-and-grow-facts). The rules, all in `buildAnatomyChildren`:
 
-This is exactly the defect the Figma MCP server flags as a top recurring issue —
-*"elements using hug contents instead of fill container (causes lopsided layouts)"*.
-So: **when a generated set looks lopsided, suspect hug before you suspect anything
-else**, and fix it as a generic rule or as curation, never by hand-editing the canvas.
+- **`grow`** (measured `flex-grow`, nulled at 0) → FILL along the PARENT's main axis.
+- **Cross-axis stretch cascade**: a child fills a VERTICAL parent's width when the
+  effective alignment stretches (parent `align`, overridden by the child's own
+  measured **`alignSelf`**, nulled at `auto`/`normal`) AND the child is block-level
+  (or the parent is real flex — flex items are blockified; an inline-flex chip in a
+  block parent keeps hugging) AND the parent's width is DEFINITE (`FIXED`/`FILL` —
+  fill-inside-hug is circular). HORIZONTAL **flex** rows do the same for height.
+- **Roots** get FIXED width from measured geometry, which is what the cascade fills
+  against; full-bleed organisms pin it with `rootWidth: true` in `figma.gen.json`.
+- **Nested INSTANCES** follow the same grow/stretch rules (previously always natural
+  size), and a text-bearing instance that still overflows its measured box gets the
+  REWRAP treatment: fonts loaded, inner TEXT `textAutoResize='HEIGHT'` + FILL, then
+  the instance resized to its measured `box.w`. Verified on the Southleft hero —
+  the Display Lg headline renders 1160x220 wrapped, byte-matching the browser
+  measurement. (Instance inner TEXT nodes ARE writable once fonts are loaded —
+  unlike nested-instance geometry.)
 
-A CSS fact that MEANS fill, and currently reaches Figma as hug:
-- `flex: 1` / `flex-grow: 1` on a child — no contract fact captures it today
-- `width: 100%` on a child of a flex row
-- `align-items: stretch` on the container (collapses to `MIN`, 3 nodes)
+**Known remaining gap: grids.** `display:grid` maps to HORIZONTAL+WRAP, which has no
+track widths, so the fill cascade CANNOT propagate through a grid container (e.g.
+`al-c-layout--constrained`, `--grid`). Children below a grid hug until a
+track-mapping fact exists (spec T10). When a generated set still looks lopsided:
+check for a grid in the chain first, then whether the root has definite width, then
+whether the fact (`grow`/`alignSelf`) was measured — fix as rule or curation, never
+by hand-editing the canvas.
 
-If you need one of these, add the fact to `anatomyNode.layout` in
-`contract.schema.json`, populate it in `measure-lib.js` + `emit-contracts.mjs`, carry
-it through `derive-ops.mjs`, and emit it in BOTH emitters in `build-set-code.mjs`.
-That five-file path is the one `wrap` took; copy it.
+To add another layout fact, follow the five-file path `wrap` and `alignSelf` took:
+`contract.schema.json` → `measure-lib.js` → `emit-contracts.mjs` (derive-ops passes
+`layout` through verbatim) → both emitters in `build-set-code.mjs`.
 
 ### How `al-layout` pairs with auto layout
 

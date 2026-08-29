@@ -202,7 +202,7 @@ function buildA11y(component) {
 // ── token binding (T3): css suffix (as measure-components emits it, e.g.
 //    "theme-color-background-primary-default") -> { code, figma } ─────────
 
-function tokenBindingFor(cssSuffix) {
+export function tokenBindingFor(cssSuffix) {
   const hit = CSS_TO_TOKEN[cssSuffix];
   return { code: `--al-${cssSuffix}`, figma: hit?.figma ?? null };
 }
@@ -591,7 +591,7 @@ function buildComposition({ tag, component, origin, project }) {
  * (tag/cls/component?/layout/tokens/children). `ctx` carries the component's
  * own base name plus the project's known component names; `isRoot` guards the
  * anatomy root (path "0" IS this contract's component — never annotated). */
-function buildAnatomyNode(raw, ctx, isRoot = false) {
+export function buildAnatomyNode(raw, ctx, isRoot = false) {
   const computed = raw.computed ?? {};
   const layoutEntries = Object.entries({
     display: computed.display,
@@ -1233,4 +1233,9 @@ function validateWithAjv(emitted) {
   return true;
 }
 
-main();
+// Main guard (same pattern as generate-figma.mjs): running as a CLI executes
+// main(); importing the module (generate-snippet.mjs imports buildAnatomyNode
+// + tokenBindingFor to shape page sections into pseudo-contracts) does not.
+if (import.meta.url === `file://${process.argv[1]}`.replace(/\\/g, '/') || process.argv[1]?.endsWith('emit-contracts.mjs')) {
+  main();
+}

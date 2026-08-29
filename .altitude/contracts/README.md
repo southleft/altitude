@@ -424,6 +424,31 @@ color, matching the real set). The stroke binds to the
 token's own alias. A frame stroke follows the frame's own true bounds
 automatically, on every row, so there is no ring geometry to track.
 
+## The snippet lane — Figma from a REAL PAGE SECTION
+
+The generation above builds LIBRARY components from contracts. The **snippet
+lane** builds a Figma page from what a visitor actually sees — a live route's
+real section, real copy, page CSS included — via a pseudo-contract that reuses
+this exact pipeline (`buildAnatomyNode` → `buildOps` → `buildPluginCode`):
+
+```bash
+node scripts/contracts/generate-snippet.mjs --section hero --project southleft \
+  --measure --verify --base http://localhost:4188/southleft
+```
+
+`--measure` captures the route (`scripts/figma-atoms/measure-page.mjs`,
+sections = `[data-section-id]`); the build lands on the "Site Sections" scratch
+page; `--verify` runs `scripts/contracts/verify-figma.mjs` — a per-node
+bounding-box diff against the measured ground truth plus an auto-exported image
+pair — and gates on it. Page-lane literal facts (used font sizes/families,
+colors, paddings, recovered margins, native grid textures, colored text runs)
+exist only on pseudo-contracts, so every component-lane ops artifact stays
+byte-identical. Full recipe, fact model, and the eleven traps:
+**`.claude/skills/altitude-figma-snippet/SKILL.md`** (read it BEFORE touching
+`generate-snippet.mjs`, `measure-page.mjs`, or the page-lane branches of
+`build-set-code.mjs`). After ANY edit to `scripts/contracts/figma/*.mjs`, run
+`node scripts/contracts/figma/check-parse.mjs` (backtick-in-template lint).
+
 ## Fan-out convention
 
 **Property mode — booleans as shared BOOLEAN component properties, never an

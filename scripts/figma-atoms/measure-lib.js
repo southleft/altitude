@@ -494,6 +494,10 @@
         bgImage: cs.backgroundImage && cs.backgroundImage !== 'none' ? cs.backgroundImage : null,
         bgSize: cs.backgroundSize && cs.backgroundSize !== 'auto' ? cs.backgroundSize : null,
         bw: px(cs.borderTopWidth), bc: cs.borderTopColor, bstyle: cs.borderTopStyle,
+        // Per-side border widths (footer round 3): a divider is border-top
+        // ONLY — collapsing to the top width rendered full boxes around the
+        // footer's quote and legal rows.
+        bw4: [px(cs.borderTopWidth), px(cs.borderRightWidth), px(cs.borderBottomWidth), px(cs.borderLeftWidth)],
         r: [px(cs.borderTopLeftRadius), px(cs.borderTopRightRadius), px(cs.borderBottomRightRadius), px(cs.borderBottomLeftRadius)],
         op: parseFloat(cs.opacity),
         shadow: cs.boxShadow === 'none' ? null : cs.boxShadow,
@@ -622,7 +626,13 @@
     // unreliable — an SVG <img> may report naturalWidth 0, and it would also miss the CSS
     // `filter` the logo wall depends on (brightness(0) invert(1) is what makes the marks
     // white). Tag them instead and let the DRIVER screenshot the real painted element.
-    if (el.tagName === 'IMG' || el.tagName === 'SVG' || el.tagName === 'svg') {
+    if (el.tagName === 'IMG' || el.tagName === 'SVG' || el.tagName === 'svg'
+      // A childless element painted ONLY by background-image (the hero's
+      // grid-texture lattice is CSS gradients on an empty div) — no token
+      // and no child will ever express it; screenshot the painted element
+      // like the other replaced elements (hero round 4). Children present →
+      // skip: rasterising a container would bake its text into pixels.
+      || (el.children.length === 0 && cs.backgroundImage && cs.backgroundImage !== 'none')) {
       const id = 'r' + (window.__rasterSeq = (window.__rasterSeq || 0) + 1);
       try { el.setAttribute('data-fig-raster', id); node.rasterId = id; } catch (e) { /* ignore */ }
     }
@@ -654,7 +664,14 @@
         return node;
       }
     }
-    for (const child of el.children) {
+    // A HOST at the walk ROOT (a web-component section like al-footer): its
+    // rendered content is the SHADOW tree — the SLOT branch below re-expands
+    // slotted light content at its slot position. Walking el.children took
+    // the light DOM only, so every shadow-TEMPLATED node (the footer's
+    // quote, divider, copyright — attribute-driven template output) vanished
+    // (footer round 2). Nested hosts never reach here: the boundary() branch
+    // intercepts them before recursion.
+    for (const child of (el.shadowRoot ? el.shadowRoot.children : el.children)) {
       if (child.tagName === 'STYLE' || child.tagName === 'SCRIPT') continue;
       if (child.tagName === 'SLOT') {
         for (const a of child.assignedNodes({ flatten: true })) {
