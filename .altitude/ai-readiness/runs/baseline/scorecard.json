@@ -1,32 +1,69 @@
 {
-  "schemaVersion": 1,
-  "runId": "run-2026-08-25T14-32-06-494Z",
-  "generatedAt": "2026-08-25T14:36:15.633Z",
-  "harnessVersion": "df384e1",
+  "schemaVersion": 2,
+  "runId": "run-2026-08-29T22-50-12-044Z",
+  "generatedAt": "2026-08-29T22:53:09.691Z",
+  "harnessVersion": "d9acb29",
   "config": {
-    "fleetSize": 1,
+    "fleetSize": 3,
     "models": [
       "claude"
     ],
     "tasks": [
-      "A"
-    ]
+      "D",
+      "E",
+      "F"
+    ],
+    "treatments": [
+      "mcp-on"
+    ],
+    "modelPin": "claude-opus-5",
+    "maxBudgetUsd": 3,
+    "concurrency": 4
   },
   "status": "unjudged",
   "overallReadinessScore": null,
   "taskScores": {},
+  "treatmentScores": {},
+  "deterministicByTreatment": {
+    "mcp-on": {
+      "avgCostUsd": 0.5534326111111112,
+      "avgLatencyMs": 49769.22222222222,
+      "avgGraderScore": 0.6825444444444444,
+      "avgAxeViolationCount": null,
+      "processAssertionPassRate": 0
+    }
+  },
   "fleetSummary": {
-    "total": 1,
-    "gradeable": 1,
+    "total": 9,
+    "gradeable": 9,
     "void": 0,
+    "unobserved": 0,
     "noParse": 0,
     "retried": 0,
+    "totalCostUsd": 4.9808935000000005,
     "byModel": {
       "claude": {
-        "gradeable": 1,
+        "gradeable": 9,
         "void": 0,
         "noParse": 0,
-        "total": 1
+        "total": 9
+      }
+    },
+    "byTreatment": {
+      "mcp-off": {
+        "gradeable": 0,
+        "total": 0,
+        "totalCostUsd": 0
+      },
+      "mcp-on": {
+        "gradeable": 9,
+        "total": 9,
+        "totalCostUsd": 4.9808935000000005
+      },
+      "with-skill": {
+        "gradeable": 0,
+        "total": 0,
+        "totalCostUsd": 0
       }
     }
   },
