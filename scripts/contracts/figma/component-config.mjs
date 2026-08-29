@@ -57,9 +57,9 @@
  *                     Bold-ish is the library's own base default (SKILL.md
  *                     "Known state"). Family stays library-wide in the set
  *                     builder; style/size are per-component.
- *   sheet           — { cellWidth, rowLabelWidth } pixel pitch overrides for
- *                     the `--sheet` documentation table (see sheet-style.mjs
- *                     for why these are fixed up-front, not measured).
+ *   sheet           — RETIRED 2026-08-29 with the prop sheet itself. Still
+ *                     present in some figma.gen.json files; the loader warns
+ *                     and ignores it. Delete it when you next touch the file.
  *   textContent     — { "<class token>": "<literal>" }: literal text the
  *                     component's own template renders inside a node with
  *                     that class (breadcrumbs' separator div renders '/').
@@ -74,8 +74,6 @@
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { isAbsolute, join } from 'node:path';
-
-import { SHEET_CELL_WIDTH_PX, SHEET_ROW_LABEL_WIDTH_PX } from './sheet-style.mjs';
 
 export const DEFAULT_COMPONENT_CONFIG = Object.freeze({
   enumProp: null, // null -> auto-detect (see resolveEnumProp in derive-ops.mjs)
@@ -122,7 +120,6 @@ export const DEFAULT_COMPONENT_CONFIG = Object.freeze({
   fullWidthExtraPx: 160,
   iconSizeVar: 'theme/icon/md',
   label: Object.freeze({ fontStyle: 'Bold', fontSize: 14 }),
-  sheet: Object.freeze({ cellWidth: SHEET_CELL_WIDTH_PX, rowLabelWidth: SHEET_ROW_LABEL_WIDTH_PX }),
 });
 
 /** al-button -> button; al-breadcrumbs-item -> breadcrumbs-item. Components
@@ -150,7 +147,7 @@ export function componentConfigPath(repoRoot, tag, libRoots) {
 
 /**
  * Load `<component dir>/figma.gen.json` if present and merge it over
- * DEFAULT_COMPONENT_CONFIG (one level deep for the `label`/`sheet` objects —
+ * DEFAULT_COMPONENT_CONFIG (one level deep for the `label` object —
  * a partial override keeps the other keys' defaults). Returns
  * { config, path, fileExists } so the CLI can report where config came from.
  * `libRoots` (optional): repo-relative library roots to search, brand layer
@@ -167,8 +164,13 @@ export function loadComponentConfig(repoRoot, tag, libRoots) {
     ...DEFAULT_COMPONENT_CONFIG,
     ...pick(overrides, ['enumProp', 'fullWidthProp', 'fullWidthExtraPx', 'iconSizeVar', 'caseAxes', 'textContent', 'glyphs', 'nestedIconGlyphs', 'nestedProps', 'rootWidth']),
     label: { ...DEFAULT_COMPONENT_CONFIG.label, ...(overrides.label || {}) },
-    sheet: { ...DEFAULT_COMPONENT_CONFIG.sheet, ...(overrides.sheet || {}) },
   };
+  // `sheet` was the retired prop-sheet's cell pitch. Warned about rather than
+  // silently ignored: a config key nothing reads is the silent no-op this
+  // repo treats as a defect in its own right.
+  if (overrides.sheet) {
+    console.warn(`[component-config] ${path}: "sheet" is retired (the prop sheet was removed 2026-08-29) and is ignored. Delete the key.`);
+  }
   return { config, path, fileExists };
 }
 

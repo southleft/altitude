@@ -157,3 +157,36 @@ export const ICON_WRAPPER_COMPONENT_NAME = 'Icon';
  * built-in black-text default (invisible against a dark surface — the bug
  * T18/T21 already fixed once for the live set's own label/icon paint). */
 export const SHEET_LABEL_COLOR_FIGMA_VAR = 'theme/color/content/default';
+
+/**
+ * RESOLVE THE SET STRUCTURALLY — never by layout.
+ *
+ * Owner direction, 2026-08-29. A component's page is arranged for HUMANS: a
+ * "<Name> — Generated" frame holding the "Documentation Header" above the
+ * real COMPONENT_SET, and whatever variant break-outs the owner expands by
+ * hand with the Propstar plugin. That arrangement is OURS to change, and it
+ * changes. It is not a fact about the component.
+ *
+ * So every tool that reads a component from Figma must find the
+ * COMPONENT_SET itself:
+ *
+ *   const sets = page.findAllWithCriteria({ types: ['COMPONENT_SET'] });
+ *   const set  = sets.find((n) => n.name === componentName)
+ *             ?? (sets.length === 1 ? sets[0] : null);   // ambiguity -> report
+ *
+ * and must NOT depend on:
+ *   - the set being a DIRECT child of the page (it is not — it is inside the
+ *     "— Generated" frame). This one already bit us: check-parity.mjs scanned
+ *     `page.children` only and reported the ENTIRE library missing from
+ *     Figma, on 2026-08-29, with a receipt to match;
+ *   - the ORDER of frames or of a set's children (extract-canvas.mjs sorts
+ *     axis options anyway, so on-canvas order is not even in the artifact);
+ *   - the presence, name, or shape of any wrapper frame, header or break-out
+ *     grid — all presentation, all disposable;
+ *   - a pinned node id staying live (a deleted node still resolves — see the
+ *     repair skill's trap 1).
+ *
+ * Two sets sharing a name is a real, documented situation in this file, so
+ * ambiguity is REPORTED, never guessed.
+ */
+export const SET_RESOLUTION_NOTE = 'Resolve the COMPONENT_SET by descending the page and matching its name; never by frame layout or sibling order.';

@@ -40,12 +40,13 @@ import {
   THEME_MODE_COLLECTION_NAME,
 } from './conventions.mjs';
 import { DEFAULT_COMPONENT_CONFIG } from './component-config.mjs';
-import { fileGuardSnippet, textStyleLinkSnippet, variableHelpersSnippet } from './plugin-snippets.mjs';
+import { docHeaderSnippet, fileGuardSnippet, textStyleLinkSnippet, variableHelpersSnippet } from './plugin-snippets.mjs';
 
 export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
   return String.raw`
     // GUARD — refuse to write into any file but the one this project names.
     ${fileGuardSnippet(SC)}
+    ${docHeaderSnippet()}
     const OPS = ${JSON.stringify(ops)};
     const PAGE_NAME = ${JSON.stringify(ops.page)};
     // Spec 2026-08-26-contract-coverage…: nested-component resolution facts.
@@ -587,14 +588,21 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
       // real page that IS the hand-built set (the generated set always lives
       // inside its "— Generated" frame, so removing the two suffixed frames
       // fully covers our own reruns).
-      // Never delete what this run does not rebuild (owner report, Chip
-      // walkthrough: a lean re-run deleted the prop sheet and left the page
-      // without header/borders). The sheet pass owns "— Prop Sheet" and
-      // replaces it itself; the lean pass clears ONLY its own "— Generated"
-      // frame. After a lean regen, re-run --sheet so its instances track the
-      // NEW set rather than ghosts of the deleted one.
+      // Never delete what this run does not rebuild. Since 2026-08-29 this
+      // run rebuilds the WHOLE page artifact — header and set together in the
+      // one "— Generated" frame — so there is no second pass to re-run and no
+      // "— Prop Sheet" to preserve. Anything the owner expanded by hand with
+      // Propstar lives under its own name and is deliberately untouched.
       const OWN_ARTIFACT_NAMES = new Set([
         OPS.componentSetName + ' — Generated',
+        // The retired prop sheet. A regen used to leave it alone because it
+        // carried the only header on the page — deleting it stranded the
+        // page bare (owner report, Chip walkthrough). The header now lives
+        // in the "— Generated" frame above the set, so the sheet is a pure
+        // orphan and a regen sweeps it. This is the ONLY thing that clears
+        // it; a page nobody regenerates keeps its old sheet until someone
+        // does.
+        OPS.componentSetName + ' — Prop Sheet',
       ]);
       for (const c of [...page.children]) if (OWN_ARTIFACT_NAMES.has(c.name)) c.remove();
     }
@@ -2235,14 +2243,34 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
     const presentationFrame = figma.createFrame();
     presentationFrame.name = OPS.componentSetName + ' — Generated';
     page.appendChild(presentationFrame);
-    presentationFrame.layoutMode = 'HORIZONTAL';
+    // VERTICAL since 2026-08-29 (owner direction): the doc header sits ABOVE
+    // the set in the SAME frame, and that is the whole page — the separate
+    // "— Prop Sheet" frame, its variant break-out grid and its dashed
+    // separators are retired. Variants are expanded by hand with Propstar
+    // when a page wants them, so nothing generated depends on that layout.
+    presentationFrame.layoutMode = 'VERTICAL';
     presentationFrame.primaryAxisSizingMode = 'AUTO';
     presentationFrame.counterAxisSizingMode = 'AUTO';
+    bindNum(presentationFrame, 'itemSpacing', FRAME_PADDING_FIGMA_VAR);
     bindNum(presentationFrame, 'paddingTop', FRAME_PADDING_FIGMA_VAR);
     bindNum(presentationFrame, 'paddingBottom', FRAME_PADDING_FIGMA_VAR);
     bindNum(presentationFrame, 'paddingLeft', FRAME_PADDING_FIGMA_VAR);
     bindNum(presentationFrame, 'paddingRight', FRAME_PADDING_FIGMA_VAR);
     { const p = await boundSolid(SITE_BG_FIGMA_VAR); if (p) presentationFrame.fills = [p]; }
+    // Header FIRST so it renders above the set in the vertical stack. It
+    // degrades to nothing (a NAMED miss) if the master is absent — the set
+    // still generates, because the set is the artifact that matters.
+    const docHeaderTextNodes = [];
+    const bodyFont = { family: 'IBM Plex Sans', style: 'Regular' };
+    try { await figma.loadFontAsync(bodyFont); }
+    catch (e) { await figma.loadFontAsync({ family: 'Inter', style: 'Regular' }); bodyFont.family = 'Inter'; }
+    const headerPlan = OPS.header ? Object.assign({}, OPS.header, {
+      width: Math.max(set.width, OPS.header.minWidth || 0),
+    }) : null;
+    const docHeaderInstance = await buildDocHeader(headerPlan, misses, bodyFont, docHeaderTextNodes);
+    if (docHeaderInstance) presentationFrame.appendChild(docHeaderInstance);
+    if (docHeaderTextNodes.length) { try { await linkTextStyles(docHeaderTextNodes); } catch (e) { misses.add('doc-header-text-style-link-failed'); } }
+
     presentationFrame.appendChild(set); // auto-layout repositions set itself; the manual x/y above is moot post-reparent
     presentationFrame.x = 0; presentationFrame.y = 0;
 

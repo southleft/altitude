@@ -25,6 +25,14 @@
  *     .claude/skills/altitude-figma-sync/SKILL.md — now centralized in
  *     conventions.mjs.
  */
+import {
+  DOC_HEADER_LINK_TEXT,
+  DOC_HEADER_MASTER_NAME,
+  DOC_HEADER_MASTER_PAGE,
+  DOC_HEADER_MIN_WIDTH_PX,
+  docHeaderDescription,
+  docHeaderDocsUrl,
+} from './doc-header-style.mjs';
 import { normKey, STATE_ORDER, BOOLEAN_AXIS_CANONICAL_ORDER } from './conventions.mjs';
 import { DEFAULT_COMPONENT_CONFIG } from './component-config.mjs';
 
@@ -227,7 +235,12 @@ export function buildOps(contract, {
   // sheet always fans out EVERY property combination, independent of what
   // the live (property-mode-by-default) set itself curates. This is the
   // "repurpose, don't duplicate" seam for the T23 fan-out machinery below —
-  // buildSheetPlan() calls buildOps(contract, { forceAllBooleanAxes: true })
+  // NO CALLER SETS THIS ANY MORE. buildSheetPlan() was its only user and the
+  // prop sheet was retired 2026-08-29, so every run now takes the `false`
+  // branch. Kept (rather than ripped out of the axis logic) because it still
+  // documents WHY the two branches differ; delete it the next time this
+  // derivation is reworked.
+  // buildSheetPlan() called buildOps(contract, { forceAllBooleanAxes: true })
   // to get the full cartesian `variants` list, then re-groups it for
   // rendering rather than re-deriving the cartesian product itself.
   forceAllBooleanAxes = false,
@@ -719,6 +732,21 @@ export function buildOps(contract, {
     contract: { id: tag, name: contract.name, version: contract.version },
     page: pageName,
     componentSetName: contract.name,
+    // Owner direction 2026-08-29: a component page is ONE frame — this
+    // header sitting above the real COMPONENT_SET. Everything the retired
+    // prop sheet added (the variant break-out grid and its dashed
+    // separators) is gone; variants get expanded by hand with Propstar when
+    // a page needs them. The header is presentation only and is NEVER a
+    // parity fact — see conventions.mjs § "Resolve the set structurally".
+    header: {
+      masterName: DOC_HEADER_MASTER_NAME,
+      masterPageName: DOC_HEADER_MASTER_PAGE,
+      title: contract.name || tag,
+      description: docHeaderDescription(contract.description),
+      linkText: DOC_HEADER_LINK_TEXT,
+      linkUrl: docHeaderDocsUrl(tag),
+      minWidth: DOC_HEADER_MIN_WIDTH_PX,
+    },
     axes,
     componentProperties,
     anatomySource: contract.anatomySource,

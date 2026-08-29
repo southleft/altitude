@@ -1,8 +1,5 @@
 {
   "$comment": "Per-component Figma-generation config (see altitude-figma-generate skill). sheet.cellWidth: this component's natural width exceeds the library's default 200px sheet pitch (sheet-style.mjs SHEET_CELL_WIDTH_PX), so its instances bled across the border-collapse grid lines and clipped their own helper text. Measured live 2026-08-27 from the widest instance in its own prop sheet, rounded up with breathing room. This is the documented per-component override the generator expects - do NOT re-measure instances inside the build (the sheet-style.mjs header explains why: ~30s per-call ceiling). nestedProps: the 'Empty State example' reference frame shows a PRIMARY action button, but Button's set defaults to Variant=Bare, so the nested instance came out as bare text. nestedIconGlyphs: the reference frame's mark is a magnifier and plan.mjs measures the icon slot with al-icon-search; Phosphor calls that glyph MagnifyingGlass. It resolves only once a human has bootstrapped one instance of it in-file (trap 8).",
-  "sheet": {
-    "cellWidth": 350
-  },
   "nestedProps": {
     "al-button": {
       "Variant": "Primary",

@@ -248,3 +248,78 @@ export function cellFrameSnippet() {
     }
   `;
 }
+
+/**
+ * The "Documentation Header" instance that sits ABOVE a component's set.
+ *
+ * Owner direction, 2026-08-29: a component page is now ONE frame — the doc
+ * header with the real COMPONENT_SET beneath it. The variant break-out grid
+ * and its dashed separators are gone; variants are expanded by hand with the
+ * Propstar plugin when a page needs them. This snippet is what survived of
+ * the retired sheet builder.
+ *
+ * Resolved BY NAME on its own page, never by a pinned id — the same
+ * by-name convention findIconWrapperComponent uses. A miss degrades
+ * cleanly: no header is built, the set is still generated, and the gap is
+ * NAMED in `misses` rather than aborting the run.
+ *
+ * Defines `buildDocHeader(HEADER, misses, bodyFont)` -> the instance (or
+ * null), pushing every text node it edited onto `outTextNodes` so the
+ * caller can link text styles in its own single pass.
+ */
+export function docHeaderSnippet() {
+  return String.raw`
+    async function buildDocHeader(HEADER, misses, bodyFont, outTextNodes) {
+      if (!HEADER) return null;
+      const headerPage = figma.root.children.find((p) => p.name === HEADER.masterPageName);
+      let master = null;
+      if (headerPage) {
+        await headerPage.loadAsync();
+        const hit = headerPage.findOne((n) => (n.type === 'COMPONENT' || n.type === 'COMPONENT_SET') && n.name === HEADER.masterName);
+        if (hit) master = hit.type === 'COMPONENT_SET' ? (hit.defaultVariant || hit.children[0]) : hit;
+      }
+      if (!headerPage) { misses.add('doc-header-page-not-found:' + HEADER.masterPageName); return null; }
+      if (!master) { misses.add('doc-header-master-not-found:' + HEADER.masterName); return null; }
+
+      const inst = master.createInstance();
+      // The master root is FIXED/FIXED (confirmed live), so resize() is the
+      // correct operation — this is NOT the "resize() undoes HUG sizing"
+      // trap, which is about converting an already-hug frame.
+      try { inst.resize(HEADER.width, inst.height); }
+      catch (e) { misses.add('doc-header-resize-failed'); }
+
+      // Font-load-before-setText: each run's EXACT existing font must be
+      // loaded before .characters is touched.
+      const headingFont = { family: 'IBM Plex Sans', style: 'Bold' };
+      try { await figma.loadFontAsync(headingFont); }
+      catch (e) { await figma.loadFontAsync({ family: 'Inter', style: 'Bold' }); headingFont.family = 'Inter'; }
+
+      const headingNode = inst.findOne((n) => n.type === 'TEXT' && n.name === 'Heading');
+      if (headingNode) {
+        headingNode.fontName = headingFont;
+        headingNode.characters = HEADER.title;
+        outTextNodes.push(headingNode);
+      } else {
+        misses.add('doc-header-heading-node-not-found');
+      }
+
+      // The master has no separate link element, so the Description text
+      // node's own trailing range carries the hyperlink.
+      const descFrame = inst.findOne((n) => n.type === 'FRAME' && n.name === 'Description');
+      const descNode = descFrame ? descFrame.findOne((n) => n.type === 'TEXT') : inst.findOne((n) => n.type === 'TEXT' && n.name === 'Text');
+      if (descNode) {
+        descNode.fontName = bodyFont;
+        const desc = HEADER.description;
+        const link = HEADER.linkText;
+        const full = desc ? desc + '  ' + link : link;
+        descNode.characters = full;
+        outTextNodes.push(descNode);
+        try { descNode.setRangeHyperlink(full.length - link.length, full.length, { type: 'URL', value: HEADER.linkUrl }); }
+        catch (e) { misses.add('doc-header-hyperlink-failed'); }
+      } else {
+        misses.add('doc-header-description-node-not-found');
+      }
+      return inst;
+    }
+  `;
+}

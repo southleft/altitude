@@ -18,18 +18,16 @@
  *                         the worked exemplar) and merged over defaults.
  *   derive-ops.mjs        The PARITY CORE: pure contract -> deterministic ops
  *                         artifact (buildOps + conditional-binding resolution).
- *   derive-sheet-plan.mjs `--sheet`'s pure derivation: ops fan-out -> a
  *                         deterministic documentation-table plan (T31/T32).
- *   sheet-style.mjs       PURE PRESENTATION constants for the sheet (border
- *                         color/dash/weights, cell pitch defaults, doc header).
+ *   doc-header-style.mjs PURE PRESENTATION constants for the doc header above
+ *                       the set. Never a parity fact.
  *   plugin-snippets.mjs   The ONE copy of the plugin-side guard/variable/text-
  *                         style/cell-frame helpers both code emitters compose.
  *   build-set-code.mjs    Emits the lean-set figma_execute code (T12–T30).
- *   build-sheet-code.mjs  Emits the sheet setup + per-group figma_execute code.
  *
  * Pipeline: contract JSON (.altitude/contracts/<project>/<tag>.contract.json)
  *   + per-component config (figma.gen.json, optional)
- *   -> deterministic OPS artifact (derive-ops.mjs / derive-sheet-plan.mjs)
+ *   -> deterministic OPS artifact (derive-ops.mjs)
  *   -> executed over scripts/figma-atoms/mcp-shim.mjs into a SCRATCH page.
  *
  * SAFETY (hard constraint, not a default): every mutating operation targets
@@ -46,7 +44,6 @@
  *   node scripts/contracts/generate-figma.mjs --component al-button --page "Contract Pilot"
  *   node scripts/contracts/generate-figma.mjs --component al-button --ops-only     # write the ops artifact only, never touch Figma
  *   node scripts/contracts/generate-figma.mjs --component al-button --check-determinism  # same contract+config, derive ops TWICE in memory, byte-compare; exit 1 on mismatch
- *   node scripts/contracts/generate-figma.mjs --component al-button --sheet       # T31: plugin-free Propstar-equivalent documentation sheet (run AFTER the lean-set build above)
  *
  * Ops artifact: .altitude/figma-sync/<project's figma-sync dir>/generated-ops/
  * <tag>.ops.json — gitignored (same zone as every other figma-sync artifact,
@@ -63,9 +60,7 @@ import { fileURLToPath } from 'node:url';
 import { scope, projectArg } from '../figma-atoms/project-scope.mjs';
 import { loadComponentConfig } from './figma/component-config.mjs';
 import { buildOps } from './figma/derive-ops.mjs';
-import { buildSheetPlan } from './figma/derive-sheet-plan.mjs';
 import { buildPluginCode } from './figma/build-set-code.mjs';
-import { buildSheetSetupPluginCode, buildSheetGroupPluginCode } from './figma/build-sheet-code.mjs';
 import { argOf } from '../lib/argv.mjs';
 // NOT from ./extract-canvas.mjs — that module is a CLI that runs `await main()`
 // at top level; the shared lib is the import-safe home for all three.
@@ -75,9 +70,7 @@ import { contractFilePath } from '../../libs/altitude-mcp/src/lib/parity.mjs';
 // Re-exported so existing importers (tests, capture harnesses) keep working —
 // the implementations live in scripts/contracts/figma/.
 export { buildOps } from './figma/derive-ops.mjs';
-export { buildSheetPlan } from './figma/derive-sheet-plan.mjs';
 export { buildPluginCode } from './figma/build-set-code.mjs';
-export { buildSheetSetupPluginCode, buildSheetGroupPluginCode } from './figma/build-sheet-code.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, '..', '..');
@@ -91,17 +84,17 @@ const PAGE_NAME = argOf('--page') || 'Contract Pilot';
 const SHIM_PORT = shimPortFromArgv();
 const OPS_ONLY = process.argv.includes('--ops-only');
 const CHECK_DETERMINISM = process.argv.includes('--check-determinism');
-/**
- * T31: plugin-free Propstar-equivalent documentation mode. Builds a labeled
- * grid of INSTANCES of the already-generated (or pre-existing) lean,
- * property-mode component set — one instance per State x Variant x every
- * BOOLEAN component property combination — as its own top-level frame next
- * to the set, never inside it. Requires the target set to already exist on
- * `--page`; run generate-figma.mjs without `--sheet` first (or a real,
- * hand-built set of the same name). See derive-sheet-plan.mjs and
- * .altitude/contracts/README.md § Documentation sheet (--sheet, T31).
- */
-const SHEET = process.argv.includes('--sheet');
+// RETIRED 2026-08-29 (owner direction). The prop sheet — a variant
+// break-out grid with dashed separators — is gone; a component page is now
+// ONE frame: the doc header above the real COMPONENT_SET. Variants get
+// expanded by hand with the Propstar plugin when a page wants them. The flag
+// is refused LOUDLY rather than ignored, so an old command line or script
+// fails visibly instead of silently generating something different from what
+// it asked for.
+if (process.argv.includes('--sheet')) {
+  console.error('[generate-figma] --sheet is retired. The doc header is now generated above the set by the ordinary run; the variant break-out grid is not generated at all — expand variants with Propstar. Re-run without --sheet.');
+  process.exit(2);
+}
 
 function serialize(ops) {
   return `${JSON.stringify(ops, null, 2)}\n`;
@@ -160,96 +153,6 @@ function writeOps(SC, tag, ops) {
   return outPath;
 }
 
-/** T31: the sheet plan's own ops artifact — same zone, same "gitignored build
- * INPUT" convention as writeOps() above, distinct filename so a `--sheet` run
- * never clobbers (or is clobbered by) the lean set's own `<tag>.ops.json`. */
-function writeSheetOps(SC, tag, plan) {
-  const dir = join(SC.dirs.sync, 'generated-ops');
-  mkdirSync(dir, { recursive: true });
-  const outPath = join(dir, `${tag}.sheet.ops.json`);
-  writeFileSync(outPath, serialize(plan), 'utf8');
-  return outPath;
-}
-
-/**
- * T31 `--sheet` entry point. Mirrors the non-sheet path's own
- * ops-only/check-determinism/decoy-guard shape, then drives the batched
- * setup-call + one-call-per-group sequence build-sheet-code.mjs implements —
- * never a single all-100-instances call (see sheet-style.mjs's pitch
- * constants' comment on the ~30s per-call ceiling).
- */
-async function mainSheet(SC, contract, config, nestedSetNames) {
-  if (CHECK_DETERMINISM) {
-    const first = serialize(buildSheetPlan(contract, { projectId: SC.id, pageName: PAGE_NAME, config, nestedSetNames }));
-    const second = serialize(buildSheetPlan(contract, { projectId: SC.id, pageName: PAGE_NAME, config, nestedSetNames }));
-    const ok = first === second;
-    console.log(`[generate-figma] --sheet --check-determinism ${SC.id}/${COMPONENT}: ${ok ? 'DETERMINISTIC' : 'NONDETERMINISTIC'}`);
-    if (!ok) {
-      console.error('[generate-figma] two in-memory sheet-plan derivations of the same contract produced different bytes.');
-      process.exit(1);
-    }
-    return;
-  }
-
-  const plan = buildSheetPlan(contract, { projectId: SC.id, pageName: PAGE_NAME, config, nestedSetNames });
-  const outPath = writeSheetOps(SC, COMPONENT, plan);
-  console.log(`[generate-figma] --sheet ${SC.id}/${COMPONENT}: wrote a ${plan.totalInstances}-instance plan -> ${outPath}`);
-
-  if (OPS_ONLY) return;
-
-  const status = parsePayload(await call(SHIM_PORT, 'figma_get_status', {}));
-  const statusStr = JSON.stringify(status);
-  const guard = checkDecoyGuard(SC.project, statusStr);
-  if (guard.blocked) {
-    console.error(
-      `Refusing to generate: Figma is on the "${guard.decoy.fileName}" DECOY file. Open "${SC.fileName}" (${SC.fileKey}).` +
-      (guard.decoy.why ? `\n  ${guard.decoy.why}` : ''),
-    );
-    process.exit(1);
-  }
-  // POSITIVE file match (2026-08-28): the decoy guard blocks only LISTED
-  // decoys — an unrelated file (a client file left focused) passed it. The
-  // open file must BE the target, not merely not-a-decoy.
-  if (status.currentFileKey && status.currentFileKey !== SC.fileKey) {
-    console.error(`Refusing to generate: Figma has "${status.currentFileName}" (${status.currentFileKey}) open — not "${SC.fileName}" (${SC.fileKey}). Focus the target file and re-run.`);
-    process.exit(1);
-  }
-
-  const setupText = await call(SHIM_PORT, 'figma_execute', { code: buildSheetSetupPluginCode(plan, SC), fileKey: SC.fileKey, timeout: 90000 });
-  let setupPayload;
-  try { setupPayload = JSON.parse(setupText); } catch { console.error(setupText); process.exit(1); }
-  if (setupPayload.success === false || setupPayload.error) {
-    console.error('[generate-figma] --sheet SETUP FAILED:', setupPayload.error || setupPayload);
-    process.exit(1);
-  }
-  const ids = typeof setupPayload.result === 'string' ? JSON.parse(setupPayload.result) : setupPayload.result;
-  console.log('[generate-figma] --sheet setup:', JSON.stringify(ids));
-
-  const missingVars = [...(ids.missingVars || [])];
-  let totalBuilt = 0;
-  for (let gi = 0; gi < plan.table.groups.length; gi++) {
-    const code = buildSheetGroupPluginCode(plan, gi, ids, SC);
-    const text = await call(SHIM_PORT, 'figma_execute', { code, fileKey: SC.fileKey, timeout: 90000 });
-    let payload;
-    try { payload = JSON.parse(text); } catch { console.error(text); process.exit(1); }
-    if (payload.success === false || payload.error) {
-      console.error(`[generate-figma] --sheet GROUP ${gi + 1}/${plan.table.groups.length} FAILED:`, payload.error || payload);
-      process.exit(1);
-    }
-    const result = typeof payload.result === 'string' ? JSON.parse(payload.result) : payload.result;
-    console.log(`[generate-figma] --sheet group ${gi + 1}/${plan.table.groups.length}:`, JSON.stringify(result));
-    totalBuilt += result.built || 0;
-    missingVars.push(...(result.missingVars || []));
-  }
-
-  console.log(JSON.stringify({
-    sheetFrameId: ids.sheetFrameId,
-    totalInstancesPlanned: plan.totalInstances,
-    totalInstancesBuilt: totalBuilt,
-    missingVars,
-  }, null, 2));
-}
-
 async function main() {
   const SC = scope(projectArg());
   const { contract } = loadContract(SC.id, COMPONENT);
@@ -263,11 +166,6 @@ async function main() {
   const { config, path: configPath, fileExists: configFileExists } = loadComponentConfig(REPO_ROOT, COMPONENT, configRoots);
   if (configFileExists) console.log(`[generate-figma] per-component config: ${configPath}`);
   const nestedSetNames = loadNestedSetNames(SC.id);
-
-  if (SHEET) {
-    await mainSheet(SC, contract, config, nestedSetNames);
-    return;
-  }
 
   if (CHECK_DETERMINISM) {
     // T15's TODO(T12): same contract+config inputs -> byte-identical ops
