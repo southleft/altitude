@@ -121,12 +121,12 @@ console.log('\n5. The needle is scored separately from the bulk');
 
 console.log('\n6. The clean case — resisting invented drift');
 {
-  const right = gradeTaskD({ verdict: 'in-sync', findings: [] }, { case: CLEAN_CASE });
+  const right = gradeTaskD({ verdict: 'in-sync', findings: [], sourceUsed: ['code.json', 'canvas.json'] }, { case: CLEAN_CASE });
   assert('reporting nothing on a clean pair scores 1.0, not 0', right.score === 1);
   assert('  ...and the verdict is scored correct', right.verdictCorrect === true);
   assert('  ...with no needle to find, injectedFound is null rather than false', right.injectedFound === null);
 
-  const invented = gradeTaskD({ verdict: 'drifted', findings: [finding('prop', 'imaginary', 'missing-in-canvas')] }, { case: CLEAN_CASE });
+  const invented = gradeTaskD({ verdict: 'drifted', findings: [finding('prop', 'imaginary', 'missing-in-canvas')], sourceUsed: ['code.json'] }, { case: CLEAN_CASE });
   assert('inventing a finding on a clean pair scores 0', invented.score === 0);
   assert('  ...and the verdict is scored wrong', invented.verdictCorrect === false);
 }
@@ -138,12 +138,33 @@ console.log('\n7. Not measured is never reported as measured-bad');
   assert('  ...and says why', /no case attached/.test(g.reason));
 
   const missing = gradeTaskD({}, { case: CASE });
-  assert('output with no findings key does not throw', missing.reported === 0 && missing.recall === 0);
+  assert('output with no findings key does not throw', missing.score === null && missing.unobserved === true);
+
+  // UNOBSERVED vs MEASURED-ZERO. The first real Task D run materialized its
+  // cases outside the child's sandbox: every attempt reported zero findings,
+  // and all three were counted `gradeable` with F1 = 0 — a harness defect
+  // wearing the costume of a model failure. An agent that read nothing has
+  // not answered; an agent that read both sides and found nothing has.
+  const blocked = gradeTaskD({ verdict: 'in-sync', findings: [], sourceUsed: [] }, { case: CASE });
+  assert('read nothing + reported nothing is unobserved, not a zero', blocked.score === null);
+  assert('  ...and says the comparison was never performed', /never performed/.test(blocked.reason));
+
+  const looked = gradeTaskD({ verdict: 'in-sync', findings: [], sourceUsed: ['code.json', 'canvas.json'] }, { case: CASE });
+  assert('read both sides and reported nothing IS a measured miss', looked.score === 0);
+  assert('  ...counted against the full expected set', looked.missed === (CASE.expected ?? []).length);
+
+  // The gaming vector the unconditional guard closes: a clean case rewards an
+  // empty answer with 1.0, so "never read anything, always say in-sync" would
+  // otherwise score 1.0 on every clean pair and null on every dirty one.
+  const freeRide = gradeTaskD({ verdict: 'in-sync', findings: [], sourceUsed: [] }, { case: CLEAN_CASE });
+  assert('a clean case does NOT hand a free 1.0 to an agent that read nothing', freeRide.score === null);
+  const earned = gradeTaskD({ verdict: 'in-sync', findings: [], sourceUsed: ['code.json'] }, { case: CLEAN_CASE });
+  assert('  ...while an agent that actually looked still earns it', earned.score === 1);
 }
 
 console.log('\n8. runGrader passes the context through');
 {
-  const viaRegistry = runGrader('gradeTaskD', { findings: [], verdict: 'in-sync' }, { case: CLEAN_CASE });
+  const viaRegistry = runGrader('gradeTaskD', { findings: [], verdict: 'in-sync', sourceUsed: ['code.json'] }, { case: CLEAN_CASE });
   assert('the registry path reaches gradeTaskD with its case', viaRegistry.score === 1);
   assert('the older graders still work with no context at all', runGrader('gradeTaskC', { violations: [] }).score === 0);
 }

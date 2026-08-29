@@ -173,6 +173,31 @@ export function gradeTaskD(parsed, context) {
   }
 
   const reported = Array.isArray(parsed?.findings) ? parsed.findings : [];
+  const observed = Array.isArray(parsed?.sourceUsed) ? parsed.sourceUsed : [];
+
+  // UNOBSERVED, not wrong. An agent that read neither contract has not
+  // performed the comparison at all, and scoring that as F1 = 0 is a lie the
+  // eval tells about the model: it is indistinguishable from an agent that
+  // read both sides and missed every disagreement. The first real Task D run
+  // hit exactly this — the cases were materialized outside the child's
+  // sandbox, every attempt reported zero findings, and the summary called all
+  // three `gradeable`. Named, counted and excluded, never silently zeroed;
+  // `unobserved` is on the record so a run cannot quietly consist of these.
+  // Deliberately NOT conditioned on the case having expected findings. A
+  // clean case rewards an empty answer with 1.0, so exempting clean cases
+  // would hand "always answer in-sync, never read anything" a perfect score
+  // on every clean pair and a null (excluded) on every dirty one — a
+  // constant strategy averaging 1.0. Not reading is not an answer either way.
+  if (!reported.length && !observed.length) {
+    return {
+      caseId: caseRecord.id,
+      mutation: caseRecord.mutation,
+      unobserved: true,
+      score: null,
+      reason: 'agent reported no findings AND read no sources - the comparison was never performed, so there is nothing to score',
+    };
+  }
+
   const reportedIds = new Set(reported.map(findingId));
   const expectedIds = new Set((caseRecord.expected ?? []).map(findingId));
   const injectedIds = new Set((caseRecord.injected ?? []).map(findingId));

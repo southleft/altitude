@@ -377,7 +377,9 @@ async function main() {
   const runId = `run-${nowStamp()}`;
   const runDir = resolve(RUNS_DIR, runId);
   const attemptsDir = resolve(runDir, 'attempts');
-  if (!DRY_RUN) mkdirSync(attemptsDir, { recursive: true });
+  // Case inputs live under the run dir so the sandboxed child can read them.
+  const casesDir = resolve(runDir, 'cases');
+  if (!DRY_RUN) { mkdirSync(attemptsDir, { recursive: true }); mkdirSync(casesDir, { recursive: true }); }
   console.log(`[run] ${runId}${DRY_RUN ? ' (dry-run)' : ''}`);
   console.log(`[fleet] tasks=${TASK_IDS.join(',')} models=${MODELS.join(',')} treatments=${TREATMENTS_TO_RUN.join(',')} fleet=${FLEET_SIZE} model-pin=${MODEL_PIN} max-budget-usd=${MAX_BUDGET_USD || 'unbounded'} concurrency=${CONCURRENCY}`);
   if (MODELS.includes('codex') && TREATMENTS_TO_RUN.some((t) => t !== 'mcp-off')) {
@@ -418,7 +420,16 @@ async function main() {
               console.error(`[fleet] the ${source.kind} corpus has no selectable cases — rebuild it.`);
               continue;
             }
-            const paths = DRY_RUN ? null : source.materialize(attemptCase, TMPDIR);
+            // Materialize INSIDE the repo, not into TMPDIR. The child
+            // `claude` runs sandboxed to its working directory, so a case
+            // written to os.tmpdir() is unreadable to the very agent being
+            // asked to read it — the first real Task D run scored 0/3 with
+            // `reported: 0` on every attempt, and the transcripts showed an
+            // agent correctly refusing to compare files it could not open.
+            // A measurement artifact that looks exactly like a model failure
+            // is the worst thing an eval can produce. The run dir is
+            // gitignored (.gitignore:62), so this leaves no tracked residue.
+            const paths = DRY_RUN ? null : source.materialize(attemptCase, casesDir);
             casePlaceholders = source.placeholders(attemptCase, paths);
           }
           let rawPrompt = promptTemplate
@@ -505,9 +516,10 @@ async function main() {
       trajectory,
     };
     writeFileSync(outPath, JSON.stringify(record, null, 2));
-    const status = out.parsed && !out.void ? 'ok'
-      : out.parsed && out.void ? 'VOID'
-      : 'NO-PARSE';
+    const status = !out.parsed ? 'NO-PARSE'
+      : out.void ? 'VOID'
+      : grader?.unobserved ? 'UNOBSERVED'
+      : 'ok';
     const retryNote = out.retried ? ` retried(firstVoid=${out.firstAttemptVoid})` : '';
     const costNote = out.costUsd != null ? ` $${out.costUsd.toFixed(4)}` : ' $?';
     console.log(`[done ] ${j.label}  exit=${out.exitCode}  ${status}${retryNote}${costNote}  ${(out.durationMs / 1000).toFixed(1)}s`);
@@ -520,6 +532,12 @@ async function main() {
       durationMs: out.durationMs,
       costUsd: out.costUsd,
       graderScore: grader?.score ?? null,
+      // A grader may decline to score — `unobserved` on Task D means the
+      // agent read neither side, so nothing was measured. It is NOT a zero
+      // and it must not vanish into a null average: the run summary counts
+      // it out loud, because a run that is quietly all-unobserved looks
+      // exactly like a run with no findings to report.
+      unobserved: grader?.unobserved === true,
       axeViolationCount: axe?.violationCount ?? null,
       processAssertionPassed: processAssertion.passed,
     };
@@ -538,6 +556,7 @@ async function main() {
       total: results.length,
       gradeable: results.filter(r => r.ok).length,
       void: results.filter(r => r.parsedButVoid).length,
+      unobserved: results.filter(r => r.unobserved).length,
       noParse: results.filter(r => !r.ok && !r.parsedButVoid).length,
       retried: results.filter(r => r.retried).length,
       totalCostUsd: results.reduce((sum, r) => sum + (r.costUsd || 0), 0),
@@ -559,6 +578,7 @@ async function main() {
   console.log('\n=== fleet summary ===');
   console.log(`  gradeable: ${manifest.summary.gradeable}/${manifest.summary.total}`);
   console.log(`  void     : ${manifest.summary.void}`);
+  console.log(`  unobserved: ${manifest.summary.unobserved}${manifest.summary.unobserved ? '  <- graded nothing: the agent read neither side. Check the case files are readable from the child sandbox.' : ''}`);
   console.log(`  no-parse : ${manifest.summary.noParse}`);
   console.log(`  retried  : ${manifest.summary.retried}`);
   console.log(`  cost     : $${manifest.summary.totalCostUsd.toFixed(4)}`);
