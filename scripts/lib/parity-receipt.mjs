@@ -130,7 +130,7 @@ export function readReceipt(project) {
  *   always populated — including on success — so a caller can record HOW a
  *   stamp was authorised rather than only that it was.
  */
-export function receiptAuthorises(receipt, tag, currentKey, { maxAgeHours = MAX_AGE_HOURS, now = Date.now() } = {}) {
+export function receiptAuthorises(receipt, tag, currentKey, { maxAgeHours = MAX_AGE_HOURS, now = Date.now(), currentFileKey = null } = {}) {
   if (!receipt) {
     return { ok: false, reason: 'no check-parity receipt exists for this project', checkedAt: null };
   }
@@ -139,18 +139,34 @@ export function receiptAuthorises(receipt, tag, currentKey, { maxAgeHours = MAX_
     return { ok: false, reason: 'the last check-parity run did not cover this component', checkedAt: receipt.checkedAt ?? null };
   }
   const checkedAt = receipt.checkedAt ?? null;
-  // Was this receipt measured against THIS project's Figma file? A receipt
-  // that does not say is refused rather than assumed: pre-guard receipts
-  // carry no observedFileKey, and silently trusting them would preserve
-  // exactly the hole the field was added to close.
-  const wantKey = receipt.figmaFileKey ?? null;
+
+  // FILE IDENTITY, checked against LIVE config rather than against the
+  // receipt's own copy of it.
+  //
+  // The first version of this guard compared `receipt.figmaFileKey` to
+  // `receipt.observedFileKey` — but writeReceipt sets both, and only after
+  // check-parity's assertTargetFile has already forced them equal. So it
+  // could only ever catch a receipt inconsistent with ITSELF, which the sole
+  // writer cannot produce: a guard that cannot fail. Found by the verify-spec
+  // adversarial pass on 2026-08-29, which reproduced `{ok: true}` for a
+  // receipt measured against a since-replaced file. Re-pointing a project at
+  // a different Figma file is real history here — see commit 12b453a.
+  //
+  // `currentFileKey` must be supplied by the caller from the project it is
+  // stamping RIGHT NOW. Absent, this refuses: the caller not saying which
+  // file it targets is exactly the state that let the old guard pass.
+  // `receipt.figmaFileKey` is still written, for audit — it is no longer
+  // what the gate consults.
+  if (!currentFileKey) {
+    return { ok: false, reason: "the caller did not say which Figma file this project targets now, so the receipt's file identity cannot be established", checkedAt };
+  }
   if (!receipt.observedFileKey) {
     return { ok: false, reason: 'the receipt does not record which Figma file it measured - re-run check-parity', checkedAt };
   }
-  if (wantKey && receipt.observedFileKey !== wantKey) {
+  if (receipt.observedFileKey !== currentFileKey) {
     return {
       ok: false,
-      reason: `the receipt was measured against ${receipt.observedFileName ? `"${receipt.observedFileName}" ` : ''}(${receipt.observedFileKey}), not this project's Figma file (${wantKey})`,
+      reason: `the receipt was measured against ${receipt.observedFileName ? `"${receipt.observedFileName}" ` : ''}(${receipt.observedFileKey}), not the file this project targets now (${currentFileKey})`,
       checkedAt,
     };
   }

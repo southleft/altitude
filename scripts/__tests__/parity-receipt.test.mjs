@@ -29,7 +29,6 @@ function assert(desc, cond) {
 const NOW = Date.parse('2026-08-29T12:00:00.000Z');
 const FRESH = '2026-08-29T11:00:00.000Z';   // 1h old
 const KEY = { codeHash: 'abc123', contractDigest: 'def456' };
-
 const FILE_KEY = 'y83n4o9LOGs74oAoguFcGS';
 
 // A receipt from a correct run: measured against the project's own Figma file.
@@ -47,8 +46,10 @@ const receiptWith = (entry, checkedAt = FRESH, over = {}) => ({
   ...over,
 });
 
+// Every caller must now name the file the project targets RIGHT NOW; the
+// receipt is no longer allowed to vouch for its own file identity.
 const auth = (receipt, key = KEY, opts = {}) =>
-  receiptAuthorises(receipt, 'al-button', key, { now: NOW, ...opts });
+  receiptAuthorises(receipt, 'al-button', key, { now: NOW, currentFileKey: FILE_KEY, ...opts });
 
 console.log('== parity-receipt receiptAuthorises() self-test ==');
 
@@ -135,6 +136,27 @@ console.log('The receipt must say WHICH Figma file it measured');
   const wrongFile = auth(receiptWith(ok, FRESH, { observedFileKey: '6jxGtEByGj7ajLWax4RgQq', observedFileName: 'Hooper Design System' }));
   assert('a receipt measured against another file is refused', wrongFile.ok === false);
   assert('  ...and the reason names the file it actually measured', /Hooper Design System/.test(wrongFile.reason));
+
+  // THE RE-POINTED PROJECT. The first version of this guard compared the
+  // receipt's figmaFileKey to its own observedFileKey — both written by the
+  // same run, after assertTargetFile had already forced them equal — so it
+  // could only catch a receipt inconsistent with itself, which the writer
+  // cannot produce. The verify-spec adversarial pass reproduced {ok:true}
+  // here on 2026-08-29. Re-pointing is real history: commit 12b453a.
+  const OLD_FILE = 'oldFileKeyAAAAAAAAAAAA';
+  const selfConsistentButStale = receiptWith(ok, FRESH, {
+    figmaFileKey: OLD_FILE, observedFileKey: OLD_FILE, observedFileName: 'Altitude DS (pre-migration)',
+  });
+  const repointed = auth(selfConsistentButStale);
+  assert('a receipt that agrees with ITSELF but not with live config is refused', repointed.ok === false);
+  assert('  ...and the reason names the file the project targets NOW', repointed.reason.includes(FILE_KEY));
+
+  // Fail-closed: a caller that does not say which file it targets gets a
+  // refusal, not the benefit of the doubt. That silence is the state the old
+  // guard treated as a pass.
+  const unstated = receiptAuthorises(receiptWith(ok), 'al-button', KEY, { now: NOW });
+  assert('a caller that names no target file is refused, not waved through', unstated.ok === false);
+  assert('  ...and says the file identity could not be established', /file identity cannot be established/.test(unstated.reason));
 
   const silent = auth(receiptWith(ok, FRESH, { observedFileKey: undefined, observedFileName: undefined }));
   assert('a receipt that does not record the file at all is refused, not assumed', silent.ok === false);

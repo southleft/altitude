@@ -143,7 +143,10 @@ for (const tag of tags) {
   // Is this component's reconciliation actually verified? `sourceKeyFor` is
   // the SAME function check-parity called when it wrote the receipt, so a
   // source edit between the check and the stamp cannot slip through.
-  const auth = receiptAuthorises(receipt, tag, sourceKeyFor(rosterByTag, tag), { maxAgeHours });
+  // currentFileKey comes from the LIVE project, not from the receipt's own
+  // copy of it — see receiptAuthorises for why the receipt cannot vouch for
+  // its own file identity.
+  const auth = receiptAuthorises(receipt, tag, sourceKeyFor(rosterByTag, tag), { maxAgeHours, currentFileKey: project.figma?.fileKey ?? null });
   if (!auth.ok && !humanVerified) {
     console.error(`REFUSED ${tag}: ${auth.reason}`);
     console.error(`         verify:  node scripts/figma-atoms/check-parity.mjs${projectFlag} ${tag}`);

@@ -390,6 +390,8 @@ async function main() {
 
   // Build the full list of attempts to run.
   const jobs = [];
+  // Cases the corpus can no longer pose — named and counted, never silent.
+  const unposable = [];
   for (const tid of TASK_IDS) {
     const task = TASKS[tid];
     if (!task) { console.error(`Unknown task: ${tid}. Supported: ${Object.keys(TASKS).join(', ')}`); continue; }
@@ -429,7 +431,31 @@ async function main() {
             // A measurement artifact that looks exactly like a model failure
             // is the worst thing an eval can produce. The run dir is
             // gitignored (.gitignore:62), so this leaves no tracked residue.
-            const paths = DRY_RUN ? null : source.materialize(attemptCase, casesDir);
+            // A case that cannot be posed must not be silently graded — that
+            // is why materializeCase THROWS. But the throw used to escape
+            // this synchronous loop all the way to main().catch, so ONE
+            // stale Task D case killed the entire fleet: tasks A/B/C/E/F/G
+            // never ran and no run.json was written, though none of them
+            // touch the drift corpus. Found by the verify-spec adversarial
+            // pass, 2026-08-29.
+            //
+            // The narrow intent is kept and the blast radius is cut: this
+            // attempt is dropped as a NAMED, counted miss and the rest of
+            // the fleet proceeds. Never a silent skip — an unposable case is
+            // printed, carried into run.json, and if it leaves NOTHING
+            // posable the run exits non-zero rather than reporting success
+            // over an empty job list.
+            let paths = null;
+            if (!DRY_RUN) {
+              try {
+                paths = source.materialize(attemptCase, casesDir);
+              } catch (err) {
+                const reason = String(err && err.message ? err.message : err).slice(0, 300);
+                unposable.push({ task: tid, attempt: i, caseId: attemptCase.id ?? null, reason });
+                console.error(`[fleet] UNPOSABLE ${tid} attempt ${i} (${attemptCase.id ?? 'no id'}): ${reason}`);
+                continue;
+              }
+            }
             casePlaceholders = source.placeholders(attemptCase, paths);
           }
           let rawPrompt = promptTemplate
@@ -456,6 +482,13 @@ async function main() {
     }
   }
 
+  if (unposable.length) {
+    console.error(`[fleet] ${unposable.length} attempt(s) could not be posed — rebuild the corpus: pnpm run evals:drift-cases -- --write`);
+  }
+  if (!jobs.length) {
+    console.error('[fleet] NOTHING to run — every attempt was unposable. Exiting non-zero rather than reporting an empty success.');
+    process.exit(1);
+  }
   console.log(`[fleet] ${jobs.length} attempts to run (concurrency ${CONCURRENCY})`);
 
   if (DRY_RUN) {
@@ -549,6 +582,7 @@ async function main() {
   const manifest = {
     runId,
     startedAt: new Date().toISOString(),
+    unposable,
     config: { fleetSize: FLEET_SIZE, models: MODELS, tasks: TASK_IDS, treatments: TREATMENTS_TO_RUN, modelPin: MODEL_PIN, maxBudgetUsd: MAX_BUDGET_USD, concurrency: CONCURRENCY },
     binaries,
     attempts: results,
@@ -556,6 +590,7 @@ async function main() {
       total: results.length,
       gradeable: results.filter(r => r.ok).length,
       void: results.filter(r => r.parsedButVoid).length,
+      unposable: unposable.length,
       unobserved: results.filter(r => r.unobserved).length,
       noParse: results.filter(r => !r.ok && !r.parsedButVoid).length,
       retried: results.filter(r => r.retried).length,
@@ -578,6 +613,7 @@ async function main() {
   console.log('\n=== fleet summary ===');
   console.log(`  gradeable: ${manifest.summary.gradeable}/${manifest.summary.total}`);
   console.log(`  void     : ${manifest.summary.void}`);
+  console.log(`  unposable: ${manifest.summary.unposable}${manifest.summary.unposable ? '  <- cases the corpus can no longer pose; the rest of the fleet still ran' : ''}`);
   console.log(`  unobserved: ${manifest.summary.unobserved}${manifest.summary.unobserved ? '  <- graded nothing: the agent read neither side. Check the case files are readable from the child sandbox.' : ''}`);
   console.log(`  no-parse : ${manifest.summary.noParse}`);
   console.log(`  retried  : ${manifest.summary.retried}`);
