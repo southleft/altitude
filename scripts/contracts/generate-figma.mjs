@@ -207,6 +207,13 @@ async function mainSheet(SC, contract, config, nestedSetNames) {
     );
     process.exit(1);
   }
+  // POSITIVE file match (2026-08-28): the decoy guard blocks only LISTED
+  // decoys — an unrelated file (a client file left focused) passed it. The
+  // open file must BE the target, not merely not-a-decoy.
+  if (status.currentFileKey && status.currentFileKey !== SC.fileKey) {
+    console.error(`Refusing to generate: Figma has "${status.currentFileName}" (${status.currentFileKey}) open — not "${SC.fileName}" (${SC.fileKey}). Focus the target file and re-run.`);
+    process.exit(1);
+  }
 
   const setupText = await call(SHIM_PORT, 'figma_execute', { code: buildSheetSetupPluginCode(plan, SC), fileKey: SC.fileKey, timeout: 90000 });
   let setupPayload;
@@ -246,7 +253,14 @@ async function mainSheet(SC, contract, config, nestedSetNames) {
 async function main() {
   const SC = scope(projectArg());
   const { contract } = loadContract(SC.id, COMPONENT);
-  const { config, path: configPath, fileExists: configFileExists } = loadComponentConfig(REPO_ROOT, COMPONENT);
+  // Config roots: the brand layer (when this project declares one) shadows
+  // the base library — the contract for a superseded/brand-only tag describes
+  // the BRAND implementation, so its figma.gen.json lives with that code.
+  const configRoots = [
+    ...(SC.brandLibrary?.root ? [SC.brandLibrary.root] : []),
+    'libs/al-web-components',
+  ];
+  const { config, path: configPath, fileExists: configFileExists } = loadComponentConfig(REPO_ROOT, COMPONENT, configRoots);
   if (configFileExists) console.log(`[generate-figma] per-component config: ${configPath}`);
   const nestedSetNames = loadNestedSetNames(SC.id);
 
@@ -286,6 +300,13 @@ async function main() {
       `Refusing to generate: Figma is on the "${guard.decoy.fileName}" DECOY file. Open "${SC.fileName}" (${SC.fileKey}).` +
       (guard.decoy.why ? `\n  ${guard.decoy.why}` : ''),
     );
+    process.exit(1);
+  }
+  // POSITIVE file match (2026-08-28): the decoy guard blocks only LISTED
+  // decoys — an unrelated file (a client file left focused) passed it. The
+  // open file must BE the target, not merely not-a-decoy.
+  if (status.currentFileKey && status.currentFileKey !== SC.fileKey) {
+    console.error(`Refusing to generate: Figma has "${status.currentFileName}" (${status.currentFileKey}) open — not "${SC.fileName}" (${SC.fileKey}). Focus the target file and re-run.`);
     process.exit(1);
   }
 

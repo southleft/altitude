@@ -73,7 +73,7 @@
  *                     on the next contracts --refresh, not at generation time.
  */
 import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { isAbsolute, join } from 'node:path';
 
 import { SHEET_CELL_WIDTH_PX, SHEET_ROW_LABEL_WIDTH_PX } from './sheet-style.mjs';
 
@@ -132,8 +132,20 @@ export function componentDirFor(tag) {
   return String(tag).replace(/^al-/, '');
 }
 
-export function componentConfigPath(repoRoot, tag) {
-  return join(repoRoot, 'libs', 'al-web-components', 'components', componentDirFor(tag), 'figma.gen.json');
+export function componentConfigPath(repoRoot, tag, libRoots) {
+  // Candidate roots, FIRST WIN. A project with a brand layer generates the
+  // BRAND implementation for a superseded tag (southleft/al-card is
+  // sl-web-components' card, not the base one), so the layer's config must
+  // shadow the base library's. Default stays base-only for callers that pass
+  // no roots (2026-08-28, sl-figma-parity-stress-test T7 — brand-layer
+  // components could never resolve a figma.gen.json before this).
+  // Roots may be repo-relative ('libs/al-web-components') or ABSOLUTE — the
+  // registry resolver (ds-project.mjs) hands out absolute paths.
+  const roots = Array.isArray(libRoots) && libRoots.length ? libRoots : ['libs/al-web-components'];
+  const candidates = roots.map((root) =>
+    join(isAbsolute(String(root)) ? String(root) : join(repoRoot, String(root)), 'components', componentDirFor(tag), 'figma.gen.json'),
+  );
+  return candidates.find((p) => existsSync(p)) ?? candidates[candidates.length - 1];
 }
 
 /**
@@ -141,9 +153,11 @@ export function componentConfigPath(repoRoot, tag) {
  * DEFAULT_COMPONENT_CONFIG (one level deep for the `label`/`sheet` objects —
  * a partial override keeps the other keys' defaults). Returns
  * { config, path, fileExists } so the CLI can report where config came from.
+ * `libRoots` (optional): repo-relative library roots to search, brand layer
+ * first — see componentConfigPath.
  */
-export function loadComponentConfig(repoRoot, tag) {
-  const path = componentConfigPath(repoRoot, tag);
+export function loadComponentConfig(repoRoot, tag, libRoots) {
+  const path = componentConfigPath(repoRoot, tag, libRoots);
   const fileExists = existsSync(path);
   let overrides = {};
   if (fileExists) {
