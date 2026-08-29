@@ -13,7 +13,9 @@
       "location": "libs/altitude-mcp/src/lib/parity.mjs",
       "anchor": "First decide direction with a human",
       "disposition": "evaluated",
-      "coveredBy": ["task E (direction policy) — fixtures/direction-cases.json"],
+      "coveredBy": [
+        "task E (direction policy) — fixtures/direction-cases.json"
+      ],
       "wrongAnswer": "Figma silently becomes the source of truth for a token value, reversing the DTCG generation direction CLAUDE.md calls one-way."
     },
     {
@@ -22,7 +24,9 @@
       "location": "libs/altitude-mcp/src/lib/parity.mjs",
       "anchor": "Merge deliberately",
       "disposition": "evaluated",
-      "coveredBy": ["task E — the `both-sides-changed` case, whose answer is ask-a-human"],
+      "coveredBy": [
+        "task E — the `both-sides-changed` case, whose answer is ask-a-human"
+      ],
       "wrongAnswer": "A half-merge; one side's intent is silently lost with no record that it existed."
     },
     {
@@ -31,7 +35,9 @@
       "location": "libs/altitude-mcp/src/lib/parity.mjs",
       "anchor": "Decide with a human whether it should exist in code",
       "disposition": "evaluated",
-      "coveredBy": ["task E — the `figma-only-set-no-code` case"],
+      "coveredBy": [
+        "task E — the `figma-only-set-no-code` case"
+      ],
       "wrongAnswer": "Scaffolding a layout wrapper the repo's arrangement guardrails ban, to turn a badge green."
     },
     {
@@ -76,7 +82,9 @@
       "location": "scripts/contracts/figma/component-config.mjs",
       "anchor": "JUDGMENT CALLS",
       "disposition": "evaluated",
-      "coveredBy": ["task F (curation review) — derived live from the 33 tracked curation files"],
+      "coveredBy": [
+        "task F (curation review) — derived live from the 33 tracked curation files"
+      ],
       "wrongAnswer": "al-badge sampled as a dot; al-banner sized by whatever message text happened to be there."
     },
     {
@@ -85,7 +93,9 @@
       "location": "scripts/contracts/emit-contracts.mjs",
       "anchor": "carryForwardPropAxisCuration",
       "disposition": "evaluated",
-      "coveredBy": ["task F — including the al-button T22/T23 -> T31 reversal as a hand-authored negative case"],
+      "coveredBy": [
+        "task F — including the al-button T22/T23 -> T31 reversal as a hand-authored negative case"
+      ],
       "wrongAnswer": "The real one: a ~200-variant fan-out curated from a documentation screenshot mistaken for the live set."
     },
     {
@@ -140,6 +150,20 @@
       ],
       "wrongAnswer": "A non-conforming set that still passes every other gate.",
       "note": "Variant ORDER remains unverifiable from a canvas contract: extract-canvas.mjs sorts axis options, so the artifact records the set and destroys the order."
+    },
+    {
+      "id": "J14",
+      "decision": "Is the Figma document I am measuring the project's file at all?",
+      "location": "scripts/lib/figma-shim.mjs",
+      "anchor": "POSITIVE target guard",
+      "disposition": "gated",
+      "coveredBy": [
+        "assertTargetFile() refuses unless the ACTIVE file key equals project.figma.fileKey",
+        "check-parity.mjs runs it before taking a single measurement",
+        "the receipt records observedFileKey, and receiptAuthorises() refuses a receipt from another file or one that does not say",
+        "scripts/__tests__/parity-receipt.test.mjs (12 assertions)"
+      ],
+      "wrongAnswer": "A receipt minted against whatever file happened to be active becomes proof of parity with the target. Found live on 2026-08-29: a client file (\"Hooper Design System\") was the ACTIVE document while this tooling was pointed at Altitude. checkDecoyGuard passed it because it is not on the known-bad list, and nothing downstream recorded which file the measurement came from - the receipt stored project.figma.fileName, what it INTENDED to measure, never what it did. This is the 14th point; the ledger existed to make it visible, and the guard it demanded is allowlist-shaped, per this repo's own rule that a negative guard let a client file through once already."
     }
   ],
   "markerFilesAcknowledged": [

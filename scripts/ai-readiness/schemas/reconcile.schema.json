@@ -22,6 +22,10 @@
           "kind": {
             "enum": ["missing-in-canvas", "missing-in-code", "value-mismatch", "present-despite-omission"]
           },
+    "renamedTo": {
+      "type": "string",
+      "description": "OPTIONAL. When this disagreement is a RENAME, the name the other side uses. Set `key` to the name one side uses, `kind` to \"value-mismatch\", and this to the other. The underlying differ has no rename concept and records a rename as two findings (the old name missing from one side, the new name missing from the other); reporting it as one finding WITH this field set is scored as covering both halves, so the better analysis is not penalised."
+    },
           "detail": { "type": "string" },
           "winner": {
             "enum": ["code", "canvas", "ask-a-human"],

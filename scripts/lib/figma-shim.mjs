@@ -77,6 +77,54 @@ export function checkDecoyGuard(project, statusText) {
   return { blocked: false, decoy: null };
 }
 
+/**
+ * POSITIVE target guard: is the live session's ACTIVE file the project's file?
+ *
+ * `checkDecoyGuard` above is negative - it blocks a short list of known-bad
+ * file keys and lets everything else through. On 2026-08-29 that let a client
+ * file ("Hooper Design System") sit active while parity tooling was pointed at
+ * Altitude: not a declared decoy, so not blocked. This repo's own rule is that
+ * a guard must be allowlist-shaped - the open file must BE the target, not
+ * merely fail to be a recognised impostor.
+ *
+ * Reads the ACTIVE file key out of a `figma_get_status` / `figma_list_open_files`
+ * payload. A file merely being *connected* is not enough: the bridge reports
+ * every open file, and tools act on the active one.
+ *
+ * @returns {{ok: boolean, activeFileKey: string|null, activeFileName: string|null, reason: string}}
+ */
+export function assertTargetFile(project, statusText) {
+  const want = project.figma?.fileKey;
+  if (!want) {
+    return { ok: false, activeFileKey: null, activeFileName: null, reason: `project "${project.id}" declares no figma.fileKey to check against` };
+  }
+  let active = null, name = null;
+  try {
+    const outer = JSON.parse(statusText);
+    const doc = typeof outer === 'string' ? JSON.parse(outer) : outer;
+    active = doc.activeFileKey ?? doc.currentFileKey ?? null;
+    name = doc.currentFileName ?? null;
+    if (!name && Array.isArray(doc.files)) {
+      const hit = doc.files.find((f) => f.fileKey === active);
+      name = hit ? hit.fileName : null;
+    }
+  } catch {
+    // Fall through: an unparseable payload is NOT treated as a pass.
+  }
+  if (!active) {
+    return { ok: false, activeFileKey: null, activeFileName: null, reason: 'could not read the active file key from the bridge status - refusing rather than assuming it is the right file' };
+  }
+  if (active !== want) {
+    return {
+      ok: false,
+      activeFileKey: active,
+      activeFileName: name,
+      reason: `the active Figma file is ${name ? `"${name}" (${active})` : active}, but project "${project.id}" targets "${project.figma.fileName}" (${want}). Open the target file, or use figma_navigate with lock:true to pin it.`,
+    };
+  }
+  return { ok: true, activeFileKey: active, activeFileName: name, reason: `active file is the project target "${project.figma.fileName}"` };
+}
+
 /** figma_execute wraps output unpredictably — dig the JSON payload out. */
 export function parsePayload(text) {
   try {

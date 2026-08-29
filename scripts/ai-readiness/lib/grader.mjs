@@ -198,8 +198,45 @@ export function gradeTaskD(parsed, context) {
     };
   }
 
-  const reportedIds = new Set(reported.map(findingId));
   const expectedIds = new Set((caseRecord.expected ?? []).map(findingId));
+
+  // RENAMES: the differ has no rename concept. `contract-diff.mjs` sees one
+  // name vanish from a side and another appear on the other, so it records a
+  // rename as a PAIR — {old, missing-in-canvas} + {new, missing-in-code}, or
+  // the mirror. An agent that recognises the rename and reports it as ONE
+  // finding is doing the BETTER analysis, and the first baseline scored
+  // exactly that as 0 true positives / 1 spurious: it named the right axis,
+  // the right new name and the right winner, and the eval called it wrong
+  // for not guessing the differ's internal encoding. The schema now carries
+  // an optional `renamedTo`, and a finding that sets it expands to the two
+  // ids it actually covers.
+  //
+  // The expansion is deliberately narrow. It fires ONLY when both halves are
+  // in the answer key AND they carry OPPOSITE kinds (missing-in-canvas vs
+  // missing-in-code) — the shape a genuine rename pair always has. Otherwise
+  // "A was renamed to B" for two arbitrary keys would harvest credit for two
+  // unrelated disagreements. When it does not fire, the finding is scored
+  // literally, so a wrong rename claim still counts as spurious.
+  const expandFinding = (f) => {
+    const literal = findingId(f);
+    const other = String(f?.renamedTo ?? '').trim();
+    if (!other) return [literal];
+    const dim = String(f?.dimension ?? '').toLowerCase();
+    const a = normFindingKey(f?.key);
+    const b = normFindingKey(other);
+    if (!a || !b || a === b) return [literal];
+    const id = (key, kind) => `${dim}|${key}|${kind}`;
+    for (const [ka, kb] of [['missing-in-canvas', 'missing-in-code'], ['missing-in-code', 'missing-in-canvas']]) {
+      const pair = [id(a, ka), id(b, kb)];
+      if (pair.every((x) => expectedIds.has(x))) return pair;
+    }
+    return [literal];
+  };
+
+  // Expanded on BOTH sides of the ratio: a rename finding contributes the two
+  // ids it covers to the reported count as well, so precision cannot exceed 1
+  // and one finding cannot outscore two correct ones.
+  const reportedIds = new Set(reported.flatMap(expandFinding));
   const injectedIds = new Set((caseRecord.injected ?? []).map(findingId));
 
   const truePositives = [...expectedIds].filter((id) => reportedIds.has(id));

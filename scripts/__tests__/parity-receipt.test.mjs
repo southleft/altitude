@@ -17,6 +17,7 @@
  * Run: node scripts/__tests__/parity-receipt.test.mjs
  */
 import { MAX_AGE_HOURS, receiptAuthorises } from '../lib/parity-receipt.mjs';
+import { assertTargetFile } from '../lib/figma-shim.mjs';
 
 let PASS = 0;
 let FAIL = 0;
@@ -29,12 +30,21 @@ const NOW = Date.parse('2026-08-29T12:00:00.000Z');
 const FRESH = '2026-08-29T11:00:00.000Z';   // 1h old
 const KEY = { codeHash: 'abc123', contractDigest: 'def456' };
 
-const receiptWith = (entry, checkedAt = FRESH) => ({
+const FILE_KEY = 'y83n4o9LOGs74oAoguFcGS';
+
+// A receipt from a correct run: measured against the project's own Figma file.
+// `observedFileKey` is what the bridge actually reported, not what config
+// hoped for - the distinction the field exists to make.
+const receiptWith = (entry, checkedAt = FRESH, over = {}) => ({
   schemaVersion: 1,
   project: 'altitude',
   checkedAt,
   tolerancePx: 4,
+  figmaFileKey: FILE_KEY,
+  observedFileKey: FILE_KEY,
+  observedFileName: 'Altitude Design System',
   components: { 'al-button': entry },
+  ...over,
 });
 
 const auth = (receipt, key = KEY, opts = {}) =>
@@ -107,8 +117,56 @@ console.log('\n4. Staleness — the FIGMA side is bound by clock, because no dig
 
   // Built by hand: receiptWith()'s default parameter would supply a fresh
   // timestamp, so passing `undefined` does NOT produce a receipt missing one.
-  const undated = { schemaVersion: 1, project: 'altitude', tolerancePx: 4, components: { 'al-button': { ok: true, checked: 1, off: 0, missing: 0, sourceKey: KEY } } };
+  const undated = { schemaVersion: 1, project: 'altitude', tolerancePx: 4, figmaFileKey: FILE_KEY, observedFileKey: FILE_KEY, components: { 'al-button': { ok: true, checked: 1, off: 0, missing: 0, sourceKey: KEY } } };
   assert('a receipt with no readable timestamp is refused, not treated as fresh', auth(undated).ok === false);
+}
+
+
+console.log('');
+console.log('The receipt must say WHICH Figma file it measured');
+{
+  const ok = { ok: true, checked: 12, off: 0, missing: 0, sourceKey: KEY };
+
+  // Found on 2026-08-29: a client file ("Hooper Design System") was the active
+  // document while the parity tooling was pointed at Altitude. The decoy guard
+  // passed it - it was not on the known-bad list - and nothing downstream
+  // recorded which file the measurement came from, so mark-synced would have
+  // accepted it as proof of parity with the target.
+  const wrongFile = auth(receiptWith(ok, FRESH, { observedFileKey: '6jxGtEByGj7ajLWax4RgQq', observedFileName: 'Hooper Design System' }));
+  assert('a receipt measured against another file is refused', wrongFile.ok === false);
+  assert('  ...and the reason names the file it actually measured', /Hooper Design System/.test(wrongFile.reason));
+
+  const silent = auth(receiptWith(ok, FRESH, { observedFileKey: undefined, observedFileName: undefined }));
+  assert('a receipt that does not record the file at all is refused, not assumed', silent.ok === false);
+  assert('  ...and says to re-run the check', /re-run check-parity/.test(silent.reason));
+
+  assert('a receipt from the right file still authorises', auth(receiptWith(ok)).ok === true);
+}
+
+console.log('');
+console.log('The target guard is POSITIVE: the open file must BE the target');
+{
+  const project = { id: 'altitude', figma: { fileKey: FILE_KEY, fileName: 'Altitude Design System', decoys: [{ fileKey: 'NGpu9IJj2pRhNru1QTGmuF' }] } };
+  const status = (o) => JSON.stringify(o);
+
+  const right = assertTargetFile(project, status({ activeFileKey: FILE_KEY, currentFileName: 'Altitude Design System' }));
+  assert('the project file passes', right.ok === true);
+
+  // The whole point: a file nobody listed as a decoy is still not the target.
+  const client = assertTargetFile(project, status({ activeFileKey: '6jxGtEByGj7ajLWax4RgQq', currentFileName: 'Hooper Design System' }));
+  assert('an unlisted third-party file is REFUSED, not merely un-blocked', client.ok === false);
+  assert('  ...and the reason names both the active file and the target', /Hooper Design System/.test(client.reason) && /Altitude Design System/.test(client.reason));
+
+  // Connected is not active. The bridge reports every open file.
+  const connectedNotActive = assertTargetFile(project, status({
+    activeFileKey: '6jxGtEByGj7ajLWax4RgQq',
+    files: [{ fileKey: FILE_KEY, fileName: 'Altitude Design System', isActive: false }, { fileKey: '6jxGtEByGj7ajLWax4RgQq', fileName: 'Hooper Design System', isActive: true }],
+  }));
+  assert('the target merely being OPEN does not pass - it must be ACTIVE', connectedNotActive.ok === false);
+
+  assert('an unparseable status is refused, never assumed to be the target', assertTargetFile(project, 'not json at all').ok === false);
+  assert('a status with no active file key is refused', assertTargetFile(project, status({ files: [] })).ok === false);
+  assert('a project with no declared fileKey is refused rather than waved through', assertTargetFile({ id: 'x', figma: {} }, status({ activeFileKey: FILE_KEY })).ok === false);
 }
 
 console.log(`\n${PASS} passed, ${FAIL} failed`);

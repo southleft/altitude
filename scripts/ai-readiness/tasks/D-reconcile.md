@@ -49,6 +49,18 @@ Do not report these. They are properties of the format, not defects:
   (DOM tag/class vs Figma layer name) with no reliable 1:1 mapping, so the
   node trees are not comparable and are not being asked about.
 
+## Renames
+
+A renamed axis, prop or state is ONE disagreement, not two. Report it as a
+single finding: `key` = the name one side uses, `kind` = `value-mismatch`,
+and `renamedTo` = the name the other side uses. Say which side is which in
+`detail`.
+
+You may instead report the two halves separately (the old name missing from
+one side, the new name missing from the other) — both encodings score the
+same. The single-finding form is preferred because it says what actually
+happened.
+
 ## The two sides may also agree
 
 If the two contracts do not disagree, return an empty `findings` array and

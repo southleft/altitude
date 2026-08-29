@@ -31,7 +31,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { scope, projectArg } from './project-scope.mjs';
-import { call, parsePayload, shimPortFromArgv } from '../lib/figma-shim.mjs';
+import { call, parsePayload, shimPortFromArgv, assertTargetFile } from '../lib/figma-shim.mjs';
 import { hasFlag, positionals } from '../lib/argv.mjs';
 import { rosterIndex, sourceKeyFor, writeReceipt } from '../lib/parity-receipt.mjs';
 
@@ -74,6 +74,26 @@ for (const name of want) {
 }
 return JSON.stringify(out);
 `;
+
+// POSITIVE target guard, BEFORE a single measurement is taken. The bridge
+// reports every connected file and acts on the ACTIVE one, so "the shim
+// answered" is not evidence the right document is open: on 2026-08-29 a
+// client file was active while this tool was pointed at Altitude, and the
+// decoy guard passed it because it was not on the known-bad list. A receipt
+// minted against the wrong file is worse than no receipt - mark-synced would
+// treat it as proof of parity with the target.
+let target;
+try {
+  target = assertTargetFile(sc.project, await call('figma_get_status', {}, { port: PORT, fileName: sc.fileName }));
+} catch (e) {
+  console.error(String(e.message).slice(0, 500));
+  process.exit(1);
+}
+if (!target.ok) {
+  console.error(`REFUSING to check parity: ${target.reason}`);
+  process.exit(1);
+}
+console.log(`[target] ${target.reason}`);
 
 let live;
 try {
@@ -140,7 +160,7 @@ for (const key of targets) {
 }
 console.log(`\n[${sc.id}] checked ${totalChecked} variants | ${totalOff} outside ${TOL}px | ${totalMissing} missing`);
 
-const receipt = writeReceipt(sc.project, { tolerancePx: TOL, components: results });
+const receipt = writeReceipt(sc.project, { tolerancePx: TOL, components: results, observedFileKey: target.activeFileKey, observedFileName: target.activeFileName });
 console.log(`[${sc.id}] receipt written: ${receipt}`);
 
 const failed = totalOff > 0 || totalMissing > 0;

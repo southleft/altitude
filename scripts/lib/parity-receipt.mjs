@@ -89,13 +89,21 @@ export function rosterIndex(project) {
  * greenlighting a stamp long after a later run failed that same tag. One run,
  * one receipt, one moment in time.
  */
-export function writeReceipt(project, { tolerancePx, components }) {
+export function writeReceipt(project, { tolerancePx, components, observedFileKey = null, observedFileName = null }) {
   const path = receiptPath(project);
   mkdirSync(dirname(path), { recursive: true });
   const receipt = {
     schemaVersion: RECEIPT_SCHEMA_VERSION,
     project: project.id,
+    // EXPECTED (from config) and OBSERVED (from the live bridge) are recorded
+    // separately and deliberately. The receipt used to store only
+    // `project.figma.fileName` - what it INTENDED to measure, never what it
+    // actually measured - so a run against whatever file happened to be
+    // active produced a receipt indistinguishable from a correct one.
     figmaFile: project.figma.fileName,
+    figmaFileKey: project.figma.fileKey ?? null,
+    observedFileKey,
+    observedFileName,
     checkedAt: new Date().toISOString(),
     tolerancePx,
     components,
@@ -131,6 +139,21 @@ export function receiptAuthorises(receipt, tag, currentKey, { maxAgeHours = MAX_
     return { ok: false, reason: 'the last check-parity run did not cover this component', checkedAt: receipt.checkedAt ?? null };
   }
   const checkedAt = receipt.checkedAt ?? null;
+  // Was this receipt measured against THIS project's Figma file? A receipt
+  // that does not say is refused rather than assumed: pre-guard receipts
+  // carry no observedFileKey, and silently trusting them would preserve
+  // exactly the hole the field was added to close.
+  const wantKey = receipt.figmaFileKey ?? null;
+  if (!receipt.observedFileKey) {
+    return { ok: false, reason: 'the receipt does not record which Figma file it measured - re-run check-parity', checkedAt };
+  }
+  if (wantKey && receipt.observedFileKey !== wantKey) {
+    return {
+      ok: false,
+      reason: `the receipt was measured against ${receipt.observedFileName ? `"${receipt.observedFileName}" ` : ''}(${receipt.observedFileKey}), not this project's Figma file (${wantKey})`,
+      checkedAt,
+    };
+  }
   if (entry.ok !== true) {
     const detail = entry.unverifiable
       ? `check-parity could not verify it (${entry.unverifiable})`

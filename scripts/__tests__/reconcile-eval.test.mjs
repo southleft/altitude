@@ -162,7 +162,72 @@ console.log('\n7. Not measured is never reported as measured-bad');
   assert('  ...while an agent that actually looked still earns it', earned.score === 1);
 }
 
-console.log('\n8. runGrader passes the context through');
+console.log('\n7b. A rename reported as one finding scores as the pair it covers');
+{
+  // The differ records a rename as {old, missing-in-canvas} + {new,
+  // missing-in-code}. The first baseline scored an agent that correctly
+  // reported it as ONE value-mismatch as 0 TP / 1 spurious: it named the
+  // right axis, the right new name and the right winner, and was marked
+  // wrong for not guessing the differ's internal encoding.
+  const renameCase = {
+    id: 'x.rename-axis',
+    mutation: 'rename-axis',
+    expected: [
+      { dimension: 'variant-axis', key: 'variant', kind: 'missing-in-canvas' },
+      { dimension: 'variant-axis', key: 'Variant Renamed', kind: 'missing-in-code' },
+    ],
+    injected: [
+      { dimension: 'variant-axis', key: 'variant', kind: 'missing-in-canvas' },
+      { dimension: 'variant-axis', key: 'Variant Renamed', kind: 'missing-in-code' },
+    ],
+  };
+  const single = gradeTaskD({
+    verdict: 'drifted',
+    sourceUsed: ['code.json', 'canvas.json'],
+    findings: [{ dimension: 'variant-axis', key: 'Variant', kind: 'value-mismatch', renamedTo: 'Variant Renamed', winner: 'canvas' }],
+  }, { case: renameCase });
+  assert('one finding with renamedTo covers both halves', single.score === 1);
+  assert('  ...and precision never exceeds 1', single.precision === 1);
+  assert('  ...and the needle counts as found', single.injectedFound === true);
+
+  const halves = gradeTaskD({
+    verdict: 'drifted',
+    sourceUsed: ['code.json'],
+    findings: [
+      { dimension: 'variant-axis', key: 'variant', kind: 'missing-in-canvas' },
+      { dimension: 'variant-axis', key: 'Variant Renamed', kind: 'missing-in-code' },
+    ],
+  }, { case: renameCase });
+  assert('the two-halves encoding scores identically', halves.score === 1);
+
+  // The gaming vector: "A was renamed to B" for two arbitrary keys must not
+  // harvest credit for two unrelated disagreements. A genuine rename pair
+  // always carries OPPOSITE kinds; these two do not.
+  const bogusCase = {
+    id: 'x.bogus',
+    mutation: 'retoken',
+    expected: [
+      { dimension: 'prop', key: 'isDot', kind: 'missing-in-canvas' },
+      { dimension: 'prop', key: 'isRound', kind: 'missing-in-canvas' },
+    ],
+  };
+  const bogus = gradeTaskD({
+    verdict: 'drifted',
+    sourceUsed: ['code.json'],
+    findings: [{ dimension: 'prop', key: 'isDot', kind: 'value-mismatch', renamedTo: 'isRound' }],
+  }, { case: bogusCase });
+  assert('same-kind pairs are NOT a rename - no expansion, scored literally', bogus.truePositives === 0);
+  assert('  ...and the bogus claim counts as spurious', bogus.spurious === 1);
+
+  const unknown = gradeTaskD({
+    verdict: 'drifted',
+    sourceUsed: ['code.json'],
+    findings: [{ dimension: 'variant-axis', key: 'nothing', kind: 'value-mismatch', renamedTo: 'nowhere' }],
+  }, { case: renameCase });
+  assert('a rename claim absent from the key is scored literally, not credited', unknown.truePositives === 0);
+}
+
+console.log('8. runGrader passes the context through');
 {
   const viaRegistry = runGrader('gradeTaskD', { findings: [], verdict: 'in-sync', sourceUsed: ['code.json'] }, { case: CLEAN_CASE });
   assert('the registry path reaches gradeTaskD with its case', viaRegistry.score === 1);

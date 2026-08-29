@@ -3,7 +3,7 @@
  * Self-test for scripts/check-judgement-ledger.mjs (T12, spec
  * 2026-08-29-parity-judgement-gates-and-evals, R8).
  *
- * A checker that cannot fail is not a checker. The 13 judgement points were
+ * A checker that cannot fail is not a checker. The 14 judgement points were
  * found by a one-off sweep, and this file's whole reason to exist is that the
  * 14th would otherwise be invisible — so the assertions that matter are the
  * NEGATIVE ones: it must actually go red when a marker appears in an
@@ -44,7 +44,10 @@ console.log('\n1. The ledger as it stands');
   const res = run();
   assert('the checker passes against the committed ledger', res.status === 0);
   const json = JSON.parse(run(['--json']).stdout);
-  assert('all 13 judgement points are recorded', json.points === 13);
+  // Bumped 13 -> 14 on 2026-08-29 when J14 (the receipt never recorded WHICH
+  // Figma file it measured) was found live. The hardcoded count is the point:
+  // adding a judgement point has to be a deliberate act that turns this red.
+  assert('all 14 judgement points are recorded', json.points === 14);
   assert('every point has a disposition', Object.values(json.byDisposition).reduce((a, b) => a + b, 0) === json.points);
   assert('marker files were actually found — a scan that finds nothing proves nothing', json.markerFiles.length >= 10);
   assert('no problems', json.problems.length === 0);
