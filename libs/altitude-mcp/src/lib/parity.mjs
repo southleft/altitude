@@ -252,6 +252,20 @@ export function contractDigest(component) {
  * exactly "a variant was added or removed on one side", the case the byte hash
  * could not see.
  *
+ * ONE counted exception (2026-08-28, southleft stress test): the library's
+ * "unset value IS the default variant" convention means a Figma VARIANT axis
+ * legitimately carries exactly one MORE option than the code enum — the
+ * implicit default, named "Default" (most sets) or "Primary" (Button —
+ * AGENTS.md's no-variant-attribute-for-primary caveat). Counting that as
+ * option-count drift held four freshly-stamped components at figma-drift
+ * forever: every hash matched, and the "extra" option was the convention
+ * itself. So: when every code value has a Figma counterpart and the single
+ * leftover Figma option is one of the implicit-default names, it matches as
+ * `implicitDefault` rather than mismatching. The blind spot is acknowledged —
+ * a REAL Figma-side addition literally named "Default" on an axis whose enum
+ * has no default-ish value is indistinguishable from the convention, and the
+ * matched row records the name so a human can still see it.
+ *
  * @returns {null|{checked:number, mismatches:Array, matched:Array, unmatchedFigmaProps:string[]}}
  */
 export function diffFigmaContract(contract, figmaContract) {
@@ -277,6 +291,17 @@ export function diffFigmaContract(contract, figmaContract) {
     };
     // Only VARIANT properties carry an option set to compare against an enum.
     if (def?.type === 'VARIANT' && attr.values.length && figmaOptions.length) {
+      // The implicit-default exception (see the header): all code values
+      // covered + exactly one leftover Figma option named Default/Primary =
+      // the unset-value variant the convention renders, not an added option.
+      if (figmaOptions.length === attr.values.length + 1) {
+        const codeKeys = new Set(attr.values.map(normKey));
+        const leftover = figmaOptions.filter((o) => !codeKeys.has(normKey(o)));
+        if (leftover.length === 1 && ['default', 'primary'].includes(normKey(leftover[0]))) {
+          matched.push({ ...row, relabelled: false, implicitDefault: leftover[0] });
+          continue;
+        }
+      }
       if (attr.values.length !== figmaOptions.length) {
         mismatches.push({ ...row, kind: 'option-count' });
         continue;

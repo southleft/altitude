@@ -25,6 +25,7 @@ import { join } from 'node:path';
 import {
   STATUS,
   assessEntry,
+  diffFigmaContract,
   readManifest,
   writeManifest,
   InvalidManifestError,
@@ -122,6 +123,27 @@ const mapped = (over = {}) => ({ figma: { name: 'Button', nodeId: '1:1' }, ...ov
     { ...CURRENT, contractDiff: { mismatches: [{ kind: 'option-count' }], matched: [], unmatchedFigmaProps: [] } },
   );
   ok(r.status === STATUS.FIGMA_DRIFT && r.contractMismatches === 1, 'contract mismatch alone → figma-drift');
+}
+{
+  // The implicit-default convention (2026-08-28, southleft stress test): a
+  // Figma VARIANT axis carrying every code value plus exactly one extra
+  // option named Default/Primary is the "unset value IS the default variant"
+  // convention rendered, NOT option-count drift. Held al-button/al-chip/
+  // al-card/al-heading at figma-drift with every hash matching before this.
+  const contract = { attributes: [{ name: 'variant', values: ['bare', 'danger', 'secondary', 'tertiary'] }] };
+  const fig = (options) => ({ props: { Variant: { type: 'VARIANT', options } } });
+  const withDefault = diffFigmaContract(contract, fig(['Bare', 'Danger', 'Primary', 'Secondary', 'Tertiary']));
+  ok(
+    withDefault.mismatches.length === 0 && withDefault.matched[0]?.implicitDefault === 'Primary',
+    'surplus "Primary" option matches as implicitDefault, not option-count drift',
+  );
+  const realAddition = diffFigmaContract(contract, fig(['Bare', 'Danger', 'Ghost', 'Secondary', 'Tertiary']));
+  ok(
+    realAddition.mismatches.length === 1 && realAddition.mismatches[0].kind === 'option-count',
+    'a surplus option NOT named Default/Primary still counts as option-count drift',
+  );
+  const twoExtra = diffFigmaContract(contract, fig(['Bare', 'Danger', 'Default', 'Ghost', 'Secondary', 'Tertiary']));
+  ok(twoExtra.mismatches.length === 1, 'two surplus options never take the implicit-default exception');
 }
 
 // ── 2. manifest io ──────────────────────────────────────────────────────
