@@ -9,8 +9,8 @@ Component: al-pagination-item
 ## Figma
 
 - Component set: **Pagination Item**
-- Node id: `3579:12297` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-12297)
+- Node id: `3543:47406` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47406)
 
 ## Props (5)
 

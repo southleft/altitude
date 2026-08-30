@@ -9,8 +9,8 @@ Component: al-badge
 ## Figma
 
 - Component set: **Badge**
-- Node id: `3579:8999` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-8999)
+- Node id: `3538:35772` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3538-35772)
 
 ## Props (3)
 

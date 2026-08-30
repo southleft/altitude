@@ -21,8 +21,8 @@ API call).
 ## Figma
 
 - Component set: **Combobox**
-- Node id: `3579:16995` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-16995)
+- Node id: `3558:63019` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558-63019)
 
 ## Props (17)
 

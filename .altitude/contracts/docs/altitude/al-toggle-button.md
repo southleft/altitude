@@ -9,8 +9,8 @@ Component: al-toggle-button
 ## Figma
 
 - Component set: **Toggle Button**
-- Node id: `3579:13020` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-13020)
+- Node id: `3543:47985` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47985)
 
 ## Props (4)
 

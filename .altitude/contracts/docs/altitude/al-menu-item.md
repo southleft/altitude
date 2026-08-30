@@ -9,8 +9,8 @@ Component: al-menu-item
 ## Figma
 
 - Component set: **Menu Item**
-- Node id: `3579:12196` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-12196)
+- Node id: `3543:47347` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47347)
 
 ## Props (16)
 

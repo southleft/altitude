@@ -9,8 +9,8 @@ Component: al-textarea
 ## Figma
 
 - Component set: **Textarea**
-- Node id: `3579:13348` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-13348)
+- Node id: `3544:49378` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3544-49378)
 
 ## Props (21)
 

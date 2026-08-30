@@ -9,8 +9,8 @@ Component: al-link
 ## Figma
 
 - Component set: **Link**
-- Node id: `3579:9902` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-9902)
+- Node id: `3543:47075` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47075)
 
 ## Props (7)
 

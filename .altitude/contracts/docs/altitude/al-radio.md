@@ -9,8 +9,8 @@ Component: al-radio
 ## Figma
 
 - Component set: **Radio**
-- Node id: `3579:12693` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-12693)
+- Node id: `3543:47540` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47540)
 
 ## Props (11)
 
@@ -22,8 +22,8 @@ Component: al-radio
 | `fieldNote` | string | — | — | — |
 | `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
 | `isChecked` | boolean | — | — | **Checked** (VARIANT): `Off`, `On` |
-| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Focus`, `Hover` |
-| `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Focus`, `Hover` |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
+| `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isRequired` | boolean | — | — | — |
 | `name` | string | — | — | — |
 | `value` | string | — | — | — |
@@ -95,12 +95,12 @@ Value attribute
 ### `isDisabled` (Figma property "State")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Focus`, `Hover`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`, `Focus`, `Hover`
 
 ### `isError` (Figma property "State")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Focus`, `Hover`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`, `Focus`, `Hover`
 
 ## States
 

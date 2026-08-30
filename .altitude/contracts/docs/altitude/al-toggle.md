@@ -9,8 +9,8 @@ Component: al-toggle
 ## Figma
 
 - Component set: **Toggle**
-- Node id: `3579:12961` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-12961)
+- Node id: `3543:48094` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-48094)
 
 ## Props (5)
 
@@ -18,7 +18,7 @@ Component: al-toggle
 | --- | --- | --- | --- | --- |
 | `fieldId` | string | — | — | — |
 | `isChecked` | boolean | — | — | **Checked** (VARIANT): `Off`, `On` |
-| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Focus` |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Focus`, `Hover` |
 | `label` | string | — | `'Toggle'` | — |
 | `name` | string | — | — | — |
 
@@ -67,7 +67,7 @@ Name attribute
 ### `isDisabled` (Figma property "State")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Focus`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Focus`, `Hover`
 
 ## States
 

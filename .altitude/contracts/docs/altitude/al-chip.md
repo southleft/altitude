@@ -9,8 +9,8 @@ Component: al-chip
 ## Figma
 
 - Component set: **Chip**
-- Node id: `3579:10324` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-10324)
+- Node id: `3540:43526` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3540-43526)
 
 ## Props (4)
 
