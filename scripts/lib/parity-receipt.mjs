@@ -170,6 +170,15 @@ export function receiptAuthorises(receipt, tag, currentKey, { maxAgeHours = MAX_
       checkedAt,
     };
   }
+  // A component whose EXISTENCE parity passed but whose geometry was never
+  // compared has not been fully verified, and `ok` alone would let it stamp
+  // `in-sync` on half a check. check-parity sets this when no measured box
+  // matched any declared variant name — the two ops lanes are keyed to
+  // different matrices — and the honest answer is to refuse the stamp and say
+  // which dimension is missing, not to quietly accept the half that ran.
+  if (entry.geometryUnverified) {
+    return { ok: false, reason: `existence parity passed but size was never compared: ${entry.geometryUnverified}`, checkedAt };
+  }
   if (entry.ok !== true) {
     const detail = entry.unverifiable
       ? `check-parity could not verify it (${entry.unverifiable})`

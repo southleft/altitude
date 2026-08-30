@@ -48,21 +48,52 @@ const MOLECULES = [
 ];
 const targets = keys.length ? keys : MOLECULES;
 
-const opsFor = (key) => {
-  const p = join(sc.dirs.ops, `${key}.json`);
+// TWO LANES, and they own different facts. Until 2026-08-29 this script took
+// BOTH from the measured lane, which is why it validated today's canvas
+// against a variant matrix last built 2026-08-21 and reported every component
+// missing from Figma.
+//
+//   generated-ops/<tag>.ops.json  (contracts lane, derive-ops.mjs)
+//       WHICH VARIANTS MUST EXIST. This is what generate-figma.mjs actually
+//       built on canvas, so it is the only honest source for the matrix.
+//
+//   ops/<tag>.json                (figma-atoms lane, build-component-ops.mjs)
+//       HOW BIG each variant should be — `expected {w,h}` measured from the
+//       real browser. Nothing else carries measured geometry, so it stays.
+//
+// The two lanes name variants differently (the measured lane fans out
+// State x case axes; the contract lane names only the axes the component
+// declares). A variant with no geometry under its own name is reported as
+// `geometry-unmeasured` — NAMED and counted, never silently passed.
+const generatedOpsFor = (key) => {
+  const p = join(sc.dirs.sync, 'generated-ops', `${key}.ops.json`);
   try {
     return JSON.parse(readFileSync(p, 'utf8'));
   } catch (e) {
-    console.error(`[check-parity] Cannot read ops file for "${key}" (${p}): ${e.message}`);
-    console.error(`Is "${key}" a component tag with generated ops for project "${sc.id}"?`);
+    console.error(`[check-parity] Cannot read generated ops for "${key}" (${p}): ${e.message}`);
+    console.error(`Generate it first: node scripts/contracts/generate-figma.mjs --component ${key} --ops-only`);
     process.exit(1);
   }
 };
-const opsByKey = new Map(targets.map((k) => [k, opsFor(k)]));
+
+/** Measured geometry, keyed by the variant name the measured lane used. Absent
+ * for a component nobody has measured since the matrix changed — that is a
+ * reported gap, not a failure, and never a pass. */
+const measuredBoxes = (key) => {
+  const p = join(sc.dirs.ops, `${key}.json`);
+  const out = new Map();
+  try {
+    const m = JSON.parse(readFileSync(p, 'utf8'));
+    for (const r of m.rows ?? []) if (r.expected && r.variant) out.set(r.variant, r.expected);
+  } catch { /* no measured lane for this component — reported per variant below */ }
+  return out;
+};
+const opsByKey = new Map(targets.map((k) => [k, generatedOpsFor(k)]));
+const boxesByKey = new Map(targets.map((k) => [k, measuredBoxes(k)]));
 
 const code = `
 await figma.loadAllPagesAsync();
-const want = ${JSON.stringify([...opsByKey.values()].map((o) => o.name))};
+const want = ${JSON.stringify([...opsByKey.values()].map((o) => o.componentSetName))};
 const out = {};
 for (const name of want) {
   const page = figma.root.children.find((p) => p.name === '\\u{1F6E0} ' + name);
@@ -79,7 +110,14 @@ for (const name of want) {
   // Prefer the set named for the component; fall back to a lone set. Two sets
   // sharing a name is this repo's own documented trap, so ambiguity is
   // reported, never guessed.
-  const set = sets.find((n) => n.name === name) ?? (sets.length === 1 ? sets[0] : null);
+  // AMBIGUITY IS REPORTED, NEVER GUESSED. Array.find returns the first match, and
+  // on 2026-08-29 that silently picked the hand-built reference set on the
+  // Text Passage page over the generated one — producing a confident, wrong
+  // "1 missing, 2 extra". Two sets sharing a name is this repo's own trap 10;
+  // the honest answer is to refuse and say so.
+  const named = sets.filter((n) => n.name === name);
+  if (named.length > 1) { out[name] = { __ambiguous: named.length }; continue; }
+  const set = named[0] ?? (sets.length === 1 ? sets[0] : null);
   if (!set) { out[name] = null; continue; }
   out[name] = set.children.map((c) => ({ n: c.name, w: Math.round(c.width * 100) / 100, h: Math.round(c.height * 100) / 100 }));
 }
@@ -124,52 +162,92 @@ let totalOff = 0; let totalMissing = 0; let totalChecked = 0;
 const results = {};
 for (const key of targets) {
   const ops = opsByKey.get(key);
-  const built = live[ops.name];
+  const setName = ops.componentSetName;
+  if (!setName) {
+    // A malformed or foreign ops file (the retired --sheet mode wrote
+    // `<tag>.sheet.ops.json` with a different shape) must not crash the run
+    // or, worse, be skipped silently.
+    console.error(`[check-parity] ${key}: ops file has no componentSetName — not a component ops artifact. Skipping, and NOT counting it as verified.`);
+    results[key] = { figmaSetName: null, sourceKey: sourceKeyFor(rosterByTag, key), ok: false, checked: 0, off: 0, missing: 0, unverifiable: 'ops file has no componentSetName' };
+    continue;
+  }
+  const boxes = boxesByKey.get(key);
+  const built = live[setName];
+  if (built && built.__ambiguous) {
+    console.log(`${setName.padEnd(18)} AMBIGUOUS — ${built.__ambiguous} sets named "${setName}" on its page`);
+    totalMissing++;
+    results[key] = { figmaSetName: setName, sourceKey: sourceKeyFor(rosterByTag, key), ok: false, checked: 0, off: 0, missing: 0, unverifiable: `${built.__ambiguous} component sets share the name "${setName}" on its page — rename the reference one "${setName} (reference)" so resolution is unambiguous` };
+    continue;
+  }
   // `sourceKey` is null for a key the roster does not know (an ops file for
   // something outside this project's component roster). The comparison below
   // still runs and still reports; what a null buys is that the receipt cannot
   // authorise a stamp for it — see receiptAuthorises() in parity-receipt.mjs.
   const sourceKey = sourceKeyFor(rosterByTag, key);
-  const base = { figmaSetName: ops.name, sourceKey };
+  const base = { figmaSetName: setName, sourceKey };
   if (!built) {
-    console.log(`${ops.name.padEnd(18)} NO PAGE/SET IN FIGMA`);
+    console.log(`${setName.padEnd(18)} NO PAGE/SET IN FIGMA`);
     totalMissing++;
     results[key] = { ...base, ok: false, checked: 0, off: 0, missing: 1, unverifiable: 'no page or component set in Figma' };
     continue;
   }
   const byName = new Map(built.map((b) => [b.n, b]));
-  const rows = ops.rows.filter((r) => r.state === 'Default' || r.differsFromDefault);
-  const offs = []; const missing = [];
+  // The matrix the generator actually built, not the measured lane's fan-out.
+  const wantVariants = (ops.variants ?? []).map((v) => v.name);
+  const offs = []; const missing = []; const unmeasured = [];
   let checkedHere = 0;
-  for (const r of rows) {
-    if (!r.expected) continue;
+  for (const name of wantVariants) {
+    const b = byName.get(name);
+    if (!b) { missing.push(name); totalMissing++; continue; }
+    const expected = boxes.get(name);
+    if (!expected) { unmeasured.push(name); continue; }
     totalChecked++; checkedHere++;
-    const b = byName.get(r.variant);
-    if (!b) { missing.push(r.variant); totalMissing++; continue; }
-    const dw = Math.abs(b.w - r.expected.w); const dh = Math.abs(b.h - r.expected.h);
+    const dw = Math.abs(b.w - expected.w); const dh = Math.abs(b.h - expected.h);
     if (dw > TOL || dh > TOL) {
-      offs.push(`${r.variant}: figma ${b.w}x${b.h} vs browser ${r.expected.w}x${r.expected.h}`);
+      offs.push(`${name}: figma ${b.w}x${b.h} vs browser ${expected.w}x${expected.h}`);
       totalOff++;
     }
   }
+  // Drift the other way: a variant on canvas the contract does not declare.
+  // Reported and counted, deliberately NOT a failure yet — this is a brand-new
+  // dimension and the repo's own eleven-false-positive lesson says to measure a
+  // rule before gating on it.
+  const wanted = new Set(wantVariants);
+  const extra = built.map((b) => b.n).filter((n) => !wanted.has(n));
   const status = !offs.length && !missing.length ? 'OK' : `${offs.length} off, ${missing.length} missing`;
-  console.log(`${ops.name.padEnd(18)} variants=${String(rows.length).padStart(3)}  ${status}`);
+  console.log(`${setName.padEnd(18)} variants=${String(wantVariants.length).padStart(3)}  ${status}${unmeasured.length ? `  (${unmeasured.length} unmeasured)` : ''}${extra.length ? `  (${extra.length} extra on canvas)` : ''}`);
   for (const m of missing.slice(0, 3)) console.log(`    MISSING  ${m}`);
   for (const o of offs.slice(0, 3)) console.log(`    OFF      ${o}`);
   if (offs.length > 3) console.log(`    ... ${offs.length - 3} more off`);
+  for (const e of extra.slice(0, 3)) console.log(`    EXTRA    ${e} (on canvas, not in the contract)`);
   results[key] = {
     ...base,
-    ok: !offs.length && !missing.length && checkedHere > 0,
+    // Existence parity is now a real, checkable fact on its own: every variant
+    // the contract declares was found on canvas. Geometry is checked wherever
+    // the measured lane can supply a box under that same name.
+    ok: !offs.length && !missing.length && wantVariants.length > 0,
     checked: checkedHere,
     off: offs.length,
     missing: missing.length,
-    // A set whose every row carries no `expected` box compares nothing at all.
-    // Reporting that as OK is how a component with no measurements would have
-    // sailed through the stamp gate; it is named instead.
-    ...(checkedHere === 0 ? { unverifiable: 'no ops row carried an expected box — nothing was compared' } : {}),
+    variantsDeclared: wantVariants.length,
+    unmeasured: unmeasured.length,
+    extra: extra.length,
+    // Named, never silent: a set where NOTHING had a measured box has had its
+    // existence verified but not its size, and the receipt says so.
+    ...(wantVariants.length === 0 ? { unverifiable: 'the contract declares no variants — nothing to compare' } : {}),
+    ...(checkedHere === 0 && wantVariants.length > 0
+      ? { geometryUnverified: `no measured box matched any of the ${wantVariants.length} declared variant name(s) — the measured lane is keyed to a different matrix; re-run the measurement pass` }
+      : {}),
   };
 }
-console.log(`\n[${sc.id}] checked ${totalChecked} variants | ${totalOff} outside ${TOL}px | ${totalMissing} missing`);
+const totalUnmeasured = Object.values(results).reduce((n, r) => n + (r.unmeasured ?? 0), 0);
+const totalExtra = Object.values(results).reduce((n, r) => n + (r.extra ?? 0), 0);
+console.log(`\n[${sc.id}] checked ${totalChecked} variants | ${totalOff} outside ${TOL}px | ${totalMissing} missing | ${totalUnmeasured} unmeasured | ${totalExtra} extra on canvas`);
+if (totalUnmeasured) {
+  console.log(`[${sc.id}] ${totalUnmeasured} variant(s) had NO measured box under their own name, so their SIZE is unverified.`);
+  console.log('          Existence parity still ran and is reported; mark-synced will REFUSE these until a measurement');
+  console.log('          pass is re-keyed to the contract variant matrix (ops/ is keyed to the 2026-08-21 fan-out).');
+}
 
 const receipt = writeReceipt(sc.project, { tolerancePx: TOL, components: results, observedFileKey: target.activeFileKey, observedFileName: target.activeFileName });
 console.log(`[${sc.id}] receipt written: ${receipt}`);

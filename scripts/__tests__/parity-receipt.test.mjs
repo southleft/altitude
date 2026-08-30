@@ -166,6 +166,30 @@ console.log('The receipt must say WHICH Figma file it measured');
 }
 
 console.log('');
+console.log('A half-checked component may not stamp');
+{
+  // check-parity now takes the variant MATRIX from the contracts lane and
+  // GEOMETRY from the measured lane. When no measured box matches a declared
+  // variant name, existence parity still passes (ok: true) but size was never
+  // compared - and stamping `in-sync` on half a check is the exact lie this
+  // spec exists to close. The refusal names the dimension that went unchecked.
+  const halfChecked = receiptWith({
+    ok: true, checked: 0, off: 0, missing: 0,
+    variantsDeclared: 5, unmeasured: 5, extra: 0,
+    geometryUnverified: 'no measured box matched any of the 5 declared variant name(s)',
+    sourceKey: KEY,
+  });
+  const res = auth(halfChecked);
+  assert('existence-only verification does NOT authorise a stamp', res.ok === false);
+  assert('  ...and the reason says size was never compared', /size was never compared/.test(res.reason));
+  assert('  ...and carries the detail through', /5 declared variant name/.test(res.reason));
+
+  // The same component once geometry really was compared.
+  const full = receiptWith({ ok: true, checked: 5, off: 0, missing: 0, variantsDeclared: 5, unmeasured: 0, extra: 0, sourceKey: KEY });
+  assert('a fully compared component still authorises', auth(full).ok === true);
+}
+
+console.log('');
 console.log('The target guard is POSITIVE: the open file must BE the target');
 {
   const project = { id: 'altitude', figma: { fileKey: FILE_KEY, fileName: 'Altitude Design System', decoys: [{ fileKey: 'NGpu9IJj2pRhNru1QTGmuF' }] } };
