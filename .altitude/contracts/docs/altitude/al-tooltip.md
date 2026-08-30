@@ -89,7 +89,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 **Anatomy case measured:** `Position=bottom,Arrow=no` (source: `measured`)
 
-### Root — `<div class="al-c-tooltip al-c-tooltip--bottom al-is-active al-has-arrow">`
+### Root — `<div class="al-c-tooltip al-c-tooltip--bottom al-is-active al-has-prefix al-has-arrow">`
 
 _None._
 
@@ -103,9 +103,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-tooltip`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (8)
+## Tokens referenced (9)
 
-`--al-theme-border-radius`, `--al-theme-box-shadow`, `--al-theme-color-background-default-strong`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`
+`--al-theme-border-radius`, `--al-theme-box-shadow`, `--al-theme-color-background-default`, `--al-theme-color-background-default-strong`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`
 
 ---
 

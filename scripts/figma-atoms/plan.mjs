@@ -364,7 +364,20 @@ export const PLAN = [
       Position: enumAxis('position', ['top', 'bottom', 'left', 'right']),
       Arrow: boolAxis('hasArrow', 'no', 'yes'),
     },
-    { always: { isactive: true }, slots: text('Tooltip text') }),
+    {
+      always: { isactive: true },
+      // al-tooltip positions its bubble against a TRIGGER. With only
+      // default-slot text it rendered a childless inline-flex and measured
+      // 0x0 — the last remaining "measured but got nothing" contract, and a
+      // different cause from the width:100% cases (no sized parent would have
+      // helped). Slots mirror the docs' own example, which is the acceptance
+      // reference: a trigger, a prefix, and the tooltip text.
+      slots: () => [
+        { name: 'trigger', html: 'Hover me' },
+        { name: 'prefix', html: '⌘ + C' },
+        { html: 'Tooltip Text' },
+      ],
+    }),
 
   atom('al-text-block', 'Text Block',
     { Width: enumAxis('maxWidth', ['sm']) },

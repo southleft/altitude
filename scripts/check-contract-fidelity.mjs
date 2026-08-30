@@ -86,6 +86,14 @@ for (const f of readdirSync(contractsDir).filter((x) => x.endsWith('.contract.js
   const box = root?.box ?? { w: 0, h: 0 };
   rows.push({
     tag: c.id,
+    // 'measured' vs 'unavailable' is the whole distinction. A MEASURED root
+    // that came out zero-wide is trap 12 — the measurement ran and returned
+    // nothing usable. An UNAVAILABLE one was never measured at all (usually
+    // no plan.mjs entry, or a brand-only component outside this project).
+    // Both block generation, for completely different reasons and with
+    // completely different fixes, so they are never reported as one number.
+    anatomySource: c.anatomySource ?? 'unknown',
+    hasAnatomy: !!root,
     // Subtract the root itself so this counts CHILDREN, the same thing the
     // docs walk counts.
     contractNodes: Math.max(countNodes(root) - 1, 0),
@@ -103,8 +111,14 @@ for (const f of readdirSync(contractsDir).filter((x) => x.endsWith('.contract.js
 // al-icon-*, an SVG wrapper that is never generated as a set) is not
 // actionable, and gating on it would bury the real ones under false alarms —
 // this repo's own eleven-false-positive lesson.
-const zeroWidth = rows.filter((r) => !r.contractW && r.hasDocsEvidence && r.docsW >= 1);
-const zeroWidthUnjudged = rows.filter((r) => !r.contractW && !(r.hasDocsEvidence && r.docsW >= 1));
+// MEASURED but zero: the measurement ran and produced nothing usable (trap
+// 12). Gated where the docs prove the component really renders with a width.
+const zeroWidth = rows.filter((r) => r.anatomySource === 'measured' && !r.contractW && r.hasDocsEvidence && r.docsW >= 1);
+const zeroWidthUnjudged = rows.filter((r) => r.anatomySource === 'measured' && !r.contractW && !(r.hasDocsEvidence && r.docsW >= 1));
+// NEVER measured: no anatomy to be zero. A different defect with a different
+// fix (give it a plan.mjs entry), reported separately so it can never be
+// mistaken for the one above.
+const noAnatomy = rows.filter((r) => r.anatomySource !== 'measured' || !r.hasAnatomy);
 const withEvidence = rows.filter((r) => r.hasDocsEvidence);
 const shortfall = withEvidence
   .filter((r) => r.docsNodes - r.contractNodes >= 3)
@@ -140,6 +154,21 @@ if (shortfall.length) {
   console.log('  NOT a gate: a docs page mounts a realistic composition, so it legitimately renders more');
   console.log('  nodes than one component\'s anatomy. Read it as a ranking of which contracts are');
   console.log('  furthest from describing their component, not as a list of defects.');
+}
+
+if (noAnatomy.length) {
+  const withDocs = noAnatomy.filter((r) => r.hasDocsEvidence && r.docsW >= 1);
+  console.log(`
+NO ANATOMY — never measured, so there is nothing to generate from (${noAnatomy.length}):`);
+  for (const r of withDocs) {
+    console.log('  ' + pad(r.tag, 24) + pad('anatomySource=' + r.anatomySource, 28) + 'docs render ' + r.docsW + 'x' + r.docsH);
+  }
+  if (withDocs.length !== noAnatomy.length) {
+    console.log(`  (+${noAnatomy.length - withDocs.length} with no docs evidence either: ${noAnatomy.filter((r) => !(r.hasDocsEvidence && r.docsW >= 1)).map((r) => r.tag).join(', ')})`);
+  }
+  console.log('  These need a plan.mjs entry with real cases and slots before they can be measured');
+  console.log('  at all. Distinct from the zero-width group above: nothing measured them, so there is');
+  console.log('  no bad number to fix — there is no number.');
 }
 
 if (zeroWidthUnjudged.length) {
