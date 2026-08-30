@@ -61,6 +61,8 @@ import { scope, projectArg } from '../figma-atoms/project-scope.mjs';
 import { loadComponentConfig } from './figma/component-config.mjs';
 import { buildOps } from './figma/derive-ops.mjs';
 import { buildPluginCode } from './figma/build-set-code.mjs';
+import { loadMeasuredIndex, measuredBoxFor } from './figma/measured-boxes.mjs';
+import { classifyAxes } from './figma/derive-ops.mjs';
 import { argOf } from '../lib/argv.mjs';
 // NOT from ./extract-canvas.mjs — that module is a CLI that runs `await main()`
 // at top level; the shared lib is the import-safe home for all three.
@@ -183,8 +185,52 @@ async function main() {
   }
 
   const ops = buildOps(contract, { projectId: SC.id, pageName: PAGE_NAME, config, nestedSetNames });
+
+  // Join the MEASURED browser box onto each variant, so the ops artifact
+  // carries both halves parity needs: which variants exist (this lane) and
+  // how big each should be (the measurement lane). Done HERE rather than in
+  // buildOps so that derivation stays pure — --check-determinism compares two
+  // in-memory buildOps runs and must not depend on gitignored run output.
+  // A variant nothing measured keeps no `expected`, and check-parity reports
+  // it as size-unverified rather than passing it.
+  {
+    const byTag = loadMeasuredIndex(SC.dirs.sync).get(COMPONENT);
+    const { enumAxis } = classifyAxes(ops.axes ?? []);
+    let matched = 0;
+    for (const v of ops.variants ?? []) {
+      const box = measuredBoxFor(byTag, ops.anatomyCase, v, enumAxis?.name ?? null);
+      if (box) { v.expected = box; matched++; }
+    }
+    ops.measuredVariants = matched;
+    console.log(`[generate-figma] measured boxes joined: ${matched}/${(ops.variants ?? []).length} variant(s)${matched === 0 ? ' — none matched; check-parity will report size unverified' : ''}`);
+  }
+
   const outPath = writeOps(SC, COMPONENT, ops);
   console.log(`[generate-figma] ${SC.id}/${COMPONENT}: wrote ${ops.variants.length} variant ops -> ${outPath}`);
+
+  // DEGENERATE-CONTRACT GUARD. A contract whose measured root box has no
+  // width did not measure small — it measured NOTHING, which is what happens
+  // to every width:100% / flex:1 component in an unconstrained harness (repair
+  // skill trap 12). Generating from one cannot produce anything but a bare
+  // frame: on 2026-08-29 al-progress generated ZERO children this way, and a
+  // whole-library sweep replaced real design work with boxes before anyone
+  // looked. The variant matrix matched perfectly the whole time, which is why
+  // no existing check caught it.
+  //
+  // Refused rather than warned, because the output is worthless by
+  // construction and it OVERWRITES the good set. `pnpm run check:contract-fidelity`
+  // lists every contract in this state.
+  {
+    const rootBox = (contract.anatomy?.root ?? contract.anatomy)?.box ?? null;
+    if (!rootBox || !(rootBox.w >= 1)) {
+      console.error(`[generate-figma] REFUSING to generate ${SC.id}/${COMPONENT}: its contract's root box is ${rootBox ? rootBox.w + 'x' + rootBox.h : 'absent'} — nothing was measured, so the generated set would be a bare frame that REPLACES whatever is on the page.`);
+      console.error('  Fix the measurement (a harness width for width:100% components), re-measure, re-derive.');
+      console.error('  Inspect the whole library:  pnpm run check:contract-fidelity');
+      console.error('  Deliberate override (you have looked and want it anyway):  --allow-degenerate');
+      if (!process.argv.includes('--allow-degenerate')) process.exit(1);
+      console.error('  --allow-degenerate given: proceeding against a contract that measured nothing.');
+    }
+  }
 
   if (OPS_ONLY) return;
 

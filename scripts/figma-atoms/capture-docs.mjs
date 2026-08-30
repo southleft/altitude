@@ -165,6 +165,38 @@ const main = async () => {
       return null;
     };
 
+    /**
+     * How much STRUCTURE the docs actually render, counted through shadow
+     * roots. This is the number the Figma sweep needed and nobody had: a
+     * contract whose anatomy is far thinner than this cannot rebuild the
+     * component, and generating from it produces the bare box that replaced
+     * real design work on 2026-08-29 (al-progress generated ZERO children).
+     * Counted here because this is the one place the real component is
+     * already rendered and addressable.
+     */
+    const structure = async () => {
+      try {
+        return await page.evaluate(() => {
+          const host = document.querySelector('[data-pg-el]') || document.querySelector('[data-pg-mount] > *');
+          if (!host) return null;
+          let els = 0, texts = 0, depth = 0;
+          const walk = (node, d) => {
+            depth = Math.max(depth, d);
+            const kids = node.shadowRoot ? [...node.shadowRoot.children, ...node.children] : [...node.children];
+            for (const k of kids) {
+              if (k.tagName === 'STYLE' || k.tagName === 'SCRIPT') continue;
+              els++;
+              const direct = [...k.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
+              if (direct) texts++;
+              walk(k, d + 1);
+            }
+          };
+          walk(host, 0);
+          return { els, texts, depth };
+        });
+      } catch { return null; }
+    };
+
     const take = async (label, meta) => {
       const name = (slug + '--' + label).replace(/[^A-Za-z0-9._-]+/g, '_');
       const file = join(OUT, name + '.png');
@@ -172,7 +204,8 @@ const main = async () => {
         const subj = await subject();
         if (!subj) throw new Error('nothing with a paint area inside [data-pg-mount]');
         await subj.handle.screenshot({ path: file, timeout: 15000 });
-        index.push({ slug, url, ...meta, shotOf: subj.of, file: 'shots/docs/' + name + '.png', w: Math.round(subj.box.width * 100) / 100, h: Math.round(subj.box.height * 100) / 100 });
+        const st = await structure();
+        index.push({ slug, url, ...meta, shotOf: subj.of, file: 'shots/docs/' + name + '.png', w: Math.round(subj.box.width * 100) / 100, h: Math.round(subj.box.height * 100) / 100, ...(st ? { rendered: st } : {}) });
         shot++;
       } catch (e) {
         index.push({ slug, url, ...meta, file: null, error: String(e.message).split('\n')[0] });
