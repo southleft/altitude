@@ -317,7 +317,17 @@ export const PLAN = [
     { slots: text('AE') }),
 
   atom('al-divider', 'Divider',
-    { Orientation: enumAxis('variant', ['vertical']) }),
+    { Orientation: enumAxis('variant', ['vertical']) },
+    {
+      // A horizontal divider is width:100%, so in the harness's shrink-to-fit
+      // `.case` it measured ZERO WIDE and its contract recorded a 0x1 root —
+      // the repair skill's trap 12. Generating from that produced a bare
+      // node, which is how the 2026-08-29 sweep degraded the Divider set.
+      // The vertical one takes its width intrinsically and its HEIGHT from a
+      // parent, which this mechanism cannot give it; that case is still
+      // unmeasured and is deliberately not faked.
+      fill: (r) => r.Orientation !== 'vertical',
+    }),
 
   atom('al-skeleton', 'Skeleton',
     { Shape: enumAxis('variant', ['circle', 'square']) }),
@@ -334,6 +344,12 @@ export const PLAN = [
     {
       always: { value: '60', max: '100' },
       omit: [(r) => r.Shape === 'bar' && r.Size !== 'default'],
+      // The BAR is width:100% and measured zero wide in the shrink-to-fit
+      // `.case`, so al-progress generated an EMPTY 100x100 frame in Figma
+      // (trap 12, and the clearest casualty of the 2026-08-29 sweep). The
+      // circle is intrinsically sized and must NOT be stretched, hence the
+      // per-row predicate rather than a blanket fill.
+      fill: (r) => r.Shape === 'bar',
     }),
 
   atom('al-field-note', 'Field Note',
