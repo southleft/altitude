@@ -9,8 +9,8 @@ Component: al-input-stepper
 ## Figma
 
 - Component set: **Input Stepper**
-- Node id: `3558:61366` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558-61366)
+- Node id: `3579:15096` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-15096)
 
 ## Props (17)
 

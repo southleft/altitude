@@ -9,8 +9,8 @@ Component: al-toggle-button
 ## Figma
 
 - Component set: **Toggle Button**
-- Node id: `3543:47985` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47985)
+- Node id: `3579:13020` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-13020)
 
 ## Props (4)
 
@@ -18,7 +18,7 @@ Component: al-toggle-button
 | --- | --- | --- | --- | --- |
 | `hasToggle` | boolean | — | — | — |
 | `isSelected` | boolean | — | `false` | **Selected** (VARIANT): `No`, `Yes` |
-| `isSmall` | boolean | — | — | **Size** (VARIANT): `Default`, `Small` |
+| `isSmall` | boolean | — | — | — |
 | `variant` | string | `'background'` | — | **Variant** (VARIANT): `Background`, `Default` |
 
 #### `hasToggle`
@@ -49,11 +49,6 @@ Variant
 
 - Code values: —
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `No`, `Yes`
-
-### `isSmall` (Figma property "Size")
-
-- Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Small`
 
 ### `variant` (Figma property "Variant")
 

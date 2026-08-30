@@ -9,8 +9,8 @@ Component: al-progress
 ## Figma
 
 - Component set: **Progress**
-- Node id: `3557:58565` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3557-58565)
+- Node id: `3579:12924` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-12924)
 
 ## Props (8)
 

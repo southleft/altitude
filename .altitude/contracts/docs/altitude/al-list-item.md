@@ -9,8 +9,8 @@ Component: al-list-item
 ## Figma
 
 - Component set: **List Item**
-- Node id: `3543:47175` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47175)
+- Node id: `3579:13543` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-13543)
 
 ## Props (11)
 
@@ -19,10 +19,10 @@ Component: al-list-item
 | `behavior` | string | `'flyout'` | — | — |
 | `flyoutPosition` | enum | `bottom`, `left`, `top` | — | — |
 | `href` | string | — | — | — |
-| `isActive` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
+| `isActive` | boolean | — | — | **State** (VARIANT): `Default`, `Focus`, `Hover` |
 | `isCurrent` | boolean | — | — | **Current** (VARIANT): `No`, `Yes` |
-| `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
-| `isError` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Focus`, `Hover` |
+| `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Focus`, `Hover` |
 | `onClick` | string | `() => void` | — | — |
 | `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | — |
 | `value` | string | `string \| { label: string; value: any; [key: string]: unknown }` | — | — |
@@ -88,7 +88,7 @@ Variants
 ### `isActive` (Figma property "State")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Focus`, `Hover`
 
 ### `isCurrent` (Figma property "Current")
 
@@ -98,12 +98,12 @@ Variants
 ### `isDisabled` (Figma property "State")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Focus`, `Hover`
 
 ### `isError` (Figma property "State")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Focus`, `Hover`
 
 ### `variant` (Figma property "Variant")
 

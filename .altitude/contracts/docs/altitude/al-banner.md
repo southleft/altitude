@@ -18,8 +18,8 @@ glyph via the `icon` slot and its color via `--al-banner-icon-fill`.
 ## Figma
 
 - Component set: **Banner**
-- Node id: `3570:1351` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3570-1351)
+- Node id: `3579:13898` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-13898)
 
 ## Props (2)
 

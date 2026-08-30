@@ -9,8 +9,8 @@ Component: al-radio-group
 ## Figma
 
 - Component set: **Radio Group**
-- Node id: `3570:3422` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3570-3422)
+- Node id: `3579:15842` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-15842)
 
 ## Props (10)
 

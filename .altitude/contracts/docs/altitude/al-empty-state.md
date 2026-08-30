@@ -12,8 +12,8 @@ tables/lists, zero-data dashboard states.
 ## Figma
 
 - Component set: **Empty State**
-- Node id: `3558:60934` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558-60934)
+- Node id: `3579:17711` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-17711)
 
 ## Props (2)
 

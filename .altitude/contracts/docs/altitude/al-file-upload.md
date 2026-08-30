@@ -9,8 +9,8 @@ Component: al-file-upload
 ## Figma
 
 - Component set: **File Upload**
-- Node id: `3544:51718` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3544-51718)
+- Node id: `3579:13161` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-13161)
 
 ## Props (17)
 
@@ -22,9 +22,9 @@ Component: al-file-upload
 | `fieldId` | string | — | — | — |
 | `fieldNote` | string | — | — | — |
 | `fileSizeLimit` | number | — | `75` | — |
-| `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
-| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Hover` |
-| `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Hover` |
+| `hideLabel` | boolean | — | — | — |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Hover` |
+| `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Hover` |
 | `isRequired` | boolean | — | — | — |
 | `label` | string | — | — | _not expressed in Figma (by design)_ |
 | `multiple` | boolean | — | — | — |
@@ -111,20 +111,15 @@ Value associated with the field
 
 ## Variant axes
 
-### `hideLabel` (Figma property "Label")
-
-- Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
-
 ### `isDisabled` (Figma property "State")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`, `Hover`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Hover`
 
 ### `isError` (Figma property "State")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`, `Hover`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Hover`
 
 ## States
 

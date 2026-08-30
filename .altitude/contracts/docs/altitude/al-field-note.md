@@ -9,15 +9,15 @@ Component: al-field-note
 ## Figma
 
 - Component set: **Field Note**
-- Node id: `3543:46961` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-46961)
+- Node id: `3579:11834` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-11834)
 
 ## Props (2)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error` |
-| `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error` |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default` |
+| `isError` | boolean | — | — | **State** (VARIANT): `Default` |
 
 #### `isDisabled`
 
@@ -34,12 +34,12 @@ Error state
 ### `isDisabled` (Figma property "State")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`
 
 ### `isError` (Figma property "State")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`
 
 ## States
 

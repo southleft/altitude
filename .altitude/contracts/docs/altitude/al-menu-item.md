@@ -9,8 +9,8 @@ Component: al-menu-item
 ## Figma
 
 - Component set: **Menu Item**
-- Node id: `3543:47347` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47347)
+- Node id: `3579:12196` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-12196)
 
 ## Props (16)
 
@@ -21,11 +21,11 @@ Component: al-menu-item
 | `href` | string | — | — | — |
 | `idx` | number | — | — | — |
 | `indentation` | number | — | `0` | — |
-| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled` |
+| `isDisabled` | boolean | — | — | — |
 | `isExpandableHeader` | boolean | — | — | — |
 | `isExpanded` | boolean | — | — | — |
 | `isFocused` | boolean | — | — | — |
-| `isHeader` | boolean | — | — | **Role** (VARIANT): `Expandable`, `Header`, `Item` |
+| `isHeader` | boolean | — | — | — |
 | `isHidden` | boolean | — | `false` | — |
 | `isSelected` | boolean | — | — | **Selected** (VARIANT): `No`, `Yes` |
 | `label` | string | — | — | — |
@@ -137,16 +137,6 @@ icon-only menu items where there is no visible text. Setting both
 accessible name.
 
 ## Variant axes
-
-### `isDisabled` (Figma property "State")
-
-- Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`
-
-### `isHeader` (Figma property "Role")
-
-- Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Expandable`, `Header`, `Item`
 
 ### `isSelected` (Figma property "Selected")
 

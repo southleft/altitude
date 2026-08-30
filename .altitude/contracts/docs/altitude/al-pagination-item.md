@@ -9,8 +9,8 @@ Component: al-pagination-item
 ## Figma
 
 - Component set: **Pagination Item**
-- Node id: `3543:47406` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47406)
+- Node id: `3579:12297` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3579-12297)
 
 ## Props (5)
 
@@ -18,8 +18,8 @@ Component: al-pagination-item
 | --- | --- | --- | --- | --- |
 | `ariaLabel` | string | — | — | — |
 | `href` | string | — | — | — |
-| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Hover` |
-| `isExpandable` | boolean | — | — | **Kind** (VARIANT): `Expandable`, `Number` |
+| `isDisabled` | boolean | — | — | — |
+| `isExpandable` | boolean | — | — | — |
 | `isSelected` | boolean | — | — | **Selected** (VARIANT): `No`, `Yes` |
 
 #### `ariaLabel`
@@ -45,16 +45,6 @@ Expandable
 Selected state
 
 ## Variant axes
-
-### `isDisabled` (Figma property "State")
-
-- Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Hover`
-
-### `isExpandable` (Figma property "Kind")
-
-- Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Expandable`, `Number`
 
 ### `isSelected` (Figma property "Selected")
 
