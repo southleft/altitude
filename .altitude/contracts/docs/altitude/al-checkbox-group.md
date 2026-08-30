@@ -9,8 +9,8 @@ Component: al-checkbox-group
 ## Figma
 
 - Component set: **Checkbox Group**
-- Node id: `3558:60896` (pinned)
-- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558-60896)
+- Node id: `3570:2154` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3570-2154)
 
 ## Props (10)
 

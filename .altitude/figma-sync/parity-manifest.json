@@ -2,7 +2,7 @@
   "$comment": "Figma <-> code parity manifest. Seeded by scripts/figma-parity/seed-manifest.mjs; lastSync stamped by scripts/figma-parity/mark-synced.mjs; figmaCurrentDigest updated by scripts/figma-parity/refresh-figma-digests.mjs. Read by libs/altitude-mcp/src/lib/parity.mjs.",
   "figmaFileId": "y83n4o9LOGs74oAoguFcGS",
   "created": "2026-08-22T03:30:29.826Z",
-  "figmaLastRefreshed": "2026-08-28T02:10:02.319Z",
+  "figmaLastRefreshed": "2026-08-30T00:03:41.800Z",
   "components": {
     "al-accordion-panel": {
       "figma": null,
@@ -30,7 +30,7 @@
     "al-badge": {
       "figma": {
         "name": "Badge",
-        "nodeId": "3538:35772"
+        "nodeId": "3579:8999"
       },
       "lastSync": {
         "date": "2026-08-22T03:30:30.419Z",
@@ -38,7 +38,7 @@
         "figmaDigest": "d49c0532cf2014a3f9dfaccafe46ac9564b01664",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "c00e03fcaf6a2b2f1ff6da6f225b8dd53ae9dad4",
+      "figmaCurrentDigest": "8fdad1ebf795d233928464403eee268474282324",
       "figmaContract": {
         "props": {
           "Text": {
@@ -68,31 +68,23 @@
     "al-banner": {
       "figma": {
         "name": "Banner",
-        "nodeId": "3558:60780"
+        "nodeId": "3570:1351"
       },
       "lastSync": {
         "date": "2026-08-28T02:12:32.490Z",
         "codeHash": "3630694d8ccb6bf06f91060b43df27acc7954611",
         "contractDigest": "934407ca1414bff595b19b130e9b708e8beff833",
-        "figmaDigest": "ca3b73ea507e65fc2c254161853942043e668b62",
+        "figmaDigest": "57b2c9597922e4d7df9ee1c129a54288c8d58e63",
         "contractHash": "074d416891da3b80b6386e8f8d87e57414aca7c2ae4af5cf5d858c001454952f",
-        "contractVersion": "1.0.0"
+        "contractVersion": "1.0.0",
+        "figmaObserved": true
       },
-      "figmaCurrentDigest": "ca3b73ea507e65fc2c254161853942043e668b62",
+      "figmaCurrentDigest": "57b2c9597922e4d7df9ee1c129a54288c8d58e63",
       "figmaContract": {
         "props": {
           "Text": {
             "type": "TEXT",
             "options": null
-          },
-          "Variant": {
-            "type": "VARIANT",
-            "options": [
-              "Danger",
-              "Info",
-              "Success",
-              "Warning"
-            ]
           },
           "Dismissible": {
             "type": "VARIANT",
@@ -103,14 +95,8 @@
           }
         },
         "variants": [
-          "Variant=Danger, Dismissible=No",
-          "Variant=Danger, Dismissible=Yes",
-          "Variant=Info, Dismissible=No",
-          "Variant=Info, Dismissible=Yes",
-          "Variant=Success, Dismissible=No",
-          "Variant=Success, Dismissible=Yes",
-          "Variant=Warning, Dismissible=No",
-          "Variant=Warning, Dismissible=Yes"
+          "Dismissible=No",
+          "Dismissible=Yes"
         ]
       }
     },
@@ -178,7 +164,8 @@
         "contractDigest": "32f5cde6ce08554e210d10c29d76473c5d0ab75a",
         "figmaDigest": "99dfc0d9505a7d84b2efa87ee6c785e3319cfe37",
         "contractHash": "6b7729cd0cde7f875829b8f67d7ea45769381aae24d68c51a1ac3615d3719c13",
-        "contractVersion": "1.0.0"
+        "contractVersion": "1.0.0",
+        "figmaObserved": true
       },
       "figmaCurrentDigest": "99dfc0d9505a7d84b2efa87ee6c785e3319cfe37",
       "figmaContract": {
@@ -291,17 +278,18 @@
     "al-checkbox-group": {
       "figma": {
         "name": "Checkbox Group",
-        "nodeId": "3558:60896"
+        "nodeId": "3570:2154"
       },
       "lastSync": {
         "date": "2026-08-28T02:12:32.490Z",
         "codeHash": "4877023a0b1570c87e3981d77e2cf29fd769cd3e",
         "contractDigest": "063ddcfa3f94a3ab3249e41bae806f141764d539",
-        "figmaDigest": "5e52998c69c916cb02f8797323834ad95940a495",
+        "figmaDigest": "8b5601ecc480d4d02a45a4824e756637cc9c0711",
         "contractHash": "2b4ae9737127c286fee250bb4a93ba56f780613dd7678761141f8989715e5b1a",
-        "contractVersion": "1.0.0"
+        "contractVersion": "1.0.0",
+        "figmaObserved": true
       },
-      "figmaCurrentDigest": "5e52998c69c916cb02f8797323834ad95940a495",
+      "figmaCurrentDigest": "8b5601ecc480d4d02a45a4824e756637cc9c0711",
       "figmaContract": {
         "props": {
           "Text": {
@@ -311,14 +299,32 @@
           "Legend": {
             "type": "VARIANT",
             "options": [
-              "Hidden",
               "Shown"
+            ]
+          },
+          "Orientation": {
+            "type": "VARIANT",
+            "options": [
+              "Default",
+              "Horizontal"
+            ]
+          },
+          "State": {
+            "type": "VARIANT",
+            "options": [
+              "Default",
+              "Disabled",
+              "Error"
             ]
           }
         },
         "variants": [
-          "Legend=Hidden",
-          "Legend=Shown"
+          "Legend=Shown, Orientation=Default, State=Default",
+          "Legend=Shown, Orientation=Default, State=Disabled",
+          "Legend=Shown, Orientation=Default, State=Error",
+          "Legend=Shown, Orientation=Horizontal, State=Default",
+          "Legend=Shown, Orientation=Horizontal, State=Disabled",
+          "Legend=Shown, Orientation=Horizontal, State=Error"
         ]
       }
     },
@@ -509,11 +515,12 @@
         "date": "2026-08-28T02:12:32.490Z",
         "codeHash": "e9c16acd8ff2d412395dc34c5ea8fe406f01eea7",
         "contractDigest": "506e8e225c6ac25cbbe3667cc248851f5a601bde",
-        "figmaDigest": "58edcf82d9d7bb8f6fa8111f915e4841c6186f35",
+        "figmaDigest": "b180b3a692162b0d7f7d3dfe34a2d39a295ecb8b",
         "contractHash": "4259ba2b27d2e96a08a4e090fb4cbb975731ff8aacee597260d592d1f065087b",
-        "contractVersion": "1.0.0"
+        "contractVersion": "1.0.0",
+        "figmaObserved": true
       },
-      "figmaCurrentDigest": "58edcf82d9d7bb8f6fa8111f915e4841c6186f35",
+      "figmaCurrentDigest": "b180b3a692162b0d7f7d3dfe34a2d39a295ecb8b",
       "figmaContract": {
         "props": {
           "Text": {
@@ -618,11 +625,12 @@
         "date": "2026-08-28T02:12:32.490Z",
         "codeHash": "e56bdd2db1dbd6cfe127585289e35d9d20cbb661",
         "contractDigest": "ef00269886af2f4303654eb4b534f7e2dd82ca18",
-        "figmaDigest": "4a73ca2e3a9417c2ccef63423ad595313a3bd0f2",
+        "figmaDigest": "6d41fd19a9847c78b23c2a4fd676c926941c53d7",
         "contractHash": "ca0c9eb19a9b9cd3237aeb85228e8380e2063a6b64efe540f9b4b1cd8914617a",
-        "contractVersion": "1.0.0"
+        "contractVersion": "1.0.0",
+        "figmaObserved": true
       },
-      "figmaCurrentDigest": "4a73ca2e3a9417c2ccef63423ad595313a3bd0f2",
+      "figmaCurrentDigest": "6d41fd19a9847c78b23c2a4fd676c926941c53d7",
       "figmaContract": {
         "props": {
           "Text": {
@@ -997,7 +1005,8 @@
         "contractDigest": "537ba0b979218b2db4ce7d9fc8380a98862597eb",
         "figmaDigest": "025e2288c21a15b7b0ba5d1f098aa0e9c4d69a3c",
         "contractHash": "31a80ff68a03e4d5c189065f698370aa176d12e31ba8b59fde3ec85326b9e64c",
-        "contractVersion": "1.0.0"
+        "contractVersion": "1.0.0",
+        "figmaObserved": true
       },
       "figmaCurrentDigest": "025e2288c21a15b7b0ba5d1f098aa0e9c4d69a3c",
       "figmaContract": {
@@ -1307,7 +1316,8 @@
         "contractDigest": "a2a87533008eb64a29ffcf2a5fef389bfa4f18dc",
         "figmaDigest": "96f759b1cbaf63c377ef404f3e329f08200e287e",
         "contractHash": "ea8d76f4cc05d2ca47a40eceb1e080636afeeb1fa577afc72a5ffd75c73ac2bf",
-        "contractVersion": "1.0.0"
+        "contractVersion": "1.0.0",
+        "figmaObserved": true
       },
       "figmaCurrentDigest": "96f759b1cbaf63c377ef404f3e329f08200e287e",
       "figmaContract": {
@@ -1399,7 +1409,8 @@
         "contractDigest": "24ea7cb4114e1f02e29601ea810543e81a607e13",
         "figmaDigest": "a89149a4374159fac3ee6f8e8bb3deda4e82a25e",
         "contractHash": "2d96a71a9de8784402616ede37e0939300f74086a867d982c06b36027f8b4d61",
-        "contractVersion": "1.0.0"
+        "contractVersion": "1.0.0",
+        "figmaObserved": true
       },
       "figmaCurrentDigest": "a89149a4374159fac3ee6f8e8bb3deda4e82a25e",
       "figmaContract": {
@@ -1489,17 +1500,18 @@
     "al-radio-group": {
       "figma": {
         "name": "Radio Group",
-        "nodeId": "3558:61632"
+        "nodeId": "3570:3422"
       },
       "lastSync": {
         "date": "2026-08-28T02:12:32.490Z",
         "codeHash": "dbc04a67536313501724e6e81f3122798bccec04",
         "contractDigest": "ded3e7c0c1515fec13f91685bebef7c5a02c4843",
-        "figmaDigest": "fe2cc63a8f914615c7840d40f4943c6d637c224e",
+        "figmaDigest": "0e05f085bd3831f1abc18712bb532ea87850d837",
         "contractHash": "2fd691d2006c5731475fc95169d23a3e71b31e441e001861b645a26a352f4390",
-        "contractVersion": "1.0.0"
+        "contractVersion": "1.0.0",
+        "figmaObserved": true
       },
-      "figmaCurrentDigest": "fe2cc63a8f914615c7840d40f4943c6d637c224e",
+      "figmaCurrentDigest": "0e05f085bd3831f1abc18712bb532ea87850d837",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1509,14 +1521,32 @@
           "Legend": {
             "type": "VARIANT",
             "options": [
-              "Hidden",
               "Shown"
+            ]
+          },
+          "Orientation": {
+            "type": "VARIANT",
+            "options": [
+              "Default",
+              "Horizontal"
+            ]
+          },
+          "State": {
+            "type": "VARIANT",
+            "options": [
+              "Default",
+              "Disabled",
+              "Error"
             ]
           }
         },
         "variants": [
-          "Legend=Hidden",
-          "Legend=Shown"
+          "Legend=Shown, Orientation=Default, State=Default",
+          "Legend=Shown, Orientation=Default, State=Disabled",
+          "Legend=Shown, Orientation=Default, State=Error",
+          "Legend=Shown, Orientation=Horizontal, State=Default",
+          "Legend=Shown, Orientation=Horizontal, State=Disabled",
+          "Legend=Shown, Orientation=Horizontal, State=Error"
         ]
       }
     },
@@ -1599,7 +1629,8 @@
         "contractDigest": "b47748f8ac44690155e85da6e33027f4e28e2886",
         "figmaDigest": "5b2c2e75585fa63c98fa37d3815e4b3b5a900bcc",
         "contractHash": "49737a8fc91840c3f06cd1f4e9712ee3d4f5a437b4610c6ac012abeaaf706565",
-        "contractVersion": "1.0.0"
+        "contractVersion": "1.0.0",
+        "figmaObserved": true
       },
       "figmaCurrentDigest": "5b2c2e75585fa63c98fa37d3815e4b3b5a900bcc",
       "figmaContract": {
@@ -1793,7 +1824,8 @@
         "contractDigest": "9cf5196a7aa796c988ea596d899d4ade5c01226e",
         "figmaDigest": "6c1e71b0a3de794136bd8ff43cba67fafc259231",
         "contractHash": "5980998042ce808d7ce6633cbc07aef955c8abc1c350939d9aeda658722db858",
-        "contractVersion": "1.0.0"
+        "contractVersion": "1.0.0",
+        "figmaObserved": true
       },
       "figmaCurrentDigest": "6c1e71b0a3de794136bd8ff43cba67fafc259231",
       "figmaContract": {
@@ -1852,7 +1884,8 @@
         "contractDigest": "13333fd679d8b6cb707f829eeea0bc3b363ed859",
         "figmaDigest": "220e45388165eec337054564441ea9088cb712c7",
         "contractHash": "192717003eadeaf63ab800e23d66fda882dc0e1c7f73e1393b18088d9b7b64a1",
-        "contractVersion": "1.0.0"
+        "contractVersion": "1.0.0",
+        "figmaObserved": true
       },
       "figmaCurrentDigest": "220e45388165eec337054564441ea9088cb712c7",
       "figmaContract": {
@@ -1924,7 +1957,8 @@
         "contractDigest": "88a328c872cc80b0993ce83f78edd3b74d085520",
         "figmaDigest": "255f4b46f47f65b1089f63230d15477cab7fcd40",
         "contractHash": "edf458ae6dd18623f6df70bd83d0e463bdac328059bb721f3ff76b74f7363441",
-        "contractVersion": "1.0.0"
+        "contractVersion": "1.0.0",
+        "figmaObserved": true
       },
       "figmaCurrentDigest": "255f4b46f47f65b1089f63230d15477cab7fcd40",
       "figmaContract": {
@@ -2115,54 +2149,8 @@
       "note": "Known missing in Figma (altitude-figma-sync MISSING_IN_FIGMA) — needs a bespoke build."
     }
   },
-  "figmaOnly": [
-    {
-      "name": "List Item (reference)",
-      "nodeId": null,
-      "note": "Observed on page \"🛠 List Item\" with no mapped code component."
-    },
-    {
-      "name": "Menu Item (reference)",
-      "nodeId": null,
-      "note": "Observed on page \"🛠 Menu Item\" with no mapped code component."
-    },
-    {
-      "name": "Pagination Item (reference)",
-      "nodeId": null,
-      "note": "Observed on page \"🛠 Pagination Item\" with no mapped code component."
-    },
-    {
-      "name": "Radio (reference)",
-      "nodeId": null,
-      "note": "Observed on page \"🛠 Radio\" with no mapped code component."
-    },
-    {
-      "name": "Toggle (reference)",
-      "nodeId": null,
-      "note": "Observed on page \"🛠 Toggle\" with no mapped code component."
-    },
-    {
-      "name": "Toggle Button (reference)",
-      "nodeId": null,
-      "note": "Observed on page \"🛠 Toggle Button\" with no mapped code component."
-    },
-    {
-      "name": "Input (reference)",
-      "nodeId": null,
-      "note": "Observed on page \"🛠 Input\" with no mapped code component."
-    },
-    {
-      "name": "File Upload (reference)",
-      "nodeId": null,
-      "note": "Observed on page \"🛠 File Upload\" with no mapped code component."
-    },
-    {
-      "name": "Textarea (reference)",
-      "nodeId": null,
-      "note": "Observed on page \"🛠 Textarea\" with no mapped code component."
-    }
-  ],
-  "updated": "2026-08-28T02:12:32.559Z",
+  "figmaOnly": [],
+  "updated": "2026-08-30T00:03:41.802Z",
   "project": "altitude",
   "figmaFileName": "Altitude Design System"
 }
