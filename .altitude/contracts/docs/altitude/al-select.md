@@ -2,7 +2,7 @@
 
 # al-select — Select
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<—>`
+**Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
 
 Component: al-select
 
@@ -123,7 +123,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## States
 
-_No interaction states recorded._
+`hover`, `focus`, `active`, `disabled`
 
 ## Slots (3)
 
@@ -147,7 +147,15 @@ _No interaction states recorded._
 
 ## Anatomy & token bindings
 
-Anatomy was not measured when this contract was authored (`anatomySource: "unavailable"`) — see `.altitude/contracts/README.md` § Anatomy availability is best-effort. No root-level token table to show.
+**Anatomy case measured:** `Label=hidden` (source: `measured`)
+
+### Root — `<div class="al-c-select al-has-hidden-label al-c-select--align-bottom">`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| column-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
+| gap | `--al-theme-space-xxs` | `theme/space/xxs` |
+| row-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -159,9 +167,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-select`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (0)
+## Tokens referenced (16)
 
-_None._
+`--al-base-space`, `--al-input-padding-end`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-icon-lg`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

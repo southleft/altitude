@@ -2,7 +2,7 @@
 
 # al-accordion — Accordion
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<—>`
+**Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
 
 Component: al-accordion
 
@@ -33,7 +33,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## States
 
-_No interaction states recorded._
+`hover`, `focus`, `active`, `disabled`
 
 ## Slots (1)
 
@@ -52,7 +52,20 @@ _No events declared._
 
 ## Anatomy & token bindings
 
-Anatomy was not measured when this contract was authored (`anatomySource: "unavailable"`) — see `.altitude/contracts/README.md` § Anatomy availability is best-effort. No root-level token table to show.
+**Anatomy case measured:** `Expanded=collapsed` (source: `measured`)
+
+### Root — `<div class="al-c-accordion">`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| border | `--al-theme-border-width` | `theme/border/width/@` |
+| border-bottom-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
+| border-bottom-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
+| border-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
+| border-top-color | `--al-theme-color-border-default` | `theme/color/border/default` |
+| border-top-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
+| border-top-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
+| border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -64,9 +77,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-accordion`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (0)
+## Tokens referenced (8)
 
-_None._
+`--al-theme-border-radius-lg`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-icon-lg`, `--al-theme-space`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`
 
 ---
 

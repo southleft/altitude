@@ -561,6 +561,89 @@ export const PLAN = [
       },
     }),
 
+  // Deps: al-accordion-panel. A container component: it measures its stacked
+  // panels, so the slotted panels ARE the component. `<f-po>` in the docs
+  // example is a docs-only placeholder element and is replaced with plain
+  // content here — the harness serves the library bundle, not the docs.
+  atom('al-accordion', 'Accordion',
+    { Expanded: boolAxis('expandAll', 'collapsed', 'expanded') },
+    {
+      slots: () => [{ html: ['Label', 'Label', 'Label'].map((l) => `<al-accordion-panel><div slot="header">${l}</div><div>Accordion Panel</div></al-accordion-panel>`).join('') }],
+    }),
+
+  // Deps: al-button. An overlay: `isactive` holds it open, which is the only
+  // state with a measurable box — closed it renders nothing.
+  atom('al-dialog', 'Dialog',
+    { Footer: boolAxis('__footer', 'no', 'yes') },
+    {
+      always: { isactive: true, heading: 'Dialog heading' },
+      slots: (r) => [
+        { name: 'trigger', html: '<al-button>Open Dialog</al-button>' },
+        { html: 'Dialog content' },
+        ...(r.Footer === 'yes' ? [{ name: 'footer', html: '<al-button variant="bare">Close</al-button>' }] : []),
+      ],
+    }),
+
+  // Deps: al-button. Overlay like Dialog; `alignment` is the axis a Figma set
+  // actually needs, since each edge is a different layout.
+  atom('al-drawer', 'Drawer',
+    { Alignment: enumAxis('alignment', ['left', 'top', 'bottom']) },
+    {
+      always: { isactive: true },
+      slots: () => [
+        { name: 'trigger', html: '<al-button variant="bare">Toggle Drawer</al-button>' },
+        { html: 'Drawer content' },
+      ],
+    }),
+
+  // Deps: al-stepper-item. Like Accordion, the slotted items ARE the component.
+  atom('al-stepper', 'Stepper',
+    { Variant: enumAxis('variant', ['vertical']) },
+    {
+      slots: () => [{ html: '<al-stepper-item iscomplete>Label<div slot="description">Supporting text</div></al-stepper-item><al-stepper-item isactive>Label<div slot="description">Supporting text</div></al-stepper-item><al-stepper-item>Label<div slot="description">Supporting text</div></al-stepper-item>' }],
+    }),
+
+  // Deps: al-field-note, al-list, al-list-item. Same field mixin as Input, plus a
+  // slotted option list — without it the control renders its trigger only. Slots
+  // mirror the docs' own example, which is the acceptance reference.
+  atom('al-select', 'Select',
+    { Label: boolAxis('hideLabel', 'shown', 'hidden') },
+    {
+      always: { label: 'Label', placeholder: 'Placeholder', fieldnote: 'This is a field note.' },
+      slots: () => [{ html: '<al-list><al-list-item value="List item 1">List item 1</al-list-item><al-list-item value="List item 2">List item 2</al-list-item><al-list-item value="List item 3">List item 3</al-list-item></al-list>' }],
+      stateCases: {
+        Error: { iserror: true, errornote: 'This is an error note.' },
+        Disabled: { isdisabled: true },
+        Readonly: { isreadonly: true },
+      },
+    }),
+
+  // Deps: al-field-note, al-list, al-list-item. Same shape as Select; the search
+  // control adds its own clear/submit affordances inside the field.
+  atom('al-search', 'Search',
+    { Label: boolAxis('hideLabel', 'shown', 'hidden') },
+    {
+      always: { label: 'Label', placeholder: 'Placeholder', fieldnote: 'This is a field note.' },
+      slots: () => [{ html: '<al-list><al-list-item value="List item 1">List item 1</al-list-item><al-list-item value="List item 2">List item 2</al-list-item><al-list-item value="List item 3">List item 3</al-list-item></al-list>' }],
+      stateCases: {
+        Error: { iserror: true, errornote: 'This is an error note.' },
+        Disabled: { isdisabled: true },
+      },
+    }),
+
+  // Deps: al-button. Like al-tooltip, this positions against a TRIGGER — with no
+  // trigger slot it renders nothing measurable. `isactive` holds it open, which is
+  // the only state worth measuring for a Figma set.
+  atom('al-popover', 'Popover',
+    { Position: enumAxis('position', ['bottom', 'left', 'right']) },
+    {
+      always: { isactive: true, heading: 'Popover heading' },
+      slots: () => [
+        { name: 'trigger', html: '<al-button>Open Popover</al-button>' },
+        { html: 'Popover content' },
+      ],
+    }),
+
   // Deps: al-field-note. Same mixin as Input; `rows` sets the box height.
   atom('al-textarea', 'Textarea',
     { Label: boolAxis('hideLabel', 'shown', 'hidden') },

@@ -2,7 +2,7 @@
 
 # al-stepper — Stepper
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<—>`
+**Status:** `source` · **Version:** `1.0.0` · **Element:** `<ul>`
 
 Component: al-stepper
 
@@ -28,7 +28,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## States
 
-_No interaction states recorded._
+`hover`, `focus`, `active`, `disabled`
 
 ## Slots (1)
 
@@ -47,7 +47,15 @@ _No events declared._
 
 ## Anatomy & token bindings
 
-Anatomy was not measured when this contract was authored (`anatomySource: "unavailable"`) — see `.altitude/contracts/README.md` § Anatomy availability is best-effort. No root-level token table to show.
+**Anatomy case measured:** `Variant=default` (source: `measured`)
+
+### Root — `<ul class="al-c-stepper">`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| column-gap | `--al-theme-space-sm` | `theme/space/sm` |
+| gap | `--al-theme-space-sm` | `theme/space/sm` |
+| row-gap | `--al-theme-space-sm` | `theme/space/sm` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -59,9 +67,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-stepper`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (0)
+## Tokens referenced (18)
 
-_None._
+`--al-base-space`, `--al-font-weight-bold`, `--al-theme-border-width`, `--al-theme-color-background-primary-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-color-content-inverse-default`, `--al-theme-color-content-primary-weak`, `--al-theme-icon`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

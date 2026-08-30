@@ -2,7 +2,7 @@
 
 # al-popover — Popover
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<—>`
+**Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
 
 Component: al-popover
 
@@ -75,7 +75,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## States
 
-_No interaction states recorded._
+`hover`, `focus`, `active`, `disabled`
 
 ## Slots (4)
 
@@ -101,7 +101,11 @@ _No interaction states recorded._
 
 ## Anatomy & token bindings
 
-Anatomy was not measured when this contract was authored (`anatomySource: "unavailable"`) — see `.altitude/contracts/README.md` § Anatomy availability is best-effort. No root-level token table to show.
+**Anatomy case measured:** `Position=bottom` (source: `measured`)
+
+### Root — `<div class="al-c-popover al-is-active">`
+
+_None._
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -113,9 +117,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-popover`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (0)
+## Tokens referenced (10)
 
-_None._
+`--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-color-background-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-primary-weak`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-letter-spacing`
 
 ---
 
