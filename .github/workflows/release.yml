@@ -1,8 +1,24 @@
 name: Release (v2)
 
+# MANUAL ONLY. The `push: branches: [main]` trigger was removed on 2026-08-31,
+# because merging a PR into main had become the publish button.
+#
+# changesets/action decides what to do from whether `.changeset/` holds any
+# changesets: with some, it opens a "Version Packages" PR and a human merges it;
+# with NONE and a `publish` command set, its index.ts control flow goes straight
+# to runPublish(). Once `changeset version` had been run on the release branch,
+# the changesets were consumed — so the merge commit would have arrived on main
+# with an empty .changeset/ and published straight to npm. That is irreversible,
+# and no human would have been asked. It did not fire only because NPM_TOKEN did
+# not exist yet, which is luck, not a gate.
+#
+# So publishing is now a deliberate act: Actions -> "Release (v2)" -> Run
+# workflow. Every other check still runs on push/PR via v2-checks.yml.
+#
+# If you ever restore an automatic trigger, restore the human gate with it:
+# leave the changesets UNCONSUMED on the release branch so the action opens the
+# version PR, or bind this job to a GitHub Environment with required reviewers.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -39,5 +55,17 @@ jobs:
           title: "chore(release): v2"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # NODE_AUTH_TOKEN is the one that actually authenticates, and it was
+          # missing. `actions/setup-node` (with registry-url, above) writes
+          # ~/.npmrc containing the literal line
+          #   //registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}
+          # which npm expands from the environment at publish time. Checked
+          # against changesets/action's current v1 source: it contains no npmrc
+          # or NPM_TOKEN handling of its own, so setup-node's line is the ONLY
+          # auth channel and NPM_TOKEN alone was read by nothing. The first real
+          # publish would have failed on an empty token. NPM_TOKEN is kept
+          # alongside it because older releases of the action did write their own
+          # line from it, and `@v1` is a moving tag.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: 'true'

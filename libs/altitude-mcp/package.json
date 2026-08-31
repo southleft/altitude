@@ -2,7 +2,27 @@
   "name": "@southleft/altitude-mcp",
   "description": "Stdio MCP server exposing Altitude's generated token/component graph (CEM, schemas, tokens, icons, deterministic theme engine) to AI agents",
   "version": "1.0.0",
+  "//private": "HELD BACK FROM THE v2 RELEASE, and `private` is the only field that actually holds it. The `.changeset/config.json` ignore list does NOT: `changeset publish` filters on `private` alone (@changesets/cli 2.31.0, dist/changesets-cli.cjs.js:1041 `packages.filter(pkg => !pkg.packageJson.private)`) and then publishes every remaining package whose local version is absent from the registry. This package has never been published at any version, so a v2 release would have pushed it to npm as a side effect of shipping the two Altitude libraries — a decision nobody made. `ignore` governs VERSIONING only, so keep the entry there too. To ship this package: delete this key, drop the ignore entry, add a changeset, and add it back to RELEASED in scripts/check-publishable.mjs (which now asserts this flag from the HELD side).",
+  "private": true,
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/southleft/altitude.git",
+    "directory": "libs/altitude-mcp"
+  },
+  "homepage": "https://altitude.pages.dev/docs",
+  "bugs": {
+    "url": "https://github.com/southleft/altitude/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "design-system",
+    "design-tokens",
+    "ai-agents",
+    "altitude",
+    "southleft"
+  ],
   "publishConfig": {
     "access": "public"
   },

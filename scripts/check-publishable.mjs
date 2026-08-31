@@ -47,15 +47,35 @@ import { fileURLToPath } from 'node:url';
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 /**
- * Every workspace that is meant to leave the machine. All four moved to the
+ * Every workspace that is meant to leave the machine. Moved to the
  * `@southleft/*` scope; these are DIRECTORY paths, not package names, so they
- * are unaffected by the rename. `altitude-mcp` and `sl-web-components` joined
- * this list when they stopped being `"private": true` — a package that can
- * publish and is not checked here is exactly the hole this gate replaced.
+ * are unaffected by the rename. A package that can publish and is not checked
+ * here is exactly the hole this gate replaced — which is why the HELD list
+ * below exists as its mirror image.
  */
-const LIBS = [
+const RELEASED = [
   'libs/al-web-components',
   'libs/al-react',
+];
+
+/**
+ * Workspaces that are deliberately NOT part of the release, and the assertion
+ * that they really cannot reach npm (R8).
+ *
+ * `.changeset/config.json`'s `ignore` list does not hold them back. It governs
+ * VERSIONING only: `changeset publish` selects with
+ * `packages.filter(pkg => !pkg.packageJson.private)` (@changesets/cli 2.31.0,
+ * dist/changesets-cli.cjs.js:1041) and then publishes every survivor whose
+ * local version is missing from the registry. Neither of these has ever been
+ * published at any version, so shipping the two Altitude libraries would have
+ * carried both to npm as a side effect. `private: true` is the only field in
+ * that filter, so it is the only thing that actually holds them — and R8 makes
+ * the hold an enforced fact rather than a comment somebody has to remember.
+ *
+ * To release one of these: drop its `private` flag and its `ignore` entry, add
+ * a changeset, and MOVE it from HELD to RELEASED here so it gets R1-R7 instead.
+ */
+const HELD = [
   'libs/altitude-mcp',
   'libs/sl-web-components',
 ];
@@ -116,7 +136,7 @@ function wildcardResolvesToFiles(libDir, target) {
   return false;
 }
 
-for (const lib of LIBS) {
+for (const lib of RELEASED) {
   const libDir = join(REPO_ROOT, lib);
   const manifestPath = join(libDir, 'package.json');
 
@@ -246,6 +266,34 @@ for (const lib of LIBS) {
   );
 }
 
+// R8 — every HELD package is genuinely unreachable by `changeset publish`.
+for (const lib of HELD) {
+  const manifestPath = join(REPO_ROOT, lib, 'package.json');
+  if (!existsSync(manifestPath)) {
+    fail(lib, 'R8', `no package.json at ${manifestPath}`);
+    continue;
+  }
+  let pkg;
+  try {
+    pkg = JSON.parse(readFileSync(manifestPath, 'utf8'));
+  } catch (err) {
+    fail(lib, 'R8', `package.json does not parse: ${err.message}`);
+    continue;
+  }
+  if (pkg.private !== true) {
+    fail(
+      lib,
+      'R8',
+      `"${pkg.name}" is held back from the release but is not \`private: true\`. ` +
+        '`changeset publish` filters on `private` alone — the changeset `ignore` list ' +
+        'does not stop a publish — so this package WOULD be pushed to npm by the next ' +
+        'release. Either set `private: true`, or move it to RELEASED above on purpose.',
+    );
+    continue;
+  }
+  console.log(`${lib}: ${pkg.name}@${pkg.version} — held back (private)`);
+}
+
 if (failures.length > 0) {
   console.error(`\ncheck-publishable: ${failures.length} failure(s)\n`);
   for (const f of failures) console.error(`  ${f}`);
@@ -256,4 +304,7 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`\ncheck-publishable: all ${LIBS.length} packages are publishable.`);
+console.log(
+  `\ncheck-publishable: all ${RELEASED.length} released packages are publishable; ` +
+    `${HELD.length} held back.`,
+);
