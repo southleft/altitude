@@ -11,12 +11,35 @@
   .al-c-alert {
     display: none;
     border-radius: var(--al-theme-border-radius-role-surface, var(--al-theme-border-radius-md));
+
+    /**
+     * v2: an alert states its tone with a soft tinted ground and a hairline of
+     * the same hue — not with elevation. The shadow stays only because an alert
+     * can be rendered floating over content; where it sits inline, the tone
+     * tint is what carries the meaning.
+     */
     background-color: var(--al-theme-color-background-default);
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
     box-shadow: var(--al-theme-box-shadow-lg);
     padding: var(--al-theme-space);
 
     &.al-is-active {
       display: flex;
+    }
+
+    &--success {
+      background-color: var(--al-theme-color-background-success-weak);
+      border-color: var(--al-theme-color-border-success-weak);
+    }
+
+    &--warning {
+      background-color: var(--al-theme-color-background-warning-weak);
+      border-color: var(--al-theme-color-border-warning-weak);
+    }
+
+    &--danger {
+      background-color: var(--al-theme-color-background-danger-weak);
+      border-color: var(--al-theme-color-border-danger-weak);
     }
   }
 

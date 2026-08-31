@@ -71,8 +71,20 @@
    */
   .al-c-table__cell--header {
     @include al-theme-typography-body-sm-bold;
+
+    /**
+     * v2 metadata layer: column headers are mono, uppercase and tracked out —
+     * the same treatment as token names and timestamps. Declared AFTER the
+     * typography include on purpose: that mixin emits the `font` shorthand,
+     * which resets font-family, so a family declared above it is discarded.
+     */
+    font-family: var(--al-font-family-mono);
+    font-size: var(--al-font-size-12);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+
     padding: 0;
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-default-faint);
     background-color: var(--al-theme-color-background-default-weak);
     position: sticky; /* 1 */
     inset-block-start: 0;

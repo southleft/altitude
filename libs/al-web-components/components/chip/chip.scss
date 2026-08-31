@@ -29,10 +29,15 @@
     white-space: nowrap;
     margin: 0;
     padding: var(--al-chip-padding, var(--al-theme-space-xxs) var(--al-theme-space-sm));
-    border: var(--al-chip-border, none);
-    border-radius: var(--al-chip-border-radius, #{size(4)});
-    background: var(--al-chip-background, var(--al-theme-color-background-default-strong));
-    color: var(--al-chip-color, var(--al-theme-color-content-default-weak));
+    /**
+     * v2: a chip is a pill with a hairline outline on the page ground, not a
+     * filled grey lozenge. The selected/active state is what carries a fill
+     * (ink), so the resting state must not spend one.
+     */
+    border: var(--al-chip-border, var(--al-theme-border-width) solid var(--al-theme-color-border-default));
+    border-radius: var(--al-chip-border-radius, var(--al-theme-border-radius-pill));
+    background: var(--al-chip-background, var(--al-theme-color-background-transparent-default));
+    color: var(--al-chip-color, var(--al-theme-color-content-default));
     font-family: var(--al-chip-font-family, inherit);
 
     /**
