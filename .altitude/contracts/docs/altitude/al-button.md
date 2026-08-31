@@ -27,7 +27,7 @@ Component: al-button
 | `isPressed` | string | `boolean \| 'mixed'` | — | — |
 | `label` | string | — | — | — |
 | `name` | string | — | — | — |
-| `size` | enum | `lg`, `sm` | — | — |
+| `size` | enum | `lg`, `sm` | — | **Size** (VARIANT): `Default`, `Lg`, `Sm` |
 | `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | — |
 | `type` | enum | `button`, `reset`, `submit` | — | — |
 | `value` | string | — | — | — |
@@ -120,6 +120,11 @@ Style variant
 **Figma-expression opt-out (T27):** `fullWidth` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
+
+### `size` (Figma property "Size")
+
+- Code values: `lg`, `sm`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Lg`, `Sm`
 
 ### `variant` (Figma property "Variant")
 

@@ -164,6 +164,18 @@ export const PLAN = [
   atom('al-button', 'Button',
     {
       Variant: enumAxis('variant', ['secondary', 'tertiary', 'bare', 'danger']),
+      // v2 control scale. `size` drives min-height off theme/size/control-sm|@|-lg
+      // (32/40/48) and the font off font-size/13|14|15 — button.scss:135-145, and the
+      // rule's own comment is explicit that height comes from the control scale rather
+      // than padding + line-height. `enumAxis` puts `default` first (attribute omitted),
+      // which is the 40px/14px row, so this yields Default | Sm | Lg and matches the
+      // Figma set's Size axis value-for-value.
+      //
+      // Without this the probe could not see the axis at all: check-parity.mjs builds
+      // its expected variant list from THIS plan, so against the repaired 60-variant set
+      // it reported all 20 of its own names "missing" and all 60 real ones "extra" —
+      // a failure that looks like a broken canvas and is actually a stale probe.
+      Size: enumAxis('size', ['sm', 'lg']),
       Width: { values: ['hug', 'fill'], attrs: (v) => (v === 'fill' ? { fullwidth: true } : {}) },
     },
     {

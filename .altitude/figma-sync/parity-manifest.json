@@ -2,7 +2,7 @@
   "$comment": "Figma <-> code parity manifest. Seeded by scripts/figma-parity/seed-manifest.mjs; lastSync stamped by scripts/figma-parity/mark-synced.mjs; figmaCurrentDigest updated by scripts/figma-parity/refresh-figma-digests.mjs. Read by libs/altitude-mcp/src/lib/parity.mjs.",
   "figmaFileId": "y83n4o9LOGs74oAoguFcGS",
   "created": "2026-08-22T03:30:29.826Z",
-  "figmaLastRefreshed": "2026-08-30T01:46:17.164Z",
+  "figmaLastRefreshed": "2026-08-31T19:20:37.258Z",
   "components": {
     "al-accordion-panel": {
       "figma": null,
@@ -38,7 +38,7 @@
         "figmaDigest": "d49c0532cf2014a3f9dfaccafe46ac9564b01664",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "c00e03fcaf6a2b2f1ff6da6f225b8dd53ae9dad4",
+      "figmaCurrentDigest": "e09d6aadcc559145d569afa56c21b2477a59d221",
       "figmaContract": {
         "props": {
           "Text": {
@@ -112,7 +112,7 @@
         "figmaDigest": "1f720a2af3eab6ed53edccbb84436ed8b27ec19a",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "7c3add9dadfa25fdb3cafcee413606ca6a9a2df0",
+      "figmaCurrentDigest": "63bb73e48f379d410f101ea6102bf89fe55d4ca2",
       "figmaContract": {
         "props": {
           "Text": {
@@ -167,7 +167,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "99dfc0d9505a7d84b2efa87ee6c785e3319cfe37",
+      "figmaCurrentDigest": "7dd1081ae2d7ac2c83fe1e9e342e9f23d89a68fa",
       "figmaContract": {
         "props": {
           "Text": {
@@ -197,7 +197,7 @@
         "figmaDigest": "18828c1c7395c3b053821c991fa6b7e9f69d9e30",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "1924f352895ce477be3106326212f5a5fd5006f5",
+      "figmaCurrentDigest": "b2a7cf5e64799936190eb170746e45f1b7092cb6",
       "figmaContract": {
         "props": {
           "Text": {
@@ -238,29 +238,77 @@
               "Secondary",
               "Tertiary"
             ]
+          },
+          "Size": {
+            "type": "VARIANT",
+            "options": [
+              "Default",
+              "Sm",
+              "Lg"
+            ]
           }
         },
         "variants": [
-          "State=Default, Variant=Bare",
-          "State=Default, Variant=Danger",
-          "State=Default, Variant=Primary",
-          "State=Default, Variant=Secondary",
-          "State=Default, Variant=Tertiary",
-          "State=Disabled, Variant=Bare",
-          "State=Disabled, Variant=Danger",
-          "State=Disabled, Variant=Primary",
-          "State=Disabled, Variant=Secondary",
-          "State=Disabled, Variant=Tertiary",
-          "State=Focus, Variant=Bare",
-          "State=Focus, Variant=Danger",
-          "State=Focus, Variant=Primary",
-          "State=Focus, Variant=Secondary",
-          "State=Focus, Variant=Tertiary",
-          "State=Hover, Variant=Bare",
-          "State=Hover, Variant=Danger",
-          "State=Hover, Variant=Primary",
-          "State=Hover, Variant=Secondary",
-          "State=Hover, Variant=Tertiary"
+          "State=Default, Variant=Bare, Size=Default",
+          "State=Default, Variant=Bare, Size=Lg",
+          "State=Default, Variant=Bare, Size=Sm",
+          "State=Default, Variant=Danger, Size=Default",
+          "State=Default, Variant=Danger, Size=Lg",
+          "State=Default, Variant=Danger, Size=Sm",
+          "State=Default, Variant=Primary, Size=Default",
+          "State=Default, Variant=Primary, Size=Lg",
+          "State=Default, Variant=Primary, Size=Sm",
+          "State=Default, Variant=Secondary, Size=Default",
+          "State=Default, Variant=Secondary, Size=Lg",
+          "State=Default, Variant=Secondary, Size=Sm",
+          "State=Default, Variant=Tertiary, Size=Default",
+          "State=Default, Variant=Tertiary, Size=Lg",
+          "State=Default, Variant=Tertiary, Size=Sm",
+          "State=Disabled, Variant=Bare, Size=Default",
+          "State=Disabled, Variant=Bare, Size=Lg",
+          "State=Disabled, Variant=Bare, Size=Sm",
+          "State=Disabled, Variant=Danger, Size=Default",
+          "State=Disabled, Variant=Danger, Size=Lg",
+          "State=Disabled, Variant=Danger, Size=Sm",
+          "State=Disabled, Variant=Primary, Size=Default",
+          "State=Disabled, Variant=Primary, Size=Lg",
+          "State=Disabled, Variant=Primary, Size=Sm",
+          "State=Disabled, Variant=Secondary, Size=Default",
+          "State=Disabled, Variant=Secondary, Size=Lg",
+          "State=Disabled, Variant=Secondary, Size=Sm",
+          "State=Disabled, Variant=Tertiary, Size=Default",
+          "State=Disabled, Variant=Tertiary, Size=Lg",
+          "State=Disabled, Variant=Tertiary, Size=Sm",
+          "State=Focus, Variant=Bare, Size=Default",
+          "State=Focus, Variant=Bare, Size=Lg",
+          "State=Focus, Variant=Bare, Size=Sm",
+          "State=Focus, Variant=Danger, Size=Default",
+          "State=Focus, Variant=Danger, Size=Lg",
+          "State=Focus, Variant=Danger, Size=Sm",
+          "State=Focus, Variant=Primary, Size=Default",
+          "State=Focus, Variant=Primary, Size=Lg",
+          "State=Focus, Variant=Primary, Size=Sm",
+          "State=Focus, Variant=Secondary, Size=Default",
+          "State=Focus, Variant=Secondary, Size=Lg",
+          "State=Focus, Variant=Secondary, Size=Sm",
+          "State=Focus, Variant=Tertiary, Size=Default",
+          "State=Focus, Variant=Tertiary, Size=Lg",
+          "State=Focus, Variant=Tertiary, Size=Sm",
+          "State=Hover, Variant=Bare, Size=Default",
+          "State=Hover, Variant=Bare, Size=Lg",
+          "State=Hover, Variant=Bare, Size=Sm",
+          "State=Hover, Variant=Danger, Size=Default",
+          "State=Hover, Variant=Danger, Size=Lg",
+          "State=Hover, Variant=Danger, Size=Sm",
+          "State=Hover, Variant=Primary, Size=Default",
+          "State=Hover, Variant=Primary, Size=Lg",
+          "State=Hover, Variant=Primary, Size=Sm",
+          "State=Hover, Variant=Secondary, Size=Default",
+          "State=Hover, Variant=Secondary, Size=Lg",
+          "State=Hover, Variant=Secondary, Size=Sm",
+          "State=Hover, Variant=Tertiary, Size=Default",
+          "State=Hover, Variant=Tertiary, Size=Lg",
+          "State=Hover, Variant=Tertiary, Size=Sm"
         ]
       }
     },
@@ -289,7 +337,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "8b5601ecc480d4d02a45a4824e756637cc9c0711",
+      "figmaCurrentDigest": "6c144feb6d31936da17871d34eae2ead52530209",
       "figmaContract": {
         "props": {
           "Text": {
@@ -340,7 +388,7 @@
         "figmaDigest": "d25ae5c815b9feccf32b361b1ca92c0914964e47",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "1fbe66ce45c239ea9e4058b0eca86a9d4bac7970",
+      "figmaCurrentDigest": "589b2ff412ad2a56a7d9cbd6bd363f0f13c65470",
       "figmaContract": {
         "props": {
           "Text": {
@@ -414,7 +462,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "f4a48b8e10fe8442a66a6cbd81e1b6f08b9fcb3b",
+      "figmaCurrentDigest": "336a9d4194778fdcb192e3c506f700793b4420d8",
       "figmaContract": {
         "props": {
           "Text": {
@@ -630,7 +678,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "6d41fd19a9847c78b23c2a4fd676c926941c53d7",
+      "figmaCurrentDigest": "de6a834c930f9adf560ea36a41ff80671f17da7b",
       "figmaContract": {
         "props": {
           "Text": {
@@ -700,7 +748,7 @@
         "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "c52abcdab297d4677692a32877e7ba58c43541a3",
+      "figmaCurrentDigest": "472657cc240409be4583bf493d40294e9141e471",
       "figmaContract": {
         "props": {
           "Text": {
@@ -765,7 +813,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "00005cd80e99da8741d08c7ed85af6019c8decec",
+      "figmaCurrentDigest": "01fc25dee4fa91b3ab503fbb62fc57260a339bc5",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1008,7 +1056,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "025e2288c21a15b7b0ba5d1f098aa0e9c4d69a3c",
+      "figmaCurrentDigest": "ae073cf83dc3784efb0b1c6361ffdce2886392a1",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1261,7 +1309,7 @@
         "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "6e723936bd36fa61acef4fa593e76c3a97257b18",
+      "figmaCurrentDigest": "93c007f4af3a49d6abbf9e0afd9bb44a27e06285",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1319,7 +1367,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "96f759b1cbaf63c377ef404f3e329f08200e287e",
+      "figmaCurrentDigest": "10cd84b3a4236a883161d82a5d78ee2210fb15e1",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1412,7 +1460,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "a89149a4374159fac3ee6f8e8bb3deda4e82a25e",
+      "figmaCurrentDigest": "1eab728ec3f85d58a463fb861db6b8ce2f258a59",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1511,7 +1559,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "0e05f085bd3831f1abc18712bb532ea87850d837",
+      "figmaCurrentDigest": "0f751a898383aa093f7b09fc029e55f51b40c1d8",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1632,7 +1680,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "5b2c2e75585fa63c98fa37d3815e4b3b5a900bcc",
+      "figmaCurrentDigest": "f42187b572ad3d93e65a6fbf678503b0b3e1ffc6",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1745,7 +1793,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "bf08a6b6de126b3908420af219b3c355fef12060",
+      "figmaCurrentDigest": "db626a13a32b553c30aed508a94423218201a8fb",
       "figmaContract": {
         "props": {
           "State": {
@@ -1774,7 +1822,7 @@
         "figmaDigest": "32277d5ac3d0d607db31acf450765670a4d28a7a",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "c4032036c96a5a00f78d1c6ae990211b07627f76",
+      "figmaCurrentDigest": "ea9fb76cec78c0cb51670f2516a5bcc2cfe2b135",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1827,7 +1875,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "6c1e71b0a3de794136bd8ff43cba67fafc259231",
+      "figmaCurrentDigest": "8b8f89c18c8e1761aa2bb0c15d24a413e16d2349",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1887,7 +1935,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "220e45388165eec337054564441ea9088cb712c7",
+      "figmaCurrentDigest": "4cf5344334a35f7f99f70146772b2cd1ec6f5200",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1923,7 +1971,7 @@
         "codeHash": "8137040f321a2503759f0c51d8dd5d05b06dd8f7",
         "figmaDigest": null
       },
-      "figmaCurrentDigest": "b652ddabd4314c4df540a99ee0c18faf5bd3498e",
+      "figmaCurrentDigest": "065645bf4c8f31026681cdb4af4c99d8c31e80dc",
       "figmaContract": {
         "props": {
           "State": {
@@ -2040,7 +2088,7 @@
         "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "7cf3684ba3111899ed393f69bc222bb5f8afee01",
+      "figmaCurrentDigest": "37fc8ff20b79734e5bcf578111581ba37fb8d702",
       "figmaContract": {
         "props": {
           "Text": {
@@ -2150,7 +2198,7 @@
     }
   },
   "figmaOnly": [],
-  "updated": "2026-08-30T01:46:17.165Z",
+  "updated": "2026-08-31T19:20:37.259Z",
   "project": "altitude",
   "figmaFileName": "Altitude Design System"
 }
