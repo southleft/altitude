@@ -136,7 +136,7 @@ For each action in the fix plan, apply it:
 1. Read `.mm/specs/{folder}/spec.md`
 2. Extract requirements from the `## Requirements` section
 3. Generate 3-5 concrete task titles based on the requirements (use `T1:`, `T2:` format)
-4. Add them as `- [ ] T{N}: {title}` to `## Backlog` in implementation.md
+4. Register them in ONE batch call: `mm_create({entity: "task", project_path, spec_path, titles: ["T1: ...", ...]})` — this writes the canonical `## Tasks` checkboxes in spec.md. Only fall back to hand-editing `## Backlog` in implementation.md when the spec is verifiably pre-literate (implementation.md already exists AND spec.md has no `## Tasks` section)
 5. Report: `✓ generate_tasks: {folder}`
 
 #### close_aged_issue

@@ -355,15 +355,20 @@ and tasks manually.` (rest of the upgrade block identical).
 2. Call `mm_get_status({ project_path })` once — `status.specs[]` is the task-count source;
    `status.stalledCount` cross-checks step 3. Per spec, get last-modified via
    `git log -1 --format="%ai" -- .mm/specs/{path}/` and build `SpecHealth` (folder, name, counts,
-   completionPct, lastModified, daysSinceModified). Scan `.mm/issues/issues.md` (title, severity
-   from `[CRITICAL]`/`[HIGH]` tags, created date from frontmatter or git) and `.mm/features/*/
-   feature.json` (name, completionPct, lastModified).
+   completionPct, lastModified, daysSinceModified, and `roadmap` from `mm_list`'s specs output —
+   `SpecHealth.roadmap` now carries each spec's `roadmap:` frontmatter, undefined when unset).
+   Scan `.mm/issues/issues.md` (title, severity from `[CRITICAL]`/`[HIGH]` tags, created date from
+   frontmatter or git) and `.mm/features/*/feature.json` (name, completionPct, lastModified).
+   Read `.mm/product/roadmap.md` and, for every milestone's `spec:`/`feature:`/bare tail refs,
+   collect the referenced slugs into a `roadmapLinkedSlugs` set (same parse `src/lib/roadmap.ts`
+   already implements) — this feeds the orphan check in step 3.
 3. Apply the health checks with `HealthConfig { staleDays: {flag or 14}, stuckTaskDays: 7,
    agedIssueDays: 30, nearlyDonePct: 80 }`: stale specs (open tasks, no activity > staleDays;
    cross-check `status.stalledCount`) · stuck tasks (in-progress, > 7d) · nearly-done (> 80%,
-   unfinished) · empty specs (0 tasks) · aged issues (> 30d; critical > 90d) · stalled features.
+   unfinished) · empty specs (0 tasks) · orphan specs (no `roadmap:` and no roadmap tail-ref;
+   includes completed; `none` excluded) · aged issues (> 30d; critical > 90d) · stalled features.
    Thresholds: Stale Spec warn >14d / crit >30d · Stuck Task >7d · Nearly Done info · Empty Spec
-   always warn · Aged Issue warn >30d / crit >90d · Stalled Feature >14d.
+   always warn · Orphan Spec always warn · Aged Issue warn >30d / crit >90d · Stalled Feature >14d.
 4. Report (`formatHealthReport` shape): SUMMARY (spec counts, overall %, issues, findings by
    severity) then CRITICAL / WARNINGS / INFO entries each with `[{type}] {message}` and a `→
    recommendation`. Append the per-spec table when `--verbose`.

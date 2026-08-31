@@ -25,15 +25,21 @@ that the Conductor reads to group and gate work.
 
 ### Step 1: Call the MCP Tool
 
-Call `mm_order_specs` with `project_path` to get the deterministic analysis. This tool:
+Call `mm_order_specs` with `project_path` (no `write`) to get the deterministic analysis. This
+tool:
 
 - Reads every spec folder, parses `depends_on` from frontmatter (including YAML lists)
 - Computes progress from `implementation.md`
 - Runs topological sort (Kahn's algorithm) into waves
 - Detects dependency cycles
-- Checks file overlaps within waves for parallelism
+- Checks file overlaps within waves for parallelism (falls back to scraping file paths out of
+  task text when a spec has no `manifest.md` bullets, so `parallel: true` means "no file
+  collision we could find," not just "no dependency edge")
 - Validates `depends_on` references exist on disk
 - Filters out completed specs
+
+Waves, `parallel`, and `file_overlaps` are this tool's own deterministic computation — nothing in
+this workflow ever hand-derives or transcribes them.
 
 The result contains:
 
@@ -88,28 +94,30 @@ Use `AskUserQuestion` to confirm (skip in `--auto` mode). Options:
 
 ### Step 4: Write order.json
 
-Write to `.mm/specs/order.json`:
+Call `mm_order_specs` again, this time with `write: true` and a `labels` argument carrying only
+the prose you composed in Step 2 — the tool recomputes waves/parallel/file_overlaps itself and
+writes `.mm/specs/order.json` (it does not trust or reuse anything from the Step 1 call for the
+write):
 
 ```json
 {
-  "feature_id": "project",
-  "generated": "<ISO-8601 timestamp>",
-  "phases": [
-    {
-      "phase": 1,
-      "label": "<your wave label>",
-      "parallel": true,
-      "specs": [
-        {
-          "spec": "<spec-folder-name>",
-          "reason": "<why this spec is in this wave>"
-        }
-      ]
+  "project_path": "<project root>",
+  "write": true,
+  "labels": {
+    "1": {
+      "label": "<your wave 1 label>",
+      "reasons": {
+        "<spec-folder-name>": "<why this spec is in wave 1>"
+      }
     }
-  ],
-  "unordered": ["<spec-folder-name>"]
+  }
 }
 ```
+
+`labels` is optional and per-phase — omit a phase (or the whole argument) to get deterministic
+defaults ("Wave N", a dependency-derived reason). The tool's response includes `order_json` (the
+exact content it wrote) and `order_json_path` — use those to confirm rather than re-reading the
+file.
 
 If the user accepted backfill proposals, also update those specs' `spec.md` frontmatter
 to add/merge the `depends_on:` list.

@@ -260,6 +260,24 @@ Recommended implementation sequence:
 
 - Different task groups (e.g., email notifications, payment processing, data migration)
 - Different execution order based on dependencies
+
+### Cross-spec dependencies on a task line
+
+When a task genuinely cannot start until work in ANOTHER spec lands, say so on the task
+line itself rather than burying it in prose:
+
+```
+- [ ] T4: Wire live sync `L` (blocked-by: 2026-08-02-sync-core#T3)
+```
+
+- Format: `(blocked-by: <spec-folder>#<task-id>)`, comma-separated for several. Drop the
+  `#task-id` only when the whole spec must land first.
+- The app reads this: deferred tasks leave the progress denominator, so the spec is not
+  pinned below 100% by work it is not allowed to start, and they surface in the roadmap's
+  **Circle back** list one wave after their blocker.
+- Use it **sparingly and only for real cross-spec ordering**. A task that merely comes
+  later in THIS spec is ordinary sequencing — leave it unmarked. Marking everything
+  defers everything, and a spec whose tasks are all deferred makes no progress at all.
 - More or fewer sub-tasks per group
 
 ## Output contract (literate tasks — read this before writing anything)

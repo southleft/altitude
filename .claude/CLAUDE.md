@@ -505,3 +505,32 @@ _This section is yours._ Monday Morning seeds it once and never overwrites it. A
 - **Simplest thing that works.** Before adding an abstraction or flexibility, name the second concrete caller that needs it; if you can't, don't add it.
 - **Don't touch unrelated code** — but do surface design smells you notice, as separate issues to address later.
 - **Suggest better ways.** Don't hesitate to propose a better approach, especially one with longer-lasting impact than a tactical fix.
+
+### Working agreements distilled from the 2026-08-28/29 sessions (owner-reviewed style)
+
+- **Least input from the human is the goal.** One command should run capture → build →
+  verify → image pair → gate. The human names a target and reviews outcomes; the system
+  finds its own defects. Never make the owner spot what a verify pass could have caught.
+- **Measured truth outranks everything** — tokens name intent, but the browser's used
+  values are the ground truth for pages (clamp() beats the token's nominal size).
+  Perception is not a comparator: eyeballs mislabeled chip colors that the measured
+  facts got right. Numbers gate; screenshots are evidence.
+- **Every fix is a generic rule or a measured fact — never a one-off patch, never a
+  hand-edit on canvas.** If a fix is idempotent, apply it unconditionally
+  (symptom-gated triggers rot as other rules land).
+- **Silence is the only forbidden failure.** Anything inexpressible degrades to a NAMED
+  miss (missingVars/degradations). Silent-skip branches and silent no-op consumers each
+  cost a debugging round — instrument the walk when something vanishes cleanly.
+- **Record learnings the moment they cost something** — into the skill, the spec ledger,
+  and the learnings note, in the same turn. Traps re-bite (backticks in String.raw
+  comments bit three times in one day; that lint exists now: run
+  `node scripts/contracts/figma/check-parse.mjs` after touching generator files).
+- **Verify with the loop before showing the owner**: site screenshot → contract/code
+  analysis → build → Figma screenshot → compare → iterate. Applies to edits as much as
+  first builds, and in both directions (code→Figma, Figma→code).
+- **Figma work answers to `.altitude/FIGMA-CLEANLINESS.md`** (owner-authored, binding):
+  reuse components, keep hug sizing on atoms, real names on real pages ("Hero", never
+  "Site Hero"), organisms at 1440/768/350 with breakpoint variants, vectors over
+  screenshots, no unnecessary absolutes.
+- **Guards must be positive, not negative** — "not a known decoy" let a client file
+  through; the open Figma file must BE the target. Prefer allowlist-shaped checks.

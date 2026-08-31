@@ -27,11 +27,32 @@ Read `.mm/product/roadmap.md` and extract features.
 ```markdown
 # Product Roadmap
 
+## Phase 1: Foundations
+
+> Status: in_progress
+
 1. [ ] Feature Name — Description here `effort`
 2. [ ] Another Feature — Another description `effort`
+
+## Phase 2: Expansion
+
+> Status: planning
+
+3. [ ] Third Feature — Another description `effort`
 ```
 
-Parse each line matching pattern: `\d+\. \[[ x]\] (.+?) — (.+?) \`(.+?)\``
+Roadmap items always live under a `## Phase <number>: <title>` heading — that is what the app's
+roadmap parser (`parse-roadmap.ts`) requires, and items outside a phase section are silently
+dropped by it. When parsing here:
+
+- **Skip `## Phase ...` heading lines** and `> Status: ...` blockquote lines. They carry phase
+  grouping, not features.
+- **Item numbering is continuous ACROSS phases** — Phase 2 above starts at `3.`, not at `1.`.
+  Use the item's own number as `roadmap_order` so numbers still map 1:1 to `roadmap_order` in
+  each `feature.json`. Do NOT restart the count per phase.
+- Both `1. [ ]` and `- [ ]` bullets are valid roadmap items.
+
+Parse each item line matching pattern: `\d+\. \[[ x]\] (.+?) — (.+?) \`(.+?)\``
 
 - Group 1: Feature name
 - Group 2: Description
@@ -128,8 +149,10 @@ then run /mm:roadmap-to-features to create features.
 No features found in roadmap.md
 
 Expected format:
+## Phase 1: Foundations
 1. [ ] Feature Name — Description `effort`
 
+Every item must sit under a "## Phase N: <title>" heading.
 Check your roadmap format and try again.
 ```
 

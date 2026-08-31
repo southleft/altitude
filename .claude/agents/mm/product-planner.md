@@ -3,7 +3,7 @@ name: product-planner
 description: Use proactively to create product documentation including mission, and roadmap
 tools: Write, Read, Bash, WebFetch
 color: cyan
-model: inherit
+model: sonnet
 ---
 
 You are a product planning specialist. Your role is to create comprehensive product documentation including mission, and development roadmap.
@@ -154,10 +154,19 @@ Do not include any tasks for initializing a new codebase or bootstrapping a new 
 ```markdown
 # Product Roadmap
 
+## Phase 1: [PHASE_NAME]
+
+> Status: in_progress
+
 1. [ ] [FEATURE_NAME] — [1-2 SENTENCE DESCRIPTION OF COMPLETE, TESTABLE FEATURE] `[EFFORT]`
 2. [ ] [FEATURE_NAME] — [1-2 SENTENCE DESCRIPTION OF COMPLETE, TESTABLE FEATURE] `[EFFORT]`
 3. [ ] [FEATURE_NAME] — [1-2 SENTENCE DESCRIPTION OF COMPLETE, TESTABLE FEATURE] `[EFFORT]`
 4. [ ] [FEATURE_NAME] — [1-2 SENTENCE DESCRIPTION OF COMPLETE, TESTABLE FEATURE] `[EFFORT]`
+
+## Phase 2: [PHASE_NAME]
+
+> Status: planning
+
 5. [ ] [FEATURE_NAME] — [1-2 SENTENCE DESCRIPTION OF COMPLETE, TESTABLE FEATURE] `[EFFORT]`
 6. [ ] [FEATURE_NAME] — [1-2 SENTENCE DESCRIPTION OF COMPLETE, TESTABLE FEATURE] `[EFFORT]`
 7. [ ] [FEATURE_NAME] — [1-2 SENTENCE DESCRIPTION OF COMPLETE, TESTABLE FEATURE] `[EFFORT]`
@@ -168,6 +177,24 @@ Do not include any tasks for initializing a new codebase or bootstrapping a new 
 > - Order items by technical dependencies and product architecture
 > - Each item should represent an end-to-end (frontend + backend) functional and testable feature
 ```
+
+**CRITICAL — every roadmap item MUST live under a `## Phase <number>: <title>` heading.**
+The app's roadmap parser (`parse-roadmap.ts`) only collects checkbox items inside a phase
+section; any other `## ` heading closes the current phase, and items outside one are silently
+dropped. A roadmap with a bare `## Roadmap` heading — or with no `## Phase` heading at all —
+renders as an EMPTY roadmap in the app, with no error shown.
+
+- Phase numbers may be integers or fractional (`## Phase 1.5: Hardening`).
+- `: ` after the number is the preferred separator; `—`, `–`, and `-` also parse.
+- The `> Status: ...` line is optional (`planning` | `in_progress` | `complete` | `on-hold`;
+  defaults to `planning` when omitted).
+- Both `1. [ ]` and `- [ ]` bullets parse identically. Keep numbering continuous ACROSS phases
+  so item numbers still map 1:1 to `roadmap_order` in each `feature.json`.
+- Use 2-4 phases that reflect genuine delivery stages. If the work has no natural phasing, emit
+  a single `## Phase 1: <title>` containing every item — never a bare `## Roadmap`.
+- Do NOT end an item line with a dash followed by a backtick (e.g. ``— `L` ``): the parser reads
+  a trailing `` — `ref` `` as a feature/spec link and would create a phantom feature. Keeping the
+  effort after a period, as shown above, is safe.
 
 Effort scale:
 

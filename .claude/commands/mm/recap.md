@@ -111,6 +111,25 @@ Render exactly one line, appended to `## Heads up` (create the section if step 6
 
 Status read only — never invoke the audit from here (the loop's no-recursion rule).
 
+### Step 6c: Run-metrics status (one line, best-effort)
+
+Same purpose as 6b: surface the spec-start run journal so nobody has to remember it exists.
+Run the MM MCP server's `runs` CLI against `project_path` — in this repo:
+`node mcp-servers/monday-morning/dist/src/index.js runs <project_path> --json`; in an installed
+project, the bundled `monday-morning` sidecar binary with the same `runs <project_path> --json`
+args. **Best-effort: if the CLI is absent or errors, skip the line entirely** — never fail a
+brief over its own instrumentation.
+
+Render exactly one line, appended to `## Heads up`, choosing the first that applies:
+
+- `sentinels.leaked` non-empty → `Run metrics: {n} leaked sentinel(s) — {names}` (this is the
+  bug class the journal exists to catch; lead with it)
+- `runs_with_no_gates` non-empty → `Run metrics: {n} run(s) logged no gates — the runtime was bypassed`
+- `totals.runs` is 0 → `Run metrics: no instrumented runs yet · {provenance.retros_recalled} retro(s) written from recall`
+- otherwise → `Run metrics: {totals.runs} runs · gates {gate_compliance_rate as %} · {provenance.retros_recalled}/{provenance.retros} retros recalled`
+
+Read-only. Never write, never re-run a spec from here.
+
 ### Step 7: Assemble + persist
 
 Assemble the brief in this section order:

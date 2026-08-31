@@ -2,32 +2,20 @@
 
 ### Sentinel (running visibility)
 
-So Monday Morning desktop (and any other tool reading
-`.mm/session/active/`) can detect this `/mm:` skill running outside the
-desktop app, write a sentinel JSON file on entry and delete it on exit.
-The trap covers clean exits and Ctrl-C; MM's 60s prune cycle covers
-hard-kills (terminal window closed without a clean exit).
-
-```bash
-TASK_SLUG="${TASK_SLUG:-<resolved task slug>}"
-SENTINEL_DIR=".mm/session/active"
-mkdir -p "$SENTINEL_DIR"
-SENTINEL="$SENTINEL_DIR/task-${TASK_SLUG}.json"
-cat > "$SENTINEL" <<EOF
-{
-  "pid": $$,
-  "started_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-  "host": "$(hostname -s)",
-  "user": "${USER:-$(whoami)}",
-  "cmd": "/mm:task ${TASK_SLUG}",
-  "spec_folder": "task-${TASK_SLUG}",
-  "session_kind": "task"
-}
-EOF
-trap 'rm -f "$SENTINEL"' EXIT
-```
+So Monday Morning desktop (and any other tool reading `.mm/session/active/`)
+can detect this `/mm:` skill running outside the desktop app, drop a sentinel
+exactly per **spec-start.md step 2** — including its durable owner-PID
+resolution. Never write `"pid": $$` (the per-call subshell PID dies
+immediately and the 60s prune deletes the sentinel mid-run) and never set a
+`trap ... EXIT` (it fires at the end of that single Bash call, not the run).
+Use `spec_folder: "task-{TASK_SLUG}"`, `session_kind: "task"`, and
+`rm -f` the sentinel explicitly in the final step of the run.
 
 One-shot task execution — from intent to committed code. For standalone work that doesn't need a full spec.
+
+## Entity Format Reference (load first)
+
+Before creating or editing any `.mm/` entity file, Read `<project_path>/.mm/reference/entity-format.md` — it is the authoritative on-demand reference for file formats, folder naming, frontmatter, and dashboard rules. If the file does not exist (legacy install), fall back to the "Monday Morning Entity Reference" section of the managed `.claude/CLAUDE.md` block. Do not proceed from memory.
 
 ## Usage
 

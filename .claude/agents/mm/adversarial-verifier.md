@@ -1,6 +1,6 @@
 ---
 name: adversarial-verifier
-description: Use proactively inside /mm:verify-spec's adversarial pass (step 1b — enabled by --adversarial, --thorough, or the /mm:complete completion gate) to run ONE adversarial-bank prompt against a spec. Emits either a single Finding or the prompt's literal null token with justification.
+description: Use ONLY inside /mm:verify-spec's adversarial pass (step 1b — enabled by --adversarial, --thorough, or a deterministic classify_risk escalation; never by default) to run ONE adversarial-bank prompt against a spec. Emits either a single Finding or the prompt's literal null token with justification.
 tools: Read, Bash, Grep, Glob
 color: orange
 model: sonnet

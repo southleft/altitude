@@ -67,7 +67,7 @@ Nothing here commits, pushes, or edits the changelog.
    - Quick task → `mm_complete({entity: "quick", project_path, id})`.
 3. **Honor the verification cascade.** If the response has `verification_recommended: true`
    (last task of the spec), run the Step 6 gate exactly as below — `/mm:verify-spec {spec}
-   --fix --adversarial --max-iterations 3`, T3 backlog surfaced record-only, revert on
+   --fix --max-iterations 3`, T3 backlog surfaced record-only, revert on
    gaps-remain. Task-only mode skips the *git* workflow, never the *verification* gate.
 4. **Confirm:** task title, spec progress `{old}% → {new}%`, and — when the user wants the
    change committed — point at full `/mm:complete`.
@@ -159,26 +159,6 @@ Check project files in this order:
 | `go.mod`         | Exists             | `go test ./...`    |
 | `Makefile`       | Has `test` target  | `make test`        |
 
-### Detection Logic
-
-```bash
-# Check for Node.js tests
-if [ -f "package.json" ]; then
-  # Check if scripts.test exists
-  cat package.json | grep -q '"test":'
-fi
-
-# Check for Rust tests
-if [ -f "Cargo.toml" ]; then
-  # Cargo test is available
-fi
-
-# Check for Makefile test target
-if [ -f "Makefile" ]; then
-  grep -q "^test:" Makefile
-fi
-```
-
 ### Multi-Project Detection
 
 For monorepos, check these subdirectories:
@@ -247,20 +227,6 @@ Check project files in this order:
 | `go.mod`         | Exists              | `go build ./...`        |
 | `Makefile`       | Has `build` target  | `make build`            |
 | `pyproject.toml` | Has build-system    | `pip install -e .`      |
-
-### Detection Logic
-
-```bash
-# Check for Node.js build
-if [ -f "package.json" ]; then
-  cat package.json | grep -q '"build":'
-fi
-
-# Check for Makefile build target
-if [ -f "Makefile" ]; then
-  grep -q "^build:" Makefile
-fi
-```
 
 ### Execute Build
 
@@ -342,7 +308,7 @@ If the review pipeline encounters a fatal error:
 Review failed: {error}
 
 Continuing without review. Your changes are unaffected.
-Use --skip-review or remove --review to skip next time.
+Remove --review to skip next time.
 ```
 
 Continue to Step 3. Review failure is non-blocking.
@@ -629,6 +595,11 @@ Fix the failing tests and run /mm:complete again.
 
 The tool handles locating the task, marking it `[x]`, marking subtasks complete, and recalculating spec/feature progress.
 
+**Backfill a missing summary.** If `{spec_path}/spec.md`'s frontmatter has no `summary:` key, run
+`node scripts/backfill-spec-summaries.mjs --write --only {spec_folder}` from the project root
+(derives one from `## Goal` and upserts it) before continuing — every completed spec should carry
+a layperson one-liner.
+
 Display:
 
 ```
@@ -649,7 +620,7 @@ If `forced: true` was in the response, note:
 
 If the response has `verification_recommended: true`, this was the last task in the spec. **Before continuing to Step 7**, run spec verification:
 
-1. **Invoke `/mm:verify-spec {spec_path} --fix --adversarial --max-iterations 3`** — runs the Generate->Critique->Revise loop (max 3 iterations) in auto-fix mode. `--max-iterations 3` is required for the fix loop to actually run: verify-spec's default budget is 1 iteration, and REVISE only fires while `iteration < max_iterations`. `--adversarial` runs the independent 3-prompt oracle because this is the done-promoting gate — the moment where an oracle uncorrelated with the implementer matters most. (Note: HIGH confidence additionally requires the iterative path to converge — `consecutive_stable >= 2` — so a gate run that passes on its first iteration reports LOW/MEDIUM by design; that does not fail the gate.)
+1. **Invoke `/mm:verify-spec {spec_path} --fix --max-iterations 3`** — runs the Generate->Critique->Revise loop (max 3 iterations) in auto-fix mode. `--max-iterations 3` is required for the fix loop to actually run: verify-spec's default budget is 1 iteration, and REVISE only fires while `iteration < max_iterations`. The adversarial oracle is no longer forced here (2026-08-03, lean-context R5): verify-spec's deterministic risk classifier (its step 0.6) decides — a gate run on a risky surface (auth, RLS, migrations, payments) or with critical requirements touched still gets the 3-prompt bank; a low-risk gate run stays a single floor pass. Pass `--adversarial` explicitly for a release-critical spec you want panelled regardless. (Note: HIGH confidence additionally requires the iterative path to converge — `consecutive_stable >= 2` — so a gate run that passes on its first iteration reports LOW/MEDIUM by design; that does not fail the gate.)
 
 2. **If verification passes** (all requirements PASS, or PARTIAL <= 1, zero MISS/REGRESSION, zero open T1/T2, every requirement covered, confidence not `unstable`):
 
@@ -666,6 +637,63 @@ If the response has `verification_recommended: true`, this was the last task in 
    status column (open → promoted | deferred | dismissed) when you get to them.
      - `{cluster}` {failure_mode}
    ```
+
+   **Then record a decision for each dispositioned backlog row (R5b, spec `2026-08-27-recorded-for-outcome`).**
+   `check_triage` only reports rows still `open`, so for this step read
+   `.mm/specs/{spec_folder}/findings-backlog.md`'s table directly. For every row whose `status`
+   column is NOT `open` (i.e. `promoted` / `deferred` / `dismissed`) AND whose trailing HTML
+   comment carries a `claim:<id>` token (T2 of this spec adds that token when the finding named a
+   requirement; a row with no `claim:` has nothing to attach a decision to — skip it):
+
+   1. Check whether `## Recorded` already has a `[decision] for="<claim>"` line for this claim
+      (`mm_record({phase: "read", project_path, spec_folder})`, then look for a `decision` kind
+      whose `for` equals the claim — or use `hasDecisionFor` from
+      `mcp-servers/monday-morning/src/lib/recorded-decisions.ts` if calling from code). If one
+      already exists, skip — never double-record.
+   2. Otherwise append one:
+
+      ```
+      mm_record({
+        phase: "append", project_path, spec_folder,
+        lines: [{
+          kind: "decision",
+          text: "<the row's rationale/last-column text, verbatim> — by <actor>",
+          for: "<claim, e.g. R3>",
+          outcome: "promoted" | "deferred" | "dismissed" | "accepted-residual-risk",
+          // accepted-residual-risk when the row's rationale states the risk is accepted rather
+          // than tracked/deferred/dismissed outright; otherwise use the row's status column verbatim
+          provenance: {
+            session_id: "cli",
+            agent: "<the orchestrating model id>",
+            model: "<the orchestrating model id>",
+            timestamp: "<ISO now>",
+            anchor: "mm-verify://<the verification_run_id that raised it — the row's first_seen_run label, or verify-summary.json's usage_run_id>",
+          },
+        }],
+      })
+      ```
+
+      `actor` is `git config user.name` (fallback `git config user.email`, same derivation as
+      spec-start's slug step). This never blocks completion — a failed `mm_record` call is
+      reported and skipped, not retried into a hang.
+
+   3. After any decisions were recorded above, rebuild the decisions projection so the board sees
+      them: `mm_index({ project_path, target: "decisions" })` (spec `2026-08-27-decisions-projection` R2).
+
+   **Then refresh the Context Weight baseline (best-effort, one CLI call).** Read the
+   previous `total_tokens` from `.mm/session/context-weight.json` if present, then run the
+   MM MCP server's `context-weight` CLI against `project_path` — in this repo:
+   `node mcp-servers/monday-morning/dist/src/index.js context-weight <project_path>`; in an
+   installed project, the bundled `monday-morning` sidecar binary with the same
+   `context-weight <project_path>` args. It rewrites `.mm/session/context-weight.json`
+   (which the dashboard badge / V2 perf tile read) and prints the report. Show one line:
+
+   ```
+   Context Weight: {total}/{budget} {✓|OVER} (Δ {+/-n} this spec)
+   ```
+
+   If the CLI is unavailable, skip silently — never block completion on telemetry. An OVER
+   result does not block either (CI owns enforcement); it is a visible early warning.
 
    Continue to Step 7.
 
@@ -713,6 +741,22 @@ Run /mm:verify-spec {spec_path} --fix when ready.
 ```
 
 Continue to Step 7.
+
+### Downstream precondition recheck
+
+When the Step 6 `mm_complete` response carried `dependents_to_recheck: string[]` (non-empty —
+this is the same list the tool pushes as its `dependents_recheck` notification, for the app), run
+`.claude/schemas/precondition-recheck.md` against each `{project_path}/.mm/specs/{slug}/spec.md`,
+trigger `(upstream {completed-slug} completed)`. Do this regardless of the verification outcome
+above (a reverted spec completion still means the upstream task itself is done and dependents
+were already queued). Collect any `broken` results across all rechecked specs, then add one line
+to the final completion summary:
+
+```
+Downstream rechecked: {n} specs · broken preconditions: {slug}: {claim ids} (or "none")
+```
+
+Never silently skip a broken one — if the list is non-empty, it must appear in that line.
 
 ---
 
@@ -882,6 +926,24 @@ Execute:
 ```bash
 gh pr create --title "{title}" --body "{body}"
 ```
+
+### Record the merge outcome (tokens-per-outcome, R7)
+
+Whenever a PR merge happens in-session — here, or any later `gh pr merge` — record the
+value boundary so token spend attributes to it. Explicit scope is mandatory (v2 selects
+zero turns without it, appending a junk unmeasured-zero row): get this session's id with
+`echo "$CLAUDE_CODE_SESSION_ID"` and pass it —
+
+```
+mm_verify({ phase: "record_outcome", project_path, outcome: "pr-merged", ref: "#<PR number>",
+            session_ids: ["<the echoed session id>"] })
+```
+
+If `$CLAUDE_CODE_SESSION_ID` is empty, SKIP the call entirely — no row beats a junk row.
+
+(The spec-verified boundary needs no call here — its cost is derived at read time by
+joining `verification-runs.jsonl` lifecycle events to run-tagged turn rows; `promote`
+does NOT write an outcome row.) Fire-and-forget: a telemetry failure never blocks the merge.
 
 ### Handle Errors
 
@@ -1066,36 +1128,8 @@ If a step fails:
 
 ## Project Detection Reference
 
-### Test Detection Matrix
-
-| Project Type | Detection File                             | Test Command    |
-| ------------ | ------------------------------------------ | --------------- |
-| Node.js      | `package.json` with `scripts.test`         | `npm test`      |
-| Rust         | `Cargo.toml`                               | `cargo test`    |
-| Python       | `pyproject.toml`, `pytest.ini`, `setup.py` | `pytest`        |
-| Go           | `go.mod`                                   | `go test ./...` |
-| Make         | `Makefile` with `test:` target             | `make test`     |
-
-### Build Detection Matrix
-
-| Project Type | Detection File                      | Build Command           |
-| ------------ | ----------------------------------- | ----------------------- |
-| Node.js      | `package.json` with `scripts.build` | `npm run build`         |
-| Rust         | `Cargo.toml`                        | `cargo build --release` |
-| Go           | `go.mod`                            | `go build ./...`        |
-| Make         | `Makefile` with `build:` target     | `make build`            |
-| Python       | `pyproject.toml` with build-system  | `pip install -e .`      |
-
-### Monorepo Subdirectories
-
-Check these paths for additional projects:
-
-- `desktop/*/`
-- `backend/`, `frontend/`
-- `server/`, `client/`
-- `packages/*/`
-- `apps/*/`
-- `services/*/`
+Test/build detection and monorepo paths: the single statement is the Step 1
+and Step 2 tables above — do not restate them here.
 
 ---
 

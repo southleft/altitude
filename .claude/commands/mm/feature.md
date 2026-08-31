@@ -7,6 +7,10 @@ Create a new feature to group related specs together for progress tracking.
 > `/mm:order-specs`. You never need a feature to create or sequence a spec; reach for one only when
 > grouping genuinely helps at-a-glance progress tracking.
 
+## Entity Format Reference (load first)
+
+Before creating or editing any `.mm/` entity file, Read `<project_path>/.mm/reference/entity-format.md` — it is the authoritative on-demand reference for file formats, folder naming, frontmatter, and dashboard rules. If the file does not exist (legacy install), fall back to the "Monday Morning Entity Reference" section of the managed `.claude/CLAUDE.md` block. Do not proceed from memory.
+
 ## Quick Create Mode
 
 If the user provides a feature name upfront, create immediately using the MCP tool.

@@ -36,7 +36,25 @@ Implement all tasks assigned to you and ONLY those task(s) that have been assign
    - If you called without `force` and it returns `gated: true`, the project test gate caught a failure — fix it and retry. Do not silence a real `gated: true` by re-calling with `force`.
    - If the call returns `verification_recommended: true`, include this in your output: **"Spec complete — verification recommended."** Do not run verification yourself; the calling workflow handles it.
 
-6. **Sync legacy mirrors (legacy specs only).** `mm_complete` already syncs the completed checkbox into any `implementation.md` / `tasks.md` that exist, so you usually do nothing here. ONLY if this is a legacy spec whose source of truth is `implementation.md` (it exists and `spec.md` has no `## Tasks` section) copy it across so the two stay identical: `cp .mm/specs/[this-spec]/implementation.md .mm/specs/[this-spec]/tasks.md`. For literate specs (the default — tasks in `spec.md`'s `## Tasks`, no `implementation.md`) skip this: there is nothing to copy.
+6. **Defer, never skip.** If a task cannot be done yet because it depends on work
+   in another spec, do NOT leave it as a plain unchecked box and move on — a silent skip
+   is indistinguishable from work nobody started, and it strands the task with nothing
+   telling the user to come back to it. Mark it in place, naming exactly what it waits on:
+
+   ```
+   - [ ] T2: Wire live sync `L` (blocked-by: 2026-08-02-sync-core#T3)
+   ```
+
+   - The ref is `<spec-folder>#<task-id>`. Several are allowed, comma-separated:
+     `(blocked-by: core#T1, core#T3)`. Omit the `#task` only when the whole spec must land first.
+   - Deferred tasks leave the progress denominator, so the spec can reach 100% of what
+     was runnable this wave and enter review-or-waiting instead of looking stalled at 60%.
+   - They appear in the roadmap's **Circle back** list, scheduled one wave after their
+     blocker — which is the entire point: the work stays visible without blocking the wave.
+   - Say which tasks you deferred, and why, in your final report. Never mark a deferred
+     task complete, and never call `mm_complete` on one.
+
+7. **Sync legacy mirrors (legacy specs only).** `mm_complete` already syncs the completed checkbox into any `implementation.md` / `tasks.md` that exist, so you usually do nothing here. ONLY if this is a legacy spec whose source of truth is `implementation.md` (it exists and `spec.md` has no `## Tasks` section) copy it across so the two stay identical: `cp .mm/specs/[this-spec]/implementation.md .mm/specs/[this-spec]/tasks.md`. For literate specs (the default — tasks in `spec.md`'s `## Tasks`, no `implementation.md`) skip this: there is nothing to copy.
 
 ## Amendment protocol (when the calling prompt includes a plan.md section)
 
@@ -59,9 +77,39 @@ intentional scope growth from silent drift. Full format: `.claude/schemas/plan-f
 If no plan.md section was provided in your prompt, this protocol doesn't apply — implement using
 your own judgment as usual.
 
+## Sharing a checkout with other agents
+
+Isolation is the default: most sessions run in their own git worktree and
+cannot collide with anyone. But **"Isolate every dispatch" can be turned off**,
+in which case you are editing the same files as every other running session.
+
+Before you start editing, when you have any reason to think you are not alone:
+
+1. `mm_list_peers({project_path})` — who else is live, and does any of them
+   share your checkout? A peer in its own worktree cannot collide with you; one
+   running **in-place** can.
+2. If any peer shares your checkout, `mm_claim_paths({project_path, session_id,
+   paths, intent})` for the files or directories you are about to change.
+   Claims cover prefixes, so claiming `src/lib` covers everything under it.
+3. If a path is already held, you get the holder's session id and what they are
+   doing. **Do not edit over them.** Either work on something else, or reach
+   them with `mm_send_peer_message` and agree who takes it.
+4. `mm_release_claims({project_path, session_id})` when you finish.
+
+Claims are **advisory** — nothing stops you editing a claimed path, and nothing
+stops anyone editing yours. They exist so a collision is something you can see
+coming and talk about, instead of two agents silently overwriting each other.
+Skipping the check is not an error; editing over a claim you were shown is.
+
 ## Hard rules — git and commits
 
 **DO NOT commit anything. The calling workflow (and the user) handle commits.**
+
+**One exception:** when the orchestrating prompt for THIS invocation explicitly
+instructs per-task commits (spec-start `--parallel` worktree agents), follow that
+prompt — commit per task with specific paths, never `-A`/`-a`. Absent that
+explicit instruction, the no-commit rule stands; do not infer commit permission
+from context.
 
 Specifically forbidden, no exceptions:
 
@@ -94,6 +142,7 @@ If you genuinely need to commit (very rare — only when a multi-task spec needs
 
 - **Running the project's own check gate — not just your own tests.** Before you report a task done, run whatever verification the codebase already uses for the files you touched: typecheck, linter, and/or build (e.g. `tsc` / `svelte-check`, `eslint`, or the package's `check` / `build` / `test` script). Discover these from `package.json` scripts, the project's standards, or existing CI/config — don't assume there are none. Run them over the code you changed and let them actually finish before you judge the result.
 - Running ONLY the tests you've written (if any) and ensuring those tests pass. Do not run the whole suite if that isn't your task.
+- Rust test code: the pre-commit hook rejects new `.unwrap()`; prefer `matches!`/`?` or add a trailing `// allow:unwrap (test code)` comment.
 - IF your task involves user-facing UI, and IF you have access to browser testing tools, open a browser and use the feature you've implemented as if you are a user to ensure a user can use the feature in the intended way.
   - Take screenshots of the views and UI elements you've tested and store those in `.mm/specs/[this-spec]/verification/screenshots/`. Do not store screenshots anywhere else in the codebase other than this location.
   - Analyze the screenshot(s) you've taken to check them against your current requirements.

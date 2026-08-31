@@ -82,7 +82,7 @@ If the user says "let's spec this" or "ready to build this":
 
 1. Run the `/mm:spec` workflow
 2. Pass the idea content as the initial description
-3. The spec-initializer will read from the idea file
+3. Pass the idea folder as `idea_folder` to `mm_create` (spec.md step 1) — it reads the idea and stamps `shaped_to` on it
 4. Link the idea to the new spec:
 
 Add to idea.md:

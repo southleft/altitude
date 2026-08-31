@@ -28,7 +28,7 @@ qualitative requirements ("the empty state reads clearly") legitimately have non
 }
 ```
 
-- **`checks`** — object keyed by the exact requirement id from `## Requirements`.
+- **`checks`** — object keyed by the exact requirement id from `## Requirements`, or by `H<n>` / `OBJ` (see "Hypotheses and objective" below). Any other key shape is rejected per-check (that entry is skipped, the manifest's other entries still run).
 - **`kind`** — `"test"` (the only kind today).
 - **`runner`** — one of `npm | vitest | cargo | pytest | go`. Determines the argv:
   - `npm` → `npm test -- <target>` · `vitest` → `npx vitest run <target>`
@@ -56,6 +56,17 @@ qualitative requirements ("the empty state reads clearly") legitimately have non
 - A check that **can't run** (unknown runner, malformed target, runner not
   installed) is _skipped_ — that requirement falls back to verifier scoring and the
   skip is surfaced in the report. A skipped check never silently passes.
+
+## Hypotheses and objective
+
+A spec's optional `hypotheses:` / `objective:` frontmatter (spec
+`2026-08-27-verify-evaluate-phase` R4) can also be proven executably: key a
+check `H<n>` (matching a `hypotheses[].id`) or `OBJ` (the spec's single
+`objective`) with the same `kind`/`runner`/`target`/`cwd` contract as an
+`R<n>` check. `run_checks` accepts these keys the same way it accepts `R<n>`
+— they land in `passed_ids` / `failed_ids` / `skipped_ids` with no special
+casing — and `evaluate` reads the pass/fail to derive that hypothesis's or
+the objective's epistemic status alongside the requirement claims.
 
 ## Authoring
 

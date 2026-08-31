@@ -2,6 +2,10 @@
 
 Create a new issue with streamlined input and Monday Morning visibility.
 
+## Entity Format Reference (load first)
+
+Before creating or editing any `.mm/` entity file, Read `<project_path>/.mm/reference/entity-format.md` — it is the authoritative on-demand reference for file formats, folder naming, frontmatter, and dashboard rules. If the file does not exist (legacy install), fall back to the "Monday Morning Entity Reference" section of the managed `.claude/CLAUDE.md` block. Do not proceed from memory.
+
 ## Quick Create Mode
 
 If the user provides a description upfront, extract what you can and only ask for missing critical info.
