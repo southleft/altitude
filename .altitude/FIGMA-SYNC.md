@@ -219,3 +219,164 @@ are ignored. Confirm with `git ls-files .claude/skills/altitude-figma-sync/`.
 What genuinely does not survive a clone is `.mm/` (gitignored by design; shared through the
 Monday Morning cloud workspace instead), so the spec link above is the one that can go
 missing — not the skill.
+
+---
+
+## 2026-08-30 — v2 rebuild: FOUNDATIONS APPLIED, component sets still to do
+
+The v2 restyle (changeset `v2-visual-language`) and the form-control rework
+(`v2-form-control-structure`) landed in code first. The FOUNDATIONS have since
+been pushed to the live file and verified; the COMPONENT SETS have not been
+regenerated yet.
+
+**Applied to `Altitude Design System` (y83n4o9LOGs74oAoguFcGS) on 2026-08-30:**
+
+| What | Result |
+|---|---|
+| Variables | 492 total, 123 created, 223 updated, **422/423 verified** by re-dump. The one exception is `theme/layout/height/header`, an alias the push deliberately preserved. |
+| Text styles | All 40 moved to Public Sans (Regular / Italic / **SemiBold** — 600 is what the pipeline emits; Figma's "Bold" is 700 and the code never renders it). |
+| Effect styles | All 6 rebuilt as single-stop warm shadows. Figma effect styles carry no modes, so they take the LIGHT tint the canvas specifies. |
+| `Tier 2 \| Brand` | The Altitude mode's 12 variables now ALIAS the `Tier 2 \| Theme` equivalents instead of tier-1 literals. Southleft/Northright/Odyssey untouched. |
+| Colors page | Swatch rows added for the five new ramps (Stone, Cobalt, Jade, Ochre, Crimson), cloned from the Blue row so they reuse the real `Swatch` component. |
+
+**Still to do:** regenerate the component sets (steps 2-5 below). Until then the
+sets carry v2 colours — they are variable-bound, so they moved automatically —
+but not the v2 STRUCTURE (`al-input`'s top-aligned label, the `Label Position`
+axis, the segmented `al-input-stepper` and its `Variant` axis).
+
+### The bridge was focused on the wrong file
+
+`figma_get_status` reported **"Hooper Design System"** as the connected file
+while `figma_list_open_files` showed Altitude as the active one — two files were
+connected at once. Before any write, pin the target and verify it POSITIVELY
+from inside the sandbox (`.altitude/FIGMA-CLEANLINESS.md`: the open file must BE
+the target, an allowlist check, never "not a known decoy"):
+
+```bash
+curl -s -X POST localhost:9401/call -H 'content-type: application/json'   -d '{"name":"figma_navigate","arguments":{"url":"https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/Altitude-Design-System","lock":true}}'
+node scripts/figma-atoms/fig.mjs --project altitude --port 9401   -e "return { name: figma.root.name, key: figma.fileKey }"
+```
+
+### The MCP server never loaded; the shim is the way in
+
+`figma-console` failed to connect for this whole session (CONNECT_TIMEOUT), and
+a session cannot hot-add an MCP server. `scripts/figma-atoms/mcp-shim.mjs` exists
+for exactly this — it spawns the same server binary and exposes `tools/call` over
+local HTTP. Everything above was driven through it on port 9401, with
+`bridge-io.mjs` on 9229 serving the payload so the plugin fetches it rather than
+having it inlined.
+
+### State on disk (all verified 2026-08-30)
+
+| Artifact | State |
+|---|---|
+| `.altitude/figma-sync/altitude-figma-payload.json` | Regenerated. 271 primitives, 30 semantic, 61 light + 61 dark, 80 text styles, 19 effect styles. Carries the five v2 ramps (`stone`, `cobalt`, `jade`, `ochre`, `crimson`), `font-family/primary = Public Sans`, `font-family/mono = IBM Plex Mono`. |
+| `spec-{light,dark}.json` (both projects) | Re-measured against the v2 build, with Public Sans and IBM Plex Mono confirmed LOADED in the harness (`document.fonts.check` true, and the face renders measurably distinct from the fallback — a declared family alone would not prove this). |
+| Contracts, both projects | 102/102 altitude and 24/24 southleft schema-valid, zero drift, anatomy re-measured. |
+| Contract reference docs | Regenerated, matching. |
+| Canvas contracts | **STALE** — extracted from the pre-v2 Figma file. southleft has none at all, which is why `check:figma-conventions:sl` fails; that is pre-existing, not caused by this work. |
+
+### Run in this order
+
+```bash
+# 1. Variables FIRST — component ops bind to variables by path, so importing a
+#    set that references theme/color/brand/stone/* before those exist binds
+#    nothing and fails silently.
+#    Push .altitude/figma-sync/altitude-figma-payload.json.
+
+# 2. Re-extract the canvas so the diff is against the real file, not the
+#    pre-v2 snapshot now on disk.
+pnpm run contracts:canvas
+pnpm run contracts:canvas --project southleft   # has never been run; expect a full first extract
+
+# 3. See what the file actually disagrees with before changing anything.
+node scripts/contracts/diff-contracts.mjs --all
+
+# 4. Regenerate the component sets. Re-measure first ONLY if the library
+#    changed since this note.
+node scripts/contracts/generate-figma.mjs --component al-input
+node scripts/contracts/generate-figma.mjs --component al-input-stepper
+#    ... then the rest; every component's tokens moved in the restyle.
+
+# 5. Refresh the observed digests, then re-check parity.
+node scripts/figma-parity/refresh-figma-digests.mjs
+node scripts/figma-parity/refresh-figma-digests.mjs --project southleft
+pnpm run gate:contracts
+```
+
+### What the generated sets will contain, and why
+
+Both new variants required curation to exist at all — `bindings.figma` is
+normally DERIVED from the manifest's observed digest of the REAL set, so a prop
+whose axis does not exist in Figma yet reads `null`, and `derive-ops.mjs`
+only builds an enum axis from a `kind: 'VARIANT'` prop. No curation would have
+meant: no axis in the generated set, no axis observed in the digest, binding
+stays `null` forever. `axis: true` is the documented escape hatch that makes the
+hand-written binding survive `--refresh`.
+
+| Component | Axes it will generate | Verified |
+|---|---|---|
+| `al-input` | `State` (Default/Hover/Active/Focus/Disabled) × `Label Position` (Top/Inset), default **Top** | 10 variants, 10/10 measured boxes joined |
+| `al-input-stepper` | `Variant` (Segmented/Trailing), default **Segmented** × `Label` (Hidden/Shown) | 4 variants, 4/4 joined |
+
+`al-input`'s `enumProp` is pinned in `components/input/figma.gen.json`: the
+auto-pick takes the SOLE `VARIANT`-kind prop, and this contract declares four
+(`isDisabled`/`isError`/`isFocused` all pair to the State axis, plus
+`labelPosition`), so it correctly declines and the inset variant would never be
+generated.
+
+`anatomyCase` is re-pinned in both `figma.gen.json` files. Adding a dimension
+changed every case id, and the alphabetical auto-pick landed on
+`Label=hidden,Label Position=inset` — the hidden-label inset form. Anatomy is
+the structural reference the whole set is built from, so it must be sampled at
+the default shape.
+
+### Five traps this setup already walked into
+
+1. **Measured boxes joined 0/4.** `plan.mjs` is what the measurement harness
+   renders, and it had no entry for either new variant, so the generator had
+   variants with no geometry — Figma would have been built at guessed sizes.
+   Both new dimensions are now in `plan.mjs`, rendered with EXPLICIT values
+   rather than `enumAxis`'s "default means attribute omitted" shorthand: a case
+   id of `Variant=default` normalises to `variant=default` and never joins to
+   `variant=segmented`.
+
+2. **The enum-axis default was alphabetical.** `derive-ops.mjs` took
+   `variantValues[0]` (special-casing only `'Primary'`), so `al-input`'s
+   `Label Position` defaulted to **Inset** — every instance placed in Figma would
+   have come out as the inset variant. It now reads the prop's own recorded
+   default from the contract. Audited across every enum axis in the library:
+   `al-input` is the only set this changes.
+
+4. **The payload named its collections wrong**, and Figma matches by NAME.
+   It emitted `Primitives` / `Semantic` / `Theme` while the file has
+   `Tier 1 | Primitive` / `Tier 2 | Semantic` / `Tier 2 | Theme` (+ `Tier 2 |
+   Brand`, `Tier 3 | Component`). Pushing that would have created three DUPLICATE
+   collections beside the real ones and orphaned every binding in the file.
+   `build-figma-payload.mjs` now mirrors the live names, and splits tier-3
+   header/body background into `Tier 3 | Component` while leaving `focus-ring` in
+   `Tier 2 | Theme` — which is the file's placement, not the token tree's.
+
+5. **Opacity is a PERCENTAGE on the Figma side.** The payload emitted the code's
+   0..1 fraction; the file holds 24/40/80/100. Pushing 0.4 into `opacity/40`
+   renders a disabled node at 0.4% — invisible. This is the same regression
+   `scripts/figma-var-fixes.mjs` documents as proven-live on 2026-08-27, and it
+   would have silently broken every disabled state in the library. The builder
+   now scales the tier-1 literals; the `theme.opacity.disabled` alias is
+   untouched. Related: a Figma font-family variable holds ONE family, not a CSS
+   stack — `"IBM Plex Mono, ui-monospace, …"` matches no installed font, so the
+   builder emits the first family only.
+
+6. **Never overwrite an existing alias with a literal.** The push refuses to, and
+   reports what it kept. `theme/layout/height/header` is bound live to
+   `layout/height/80`; the payload has the resolved literal `80` because the
+   tier-1 layout primitives are code-only and excluded from the sync. Writing it
+   would render identically and quietly destroy the reference.
+
+3. **`isActive` is curated `omit: true`** on `al-input` and `al-textarea`. It is
+   deprecated in v2 and produces no visual state, so a Figma `State=Active`
+   variant driven by it would render identically to Default. The State axis is
+   unaffected — `derive-ops` builds it from `contract.states` plus measured
+   facts, where `active` is the CSS `:active` (pressed) state, which is real.
+   The current file still exposes a `Label` property that the contract now omits;
+   the diff reports it as `present-despite-omission`.

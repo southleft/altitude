@@ -15,9 +15,13 @@
  * partial is ever emitted.
  *
  * Collections
- *   Primitives  Default        tier-1/*            hidden from publishing
- *   Semantic    Default        tier-2/* (non-colour)
- *   Theme       Light, Dark    tier-2,3/theme/{light,dark}/colors
+ *   Tier 1 | Primitive   Default      tier-1/*            hidden from publishing
+ *   Tier 2 | Semantic    Default      tier-2/* (non-colour)
+ *   Tier 2 | Theme       Light, Dark  tier-2/theme/{light,dark}/colors + focus-ring
+ *   Tier 3 | Component   Light, Dark  tier-3 header/body background
+ *
+ * Names and placement MIRROR THE LIVE FILE — see the comment at the assembly
+ * below for why a mismatch is destructive rather than cosmetic.
  *
  * Not variables — emitted to `styles` instead of `collections`:
  *   - `typography` composites  → Figma text styles
@@ -183,8 +187,45 @@ function partition(rawByMode, report) {
         report.excluded.unmappedType.add(`${path} (${def.type})`);
         continue;
       }
-      const value = toFigmaValue(def.value, figmaType, path, report.warnings);
+      let value = toFigmaValue(def.value, figmaType, path, report.warnings);
       if (value === null) continue;
+
+      /**
+       * OPACITY IS A PERCENTAGE ON THE FIGMA SIDE — 100x the code's fraction.
+       *
+       * The token tree authors opacity as a 0..1 fraction, which is what CSS
+       * wants. Figma's variable for the same thing holds 40, not 0.4, and a
+       * node binding its `opacity` to that variable divides by 100. Emitting
+       * the fraction is not a rounding difference, it is 100x too transparent:
+       * PROVEN LIVE 2026-08-27 on al-field-note State=Disabled —
+       *     opacity/40 = 0.4  ->  node.opacity === 0.004  (invisible)
+       *     opacity/40 = 40   ->  node.opacity === 0.4    (correct)
+       * The live file already holds the percentages (24/40/80/100, dumped and
+       * compared 2026-08-30); without this the first push would have silently
+       * broken every disabled state in the library, which is the same
+       * regression `scripts/figma-var-fixes.mjs` documents at its top.
+       *
+       * Only the tier-1 LITERALS convert. `theme.opacity.disabled` is an alias
+       * (`{opacity.40}`) and passes through as a reference, unscaled.
+       */
+      if (def.type === 'opacity' && typeof value === 'number') value = value * 100;
+
+      /**
+       * A FIGMA FONT-FAMILY VARIABLE HOLDS ONE FAMILY, NOT A CSS STACK.
+       *
+       * The token authors the full fallback chain ("IBM Plex Mono, ui-monospace,
+       * SFMono-Regular, Menlo, Consolas, monospace") because that is what CSS
+       * needs. Figma resolves a font-family STRING against installed fonts by
+       * exact name: the comma list matches nothing, so any text style bound to
+       * it silently falls back to the document default. Only the first family
+       * is the design intent; the rest are a browser degradation path Figma has
+       * no equivalent for. Quotes are stripped too ("Space Grotesk" arrives
+       * unquoted in Figma).
+       */
+      if (def.type === 'fontFamilies' && typeof value === 'string') {
+        value = value.split(',')[0].trim().replace(/^["']|["']$/g, '');
+      }
+
       variables[mode][path.replace(/\./g, '/')] = { value, resolvedType: figmaType };
     }
   }
@@ -217,23 +258,54 @@ function main() {
     'opacity', 'shadows', 'spacing', 'typography',
   ].map((f) => `tier-2/${f}.json`);
 
+  /**
+   * COLLECTION NAMES AND PLACEMENT MIRROR THE LIVE FILE — they are not free
+   * choices. Figma matches a collection by NAME on import: a payload naming its
+   * collections "Primitives"/"Semantic"/"Theme" does not update
+   * "Tier 1 | Primitive"/"Tier 2 | Semantic"/"Tier 2 | Theme", it CREATES THREE
+   * NEW COLLECTIONS beside them, duplicating ~360 variables and orphaning every
+   * binding in the file. Measured against the live file 2026-08-30 (dump via
+   * bridge-io -> .altitude/figma-sync/figma-live-vars.json) before the first push.
+   *
+   * Two collections in the file are deliberately NOT emitted here and must be
+   * left alone: `Tier 2 | Brand` (4 modes) is out of scope per the header, and
+   * anything else a designer added is not ours to overwrite.
+   *
+   * The tier-3 SPLIT is also the live file's shape, not the token tree's:
+   * `theme/color/{header,body}/background` live in `Tier 3 | Component`, while
+   * `theme/color/focus-ring` — authored in the same tier-3 files — lives in
+   * `Tier 2 | Theme`. Following the code's tiering instead would move
+   * focus-ring between collections and break every node already bound to it.
+   */
+  // DOT paths, not slash: `flatten()` emits `a.b.c` and `partition()` is what
+  // converts to Figma's `a/b/c` later. Matching on the slash form here selects
+  // nothing and silently leaves Tier 3 | Component empty.
+  const TIER3_COMPONENT = new Set(['theme.color.header.background', 'theme.color.body.background']);
+  const pick = (obj, want) => Object.fromEntries(Object.entries(obj).filter(([k]) => TIER3_COMPONENT.has(k) === want));
+
+  const themeLight = {
+    ...flatten(readJson(join(TOKENS, 'tier-2/theme/light/colors.json'))),
+    ...flatten(readJson(join(TOKENS, 'tier-3/theme/light/colors.json'))),
+  };
+  const themeDark = {
+    ...flatten(readJson(join(TOKENS, 'tier-2/theme/dark/colors.json'))),
+    ...flatten(readJson(join(TOKENS, 'tier-3/theme/dark/colors.json'))),
+  };
+
   const raw = [
-    buildFlatCollection('Primitives', tier1, true, report),
-    buildFlatCollection('Semantic', tier2, false, report),
+    buildFlatCollection('Tier 1 | Primitive', tier1, true, report),
+    buildFlatCollection('Tier 2 | Semantic', tier2, false, report),
     {
-      name: 'Theme',
+      name: 'Tier 2 | Theme',
       modes: ['Light', 'Dark'],
       hideFromPublishing: false,
-      variables: {
-        Light: {
-          ...flatten(readJson(join(TOKENS, 'tier-2/theme/light/colors.json'))),
-          ...flatten(readJson(join(TOKENS, 'tier-3/theme/light/colors.json'))),
-        },
-        Dark: {
-          ...flatten(readJson(join(TOKENS, 'tier-2/theme/dark/colors.json'))),
-          ...flatten(readJson(join(TOKENS, 'tier-3/theme/dark/colors.json'))),
-        },
-      },
+      variables: { Light: pick(themeLight, false), Dark: pick(themeDark, false) },
+    },
+    {
+      name: 'Tier 3 | Component',
+      modes: ['Light', 'Dark'],
+      hideFromPublishing: false,
+      variables: { Light: pick(themeLight, true), Dark: pick(themeDark, true) },
     },
   ];
 
