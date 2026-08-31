@@ -166,26 +166,34 @@ const innerFont = await inner('inner', 'al-button', '.al-c-button', 'brand-probe
 console.log(`      outer (southleft) ${outerFont}`);
 console.log(`      inner (altitude)  ${innerFont}`);
 check(outerFont === fonts.southleft, 'outer subtree resolves to southleft');
-// KNOWN GAP — PINNED, NOT FIXED (found 2026-08-23, the day the probe gained a
-// brand-varying property; the old font-only probe was vacuously green because
-// both brands share a font). `altitude` is deliberately an EMPTY brand delta
-// (tokens-config.v5.mjs emits no tokens-brand-altitude partial — neutrality by
-// construction), so `<al-theme brand="altitude">` nested inside southleft has
-// nothing to re-declare and the OUTER brand's custom properties inherit
-// straight through: the inner "altitude" button paints southleft's background.
-// Measured: standalone altitude bg rgb(67,117,255); inner-nested "altitude"
-// bg rgb(240,87,53) — southleft's. Tracked as an .mm issue (nesting altitude
-// inside another brand). The assertions below PIN today's actual behavior so
-// CI is green-and-honest — when the empty-delta gap is fixed, the second
-// check fails ON PURPOSE: flip it to `innerFont === fonts.altitude` and close
-// the issue.
+// GAP CLOSED 2026-08-31 — this used to PIN a known bug, and the pin has been
+// flipped exactly as its own note instructed.
+//
+// The bug: `altitude` is an EMPTY brand delta by construction (neutrality —
+// tokens-config.v5.mjs emits no tokens-brand-altitude partial), so
+// `<al-theme brand="altitude">` nested inside southleft had nothing to
+// re-declare and the OUTER brand's custom properties inherited straight
+// through. Measured 2026-08-23: the inner "altitude" button painted
+// southleft's rgb(240,87,53).
+//
+// What fixed it: the v2 restyle made the PRIMARY role mode-dependent (light
+// paints white ink on a saturated fill, dark paints dark ink on a light one),
+// so `theme.color.background.primary-default` now lives in the MODE partials —
+// which every <al-theme> re-declares regardless of brand — instead of only in
+// a brand partial. A nested theme therefore re-establishes it. Measured
+// 2026-08-31: outer rgb(240,87,53) (southleft), inner rgb(114,144,255)
+// (cobalt.450, altitude's own dark primary).
+//
+// Note this does NOT make empty-delta nesting safe in general: a property that
+// lives ONLY in a brand partial still inherits through. It is safe for every
+// property the mode axis owns, which is what this probe reads.
 check(
   innerFont.split(' | ')[0] === fonts.altitude.split(' | ')[0],
   'inner subtree keeps the base font (non-brand-delta half resolves)'
 );
 check(
-  innerFont.split(' | ')[1] === outerFont.split(' | ')[1],
-  "KNOWN GAP (pinned): inner altitude inherits the OUTER brand's background — empty-delta brands cannot re-establish base values when nested; see the .mm issue"
+  innerFont.split(' | ')[1] === fonts.altitude.split(' | ')[1],
+  "inner altitude resolves its OWN background, not the outer brand's (gap closed 2026-08-31)"
 );
 
 // ---------- 4b: the versioned registry (T4.6) ----------

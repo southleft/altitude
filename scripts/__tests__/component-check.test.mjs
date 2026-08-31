@@ -74,10 +74,25 @@ console.log('\n==> --all covers every discovered component with zero usage error
   const r = run(['--all', '--json']);
   assert('exit code is 0 or 1, never 2 (usage error)', r.status === 0 || r.status === 1);
   let payload;
+  let parseError = null;
   try {
     payload = JSON.parse(r.stdout);
-  } catch {
+  } catch (e) {
     payload = null;
+    parseError = e;
+  }
+  /**
+   * SAY WHY, don't just fail. This swallowed its parse error, so when the
+   * assertion went red in CI on 2026-08-31 the log showed only "emits a JSON
+   * array: NOT OK" — no status, no stderr, nothing to act on, and it could not
+   * be reproduced locally. A test that hides its evidence costs more than the
+   * bug it catches.
+   */
+  if (!payload) {
+    console.log(`      status=${r.status} stdout=${r.stdout.length}b stderr=${r.stderr.length}b`);
+    if (parseError) console.log(`      parse: ${parseError.message}`);
+    if (r.stdout) console.log(`      stdout head: ${JSON.stringify(r.stdout.slice(0, 300))}`);
+    if (r.stderr) console.log(`      stderr head: ${JSON.stringify(r.stderr.slice(0, 600))}`);
   }
   assert('emits a JSON array', Array.isArray(payload));
   assert('covers more than 60 components', Array.isArray(payload) && payload.length > 60);
