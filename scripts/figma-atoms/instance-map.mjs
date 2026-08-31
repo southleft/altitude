@@ -43,8 +43,22 @@ const stateOf = (a, extra = {}) => {
 const cap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 
 export const INSTANCE_MAP = {
-  'al-button': set('Button', '4271:9562',
-    (a) => ({ Variant: cap(a.variant) || 'Primary', State: stateOf(a) }),
+  // id re-read live 2026-08-31. The previous pin, `4271:9562`, was a GHOST: it still
+  // RESOLVES via getNodeByIdAsync as a COMPONENT_SET named "Button" with 25 variants and
+  // `removed === false`, but its parent chain reaches no PAGE — the set was rebuilt at some
+  // point and this file kept the dead id. "It resolved" is not proof a node is in the
+  // document; walk to a PAGE and check it is in figma.root.children.
+  //
+  // Size and Shape were missing from the axis map, so every expected variant name was
+  // `State=…, Variant=…` and check-parity called all 20 of its own names missing and all
+  // 120 real ones extra.
+  'al-button': set('Button', '3538:36730',
+    (a) => ({
+      Variant: cap(a.variant) || 'Primary',
+      Size: cap(a.size) || 'Default',
+      Shape: on(a.ispill) ? 'Pill' : 'Default',
+      State: stateOf(a),
+    }),
     {
       text: (a, t) => t || 'Button',
       // Slot booleans MUST be set explicitly. Figma's default Button variant ships with
