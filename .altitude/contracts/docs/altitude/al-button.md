@@ -16,21 +16,21 @@ Component: al-button
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaControls` | string | — | — | — |
+| `ariaControls` | string | — | — | _not expressed in Figma (by design)_ |
 | `fullWidth` | boolean | — | — | _not expressed in Figma (by design)_ |
-| `hideText` | boolean | — | — | — |
-| `href` | string | — | — | — |
-| `isAriaDisabled` | boolean | — | — | — |
-| `isDisabled` | boolean | — | — | — |
-| `isExpanded` | boolean | — | — | — |
-| `isPill` | boolean | — | — | — |
-| `isPressed` | string | `boolean \| 'mixed'` | — | — |
+| `hideText` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `href` | string | — | — | _not expressed in Figma (by design)_ |
+| `isAriaDisabled` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Focus`, `Hover` |
+| `isExpanded` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `isPill` | boolean | — | — | **Shape** (VARIANT): `Default`, `Pill` |
+| `isPressed` | string | `boolean \| 'mixed'` | — | _not expressed in Figma (by design)_ |
 | `label` | string | — | — | — |
-| `name` | string | — | — | — |
+| `name` | string | — | — | _not expressed in Figma (by design)_ |
 | `size` | enum | `lg`, `sm` | — | **Size** (VARIANT): `Default`, `Lg`, `Sm` |
-| `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | — |
-| `type` | enum | `button`, `reset`, `submit` | — | — |
-| `value` | string | — | — | — |
+| `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | _not expressed in Figma (by design)_ |
+| `type` | enum | `button`, `reset`, `submit` | — | _not expressed in Figma (by design)_ |
+| `value` | string | — | — | _not expressed in Figma (by design)_ |
 | `variant` | enum | `bare`, `danger`, `secondary`, `tertiary` | — | **Variant** (VARIANT): `Bare`, `Danger`, `Primary`, `Secondary`, `Tertiary` |
 
 #### `ariaControls`
@@ -117,9 +117,19 @@ Style variant
 - **bare** renders the button with a bare style
 - **danger** renders the button used for caution actions
 
-**Figma-expression opt-out (T27):** `fullWidth` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `ariaControls`, `fullWidth`, `hideText`, `href`, `isAriaDisabled`, `isExpanded`, `isPressed`, `name`, `target`, `type`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
+
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Focus`, `Hover`
+
+### `isPill` (Figma property "Shape")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Pill`
 
 ### `size` (Figma property "Size")
 

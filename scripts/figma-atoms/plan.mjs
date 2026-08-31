@@ -176,6 +176,17 @@ export const PLAN = [
       // it reported all 20 of its own names "missing" and all 60 real ones "extra" —
       // a failure that looks like a broken canvas and is actually a stale probe.
       Size: enumAxis('size', ['sm', 'lg']),
+      // `isPill` is a BOOLEAN in code but cannot be a Figma BOOLEAN property: those
+      // toggle layer visibility or swap an instance and cannot change a corner radius.
+      // So it is a variant axis on both sides — same shape as al-badge's Shape axis
+      // below. One token flips (border-radius -> theme/border/radius/pill, 999px,
+      // against the default action radius; button.scss:151-153) but it flips for every
+      // Variant x State x Size, so it is a real axis, not trap 11's phantom fan-out.
+      //
+      // Until now the probe never rendered a pill button, so the delta was never
+      // measured and `isPill` was missing from the contract's conditionalBindings
+      // entirely — the same stale-probe gap that hid `size`.
+      Shape: { values: ['default', 'pill'], attrs: (v) => (v === 'pill' ? { ispill: true } : {}) },
       Width: { values: ['hug', 'fill'], attrs: (v) => (v === 'fill' ? { fullwidth: true } : {}) },
     },
     {
