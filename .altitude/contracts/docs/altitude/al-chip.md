@@ -16,9 +16,9 @@ Component: al-chip
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `isDismissed` | boolean | — | — | — |
+| `isDismissed` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isDismissible` | boolean | — | — | — |
-| `type` | string | `'squared'` | — | — |
+| `type` | string | `'squared'` | — | **Shape** (VARIANT): `Default`, `Squared` |
 | `variant` | enum | `danger`, `info`, `secondary`, `success`, `warning` | — | **Variant** (VARIANT): `Danger`, `Default`, `Info`, `Secondary`, `Success`, `Warning` |
 
 #### `isDismissed`
@@ -49,7 +49,14 @@ Variant
 - **warning** A chip with a warning background
 - **danger** A chip with a danger background
 
+**Figma-expression opt-out (T27):** `isDismissed` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
+
+### `type` (Figma property "Shape")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Squared`
 
 ### `variant` (Figma property "Variant")
 
