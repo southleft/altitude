@@ -241,8 +241,10 @@ re-elected the winner and reported value drift for tokens nobody touched.
 Measured against a scratch `altitude` brand (sorts before `northright`): **6
 `--al-theme-*` tokens** reported as drifted, all of them
 `var(--al-color-brand-green-*)` → `var(--al-color-brand-blue-*)` — i.e. exactly
-the tokens `tier-2/brand/altitude/colors.json` overrides. Nothing had
-regressed. The blast radius equals the number of tokens the earlier-sorting
+the tokens `tier-2/brand/altitude/colors.json` overrode at the time. Nothing had
+regressed. (That file no longer exists — altitude overrides nothing since the
+v2 restyle, 2026-08-30 — but the ordering hazard it illustrates is unchanged
+for any brand that DOES define tokens.) The blast radius equals the number of tokens the earlier-sorting
 brand defines, so it grows as brand palettes diverge.
 
 The VALUES check is now keyed by `<file>::<name>`, which makes each emission's

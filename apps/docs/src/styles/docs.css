@@ -7,15 +7,19 @@
  * the same value; the type ramp, the hairline rules, the mono uppercase
  * micro-labels and the 264px sidebar are its measurements, not new ones.
  *
- * Two font families, matching the canvas: IBM Plex Sans (fetched already by
+ * Two font families, matching the v2 canvas: Public Sans (fetched by
  * @southleft/al-web-components/css/main.css, styles/main.scss:11) and IBM Plex Mono
  * (self-hosted in public/fonts/, same files and provenance as
- * apps/southleft/public/fonts/README.md).
+ * apps/southleft/public/fonts/README.md). IBM Plex Sans is ALSO imported below:
+ * it is no longer the base face, but southleft-branded previews on this site
+ * still resolve to it through that brand's `{font-family.plex}` pin.
  *
  * Dark mode is `[data-theme]` on <html>, exactly as the canvas drives it.
  */
 
 /* ------------------------------------------------------------- typefaces */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap');
 
 @font-face {
   font-family: 'IBM Plex Mono';
@@ -77,16 +81,16 @@
  * Changing a brand's background tokens therefore means re-checking these.
  */
 :root {
-  --bg: #e2e0da;
-  --bg2: #e9e7e2;
-  --fg: #101010;
-  --fg-weak: #3a3a3a;
-  --line: #3a3a3a;
-  --line-weak: #d9d9d9;
-  --blue: #4375ff;
-  --blue-hover: #6b93ff;
-  --blue-ink: #000b29;
-  --blue-soft: #dbe5ff;
+  --bg: #f7f6f3;
+  --bg2: #ffffff;
+  --fg: #191813;
+  --fg-weak: #6e6b60;
+  --line: #d2cfc6;
+  --line-weak: #e7e5de;
+  --blue: #2e5ce6;
+  --blue-hover: #2549c4;
+  --blue-ink: #0e1834;
+  --blue-soft: #e9eefc;
 
   /*
    * Status tones. Named here rather than inline at the rule sites because
@@ -100,9 +104,9 @@
    * in light mode. Reconcile the two switches, then replace these three pairs
    * with the semantic tokens; the values below are the canvas's.
    */
-  --status-ok: #2f8f4e;
-  --status-warn: #b4761a;
-  --status-gap: #f05735;
+  --status-ok: #157b46;
+  --status-warn: #906500;
+  --status-gap: #cc2b36;
 
   /*
    * Two tones that stay fixed across both themes, so they live here rather
@@ -110,21 +114,19 @@
    * light mode too (it is the canvas's treatment), and --on-blue is the
    * foreground that sits on the accent, used by ::selection.
    */
-  --code-bg: #0b0b0b;
-  --code-fg: #e9e7e2;
+  --code-bg: #191813;
+  --code-fg: #f1f0ea;
   --on-blue: #ffffff;
-  --al-bg-default: #e9e7e2;
-  --al-bg-strong: #f2f1ee;
-  --al-bg-stronger: #f4f3f1;
-  --al-content: #101010;
-  --al-content-weak: #3a3a3a;
-  --al-border: #b0b0b0;
-  --al-border-weak: #d9d9d9;
-  --al-shadow:
-    0 8px 8px 0 rgb(217 217 217 / 20%), 0 4px 4px 0 rgb(217 217 217 / 20%),
-    0 2px 2px 0 rgb(217 217 217 / 20%);
+  --al-bg-default: #ffffff;
+  --al-bg-strong: #f7f6f3;
+  --al-bg-stronger: #eceae4;
+  --al-content: #191813;
+  --al-content-weak: #6e6b60;
+  --al-border: #d2cfc6;
+  --al-border-weak: #e7e5de;
+  --al-shadow: 0 8px 24px 0 rgb(25 22 14 / 16%);
 
-  --sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --sans: 'Public Sans', system-ui, sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, monospace;
 
   --sidebar-w: 264px;
@@ -135,23 +137,26 @@
 /* The dark half of the boot palette — same rule: the default brand's resolved
    values, so its dark pages boot on their final colours. */
 [data-theme='dark'] {
-  --bg: #101010;
-  --bg2: #181818;
-  --fg: #f8f8f6;
-  --fg-weak: #bdb39e;
-  --line: #bdb39e;
-  --line-weak: #616161;
-  --blue-soft: #0c3197;
-  --al-bg-default: #181818;
-  --al-bg-strong: #2e2e2e;
-  --al-bg-stronger: #3a3a3a;
-  --al-content: #f8f8f6;
-  --al-content-weak: #bdb39e;
-  --al-border: #8a8a8a;
-  --al-border-weak: #616161;
+  --bg: #131311;
+  --bg2: #1d1d1a;
+  --fg: #f1f0ea;
+  --fg-weak: #a5a399;
+  --line: #3c3c35;
+  --line-weak: #2c2c28;
+  --blue: #7290ff;
+  --blue-hover: #8ea6ff;
+  --blue-soft: #252e4d;
+  --al-bg-default: #1d1d1a;
+  --al-bg-strong: #2c2c28;
+  --al-bg-stronger: #3c3c35;
+  --al-content: #f1f0ea;
+  --al-content-weak: #a5a399;
+  --al-border: #3c3c35;
+  --al-border-weak: #2c2c28;
   --al-shadow: 0 8px 8px rgb(0 0 0 / 60%), 0 4px 4px rgb(0 0 0 / 60%), 0 2px 2px rgb(0 0 0 / 60%);
-  --status-ok: #58c07c;
-  --status-warn: #e0a94a;
+  --status-ok: #4cd98a;
+  --status-warn: #f5b942;
+  --status-gap: #ff6d76;
 }
 
 /* ------------------------------------------------------------------ base */
