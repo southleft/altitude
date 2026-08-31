@@ -125,6 +125,8 @@
     "test:scoped-theming": "node scripts/check-scoped-theming.mjs",
     "//test:contrast-axis": "Behavioural verification for <al-theme contrast> (spec 2026-08-22-token-debt-and-machine-readable-metadata). Proves contrast='more' raises --al-theme-opacity-disabled on a REAL rendered component and clears WCAG AA text contrast (4.5:1) against the worst realistic disabled pairing in both modes, and that nesting a bare or explicit contrast=\"normal\" <al-theme> inside one set to 'more' resets rather than inherits. Served through the same Vite-dev-server + static-harness infrastructure as test:scoped-theming (`.altitude/visual-compare/harness/contrast-axis.{html,js}`), not a live Storybook — Storybook was removed from this repo 2026-08-25. Requires `pnpm --filter @southleft/al-web-components build` first; first run compiles the whole component graph on demand and can take a minute.",
     "test:contrast-axis": "node scripts/verify-contrast-axis.mjs",
+    "//check:palette-contrast": "WCAG AA gate over the EMITTED semantic palette (both modes). Distinct from test:contrast-axis, which only exercises the contrast= axis against hardcoded colours and cannot see a palette re-point. Needs build:tokens first (dist-v5 is gitignored).",
+    "check:palette-contrast": "node scripts/check-palette-contrast.mjs",
     "baselines:tokens": "node scripts/capture-token-baseline.js",
     "baselines:bundle": "node scripts/capture-bundle-baseline.js",
     "baselines:vrt": "playwright test --update-snapshots",
