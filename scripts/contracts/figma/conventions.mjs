@@ -120,6 +120,23 @@ export const PHOSPHOR_WEIGHT_OPTIONS = ['Thin', 'Light', 'Regular', 'Bold', 'Fil
  * Add a page name here if a future bootstrap lands somewhere else.
  */
 export const PHOSPHOR_PRIORITY_PAGE_NAMES = ['🛠 Icons', '🛝 Playground'];
+
+/**
+ * LOCALIZED Phosphor icons (2026-08-31). The owner localized the Phosphor set
+ * into this file: ~1500 plain local COMPONENTs (remote === false), direct
+ * children of one GROUP with this exact name on the priority page. They are NOT
+ * component SETS, so isVerifiedPhosphorIconSet() — which proves Phosphor by the
+ * Format x Weight variant axes — cannot speak to them at all.
+ *
+ * The container name is the positive guard that replaces it. It is a real,
+ * human-created structural marker, and it is allowlist-shaped: a component only
+ * counts as Phosphor if it sits inside THIS group on a priority page. That is
+ * deliberately narrower than "a local component whose name matches", which is
+ * the loose shape that let the wrong-library CheckCircle collision through (see
+ * PHOSPHOR_KEY_BY_NAME above). Renaming the group breaks resolution loudly
+ * rather than silently matching some other same-named component.
+ */
+export const PHOSPHOR_LOCAL_GROUP_NAME = 'Phosphor Icons — Local';
 export const PHOSPHOR_SCAN_NODE_BUDGET = 2000;
 
 /**

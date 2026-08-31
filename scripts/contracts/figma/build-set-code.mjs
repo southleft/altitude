@@ -32,6 +32,7 @@ import {
   PHOSPHOR_FORMAT_OPTIONS,
   PHOSPHOR_KEY_BY_NAME,
   PHOSPHOR_NAME_ALIASES,
+  PHOSPHOR_LOCAL_GROUP_NAME,
   PHOSPHOR_PRIORITY_PAGE_NAMES,
   PHOSPHOR_SCAN_NODE_BUDGET,
   PHOSPHOR_WEIGHT_OPTIONS,
@@ -154,6 +155,7 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
     // unresolved name degrading to a reported miss instead of a timeout —
     // see conventions.mjs's PHOSPHOR_PRIORITY_PAGE_NAMES comment.
     const PHOSPHOR_PRIORITY_PAGE_NAMES = ${JSON.stringify(PHOSPHOR_PRIORITY_PAGE_NAMES)};
+    const PHOSPHOR_LOCAL_GROUP_NAME = ${JSON.stringify(PHOSPHOR_LOCAL_GROUP_NAME)};
     const PHOSPHOR_SCAN_NODE_BUDGET = ${JSON.stringify(PHOSPHOR_SCAN_NODE_BUDGET)};
     // T29: hand-curated EXACT aliases (never substring/fuzzy — a looser match
     // is exactly the shape of rule that let the wrong-library CBDS
@@ -229,6 +231,28 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           return null;
         }
       }
+      // LOCALIZED PHOSPHOR (2026-08-31). The owner localized the Phosphor set
+      // into this file, so the glyphs are no longer REMOTE INSTANCES for the
+      // scan above to find - they are ~1500 plain local COMPONENTs sitting as
+      // direct children of one named GROUP. Those carry no Format x Weight
+      // axes, so isVerifiedPhosphorIconSet cannot vouch for them; the GROUP
+      // NAME is the positive, allowlist-shaped guard instead (see
+      // conventions.mjs PHOSPHOR_LOCAL_GROUP_NAME for why that is narrower
+      // than matching any same-named local component).
+      //
+      // Direct children only - a flat pass over one group, no recursion, which
+      // is what keeps this affordable against the Desktop Bridge execution
+      // ceiling even at ~1500 children.
+      for (const page of priorityPages) {
+        const group = page.findChild((n) => n.type === 'GROUP' && n.name === PHOSPHOR_LOCAL_GROUP_NAME);
+        if (!group) continue;
+        for (const child of group.children) {
+          if (child.type !== 'COMPONENT') continue;
+          if (targetNorms.indexOf(normalizeIconName(child.name)) === -1) continue;
+          return child;
+        }
+      }
+
       const key = PHOSPHOR_KEY_BY_NAME[name];
       if (key) {
         // T29: a hand-typed key gets NO exemption from library verification
@@ -1282,7 +1306,31 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         // leaf falls back to the Text property default. Color: the node's
         // own binding, else inherited (the CSS cascade the anatomy actually
         // had).
-        const isTextLeaf = !(child.children || []).length && !child.component && (child.text || t['color']);
+        /**
+         * A FORM CONTROL IS A BOX, NOT A TEXT NODE.
+         *
+         * isTextLeaf treats "childless + carries a color token" as text, which
+         * is right for a legend or a field-note line. An input / textarea /
+         * select satisfies exactly that test - childless, and it carries color
+         * for the value it would display - but it is a SURFACE: border,
+         * background, radius, measured box. Classified as text it rendered as a
+         * TEXT node carrying the set's Text-property default, so al-input's
+         * generated set showed a stray duplicate "Label" where the field should
+         * be and no field box at all (measured 2026-08-31: the container came
+         * out 35x18 against a measured 227x48).
+         *
+         * Excluding these tags lets the node fall through to the childless-leaf
+         * branch below, which already draws the right thing - a frame at the
+         * measured box with the background/border/radius bindings.
+         *
+         * Keyed on the anatomy's own tag, not on the presence of box facts: a
+         * genuine text wrapper can legitimately carry a background tint, so
+         * "has a background" would misfire on it, while the tag cannot.
+         *
+         * NOTE: no backticks in comments here - trap 3.
+         */
+        const isFormControl = ['input', 'textarea', 'select'].indexOf(String(child.tag)) !== -1;
+        const isTextLeaf = !isFormControl && !(child.children || []).length && !child.component && (child.text || t['color']);
         if (isTextLeaf) {
           const tn = figma.createText();
           // PAGE-lane texts are ALL literal — a section is not a
@@ -1405,6 +1453,17 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           const bh = child.box ? child.box.h : 0;
           if (!hasPaint || bw < 1 || bh < 1) {
             if (t['outline-color']) pendingOutline = { color: t['outline-color'], width: t['outline-width'], offset: t['outline-offset'] };
+            /**
+             * NAME THE SKIP. A 0x0 box or an unpainted native control under a
+             * custom one is a legitimate nothing-to-draw, but a leaf that IS
+             * meant to be visible and happens to carry no paint vanishes here
+             * without a trace - which is how al-input-stepper's value segment
+             * came out missing (v2 moved the border and surface up to __body,
+             * leaving the inner input transparent, and an input has no DOM text
+             * to fall back to). Silence is the one failure mode that costs a
+             * debugging round; a named miss costs nothing.
+             */
+            if (bw >= 1 && bh >= 1) misses.add('leaf-no-paint:' + (child.cls ? String(child.cls).split(/\s+/)[0] : child.tag));
             continue;
           }
           const g = figma.createFrame();

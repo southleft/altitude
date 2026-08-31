@@ -274,6 +274,68 @@ async function main() {
   }
   const result = typeof payload.result === 'string' ? JSON.parse(payload.result) : payload.result;
   console.log(JSON.stringify(result, null, 2));
+
+  /* ---------------------------------------------------------------------
+   * ENFORCEMENT (2026-08-31). Two steps the skill has always PRESCRIBED and
+   * that an agent could simply skip, because a degraded run still exited 0
+   * and the screenshot was a manual afterthought. Both are now mechanical.
+   *
+   * This was not hypothetical: a v2 session generated al-input-stepper with
+   * "phosphor-component-not-found:minus/plus" in missingVars, read the green
+   * exit as success, never exported a PNG, and reported the set as merely
+   * "needs two icons" — when it actually rendered with the two nested buttons
+   * overlapping into illegible text. The misses were NAMED and still sailed
+   * past, so naming them was necessary and not sufficient.
+   * ------------------------------------------------------------------- */
+
+  // 1. VERIFICATION SCREENSHOT, always. Written next to the ops artifact so a
+  //    run leaves visual evidence whether or not anyone remembers to ask.
+  const shotTarget = result.presentationFrame || result.set;
+  if (shotTarget) {
+    try {
+      const shotDir = join(SC.dirs.sync, 'generated-shots');
+      mkdirSync(shotDir, { recursive: true });
+      const shotPath = join(shotDir, `${COMPONENT}${process.argv.includes('--sheet') ? '-sheet' : ''}.png`);
+      const b64 = await call(SHIM_PORT, 'figma_execute', {
+        code: `const n = await figma.getNodeByIdAsync(${JSON.stringify(shotTarget)});
+if (!n) return null;
+const bytes = await n.exportAsync({ format: 'PNG', constraint: { type: 'SCALE', value: 1.5 } });
+return figma.base64Encode(bytes);`,
+        fileKey: SC.fileKey,
+        timeout: 60000,
+      });
+      const parsed = JSON.parse(b64);
+      const data = typeof parsed.result === 'string' ? parsed.result : null;
+      if (data) {
+        writeFileSync(shotPath, Buffer.from(data, 'base64'));
+        console.log(`[generate-figma] verification shot -> ${shotPath}`);
+        console.log('[generate-figma] LOOK AT IT. A structure dump is not a screenshot: the');
+        console.log('[generate-figma] stepper regression above was invisible in the node tree.');
+      } else {
+        console.warn('[generate-figma] WARNING: could not export a verification shot — verify by hand.');
+      }
+    } catch (e) {
+      console.warn(`[generate-figma] WARNING: verification shot failed (${e.message}) — verify by hand.`);
+    }
+  }
+
+  // 2. DEGRADATIONS ARE A FAILURE unless explicitly accepted. `al-layout` has
+  //    no set of its own by design (COVERAGE.md), so it is the one documented
+  //    exception; everything else means the set is missing something real.
+  const EXPECTED_MISSES = ['nested-set-not-found:al-layout'];
+  const unresolved = (result.missingVars || []).filter((m) => !EXPECTED_MISSES.includes(m));
+  if (unresolved.length) {
+    console.error('');
+    console.error(`[generate-figma] DEGRADED — ${unresolved.length} unresolved miss(es):`);
+    for (const m of unresolved) console.error(`    ${m}`);
+    console.error('');
+    console.error('  The set was built, but it does NOT fully represent the component.');
+    console.error('  Fix the cause, or re-run with --allow-degraded to accept it deliberately.');
+    console.error('  phosphor-component-not-found:* needs ONE in-file instance of that glyph');
+    console.error('  (trap 8) — it cannot be resolved from the library by name alone.');
+    if (!process.argv.includes('--allow-degraded')) process.exit(1);
+    console.error('  --allow-degraded passed; continuing.');
+  }
 }
 
 if (import.meta.url === `file://${process.argv[1]}`.replace(/\\/g, '/') || process.argv[1]?.endsWith('generate-figma.mjs')) {

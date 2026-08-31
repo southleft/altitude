@@ -551,7 +551,16 @@ export const PLAN = [
   // Deps: al-field-note. Real pseudo states via the shared al-input mixin
   // (hover / focus-visible / disabled / read-only), so States are genuine here.
   atom('al-input', 'Input',
-    { Label: boolAxis('hideLabel', 'shown', 'hidden') },
+    {
+      Label: boolAxis('hideLabel', 'shown', 'hidden'),
+      // v2 (spec 2026-08-30): the inset-label variant. Both values are rendered
+      // EXPLICITLY rather than through enumAxis's "default means attribute
+      // omitted" shorthand, because the generated Figma axis spells its options
+      // Top/Inset — a case id of `Label Position=default` would normalise to
+      // `labelposition=default` and never join to `labelposition=top`, leaving
+      // every variant size-unverified.
+      'Label Position': { values: ['top', 'inset'], attrs: (v) => ({ labelposition: v }) },
+    },
     {
       always: { label: 'Label', placeholder: 'Placeholder', fieldnote: 'This is a field note.' },
       stateCases: {
@@ -658,7 +667,12 @@ export const PLAN = [
 
   // Deps: al-button (x2, bare + icon), al-field-note.
   atom('al-input-stepper', 'Input Stepper',
-    { Label: boolAxis('hideLabel', 'shown', 'hidden') },
+    {
+      Label: boolAxis('hideLabel', 'shown', 'hidden'),
+      // v2 (spec 2026-08-30): the trailing-controls variant. Explicit values for
+      // the same reason as al-input's Label Position above.
+      Variant: { values: ['segmented', 'trailing'], attrs: (v) => ({ variant: v }) },
+    },
     {
       always: { label: 'Label', fieldnote: 'This is a field note.', count: '1', min: '0', max: '5' },
       stateCases: {

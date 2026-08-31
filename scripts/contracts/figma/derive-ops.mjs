@@ -269,8 +269,37 @@ export function buildOps(contract, {
     ? [...variantProp.bindings.figma.options].sort()
     : [];
   const variantAxisName = variantProp?.bindings?.figma?.property || 'Variant';
+  /**
+   * The axis default is the CODE default, when the contract records one that
+   * names an actual option.
+   *
+   * `variantValues` is sorted alphabetically, so taking `[0]` made the default
+   * whichever option happened to sort first — right by luck for most sets
+   * (Default/Bar/Off/No all sort first), and wrong for any set whose real
+   * default does not. al-input's v2 `labelPosition` is the case that exposed
+   * it: options sort to ["Inset","Top"] while the code default is `top`, so
+   * every instance placed in Figma would have defaulted to the inset variant.
+   *
+   * `'Primary'` stays as the fallback ahead of alphabetical for al-button,
+   * whose contract records no default for `variant` — it is a narrower special
+   * case than it looks, and this generic rule now covers the components that
+   * DO declare one. Audited across every enum axis in the library: al-input is
+   * the only set this changes.
+   *
+   * The contract stores the default as the source literal (`"'top'"`), hence
+   * the quote strip; matching is the same normalisation the rest of this file
+   * uses, so `top` finds `Top`.
+   */
+  const codeDefault = String(variantProp?.default ?? '').replace(/^['"]|['"]$/g, '').trim();
+  const defaultFromCode = codeDefault
+    ? variantValues.find((v) => normKey(v) === normKey(codeDefault))
+    : undefined;
   const variantAxis = variantValues.length
-    ? { name: variantAxisName, values: variantValues, default: variantValues.includes('Primary') ? 'Primary' : variantValues[0] }
+    ? {
+        name: variantAxisName,
+        values: variantValues,
+        default: defaultFromCode || (variantValues.includes('Primary') ? 'Primary' : variantValues[0]),
+      }
     : null;
 
   // State axis: Default always, plus whichever of the contract's declared
